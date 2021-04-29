@@ -1,0 +1,7 @@
+{
+  "eslint.validate": ["javascript", "typescript", "vue", "markdown", "svelte"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "vetur.validation.script": false,
+  "vetur.validation.style": false
+}
