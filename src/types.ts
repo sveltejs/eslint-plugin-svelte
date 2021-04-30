@@ -31,6 +31,7 @@ export interface RuleListener extends ASTNodeListener {
     toSegment: Rule.CodePathSegment,
     node: never,
   ): void
+
   [key: string]:
     | ((codePath: Rule.CodePath, node: never) => void)
     | ((segment: Rule.CodePathSegment, node: never) => void)
@@ -40,12 +41,13 @@ export interface RuleListener extends ASTNodeListener {
         node: never,
       ) => void)
     | ASTNodeListener[keyof ASTNodeListener]
+    | ((node: never) => void)
     | undefined
 }
 
 export interface RuleModule {
   meta: RuleMetaData
-  create(context: Rule.RuleContext): RuleListener
+  create(context: RuleContext): RuleListener
 }
 
 export interface RuleMetaData {
@@ -86,7 +88,7 @@ export interface PartialRuleMetaData {
   type: "problem" | "suggestion" | "layout"
 }
 
-type RuleContext = {
+export type RuleContext = {
   id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   options: any[]
@@ -119,7 +121,7 @@ interface ReportDescriptorOptionsBase {
   fix?:
     | null
     | ((
-        fixer: Rule.RuleFixer,
+        fixer: RuleFixer,
       ) => null | Rule.Fix | IterableIterator<Rule.Fix> | Rule.Fix[])
 }
 
@@ -139,6 +141,23 @@ type ReportDescriptorLocation =
   | { node: NodeOrToken }
   | { loc: AST.SourceLocation | { line: number; column: number } }
 
+export interface RuleFixer {
+  insertTextAfter(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+
+  insertTextAfterRange(range: AST.Range, text: string): Rule.Fix
+
+  insertTextBefore(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+
+  insertTextBeforeRange(range: AST.Range, text: string): Rule.Fix
+
+  remove(nodeOrToken: NodeOrToken): Rule.Fix
+
+  removeRange(range: AST.Range): Rule.Fix
+
+  replaceText(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+
+  replaceTextRange(range: AST.Range, text: string): Rule.Fix
+}
 // eslint-disable-next-line @typescript-eslint/no-namespace -- ignore
 export declare namespace SourceCode {
   export function splitLines(text: string): string[]

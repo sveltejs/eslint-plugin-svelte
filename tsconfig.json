@@ -18,7 +18,10 @@
     //     "*": ["typings/*"]
     // },
     "esModuleInterop": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "paths": {
+      "*": ["typings/*"]
+    }
   },
   "include": [
     "src/**/*",
