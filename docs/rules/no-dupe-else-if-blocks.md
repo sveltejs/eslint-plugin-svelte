@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-dupe-else-if-blocks"
 description: "disallow duplicate conditions in `{#if}` / `{:else if}` chains"
+since: "v0.0.1"
 ---
 
 # @ota-meshi/svelte/no-dupe-else-if-blocks
 
 > disallow duplicate conditions in `{#if}` / `{:else if}` chains
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -121,6 +121,10 @@ Nothing.
 - [no-dupe-else-if]
 
 [no-dupe-else-if]: https://eslint.org/docs/rules/no-dupe-else-if
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 

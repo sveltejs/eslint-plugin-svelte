@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-at-html-tags"
 description: "disallow use of `{@html}` to prevent XSS attack"
+since: "v0.0.1"
 ---
 
 # @ota-meshi/svelte/no-at-html-tags
 
 > disallow use of `{@html}` to prevent XSS attack
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -45,6 +45,10 @@ If you are certain the content passed to `{@html}` is sanitized HTML you can dis
 ## :books: Further Reading
 
 - [Svelte - Tutorial > 1. Introduction / HTML tags](https://svelte.dev/tutorial/html-tags)
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 

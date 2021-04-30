@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-at-debug-tags"
 description: "disallow the use of `{@debug}`"
+since: "v0.0.1"
 ---
 
 # @ota-meshi/svelte/no-at-debug-tags
 
 > disallow the use of `{@debug}`
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -42,6 +42,10 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte - Tutorial > 18. Debugging / The @debug tags](https://svelte.dev/tutorial/debug)
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 
