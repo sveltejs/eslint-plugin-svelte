@@ -2,18 +2,18 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-at-html-tags"
-description: "disallow use of `{@html ...}` to prevent XSS attack"
+description: "disallow use of `{@html}` to prevent XSS attack"
 ---
 # @ota-meshi/svelte/no-at-html-tags
 
-> disallow use of `{@html ...}` to prevent XSS attack
+> disallow use of `{@html}` to prevent XSS attack
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
 
-This rule reports all uses of `{@html ...}` in order to reduce the risk of injecting potentially unsafe / unescaped html into the browser leading to Cross-Site Scripting (XSS) attacks.
+This rule reports all uses of `{@html}` in order to reduce the risk of injecting potentially unsafe / unescaped html into the browser leading to Cross-Site Scripting (XSS) attacks.
 
 <eslint-code-block>
 
@@ -39,7 +39,7 @@ Nothing.
 
 ## :mute: When Not To Use It
 
-If you are certain the content passed to `{@html ...}` is sanitized HTML you can disable this rule.
+If you are certain the content passed to `{@html}` is sanitized HTML you can disable this rule.
 
 ## :books: Further Reading
 

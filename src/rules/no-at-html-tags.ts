@@ -4,12 +4,12 @@ import { createRule } from "../utils"
 export default createRule("no-at-html-tags", {
   meta: {
     docs: {
-      description: "disallow use of `{@html ...}` to prevent XSS attack",
+      description: "disallow use of `{@html}` to prevent XSS attack",
       recommended: true,
     },
     schema: [],
     messages: {
-      disallow: "`{@html ...}` can lead to XSS attack.",
+      unexpected: "`{@html}` can lead to XSS attack.",
     },
     type: "suggestion", // "problem",
   },
@@ -18,7 +18,7 @@ export default createRule("no-at-html-tags", {
       "SvelteMustacheTag[kind=raw]"(node: AST.SvelteMustacheTag) {
         context.report({
           node,
-          messageId: "disallow",
+          messageId: "unexpected",
         })
       },
     }
