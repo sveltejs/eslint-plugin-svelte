@@ -1,0 +1,26 @@
+import { createRule } from "../utils"
+
+export default createRule("no-at-debug-tags", {
+  meta: {
+    docs: {
+      description: "disallow the use of `{@debug}`",
+      recommended: true,
+      default: "warn",
+    },
+    schema: [],
+    messages: {
+      unexpected: "Unexpected `{@debug}`.",
+    },
+    type: "problem",
+  },
+  create(context) {
+    return {
+      SvelteDebugTag(node) {
+        context.report({
+          node,
+          messageId: "unexpected",
+        })
+      },
+    }
+  },
+})

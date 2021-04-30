@@ -1,0 +1,7 @@
+[
+  {
+    "message": "This branch can never execute. Its condition is a duplicate or covered by previous conditions in the `{#if}` / `{:else if}` chain.",
+    "line": 7,
+    "column": 11
+  }
+]
