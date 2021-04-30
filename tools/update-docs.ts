@@ -98,7 +98,7 @@ class DocFile {
     }
     if (!this.since) {
       notes.unshift(
-        `- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>`,
+        `- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>`,
       )
     }
 
@@ -202,7 +202,7 @@ ${
     const computed = `---\n${Object.keys(fileIntro)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- tool
       .map((key) => `${key}: ${yamlValue((fileIntro as any)[key])}`)
-      .join("\n")}\n---\n`
+      .join("\n")}\n---\n\n`
 
     const fileIntroPattern = /^---\n(?:.*\n)+?---\n*/gu
 

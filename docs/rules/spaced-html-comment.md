@@ -4,11 +4,12 @@ sidebarDepth: 0
 title: "@ota-meshi/svelte/spaced-html-comment"
 description: "enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment"
 ---
+
 # @ota-meshi/svelte/spaced-html-comment
 
 > enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details

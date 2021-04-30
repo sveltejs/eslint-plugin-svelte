@@ -8,5 +8,6 @@ export = {
     // @ota-meshi/eslint-plugin-svelte rules
     "@ota-meshi/svelte/no-at-debug-tags": "warn",
     "@ota-meshi/svelte/no-at-html-tags": "error",
+    "@ota-meshi/svelte/no-dupe-else-if-blocks": "error",
   },
 }

@@ -1,11 +1,17 @@
 import type { JSONSchema4 } from "json-schema"
-import type { Linter, Rule, Scope, SourceCode } from "eslint"
+import type {
+  Linter,
+  Rule,
+  Scope,
+  SourceCode as ESLintSourceCode,
+} from "eslint"
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 
-type ASTNode = AST.SvelteNode | (ESTree.Node & { parent: ASTNode })
-type ASTNodeListenerMap<T extends ASTNode = ASTNode> = {
-  [key in ASTNode["type"]]: T extends { type: key } ? T : never
+export type ASTNode = AST.SvelteNode | ESTree.Node
+type ASTNodeWithParent = ASTNode & { parent: ASTNode }
+type ASTNodeListenerMap<T extends ASTNodeWithParent = ASTNodeWithParent> = {
+  [key in ASTNodeWithParent["type"]]: T extends { type: key } ? T : never
 }
 
 type ASTNodeListener = {
@@ -88,9 +94,9 @@ type RuleContext = {
   settings: { [name: string]: any }
   parserPath: string
   parserOptions: Linter.ParserOptions
-  parserServices: SourceCode.ParserServices
+  parserServices: ESLintSourceCode.ParserServices
 
-  getAncestors(): ESTree.Node[]
+  getAncestors(): ASTNode[]
 
   getDeclaredVariables(node: ESTree.Node): Scope.Variable[]
 
@@ -104,6 +110,8 @@ type RuleContext = {
 
   report(descriptor: ReportDescriptor): void
 }
+
+type NodeOrToken = { type: string; loc?: AST.SourceLocation | null }
 
 interface ReportDescriptorOptionsBase {
   data?: { [key: string]: string }
@@ -128,5 +136,135 @@ type ReportDescriptor = ReportDescriptorMessage &
   ReportDescriptorOptions
 type ReportDescriptorMessage = { message: string } | { messageId: string }
 type ReportDescriptorLocation =
-  | { node: { type: string; loc?: AST.SourceLocation } }
+  | { node: NodeOrToken }
   | { loc: AST.SourceLocation | { line: number; column: number } }
+
+// eslint-disable-next-line @typescript-eslint/no-namespace -- ignore
+export declare namespace SourceCode {
+  export function splitLines(text: string): string[]
+}
+export interface SourceCode {
+  text: string
+  ast: AST.SvelteProgram
+  lines: string[]
+  hasBOM: boolean
+  parserServices: ESLintSourceCode.ParserServices
+  scopeManager: Scope.ScopeManager
+  visitorKeys: ESLintSourceCode.VisitorKeys
+
+  getText(node?: NodeOrToken, beforeCount?: number, afterCount?: number): string
+
+  getLines(): string[]
+
+  getAllComments(): AST.Comment[]
+
+  getComments(
+    node: NodeOrToken,
+  ): { leading: AST.Comment[]; trailing: AST.Comment[] }
+
+  getJSDocComment(node: NodeOrToken): AST.Comment | null
+
+  getNodeByRangeIndex(index: number): NodeOrToken | null
+
+  isSpaceBetweenTokens(first: AST.Token, second: AST.Token): boolean
+
+  getLocFromIndex(index: number): AST.Position
+
+  getIndexFromLoc(location: AST.Position): number
+
+  // Inherited methods from TokenStore
+  // ---------------------------------
+
+  getTokenByRangeStart(
+    offset: number,
+    options?: { includeComments?: boolean },
+  ): AST.Token | AST.Comment | null
+
+  getFirstToken(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getFirstTokens(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getLastToken(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getLastTokens(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getTokenBefore(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getTokensBefore(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getTokenAfter(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getTokensAfter(
+    node: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getFirstTokenBetween(
+    left: NodeOrToken,
+    right: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getFirstTokensBetween(
+    left: NodeOrToken,
+    right: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getLastTokenBetween(
+    left: NodeOrToken,
+    right: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithSkipOptions,
+  ): AST.Token | AST.Comment | null
+
+  getLastTokensBetween(
+    left: NodeOrToken,
+    right: NodeOrToken,
+    options?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getTokensBetween(
+    left: NodeOrToken,
+    right: NodeOrToken,
+    padding?: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  getTokens(
+    node: NodeOrToken,
+    beforeCount?: number,
+    afterCount?: number,
+  ): AST.Token[]
+  getTokens(
+    node: NodeOrToken,
+    options: ESLintSourceCode.CursorWithCountOptions,
+  ): (AST.Token | AST.Comment)[]
+
+  commentsExistBetween(left: NodeOrToken, right: NodeOrToken): boolean
+
+  getCommentsBefore(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[]
+
+  getCommentsAfter(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[]
+
+  getCommentsInside(node: NodeOrToken): AST.Comment[]
+}

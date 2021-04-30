@@ -13,4 +13,5 @@ The rules with the following star :star: are included in the `plugin:@ota-meshi/
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/no-at-debug-tags](./no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
 | [@ota-meshi/svelte/no-at-html-tags](./no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack | :star: |
+| [@ota-meshi/svelte/no-dupe-else-if-blocks](./no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [@ota-meshi/svelte/spaced-html-comment](./spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |

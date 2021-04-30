@@ -21,8 +21,8 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 <eslint-code-block>
 
 <!--eslint-skip-->
-<!--prettier-ignore-->
-```html
+
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/no-at-debug-tags: "error" */
 </script>
