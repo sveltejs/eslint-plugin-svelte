@@ -45,19 +45,47 @@ import { deserializeState, serializeState } from "./state"
 import { DEFAULT_RULES_CONFIG } from "./rules"
 
 const DEFAULT_CODE =
-  `<!--welcome to @ota-meshi/eslint-plugin-svelte-->
+  `<!-- Welcome to @ota-meshi/eslint-plugin-svelte -->
 <script>
     let a = 1;
     let b = 2;
     // let c = 2;
+    let string = \`this string contains some <strong>HTML!!!</strong>\`;
+    let user = {
+        firstname: 'Ada',
+        lastname: 'Lovelace'
+    };
+    let current = 'foo';
 <` +
   `/script>
 
 <input type="number" bind:value={a}>
 <input type="number" bind:value={b}>
 <input type="number" bind:value={c}>
+<p>{a} + {b} + {c} = {a + b + c}</p>
 
-<p>{a} + {b} = {a + b + c}</p>`
+<p>{@html string}</p>
+
+<input bind:value={user.firstname}>
+<input bind:value={user.lastname}>
+
+{@debug user}
+
+<h1>Hello {user.firstname}!</h1>
+
+{#if a}
+  <div>foo</div>
+{:else if b}
+  <div>bar</div>
+{:else if b}
+  <div>baz</div>
+{/if}
+
+<button
+  class="{current === 'foo' ? 'selected' : ''}"
+  on:click="{() => current = 'foo'}"
+>foo</button>
+`
 
 const ruleURLs = {}
 for (const k of Object.keys(plugin.rules)) {
