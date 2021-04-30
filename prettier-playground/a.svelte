@@ -12,4 +12,6 @@
 
 <input type="text" {value} />
 <input type="text" {value} />
+<p>{@html a}</p>
+{@debug a}
 <!--comment-->

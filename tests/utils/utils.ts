@@ -219,8 +219,8 @@ function getLinter(ruleName: string) {
 
 function getConfig(ruleName: string, inputFile: string) {
   const filename = inputFile.slice(inputFile.indexOf(ruleName))
-  const code0 = fs.readFileSync(inputFile, "utf8")
-  let code, config
+  const code = fs.readFileSync(inputFile, "utf8")
+  let config
   let configFile: string = inputFile.replace(/input\.svelte$/u, "config.json")
   if (!exists(configFile)) {
     configFile = path.join(path.dirname(inputFile), "_config.json")
@@ -229,30 +229,15 @@ function getConfig(ruleName: string, inputFile: string) {
     config = JSON.parse(fs.readFileSync(configFile, "utf8"))
   }
   if (config && typeof config === "object") {
-    code = code0
     return Object.assign(
       { parser: require.resolve("svelte-eslint-parser") },
       config,
       { code, filename },
     )
   }
-  // inline config
-  const configStr = /^<!--(.*?)-->/u.exec(code0)
-  if (!configStr) {
-    fs.writeFileSync(inputFile, `<!--{}-->\n${code0}`, "utf8")
-    throw new Error("missing config")
-  } else {
-    code = code0.replace(/^(<!--\s*{).*?(}\s*-->)/u, `$1${filename}$2`)
-    try {
-      config = configStr ? JSON.parse(configStr[1]) : {}
-    } catch (e) {
-      throw new Error(`${e.message} in @ ${inputFile}`)
-    }
-  }
-
+  // default
   return Object.assign(
     { parser: require.resolve("svelte-eslint-parser") },
-    config,
     { code, filename },
   )
 }

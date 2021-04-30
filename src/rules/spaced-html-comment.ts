@@ -1,4 +1,3 @@
-import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("spaced-html-comment", {
@@ -27,7 +26,7 @@ export default createRule("spaced-html-comment", {
     const requireSpace = context.options[0] !== "never"
 
     return {
-      SvelteHTMLComment(node: AST.SvelteHTMLComment) {
+      SvelteHTMLComment(node) {
         if (!node.value.trim()) {
           return
         }

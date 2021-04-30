@@ -4,27 +4,37 @@ import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 
 type ASTNode = AST.SvelteNode | (ESTree.Node & { parent: ASTNode })
-type ASTNodeListener<T extends ASTNode = ASTNode> = {
-  [key in ASTNode["type"]]?: T extends { type: key }
-    ? (node: KeyofObject<T>) => void
-    : (node: never) => void
+type ASTNodeListenerMap<T extends ASTNode = ASTNode> = {
+  [key in ASTNode["type"]]: T extends { type: key } ? T : never
 }
-type KeyofObject<T> = { [key in keyof T]: key }[keyof T]
 
-export type RuleListener = ASTNodeListener & {
-  onCodePathStart?(codePath: Rule.CodePath, node: ASTNode): void
+type ASTNodeListener = {
+  [T in keyof ASTNodeListenerMap]?: (node: ASTNodeListenerMap[T]) => void
+}
+export interface RuleListener extends ASTNodeListener {
+  onCodePathStart?(codePath: Rule.CodePath, node: never): void
 
-  onCodePathEnd?(codePath: Rule.CodePath, node: ASTNode): void
+  onCodePathEnd?(codePath: Rule.CodePath, node: never): void
 
-  onCodePathSegmentStart?(segment: Rule.CodePathSegment, node: ASTNode): void
+  onCodePathSegmentStart?(segment: Rule.CodePathSegment, node: never): void
 
-  onCodePathSegmentEnd?(segment: Rule.CodePathSegment, node: ASTNode): void
+  onCodePathSegmentEnd?(segment: Rule.CodePathSegment, node: never): void
 
   onCodePathSegmentLoop?(
     fromSegment: Rule.CodePathSegment,
     toSegment: Rule.CodePathSegment,
-    node: ASTNode,
+    node: never,
   ): void
+  [key: string]:
+    | ((codePath: Rule.CodePath, node: never) => void)
+    | ((segment: Rule.CodePathSegment, node: never) => void)
+    | ((
+        fromSegment: Rule.CodePathSegment,
+        toSegment: Rule.CodePathSegment,
+        node: never,
+      ) => void)
+    | ASTNodeListener[keyof ASTNodeListener]
+    | undefined
 }
 
 export interface RuleModule {

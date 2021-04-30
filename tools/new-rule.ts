@@ -33,7 +33,7 @@ const logger = console
 
   fs.writeFileSync(
     ruleFile,
-    `
+    `import { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("${ruleId}", {
@@ -108,7 +108,7 @@ This rule reports ???.
 
 - 
 
-## :books: Further reading
+## :books: Further Reading
 
 - 
 

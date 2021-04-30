@@ -133,6 +133,7 @@ The rules with the following star :star: are included in the configs.
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags.html) | disallow use of `{@html ...}` to prevent XSS attack | :star: |
 | [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment.html) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 <!--RULES_TABLE_END-->

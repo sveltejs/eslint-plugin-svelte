@@ -1,5 +1,14 @@
 {
-  "eslint.validate": ["javascript", "typescript", "vue", "markdown", "svelte"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue",
+    "markdown",
+    "svelte",
+    "json",
+    "jsonc",
+    "yaml"
+  ],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "vetur.validation.script": false,

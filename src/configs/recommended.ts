@@ -6,5 +6,6 @@ export = {
   extends: [baseExtend],
   rules: {
     // @ota-meshi/eslint-plugin-svelte rules
+    "@ota-meshi/svelte/no-at-html-tags": "error",
   },
 }
