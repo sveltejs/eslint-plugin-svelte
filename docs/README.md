@@ -40,4 +40,4 @@ See [Available Rules](./rules/README.md).
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
-[svelte]: https://svelte.io/
+[svelte]: https://svelte.dev/

@@ -165,4 +165,4 @@ This plugin uses [svelte-eslint-parser](https://github.com/ota-meshi/svelte-esli
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
-[svelte]: https://svelte.io/
+[svelte]: https://svelte.dev/
