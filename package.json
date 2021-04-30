@@ -1,6 +1,9 @@
 {
   "name": "@ota-meshi/eslint-plugin-svelte",
   "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "ESLint plugin for Svelte using AST",
   "main": "lib/index.js",
   "files": [
