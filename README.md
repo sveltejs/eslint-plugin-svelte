@@ -37,7 +37,7 @@ See [documents](https://ota-meshi.github.io/eslint-plugin-svelte/).
 ## :cd: Installation
 
 ```bash
-npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte
+npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte svelte
 ```
 
 > **Requirements**
