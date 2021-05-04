@@ -1,0 +1,37 @@
+[
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 1,
+    "column": 1
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 2,
+    "column": 1
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 4,
+    "column": 17
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 4,
+    "column": 24
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 6,
+    "column": 1
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 7,
+    "column": 1
+  },
+  {
+    "message": "Unexpected mustache interpolation with a string literal value.",
+    "line": 8,
+    "column": 1
+  }
+]
