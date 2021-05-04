@@ -3,7 +3,7 @@
 ## :cd: Installation
 
 ```bash
-npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte
+npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte svelte
 ```
 
 ::: tip Requirements
