@@ -10,13 +10,14 @@ description: "disallow unnecessary mustache interpolations"
 > disallow unnecessary mustache interpolations
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
 This rule reports mustache interpolation with a string literal value.  
 The mustache interpolation with a string literal value can be changed to a static contents.
 
-<eslint-code-block>
+<eslint-code-block fix>
 
 <!--eslint-skip-->
 
