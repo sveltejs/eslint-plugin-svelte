@@ -123,7 +123,29 @@ export default createRule("no-useless-mustaches", {
             return null
           }
 
-          return fixer.replaceText(node, text.replace(/\\([\s\S])/g, "$1"))
+          const unescaped = text.replace(/\\([\s\S])/g, "$1")
+
+          if (node.parent.type === "SvelteAttribute") {
+            const div = sourceCode.text.slice(
+              node.parent.key.range[1],
+              node.parent.value[0].range[0],
+            )
+            if (!div.endsWith('"') && !div.endsWith("'")) {
+              return [
+                fixer.insertTextBefore(node.parent.value[0], '"'),
+                fixer.replaceText(node, unescaped.replace(/"/gu, "&quot;")),
+                fixer.insertTextAfter(
+                  node.parent.value[node.parent.value.length - 1],
+                  '"',
+                ),
+              ]
+            }
+            return fixer.replaceText(node, unescaped)
+          }
+          return fixer.replaceText(
+            node,
+            unescaped.replace(/</gu, "&lt;").replace(/>/gu, "&gt;"),
+          )
         },
       })
     }
