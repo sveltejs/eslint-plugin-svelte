@@ -5,7 +5,7 @@ You can check on the [Online DEMO](./playground/README.md).
 
 ::: **_WORKS IN PROGRESS_** :::
 
-::: **_This Parser is still in an EXPERIMENTAL STATE_** :::
+::: **_This Plugin is still in an EXPERIMENTAL STATE_** :::
 
 [![NPM license](https://img.shields.io/npm/l/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
 [![NPM version](https://img.shields.io/npm/v/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
