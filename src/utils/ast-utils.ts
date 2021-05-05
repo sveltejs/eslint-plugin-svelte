@@ -103,14 +103,16 @@ export function findAttribute<N extends string>(
   node:
     | SvAST.SvelteElement
     | SvAST.SvelteScriptElement
-    | SvAST.SvelteStyleElement,
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
   name: N,
 ):
   | (SvAST.SvelteAttribute & {
       key: SvAST.SvelteAttribute["key"] & { name: N }
     })
   | null {
-  for (const attr of node.attributes) {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
     if (attr.type === "SvelteAttribute") {
       if (attr.key.name === name) {
         return attr as never
@@ -126,14 +128,16 @@ export function findShorthandAttribute<N extends string>(
   node:
     | SvAST.SvelteElement
     | SvAST.SvelteScriptElement
-    | SvAST.SvelteStyleElement,
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
   name: N,
 ):
   | (SvAST.SvelteShorthandAttribute & {
       key: SvAST.SvelteShorthandAttribute["key"] & { name: N }
     })
   | null {
-  for (const attr of node.attributes) {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
     if (attr.type === "SvelteShorthandAttribute") {
       if (attr.key.name === name) {
         return attr as never
@@ -150,14 +154,16 @@ export function findBindDirective<N extends string>(
   node:
     | SvAST.SvelteElement
     | SvAST.SvelteScriptElement
-    | SvAST.SvelteStyleElement,
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
   name: N,
 ):
   | (SvAST.SvelteBindingDirective & {
       name: SvAST.SvelteBindingDirective["name"] & { name: N }
     })
   | null {
-  for (const attr of node.attributes) {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
     if (attr.type === "SvelteDirective") {
       if (attr.kind === "Binding" && attr.name.name === name) {
         return attr as never
@@ -175,7 +181,7 @@ export function getStaticAttributeValue(
 ): string | null {
   let str = ""
   for (const value of node.value) {
-    if (value.type === "SvelteText") {
+    if (value.type === "SvelteLiteral") {
       str += value.value
     } else {
       return null

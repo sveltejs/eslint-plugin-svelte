@@ -69,7 +69,7 @@ export default createRule("button-has-type", {
       node:
         | AST.SvelteAttribute
         | AST.SvelteBindingDirective
-        | AST.SvelteElement,
+        | AST.SvelteStartTag,
       messageId: string,
       data: Record<string, string> = {},
     ) {
@@ -110,14 +110,12 @@ export default createRule("button-has-type", {
     }
 
     return {
-      "SvelteElement[name.name='button']"(node: AST.SvelteElement) {
+      "SvelteElement[name.name='button'] > SvelteStartTag"(
+        node: AST.SvelteStartTag,
+      ) {
         const typeAttr = findAttribute(node, "type")
         if (typeAttr) {
           validateAttribute(typeAttr)
-          return
-        }
-        const typeShortAttr = findShorthandAttribute(node, "type")
-        if (typeShortAttr) {
           return
         }
         const typeDir = findBindDirective(node, "type")
@@ -125,11 +123,13 @@ export default createRule("button-has-type", {
           validateDirective(typeDir)
           return
         }
+        const typeShortAttr = findShorthandAttribute(node, "type")
+        if (typeShortAttr) {
+          return
+        }
 
         for (const attr of node.attributes) {
-          if (attr.type === "SvelteShorthandAttribute") {
-            if (attr.key.name === "type") return
-          } else if (attr.type === "SvelteSpreadAttribute") {
+          if (attr.type === "SvelteSpreadAttribute") {
             return
           }
         }

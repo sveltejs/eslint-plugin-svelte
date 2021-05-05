@@ -23,7 +23,7 @@ function hasSecureRel(
   if (attr) {
     const tags = []
     for (const value of attr.value) {
-      if (value.type === "SvelteText") {
+      if (value.type === "SvelteLiteral") {
         tags.push(...value.value.toLowerCase().split(" "))
       }
     }
@@ -43,7 +43,7 @@ function hasExternalLink(node: AST.SvelteAttribute["parent"]) {
       attr.type === "SvelteAttribute" &&
       attr.key.name === "href" &&
       attr.value.length >= 1 &&
-      attr.value[0].type === "SvelteText" &&
+      attr.value[0].type === "SvelteLiteral" &&
       /^(?:\w+:|\/\/)/.test(attr.value[0].value),
   )
 }
