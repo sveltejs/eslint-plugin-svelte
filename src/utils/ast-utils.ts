@@ -1,5 +1,6 @@
 import type { ASTNode, SourceCode } from "../types"
 import type * as ESTree from "estree"
+import type { AST as SvAST } from "svelte-eslint-parser"
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -93,4 +94,98 @@ export function needParentheses(
     return node.type === "FunctionExpression"
   }
   return false
+}
+
+/**
+ * Find the attribute from the given element node
+ */
+export function findAttribute<N extends string>(
+  node:
+    | SvAST.SvelteElement
+    | SvAST.SvelteScriptElement
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
+  name: N,
+):
+  | (SvAST.SvelteAttribute & {
+      key: SvAST.SvelteAttribute["key"] & { name: N }
+    })
+  | null {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
+    if (attr.type === "SvelteAttribute") {
+      if (attr.key.name === name) {
+        return attr as never
+      }
+    }
+  }
+  return null
+}
+/**
+ * Find the shorthand attribute from the given element node
+ */
+export function findShorthandAttribute<N extends string>(
+  node:
+    | SvAST.SvelteElement
+    | SvAST.SvelteScriptElement
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
+  name: N,
+):
+  | (SvAST.SvelteShorthandAttribute & {
+      key: SvAST.SvelteShorthandAttribute["key"] & { name: N }
+    })
+  | null {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
+    if (attr.type === "SvelteShorthandAttribute") {
+      if (attr.key.name === name) {
+        return attr as never
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * Find the bind directive from the given element node
+ */
+export function findBindDirective<N extends string>(
+  node:
+    | SvAST.SvelteElement
+    | SvAST.SvelteScriptElement
+    | SvAST.SvelteStyleElement
+    | SvAST.SvelteStartTag,
+  name: N,
+):
+  | (SvAST.SvelteBindingDirective & {
+      name: SvAST.SvelteBindingDirective["name"] & { name: N }
+    })
+  | null {
+  const startTag = node.type === "SvelteStartTag" ? node : node.startTag
+  for (const attr of startTag.attributes) {
+    if (attr.type === "SvelteDirective") {
+      if (attr.kind === "Binding" && attr.name.name === name) {
+        return attr as never
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * Get the static attribute value from given attribute
+ */
+export function getStaticAttributeValue(
+  node: SvAST.SvelteAttribute,
+): string | null {
+  let str = ""
+  for (const value of node.value) {
+    if (value.type === "SvelteLiteral") {
+      str += value.value
+    } else {
+      return null
+    }
+  }
+  return str
 }

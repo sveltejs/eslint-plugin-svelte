@@ -147,7 +147,7 @@ export default createRule("prefer-class-directive", {
      * Returns all possible strings.
      */
     function getStrings(node: AST.SvelteAttribute["value"][number]) {
-      if (node.type === "SvelteText") {
+      if (node.type === "SvelteLiteral") {
         return [node.value]
       }
       if (node.expression.type === "ConditionalExpression") {
@@ -300,8 +300,10 @@ export default createRule("prefer-class-directive", {
     }
 
     return {
-      "SvelteElement > SvelteAttribute"(
-        node: AST.SvelteAttribute & { parent: AST.SvelteElement },
+      "SvelteElement > SvelteStartTag > SvelteAttribute"(
+        node: AST.SvelteAttribute & {
+          parent: AST.SvelteStartTag & { parent: AST.SvelteElement }
+        },
       ) {
         if (node.key.name !== "class") {
           return

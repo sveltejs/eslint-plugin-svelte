@@ -133,6 +133,7 @@ The rules with the following star :star: are included in the configs.
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type.html) | disallow usage of button without an explicit type attribute |  |
 | [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags.html) | disallow the use of `{@debug}` | :star: |
 | [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags.html) | disallow use of `{@html}` to prevent XSS attack | :star: |
 | [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks.html) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
