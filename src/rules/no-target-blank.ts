@@ -1,13 +1,16 @@
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
+import {
+  findAttribute,
+  findBindDirective,
+  findShorthandAttribute,
+  getStaticAttributeValue,
+} from "../utils/ast-utils"
 
 /** Checks wether the given attr node is target="_blank"  */
 function isTargetBlank(node: AST.SvelteAttribute) {
   return (
-    node.key.name === "target" &&
-    node.value.length === 1 &&
-    node.value[0].type === "SvelteText" &&
-    node.value[0].value === "_blank"
+    node.key.name === "target" && getStaticAttributeValue(node) === "_blank"
   )
 }
 
@@ -16,20 +19,21 @@ function hasSecureRel(
   node: AST.SvelteAttribute["parent"],
   allowReferrer: boolean,
 ) {
-  return node.attributes.some((attr) => {
-    if (attr.type === "SvelteAttribute" && attr.key.name === "rel") {
-      const tags =
-        attr.value.length === 1 &&
-        attr.value[0].type === "SvelteText" &&
-        attr.value[0].value.toLowerCase().split(" ")
-      return (
-        tags &&
-        tags.includes("noopener") &&
-        (allowReferrer || tags.includes("noreferrer"))
-      )
+  const attr = findAttribute(node, "rel")
+  if (attr) {
+    const tags = []
+    for (const value of attr.value) {
+      if (value.type === "SvelteText") {
+        tags.push(...value.value.toLowerCase().split(" "))
+      }
     }
-    return false
-  })
+    return (
+      tags &&
+      tags.includes("noopener") &&
+      (allowReferrer || tags.includes("noreferrer"))
+    )
+  }
+  return false
 }
 
 /** Checks wether the given element node has external link */
@@ -38,7 +42,7 @@ function hasExternalLink(node: AST.SvelteAttribute["parent"]) {
     (attr) =>
       attr.type === "SvelteAttribute" &&
       attr.key.name === "href" &&
-      attr.value.length === 1 &&
+      attr.value.length >= 1 &&
       attr.value[0].type === "SvelteText" &&
       /^(?:\w+:|\/\/)/.test(attr.value[0].value),
   )
@@ -46,12 +50,13 @@ function hasExternalLink(node: AST.SvelteAttribute["parent"]) {
 
 /** Checks wether the given element node has dynamic link */
 function hasDynamicLink(node: AST.SvelteAttribute["parent"]) {
-  return node.attributes.some(
-    (attr) =>
-      (attr.type === "SvelteAttribute" &&
-        attr.key.name === "href" &&
-        attr.value.some((v) => v.type === "SvelteMustacheTag")) ||
-      (attr.type === "SvelteShorthandAttribute" && attr.key.name === "href"),
+  const attr = findAttribute(node, "href")
+  if (attr) {
+    return attr.value.some((v) => v.type === "SvelteMustacheTag")
+  }
+  return (
+    Boolean(findShorthandAttribute(node, "href")) ||
+    Boolean(findBindDirective(node, "href"))
   )
 }
 
