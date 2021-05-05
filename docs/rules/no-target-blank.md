@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-target-blank"
 description: "disallow target=\"_blank\" attribute without rel=\"noopener noreferrer\""
+since: "v0.0.4"
 ---
 
 # @ota-meshi/svelte/no-target-blank
 
 > disallow target="_blank" attribute without rel="noopener noreferrer"
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -129,6 +128,10 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 ```
 
 </eslint-code-block>
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.4
 
 ## :mag: Implementation
 

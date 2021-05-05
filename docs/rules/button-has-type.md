@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/button-has-type"
 description: "disallow usage of button without an explicit type attribute"
+since: "v0.0.4"
 ---
 
 # @ota-meshi/svelte/button-has-type
 
 > disallow usage of button without an explicit type attribute
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -61,6 +60,10 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 - `reset` ... `<button type="reset"></button>`
   - `true` (default) ... allow value `reset`.
   - `false` ... disallow value `reset`.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.4
 
 ## :mag: Implementation
 

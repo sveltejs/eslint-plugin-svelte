@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-useless-mustaches"
 description: "disallow unnecessary mustache interpolations"
+since: "v0.0.4"
 ---
 
 # @ota-meshi/svelte/no-useless-mustaches
 
 > disallow unnecessary mustache interpolations
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -88,6 +88,10 @@ Lorem ipsum {foo}
 ```
 
 </eslint-code-block>
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.4
 
 ## :mag: Implementation
 
