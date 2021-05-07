@@ -9,4 +9,13 @@ module.exports = {
       },
     },
   ],
+  rules: {
+    "no-undef": "off",
+    "require-jsdoc": "off",
+    "no-inner-declarations": "off",
+    "no-unused-vars": "off",
+    "no-empty-function": "off",
+    "one-var": "off",
+    "func-style": "off",
+  },
 }
