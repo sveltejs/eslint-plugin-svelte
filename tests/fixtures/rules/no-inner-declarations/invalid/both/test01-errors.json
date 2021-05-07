@@ -6,32 +6,32 @@
   },
   {
     "message": "Move variable declaration to program root.",
-    "line": 5,
+    "line": 6,
     "column": 12
   },
   {
     "message": "Move variable declaration to program root.",
-    "line": 6,
+    "line": 8,
     "column": 32
   },
   {
     "message": "Move function declaration to program root.",
-    "line": 8,
+    "line": 10,
     "column": 5
   },
   {
     "message": "Move variable declaration to function body root.",
-    "line": 11,
+    "line": 13,
     "column": 9
   },
   {
     "message": "Move function declaration to program root.",
-    "line": 16,
+    "line": 18,
     "column": 5
   },
   {
     "message": "Move variable declaration to function body root.",
-    "line": 17,
+    "line": 20,
     "column": 16
   }
 ]

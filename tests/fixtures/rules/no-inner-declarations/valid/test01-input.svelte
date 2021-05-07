@@ -7,16 +7,20 @@
     function doSomething() {}
   })()
   if (test) {
+    // eslint-disable-next-line no-var -- test
     var fn = function () {}
   }
   if (test) {
+    // eslint-disable-next-line no-var, no-redeclare -- test
     var fn = function expr() {}
   }
   function decl() {
-    let fn = function expr() {}
+    // eslint-disable-next-line no-var -- test
+    var fn = function expr() {}
   }
   function decl2(arg) {
-    let fn
+    // eslint-disable-next-line no-var -- test
+    var fn
     if (arg) {
       fn = function () {}
     }

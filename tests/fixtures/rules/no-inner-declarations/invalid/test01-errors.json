@@ -6,12 +6,12 @@
   },
   {
     "message": "Move function declaration to program root.",
-    "line": 8,
+    "line": 10,
     "column": 5
   },
   {
     "message": "Move function declaration to program root.",
-    "line": 15,
+    "line": 18,
     "column": 5
   }
 ]
