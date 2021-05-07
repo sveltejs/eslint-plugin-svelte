@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-inner-declarations"
 description: "disallow variable or `function` declarations in nested blocks"
+since: "v0.0.8"
 ---
 
 # @ota-meshi/svelte/no-inner-declarations
 
 > disallow variable or `function` declarations in nested blocks
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -63,6 +63,10 @@ Same as [no-inner-declarations] rule option. See [here](https://eslint.org/docs/
 - [no-inner-declarations]
 
 [no-inner-declarations]: https://eslint.org/docs/rules/no-inner-declarations
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.8
 
 ## :mag: Implementation
 
