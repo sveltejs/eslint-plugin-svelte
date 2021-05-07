@@ -1,0 +1,37 @@
+[
+  {
+    "message": "Move function declaration to program root.",
+    "line": 3,
+    "column": 5
+  },
+  {
+    "message": "Move variable declaration to program root.",
+    "line": 5,
+    "column": 12
+  },
+  {
+    "message": "Move variable declaration to program root.",
+    "line": 6,
+    "column": 32
+  },
+  {
+    "message": "Move function declaration to program root.",
+    "line": 8,
+    "column": 5
+  },
+  {
+    "message": "Move variable declaration to function body root.",
+    "line": 11,
+    "column": 9
+  },
+  {
+    "message": "Move function declaration to program root.",
+    "line": 16,
+    "column": 5
+  },
+  {
+    "message": "Move variable declaration to function body root.",
+    "line": 17,
+    "column": 16
+  }
+]

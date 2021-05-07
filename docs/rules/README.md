@@ -15,6 +15,7 @@ The rules with the following star :star: are included in the `plugin:@ota-meshi/
 | [@ota-meshi/svelte/no-at-debug-tags](./no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
 | [@ota-meshi/svelte/no-at-html-tags](./no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack | :star: |
 | [@ota-meshi/svelte/no-dupe-else-if-blocks](./no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
+| [@ota-meshi/svelte/no-inner-declarations](./no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
 | [@ota-meshi/svelte/no-target-blank](./no-target-blank.md) | disallow target="_blank" attribute without rel="noopener noreferrer" |  |
 | [@ota-meshi/svelte/no-useless-mustaches](./no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 | [@ota-meshi/svelte/prefer-class-directive](./prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |

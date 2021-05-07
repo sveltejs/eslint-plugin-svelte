@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Move function declaration to program root.",
+    "line": 3,
+    "column": 5
+  },
+  {
+    "message": "Move function declaration to program root.",
+    "line": 8,
+    "column": 5
+  },
+  {
+    "message": "Move function declaration to program root.",
+    "line": 15,
+    "column": 5
+  }
+]
