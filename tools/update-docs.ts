@@ -124,7 +124,8 @@ class DocFile {
 
   public updateFooter() {
     const { ruleName, extensionRule } = this.rule.meta.docs
-    const footerPattern = /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s
+    const footerPattern =
+      /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s
     const footer = `${
       this.since
         ? `## :rocket: Version
