@@ -177,9 +177,10 @@ export interface SourceCode {
 
   getAllComments(): AST.Comment[]
 
-  getComments(
-    node: NodeOrToken,
-  ): { leading: AST.Comment[]; trailing: AST.Comment[] }
+  getComments(node: NodeOrToken): {
+    leading: AST.Comment[]
+    trailing: AST.Comment[]
+  }
 
   getJSDocComment(node: NodeOrToken): AST.Comment | null
 
