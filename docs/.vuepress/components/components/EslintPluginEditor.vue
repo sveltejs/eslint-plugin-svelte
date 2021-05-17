@@ -7,6 +7,8 @@
     class="eslint-code-block"
     :language="language"
     :filename="fileName"
+    :preprocess="preprocess"
+    :postprocess="postprocess"
     :dark="dark"
     :format="format"
     :fix="fix"
@@ -64,6 +66,8 @@ export default {
         insertSpaces: true,
         tabSize: 2,
       },
+      preprocess: plugin.processors[".svelte"].preprocess,
+      postprocess: plugin.processors[".svelte"].postprocess,
     }
   },
 

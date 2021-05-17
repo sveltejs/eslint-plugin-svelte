@@ -86,9 +86,15 @@ class DocFile {
       }
     } else {
       if (recommended) {
-        notes.push(
-          '- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.',
-        )
+        if (recommended === "base") {
+          notes.push(
+            '- :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.',
+          )
+        } else {
+          notes.push(
+            '- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.',
+          )
+        }
       }
     }
     if (fixable) {
