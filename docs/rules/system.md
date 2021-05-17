@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/system"
 description: "system rule for working this plugin"
+since: "v0.0.13"
 ---
 
 # @ota-meshi/svelte/system
 
 > system rule for working this plugin
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -19,6 +19,10 @@ This rule is a system rule for working the this plugin. This rule does not repor
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.13
 
 ## :mag: Implementation
 

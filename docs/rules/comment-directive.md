@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/comment-directive"
 description: "support comment-directives in HTML template"
+since: "v0.0.13"
 ---
 
 # @ota-meshi/svelte/comment-directive
 
 > support comment-directives in HTML template
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
 
 Sole purpose of this rule is to provide `eslint-disable` functionality in the template HTML.
@@ -71,6 +71,10 @@ Nothing.
 - [Disabling rules with inline comments]
 
 [disabling rules with inline comments]: https://eslint.org/docs/user-guide/configuring#disabling-rules-with-inline-comments
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.13
 
 ## :mag: Implementation
 
