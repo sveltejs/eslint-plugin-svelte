@@ -4,8 +4,7 @@ const COMPUTED = Symbol()
 const ALL = Symbol()
 
 type Define = {
-  kind: string
-  loc: AST.SourceLocation
+  loc: AST.Position
 }
 type Block = {
   loc: AST.Position
@@ -89,7 +88,7 @@ export class CommentDirectives {
 
     if (reportUnusedDisableDirectives) {
       const usedDirectiveKeys = new Set(
-        [...usedDirectives].map((d) => locToKey(d.define.loc.start)),
+        [...usedDirectives].map((d) => locToKey(d.define.loc)),
       )
       filteredMessages = filteredMessages.filter((m) => {
         if (m.ruleId !== this.ruleId) {

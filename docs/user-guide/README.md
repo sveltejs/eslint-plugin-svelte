@@ -57,6 +57,30 @@ If you are using [eslint-plugin-svelte3] you need to remove it.
 
 :::
 
+#### settings["@ota-meshi/svelte"]
+
+You can change the behavior of this plugin with some settings.
+
+- `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
+  For example, set rules on the template that cannot avoid false positives.
+
+e.g.
+
+```js
+module.exports = {
+  // ...
+  settings: {
+    "@ota-meshi/svelte": {
+      ignoreWarnings: [
+        "@typescript-eslint/no-unsafe-assignment",
+        "@typescript-eslint/no-unsafe-member-access",
+      ],
+    },
+  },
+  // ...
+}
+```
+
 ### Running ESLint from the command line
 
 If you want to run `eslint` from the command line, make sure you include the `.svelte` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
