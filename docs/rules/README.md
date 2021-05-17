@@ -21,3 +21,4 @@ The rules with the following star :star: are included in the `plugin:@ota-meshi/
 | [@ota-meshi/svelte/no-useless-mustaches](./no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 | [@ota-meshi/svelte/prefer-class-directive](./prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](./spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| [@ota-meshi/svelte/system](./system.md) | system rule for working this plugin | :star: |

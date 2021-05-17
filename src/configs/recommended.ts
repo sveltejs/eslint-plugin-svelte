@@ -11,5 +11,6 @@ export = {
     "@ota-meshi/svelte/no-at-html-tags": "error",
     "@ota-meshi/svelte/no-dupe-else-if-blocks": "error",
     "@ota-meshi/svelte/no-inner-declarations": "error",
+    "@ota-meshi/svelte/system": "error",
   },
 }

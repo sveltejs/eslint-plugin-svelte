@@ -9,6 +9,7 @@ import noTargetBlank from "../rules/no-target-blank"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import spacedHtmlComment from "../rules/spaced-html-comment"
+import system from "../rules/system"
 
 export const rules = [
   buttonHasType,
@@ -21,4 +22,5 @@ export const rules = [
   noUselessMustaches,
   preferClassDirective,
   spacedHtmlComment,
+  system,
 ] as RuleModule[]

@@ -99,6 +99,30 @@ If you are using [eslint-plugin-svelte3] you need to remove it.
 
 :::
 
+#### settings["@ota-meshi/svelte"]
+
+You can change the behavior of this plugin with some settings.
+
+- `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
+  For example, set rules on the template that cannot avoid false positives.
+
+e.g.
+
+```js
+module.exports = {
+  // ...
+  settings: {
+    "@ota-meshi/svelte": {
+      ignoreWarnings: [
+        "@typescript-eslint/no-unsafe-assignment",
+        "@typescript-eslint/no-unsafe-member-access",
+      ],
+    },
+  },
+  // ...
+}
+```
+
 ### Running ESLint from the command line
 
 If you want to run `eslint` from the command line, make sure you include the `.svelte` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
@@ -138,18 +162,19 @@ The rules with the following star :star: are included in the configs.
 
 <!--RULES_TABLE_START-->
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type.html) | disallow usage of button without an explicit type attribute |  |
-| [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive.html) | support comment-directives in HTML template | :star: |
-| [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags.html) | disallow the use of `{@debug}` | :star: |
-| [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags.html) | disallow use of `{@html}` to prevent XSS attack | :star: |
-| [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks.html) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
-| [@ota-meshi/svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations.html) | disallow variable or `function` declarations in nested blocks | :star: |
-| [@ota-meshi/svelte/no-target-blank](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-target-blank.html) | disallow target="_blank" attribute without rel="noopener noreferrer" |  |
-| [@ota-meshi/svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches.html) | disallow unnecessary mustache interpolations | :wrench: |
-| [@ota-meshi/svelte/prefer-class-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-class-directive.html) | require class directives instead of ternary expressions | :wrench: |
-| [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment.html) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| Rule ID                                                                                                                        | Description                                                                        |          |
+| :----------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
+| [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type.html)               | disallow usage of button without an explicit type attribute                        |          |
+| [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive.html)           | support comment-directives in HTML template                                        | :star:   |
+| [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags.html)             | disallow the use of `{@debug}`                                                     | :star:   |
+| [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags.html)               | disallow use of `{@html}` to prevent XSS attack                                    | :star:   |
+| [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks.html) | disallow duplicate conditions in `{#if}` / `{:else if}` chains                     | :star:   |
+| [@ota-meshi/svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations.html)   | disallow variable or `function` declarations in nested blocks                      | :star:   |
+| [@ota-meshi/svelte/no-target-blank](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-target-blank.html)               | disallow target="\_blank" attribute without rel="noopener noreferrer"              |          |
+| [@ota-meshi/svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches.html)     | disallow unnecessary mustache interpolations                                       | :wrench: |
+| [@ota-meshi/svelte/prefer-class-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-class-directive.html) | require class directives instead of ternary expressions                            | :wrench: |
+| [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment.html)       | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system.html)                                 | system rule for working this plugin                                                | :star:   |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

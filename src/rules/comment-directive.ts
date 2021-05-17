@@ -121,8 +121,7 @@ export default createRule("comment-directive", {
                 })
               }
               directives.disableBlock(comment.loc.start, rule.ruleId, {
-                kind: parsed.type,
-                loc: rule.loc,
+                loc: rule.loc.start,
               })
             }
           } else {
@@ -134,8 +133,7 @@ export default createRule("comment-directive", {
               })
             }
             directives.disableBlock(comment.loc.start, ALL_RULES, {
-              kind: parsed.type,
-              loc: comment.loc,
+              loc: comment.loc.start,
             })
           }
         } else {
@@ -149,8 +147,7 @@ export default createRule("comment-directive", {
                 })
               }
               directives.enableBlock(comment.loc.start, rule.ruleId, {
-                kind: parsed.type,
-                loc: rule.loc,
+                loc: rule.loc.start,
               })
             }
           } else {
@@ -162,8 +159,7 @@ export default createRule("comment-directive", {
               })
             }
             directives.enableBlock(comment.loc.start, ALL_RULES, {
-              kind: parsed.type,
-              loc: comment.loc,
+              loc: comment.loc.start,
             })
           }
         }
@@ -193,8 +189,7 @@ export default createRule("comment-directive", {
               })
             }
             directives.disableLine(line, rule.ruleId, {
-              kind: parsed.type,
-              loc: rule.loc,
+              loc: rule.loc.start,
             })
           }
         } else {
@@ -206,8 +201,7 @@ export default createRule("comment-directive", {
             })
           }
           directives.disableLine(line, ALL_RULES, {
-            kind: parsed.type,
-            loc: comment.loc,
+            loc: comment.loc.start,
           })
         }
       }
@@ -220,8 +214,7 @@ export default createRule("comment-directive", {
       },
       SvelteScriptElement(node) {
         directives.enableBlock(node.startTag.loc.end, ALL_RULES, {
-          kind: "system",
-          loc: node.loc,
+          loc: node.loc.start,
         })
       },
     }
