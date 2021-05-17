@@ -22,7 +22,7 @@ export default createRule("system", {
 
     const ignoreWarnings =
       context.settings?.["@ota-meshi/svelte"]?.ignoreWarnings
-    if (!Array.isArray(ignoreWarnings)) {
+    if (ignoreWarnings && !Array.isArray(ignoreWarnings)) {
       context.report({
         loc: { line: 1, column: 0 },
         message:
@@ -31,7 +31,7 @@ export default createRule("system", {
       return {}
     }
     const ignoreTests: ((ruleId: string) => boolean)[] = []
-    for (const ignoreWarning of ignoreWarnings) {
+    for (const ignoreWarning of ignoreWarnings || []) {
       if (typeof ignoreWarning !== "string") {
         context.report({
           loc: { line: 1, column: 0 },
