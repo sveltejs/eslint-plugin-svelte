@@ -125,4 +125,38 @@ describe("ignore-warnings", () => {
       ],
     )
   })
+
+  it("without settings", async () => {
+    const code = `
+      {@html a+b}
+      {@debug a}
+      <script>
+        a+b;
+      </script>
+      `
+
+    const linter = new eslint.ESLint({
+      plugins: {
+        "@ota-meshi/svelte": plugin,
+      },
+      baseConfig: {
+        parser: require.resolve("svelte-eslint-parser"),
+        parserOptions: {
+          ecmaVersion: 2020,
+        },
+        plugins: ["@ota-meshi/svelte"],
+        rules: {
+          "@ota-meshi/svelte/system": "error",
+        },
+      },
+      useEslintrc: false,
+    })
+    const result = await linter.lintText(code, { filePath: "test.svelte" })
+    const messages = result[0].messages
+
+    assert.deepStrictEqual(
+      messages.map((m) => ({ ruleId: m.ruleId, line: m.line })),
+      [],
+    )
+  })
 })
