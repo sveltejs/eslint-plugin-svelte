@@ -53,7 +53,7 @@ export interface RuleModule {
 export interface RuleMetaData {
   docs: {
     description: string
-    recommended: boolean
+    recommended: boolean | "base"
     extensionRule?: string
     url: string
     ruleId: string
@@ -76,7 +76,7 @@ export interface PartialRuleModule {
 export interface PartialRuleMetaData {
   docs: {
     description: string
-    recommended: boolean
+    recommended: boolean | "base"
     extensionRule?: string
     replacedBy?: string[]
     default?: "error" | "warn"
