@@ -47,7 +47,7 @@
   "homepage": "https://github.com/ota-meshi/eslint-plugin-svelte#readme",
   "dependencies": {
     "debug": "^4.3.1",
-    "svelte-eslint-parser": "^0.0.15"
+    "svelte-eslint-parser": "^0.0.16"
   },
   "peerDependencies": {
     "eslint": "^7.0.0",
