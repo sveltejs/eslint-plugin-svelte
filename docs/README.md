@@ -15,7 +15,6 @@ You can check on the [Online DEMO](./playground/README.md).
 [![NPM downloads](https://img.shields.io/npm/dy/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
 [![NPM downloads](https://img.shields.io/npm/dt/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
-[![Coverage Status](https://coveralls.io/repos/github/ota-meshi/eslint-plugin-svelte/badge.svg?branch=main)](https://coveralls.io/github/ota-meshi/eslint-plugin-svelte?branch=main)
 
 ## :name_badge: What is this plugin?
 
