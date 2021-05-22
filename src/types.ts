@@ -202,72 +202,72 @@ export interface SourceCode {
 
   getFirstToken(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getFirstToken"]>[1],
   ): AST.Token | AST.Comment | null
 
   getFirstTokens(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getFirstTokens"]>[1],
   ): (AST.Token | AST.Comment)[]
 
   getLastToken(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getLastToken"]>[1],
   ): AST.Token | AST.Comment | null
 
   getLastTokens(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getLastTokens"]>[1],
   ): (AST.Token | AST.Comment)[]
 
   getTokenBefore(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getTokenBefore"]>[1],
   ): AST.Token | AST.Comment | null
 
   getTokensBefore(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getTokensBefore"]>[1],
   ): (AST.Token | AST.Comment)[]
 
   getTokenAfter(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getTokenAfter"]>[1],
   ): AST.Token | AST.Comment | null
 
   getTokensAfter(
     node: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getTokensAfter"]>[1],
   ): (AST.Token | AST.Comment)[]
 
   getFirstTokenBetween(
     left: NodeOrToken,
     right: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getFirstTokenBetween"]>[2],
   ): AST.Token | AST.Comment | null
 
   getFirstTokensBetween(
     left: NodeOrToken,
     right: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getFirstTokensBetween"]>[2],
   ): (AST.Token | AST.Comment)[]
 
   getLastTokenBetween(
     left: NodeOrToken,
     right: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithSkipOptions,
+    options?: Parameters<ESLintSourceCode["getLastTokenBetween"]>[2],
   ): AST.Token | AST.Comment | null
 
   getLastTokensBetween(
     left: NodeOrToken,
     right: NodeOrToken,
-    options?: ESLintSourceCode.CursorWithCountOptions,
+    options?: Parameters<ESLintSourceCode["getLastTokensBetween"]>[2],
   ): (AST.Token | AST.Comment)[]
 
   getTokensBetween(
     left: NodeOrToken,
     right: NodeOrToken,
-    padding?: ESLintSourceCode.CursorWithCountOptions,
+    padding?: Parameters<ESLintSourceCode["getTokensBetween"]>[2],
   ): (AST.Token | AST.Comment)[]
 
   getTokens(
@@ -277,7 +277,7 @@ export interface SourceCode {
   ): AST.Token[]
   getTokens(
     node: NodeOrToken,
-    options: ESLintSourceCode.CursorWithCountOptions,
+    options: Parameters<ESLintSourceCode["getTokens"]>[1],
   ): (AST.Token | AST.Comment)[]
 
   commentsExistBetween(left: NodeOrToken, right: NodeOrToken): boolean
