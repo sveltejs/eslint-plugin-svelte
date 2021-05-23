@@ -57,6 +57,69 @@ If you are using [eslint-plugin-svelte3] you need to remove it.
 
 :::
 
+#### Parser Configuration
+
+If you have specified a parser, you need to configure a parser for `.svelte`.
+
+For example, if you are using the `"@typescript-eslint/parser"`, configure it as follows:
+
+```js
+module.exports = {
+  // ...
+  parser: "@typescript-eslint/parser",
+  // Add an `overrides` section to add a parser configuration for svelte.
+  overrides: [
+    {
+      files: ["*.svelte"],
+      parser: "svelte-eslint-parser",
+    },
+  ],
+  // ...
+}
+```
+
+If you want to use TypeScript in `<script>` of `.svelte`, you need to add more `parserOptions` configuration.
+
+```js
+module.exports = {
+  parser: "@typescript-eslint/parser",
+  overrides: [
+    {
+      files: ["*.svelte"],
+      parser: "svelte-eslint-parser",
+      // Parse the script in `.svelte` as TypeScript by adding the following configuration.
+      parserOptions: {
+        parser: "@typescript-eslint/parser",
+      },
+    },
+  ],
+}
+```
+
+If you have a mix of TypeScript and JavaScript in your project, use a multiple parser configuration.
+
+```js
+module.exports = {
+  parser: "@typescript-eslint/parser",
+  overrides: [
+    {
+      files: ["*.svelte"],
+      parser: "svelte-eslint-parser",
+      parserOptions: {
+        parser: {
+          // Specify a parser for each lang.
+          ts: "@typescript-eslint/parser",
+          js: "espree",
+          typescript: "@typescript-eslint/parser",
+        },
+      },
+    },
+  ],
+}
+```
+
+See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+
 #### settings["@ota-meshi/svelte"]
 
 You can change the behavior of this plugin with some settings.
@@ -112,6 +175,8 @@ Example **.vscode/settings.json**:
 
 ## :question: FAQ
 
-- TODO
+### Parsing the `.svelte` file fails
+
+You should check the [parser configuration](#parser-configuration).
 
 [eslint-plugin-svelte3]: https://github.com/sveltejs/eslint-plugin-svelte3
