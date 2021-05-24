@@ -61,38 +61,51 @@ If you are using [eslint-plugin-svelte3] you need to remove it.
 
 If you have specified a parser, you need to configure a parser for `.svelte`.
 
-For example, if you are using the `"@typescript-eslint/parser"`, configure it as follows:
+For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
 
 ```js
 module.exports = {
   // ...
-  parser: "@typescript-eslint/parser",
+  extends: ["plugin:@ota-meshi/svelte/recommended"],
+  // ...
+  parser: "@babel/eslint-parser",
   // Add an `overrides` section to add a parser configuration for svelte.
   overrides: [
     {
       files: ["*.svelte"],
       parser: "svelte-eslint-parser",
     },
+    // ...
   ],
   // ...
 }
 ```
 
-If you want to use TypeScript in `<script>` of `.svelte`, you need to add more `parserOptions` configuration.
+For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `<script>` of `.svelte`, you need to add more `parserOptions` configuration.
 
 ```js
 module.exports = {
+  // ...
+  extends: ["plugin:@ota-meshi/svelte/recommended"],
+  // ...
   parser: "@typescript-eslint/parser",
+  parserOptions: {
+    // ...
+    project: "path/to/your/tsconfig.json",
+    extraFileExtensions: [".svelte"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
+  },
   overrides: [
     {
       files: ["*.svelte"],
       parser: "svelte-eslint-parser",
-      // Parse the script in `.svelte` as TypeScript by adding the following configuration.
+      // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
       parserOptions: {
         parser: "@typescript-eslint/parser",
       },
     },
+    // ...
   ],
+  // ...
 }
 ```
 
@@ -100,7 +113,7 @@ If you have a mix of TypeScript and JavaScript in your project, use a multiple p
 
 ```js
 module.exports = {
-  parser: "@typescript-eslint/parser",
+  // ...
   overrides: [
     {
       files: ["*.svelte"],
@@ -114,7 +127,9 @@ module.exports = {
         },
       },
     },
+    // ...
   ],
+  // ...
 }
 ```
 
