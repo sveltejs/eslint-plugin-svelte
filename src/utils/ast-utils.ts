@@ -159,13 +159,15 @@ export function findBindDirective<N extends string>(
   name: N,
 ):
   | (SvAST.SvelteBindingDirective & {
-      name: SvAST.SvelteBindingDirective["name"] & { name: N }
+      key: SvAST.SvelteDirectiveKey & {
+        name: SvAST.SvelteDirectiveKey["name"] & { name: N }
+      }
     })
   | null {
   const startTag = node.type === "SvelteStartTag" ? node : node.startTag
   for (const attr of startTag.attributes) {
     if (attr.type === "SvelteDirective") {
-      if (attr.kind === "Binding" && attr.name.name === name) {
+      if (attr.kind === "Binding" && attr.key.name.name === name) {
         return attr as never
       }
     }
