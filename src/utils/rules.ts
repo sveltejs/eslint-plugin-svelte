@@ -1,6 +1,7 @@
 import type { RuleModule } from "../types"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
+import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
@@ -14,6 +15,7 @@ import system from "../rules/system"
 export const rules = [
   buttonHasType,
   commentDirective,
+  maxAttributesPerLine,
   noAtDebugTags,
   noAtHtmlTags,
   noDupeElseIfBlocks,
