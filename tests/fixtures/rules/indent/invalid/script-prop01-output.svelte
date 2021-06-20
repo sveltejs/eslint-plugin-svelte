@@ -1,0 +1,33 @@
+<!-- prettier-ignore -->
+<script>
+  o
+    =
+    {
+      a
+      ,
+      [
+        b
+      ]
+        :
+        b
+      ,
+      c
+        :
+        d
+      ,
+      e
+        (
+        )
+      {
+      },
+      [
+        f
+      ]
+        (
+        )
+      {
+      }
+    }
+</script>
+
+<!--tests/fixtures/rules/indent/invalid/script-prop01-input.svelte-->

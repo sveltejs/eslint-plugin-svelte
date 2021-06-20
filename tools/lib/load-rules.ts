@@ -7,9 +7,10 @@ import fs from "fs"
  */
 function readRules() {
   const rulesLibRoot = path.resolve(__dirname, "../../src/rules")
-  const result = fs.readdirSync(rulesLibRoot)
   const rules = []
-  for (const name of result) {
+  for (const name of fs
+    .readdirSync(rulesLibRoot)
+    .filter((n) => n.endsWith(".ts"))) {
     const ruleName = name.replace(/\.ts$/u, "")
     const ruleId = `@ota-meshi/svelte/${ruleName}`
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore

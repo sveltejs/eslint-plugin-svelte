@@ -13,6 +13,7 @@ The rules with the following star :star: are included in the `plugin:@ota-meshi/
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/button-has-type](./button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [@ota-meshi/svelte/comment-directive](./comment-directive.md) | support comment-directives in HTML template | :star: |
+| [@ota-meshi/svelte/indent](./indent.md) | enforce consistent indentation | :wrench: |
 | [@ota-meshi/svelte/max-attributes-per-line](./max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
 | [@ota-meshi/svelte/no-at-debug-tags](./no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
 | [@ota-meshi/svelte/no-at-html-tags](./no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack | :star: |
