@@ -17,7 +17,7 @@ since: "v0.3.0"
 This rule enforces a consistent indentation style in `.svelte`. The default style is 2 spaces.
 
 - This rule checks all tags, also all expressions in directives and mustaches.
-- In the expressions, this rule supports ECMAScript 2020 syntaxes. It ignores unknown AST nodes, but it might be confused by non-standard syntaxes.
+- In the expressions, this rule supports ECMAScript 2021 syntaxes. It ignores unknown AST nodes, but it might be confused by non-standard syntaxes.
 
 <eslint-code-block fix>
 
