@@ -671,9 +671,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     MetaProperty(node: ESTree.MetaProperty) {
       visitor.MemberExpression(node)
     },
-    MethodDefinition(node: ESTree.MethodDefinition | ESTree.Property) {
-      const isMethod = node.type === "MethodDefinition" || node.method === true
-
+    MethodDefinition(
+      node:
+        | ESTree.MethodDefinition
+        | ESTree.Property
+        | ESTree.PropertyDefinition,
+    ) {
       const firstToken = sourceCode.getFirstToken(node)
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
       const prefixTokens = sourceCode.getTokensBetween(
@@ -706,7 +709,10 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (isMethod) {
+      if (
+        node.type === "MethodDefinition" ||
+        (node.type === "Property" && node.method === true)
+      ) {
         const leftParenToken = sourceCode.getTokenAfter(lastKeyToken)
         setOffset(leftParenToken, 1, lastKeyToken)
       } else if (node.type === "Property" && !node.shorthand) {
@@ -714,6 +720,11 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         const valueToken = sourceCode.getTokenAfter(colonToken)
 
         setOffset([colonToken, valueToken], 1, lastKeyToken)
+      } else if (node.type === "PropertyDefinition" && node.value != null) {
+        const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
+        const initToken = sourceCode.getTokenAfter(eqToken)
+
+        setOffset([eqToken, initToken], 1, lastKeyToken)
       }
     },
     Property(node: ESTree.Property) {
@@ -752,6 +763,9 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     },
     ObjectPattern(node: ESTree.ObjectPattern) {
       visitor.ObjectExpression(node)
+    },
+    PropertyDefinition(node: ESTree.PropertyDefinition) {
+      visitor.MethodDefinition(node)
     },
     ReturnStatement(node: ESTree.ReturnStatement | ESTree.ThrowStatement) {
       if (node.argument) {
@@ -925,6 +939,9 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       // noop
     },
     Literal() {
+      // noop
+    },
+    PrivateIdentifier() {
       // noop
     },
     Super() {
