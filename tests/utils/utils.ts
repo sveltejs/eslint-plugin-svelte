@@ -180,6 +180,10 @@ function writeFixtures(
         [ruleName]: ["error", ...(config.options || [])],
       },
       parser: "svelte-eslint-parser",
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: "module",
+      },
     },
     config.filename,
   )
@@ -193,7 +197,7 @@ function writeFixtures(
           column: m.column,
         })),
         null,
-        4,
+        2,
       )}\n`,
       "utf8",
     )

@@ -1,0 +1,51 @@
+<!-- prettier-ignore -->
+<script context="module">
+  export
+    *
+  from
+    "mod"
+  export
+    *
+      as
+      foo
+  from
+    "mod"
+  export
+    default
+    A
+  export
+    var
+      v
+        =
+        1
+    ;
+  let a, b
+  export
+  {
+    a
+    ,
+    b
+  }
+  export
+  {
+    a1
+    ,
+    b1
+  }
+  from
+    "mod"
+  export
+  {
+    a1
+      as
+      a2
+    ,
+    b1
+      as
+      b2
+  }
+  from
+    "mod"
+</script>
+
+<!--tests/fixtures/rules/indent/invalid/script-export01-input.svelte-->

@@ -9,7 +9,9 @@ import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 
 export type ASTNode = AST.SvelteNode | ESTree.Node
-type ASTNodeWithParent = ASTNode & { parent: ASTNode }
+type ASTNodeWithParent =
+  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNode })
+  | AST.SvelteProgram
 type ASTNodeListenerMap<T extends ASTNodeWithParent = ASTNodeWithParent> = {
   [key in ASTNodeWithParent["type"]]: T extends { type: key } ? T : never
 }
@@ -200,6 +202,7 @@ export interface SourceCode {
     options?: { includeComments?: boolean },
   ): AST.Token | AST.Comment | null
 
+  getFirstToken(node: NodeOrToken): AST.Token
   getFirstToken(
     node: NodeOrToken,
     options?: Parameters<ESLintSourceCode["getFirstToken"]>[1],
@@ -210,6 +213,7 @@ export interface SourceCode {
     options?: Parameters<ESLintSourceCode["getFirstTokens"]>[1],
   ): (AST.Token | AST.Comment)[]
 
+  getLastToken(node: NodeOrToken): AST.Token
   getLastToken(
     node: NodeOrToken,
     options?: Parameters<ESLintSourceCode["getLastToken"]>[1],
@@ -220,6 +224,7 @@ export interface SourceCode {
     options?: Parameters<ESLintSourceCode["getLastTokens"]>[1],
   ): (AST.Token | AST.Comment)[]
 
+  getTokenBefore(node: NodeOrToken): AST.Token | null
   getTokenBefore(
     node: NodeOrToken,
     options?: Parameters<ESLintSourceCode["getTokenBefore"]>[1],
@@ -230,6 +235,7 @@ export interface SourceCode {
     options?: Parameters<ESLintSourceCode["getTokensBefore"]>[1],
   ): (AST.Token | AST.Comment)[]
 
+  getTokenAfter(node: NodeOrToken): AST.Token | null
   getTokenAfter(
     node: NodeOrToken,
     options?: Parameters<ESLintSourceCode["getTokenAfter"]>[1],
