@@ -972,7 +972,7 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       if (isSemicolonToken(lastToken) && firstToken !== lastToken) {
         const next = sourceCode.getTokenAfter(lastToken)
         if (!next || lastToken.loc.start.line < next.loc.start.line) {
-          // Lone semicolons
+          // End of line semicolons
           setOffset(lastToken, 0, firstToken)
         }
       }
