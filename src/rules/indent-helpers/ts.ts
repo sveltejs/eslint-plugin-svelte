@@ -163,6 +163,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
         firstToken,
       )
     },
+    TSTupleType(node: TSESTree.TSTupleType) {
+      // [T, U]
+      setOffsetNodes(
+        context,
+        node.elementTypes,
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
     TSQualifiedName(node: TSESTree.TSQualifiedName) {
       // A.B
       const objectToken = sourceCode.getFirstToken(node)
@@ -352,7 +362,101 @@ export function defineVisitor(context: IndentContext): NodeListener {
       setOffset(consequentToken, 1, questionToken)
       setOffset(alternateToken, 1, colonToken)
     },
+    TSInterfaceDeclaration(node: TSESTree.TSInterfaceDeclaration) {
+      // interface I {}
+      const interfaceToken = sourceCode.getFirstToken(node)
+      setOffset(sourceCode.getFirstToken(node.id), 1, interfaceToken)
+      if (node.typeParameters != null) {
+        setOffset(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          sourceCode.getFirstToken(node.id),
+        )
+      }
+      if (node.extends != null && node.extends.length) {
+        const extendsToken = sourceCode.getTokenBefore(node.extends[0])!
+        setOffset(extendsToken, 1, interfaceToken)
+        setOffsetNodes(context, node.extends, extendsToken, null, 1)
+      }
+      if (node.implements != null && node.implements.length) {
+        const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
+        setOffset(implementsToken, 1, interfaceToken)
+        setOffsetNodes(context, node.implements, implementsToken, null, 1)
+      }
+      const bodyToken = sourceCode.getFirstToken(node.body)
+      setOffset(bodyToken, 0, interfaceToken)
+    },
+    TSInterfaceBody(node: TSESTree.TSInterfaceBody) {
+      setOffsetNodes(
+        context,
+        node.body,
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
+    TSClassImplements(
+      node: TSESTree.TSClassImplements | TSESTree.TSInterfaceHeritage,
+    ) {
+      // class C implements T {}
+      //                    ^
+      if (node.typeParameters) {
+        setOffset(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          sourceCode.getFirstToken(node),
+        )
+      }
+    },
+    TSInterfaceHeritage(node: TSESTree.TSInterfaceHeritage) {
+      // interface I extends E implements T {}
+      //                     ^            ^
+      visitor.TSClassImplements(node)
+    },
 
+    // ----------------------------------------------------------------------
+    // NON-STANDARD NODES
+    // ----------------------------------------------------------------------
+    ClassProperty(node: TSESTree.ClassProperty) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
+      const prefixTokens = sourceCode.getTokensBetween(
+        firstToken,
+        keyTokens.firstToken,
+      )
+      if (node.computed) {
+        prefixTokens.pop() // pop [
+      }
+      setOffset(prefixTokens, 0, firstToken)
+
+      let lastKeyToken
+      if (node.computed) {
+        const leftBracketToken = sourceCode.getTokenBefore(
+          keyTokens.firstToken,
+        )!
+        const rightBracketToken = (lastKeyToken = sourceCode.getTokenAfter(
+          keyTokens.lastToken,
+        )!)
+        setOffset(leftBracketToken, 0, firstToken)
+        setOffsetNodes(
+          context,
+          [node.key],
+          leftBracketToken,
+          rightBracketToken,
+          1,
+        )
+      } else {
+        setOffset(keyTokens.firstToken, 0, firstToken)
+        lastKeyToken = keyTokens.lastToken
+      }
+
+      if (node.value != null) {
+        const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
+        const initToken = sourceCode.getTokenAfter(eqToken)
+
+        setOffset([eqToken, initToken], 1, lastKeyToken)
+      }
+    },
     // ----------------------------------------------------------------------
     // SINGLE TOKEN NODES
     // ----------------------------------------------------------------------
@@ -400,5 +504,38 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
   }
 
-  return visitor
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  const extendsESVisitor: any = {
+    ["ClassDeclaration[implements], ClassDeclaration[typeParameters], ClassDeclaration[superTypeParameters]," +
+      "ClassExpression[implements], ClassExpression[typeParameters], ClassExpression[superTypeParameters]"](
+      node: TSESTree.ClassDeclaration | TSESTree.ClassExpression,
+    ) {
+      if (node.typeParameters != null) {
+        setOffset(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          sourceCode.getFirstToken(node.id || node),
+        )
+      }
+      if (node.superTypeParameters != null && node.superClass != null) {
+        setOffset(
+          sourceCode.getFirstToken(node.superTypeParameters),
+          1,
+          sourceCode.getFirstToken(node.superClass),
+        )
+      }
+      if (node.implements != null && node.implements.length) {
+        const classToken = sourceCode.getFirstToken(node)
+        const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
+        setOffset(implementsToken, 1, classToken)
+
+        setOffsetNodes(context, node.implements, implementsToken, null, 1)
+      }
+    },
+  }
+
+  return {
+    ...visitor,
+    ...extendsESVisitor,
+  }
 }

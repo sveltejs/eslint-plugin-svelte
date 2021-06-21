@@ -250,7 +250,7 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         setOffset(sourceCode.getFirstToken(node.id), 1, classToken)
       }
       if (node.superClass != null) {
-        const extendsToken = sourceCode.getTokenAfter(node.id || classToken)!
+        const extendsToken = sourceCode.getTokenBefore(node.superClass)!
         const superClassToken = sourceCode.getTokenAfter(extendsToken)
         setOffset(extendsToken, 1, classToken)
         setOffset(superClassToken, 1, extendsToken)

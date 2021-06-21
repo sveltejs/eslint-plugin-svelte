@@ -74,4 +74,4 @@
     }
 </script>
 
-<!--tests/fixtures/rules/indent/invalid/ts/ts-type-annotation01-input.svelte-->
+<!--tests/fixtures/rules/indent/invalid/ts/ts-types01-input.svelte-->
