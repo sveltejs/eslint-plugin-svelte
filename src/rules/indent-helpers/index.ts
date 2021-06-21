@@ -366,8 +366,8 @@ export function defineVisitor(
     "*:exit"(node: ASTNode) {
       // Ignore tokens of unknown nodes.
       if (!knownNodes.has(node.type)) {
-        debugger
-        console.log(node.type, node.loc!.start.line)
+        // debugger
+        // console.log(node.type, node.loc!.start.line)
         ignore(node)
       }
     },
