@@ -4,7 +4,9 @@ import {
   isClosingBracketToken,
   isClosingParenToken,
   isNotClosingParenToken,
+  isOpeningBraceToken,
   isOpeningBracketToken,
+  isOpeningParenToken,
 } from "eslint-utils"
 import type { AnyToken, IndentContext } from "./commons"
 import { isBeginningOfLine } from "./commons"
@@ -16,7 +18,7 @@ type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
   [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
 }
 type NodeListener = {
-  [T in keyof NodeListenerMap]: (node: NodeListenerMap[T]) => void
+  [T in keyof NodeListenerMap]?: (node: NodeListenerMap[T]) => void
 }
 
 /**
@@ -27,7 +29,7 @@ type NodeListener = {
  */
 export function defineVisitor(context: IndentContext): NodeListener {
   const { setOffset, sourceCode, copyOffset } = context
-  const visitor: NodeListener = {
+  const visitor = {
     TSTypeAnnotation(node: TSESTree.TSTypeAnnotation) {
       // : Type
       // => Type
@@ -127,6 +129,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TSPropertySignature(node: TSESTree.TSPropertySignature) {
       // { target:any }
+      //   ^^^^^^^^^^
       const firstToken = sourceCode.getFirstToken(node)
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
       let keyLast
@@ -152,6 +155,36 @@ export function defineVisitor(context: IndentContext): NodeListener {
       } else if (node.optional) {
         const qToken = sourceCode.getLastToken(node)
         setOffset(qToken, 1, firstToken)
+      }
+    },
+    TSIndexSignature(node: TSESTree.TSIndexSignature) {
+      // { [k: string ]: string[] };
+      //   ^^^^^^^^^^^^^^^^^^^^^^
+      const leftBracketToken = sourceCode.getFirstToken(node)
+      const rightBracketToken = sourceCode.getTokenAfter(
+        node.parameters[node.parameters.length - 1] || leftBracketToken,
+        { filter: isClosingBracketToken, includeComments: false },
+      )!
+      setOffsetNodes(
+        context,
+        node.parameters,
+        leftBracketToken,
+        rightBracketToken,
+        1,
+      )
+      const keyLast = rightBracketToken
+      if (node.typeAnnotation) {
+        const typeAnnotationToken = sourceCode.getFirstToken(
+          node.typeAnnotation,
+        )
+        setOffset(
+          [
+            ...sourceCode.getTokensBetween(keyLast, typeAnnotationToken),
+            typeAnnotationToken,
+          ],
+          1,
+          leftBracketToken,
+        )
       }
     },
     TSArrayType(node: TSESTree.TSArrayType) {
@@ -289,9 +322,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       //   ^^^^^^^^^^
       // type T<U extends V = W>
       //        ^^^^^^^^^^^^^^^
-      const [firstToken, secondToken, ...afterTokens] =
-        sourceCode.getTokens(node)
-      setOffset(secondToken, 1, firstToken)
+      const [firstToken, ...afterTokens] = sourceCode.getTokens(node)
 
       for (const child of [node.constraint, node.default]) {
         if (!child) {
@@ -305,6 +336,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
           }
         }
       }
+      const secondToken = afterTokens.shift()
+      if (!secondToken) {
+        return
+      }
+      setOffset(secondToken, 1, firstToken)
 
       if (secondToken.value === "extends") {
         let prevToken: AnyToken | null = null
@@ -386,7 +422,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const bodyToken = sourceCode.getFirstToken(node.body)
       setOffset(bodyToken, 0, interfaceToken)
     },
-    TSInterfaceBody(node: TSESTree.TSInterfaceBody) {
+    TSInterfaceBody(node: TSESTree.TSInterfaceBody | TSESTree.TSModuleBlock) {
       setOffsetNodes(
         context,
         node.body,
@@ -413,13 +449,204 @@ export function defineVisitor(context: IndentContext): NodeListener {
       //                     ^            ^
       visitor.TSClassImplements(node)
     },
+    TSEnumDeclaration(node: TSESTree.TSEnumDeclaration) {
+      // enum E {}
+      const firstToken = sourceCode.getFirstToken(node)
+      const idTokens = getFirstAndLastTokens(sourceCode, node.id)
+      const prefixTokens = sourceCode.getTokensBetween(
+        firstToken,
+        idTokens.firstToken,
+      )
+      setOffset(prefixTokens, 0, firstToken)
+      setOffset(idTokens.firstToken, 1, firstToken)
+
+      const leftBraceToken = sourceCode.getTokenAfter(idTokens.lastToken)!
+      const rightBraceToken = sourceCode.getLastToken(node)
+      setOffset(leftBraceToken, 0, firstToken)
+      setOffsetNodes(context, node.members, leftBraceToken, rightBraceToken, 1)
+    },
+    TSEnumMember(node: TSESTree.TSEnumMember) {
+      visitor.ClassProperty(node)
+    },
+    TSModuleDeclaration(node: TSESTree.TSModuleDeclaration) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const idTokens = getFirstAndLastTokens(sourceCode, node.id)
+      const prefixTokens = sourceCode.getTokensBetween(
+        firstToken,
+        idTokens.firstToken,
+      )
+      setOffset(prefixTokens, 0, firstToken)
+      setOffset(idTokens.firstToken, 1, firstToken)
+
+      if (node.body) {
+        const bodyFirstToken = sourceCode.getFirstToken(node.body)
+        setOffset(
+          bodyFirstToken,
+          isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
+          firstToken,
+        )
+      }
+    },
+    TSModuleBlock(node: TSESTree.TSModuleBlock) {
+      visitor.TSInterfaceBody(node)
+    },
+    TSMethodSignature(node: TSESTree.TSMethodSignature) {
+      // fn(arg: A): R | null;
+      const firstToken = sourceCode.getFirstToken(node)
+      const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
+      let keyLast
+      if (node.computed) {
+        const closeBracket = sourceCode.getTokenAfter(keyTokens.firstToken)!
+        setOffsetNodes(context, [node.key], firstToken, closeBracket, 1)
+        keyLast = closeBracket
+      } else {
+        keyLast = keyTokens.lastToken
+      }
+      const leftParenToken = sourceCode.getTokenAfter(keyLast, {
+        filter: isOpeningParenToken,
+        includeComments: false,
+      })!
+      setOffset(
+        [
+          ...sourceCode.getTokensBetween(keyLast, leftParenToken),
+          leftParenToken,
+        ],
+        1,
+        firstToken,
+      )
+      const rightParenToken = sourceCode.getTokenAfter(
+        node.params[node.params.length - 1] || leftParenToken,
+        { filter: isClosingParenToken, includeComments: false },
+      )!
+      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      if (node.returnType) {
+        const typeAnnotationToken = sourceCode.getFirstToken(node.returnType)
+        setOffset(
+          [
+            ...sourceCode.getTokensBetween(keyLast, typeAnnotationToken),
+            typeAnnotationToken,
+          ],
+          1,
+          firstToken,
+        )
+      }
+    },
+    TSCallSignatureDeclaration(node: TSESTree.TSCallSignatureDeclaration) {
+      // interface A { <T> (e: E): R }
+      //               ^^^^^^^^^^^^^
+      const firstToken = sourceCode.getFirstToken(node)
+      let currToken = firstToken
+      if (node.typeParameters) {
+        currToken = sourceCode.getTokenAfter(node.typeParameters)!
+        setOffset(currToken, 1, firstToken)
+      }
+      const leftParenToken = currToken
+      const rightParenToken = sourceCode.getTokenAfter(
+        node.params[node.params.length - 1] || leftParenToken,
+        { filter: isClosingParenToken, includeComments: false },
+      )!
+      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+
+      if (node.returnType) {
+        const typeAnnotationToken = sourceCode.getFirstToken(node.returnType)
+        setOffset(
+          [
+            ...sourceCode.getTokensBetween(
+              rightParenToken,
+              typeAnnotationToken,
+            ),
+            typeAnnotationToken,
+          ],
+          1,
+          firstToken,
+        )
+      }
+    },
+    TSEmptyBodyFunctionExpression(
+      node: TSESTree.TSEmptyBodyFunctionExpression,
+    ) {
+      const firstToken = sourceCode.getFirstToken(node)
+      let leftParenToken, bodyBaseToken
+      if (firstToken.type === "Punctuator") {
+        // method
+        leftParenToken = firstToken
+        bodyBaseToken = sourceCode.getFirstToken(node.parent!)
+      } else {
+        const functionToken = node.async
+          ? sourceCode.getTokenAfter(firstToken)!
+          : firstToken
+        const starToken = node.generator
+          ? sourceCode.getTokenAfter(functionToken)
+          : null
+        const idToken = node.id && sourceCode.getFirstToken(node.id)
+
+        if (node.async) {
+          setOffset(functionToken, 0, firstToken)
+        }
+        if (node.generator) {
+          setOffset(starToken, 1, firstToken)
+        }
+        if (node.id != null) {
+          setOffset(idToken, 1, firstToken)
+        }
+
+        leftParenToken = sourceCode.getTokenAfter(
+          idToken || starToken || functionToken,
+        )!
+        bodyBaseToken = firstToken
+      }
+
+      if (!isOpeningParenToken(leftParenToken) && node.typeParameters) {
+        leftParenToken = sourceCode.getTokenAfter(node.typeParameters)!
+      }
+
+      const rightParenToken = sourceCode.getTokenAfter(
+        node.params[node.params.length - 1] || leftParenToken,
+        { filter: isClosingParenToken, includeComments: false },
+      )!
+
+      setOffset(leftParenToken, 1, bodyBaseToken)
+      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+    },
+    TSTypeOperator(node: TSESTree.TSTypeOperator | TSESTree.TSTypeQuery) {
+      // keyof T
+      const firstToken = sourceCode.getFirstToken(node)
+      const nextToken = sourceCode.getTokenAfter(firstToken)
+
+      setOffset(nextToken, 1, firstToken)
+    },
+    TSTypeQuery(node: TSESTree.TSTypeQuery) {
+      // type T = typeof a
+      visitor.TSTypeOperator(node)
+    },
+    TSTypePredicate(node: TSESTree.TSTypePredicate) {
+      // v is T
+      const firstToken = sourceCode.getFirstToken(node)
+      const opToken = sourceCode.getTokenAfter(node.parameterName, {
+        filter: isNotClosingParenToken,
+        includeComments: false,
+      })!
+      const rightToken =
+        node.typeAnnotation &&
+        getFirstAndLastTokens(sourceCode, node.typeAnnotation).firstToken
+
+      setOffset(
+        [opToken, rightToken],
+        1,
+        getFirstAndLastTokens(sourceCode, firstToken).firstToken,
+      )
+    },
 
     // ----------------------------------------------------------------------
     // NON-STANDARD NODES
     // ----------------------------------------------------------------------
-    ClassProperty(node: TSESTree.ClassProperty) {
+    ClassProperty(node: TSESTree.ClassProperty | TSESTree.TSEnumMember) {
+      const { keyNode, valueNode } =
+        node.type === "ClassProperty"
+          ? { keyNode: node.key, valueNode: node.value }
+          : { keyNode: node.id, valueNode: node.initializer }
       const firstToken = sourceCode.getFirstToken(node)
-      const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
+      const keyTokens = getFirstAndLastTokens(sourceCode, keyNode)
       const prefixTokens = sourceCode.getTokensBetween(
         firstToken,
         keyTokens.firstToken,
@@ -440,7 +667,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         setOffset(leftBracketToken, 0, firstToken)
         setOffsetNodes(
           context,
-          [node.key],
+          [keyNode],
           leftBracketToken,
           rightBracketToken,
           1,
@@ -450,11 +677,38 @@ export function defineVisitor(context: IndentContext): NodeListener {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (node.value != null) {
+      if (valueNode != null) {
         const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
         const initToken = sourceCode.getTokenAfter(eqToken)
 
         setOffset([eqToken, initToken], 1, lastKeyToken)
+      }
+    },
+    Decorator(node: TSESTree.Decorator) {
+      // @Decorator
+      const [atToken, secondToken] = sourceCode.getFirstTokens(node, {
+        count: 2,
+        includeComments: false,
+      })
+      setOffset(secondToken, 0, atToken)
+
+      const parent = node.parent!
+      const { decorators } = parent as { decorators?: TSESTree.Decorator[] }
+      if (!decorators || decorators.length === 0) {
+        return
+      }
+      if (decorators[0] === node) {
+        if (parent.range[0] === node.range[0]) {
+          const startParentToken = sourceCode.getTokenAfter(
+            decorators[decorators?.length - 1],
+          )
+          setOffset(startParentToken, 0, atToken)
+        } else {
+          const startParentToken = sourceCode.getFirstToken(parent)
+          copyOffset(atToken, startParentToken)
+        }
+      } else {
+        setOffset(atToken, 0, sourceCode.getFirstToken(decorators[0]))
       }
     },
     // ----------------------------------------------------------------------
@@ -494,6 +748,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // noop
     },
     TSVoidKeyword() {
+      // noop
+    },
+    TSThisType() {
       // noop
     },
     // ----------------------------------------------------------------------

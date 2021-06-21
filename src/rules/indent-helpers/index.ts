@@ -367,7 +367,7 @@ export function defineVisitor(
       // Ignore tokens of unknown nodes.
       if (!knownNodes.has(node.type)) {
         debugger
-        console.log(node.type)
+        console.log(node.type, node.loc!.start.line)
         ignore(node)
       }
     },

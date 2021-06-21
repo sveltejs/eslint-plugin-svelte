@@ -1,5 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { ASTNode } from "../../types"
 import type { IndentContext } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
@@ -461,7 +462,7 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     ) {
       const firstToken = sourceCode.getFirstToken(node)
       let leftParenToken, bodyBaseToken
-      if (isOpeningParenToken(firstToken)) {
+      if (firstToken.type === "Punctuator") {
         // method
         leftParenToken = firstToken
         bodyBaseToken = sourceCode.getFirstToken(getParent(node)!)
@@ -488,6 +489,15 @@ export function defineVisitor(context: IndentContext): NodeListener & {
           idToken || starToken || functionToken,
         )!
         bodyBaseToken = firstToken
+      }
+
+      if (
+        !isOpeningParenToken(leftParenToken) &&
+        (node as TSESTree.FunctionExpression).typeParameters
+      ) {
+        leftParenToken = sourceCode.getTokenAfter(
+          (node as TSESTree.FunctionExpression).typeParameters!,
+        )!
       }
 
       const rightParenToken = sourceCode.getTokenAfter(
