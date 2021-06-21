@@ -38,6 +38,20 @@
       R
     ;
   }
+
+  interface D {
+    new
+      (
+        arg
+          :
+          readonly
+            string[
+            ]
+      )
+      :
+      void
+    ;
+  }
 </script>
 
 <!--tests/fixtures/rules/indent/invalid/ts/ts-interface01-input.svelte-->

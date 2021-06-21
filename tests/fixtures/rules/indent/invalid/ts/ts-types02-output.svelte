@@ -21,6 +21,56 @@
     =>
     v is
       number
+
+  type E = [
+    number,
+    string?,
+    boolean?
+  ]
+    |
+    [
+      {
+      }
+      ,
+      [
+        number?
+      ]
+      |
+      null
+      &
+      boolean[
+      ]
+    ]
+    &
+    {
+    }
+
+  type F<T> =
+    T extends
+      (
+        infer
+          U
+      )[
+      ]
+      ?
+        U
+      :
+        T extends
+          infer
+            U
+      ?
+        U
+      :
+        T extends
+          Promise<
+            infer
+              U
+          >
+      ?
+        U
+      :
+        T
+  ;
 </script>
 
 <!--tests/fixtures/rules/indent/invalid/ts/ts-types02-input.svelte-->

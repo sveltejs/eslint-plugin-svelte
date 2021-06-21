@@ -18,6 +18,26 @@
     :
     A[
     ] = []
+
+  const v
+    =
+    b!
+
+  let
+    x
+      =
+      10 as
+        const
+  ;
+
+  let
+    x
+      =
+      <
+        const
+      >
+        10
+  ;
 </script>
 
 <!--tests/fixtures/rules/indent/invalid/ts/ts-type-annotation02-input.svelte-->

@@ -106,8 +106,24 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
       setOffset([eqToken, initToken], 1, idToken)
     },
-    TSFunctionType(node: TSESTree.TSFunctionType) {
-      const leftParenToken = sourceCode.getFirstToken(node)
+    TSFunctionType(node: TSESTree.TSFunctionType | TSESTree.TSConstructorType) {
+      // ()=>void
+      const firstToken = sourceCode.getFirstToken(node)
+      // new or < or (
+      let currToken = firstToken
+      if (node.type === "TSConstructorType") {
+        // currToken is new token
+        // < or (
+        currToken = sourceCode.getTokenAfter(currToken)!
+        setOffset(currToken, 1, firstToken)
+      }
+      if (node.typeParameters) {
+        // currToken is < token
+        // (
+        currToken = sourceCode.getTokenAfter(node.typeParameters)!
+        setOffset(currToken, 1, firstToken)
+      }
+      const leftParenToken = currToken
       const rightParenToken = sourceCode.getTokenAfter(
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
@@ -116,6 +132,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
       const arrowToken = sourceCode.getTokenAfter(rightParenToken)
       setOffset(arrowToken, 1, leftParenToken)
+    },
+    TSConstructorType(node: TSESTree.TSConstructorType) {
+      // new ()=>void
+      visitor.TSFunctionType(node)
     },
     TSTypeLiteral(node: TSESTree.TSTypeLiteral) {
       // {foo:any}
@@ -465,9 +485,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
       setOffset(leftBraceToken, 0, firstToken)
       setOffsetNodes(context, node.members, leftBraceToken, rightBraceToken, 1)
     },
-    TSEnumMember(node: TSESTree.TSEnumMember) {
-      visitor.ClassProperty(node)
-    },
     TSModuleDeclaration(node: TSESTree.TSModuleDeclaration) {
       const firstToken = sourceCode.getFirstToken(node)
       const idTokens = getFirstAndLastTokens(sourceCode, node.id)
@@ -531,12 +548,25 @@ export function defineVisitor(context: IndentContext): NodeListener {
         )
       }
     },
-    TSCallSignatureDeclaration(node: TSESTree.TSCallSignatureDeclaration) {
+    TSCallSignatureDeclaration(
+      node:
+        | TSESTree.TSCallSignatureDeclaration
+        | TSESTree.TSConstructSignatureDeclaration,
+    ) {
       // interface A { <T> (e: E): R }
       //               ^^^^^^^^^^^^^
       const firstToken = sourceCode.getFirstToken(node)
+      // new or < or (
       let currToken = firstToken
+      if (node.type === "TSConstructSignatureDeclaration") {
+        // currToken is new token
+        // < or (
+        currToken = sourceCode.getTokenAfter(currToken)!
+        setOffset(currToken, 1, firstToken)
+      }
       if (node.typeParameters) {
+        // currToken is < token
+        // (
         currToken = sourceCode.getTokenAfter(node.typeParameters)!
         setOffset(currToken, 1, firstToken)
       }
@@ -562,8 +592,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
         )
       }
     },
+    TSConstructSignatureDeclaration(
+      node: TSESTree.TSConstructSignatureDeclaration,
+    ) {
+      // interface A { new <T> (e: E): R }
+      //               ^^^^^^^^^^^^^^^^^
+      visitor.TSCallSignatureDeclaration(node)
+    },
     TSEmptyBodyFunctionExpression(
-      node: TSESTree.TSEmptyBodyFunctionExpression,
+      node: TSESTree.TSEmptyBodyFunctionExpression | TSESTree.TSDeclareFunction,
     ) {
       const firstToken = sourceCode.getFirstToken(node)
       let leftParenToken, bodyBaseToken
@@ -608,7 +645,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
       setOffset(leftParenToken, 1, bodyBaseToken)
       setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
     },
-    TSTypeOperator(node: TSESTree.TSTypeOperator | TSESTree.TSTypeQuery) {
+    TSDeclareFunction(node: TSESTree.TSDeclareFunction) {
+      // function fn(): void;
+      visitor.TSEmptyBodyFunctionExpression(node)
+    },
+    TSTypeOperator(
+      node:
+        | TSESTree.TSTypeOperator
+        | TSESTree.TSTypeQuery
+        | TSESTree.TSInferType,
+    ) {
       // keyof T
       const firstToken = sourceCode.getFirstToken(node)
       const nextToken = sourceCode.getTokenAfter(firstToken)
@@ -617,6 +663,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TSTypeQuery(node: TSESTree.TSTypeQuery) {
       // type T = typeof a
+      visitor.TSTypeOperator(node)
+    },
+    TSInferType(node: TSESTree.TSInferType) {
+      // infer U
       visitor.TSTypeOperator(node)
     },
     TSTypePredicate(node: TSESTree.TSTypePredicate) {
@@ -636,15 +686,18 @@ export function defineVisitor(context: IndentContext): NodeListener {
         getFirstAndLastTokens(sourceCode, firstToken).firstToken,
       )
     },
-
-    // ----------------------------------------------------------------------
-    // NON-STANDARD NODES
-    // ----------------------------------------------------------------------
-    ClassProperty(node: TSESTree.ClassProperty | TSESTree.TSEnumMember) {
+    TSAbstractMethodDefinition(
+      node:
+        | TSESTree.TSAbstractMethodDefinition
+        | TSESTree.TSAbstractClassProperty
+        | TSESTree.ClassProperty
+        | TSESTree.TSEnumMember,
+    ) {
       const { keyNode, valueNode } =
-        node.type === "ClassProperty"
-          ? { keyNode: node.key, valueNode: node.value }
-          : { keyNode: node.id, valueNode: node.initializer }
+        node.type === "TSEnumMember"
+          ? { keyNode: node.id, valueNode: node.initializer }
+          : { keyNode: node.key, valueNode: node.value }
+
       const firstToken = sourceCode.getFirstToken(node)
       const keyTokens = getFirstAndLastTokens(sourceCode, keyNode)
       const prefixTokens = sourceCode.getTokensBetween(
@@ -677,12 +730,160 @@ export function defineVisitor(context: IndentContext): NodeListener {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (valueNode != null) {
+      if (
+        node.type === "TSAbstractMethodDefinition"
+        // || (node.type === "Property" && node.method === true)
+      ) {
+        const leftParenToken = sourceCode.getTokenAfter(lastKeyToken)
+        setOffset(leftParenToken, 1, lastKeyToken)
+        // } else if (node.type === "Property" && !node.shorthand) {
+        //   const colonToken = sourceCode.getTokenAfter(lastKeyToken)!
+        //   const valueToken = sourceCode.getTokenAfter(colonToken)
+
+        //   setOffset([colonToken, valueToken], 1, lastKeyToken)
+      } else if (
+        (node.type === "TSAbstractClassProperty" ||
+          node.type === "ClassProperty" ||
+          node.type === "TSEnumMember") &&
+        valueNode != null
+      ) {
         const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
         const initToken = sourceCode.getTokenAfter(eqToken)
 
         setOffset([eqToken, initToken], 1, lastKeyToken)
       }
+    },
+    TSAbstractClassProperty(node: TSESTree.TSAbstractClassProperty) {
+      visitor.TSAbstractMethodDefinition(node)
+    },
+    TSEnumMember(node: TSESTree.TSEnumMember) {
+      visitor.TSAbstractMethodDefinition(node)
+    },
+    TSOptionalType(
+      node: TSESTree.TSOptionalType | TSESTree.TSNonNullExpression,
+    ) {
+      // [number?]
+      //  ^^^^^^^
+      setOffset(
+        sourceCode.getLastToken(node),
+        1,
+        sourceCode.getFirstToken(node),
+      )
+    },
+    TSNonNullExpression(node: TSESTree.TSNonNullExpression) {
+      // v!
+      visitor.TSOptionalType(node)
+    },
+    TSJSDocNonNullableType(
+      // @ts-expect-error -- Missing TSJSDocNonNullableType type
+      node: TSESTree.TSJSDocNonNullableType,
+    ) {
+      // T!
+      visitor.TSOptionalType(node)
+    },
+    TSTypeAssertion(node: TSESTree.TSTypeAssertion) {
+      // <const>
+      const firstToken = sourceCode.getFirstToken(node)
+      const expressionToken = getFirstAndLastTokens(
+        sourceCode,
+        node.expression,
+      ).firstToken
+      setOffsetNodes(
+        context,
+        [node.typeAnnotation],
+        firstToken,
+        sourceCode.getTokenBefore(expressionToken),
+        1,
+      )
+      setOffset(expressionToken, 1, firstToken)
+    },
+    TSImportType(node: TSESTree.TSImportType) {
+      // import('foo').B
+      const firstToken = sourceCode.getFirstToken(node)
+      const leftParenToken = sourceCode.getTokenAfter(firstToken, {
+        filter: isOpeningParenToken,
+        includeComments: false,
+      })!
+      setOffset(leftParenToken, 1, firstToken)
+      const rightParenToken = sourceCode.getTokenAfter(node.parameter, {
+        filter: isClosingParenToken,
+        includeComments: false,
+      })!
+      setOffsetNodes(
+        context,
+        [node.parameter],
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
+      if (node.qualifier) {
+        const dotToken = sourceCode.getTokenBefore(node.qualifier)!
+        const propertyToken = sourceCode.getTokenAfter(dotToken)
+        setOffset([dotToken, propertyToken], 1, firstToken)
+      }
+      if (node.typeParameters) {
+        setOffset(sourceCode.getFirstToken(node.typeParameters), 1, firstToken)
+      }
+    },
+    TSParameterProperty(node: TSESTree.TSParameterProperty) {
+      // constructor(private a)
+      const firstToken = sourceCode.getFirstToken(node)
+      const parameterToken = sourceCode.getFirstToken(node.parameter)
+      setOffset(
+        [
+          ...sourceCode.getTokensBetween(firstToken, parameterToken),
+          parameterToken,
+        ],
+        1,
+        firstToken,
+      )
+    },
+    TSImportEqualsDeclaration(node: TSESTree.TSImportEqualsDeclaration) {
+      // import foo = require('foo')
+      const importToken = sourceCode.getFirstToken(node)
+      const idTokens = getFirstAndLastTokens(sourceCode, node.id)
+      setOffset(idTokens.firstToken, 1, importToken)
+
+      const opToken = sourceCode.getTokenAfter(idTokens.lastToken)
+
+      setOffset(
+        [opToken, sourceCode.getFirstToken(node.moduleReference)],
+        1,
+        idTokens.lastToken,
+      )
+    },
+    TSExternalModuleReference(node: TSESTree.TSExternalModuleReference) {
+      // require('foo')
+      const requireToken = sourceCode.getFirstToken(node)
+      const leftParenToken = sourceCode.getTokenAfter(requireToken, {
+        filter: isOpeningParenToken,
+        includeComments: false,
+      })!
+      const rightParenToken = sourceCode.getLastToken(node)
+
+      setOffset(leftParenToken, 1, requireToken)
+      setOffsetNodes(
+        context,
+        [node.expression],
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
+    },
+    TSExportAssignment(node: TSESTree.TSExportAssignment) {
+      // export = foo
+      const exportNode = sourceCode.getFirstToken(node)
+      const exprTokens = getFirstAndLastTokens(sourceCode, node.expression)
+      const opToken = sourceCode.getTokenBefore(exprTokens.firstToken)
+
+      setOffset([opToken, exprTokens.firstToken], 1, exportNode)
+    },
+
+    // ----------------------------------------------------------------------
+    // NON-STANDARD NODES
+    // ----------------------------------------------------------------------
+    ClassProperty(node: TSESTree.ClassProperty) {
+      visitor.TSAbstractMethodDefinition(node)
     },
     Decorator(node: TSESTree.Decorator) {
       // @Decorator
@@ -714,6 +915,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     // ----------------------------------------------------------------------
     // SINGLE TOKEN NODES
     // ----------------------------------------------------------------------
+    // VALUES KEYWORD
     TSAnyKeyword() {
       // noop
     },
@@ -750,6 +952,39 @@ export function defineVisitor(context: IndentContext): NodeListener {
     TSVoidKeyword() {
       // noop
     },
+    // MODIFIERS KEYWORD
+    TSAbstractKeyword() {
+      // noop
+    },
+    TSAsyncKeyword() {
+      // noop
+    },
+    TSPrivateKeyword() {
+      // noop
+    },
+    TSProtectedKeyword() {
+      // noop
+    },
+    TSPublicKeyword() {
+      // noop
+    },
+    TSReadonlyKeyword() {
+      // noop
+    },
+    TSStaticKeyword() {
+      // noop
+    },
+    // OTHERS KEYWORD
+    TSDeclareKeyword() {
+      // noop
+    },
+    TSExportKeyword() {
+      // noop
+    },
+    TSIntrinsicKeyword() {
+      // noop
+    },
+    // OTHERS
     TSThisType() {
       // noop
     },
@@ -759,7 +994,131 @@ export function defineVisitor(context: IndentContext): NodeListener {
     TSLiteralType() {
       // noop
     },
+    // ----------------------------------------------------------------------
+    // JSX
+    // ----------------------------------------------------------------------
+    JSXElement(node: TSESTree.JSXElement) {
+      setOffsetNodes(
+        context,
+        node.children,
+        node.openingElement,
+        node.closingElement,
+        1,
+      )
+    },
+    JSXFragment(node: TSESTree.JSXFragment) {
+      setOffsetNodes(
+        context,
+        node.children,
+        node.openingFragment,
+        node.closingFragment,
+        1,
+      )
+    },
+    JSXOpeningElement(node: TSESTree.JSXOpeningElement) {
+      const openToken = sourceCode.getFirstToken(node)
+      const closeToken = sourceCode.getLastToken(node)
+
+      const nameToken = sourceCode.getFirstToken(node.name)
+      setOffset(nameToken, 1, openToken)
+      if (node.typeParameters) {
+        setOffset(sourceCode.getFirstToken(node.typeParameters), 1, nameToken)
+      }
+      for (const attr of node.attributes) {
+        setOffset(sourceCode.getFirstToken(attr), 1, openToken)
+      }
+      if (node.selfClosing) {
+        const slash = sourceCode.getTokenBefore(closeToken)!
+        if (slash.value === "/") {
+          setOffset(slash, 0, openToken)
+        }
+      }
+      setOffset(closeToken, 0, openToken)
+    },
+    JSXClosingElement(node: TSESTree.JSXClosingElement) {
+      const openToken = sourceCode.getFirstToken(node)
+      const slash = sourceCode.getTokenAfter(openToken)!
+      if (slash.value === "/") {
+        setOffset(slash, 0, openToken)
+      }
+      const closeToken = sourceCode.getLastToken(node)
+      const nameToken = sourceCode.getFirstToken(node.name)
+      setOffset(nameToken, 1, openToken)
+      setOffset(closeToken, 0, openToken)
+    },
+    JSXOpeningFragment(
+      node: TSESTree.JSXOpeningFragment | TSESTree.JSXClosingFragment,
+    ) {
+      const [firstToken, ...tokens] = sourceCode.getTokens(node)
+      setOffset(tokens, 0, firstToken)
+    },
+    JSXClosingFragment(node: TSESTree.JSXClosingFragment) {
+      visitor.JSXOpeningFragment(node)
+    },
+    JSXAttribute(node: TSESTree.JSXAttribute) {
+      if (!node.value) {
+        return
+      }
+      const keyToken = sourceCode.getFirstToken(node)
+      const eqToken = sourceCode.getTokenAfter(node.name)
+      setOffset(eqToken, 1, keyToken)
+      setOffset(sourceCode.getFirstToken(node.value), 1, keyToken)
+    },
+    JSXExpressionContainer(node: TSESTree.JSXExpressionContainer) {
+      setOffsetNodes(
+        context,
+        [node.expression],
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
+    JSXSpreadAttribute(node: TSESTree.JSXSpreadAttribute) {
+      setOffsetNodes(
+        context,
+        [node.argument],
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
+    JSXSpreadChild(node: TSESTree.JSXSpreadChild) {
+      setOffsetNodes(
+        context,
+        [node.expression],
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
+    JSXMemberExpression(node: TSESTree.JSXMemberExpression) {
+      const objectToken = sourceCode.getFirstToken(node)
+      const dotToken = sourceCode.getTokenBefore(node.property)!
+      const propertyToken = sourceCode.getTokenAfter(dotToken)
+
+      setOffset([dotToken, propertyToken], 1, objectToken)
+    },
+    // ----------------------------------------------------------------------
+    // JSX SINGLE TOKEN NODES
+    // ----------------------------------------------------------------------
+    JSXEmptyExpression() {
+      // noop
+    },
+    JSXIdentifier() {
+      // noop
+    },
+    JSXNamespacedName() {
+      // noop
+    },
+    JSXText() {
+      // noop
+    },
   }
+
+  const o: {
+    [key in Exclude<NodeWithoutES["type"], keyof typeof visitor>]: never
+  } = {}
+  // console.log(o)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   const extendsESVisitor: any = {
@@ -790,9 +1149,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
     },
   }
+  const v: NodeListener = visitor
 
   return {
-    ...visitor,
+    ...v,
     ...extendsESVisitor,
   }
 }
