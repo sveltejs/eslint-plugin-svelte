@@ -878,6 +878,50 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
       setOffset([opToken, exprTokens.firstToken], 1, exportNode)
     },
+    TSNamedTupleMember(node: TSESTree.TSNamedTupleMember) {
+      // [a: string, ...b: string[]]
+      //  ^^^^^^^^^
+      const labelToken = sourceCode.getFirstToken(node)
+      const elementTokens = getFirstAndLastTokens(sourceCode, node.elementType)
+      setOffset(
+        [
+          ...sourceCode.getTokensBetween(labelToken, elementTokens.firstToken),
+          elementTokens.firstToken,
+        ],
+        1,
+        labelToken,
+      )
+    },
+    TSRestType(node: TSESTree.TSRestType) {
+      // [a: string, ...b: string[]]
+      //             ^^^^^^^^^^^^^^
+      const firstToken = sourceCode.getFirstToken(node)
+      const nextToken = sourceCode.getTokenAfter(firstToken)
+
+      setOffset(nextToken, 1, firstToken)
+    },
+    TSNamespaceExportDeclaration(node: TSESTree.TSNamespaceExportDeclaration) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const idToken = sourceCode.getFirstToken(node.id)
+
+      setOffset(
+        [...sourceCode.getTokensBetween(firstToken, idToken), idToken],
+        1,
+        firstToken,
+      )
+    },
+    TSTemplateLiteralType(node: TSESTree.TSTemplateLiteralType) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const quasiTokens = node.quasis
+        .slice(1)
+        .map((n) => sourceCode.getFirstToken(n))
+      const expressionToken = node.quasis
+        .slice(0, -1)
+        .map((n) => sourceCode.getTokenAfter(n))
+
+      setOffset(quasiTokens, 0, firstToken)
+      setOffset(expressionToken, 1, firstToken)
+    },
 
     // ----------------------------------------------------------------------
     // NON-STANDARD NODES
@@ -1114,11 +1158,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // noop
     },
   }
-
-  const o: {
-    [key in Exclude<NodeWithoutES["type"], keyof typeof visitor>]: never
-  } = {}
-  // console.log(o)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   const extendsESVisitor: any = {

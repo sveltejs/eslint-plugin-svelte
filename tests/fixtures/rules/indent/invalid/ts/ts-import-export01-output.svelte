@@ -11,6 +11,13 @@
   export
     =
     foo
+;
+
+  export
+    as
+    namespace
+    a
+  ;
 </script>
 
-<!--tests/fixtures/rules/indent/invalid/ts/ts-node01-input.svelte-->
+<!--tests/fixtures/rules/indent/invalid/ts/ts-import-export01-input.svelte-->
