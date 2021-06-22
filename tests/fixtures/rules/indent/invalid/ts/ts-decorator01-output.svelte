@@ -23,11 +23,11 @@
     type
       =
       "report"
-;
+    ;
     title
       :
       string
-;
+    ;
 
     constructor
       (
@@ -51,7 +51,7 @@
     greeting
       :
       string
-;
+    ;
     constructor
       (
         message
@@ -129,7 +129,7 @@
     greeting
       :
       string
-;
+    ;
     constructor(message: string) {
       this.greeting = message;
     }

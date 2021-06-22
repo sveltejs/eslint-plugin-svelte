@@ -7,6 +7,7 @@ import {
   isOpeningBraceToken,
   isOpeningBracketToken,
   isOpeningParenToken,
+  isSemicolonToken,
 } from "eslint-utils"
 import type { AnyToken, IndentContext } from "./commons"
 import { isBeginningOfLine } from "./commons"
@@ -156,7 +157,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
       let keyLast
       if (node.computed) {
-        const closeBracket = sourceCode.getTokenAfter(keyTokens.firstToken)!
+        const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
         setOffsetNodes(context, [node.key], firstToken, closeBracket, 1)
         keyLast = closeBracket
       } else {
@@ -515,7 +516,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
       let keyLast
       if (node.computed) {
-        const closeBracket = sourceCode.getTokenAfter(keyTokens.firstToken)!
+        const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
         setOffsetNodes(context, [node.key], firstToken, closeBracket, 1)
         keyLast = closeBracket
       } else {
@@ -611,27 +612,24 @@ export function defineVisitor(context: IndentContext): NodeListener {
         leftParenToken = firstToken
         bodyBaseToken = sourceCode.getFirstToken(node.parent!)
       } else {
-        const functionToken = node.async
-          ? sourceCode.getTokenAfter(firstToken)!
-          : firstToken
-        const starToken = node.generator
-          ? sourceCode.getTokenAfter(functionToken)
-          : null
-        const idToken = node.id && sourceCode.getFirstToken(node.id)
+        let nextToken = sourceCode.getTokenAfter(firstToken)
+        let nextTokenOffset = 0
+        while (
+          nextToken &&
+          !isOpeningParenToken(nextToken) &&
+          nextToken.value !== "<"
+        ) {
+          if (
+            nextToken.value === "*" ||
+            (node.id && nextToken.range[0] === node.id.range[0])
+          ) {
+            nextTokenOffset = 1
+          }
+          setOffset(nextToken, nextTokenOffset, firstToken)
+          nextToken = sourceCode.getTokenAfter(nextToken)
+        }
 
-        if (node.async) {
-          setOffset(functionToken, 0, firstToken)
-        }
-        if (node.generator) {
-          setOffset(starToken, 1, firstToken)
-        }
-        if (node.id != null) {
-          setOffset(idToken, 1, firstToken)
-        }
-
-        leftParenToken = sourceCode.getTokenAfter(
-          idToken || starToken || functionToken,
-        )!
+        leftParenToken = nextToken!
         bodyBaseToken = firstToken
       }
 
@@ -1148,6 +1146,26 @@ export function defineVisitor(context: IndentContext): NodeListener {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  const commonsVisitor: any = {
+    // Process semicolons.
+    ["TSTypeAliasDeclaration, TSCallSignatureDeclaration, TSConstructSignatureDeclaration, TSImportEqualsDeclaration," +
+      "TSAbstractMethodDefinition, TSAbstractClassProperty, TSEnumMember, ClassProperty," +
+      "TSPropertySignature, TSIndexSignature, TSMethodSignature"](
+      node: ESTree.Node,
+    ) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const lastToken = sourceCode.getLastToken(node)
+      if (isSemicolonToken(lastToken) && firstToken !== lastToken) {
+        const next = sourceCode.getTokenAfter(lastToken)
+        if (!next || lastToken.loc.start.line < next.loc.start.line) {
+          // End of line semicolons
+          setOffset(lastToken, 0, firstToken)
+        }
+      }
+    },
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   const extendsESVisitor: any = {
     ["ClassDeclaration[implements], ClassDeclaration[typeParameters], ClassDeclaration[superTypeParameters]," +
       "ClassExpression[implements], ClassExpression[typeParameters], ClassExpression[superTypeParameters]"](
@@ -1180,6 +1198,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
   return {
     ...v,
+    ...commonsVisitor,
     ...extendsESVisitor,
   }
 }
