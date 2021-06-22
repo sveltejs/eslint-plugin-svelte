@@ -41,6 +41,22 @@
     {
     }
   }
+
+  class Foo {
+    prop
+      :
+      number;
+    opt
+      ?
+      :
+      number;
+    opt2
+      ?
+      :
+      number
+      =
+      42;
+  }
 </script>
 
 <!--tests/fixtures/rules/indent/invalid/ts/ts-class01-input.svelte-->

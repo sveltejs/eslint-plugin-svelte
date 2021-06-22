@@ -81,13 +81,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       }
     },
     ArrayExpression(node: ESTree.ArrayExpression | ESTree.ArrayPattern) {
-      setOffsetNodes(
-        context,
-        node.elements,
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
+      const firstToken = sourceCode.getFirstToken(node)
+      const rightToken = sourceCode.getTokenAfter(
+        node.elements[node.elements.length - 1] || firstToken,
+        { filter: isClosingBracketToken, includeComments: false },
       )
+      setOffsetNodes(context, node.elements, firstToken, rightToken, 1)
     },
     ArrayPattern(node: ESTree.ArrayPattern) {
       visitor.ArrayExpression(node)
@@ -719,22 +718,13 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (
-        node.type === "MethodDefinition" ||
-        (node.type === "Property" && node.method === true)
-      ) {
-        const leftParenToken = sourceCode.getTokenAfter(lastKeyToken)
-        setOffset(leftParenToken, 1, lastKeyToken)
-      } else if (node.type === "Property" && !node.shorthand) {
-        const colonToken = sourceCode.getTokenAfter(lastKeyToken)!
-        const valueToken = sourceCode.getTokenAfter(colonToken)
-
-        setOffset([colonToken, valueToken], 1, lastKeyToken)
-      } else if (node.type === "PropertyDefinition" && node.value != null) {
-        const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
-        const initToken = sourceCode.getTokenAfter(eqToken)
-
-        setOffset([eqToken, initToken], 1, lastKeyToken)
+      if (node.value) {
+        const initToken = sourceCode.getFirstToken(node.value)
+        setOffset(
+          [...sourceCode.getTokensBetween(lastKeyToken, initToken), initToken],
+          1,
+          lastKeyToken,
+        )
       }
     },
     Property(node: ESTree.Property) {
@@ -763,13 +753,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       }
     },
     ObjectExpression(node: ESTree.ObjectExpression | ESTree.ObjectPattern) {
-      setOffsetNodes(
-        context,
-        node.properties,
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
+      const firstToken = sourceCode.getFirstToken(node)
+      const rightToken = sourceCode.getTokenAfter(
+        node.properties[node.properties.length - 1] || firstToken,
+        { filter: isClosingBraceToken, includeComments: false },
       )
+      setOffsetNodes(context, node.properties, firstToken, rightToken, 1)
     },
     ObjectPattern(node: ESTree.ObjectPattern) {
       visitor.ObjectExpression(node)
@@ -939,9 +928,6 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     DebuggerStatement() {
       // noop
     },
-    EmptyStatement() {
-      // noop
-    },
     Identifier() {
       // noop
     },
@@ -970,6 +956,9 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       // noop
     },
     ChainExpression() {
+      // noop
+    },
+    EmptyStatement() {
       // noop
     },
   }

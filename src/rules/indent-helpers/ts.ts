@@ -18,7 +18,7 @@ type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
   [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
 }
 type NodeListener = {
-  [T in keyof NodeListenerMap]?: (node: NodeListenerMap[T]) => void
+  [T in keyof NodeListenerMap]: (node: NodeListenerMap[T]) => void
 }
 
 /**
@@ -37,11 +37,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: 2,
         includeComments: false,
       })
-      setOffset(
-        [colonOrArrowToken, secondToken],
-        1,
-        sourceCode.getFirstToken(node.parent!),
-      )
+      const baseToken = sourceCode.getFirstToken(node.parent!)
+      setOffset([colonOrArrowToken, secondToken], 1, baseToken)
+
+      const before = sourceCode.getTokenBefore(colonOrArrowToken)
+      if (before && before.value === "?") {
+        setOffset(before, 1, baseToken)
+      }
     },
     TSAsExpression(node: TSESTree.TSAsExpression) {
       // foo as T
@@ -730,27 +732,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (
-        node.type === "TSAbstractMethodDefinition"
-        // || (node.type === "Property" && node.method === true)
-      ) {
-        const leftParenToken = sourceCode.getTokenAfter(lastKeyToken)
-        setOffset(leftParenToken, 1, lastKeyToken)
-        // } else if (node.type === "Property" && !node.shorthand) {
-        //   const colonToken = sourceCode.getTokenAfter(lastKeyToken)!
-        //   const valueToken = sourceCode.getTokenAfter(colonToken)
-
-        //   setOffset([colonToken, valueToken], 1, lastKeyToken)
-      } else if (
-        (node.type === "TSAbstractClassProperty" ||
-          node.type === "ClassProperty" ||
-          node.type === "TSEnumMember") &&
-        valueNode != null
-      ) {
-        const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
-        const initToken = sourceCode.getTokenAfter(eqToken)
-
-        setOffset([eqToken, initToken], 1, lastKeyToken)
+      if (valueNode != null) {
+        const initToken = sourceCode.getFirstToken(valueNode)
+        setOffset(
+          [...sourceCode.getTokensBetween(lastKeyToken, initToken), initToken],
+          1,
+          lastKeyToken,
+        )
       }
     },
     TSAbstractClassProperty(node: TSESTree.TSAbstractClassProperty) {

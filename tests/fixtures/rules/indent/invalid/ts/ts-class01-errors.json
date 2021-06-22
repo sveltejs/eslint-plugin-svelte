@@ -198,5 +198,80 @@
     "message": "Expected indentation of 2 spaces but found 0 spaces.",
     "line": 43,
     "column": 1
+  },
+  {
+    "message": "Expected indentation of 2 spaces but found 0 spaces.",
+    "line": 45,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 4 spaces but found 0 spaces.",
+    "line": 46,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 47,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 48,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 4 spaces but found 0 spaces.",
+    "line": 49,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 50,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 51,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 52,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 4 spaces but found 0 spaces.",
+    "line": 53,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 54,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 55,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 56,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 57,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "line": 58,
+    "column": 1
+  },
+  {
+    "message": "Expected indentation of 2 spaces but found 0 spaces.",
+    "line": 59,
+    "column": 1
   }
 ]
