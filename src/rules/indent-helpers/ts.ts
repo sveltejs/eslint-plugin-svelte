@@ -954,7 +954,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
           )
           setOffset(startParentToken, 0, atToken)
         } else {
-          const startParentToken = sourceCode.getFirstToken(parent)
+          const startParentToken = sourceCode.getFirstToken(
+            parent.parent &&
+              (parent.parent.type === "ExportDefaultDeclaration" ||
+                parent.parent.type === "ExportNamedDeclaration") &&
+              node.range[0] < parent.parent.range[0]
+              ? parent.parent
+              : parent,
+          )
           copyOffset(atToken, startParentToken)
         }
       } else {
