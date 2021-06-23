@@ -14,7 +14,25 @@ import { isBeginningOfLine } from "./commons"
 import { setOffsetNodes } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
 
-type NodeWithoutES = Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
+type NodeWithoutES = Exclude<
+  TSESTree.Node,
+  | { type: ESTree.Node["type"] }
+  | TSESTree.JSXAttribute
+  | TSESTree.JSXClosingElement
+  | TSESTree.JSXClosingFragment
+  | TSESTree.JSXElement
+  | TSESTree.JSXEmptyExpression
+  | TSESTree.JSXExpressionContainer
+  | TSESTree.JSXFragment
+  | TSESTree.JSXIdentifier
+  | TSESTree.JSXMemberExpression
+  | TSESTree.JSXNamespacedName
+  | TSESTree.JSXOpeningElement
+  | TSESTree.JSXOpeningFragment
+  | TSESTree.JSXSpreadAttribute
+  | TSESTree.JSXSpreadChild
+  | TSESTree.JSXText
+>
 type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
   [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
 }
@@ -437,11 +455,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
         setOffset(extendsToken, 1, interfaceToken)
         setOffsetNodes(context, node.extends, extendsToken, null, 1)
       }
-      if (node.implements != null && node.implements.length) {
-        const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
-        setOffset(implementsToken, 1, interfaceToken)
-        setOffsetNodes(context, node.implements, implementsToken, null, 1)
-      }
+      // It may not calculate the correct location because the visitor key is not provided.
+      // if (node.implements != null && node.implements.length) {
+      //   const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
+      //   setOffset(implementsToken, 1, interfaceToken)
+      //   setOffsetNodes(context, node.implements, implementsToken, null, 1)
+      // }
       const bodyToken = sourceCode.getFirstToken(node.body)
       setOffset(bodyToken, 0, interfaceToken)
     },
@@ -1022,125 +1041,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
     // WRAPPER NODES
     // ----------------------------------------------------------------------
     TSLiteralType() {
-      // noop
-    },
-    // ----------------------------------------------------------------------
-    // JSX
-    // ----------------------------------------------------------------------
-    JSXElement(node: TSESTree.JSXElement) {
-      setOffsetNodes(
-        context,
-        node.children,
-        node.openingElement,
-        node.closingElement,
-        1,
-      )
-    },
-    JSXFragment(node: TSESTree.JSXFragment) {
-      setOffsetNodes(
-        context,
-        node.children,
-        node.openingFragment,
-        node.closingFragment,
-        1,
-      )
-    },
-    JSXOpeningElement(node: TSESTree.JSXOpeningElement) {
-      const openToken = sourceCode.getFirstToken(node)
-      const closeToken = sourceCode.getLastToken(node)
-
-      const nameToken = sourceCode.getFirstToken(node.name)
-      setOffset(nameToken, 1, openToken)
-      if (node.typeParameters) {
-        setOffset(sourceCode.getFirstToken(node.typeParameters), 1, nameToken)
-      }
-      for (const attr of node.attributes) {
-        setOffset(sourceCode.getFirstToken(attr), 1, openToken)
-      }
-      if (node.selfClosing) {
-        const slash = sourceCode.getTokenBefore(closeToken)!
-        if (slash.value === "/") {
-          setOffset(slash, 0, openToken)
-        }
-      }
-      setOffset(closeToken, 0, openToken)
-    },
-    JSXClosingElement(node: TSESTree.JSXClosingElement) {
-      const openToken = sourceCode.getFirstToken(node)
-      const slash = sourceCode.getTokenAfter(openToken)!
-      if (slash.value === "/") {
-        setOffset(slash, 0, openToken)
-      }
-      const closeToken = sourceCode.getLastToken(node)
-      const nameToken = sourceCode.getFirstToken(node.name)
-      setOffset(nameToken, 1, openToken)
-      setOffset(closeToken, 0, openToken)
-    },
-    JSXOpeningFragment(
-      node: TSESTree.JSXOpeningFragment | TSESTree.JSXClosingFragment,
-    ) {
-      const [firstToken, ...tokens] = sourceCode.getTokens(node)
-      setOffset(tokens, 0, firstToken)
-    },
-    JSXClosingFragment(node: TSESTree.JSXClosingFragment) {
-      visitor.JSXOpeningFragment(node)
-    },
-    JSXAttribute(node: TSESTree.JSXAttribute) {
-      if (!node.value) {
-        return
-      }
-      const keyToken = sourceCode.getFirstToken(node)
-      const eqToken = sourceCode.getTokenAfter(node.name)
-      setOffset(eqToken, 1, keyToken)
-      setOffset(sourceCode.getFirstToken(node.value), 1, keyToken)
-    },
-    JSXExpressionContainer(node: TSESTree.JSXExpressionContainer) {
-      setOffsetNodes(
-        context,
-        [node.expression],
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
-      )
-    },
-    JSXSpreadAttribute(node: TSESTree.JSXSpreadAttribute) {
-      setOffsetNodes(
-        context,
-        [node.argument],
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
-      )
-    },
-    JSXSpreadChild(node: TSESTree.JSXSpreadChild) {
-      setOffsetNodes(
-        context,
-        [node.expression],
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
-      )
-    },
-    JSXMemberExpression(node: TSESTree.JSXMemberExpression) {
-      const objectToken = sourceCode.getFirstToken(node)
-      const dotToken = sourceCode.getTokenBefore(node.property)!
-      const propertyToken = sourceCode.getTokenAfter(dotToken)
-
-      setOffset([dotToken, propertyToken], 1, objectToken)
-    },
-    // ----------------------------------------------------------------------
-    // JSX SINGLE TOKEN NODES
-    // ----------------------------------------------------------------------
-    JSXEmptyExpression() {
-      // noop
-    },
-    JSXIdentifier() {
-      // noop
-    },
-    JSXNamespacedName() {
-      // noop
-    },
-    JSXText() {
       // noop
     },
   }

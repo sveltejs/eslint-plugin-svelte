@@ -730,32 +730,32 @@
     "column": 1
   },
   {
-    "message": "Expected indentation of 8 spaces but found 0 spaces.",
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
     "line": 160,
     "column": 1
   },
   {
-    "message": "Expected indentation of 10 spaces but found 0 spaces.",
+    "message": "Expected indentation of 8 spaces but found 0 spaces.",
     "line": 161,
     "column": 1
   },
   {
-    "message": "Expected indentation of 8 spaces but found 0 spaces.",
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
     "line": 162,
     "column": 1
   },
   {
-    "message": "Expected indentation of 10 spaces but found 0 spaces.",
+    "message": "Expected indentation of 8 spaces but found 0 spaces.",
     "line": 163,
     "column": 1
   },
   {
-    "message": "Expected indentation of 8 spaces but found 0 spaces.",
+    "message": "Expected indentation of 6 spaces but found 0 spaces.",
     "line": 164,
     "column": 1
   },
   {
-    "message": "Expected indentation of 6 spaces but found 0 spaces.",
+    "message": "Expected indentation of 4 spaces but found 0 spaces.",
     "line": 165,
     "column": 1
   },

@@ -38,4 +38,4 @@ string[
 ;
 </script>
 
-<!--tests/fixtures/rules/indent/invalid/ts/ts-types02-input.svelte-->
+<!--tests/fixtures/rules/indent/invalid/ts/ts-types03-input.svelte-->

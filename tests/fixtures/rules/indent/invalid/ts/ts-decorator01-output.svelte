@@ -157,12 +157,12 @@
           :
           boolean
       ) {
-        if (verbose) {
-          return `type: ${this.type}\ntitle: ${this.title}`;
-        } else {
-          return this.title;
-        }
+      if (verbose) {
+        return `type: ${this.type}\ntitle: ${this.title}`;
+      } else {
+        return this.title;
       }
+    }
   }
 
   class Line {

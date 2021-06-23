@@ -54,4 +54,4 @@
   }
 </script>
 
-<!--tests/fixtures/rules/indent/invalid/ts/ts-interface01-input.svelte-->
+<!--tests/fixtures/rules/indent/invalid/ts/ts-interface02-input.svelte-->

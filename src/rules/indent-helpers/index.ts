@@ -309,7 +309,14 @@ export function defineVisitor(
       saveExpectedIndent(tokens, actualIndent)
       return
     }
-    saveExpectedIndent(tokens, expectedIndent)
+    saveExpectedIndent(
+      tokens,
+      Math.min(
+        ...tokens
+          .map(getExpectedIndentFromToken)
+          .filter((i): i is number => i != null),
+      ),
+    )
 
     let prev = prevToken
     if (prevComments.length) {
