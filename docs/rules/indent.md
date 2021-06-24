@@ -56,13 +56,11 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 
 ```json
 {
-  "rules": {
-    "@ota-meshi/svelte/indent": "error"
-  },
   "overrides": [
     {
       "files": ["*.svelte"],
       "rules": {
+        "@ota-meshi/svelte/indent": "error",
         "indent": "off"
       }
     }
