@@ -23,7 +23,6 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 
 <!--eslint-skip-->
 <!-- prettier-ignore -->
-
 ```html
 <script>
   /* eslint @ota-meshi/svelte/indent: "error" */
@@ -51,6 +50,26 @@ CLICK ME!
 
 </eslint-code-block>
 
+::: warning Note
+This rule only checks `.svelte` files and does not interfere with other `.js` files. Unfortunately the default `indent` rule when turned on will try to lint both, so in order to make them complementary you can use `overrides` setting and disable `indent` rule on `.svelte` files:
+:::
+
+```json
+{
+  "rules": {
+    "@ota-meshi/svelte/indent": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.svelte"],
+      "rules": {
+        "indent": "off"
+      }
+    }
+  ]
+}
+```
+
 ## :wrench: Options
 
 ```json
@@ -60,7 +79,8 @@ CLICK ME!
     {
       "indent": 2,
       "ignoredNodes": [],
-      "switchCase": 1
+      "switchCase": 1,
+      "alignAttributesVertically": false
     }
   ]
 }
@@ -69,6 +89,7 @@ CLICK ME!
 - `indent` (`number | "tab"`) ... The type of indentation. Default is `2`. If this is a number, it's the number of spaces for one indent. If this is `"tab"`, it uses one tab for one indent.
 - `ignoredNodes` ... Can be used to disable indentation checking for any AST node. This accepts an array of [selectors](https://eslint.org/docs/developer-guide/selectors). If an AST node is matched by any of the selectors, the indentation of tokens which are direct children of that node will be ignored. This can be used as an escape hatch to relax the rule if you disagree with the indentation that it enforces for a particular syntactic pattern.
 - `switchCase` ... Enforces indentation level for case clauses in switch statements. Default is `1`.
+- `alignAttributesVertically` ... Condition for whether attributes should be vertically aligned to the first attribute in multiline case or not. Default is `false`
 
 ## :rocket: Version
 

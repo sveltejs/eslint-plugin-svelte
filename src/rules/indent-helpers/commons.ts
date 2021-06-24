@@ -2,6 +2,7 @@ import type { ASTNode, SourceCode } from "../../types"
 import type { AST } from "svelte-eslint-parser"
 import { isOpeningParenToken, isClosingParenToken } from "eslint-utils"
 import { isNotWhitespace, isWhitespace } from "./ast"
+import type { OffsetContext } from "./offset-context"
 
 export type AnyToken = AST.Token | AST.Comment
 export type MaybeNode = {
@@ -14,93 +15,14 @@ export type IndentOptions = {
   indentChar: " " | "\t"
   indentSize: number
   switchCase: number
+  alignAttributesVertically: boolean
   ignoredNodes: string[]
 }
+
 export type IndentContext = {
   sourceCode: SourceCode
   options: IndentOptions
-  /**
-   * Set offset to the given tokens.
-   */
-  setOffset: (
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    offset: number,
-    baseToken: AnyToken,
-  ) => void
-  /**
-   * Copy offset to the given tokens from srcToken.
-   */
-  copyOffset: (
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    srcToken: AnyToken,
-  ) => void
-
-  /**
-   * Set baseline offset to the given token.
-   */
-  setOffsetBaseLine: (
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    offset: number,
-  ) => void
-  /**
-   * Ignore all tokens of the given node.
-   */
-  ignore: (node: ASTNode) => void
-}
-
-/**
- * Set offset to the given nodes.
- * The first node is offsetted from the given base token.
- */
-export function setOffsetNodes(
-  { sourceCode, setOffset }: IndentContext,
-  nodes: (ASTNode | AnyToken | MaybeNode | null | undefined)[],
-  baseNodeOrToken: ASTNode | AnyToken | MaybeNode,
-  lastNodeOrToken: ASTNode | AnyToken | MaybeNode | null,
-  offset: number,
-): void {
-  const baseToken = sourceCode.getFirstToken(baseNodeOrToken)
-
-  let prevToken = sourceCode.getLastToken(baseNodeOrToken)
-  for (const node of nodes) {
-    if (node == null) {
-      continue
-    }
-    const elementTokens = getFirstAndLastTokens(
-      sourceCode,
-      node,
-      prevToken.range[1],
-    )
-
-    let t: AnyToken | null = prevToken
-    while (
-      (t = sourceCode.getTokenAfter(t, {
-        includeComments: true,
-        filter: isNotWhitespace,
-      })) != null &&
-      t.range[1] <= elementTokens.firstToken.range[0]
-    ) {
-      setOffset(t, offset, baseToken)
-    }
-    setOffset(elementTokens.firstToken, offset, baseToken)
-
-    prevToken = elementTokens.lastToken
-  }
-
-  if (lastNodeOrToken) {
-    const lastToken = sourceCode.getFirstToken(lastNodeOrToken)
-    let t: AnyToken | null = prevToken
-    while (
-      (t = sourceCode.getTokenAfter(t, {
-        includeComments: true,
-        filter: isNotWhitespace,
-      })) != null &&
-      t.range[1] <= lastToken.range[0]
-    ) {
-      setOffset(t, offset, baseToken)
-    }
-    setOffset(lastToken, 0, baseToken)
-  }
+  offsets: OffsetContext
 }
 
 /**
@@ -146,7 +68,10 @@ export function isBeginningOfLine(
   sourceCode: SourceCode,
   node: ASTNode | AnyToken | MaybeNode,
 ): boolean {
-  const prevToken = sourceCode.getTokenBefore(node, { includeComments: false })
+  const prevToken = sourceCode.getTokenBefore(node, {
+    includeComments: false,
+    filter: isNotWhitespace,
+  })
 
   return !prevToken || prevToken.loc.end.line < node.loc!.start.line
 }

@@ -7,10 +7,13 @@ import * as TS from "./ts"
 import { isNotWhitespace } from "./ast"
 import { isCommentToken } from "eslint-utils"
 import type { AnyToken, IndentOptions } from "./commons"
+import type { OffsetCalculator } from "./offset-context"
+import { OffsetContext } from "./offset-context"
 
 type IndentUserOptions = {
   indent?: number | "tab"
   switchCase?: number
+  alignAttributesVertically?: boolean
   ignoredNodes?: string[]
 }
 
@@ -29,6 +32,7 @@ function parseOptions(
     indentChar: " ",
     indentSize: 2,
     switchCase: 1,
+    alignAttributesVertically: false,
     ignoredNodes: [],
     ...defaultOptions,
   }
@@ -46,6 +50,12 @@ function parseOptions(
 
   if (options.ignoredNodes != null) {
     ret.ignoredNodes = options.ignoredNodes
+  }
+
+  if (options.alignAttributesVertically && ret.indentChar === " ") {
+    ret.alignAttributesVertically = true
+  } else if (ret.indentChar !== " ") {
+    ret.alignAttributesVertically = false
   }
 
   return ret
@@ -66,156 +76,13 @@ export function defineVisitor(
 
   const options = parseOptions(context.options[0] || {}, defaultOptions)
   const sourceCode = context.getSourceCode()
-  const offsets = new Map<
-    AnyToken,
-    | {
-        baseToken: AnyToken
-        offset: number
-        baseline: false
-        expectedIndent?: number
-      }
-    | {
-        baseToken?: undefined
-        offset: number
-        baseline: true
-        expectedIndent?: number
-      }
-  >()
-  const ignoreTokens = new Set<AnyToken>()
-
-  /**
-   * Set offset to the given tokens.
-   */
-  function setOffset(
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    offset: number,
-    baseToken: AnyToken,
-  ) {
-    if (!token) {
-      return
-    }
-    if (Array.isArray(token)) {
-      for (const t of token) {
-        setOffset(t, offset, baseToken)
-      }
-      return
-    }
-    if (token === baseToken) {
-      return
-    }
-    offsets.set(token, {
-      baseToken,
-      offset,
-      baseline: false,
-    })
-  }
-
-  /**
-   * Copy offset to the given tokens from srcToken.
-   */
-  function copyOffset(
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    srcToken: AnyToken,
-  ): void {
-    if (!token) {
-      return
-    }
-    const offsetData = offsets.get(srcToken)
-    if (!offsetData) {
-      return
-    }
-    if (!offsetData.baseline) {
-      setOffset(token, offsetData.offset, offsetData.baseToken)
-    } else {
-      setOffsetBaseLine(token, offsetData.offset)
-    }
-  }
-
-  /**
-   * Set baseline offset to the given token.
-   */
-  function setOffsetBaseLine(
-    token: AnyToken | null | undefined | (AnyToken | null | undefined)[],
-    offset: number,
-  ) {
-    if (!token) {
-      return
-    }
-    if (Array.isArray(token)) {
-      for (const t of token) {
-        setOffsetBaseLine(t, offset)
-      }
-      return
-    }
-    offsets.set(token, {
-      offset,
-      baseline: true,
-      expectedIndent: undefined,
-    })
-  }
-
-  /**
-   * Ignore all tokens of the given node.
-   */
-  function ignore(node: ASTNode) {
-    for (const token of sourceCode.getTokens(node)) {
-      ignoreTokens.add(token)
-    }
-  }
+  const offsets = new OffsetContext({ sourceCode, options })
 
   /**
    * Get the text of the indentation part of the given location.
    */
   function getIndentText({ line, column }: { line: number; column: number }) {
     return sourceCode.lines[line - 1].slice(0, column)
-  }
-
-  /**
-   * Calculate correct indentation of the given token.
-   */
-  function getExpectedIndentFromToken(token: AnyToken): number | null {
-    const offsetInfo = offsets.get(token)
-    if (offsetInfo == null) {
-      return null
-    }
-    if (offsetInfo.expectedIndent != null) {
-      return offsetInfo.expectedIndent
-    }
-    if (offsetInfo.baseline) {
-      return offsetInfo.offset * options.indentSize
-    }
-    const baseIndent = getExpectedIndentFromToken(offsetInfo.baseToken)
-    if (baseIndent == null) {
-      return null
-    }
-    return baseIndent + offsetInfo.offset * options.indentSize
-  }
-
-  /**
-   * Calculate correct indentation of the line of the given tokens.
-   */
-  function getExpectedIndentFromTokens(tokens: AnyToken[]) {
-    for (const token of tokens) {
-      if (ignoreTokens.has(token)) {
-        return null
-      }
-      const expectedIndent = getExpectedIndentFromToken(token)
-      if (expectedIndent != null) {
-        return expectedIndent
-      }
-    }
-    return null
-  }
-
-  /** Save expected indent to give tokens */
-  function saveExpectedIndent(tokens: AnyToken[], expectedIndent: number) {
-    for (const token of tokens) {
-      const offsetInfo = offsets.get(token)
-      if (offsetInfo == null) {
-        continue
-      }
-      offsetInfo.expectedIndent ??= expectedIndent
-    }
   }
 
   /**
@@ -301,19 +168,20 @@ export function defineVisitor(
     tokens: AnyToken[],
     prevComments: AST.Comment[],
     prevToken: AnyToken | null,
+    calculator: OffsetCalculator,
   ) {
     const firstToken = tokens[0]
     const actualIndent = firstToken.loc.start.column
-    const expectedIndent = getExpectedIndentFromTokens(tokens)
+    const expectedIndent = calculator.getExpectedIndentFromTokens(tokens)
     if (expectedIndent == null) {
-      saveExpectedIndent(tokens, actualIndent)
+      calculator.saveExpectedIndent(tokens, actualIndent)
       return
     }
-    saveExpectedIndent(
+    calculator.saveExpectedIndent(
       tokens,
       Math.min(
         ...tokens
-          .map(getExpectedIndentFromToken)
+          .map((t) => calculator.getExpectedIndentFromToken(t))
           .filter((i): i is number => i != null),
       ),
     )
@@ -333,10 +201,7 @@ export function defineVisitor(
   const indentContext = {
     sourceCode,
     options,
-    setOffset,
-    copyOffset,
-    setOffsetBaseLine,
-    ignore,
+    offsets,
   }
   const nodesVisitor = {
     ...ES.defineVisitor(indentContext),
@@ -357,11 +222,11 @@ export function defineVisitor(
         const handler = visitor[key] as any
         visitor[key] = function (node: never, ...args: never[]) {
           const ret = handler.call(this, node, ...args)
-          ignore(node)
+          offsets.ignore(node)
           return ret
         }
       } else {
-        visitor[key] = ignore
+        visitor[key] = (node: never) => offsets.ignore(node)
       }
     }
 
@@ -375,13 +240,15 @@ export function defineVisitor(
       if (!knownNodes.has(node.type)) {
         // debugger
         // console.log(node.type, node.loc!.start.line)
-        ignore(node)
+        offsets.ignore(node)
       }
     },
     "Program:exit"(node: ESTree.Program) {
+      const calculator = offsets.getOffsetCalculator()
+
       let prevToken: AnyToken | null = null
       for (const { prevComments, tokens } of iterateLineTokens()) {
-        processLine(tokens, prevComments, prevToken)
+        processLine(tokens, prevComments, prevToken, calculator)
         prevToken = tokens[tokens.length - 1]
       }
 
