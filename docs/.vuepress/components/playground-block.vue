@@ -47,21 +47,27 @@ import { DEFAULT_RULES_CONFIG } from "./rules"
 const DEFAULT_CODE =
   `<!-- Welcome to @ota-meshi/eslint-plugin-svelte -->
 <script>
-    let a = 1;
-    let b = 2;
-    // let c = 2;
-    let string = \`this string contains some <strong>HTML!!!</strong>\`;
-    let user = {
-        firstname: 'Ada',
-        lastname: 'Lovelace'
-    };
+  let a = 1;
+  let b = 2;
+  // let c = 2;
+  let string = \`this string contains some <strong>HTML!!!</strong>\`;
+  let user = {
+    firstname: 'Ada',
+    lastname: 'Lovelace'
+  };
     let current = 'foo';
 <` +
   `/script>
 
-<input type="number" bind:value={a}>
-<input type="number" bind:value={b}>
-<input type="number" bind:value={c}>
+<input
+  type="number"
+  bind:value={a}>
+<input
+    type="number"
+  bind:value={b}>
+<input
+  type="number"
+  bind:value={c}>
 <p>{a} + {b} + {c} = {a + b + c}</p>
 
 <p>{@html string}</p>
@@ -82,7 +88,8 @@ const DEFAULT_CODE =
 {/if}
 
 <button
-  class="{current === 'foo' ? 'selected' : ''}"
+  type=button
+  class={current === 'foo' ? 'selected' : ''}
   on:click="{() => current = 'foo'}"
 >foo</button>
 `
