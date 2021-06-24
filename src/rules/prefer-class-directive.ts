@@ -7,6 +7,7 @@ export default createRule("prefer-class-directive", {
   meta: {
     docs: {
       description: "require class directives instead of ternary expressions",
+      category: "Stylistic Issues",
       recommended: false,
     },
     fixable: "code",

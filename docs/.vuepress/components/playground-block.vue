@@ -250,4 +250,8 @@ function equalsRules(a, b) {
   padding: 8px;
   font-size: 12px;
 }
+
+.main-content > .editor-content > .messages a {
+  color: #40b3ff;
+}
 </style>

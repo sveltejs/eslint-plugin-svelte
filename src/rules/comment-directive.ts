@@ -30,6 +30,7 @@ export default createRule("comment-directive", {
   meta: {
     docs: {
       description: "support comment-directives in HTML template",
+      category: "System",
       recommended: "base",
     },
     schema: [

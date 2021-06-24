@@ -4,7 +4,12 @@ import * as coreRules from "../../../../node_modules/eslint4b/dist/core-rules"
 import plugin from "../../../../"
 
 const CATEGORY_TITLES = {
-  recommended: "eslint-plugin-svelte",
+  "Possible Errors": "Svelte Rules(Possible Errors)",
+  "Security Vulnerability": "Svelte Rules(Security Vulnerability)",
+  "Best Practices": "Svelte Rules(Best Practices)",
+  "Stylistic Issues": "Svelte Rules(Stylistic Issues)",
+  System: "Svelte Rules(System)",
+  "Extension Rules": "Svelte Rules(Extension Rules)",
   "eslint-core-rules@Possible Errors": "ESLint core rules(Possible Errors)",
   "eslint-core-rules@Best Practices": "ESLint core rules(Best Practices)",
   "eslint-core-rules@Strict Mode": "ESLint core rules(Strict Mode)",
@@ -15,7 +20,12 @@ const CATEGORY_TITLES = {
   "eslint-core-rules@ECMAScript 6": "ESLint core rules(ECMAScript 6)",
 }
 const CATEGORY_INDEX = {
-  recommended: 2,
+  "Possible Errors": 1,
+  "Security Vulnerability": 2,
+  "Best Practices": 3,
+  "Stylistic Issues": 4,
+  System: 5,
+  "Extension Rules": 5.5,
   "eslint-core-rules@Possible Errors": 6,
   "eslint-core-rules@Best Practices": 7,
   "eslint-core-rules@Strict Mode": 8,
@@ -25,16 +35,29 @@ const CATEGORY_INDEX = {
   "eslint-core-rules@ECMAScript 6": 12,
 }
 const CATEGORY_CLASSES = {
-  recommended: "eslint-plugin-svelte__category",
+  "Possible Errors": "eslint-plugin-svelte__category",
+  "Security Vulnerability": "eslint-plugin-svelte__category",
+  "Best Practices": "eslint-plugin-svelte__category",
+  "Stylistic Issues": "eslint-plugin-svelte__category",
+  System: "eslint-plugin-svelte__category",
+  "Extension Rules": "eslint-plugin-svelte__category",
 }
 
 const allRules = []
 
 for (const k of Object.keys(plugin.rules)) {
   const rule = plugin.rules[k]
+  if (rule.meta.deprecated) {
+    continue
+  }
+
+  const category = rule.meta.docs.extensionRule
+    ? "Extension Rules"
+    : rule.meta.docs.category
+
   allRules.push({
     classes: "eslint-plugin-svelte__rule",
-    category: "recommended",
+    category,
     ruleId: rule.meta.docs.ruleId,
     url: rule.meta.docs.url,
     initChecked: true,

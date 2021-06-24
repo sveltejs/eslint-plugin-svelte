@@ -1,13 +1,50 @@
 import type { RuleModule } from "../src/types"
 import { rules } from "../src/utils/rules"
 
+const categories = [
+  "Possible Errors",
+  "Security Vulnerability",
+  "Best Practices",
+  "Stylistic Issues",
+  "System",
+] as const
+
+const descriptions: Record<typeof categories[number], string> = {
+  "Possible Errors":
+    "These rules relate to possible syntax or logic errors in Svelte code:",
+  "Security Vulnerability":
+    "These rules relate to security vulnerabilities in Svelte code:",
+  "Best Practices":
+    "These rules relate to better ways of doing things to help you avoid problems:",
+  "Stylistic Issues":
+    "These rules relate to style guidelines, and are therefore quite subjective:",
+  System: "These rules relate to this plugin works:",
+}
+
+const activeRules = rules.filter((rule) => !rule.meta.deprecated)
+const svelteRules = activeRules.filter((rule) => !rule.meta.docs.extensionRule)
+const extensionRules = activeRules.filter(
+  (rule) => rule.meta.docs.extensionRule,
+)
+const deprecatedRules = rules.filter((rule) => rule.meta.deprecated)
+
+activeRules.forEach((rule) => {
+  if (!categories.includes(rule.meta.docs.category)) {
+    throw new Error(`missing categories:${rule.meta.docs.category}`)
+  }
+})
+
+const categoryRules = categories.map((cat) => {
+  return {
+    title: cat,
+    rules: svelteRules.filter((rule) => rule.meta.docs.category === cat),
+  }
+})
+
 //eslint-disable-next-line require-jsdoc -- ignore
 export default function renderRulesTableContent(
   buildRulePath = (ruleName: string) => `./${ruleName}.md`,
 ): string {
-  const activeRules = rules.filter((rule) => !rule.meta.deprecated)
-  const deprecatedRules = rules.filter((rule) => rule.meta.deprecated)
-
   // -----------------------------------------------------------------------------
 
   //eslint-disable-next-line require-jsdoc -- ignore
@@ -37,11 +74,30 @@ export default function renderRulesTableContent(
   }
 
   // -----------------------------------------------------------------------------
-  let rulesTableContent = `
+  let rulesTableContent = categoryRules
+    .map((cat) => {
+      return `
+## ${cat.title}
+
+${descriptions[cat.title]}
+
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-${activeRules.map(toRuleRow).join("\n")}
+${cat.rules.map(toRuleRow).join("\n")}
 `
+    })
+    .join("")
+  if (extensionRules.length >= 1) {
+    rulesTableContent += `
+## Extension Rules
+
+These rules extend the rules provided by ESLint itself to work well in Svelte:
+
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+${extensionRules.map(toRuleRow).join("\n")}
+`
+  }
 
   // -----------------------------------------------------------------------------
   if (deprecatedRules.length >= 1) {

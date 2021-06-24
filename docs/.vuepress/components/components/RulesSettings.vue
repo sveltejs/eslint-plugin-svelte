@@ -146,6 +146,6 @@ a {
 }
 
 .eslint-plugin-svelte__category {
-  color: #f8c555;
+  color: #ffdcd3;
 }
 </style>

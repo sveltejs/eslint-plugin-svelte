@@ -18,6 +18,7 @@ export default createRule("button-has-type", {
     docs: {
       description:
         "disallow usage of button without an explicit type attribute",
+      category: "Best Practices",
       recommended: false,
     },
     schema: [

@@ -18,6 +18,7 @@ export default createRule("no-useless-mustaches", {
   meta: {
     docs: {
       description: "disallow unnecessary mustache interpolations",
+      category: "Best Practices",
       recommended: false,
     },
     fixable: "code",

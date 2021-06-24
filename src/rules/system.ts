@@ -6,6 +6,7 @@ export default createRule("system", {
   meta: {
     docs: {
       description: "system rule for working this plugin",
+      category: "System",
       recommended: "base",
     },
     schema: [],

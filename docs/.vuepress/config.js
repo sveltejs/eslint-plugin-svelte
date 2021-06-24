@@ -2,6 +2,33 @@ const path = require("path")
 // eslint-disable-next-line node/no-missing-require, node/no-unpublished-require -- no build
 const { rules } = require("../../lib/utils/rules")
 
+const svelteRules = rules.filter(
+  (rule) => !rule.meta.docs.extensionRule && !rule.meta.deprecated,
+)
+
+const categories = [
+  "Possible Errors",
+  "Security Vulnerability",
+  "Best Practices",
+  "Stylistic Issues",
+  "System",
+]
+svelteRules.forEach((rule) => {
+  if (!categories.includes(rule.meta.docs.category)) {
+    throw new Error(`missing categories:${rule.meta.docs.category}`)
+  }
+})
+const categoryRules = categories.map((cat) => {
+  return {
+    title: cat,
+    rules: svelteRules.filter((rule) => rule.meta.docs.category === cat),
+  }
+})
+
+const extensionRules = rules.filter(
+  (rule) => rule.meta.docs.extensionRule && !rule.meta.deprecated,
+)
+
 function ruleToLink({
   meta: {
     docs: { ruleId, ruleName },
@@ -50,28 +77,19 @@ module.exports = {
     sidebar: {
       "/rules/": [
         "/rules/",
-        {
-          title: "Svelte Rules",
-          collapsable: false,
-          children: rules
-            .filter(
-              (rule) => !rule.meta.docs.extensionRule && !rule.meta.deprecated,
-            )
-            .map(ruleToLink),
-        },
-        ...(rules.some(
-          (rule) => rule.meta.docs.extensionRule && !rule.meta.deprecated,
-        )
+        ...categoryRules.map((cat) => {
+          return {
+            title: cat.title,
+            collapsable: false,
+            children: cat.rules.map(ruleToLink),
+          }
+        }),
+        ...(extensionRules.length
           ? [
               {
                 title: "Extension Rules",
                 collapsable: false,
-                children: rules
-                  .filter(
-                    (rule) =>
-                      rule.meta.docs.extensionRule && !rule.meta.deprecated,
-                  )
-                  .map(ruleToLink),
+                children: extensionRules.map(ruleToLink),
               },
             ]
           : []),

@@ -5,6 +5,7 @@ export default createRule("indent", {
   meta: {
     docs: {
       description: "enforce consistent indentation",
+      category: "Stylistic Issues",
       recommended: false,
     },
     fixable: "whitespace",

@@ -56,9 +56,17 @@ export interface RuleModule {
   create(context: RuleContext): RuleListener
 }
 
+export type RuleCategory =
+  | "Possible Errors"
+  | "Security Vulnerability"
+  | "Best Practices"
+  | "Stylistic Issues"
+  | "System"
+
 export interface RuleMetaData {
   docs: {
     description: string
+    category: RuleCategory
     recommended: boolean | "base"
     extensionRule?: string
     url: string
@@ -82,6 +90,7 @@ export interface PartialRuleModule {
 export interface PartialRuleMetaData {
   docs: {
     description: string
+    category: RuleCategory
     recommended: boolean | "base"
     extensionRule?: string
     replacedBy?: string[]

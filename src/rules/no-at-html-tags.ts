@@ -5,6 +5,7 @@ export default createRule("no-at-html-tags", {
   meta: {
     docs: {
       description: "disallow use of `{@html}` to prevent XSS attack",
+      category: "Security Vulnerability",
       recommended: true,
     },
     schema: [],

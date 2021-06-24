@@ -28,6 +28,7 @@ export default createRule("max-attributes-per-line", {
   meta: {
     docs: {
       description: "enforce the maximum number of attributes per line",
+      category: "Stylistic Issues",
       recommended: false,
     },
     fixable: "whitespace",

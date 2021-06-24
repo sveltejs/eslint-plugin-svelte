@@ -13,6 +13,7 @@ export default createRule("no-inner-declarations", {
     docs: {
       description:
         "disallow variable or `function` declarations in nested blocks",
+      category: "Possible Errors",
       recommended: true,
       extensionRule: "no-inner-declarations",
     },
