@@ -23,6 +23,7 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 
 <!--eslint-skip-->
 <!-- prettier-ignore -->
+
 ```html
 <script>
   /* eslint @ota-meshi/svelte/indent: "error" */
