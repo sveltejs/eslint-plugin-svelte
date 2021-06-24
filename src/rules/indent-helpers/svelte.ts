@@ -4,12 +4,12 @@ import { isNotWhitespace } from "./ast"
 import type { IndentContext } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
 import { setOffsetNodes } from "./commons"
-type NodeWithParent = Exclude<
+type NodeWithoutES = Exclude<
   AST.SvelteNode,
   AST.SvelteProgram | AST.SvelteReactiveStatement
 >
-type NodeListenerMap<T extends NodeWithParent = NodeWithParent> = {
-  [key in NodeWithParent["type"]]: T extends { type: key } ? T : never
+type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
+  [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
 }
 
 type NodeListener = {

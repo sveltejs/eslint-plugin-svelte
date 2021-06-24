@@ -17,6 +17,8 @@ export function isNotWhitespace(
   token: AnyToken | ESTree.Comment | null | undefined,
 ): boolean {
   return (
-    token != null && (token.type !== "HTMLText" || Boolean(token.value.trim()))
+    token != null &&
+    (token.type !== "HTMLText" || Boolean(token.value.trim())) &&
+    (token.type !== "JSXText" || Boolean(token.value.trim()))
   )
 }

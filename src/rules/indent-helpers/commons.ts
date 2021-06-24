@@ -3,7 +3,12 @@ import type { AST } from "svelte-eslint-parser"
 import { isOpeningParenToken, isClosingParenToken } from "eslint-utils"
 import { isNotWhitespace, isWhitespace } from "./ast"
 
-type AnyToken = AST.Token | AST.Comment
+export type AnyToken = AST.Token | AST.Comment
+export type MaybeNode = {
+  type: string
+  range: [number, number]
+  loc: AST.SourceLocation
+}
 
 export type IndentOptions = {
   indentChar: " " | "\t"
@@ -49,9 +54,9 @@ export type IndentContext = {
  */
 export function setOffsetNodes(
   { sourceCode, setOffset }: IndentContext,
-  nodes: (ASTNode | AnyToken | null | undefined)[],
-  baseNodeOrToken: ASTNode | AnyToken,
-  lastNodeOrToken: ASTNode | AnyToken | null,
+  nodes: (ASTNode | AnyToken | MaybeNode | null | undefined)[],
+  baseNodeOrToken: ASTNode | AnyToken | MaybeNode,
+  lastNodeOrToken: ASTNode | AnyToken | MaybeNode | null,
   offset: number,
 ): void {
   const baseToken = sourceCode.getFirstToken(baseNodeOrToken)
@@ -105,7 +110,7 @@ export function setOffsetNodes(
  */
 export function getFirstAndLastTokens(
   sourceCode: SourceCode,
-  node: ASTNode | AnyToken,
+  node: ASTNode | AnyToken | MaybeNode,
   borderOffset = 0,
 ): { firstToken: AST.Token; lastToken: AST.Token } {
   let firstToken = sourceCode.getFirstToken(node)
@@ -132,4 +137,16 @@ export function getFirstAndLastTokens(
   }
 
   return { firstToken, lastToken }
+}
+
+/**
+ * Check whether the given node or token is the beginning of a line.
+ */
+export function isBeginningOfLine(
+  sourceCode: SourceCode,
+  node: ASTNode | AnyToken | MaybeNode,
+): boolean {
+  const prevToken = sourceCode.getTokenBefore(node, { includeComments: false })
+
+  return !prevToken || prevToken.loc.end.line < node.loc!.start.line
 }

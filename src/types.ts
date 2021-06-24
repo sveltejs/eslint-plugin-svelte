@@ -7,8 +7,12 @@ import type {
 } from "eslint"
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 
-export type ASTNode = AST.SvelteNode | ESTree.Node
+export type ASTNode =
+  | AST.SvelteNode
+  | ESTree.Node
+  | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
 type ASTNodeWithParent =
   | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNode })
   | AST.SvelteProgram

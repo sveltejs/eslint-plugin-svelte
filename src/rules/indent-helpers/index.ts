@@ -3,16 +3,16 @@ import type * as ESTree from "estree"
 import type { ASTNode, RuleContext, RuleListener } from "../../types"
 import * as SV from "./svelte"
 import * as ES from "./es"
+import * as TS from "./ts"
 import { isNotWhitespace } from "./ast"
 import { isCommentToken } from "eslint-utils"
-import type { IndentOptions } from "./commons"
+import type { AnyToken, IndentOptions } from "./commons"
 
 type IndentUserOptions = {
   indent?: number | "tab"
   switchCase?: number
   ignoredNodes?: string[]
 }
-type AnyToken = AST.Token | AST.Comment
 
 /**
  * Normalize options.
@@ -309,7 +309,14 @@ export function defineVisitor(
       saveExpectedIndent(tokens, actualIndent)
       return
     }
-    saveExpectedIndent(tokens, expectedIndent)
+    saveExpectedIndent(
+      tokens,
+      Math.min(
+        ...tokens
+          .map(getExpectedIndentFromToken)
+          .filter((i): i is number => i != null),
+      ),
+    )
 
     let prev = prevToken
     if (prevComments.length) {
@@ -334,6 +341,7 @@ export function defineVisitor(
   const nodesVisitor = {
     ...ES.defineVisitor(indentContext),
     ...SV.defineVisitor(indentContext),
+    ...TS.defineVisitor(indentContext),
   }
   const knownNodes = new Set(Object.keys(nodesVisitor))
 
@@ -365,6 +373,8 @@ export function defineVisitor(
     "*:exit"(node: ASTNode) {
       // Ignore tokens of unknown nodes.
       if (!knownNodes.has(node.type)) {
+        // debugger
+        // console.log(node.type, node.loc!.start.line)
         ignore(node)
       }
     },

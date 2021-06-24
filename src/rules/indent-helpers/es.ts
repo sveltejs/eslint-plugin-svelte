@@ -1,5 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { ASTNode } from "../../types"
 import type { IndentContext } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
@@ -35,10 +36,7 @@ type NodeListener = {
  * @param context The rule context.
  * @returns AST event handlers.
  */
-export function defineVisitor(context: IndentContext): NodeListener & {
-  ":expression": (node: ESTree.Expression) => void
-  ":statement": (node: ESTree.Statement) => void
-} {
+export function defineVisitor(context: IndentContext): NodeListener {
   const { sourceCode, options, setOffsetBaseLine, setOffset } = context
 
   /**
@@ -80,13 +78,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       }
     },
     ArrayExpression(node: ESTree.ArrayExpression | ESTree.ArrayPattern) {
-      setOffsetNodes(
-        context,
-        node.elements,
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
+      const firstToken = sourceCode.getFirstToken(node)
+      const rightToken = sourceCode.getTokenAfter(
+        node.elements[node.elements.length - 1] || firstToken,
+        { filter: isClosingBracketToken, includeComments: false },
       )
+      setOffsetNodes(context, node.elements, firstToken, rightToken, 1)
     },
     ArrayPattern(node: ESTree.ArrayPattern) {
       visitor.ArrayExpression(node)
@@ -250,7 +247,7 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         setOffset(sourceCode.getFirstToken(node.id), 1, classToken)
       }
       if (node.superClass != null) {
-        const extendsToken = sourceCode.getTokenAfter(node.id || classToken)!
+        const extendsToken = sourceCode.getTokenBefore(node.superClass)!
         const superClassToken = sourceCode.getTokenAfter(extendsToken)
         setOffset(extendsToken, 1, classToken)
         setOffset(superClassToken, 1, extendsToken)
@@ -461,43 +458,49 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     ) {
       const firstToken = sourceCode.getFirstToken(node)
       let leftParenToken, bodyBaseToken
-      if (isOpeningParenToken(firstToken)) {
+      if (firstToken.type === "Punctuator") {
         // method
         leftParenToken = firstToken
         bodyBaseToken = sourceCode.getFirstToken(getParent(node)!)
       } else {
-        const functionToken = node.async
-          ? sourceCode.getTokenAfter(firstToken)!
-          : firstToken
-        const starToken = node.generator
-          ? sourceCode.getTokenAfter(functionToken)
-          : null
-        const idToken = node.id && sourceCode.getFirstToken(node.id)
+        let nextToken = sourceCode.getTokenAfter(firstToken)
+        let nextTokenOffset = 0
+        while (
+          nextToken &&
+          !isOpeningParenToken(nextToken) &&
+          nextToken.value !== "<"
+        ) {
+          if (
+            nextToken.value === "*" ||
+            (node.id && nextToken.range[0] === node.id.range![0])
+          ) {
+            nextTokenOffset = 1
+          }
+          setOffset(nextToken, nextTokenOffset, firstToken)
+          nextToken = sourceCode.getTokenAfter(nextToken)
+        }
 
-        if (node.async) {
-          setOffset(functionToken, 0, firstToken)
-        }
-        if (node.generator) {
-          setOffset(starToken, 1, firstToken)
-        }
-        if (node.id != null) {
-          setOffset(idToken, 1, firstToken)
-        }
-
-        leftParenToken = sourceCode.getTokenAfter(
-          idToken || starToken || functionToken,
-        )!
+        leftParenToken = nextToken!
         bodyBaseToken = firstToken
+      }
+
+      if (
+        !isOpeningParenToken(leftParenToken) &&
+        (node as TSESTree.FunctionExpression).typeParameters
+      ) {
+        leftParenToken = sourceCode.getTokenAfter(
+          (node as TSESTree.FunctionExpression).typeParameters!,
+        )!
       }
 
       const rightParenToken = sourceCode.getTokenAfter(
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
       )!
-      const bodyToken = sourceCode.getFirstToken(node.body)
-
       setOffset(leftParenToken, 1, bodyBaseToken)
       setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+
+      const bodyToken = sourceCode.getFirstToken(node.body)
       setOffset(bodyToken, 0, bodyBaseToken)
     },
     FunctionExpression(node: ESTree.FunctionExpression) {
@@ -709,22 +712,13 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         lastKeyToken = keyTokens.lastToken
       }
 
-      if (
-        node.type === "MethodDefinition" ||
-        (node.type === "Property" && node.method === true)
-      ) {
-        const leftParenToken = sourceCode.getTokenAfter(lastKeyToken)
-        setOffset(leftParenToken, 1, lastKeyToken)
-      } else if (node.type === "Property" && !node.shorthand) {
-        const colonToken = sourceCode.getTokenAfter(lastKeyToken)!
-        const valueToken = sourceCode.getTokenAfter(colonToken)
-
-        setOffset([colonToken, valueToken], 1, lastKeyToken)
-      } else if (node.type === "PropertyDefinition" && node.value != null) {
-        const eqToken = sourceCode.getTokenAfter(lastKeyToken)!
-        const initToken = sourceCode.getTokenAfter(eqToken)
-
-        setOffset([eqToken, initToken], 1, lastKeyToken)
+      if (node.value) {
+        const initToken = sourceCode.getFirstToken(node.value)
+        setOffset(
+          [...sourceCode.getTokensBetween(lastKeyToken, initToken), initToken],
+          1,
+          lastKeyToken,
+        )
       }
     },
     Property(node: ESTree.Property) {
@@ -753,13 +747,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
       }
     },
     ObjectExpression(node: ESTree.ObjectExpression | ESTree.ObjectPattern) {
-      setOffsetNodes(
-        context,
-        node.properties,
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
+      const firstToken = sourceCode.getFirstToken(node)
+      const rightToken = sourceCode.getTokenAfter(
+        node.properties[node.properties.length - 1] || firstToken,
+        { filter: isClosingBraceToken, includeComments: false },
       )
+      setOffsetNodes(context, node.properties, firstToken, rightToken, 1)
     },
     ObjectPattern(node: ESTree.ObjectPattern) {
       visitor.ObjectExpression(node)
@@ -929,9 +922,6 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     DebuggerStatement() {
       // noop
     },
-    EmptyStatement() {
-      // noop
-    },
     Identifier() {
       // noop
     },
@@ -962,17 +952,20 @@ export function defineVisitor(context: IndentContext): NodeListener & {
     ChainExpression() {
       // noop
     },
+    EmptyStatement() {
+      // noop
+    },
   }
 
-  return {
-    ...visitor,
-    ":statement"(node: ESTree.Statement) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  const commonVisitor: any = {
+    ":statement, PropertyDefinition"(node: ESTree.Statement) {
       const firstToken = sourceCode.getFirstToken(node)
       const lastToken = sourceCode.getLastToken(node)
       if (isSemicolonToken(lastToken) && firstToken !== lastToken) {
         const next = sourceCode.getTokenAfter(lastToken)
         if (!next || lastToken.loc.start.line < next.loc.start.line) {
-          // Lone semicolons
+          // End of line semicolons
           setOffset(lastToken, 0, firstToken)
         }
       }
@@ -997,6 +990,12 @@ export function defineVisitor(context: IndentContext): NodeListener & {
         rightToken = sourceCode.getTokenAfter(rightToken)
       }
     },
+  }
+  const v: NodeListener = visitor
+
+  return {
+    ...v,
+    ...commonVisitor,
   }
 }
 
