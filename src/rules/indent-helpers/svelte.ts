@@ -2,8 +2,8 @@ import type { AST } from "svelte-eslint-parser"
 import type { ASTNode } from "../../types"
 import { isNotWhitespace } from "./ast"
 import type { IndentContext } from "./commons"
+import { isBeginningOfLine } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
-import { setOffsetNodes } from "./commons"
 type NodeWithoutES = Exclude<
   AST.SvelteNode,
   AST.SvelteProgram | AST.SvelteReactiveStatement
@@ -24,16 +24,16 @@ const PREFORMATTED_ELEMENT_NAMES = ["pre", "textarea"]
  * @returns AST event handlers.
  */
 export function defineVisitor(context: IndentContext): NodeListener {
-  const { setOffset, sourceCode, copyOffset, ignore } = context
+  const { sourceCode, offsets, options } = context
   const visitor = {
     // ----------------------------------------------------------------------
     // ELEMENTS
     // ----------------------------------------------------------------------
     SvelteScriptElement(node: AST.SvelteScriptElement) {
-      setOffsetNodes(context, node.body, node.startTag, node.endTag, 1)
+      offsets.setOffsetElementList(node.body, node.startTag, node.endTag, 1)
     },
     SvelteStyleElement(node: AST.SvelteStyleElement) {
-      node.children.forEach(ignore)
+      node.children.forEach((n) => offsets.ignore(n))
     },
     SvelteElement(node: AST.SvelteElement) {
       if (
@@ -41,8 +41,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         !PREFORMATTED_ELEMENT_NAMES.includes(node.name.name)
       ) {
         if (node.endTag) {
-          setOffsetNodes(
-            context,
+          offsets.setOffsetElementList(
             node.children.filter(isNotEmptyTextNode),
             node.startTag,
             node.endTag,
@@ -52,8 +51,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
       } else {
         const startTagToken = sourceCode.getFirstToken(node)
         const endTagToken = node.endTag && sourceCode.getFirstToken(node.endTag)
-        setOffset(endTagToken, 0, startTagToken)
-        node.children.forEach(ignore)
+        offsets.setOffsetToken(endTagToken, 0, startTagToken)
+        node.children.forEach((n) => offsets.ignore(n))
       }
     },
     // ----------------------------------------------------------------------
@@ -63,18 +62,24 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const openToken = sourceCode.getFirstToken(node)
       const closeToken = sourceCode.getLastToken(node)
 
-      setOffsetNodes(context, node.attributes, openToken, closeToken, 1)
+      offsets.setOffsetElementList(
+        node.attributes,
+        openToken,
+        closeToken,
+        1,
+        options.alignAttributesVertically,
+      )
       if (node.selfClosing) {
         const slash = sourceCode.getTokenBefore(closeToken)!
         if (slash.value === "/") {
-          setOffset(slash, 0, openToken)
+          offsets.setOffsetToken(slash, 0, openToken)
         }
       }
     },
     SvelteEndTag(node: AST.SvelteEndTag) {
       const openToken = sourceCode.getFirstToken(node)
       const closeToken = sourceCode.getLastToken(node)
-      setOffsetNodes(context, [], openToken, closeToken, 1)
+      offsets.setOffsetElementList([], openToken, closeToken, 1)
     },
     // ----------------------------------------------------------------------
     // ATTRIBUTES
@@ -90,14 +95,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const eqToken = sourceCode.getTokenAfter(node.key)
 
       if (eqToken != null && eqToken.range[1] <= node.range[1]) {
-        setOffset(eqToken, 1, keyToken)
+        offsets.setOffsetToken(eqToken, 1, keyToken)
 
         const valueStartToken = sourceCode.getTokenAfter(eqToken)
         if (
           valueStartToken != null &&
           valueStartToken.range[1] <= node.range[1]
         ) {
-          setOffset(valueStartToken, 1, keyToken)
+          offsets.setOffsetToken(valueStartToken, 1, keyToken)
 
           const values = node.type === "SvelteAttribute" ? node.value : []
           // process quoted
@@ -112,9 +117,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
                 ((quoted && last.value === valueStartToken.value) ||
                   (mustache && last.value === "}"))
               ) {
-                setOffset(last, 0, valueStartToken)
+                offsets.setOffsetToken(last, 0, valueStartToken)
 
-                setOffsetNodes(context, values, valueStartToken, last, 1)
+                offsets.setOffsetElementList(values, valueStartToken, last, 1)
                 processedValues = true
               }
             }
@@ -122,7 +127,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           if (!processedValues) {
             for (const val of values) {
               const token = sourceCode.getFirstToken(val)
-              setOffset(token, 0, valueStartToken)
+              offsets.setOffsetToken(token, 0, valueStartToken)
             }
           }
         }
@@ -139,7 +144,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     ) {
       const openToken = sourceCode.getFirstToken(node)
       const closeToken = sourceCode.getLastToken(node)
-      setOffsetNodes(context, [], openToken, closeToken, 1)
+      offsets.setOffsetElementList([], openToken, closeToken, 1)
     },
     SvelteSpreadAttribute(node: AST.SvelteSpreadAttribute) {
       visitor.SvelteShorthandAttribute(node)
@@ -161,16 +166,30 @@ export function defineVisitor(context: IndentContext): NodeListener {
         filter: isNotWhitespace,
         includeComments: false,
       })
-      const first = tokens.shift()!
-      copyOffset(tokens, first)
+      const first = tokens.shift()
+      if (!first) {
+        return
+      }
+      offsets.setOffsetToken(
+        tokens,
+        isBeginningOfLine(sourceCode, first) ? 0 : 1,
+        first,
+      )
     },
     SvelteLiteral(node: AST.SvelteLiteral) {
       const tokens = sourceCode.getTokens(node, {
         filter: isNotWhitespace,
         includeComments: false,
       })
-      const first = tokens.shift()!
-      copyOffset(tokens, first)
+      const first = tokens.shift()
+      if (!first) {
+        return
+      }
+      offsets.setOffsetToken(
+        tokens,
+        isBeginningOfLine(sourceCode, first) ? 0 : 1,
+        first,
+      )
     },
     // ----------------------------------------------------------------------
     // MUSTACHE TAGS
@@ -178,12 +197,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
     SvelteMustacheTag(node: AST.SvelteMustacheTag) {
       const openToken = sourceCode.getFirstToken(node)
       const closeToken = sourceCode.getLastToken(node)
-      setOffsetNodes(context, [node.expression], openToken, closeToken, 1)
+      offsets.setOffsetElementList([node.expression], openToken, closeToken, 1)
     },
     SvelteDebugTag(node: AST.SvelteDebugTag) {
       const openToken = sourceCode.getFirstToken(node)
       const closeToken = sourceCode.getLastToken(node)
-      setOffsetNodes(context, node.identifiers, openToken, closeToken, 1)
+      offsets.setOffsetElementList(node.identifiers, openToken, closeToken, 1)
     },
     // ----------------------------------------------------------------------
     // BLOCKS
@@ -193,23 +212,27 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: node.elseif ? 3 : 2,
         includeComments: false,
       })
-      setOffset(ifTokens, 1, openToken)
+      offsets.setOffsetToken(ifTokens, 1, openToken)
       const exp = getFirstAndLastTokens(sourceCode, node.expression)
-      setOffset(exp.firstToken, 1, ifTokens[0])
+      offsets.setOffsetToken(exp.firstToken, 1, ifTokens[0])
 
       const closeOpenTagToken = sourceCode.getTokenAfter(exp.lastToken)
-      setOffset(closeOpenTagToken, 0, openToken)
+      offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
 
       for (const child of node.children) {
         const token = sourceCode.getFirstToken(child, {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
 
       if (node.else) {
-        setOffset(sourceCode.getFirstToken(node.else), 0, openToken)
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.else),
+          0,
+          openToken,
+        )
         if (
           node.else.children.length === 1 &&
           node.else.children[0].type === "SvelteIfBlock" &&
@@ -224,9 +247,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 3,
           includeComments: false,
         })
-      setOffset(openCloseTagToken, 0, openToken)
-      setOffset(endIfToken, 1, openCloseTagToken)
-      setOffset(closeCloseTagToken, 0, openCloseTagToken)
+      offsets.setOffsetToken(openCloseTagToken, 0, openToken)
+      offsets.setOffsetToken(endIfToken, 1, openCloseTagToken)
+      offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     SvelteElseBlock(node: AST.SvelteElseBlock) {
       if (
@@ -243,15 +266,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
         },
       )
-      setOffset(elseToken, 1, openToken)
-      setOffset(closeToken, 0, openToken)
+      offsets.setOffsetToken(elseToken, 1, openToken)
+      offsets.setOffsetToken(closeToken, 0, openToken)
 
       for (const child of node.children) {
         const token = sourceCode.getFirstToken(child, {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
     },
     SvelteEachBlock(node: AST.SvelteEachBlock) {
@@ -259,9 +282,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: 2,
         includeComments: false,
       })
-      setOffset(eachToken, 1, openToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(eachToken, 1, openToken)
+      offsets.setOffsetElementList(
         [node.expression, node.context, node.index],
         eachToken,
         null,
@@ -269,14 +291,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
       )
       if (node.key) {
         const key = getFirstAndLastTokens(sourceCode, node.key)
-        setOffset(key.firstToken, 1, eachToken)
+        offsets.setOffsetToken(key.firstToken, 1, eachToken)
         const closeOpenTagToken = sourceCode.getTokenAfter(key.lastToken)
-        setOffset(closeOpenTagToken, 0, openToken)
+        offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
       } else {
         const closeOpenTagToken = sourceCode.getTokenAfter(
           node.index || node.context,
         )
-        setOffset(closeOpenTagToken, 0, openToken)
+        offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
       }
 
       for (const child of node.children) {
@@ -284,10 +306,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
       if (node.else) {
-        setOffset(sourceCode.getFirstToken(node.else), 0, openToken)
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.else),
+          0,
+          openToken,
+        )
       }
 
       const [openCloseTagToken, endEachToken, closeCloseTagToken] =
@@ -295,24 +321,24 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 3,
           includeComments: false,
         })
-      setOffset(openCloseTagToken, 0, openToken)
-      setOffset(endEachToken, 1, openCloseTagToken)
-      setOffset(closeCloseTagToken, 0, openCloseTagToken)
+      offsets.setOffsetToken(openCloseTagToken, 0, openToken)
+      offsets.setOffsetToken(endEachToken, 1, openCloseTagToken)
+      offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     SvelteAwaitBlock(node: AST.SvelteAwaitBlock) {
       const [openToken, awaitToken] = sourceCode.getFirstTokens(node, {
         count: 2,
         includeComments: false,
       })
-      setOffset(awaitToken, 1, openToken)
+      offsets.setOffsetToken(awaitToken, 1, openToken)
       const exp = getFirstAndLastTokens(sourceCode, node.expression)
-      setOffset(exp.firstToken, 1, awaitToken)
+      offsets.setOffsetToken(exp.firstToken, 1, awaitToken)
 
       if (node.pending) {
         const closeOpenTagToken = sourceCode.getTokenAfter(exp.lastToken)
-        setOffset(closeOpenTagToken, 0, openToken)
+        offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
 
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.pending, {
             includeComments: false,
             filter: isNotWhitespace,
@@ -326,34 +352,50 @@ export function defineVisitor(context: IndentContext): NodeListener {
         if (!node.pending) {
           // {#await expression then value}
           const thenToken = sourceCode.getTokenAfter(exp.lastToken)!
-          setOffset(thenToken, 1, openToken)
+          offsets.setOffsetToken(thenToken, 1, openToken)
           if (node.then.value) {
-            setOffset(sourceCode.getFirstToken(node.then.value), 1, thenToken)
+            offsets.setOffsetToken(
+              sourceCode.getFirstToken(node.then.value),
+              1,
+              thenToken,
+            )
           }
           const closeOpenTagToken = sourceCode.getTokenAfter(
             node.then.value || thenToken,
           )
-          setOffset(closeOpenTagToken, 0, openToken)
+          offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
         } else {
           // {:then value}
-          setOffset(sourceCode.getFirstToken(node.then), 0, openToken)
+          offsets.setOffsetToken(
+            sourceCode.getFirstToken(node.then),
+            0,
+            openToken,
+          )
         }
       }
       if (node.catch) {
         if (!node.pending && !node.then) {
           // {#await expression catch error}
           const catchToken = sourceCode.getTokenAfter(exp.lastToken)!
-          setOffset(catchToken, 1, openToken)
+          offsets.setOffsetToken(catchToken, 1, openToken)
           if (node.catch.error) {
-            setOffset(sourceCode.getFirstToken(node.catch.error), 1, catchToken)
+            offsets.setOffsetToken(
+              sourceCode.getFirstToken(node.catch.error),
+              1,
+              catchToken,
+            )
           }
           const closeOpenTagToken = sourceCode.getTokenAfter(
             node.catch.error || catchToken,
           )
-          setOffset(closeOpenTagToken, 0, openToken)
+          offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
         } else {
           // {:catch value}
-          setOffset(sourceCode.getFirstToken(node.catch), 0, openToken)
+          offsets.setOffsetToken(
+            sourceCode.getFirstToken(node.catch),
+            0,
+            openToken,
+          )
         }
       }
 
@@ -362,21 +404,22 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 3,
           includeComments: false,
         })
-      setOffset(openCloseTagToken, 0, openToken)
-      setOffset(endAwaitToken, 1, openCloseTagToken)
-      setOffset(closeCloseTagToken, 0, openCloseTagToken)
+      offsets.setOffsetToken(openCloseTagToken, 0, openToken)
+      offsets.setOffsetToken(endAwaitToken, 1, openCloseTagToken)
+      offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     SvelteAwaitPendingBlock(node: AST.SvelteAwaitPendingBlock) {
       const first = sourceCode.getFirstToken(node, {
         includeComments: false,
         filter: isNotWhitespace,
       })!
+      const offset = isBeginningOfLine(sourceCode, first) ? 0 : 1
       for (const child of node.children) {
         const token = sourceCode.getFirstToken(child, {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        copyOffset(token, first)
+        offsets.setOffsetToken(token, offset, first)
       }
     },
     SvelteAwaitThenBlock(node: AST.SvelteAwaitThenBlock) {
@@ -387,15 +430,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 2,
           includeComments: false,
         })
-        setOffset(thenToken, 1, openToken)
+        offsets.setOffsetToken(thenToken, 1, openToken)
         if (node.value) {
           const valueToken = sourceCode.getFirstToken(node.value)
-          setOffset(valueToken, 1, thenToken)
+          offsets.setOffsetToken(valueToken, 1, thenToken)
         }
         const closeOpenTagToken = sourceCode.getTokenAfter(
           node.value || thenToken,
         )
-        setOffset(closeOpenTagToken, 0, openToken)
+        offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
       }
       const openToken = sourceCode.getFirstToken(node)
 
@@ -404,7 +447,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
     },
     SvelteAwaitCatchBlock(node: AST.SvelteAwaitCatchBlock) {
@@ -415,15 +458,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 2,
           includeComments: false,
         })
-        setOffset(catchToken, 1, openToken)
+        offsets.setOffsetToken(catchToken, 1, openToken)
         if (node.error) {
           const errorToken = sourceCode.getFirstToken(node.error)
-          setOffset(errorToken, 1, catchToken)
+          offsets.setOffsetToken(errorToken, 1, catchToken)
         }
         const closeOpenTagToken = sourceCode.getTokenAfter(
           node.error || catchToken,
         )
-        setOffset(closeOpenTagToken, 0, openToken)
+        offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
       }
       const openToken = sourceCode.getFirstToken(node)
 
@@ -432,7 +475,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
     },
     SvelteKeyBlock(node: AST.SvelteKeyBlock) {
@@ -440,19 +483,19 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: 2,
         includeComments: false,
       })
-      setOffset(keyToken, 1, openToken)
+      offsets.setOffsetToken(keyToken, 1, openToken)
       const exp = getFirstAndLastTokens(sourceCode, node.expression)
-      setOffset(exp.firstToken, 1, keyToken)
+      offsets.setOffsetToken(exp.firstToken, 1, keyToken)
 
       const closeOpenTagToken = sourceCode.getTokenAfter(exp.lastToken)
-      setOffset(closeOpenTagToken, 0, openToken)
+      offsets.setOffsetToken(closeOpenTagToken, 0, openToken)
 
       for (const child of node.children) {
         const token = sourceCode.getFirstToken(child, {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        setOffset(token, 1, openToken)
+        offsets.setOffsetToken(token, 1, openToken)
       }
 
       const [openCloseTagToken, endAwaitToken, closeCloseTagToken] =
@@ -460,9 +503,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
           count: 3,
           includeComments: false,
         })
-      setOffset(openCloseTagToken, 0, openToken)
-      setOffset(endAwaitToken, 1, openCloseTagToken)
-      setOffset(closeCloseTagToken, 0, openCloseTagToken)
+      offsets.setOffsetToken(openCloseTagToken, 0, openToken)
+      offsets.setOffsetToken(endAwaitToken, 1, openCloseTagToken)
+      offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     // ----------------------------------------------------------------------
     // COMMENTS

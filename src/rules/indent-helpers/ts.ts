@@ -11,7 +11,6 @@ import {
 } from "eslint-utils"
 import type { AnyToken, IndentContext } from "./commons"
 import { isBeginningOfLine } from "./commons"
-import { setOffsetNodes } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
 
 type NodeWithoutES = Exclude<
@@ -47,7 +46,7 @@ type NodeListener = {
  * @returns AST event handlers.
  */
 export function defineVisitor(context: IndentContext): NodeListener {
-  const { setOffset, sourceCode, copyOffset } = context
+  const { offsets, sourceCode } = context
   const visitor = {
     TSTypeAnnotation(node: TSESTree.TSTypeAnnotation) {
       // : Type
@@ -57,11 +56,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })
       const baseToken = sourceCode.getFirstToken(node.parent!)
-      setOffset([colonOrArrowToken, secondToken], 1, baseToken)
+      offsets.setOffsetToken([colonOrArrowToken, secondToken], 1, baseToken)
 
       const before = sourceCode.getTokenBefore(colonOrArrowToken)
       if (before && before.value === "?") {
-        setOffset(before, 1, baseToken)
+        offsets.setOffsetToken(before, 1, baseToken)
       }
     },
     TSAsExpression(node: TSESTree.TSAsExpression) {
@@ -71,7 +70,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.expression as ESTree.Expression,
       )
       const asToken = sourceCode.getTokenAfter(expressionTokens.lastToken)!
-      setOffset(
+      offsets.setOffsetToken(
         [
           asToken,
           getFirstAndLastTokens(sourceCode, node.typeAnnotation).firstToken,
@@ -84,7 +83,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // T<U>
       if (node.typeParameters) {
         const typeNameTokens = getFirstAndLastTokens(sourceCode, node.typeName)
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
           1,
           typeNameTokens.firstToken,
@@ -97,8 +96,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         | TSESTree.TSTypeParameterDeclaration,
     ) {
       // <T>
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.params,
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -113,11 +111,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // type T = {}
       const typeToken = sourceCode.getFirstToken(node)
       const idToken = sourceCode.getFirstToken(node.id)
-      setOffset(idToken, 1, typeToken)
+      offsets.setOffsetToken(idToken, 1, typeToken)
 
       let eqToken
       if (node.typeParameters) {
-        setOffset(sourceCode.getFirstToken(node.typeParameters), 1, idToken)
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          idToken,
+        )
         eqToken = sourceCode.getTokenAfter(node.typeParameters)!
       } else {
         eqToken = sourceCode.getTokenAfter(node.id)!
@@ -125,7 +127,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
       const initToken = sourceCode.getTokenAfter(eqToken)
 
-      setOffset([eqToken, initToken], 1, idToken)
+      offsets.setOffsetToken([eqToken, initToken], 1, idToken)
     },
     TSFunctionType(node: TSESTree.TSFunctionType | TSESTree.TSConstructorType) {
       // ()=>void
@@ -136,23 +138,28 @@ export function defineVisitor(context: IndentContext): NodeListener {
         // currToken is new token
         // < or (
         currToken = sourceCode.getTokenAfter(currToken)!
-        setOffset(currToken, 1, firstToken)
+        offsets.setOffsetToken(currToken, 1, firstToken)
       }
       if (node.typeParameters) {
         // currToken is < token
         // (
         currToken = sourceCode.getTokenAfter(node.typeParameters)!
-        setOffset(currToken, 1, firstToken)
+        offsets.setOffsetToken(currToken, 1, firstToken)
       }
       const leftParenToken = currToken
       const rightParenToken = sourceCode.getTokenAfter(
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
       )!
-      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      offsets.setOffsetElementList(
+        node.params,
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
 
       const arrowToken = sourceCode.getTokenAfter(rightParenToken)
-      setOffset(arrowToken, 1, leftParenToken)
+      offsets.setOffsetToken(arrowToken, 1, leftParenToken)
     },
     TSConstructorType(node: TSESTree.TSConstructorType) {
       // new ()=>void
@@ -160,8 +167,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TSTypeLiteral(node: TSESTree.TSTypeLiteral) {
       // {foo:any}
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.members,
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -176,7 +182,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       let keyLast
       if (node.computed) {
         const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
-        setOffsetNodes(context, [node.key], firstToken, closeBracket, 1)
+        offsets.setOffsetElementList([node.key], firstToken, closeBracket, 1)
         keyLast = closeBracket
       } else {
         keyLast = keyTokens.lastToken
@@ -185,7 +191,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const typeAnnotationToken = sourceCode.getFirstToken(
           node.typeAnnotation,
         )
-        setOffset(
+        offsets.setOffsetToken(
           [
             ...sourceCode.getTokensBetween(keyLast, typeAnnotationToken),
             typeAnnotationToken,
@@ -195,7 +201,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         )
       } else if (node.optional) {
         const qToken = sourceCode.getLastToken(node)
-        setOffset(qToken, 1, firstToken)
+        offsets.setOffsetToken(qToken, 1, firstToken)
       }
     },
     TSIndexSignature(node: TSESTree.TSIndexSignature) {
@@ -206,8 +212,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.parameters[node.parameters.length - 1] || leftBracketToken,
         { filter: isClosingBracketToken, includeComments: false },
       )!
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.parameters,
         leftBracketToken,
         rightBracketToken,
@@ -218,7 +223,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const typeAnnotationToken = sourceCode.getFirstToken(
           node.typeAnnotation,
         )
-        setOffset(
+        offsets.setOffsetToken(
           [
             ...sourceCode.getTokensBetween(keyLast, typeAnnotationToken),
             typeAnnotationToken,
@@ -231,7 +236,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     TSArrayType(node: TSESTree.TSArrayType) {
       // T[]
       const firstToken = sourceCode.getFirstToken(node)
-      setOffset(
+      offsets.setOffsetToken(
         sourceCode.getLastTokens(node, { count: 2, includeComments: false }),
         0,
         firstToken,
@@ -239,8 +244,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TSTupleType(node: TSESTree.TSTupleType) {
       // [T, U]
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.elementTypes,
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -253,7 +257,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const dotToken = sourceCode.getTokenBefore(node.right)!
       const propertyToken = sourceCode.getTokenAfter(dotToken)
 
-      setOffset([dotToken, propertyToken], 1, objectToken)
+      offsets.setOffsetToken([dotToken, propertyToken], 1, objectToken)
     },
     TSIndexedAccessType(node: TSESTree.TSIndexedAccessType) {
       // A[B]
@@ -268,9 +272,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })
 
-      setOffset(leftBracketToken, 1, objectToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftBracketToken, 1, objectToken)
+      offsets.setOffsetElementList(
         [node.indexType],
         leftBracketToken,
         rightBracketToken,
@@ -286,8 +289,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       ) {
         types.shift()
       }
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         types,
         firstToken,
         null,
@@ -300,8 +302,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TSParenthesizedType(node: TSESTree.TSParenthesizedType) {
       // (T)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         [node.typeAnnotation],
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -316,7 +317,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const rightBracketToken = sourceCode.getTokenAfter(
         node.nameType || node.typeParameter,
       )!
-      setOffset(
+      offsets.setOffsetToken(
         [
           ...sourceCode.getTokensBetween(leftBraceToken, leftBracketToken),
           leftBracketToken,
@@ -324,8 +325,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         1,
         leftBraceToken,
       )
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         [node.typeParameter, node.nameType],
         leftBracketToken,
         rightBracketToken,
@@ -337,7 +337,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const typeAnnotationToken = sourceCode.getFirstToken(
           node.typeAnnotation,
         )
-        setOffset(
+        offsets.setOffsetToken(
           [
             ...sourceCode.getTokensBetween(
               rightBracketToken,
@@ -349,14 +349,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
           leftBraceToken,
         )
       } else {
-        setOffset(
+        offsets.setOffsetToken(
           [...sourceCode.getTokensBetween(rightBracketToken, rightBraceToken)],
           1,
           leftBraceToken,
         )
       }
 
-      setOffset(rightBraceToken, 0, leftBraceToken)
+      offsets.setOffsetToken(rightBraceToken, 0, leftBraceToken)
     },
     TSTypeParameter(node: TSESTree.TSTypeParameter) {
       // {[key in foo]: bar}
@@ -381,7 +381,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (!secondToken) {
         return
       }
-      setOffset(secondToken, 1, firstToken)
+      offsets.setOffsetToken(secondToken, 1, firstToken)
 
       if (secondToken.value === "extends") {
         let prevToken: AnyToken | null = null
@@ -390,16 +390,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
           if (token.value === "=") {
             break
           }
-          setOffset(token, 1, secondToken)
+          offsets.setOffsetToken(token, 1, secondToken)
           prevToken = token
           token = afterTokens.shift()
         }
         while (token) {
-          setOffset(token, 1, prevToken || secondToken)
+          offsets.setOffsetToken(token, 1, prevToken || secondToken)
           token = afterTokens.shift()
         }
       } else {
-        setOffset(afterTokens, 1, firstToken)
+        offsets.setOffsetToken(afterTokens, 1, firstToken)
       }
     },
     TSConditionalType(node: TSESTree.TSConditionalType) {
@@ -408,8 +408,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const extendsToken = sourceCode.getTokenAfter(node.checkType)!
       const extendsTypeToken = sourceCode.getFirstToken(node.extendsType)
 
-      setOffset(extendsToken, 1, checkTypeToken)
-      setOffset(extendsTypeToken, 1, extendsToken)
+      offsets.setOffsetToken(extendsToken, 1, checkTypeToken)
+      offsets.setOffsetToken(extendsTypeToken, 1, extendsToken)
 
       const questionToken = sourceCode.getTokenAfter(node.extendsType, {
         filter: isNotClosingParenToken,
@@ -435,16 +435,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       const baseToken = sourceCode.getFirstToken(baseNode)
 
-      setOffset([questionToken, colonToken], 1, baseToken)
-      setOffset(consequentToken, 1, questionToken)
-      setOffset(alternateToken, 1, colonToken)
+      offsets.setOffsetToken([questionToken, colonToken], 1, baseToken)
+      offsets.setOffsetToken(consequentToken, 1, questionToken)
+      offsets.setOffsetToken(alternateToken, 1, colonToken)
     },
     TSInterfaceDeclaration(node: TSESTree.TSInterfaceDeclaration) {
       // interface I {}
       const interfaceToken = sourceCode.getFirstToken(node)
-      setOffset(sourceCode.getFirstToken(node.id), 1, interfaceToken)
+      offsets.setOffsetToken(
+        sourceCode.getFirstToken(node.id),
+        1,
+        interfaceToken,
+      )
       if (node.typeParameters != null) {
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
           1,
           sourceCode.getFirstToken(node.id),
@@ -452,21 +456,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       if (node.extends != null && node.extends.length) {
         const extendsToken = sourceCode.getTokenBefore(node.extends[0])!
-        setOffset(extendsToken, 1, interfaceToken)
-        setOffsetNodes(context, node.extends, extendsToken, null, 1)
+        offsets.setOffsetToken(extendsToken, 1, interfaceToken)
+        offsets.setOffsetElementList(node.extends, extendsToken, null, 1)
       }
       // It may not calculate the correct location because the visitor key is not provided.
       // if (node.implements != null && node.implements.length) {
       //   const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
-      //   setOffset(implementsToken, 1, interfaceToken)
-      //   setOffsetNodes(context, node.implements, implementsToken, null, 1)
+      //  offsets.setOffsetToken(implementsToken, 1, interfaceToken)
+      //  offsets.setOffsetElementList( node.implements, implementsToken, null, 1)
       // }
       const bodyToken = sourceCode.getFirstToken(node.body)
-      setOffset(bodyToken, 0, interfaceToken)
+      offsets.setOffsetToken(bodyToken, 0, interfaceToken)
     },
     TSInterfaceBody(node: TSESTree.TSInterfaceBody | TSESTree.TSModuleBlock) {
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.body,
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -479,7 +482,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // class C implements T {}
       //                    ^
       if (node.typeParameters) {
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
           1,
           sourceCode.getFirstToken(node),
@@ -499,13 +502,18 @@ export function defineVisitor(context: IndentContext): NodeListener {
         firstToken,
         idTokens.firstToken,
       )
-      setOffset(prefixTokens, 0, firstToken)
-      setOffset(idTokens.firstToken, 1, firstToken)
+      offsets.setOffsetToken(prefixTokens, 0, firstToken)
+      offsets.setOffsetToken(idTokens.firstToken, 1, firstToken)
 
       const leftBraceToken = sourceCode.getTokenAfter(idTokens.lastToken)!
       const rightBraceToken = sourceCode.getLastToken(node)
-      setOffset(leftBraceToken, 0, firstToken)
-      setOffsetNodes(context, node.members, leftBraceToken, rightBraceToken, 1)
+      offsets.setOffsetToken(leftBraceToken, 0, firstToken)
+      offsets.setOffsetElementList(
+        node.members,
+        leftBraceToken,
+        rightBraceToken,
+        1,
+      )
     },
     TSModuleDeclaration(node: TSESTree.TSModuleDeclaration) {
       const firstToken = sourceCode.getFirstToken(node)
@@ -514,12 +522,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
         firstToken,
         idTokens.firstToken,
       )
-      setOffset(prefixTokens, 0, firstToken)
-      setOffset(idTokens.firstToken, 1, firstToken)
+      offsets.setOffsetToken(prefixTokens, 0, firstToken)
+      offsets.setOffsetToken(idTokens.firstToken, 1, firstToken)
 
       if (node.body) {
         const bodyFirstToken = sourceCode.getFirstToken(node.body)
-        setOffset(
+        offsets.setOffsetToken(
           bodyFirstToken,
           isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
           firstToken,
@@ -536,7 +544,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       let keyLast
       if (node.computed) {
         const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
-        setOffsetNodes(context, [node.key], firstToken, closeBracket, 1)
+        offsets.setOffsetElementList([node.key], firstToken, closeBracket, 1)
         keyLast = closeBracket
       } else {
         keyLast = keyTokens.lastToken
@@ -545,7 +553,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         filter: isOpeningParenToken,
         includeComments: false,
       })!
-      setOffset(
+      offsets.setOffsetToken(
         [
           ...sourceCode.getTokensBetween(keyLast, leftParenToken),
           leftParenToken,
@@ -557,10 +565,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
       )!
-      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      offsets.setOffsetElementList(
+        node.params,
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
       if (node.returnType) {
         const typeAnnotationToken = sourceCode.getFirstToken(node.returnType)
-        setOffset(
+        offsets.setOffsetToken(
           [
             ...sourceCode.getTokensBetween(keyLast, typeAnnotationToken),
             typeAnnotationToken,
@@ -584,24 +597,29 @@ export function defineVisitor(context: IndentContext): NodeListener {
         // currToken is new token
         // < or (
         currToken = sourceCode.getTokenAfter(currToken)!
-        setOffset(currToken, 1, firstToken)
+        offsets.setOffsetToken(currToken, 1, firstToken)
       }
       if (node.typeParameters) {
         // currToken is < token
         // (
         currToken = sourceCode.getTokenAfter(node.typeParameters)!
-        setOffset(currToken, 1, firstToken)
+        offsets.setOffsetToken(currToken, 1, firstToken)
       }
       const leftParenToken = currToken
       const rightParenToken = sourceCode.getTokenAfter(
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
       )!
-      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      offsets.setOffsetElementList(
+        node.params,
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
 
       if (node.returnType) {
         const typeAnnotationToken = sourceCode.getFirstToken(node.returnType)
-        setOffset(
+        offsets.setOffsetToken(
           [
             ...sourceCode.getTokensBetween(
               rightParenToken,
@@ -644,7 +662,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           ) {
             nextTokenOffset = 1
           }
-          setOffset(nextToken, nextTokenOffset, firstToken)
+          offsets.setOffsetToken(nextToken, nextTokenOffset, firstToken)
           nextToken = sourceCode.getTokenAfter(nextToken)
         }
 
@@ -661,8 +679,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
         { filter: isClosingParenToken, includeComments: false },
       )!
 
-      setOffset(leftParenToken, 1, bodyBaseToken)
-      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      offsets.setOffsetToken(leftParenToken, 1, bodyBaseToken)
+      offsets.setOffsetElementList(
+        node.params,
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
     },
     TSDeclareFunction(node: TSESTree.TSDeclareFunction) {
       // function fn(): void;
@@ -678,7 +701,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const firstToken = sourceCode.getFirstToken(node)
       const nextToken = sourceCode.getTokenAfter(firstToken)
 
-      setOffset(nextToken, 1, firstToken)
+      offsets.setOffsetToken(nextToken, 1, firstToken)
     },
     TSTypeQuery(node: TSESTree.TSTypeQuery) {
       // type T = typeof a
@@ -699,7 +722,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.typeAnnotation &&
         getFirstAndLastTokens(sourceCode, node.typeAnnotation).firstToken
 
-      setOffset(
+      offsets.setOffsetToken(
         [opToken, rightToken],
         1,
         getFirstAndLastTokens(sourceCode, firstToken).firstToken,
@@ -726,7 +749,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (node.computed) {
         prefixTokens.pop() // pop [
       }
-      setOffset(prefixTokens, 0, firstToken)
+      offsets.setOffsetToken(prefixTokens, 0, firstToken)
 
       let lastKeyToken
       if (node.computed) {
@@ -736,22 +759,21 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const rightBracketToken = (lastKeyToken = sourceCode.getTokenAfter(
           keyTokens.lastToken,
         )!)
-        setOffset(leftBracketToken, 0, firstToken)
-        setOffsetNodes(
-          context,
+        offsets.setOffsetToken(leftBracketToken, 0, firstToken)
+        offsets.setOffsetElementList(
           [keyNode],
           leftBracketToken,
           rightBracketToken,
           1,
         )
       } else {
-        setOffset(keyTokens.firstToken, 0, firstToken)
+        offsets.setOffsetToken(keyTokens.firstToken, 0, firstToken)
         lastKeyToken = keyTokens.lastToken
       }
 
       if (valueNode != null) {
         const initToken = sourceCode.getFirstToken(valueNode)
-        setOffset(
+        offsets.setOffsetToken(
           [...sourceCode.getTokensBetween(lastKeyToken, initToken), initToken],
           1,
           lastKeyToken,
@@ -769,7 +791,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     ) {
       // [number?]
       //  ^^^^^^^
-      setOffset(
+      offsets.setOffsetToken(
         sourceCode.getLastToken(node),
         1,
         sourceCode.getFirstToken(node),
@@ -793,14 +815,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
         sourceCode,
         node.expression,
       ).firstToken
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         [node.typeAnnotation],
         firstToken,
         sourceCode.getTokenBefore(expressionToken),
         1,
       )
-      setOffset(expressionToken, 1, firstToken)
+      offsets.setOffsetToken(expressionToken, 1, firstToken)
     },
     TSImportType(node: TSESTree.TSImportType) {
       // import('foo').B
@@ -809,13 +830,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
         filter: isOpeningParenToken,
         includeComments: false,
       })!
-      setOffset(leftParenToken, 1, firstToken)
+      offsets.setOffsetToken(leftParenToken, 1, firstToken)
       const rightParenToken = sourceCode.getTokenAfter(node.parameter, {
         filter: isClosingParenToken,
         includeComments: false,
       })!
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         [node.parameter],
         leftParenToken,
         rightParenToken,
@@ -824,17 +844,21 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (node.qualifier) {
         const dotToken = sourceCode.getTokenBefore(node.qualifier)!
         const propertyToken = sourceCode.getTokenAfter(dotToken)
-        setOffset([dotToken, propertyToken], 1, firstToken)
+        offsets.setOffsetToken([dotToken, propertyToken], 1, firstToken)
       }
       if (node.typeParameters) {
-        setOffset(sourceCode.getFirstToken(node.typeParameters), 1, firstToken)
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          firstToken,
+        )
       }
     },
     TSParameterProperty(node: TSESTree.TSParameterProperty) {
       // constructor(private a)
       const firstToken = sourceCode.getFirstToken(node)
       const parameterToken = sourceCode.getFirstToken(node.parameter)
-      setOffset(
+      offsets.setOffsetToken(
         [
           ...sourceCode.getTokensBetween(firstToken, parameterToken),
           parameterToken,
@@ -847,11 +871,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // import foo = require('foo')
       const importToken = sourceCode.getFirstToken(node)
       const idTokens = getFirstAndLastTokens(sourceCode, node.id)
-      setOffset(idTokens.firstToken, 1, importToken)
+      offsets.setOffsetToken(idTokens.firstToken, 1, importToken)
 
       const opToken = sourceCode.getTokenAfter(idTokens.lastToken)
 
-      setOffset(
+      offsets.setOffsetToken(
         [opToken, sourceCode.getFirstToken(node.moduleReference)],
         1,
         idTokens.lastToken,
@@ -866,9 +890,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
       })!
       const rightParenToken = sourceCode.getLastToken(node)
 
-      setOffset(leftParenToken, 1, requireToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftParenToken, 1, requireToken)
+      offsets.setOffsetElementList(
         [node.expression],
         leftParenToken,
         rightParenToken,
@@ -881,14 +904,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const exprTokens = getFirstAndLastTokens(sourceCode, node.expression)
       const opToken = sourceCode.getTokenBefore(exprTokens.firstToken)
 
-      setOffset([opToken, exprTokens.firstToken], 1, exportNode)
+      offsets.setOffsetToken([opToken, exprTokens.firstToken], 1, exportNode)
     },
     TSNamedTupleMember(node: TSESTree.TSNamedTupleMember) {
       // [a: string, ...b: string[]]
       //  ^^^^^^^^^
       const labelToken = sourceCode.getFirstToken(node)
       const elementTokens = getFirstAndLastTokens(sourceCode, node.elementType)
-      setOffset(
+      offsets.setOffsetToken(
         [
           ...sourceCode.getTokensBetween(labelToken, elementTokens.firstToken),
           elementTokens.firstToken,
@@ -903,13 +926,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const firstToken = sourceCode.getFirstToken(node)
       const nextToken = sourceCode.getTokenAfter(firstToken)
 
-      setOffset(nextToken, 1, firstToken)
+      offsets.setOffsetToken(nextToken, 1, firstToken)
     },
     TSNamespaceExportDeclaration(node: TSESTree.TSNamespaceExportDeclaration) {
       const firstToken = sourceCode.getFirstToken(node)
       const idToken = sourceCode.getFirstToken(node.id)
 
-      setOffset(
+      offsets.setOffsetToken(
         [...sourceCode.getTokensBetween(firstToken, idToken), idToken],
         1,
         firstToken,
@@ -924,8 +947,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         .slice(0, -1)
         .map((n) => sourceCode.getTokenAfter(n))
 
-      setOffset(quasiTokens, 0, firstToken)
-      setOffset(expressionToken, 1, firstToken)
+      offsets.setOffsetToken(quasiTokens, 0, firstToken)
+      offsets.setOffsetToken(expressionToken, 1, firstToken)
     },
 
     // ----------------------------------------------------------------------
@@ -940,7 +963,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: 2,
         includeComments: false,
       })
-      setOffset(secondToken, 0, atToken)
+      offsets.setOffsetToken(secondToken, 0, atToken)
 
       const parent = node.parent!
       const { decorators } = parent as { decorators?: TSESTree.Decorator[] }
@@ -952,7 +975,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           const startParentToken = sourceCode.getTokenAfter(
             decorators[decorators?.length - 1],
           )
-          setOffset(startParentToken, 0, atToken)
+          offsets.setOffsetToken(startParentToken, 0, atToken)
         } else {
           const startParentToken = sourceCode.getFirstToken(
             parent.parent &&
@@ -962,10 +985,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
               ? parent.parent
               : parent,
           )
-          copyOffset(atToken, startParentToken)
+          offsets.copyOffset(atToken.range[0], startParentToken.range[0])
         }
       } else {
-        setOffset(atToken, 0, sourceCode.getFirstToken(decorators[0]))
+        offsets.setOffsetToken(
+          atToken,
+          0,
+          sourceCode.getFirstToken(decorators[0]),
+        )
       }
     },
     // ----------------------------------------------------------------------
@@ -1066,7 +1093,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const next = sourceCode.getTokenAfter(lastToken)
         if (!next || lastToken.loc.start.line < next.loc.start.line) {
           // End of line semicolons
-          setOffset(lastToken, 0, firstToken)
+          offsets.setOffsetToken(lastToken, 0, firstToken)
         }
       }
     },
@@ -1079,14 +1106,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node: TSESTree.ClassDeclaration | TSESTree.ClassExpression,
     ) {
       if (node.typeParameters != null) {
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
           1,
           sourceCode.getFirstToken(node.id || node),
         )
       }
       if (node.superTypeParameters != null && node.superClass != null) {
-        setOffset(
+        offsets.setOffsetToken(
           sourceCode.getFirstToken(node.superTypeParameters),
           1,
           sourceCode.getFirstToken(node.superClass),
@@ -1095,9 +1122,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (node.implements != null && node.implements.length) {
         const classToken = sourceCode.getFirstToken(node)
         const implementsToken = sourceCode.getTokenBefore(node.implements[0])!
-        setOffset(implementsToken, 1, classToken)
+        offsets.setOffsetToken(implementsToken, 1, classToken)
 
-        setOffsetNodes(context, node.implements, implementsToken, null, 1)
+        offsets.setOffsetElementList(node.implements, implementsToken, null, 1)
       }
     },
   }

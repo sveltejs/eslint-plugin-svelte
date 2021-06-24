@@ -4,7 +4,6 @@ import type { TSESTree } from "@typescript-eslint/types"
 import type { ASTNode } from "../../types"
 import type { IndentContext } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
-import { setOffsetNodes } from "./commons"
 import {
   isArrowToken,
   isClosingBraceToken,
@@ -37,7 +36,7 @@ type NodeListener = {
  * @returns AST event handlers.
  */
 export function defineVisitor(context: IndentContext): NodeListener {
-  const { sourceCode, options, setOffsetBaseLine, setOffset } = context
+  const { sourceCode, offsets, options } = context
 
   /**
    * Find the root of left node.
@@ -74,7 +73,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         if (body.type === "SvelteText" && !body.value.trim()) {
           continue
         }
-        setOffsetBaseLine(sourceCode.getFirstToken(body), 0)
+        offsets.setStartOffsetToken(sourceCode.getFirstToken(body), 0)
       }
     },
     ArrayExpression(node: ESTree.ArrayExpression | ESTree.ArrayPattern) {
@@ -83,7 +82,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.elements[node.elements.length - 1] || firstToken,
         { filter: isClosingBracketToken, includeComments: false },
       )
-      setOffsetNodes(context, node.elements, firstToken, rightToken, 1)
+      offsets.setOffsetElementList(node.elements, firstToken, rightToken, 1)
     },
     ArrayPattern(node: ESTree.ArrayPattern) {
       visitor.ArrayExpression(node)
@@ -100,20 +99,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
       })
 
       if (node.async) {
-        setOffset(secondToken, 1, firstToken)
+        offsets.setOffsetToken(secondToken, 1, firstToken)
       }
       if (isOpeningParenToken(leftToken)) {
         const rightToken = sourceCode.getTokenAfter(
           node.params[node.params.length - 1] || leftToken,
           { filter: isClosingParenToken, includeComments: false },
         )
-        setOffsetNodes(context, node.params, leftToken, rightToken, 1)
+        offsets.setOffsetElementList(node.params, leftToken, rightToken, 1)
       }
 
-      setOffset(arrowToken, 1, firstToken)
+      offsets.setOffsetToken(arrowToken, 1, firstToken)
 
       const bodyFirstToken = sourceCode.getFirstToken(node.body)
-      setOffset(
+      offsets.setOffsetToken(
         bodyFirstToken,
         isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
         firstToken,
@@ -136,7 +135,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.right,
       ).firstToken
 
-      setOffset(
+      offsets.setOffsetToken(
         [opToken, rightToken],
         1,
         getFirstAndLastTokens(sourceCode, leftNode).firstToken,
@@ -162,7 +161,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const firstToken = sourceCode.getFirstToken(node)
       const nextToken = sourceCode.getTokenAfter(firstToken)
 
-      setOffset(nextToken, 1, firstToken)
+      offsets.setOffsetToken(nextToken, 1, firstToken)
     },
     RestElement(node: ESTree.RestElement) {
       visitor.AwaitExpression(node)
@@ -174,8 +173,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       visitor.AwaitExpression(node)
     },
     BlockStatement(node: ESTree.BlockStatement | ESTree.ClassBody) {
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.body,
         sourceCode.getFirstToken(node),
         sourceCode.getLastToken(node),
@@ -190,7 +188,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const firstToken = sourceCode.getFirstToken(node)
         const nextToken = sourceCode.getTokenAfter(firstToken)
 
-        setOffset(nextToken, 1, firstToken)
+        offsets.setOffsetToken(nextToken, 1, firstToken)
       }
     },
     ContinueStatement(node: ESTree.ContinueStatement) {
@@ -209,12 +207,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
         leftParenToken,
         { filter: isOptionalToken, includeComments: false },
       )) {
-        setOffset(optionalToken, 1, firstToken)
+        offsets.setOffsetToken(optionalToken, 1, firstToken)
       }
 
-      setOffset(leftParenToken, 1, firstToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftParenToken, 1, firstToken)
+      offsets.setOffsetElementList(
         node.arguments,
         leftParenToken,
         rightParenToken,
@@ -228,9 +225,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const leftParenToken = sourceCode.getTokenBefore(node.param)!
         const rightParenToken = sourceCode.getTokenAfter(node.param)
 
-        setOffset(leftParenToken, 1, catchToken)
-        setOffsetNodes(
-          context,
+        offsets.setOffsetToken(leftParenToken, 1, catchToken)
+        offsets.setOffsetElementList(
           [node.param],
           leftParenToken,
           rightParenToken,
@@ -238,22 +234,22 @@ export function defineVisitor(context: IndentContext): NodeListener {
         )
       }
       const bodyToken = sourceCode.getFirstToken(node.body)
-      setOffset(bodyToken, 0, catchToken)
+      offsets.setOffsetToken(bodyToken, 0, catchToken)
     },
     ClassDeclaration(node: ESTree.ClassDeclaration | ESTree.ClassExpression) {
       const classToken = sourceCode.getFirstToken(node)
 
       if (node.id != null) {
-        setOffset(sourceCode.getFirstToken(node.id), 1, classToken)
+        offsets.setOffsetToken(sourceCode.getFirstToken(node.id), 1, classToken)
       }
       if (node.superClass != null) {
         const extendsToken = sourceCode.getTokenBefore(node.superClass)!
         const superClassToken = sourceCode.getTokenAfter(extendsToken)
-        setOffset(extendsToken, 1, classToken)
-        setOffset(superClassToken, 1, extendsToken)
+        offsets.setOffsetToken(extendsToken, 1, classToken)
+        offsets.setOffsetToken(superClassToken, 1, extendsToken)
       }
       const bodyToken = sourceCode.getFirstToken(node.body)
-      setOffset(bodyToken, 0, classToken)
+      offsets.setOffsetToken(bodyToken, 0, classToken)
     },
     ClassExpression(node: ESTree.ClassExpression) {
       visitor.ClassDeclaration(node)
@@ -283,9 +279,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       const baseToken = sourceCode.getFirstToken(baseNode)
 
-      setOffset([questionToken, colonToken], 1, baseToken)
-      setOffset(consequentToken, 1, questionToken)
-      setOffset(alternateToken, 1, colonToken)
+      offsets.setOffsetToken([questionToken, colonToken], 1, baseToken)
+      offsets.setOffsetToken(consequentToken, 1, questionToken)
+      offsets.setOffsetToken(alternateToken, 1, colonToken)
     },
     DoWhileStatement(node: ESTree.DoWhileStatement) {
       const doToken = sourceCode.getFirstToken(node)
@@ -297,15 +293,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const rightParenToken = sourceCode.getTokenAfter(node.test)!
 
       const bodyFirstToken = sourceCode.getFirstToken(node.body)
-      setOffset(
+      offsets.setOffsetToken(
         bodyFirstToken,
         isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
         doToken,
       )
 
-      setOffset(whileToken, 0, doToken)
-      setOffset(leftParenToken, 1, whileToken)
-      setOffsetNodes(context, [node.test], leftParenToken, rightParenToken, 1)
+      offsets.setOffsetToken(whileToken, 0, doToken)
+      offsets.setOffsetToken(leftParenToken, 1, whileToken)
+      offsets.setOffsetElementList(
+        [node.test],
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
     },
     ExportAllDeclaration(node: ESTree.ExportAllDeclaration) {
       const exportToken = sourceCode.getFirstToken(node)
@@ -321,15 +322,19 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- type bug?
       if (!(node as any).exported) {
         // export * from "mod"
-        setOffset(beforeTokens, 1, exportToken)
+        offsets.setOffsetToken(beforeTokens, 1, exportToken)
       } else {
         // export * as foo from "mod"
         const asIndex = beforeTokens.findIndex((t) => t.value === "as")
-        setOffset(beforeTokens.slice(0, asIndex), 1, exportToken)
-        setOffset(beforeTokens.slice(asIndex), 1, beforeTokens[asIndex - 1])
+        offsets.setOffsetToken(beforeTokens.slice(0, asIndex), 1, exportToken)
+        offsets.setOffsetToken(
+          beforeTokens.slice(asIndex),
+          1,
+          beforeTokens[asIndex - 1],
+        )
       }
-      setOffset(fromToken, 0, exportToken)
-      setOffset(afterTokens, 1, fromToken)
+      offsets.setOffsetToken(fromToken, 0, exportToken)
+      offsets.setOffsetToken(afterTokens, 1, fromToken)
     },
     ExportDefaultDeclaration(node: ESTree.ExportDefaultDeclaration) {
       const exportToken = sourceCode.getFirstToken(node)
@@ -341,14 +346,18 @@ export function defineVisitor(context: IndentContext): NodeListener {
         exportToken,
         declarationToken,
       )
-      setOffset([...defaultTokens, declarationToken], 1, exportToken)
+      offsets.setOffsetToken(
+        [...defaultTokens, declarationToken],
+        1,
+        exportToken,
+      )
     },
     ExportNamedDeclaration(node: ESTree.ExportNamedDeclaration) {
       const exportToken = sourceCode.getFirstToken(node)
       if (node.declaration) {
         // export var foo = 1;
         const declarationToken = sourceCode.getFirstToken(node.declaration)
-        setOffset(declarationToken, 1, exportToken)
+        offsets.setOffsetToken(declarationToken, 1, exportToken)
       } else {
         const firstSpecifier = node.specifiers[0]
         if (!firstSpecifier || firstSpecifier.type === "ExportSpecifier") {
@@ -361,9 +370,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
             filter: isClosingBraceToken,
             includeComments: false,
           })!
-          setOffset(leftBraceTokens, 0, exportToken)
-          setOffsetNodes(
-            context,
+          offsets.setOffsetToken(leftBraceTokens, 0, exportToken)
+          offsets.setOffsetElementList(
             node.specifiers,
             leftBraceTokens[leftBraceTokens.length - 1],
             rightBraceToken,
@@ -376,8 +384,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
               node.source,
             )
 
-            setOffset(fromToken, 0, exportToken)
-            setOffset(
+            offsets.setOffsetToken(fromToken, 0, exportToken)
+            offsets.setOffsetToken(
               [...tokens, sourceCode.getFirstToken(node.source)],
               1,
               fromToken,
@@ -390,7 +398,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     ExportSpecifier(node: ESTree.ExportSpecifier) {
       const [firstToken, ...tokens] = sourceCode.getTokens(node)
-      setOffset(tokens, 1, firstToken)
+      offsets.setOffsetToken(tokens, 1, firstToken)
     },
     ForInStatement(node: ESTree.ForInStatement | ESTree.ForOfStatement) {
       const forToken = sourceCode.getFirstToken(node)
@@ -412,15 +420,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
       })!
 
       if (awaitToken != null) {
-        setOffset(awaitToken, 0, forToken)
+        offsets.setOffsetToken(awaitToken, 0, forToken)
       }
-      setOffset(leftParenToken, 1, forToken)
-      setOffset(leftToken, 1, leftParenToken)
-      setOffset([inOrOfToken, rightToken], 1, leftToken)
-      setOffset(rightParenToken, 0, leftParenToken)
+      offsets.setOffsetToken(leftParenToken, 1, forToken)
+      offsets.setOffsetToken(leftToken, 1, leftParenToken)
+      offsets.setOffsetToken([inOrOfToken, rightToken], 1, leftToken)
+      offsets.setOffsetToken(rightParenToken, 0, leftParenToken)
 
       const bodyFirstToken = sourceCode.getFirstToken(node.body)
-      setOffset(
+      offsets.setOffsetToken(
         bodyFirstToken,
         isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
         forToken,
@@ -437,9 +445,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })
 
-      setOffset(leftParenToken, 1, forToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftParenToken, 1, forToken)
+      offsets.setOffsetElementList(
         [node.init, node.test, node.update],
         leftParenToken,
         rightParenToken,
@@ -447,7 +454,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       )
 
       const bodyFirstToken = sourceCode.getFirstToken(node.body)
-      setOffset(
+      offsets.setOffsetToken(
         bodyFirstToken,
         isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
         forToken,
@@ -476,7 +483,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           ) {
             nextTokenOffset = 1
           }
-          setOffset(nextToken, nextTokenOffset, firstToken)
+          offsets.setOffsetToken(nextToken, nextTokenOffset, firstToken)
           nextToken = sourceCode.getTokenAfter(nextToken)
         }
 
@@ -497,11 +504,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.params[node.params.length - 1] || leftParenToken,
         { filter: isClosingParenToken, includeComments: false },
       )!
-      setOffset(leftParenToken, 1, bodyBaseToken)
-      setOffsetNodes(context, node.params, leftParenToken, rightParenToken, 1)
+      offsets.setOffsetToken(leftParenToken, 1, bodyBaseToken)
+      offsets.setOffsetElementList(
+        node.params,
+        leftParenToken,
+        rightParenToken,
+        1,
+      )
 
       const bodyToken = sourceCode.getFirstToken(node.body)
-      setOffset(bodyToken, 0, bodyBaseToken)
+      offsets.setOffsetToken(bodyToken, 0, bodyBaseToken)
     },
     FunctionExpression(node: ESTree.FunctionExpression) {
       visitor.FunctionDeclaration(node)
@@ -516,11 +528,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })
 
-      setOffset(ifLeftParenToken, 1, ifToken)
-      setOffset(ifRightParenToken, 0, ifLeftParenToken)
+      offsets.setOffsetToken(ifLeftParenToken, 1, ifToken)
+      offsets.setOffsetToken(ifRightParenToken, 0, ifLeftParenToken)
 
       const consequentFirstToken = sourceCode.getFirstToken(node.consequent)
-      setOffset(
+      offsets.setOffsetToken(
         consequentFirstToken,
         isOpeningBraceToken(consequentFirstToken) ? 0 : 1,
         ifToken,
@@ -532,10 +544,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
         })!
 
-        setOffset(elseToken, 0, ifToken)
+        offsets.setOffsetToken(elseToken, 0, ifToken)
 
         const alternateFirstToken = sourceCode.getFirstToken(node.alternate)
-        setOffset(
+        offsets.setOffsetToken(
           alternateFirstToken,
           isOpeningBraceToken(alternateFirstToken) ? 0 : 1,
           elseToken,
@@ -584,7 +596,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const rightBrace = sourceCode.getTokenAfter(
           namedSpecifiers[namedSpecifiers.length - 1],
         )
-        setOffsetNodes(context, namedSpecifiers, leftBrace, rightBrace, 1)
+        offsets.setOffsetElementList(namedSpecifiers, leftBrace, rightBrace, 1)
       }
 
       if (
@@ -592,13 +604,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
           (t) => isOpeningBraceToken(t) || isClosingBraceToken(t),
         )
       ) {
-        setOffset(beforeTokens, 0, importToken)
+        offsets.setOffsetToken(beforeTokens, 0, importToken)
       } else {
-        setOffset(beforeTokens, 1, importToken)
+        offsets.setOffsetToken(beforeTokens, 1, importToken)
       }
       if (fromToken) {
-        setOffset(fromToken, 0, importToken)
-        setOffset(afterTokens, 1, fromToken)
+        offsets.setOffsetToken(fromToken, 0, importToken)
+        offsets.setOffsetToken(afterTokens, 1, fromToken)
       }
     },
     ImportExpression(node: ESTree.ImportExpression) {
@@ -609,19 +621,19 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })!
 
-      setOffset(leftToken, 1, firstToken)
-      setOffsetNodes(context, [node.source], leftToken, rightToken, 1)
+      offsets.setOffsetToken(leftToken, 1, firstToken)
+      offsets.setOffsetElementList([node.source], leftToken, rightToken, 1)
     },
     ImportNamespaceSpecifier(node: ESTree.ImportNamespaceSpecifier) {
       const tokens = sourceCode.getTokens(node)
       const firstToken = tokens.shift()!
-      setOffset(tokens, 1, firstToken)
+      offsets.setOffsetToken(tokens, 1, firstToken)
     },
     ImportSpecifier(node: ESTree.ImportSpecifier) {
       if (node.local.range![0] !== node.imported.range![0]) {
         const tokens = sourceCode.getTokens(node)
         const firstToken = tokens.shift()!
-        setOffset(tokens, 1, firstToken)
+        offsets.setOffsetToken(tokens, 1, firstToken)
       }
     },
     LabeledStatement(
@@ -631,7 +643,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const colonToken = sourceCode.getTokenAfter(labelToken)!
       const bodyToken = sourceCode.getTokenAfter(colonToken)
 
-      setOffset([colonToken, bodyToken], 1, labelToken)
+      offsets.setOffsetToken([colonToken, bodyToken], 1, labelToken)
     },
     SvelteReactiveStatement(node: AST.SvelteReactiveStatement) {
       visitor.LabeledStatement(node)
@@ -653,12 +665,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
           leftBracketToken,
           { filter: isOptionalToken, includeComments: false },
         )) {
-          setOffset(optionalToken, 1, objectToken)
+          offsets.setOffsetToken(optionalToken, 1, objectToken)
         }
 
-        setOffset(leftBracketToken, 1, objectToken)
-        setOffsetNodes(
-          context,
+        offsets.setOffsetToken(leftBracketToken, 1, objectToken)
+        offsets.setOffsetElementList(
           [node.property],
           leftBracketToken,
           rightBracketToken,
@@ -668,7 +679,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const dotToken = sourceCode.getTokenBefore(node.property)!
         const propertyToken = sourceCode.getTokenAfter(dotToken)
 
-        setOffset([dotToken, propertyToken], 1, objectToken)
+        offsets.setOffsetToken([dotToken, propertyToken], 1, objectToken)
       }
     },
     MetaProperty(node: ESTree.MetaProperty) {
@@ -689,7 +700,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (node.computed) {
         prefixTokens.pop() // pop [
       }
-      setOffset(prefixTokens, 0, firstToken)
+      offsets.setOffsetToken(prefixTokens, 0, firstToken)
 
       let lastKeyToken
       if (node.computed) {
@@ -699,22 +710,21 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const rightBracketToken = (lastKeyToken = sourceCode.getTokenAfter(
           keyTokens.lastToken,
         )!)
-        setOffset(leftBracketToken, 0, firstToken)
-        setOffsetNodes(
-          context,
+        offsets.setOffsetToken(leftBracketToken, 0, firstToken)
+        offsets.setOffsetElementList(
           [node.key],
           leftBracketToken,
           rightBracketToken,
           1,
         )
       } else {
-        setOffset(keyTokens.firstToken, 0, firstToken)
+        offsets.setOffsetToken(keyTokens.firstToken, 0, firstToken)
         lastKeyToken = keyTokens.lastToken
       }
 
       if (node.value) {
         const initToken = sourceCode.getFirstToken(node.value)
-        setOffset(
+        offsets.setOffsetToken(
           [...sourceCode.getTokensBetween(lastKeyToken, initToken), initToken],
           1,
           lastKeyToken,
@@ -727,7 +737,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     NewExpression(node: ESTree.NewExpression) {
       const newToken = sourceCode.getFirstToken(node)
       const calleeTokens = getFirstAndLastTokens(sourceCode, node.callee)
-      setOffset(calleeTokens.firstToken, 1, newToken)
+      offsets.setOffsetToken(calleeTokens.firstToken, 1, newToken)
 
       if (
         node.arguments.length ||
@@ -736,9 +746,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const rightParenToken = sourceCode.getLastToken(node)
         const leftParenToken = sourceCode.getTokenAfter(calleeTokens.lastToken)!
 
-        setOffset(leftParenToken, 1, calleeTokens.firstToken)
-        setOffsetNodes(
-          context,
+        offsets.setOffsetToken(leftParenToken, 1, calleeTokens.firstToken)
+        offsets.setOffsetElementList(
           node.arguments,
           leftParenToken,
           rightParenToken,
@@ -752,7 +761,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         node.properties[node.properties.length - 1] || firstToken,
         { filter: isClosingBraceToken, includeComments: false },
       )
-      setOffsetNodes(context, node.properties, firstToken, rightToken, 1)
+      offsets.setOffsetElementList(node.properties, firstToken, rightToken, 1)
     },
     ObjectPattern(node: ESTree.ObjectPattern) {
       visitor.ObjectExpression(node)
@@ -765,7 +774,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const firstToken = sourceCode.getFirstToken(node)
         const nextToken = sourceCode.getTokenAfter(firstToken)
 
-        setOffset(nextToken, 1, firstToken)
+        offsets.setOffsetToken(nextToken, 1, firstToken)
       }
     },
     ThrowStatement(node: ESTree.ThrowStatement) {
@@ -773,27 +782,35 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     SequenceExpression(node: ESTree.SequenceExpression) {
       const firstToken = sourceCode.getFirstToken(node)
-      setOffsetNodes(context, node.expressions, firstToken, null, 0)
+      offsets.setOffsetElementList(node.expressions, firstToken, null, 0)
     },
     SwitchCase(node: ESTree.SwitchCase) {
       const caseToken = sourceCode.getFirstToken(node)
       if (node.test != null) {
         const testTokens = getFirstAndLastTokens(sourceCode, node.test)
         const colonToken = sourceCode.getTokenAfter(testTokens.lastToken)
-        setOffset([testTokens.firstToken, colonToken], 1, caseToken)
+        offsets.setOffsetToken(
+          [testTokens.firstToken, colonToken],
+          1,
+          caseToken,
+        )
       } else {
         const colonToken = sourceCode.getTokenAfter(caseToken)
-        setOffset(colonToken, 1, caseToken)
+        offsets.setOffsetToken(colonToken, 1, caseToken)
       }
 
       if (
         node.consequent.length === 1 &&
         node.consequent[0].type === "BlockStatement"
       ) {
-        setOffset(sourceCode.getFirstToken(node.consequent[0]), 0, caseToken)
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.consequent[0]),
+          0,
+          caseToken,
+        )
       } else {
         for (const statement of node.consequent) {
-          setOffset(
+          offsets.setOffsetToken(
             getFirstAndLastTokens(sourceCode, statement).firstToken,
             1,
             caseToken,
@@ -808,17 +825,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const leftBraceToken = sourceCode.getTokenAfter(rightParenToken)!
       const rightBraceToken = sourceCode.getLastToken(node)
 
-      setOffset(leftParenToken, 1, switchToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftParenToken, 1, switchToken)
+      offsets.setOffsetElementList(
         [node.discriminant],
         leftParenToken,
         rightParenToken,
         1,
       )
-      setOffset(leftBraceToken, 0, switchToken)
-      setOffsetNodes(
-        context,
+      offsets.setOffsetToken(leftBraceToken, 0, switchToken)
+      offsets.setOffsetElementList(
         node.cases,
         leftBraceToken,
         rightBraceToken,
@@ -827,7 +842,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     TaggedTemplateExpression(node: ESTree.TaggedTemplateExpression) {
       const tagTokens = getFirstAndLastTokens(sourceCode, node.tag)
-      setOffset(sourceCode.getFirstToken(node.quasi), 1, tagTokens.firstToken)
+      offsets.setOffsetToken(
+        sourceCode.getFirstToken(node.quasi),
+        1,
+        tagTokens.firstToken,
+      )
     },
     TemplateLiteral(node: ESTree.TemplateLiteral) {
       const firstToken = sourceCode.getFirstToken(node)
@@ -838,34 +857,33 @@ export function defineVisitor(context: IndentContext): NodeListener {
         .slice(0, -1)
         .map((n) => sourceCode.getTokenAfter(n))
 
-      setOffset(quasiTokens, 0, firstToken)
-      setOffset(expressionToken, 1, firstToken)
+      offsets.setOffsetToken(quasiTokens, 0, firstToken)
+      offsets.setOffsetToken(expressionToken, 1, firstToken)
     },
     TryStatement(node: ESTree.TryStatement) {
       const tryToken = sourceCode.getFirstToken(node)
       const tryBlockToken = sourceCode.getFirstToken(node.block)
 
-      setOffset(tryBlockToken, 0, tryToken)
+      offsets.setOffsetToken(tryBlockToken, 0, tryToken)
 
       if (node.handler != null) {
         const catchToken = sourceCode.getFirstToken(node.handler)
-        setOffset(catchToken, 0, tryToken)
+        offsets.setOffsetToken(catchToken, 0, tryToken)
       }
 
       if (node.finalizer != null) {
         const finallyToken = sourceCode.getTokenBefore(node.finalizer)
         const finallyBlockToken = sourceCode.getFirstToken(node.finalizer)
-        setOffset([finallyToken, finallyBlockToken], 0, tryToken)
+        offsets.setOffsetToken([finallyToken, finallyBlockToken], 0, tryToken)
       }
     },
     UpdateExpression(node: ESTree.UpdateExpression) {
       const firstToken = sourceCode.getFirstToken(node)
       const nextToken = sourceCode.getTokenAfter(firstToken)
-      setOffset(nextToken, 1, firstToken)
+      offsets.setOffsetToken(nextToken, 1, firstToken)
     },
     VariableDeclaration(node: ESTree.VariableDeclaration) {
-      setOffsetNodes(
-        context,
+      offsets.setOffsetElementList(
         node.declarations,
         sourceCode.getFirstToken(node),
         null,
@@ -878,7 +896,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const eqToken = sourceCode.getTokenAfter(node.id)!
         const initToken = sourceCode.getTokenAfter(eqToken)
 
-        setOffset([eqToken, initToken], 1, idToken)
+        offsets.setOffsetToken([eqToken, initToken], 1, idToken)
       }
     },
     WhileStatement(node: ESTree.WhileStatement | ESTree.WithStatement) {
@@ -889,11 +907,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })!
 
-      setOffset(leftParenToken, 1, firstToken)
-      setOffset(rightParenToken, 0, leftParenToken)
+      offsets.setOffsetToken(leftParenToken, 1, firstToken)
+      offsets.setOffsetToken(rightParenToken, 0, leftParenToken)
 
       const bodyFirstToken = sourceCode.getFirstToken(node.body)
-      setOffset(
+      offsets.setOffsetToken(
         bodyFirstToken,
         isOpeningBraceToken(bodyFirstToken) ? 0 : 1,
         firstToken,
@@ -909,9 +927,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
           includeComments: false,
         })
 
-        setOffset(secondToken, 1, yieldToken)
+        offsets.setOffsetToken(secondToken, 1, yieldToken)
         if (node.delegate) {
-          setOffset(sourceCode.getTokenAfter(secondToken), 1, yieldToken)
+          offsets.setOffsetToken(
+            sourceCode.getTokenAfter(secondToken),
+            1,
+            yieldToken,
+          )
         }
       }
     },
@@ -966,7 +988,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const next = sourceCode.getTokenAfter(lastToken)
         if (!next || lastToken.loc.start.line < next.loc.start.line) {
           // End of line semicolons
-          setOffset(lastToken, 0, firstToken)
+          offsets.setOffsetToken(lastToken, 0, firstToken)
         }
       }
     },
@@ -982,8 +1004,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
         rightToken &&
         isClosingParenToken(rightToken)
       ) {
-        setOffset(firstToken, 1, leftToken)
-        setOffset(rightToken, 0, leftToken)
+        offsets.setOffsetToken(firstToken, 1, leftToken)
+        offsets.setOffsetToken(rightToken, 0, leftToken)
 
         firstToken = leftToken
         leftToken = sourceCode.getTokenBefore(leftToken)
