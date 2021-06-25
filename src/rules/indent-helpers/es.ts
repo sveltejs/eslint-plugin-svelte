@@ -576,18 +576,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
 
       const namedSpecifiers: ESTree.ImportSpecifier[] = []
       for (const specifier of node.specifiers) {
-        let removeTokens
         if (specifier.type === "ImportSpecifier") {
           namedSpecifiers.push(specifier)
-          removeTokens = sourceCode.getTokens(specifier)
         } else {
-          removeTokens = sourceCode.getTokens(specifier)
+          const removeTokens = sourceCode.getTokens(specifier)
           removeTokens.shift()
-        }
-        for (const token of removeTokens) {
-          const i = beforeTokens.indexOf(token)
-          if (i >= 0) {
-            beforeTokens.splice(i, 1)
+          for (const token of removeTokens) {
+            const i = beforeTokens.indexOf(token)
+            if (i >= 0) {
+              beforeTokens.splice(i, 1)
+            }
           }
         }
       }
@@ -595,8 +593,18 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const leftBrace = sourceCode.getTokenBefore(namedSpecifiers[0])!
         const rightBrace = sourceCode.getTokenAfter(
           namedSpecifiers[namedSpecifiers.length - 1],
-        )
+          { filter: isClosingBraceToken, includeComments: false },
+        )!
         offsets.setOffsetElementList(namedSpecifiers, leftBrace, rightBrace, 1)
+        for (const token of sourceCode.getTokensBetween(
+          leftBrace,
+          rightBrace,
+        )) {
+          const i = beforeTokens.indexOf(token)
+          if (i >= 0) {
+            beforeTokens.splice(i, 1)
+          }
+        }
       }
 
       if (
