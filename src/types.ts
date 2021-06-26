@@ -128,7 +128,11 @@ export type RuleContext = {
   report(descriptor: ReportDescriptor): void
 }
 
-type NodeOrToken = { type: string; loc?: AST.SourceLocation | null }
+export type NodeOrToken = {
+  type: string
+  loc?: AST.SourceLocation | null
+  range?: [number, number]
+}
 
 interface ReportDescriptorOptionsBase {
   data?: { [key: string]: string }

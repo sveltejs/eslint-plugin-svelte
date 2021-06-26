@@ -1,0 +1,47 @@
+[
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 9,
+    "column": 13
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 9,
+    "column": 29
+  },
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 10,
+    "column": 13
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 12,
+    "column": 31
+  },
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 14,
+    "column": 16
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 16,
+    "column": 10
+  },
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 16,
+    "column": 22
+  },
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 18,
+    "column": 20
+  },
+  {
+    "message": "Expected to be enclosed by single quotes.",
+    "line": 20,
+    "column": 42
+  }
+]

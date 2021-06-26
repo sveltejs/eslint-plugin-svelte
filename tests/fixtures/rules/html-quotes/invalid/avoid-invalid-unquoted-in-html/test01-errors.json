@@ -1,0 +1,32 @@
+[
+  {
+    "message": "Expected to be enclosed by double quotes.",
+    "line": 9,
+    "column": 13
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 9,
+    "column": 29
+  },
+  {
+    "message": "Expected to be enclosed by double quotes.",
+    "line": 12,
+    "column": 13
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 12,
+    "column": 31
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 16,
+    "column": 10
+  },
+  {
+    "message": "Expected to be enclosed by quotes.",
+    "line": 20,
+    "column": 10
+  }
+]
