@@ -40,11 +40,12 @@ export default createRule("${ruleId}", {
     meta: {
         docs: {
             description: "",
-            recommended: true,
+            category: "",
+            recommended: false,
         },
         schema: [],
         messages: {},
-        type: "suggestion", // "problem",
+        type: "suggestion", // "problem", or "layout",
     },
     create(context) {
         
