@@ -21,10 +21,10 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 
 <eslint-code-block fix>
 
+<!-- prettier-ignore-start -->
 <!--eslint-skip-->
-<!-- prettier-ignore -->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/indent: "error" */
   function click() {}
@@ -33,7 +33,7 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 <!-- ✓ GOOD -->
 <button
   type="button"
-  on:click="{click}"
+  on:click={click}
   class="my-button primally"
 >
   CLICK ME!
@@ -42,12 +42,14 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 <!-- ✗ BAD -->
 <button
 type="button"
-    on:click="{click}"
+    on:click={click}
      class="my-button primally"
   >
 CLICK ME!
 </button>
 ```
+
+<!-- prettier-ignore-end -->
 
 </eslint-code-block>
 

@@ -24,9 +24,10 @@ This rule enforces the quotes style of HTML attributes.
 
 <eslint-code-block fix>
 
+<!-- prettier-ignore-start -->
 <!--eslint-skip-->
-<!-- prettier-ignore -->
-```html
+
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/html-quotes: "error" */
 </script>
@@ -39,6 +40,8 @@ This rule enforces the quotes style of HTML attributes.
 <input type=text bind:value="{text}" />
 <img src="{src}" alt='{name} dances.' />
 ```
+
+<!-- prettier-ignore-end -->
 
 </eslint-code-block>
 
@@ -59,7 +62,7 @@ This rule enforces the quotes style of HTML attributes.
 }
 ```
 
-- `prefer` ... If `"double"`, requires double quotes. If `"single"` requires single quotes.
+- `prefer` ... If `"double"`, requires double quotes. If `"single"`, requires single quotes.
 - `dynamic` ... Settings for dynamic attribute values and directive values using curly braces.
   - `quoted` ... If `true`, enforce the use of quotes. If `false`, do not allow the use of quotes. The default is `false`.
   - `avoidInvalidUnquotedInHTML` ... If `true`, enforces the use of quotes if they are invalid as HTML attribute when not using quotes. The default is `false`.

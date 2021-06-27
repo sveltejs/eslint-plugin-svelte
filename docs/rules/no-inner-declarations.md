@@ -25,7 +25,7 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/no-inner-declarations: "error" */
 

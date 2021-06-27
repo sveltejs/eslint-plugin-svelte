@@ -18,7 +18,7 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/button-has-type: "error" */
 </script>

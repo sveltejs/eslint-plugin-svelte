@@ -26,7 +26,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/max-attributes-per-line: "error" */
 </script>
@@ -34,7 +34,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 <!-- ✓ GOOD -->
 <input
   type="text"
-  bind:value="{text}"
+  bind:value={text}
   {maxlength}
   {...attrs}
   readonly
@@ -42,7 +42,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 />
 <button
   type="button"
-  on:click="{click}"
+  on:click={click}
   {maxlength}
   {...attrs}
   disabled
@@ -52,8 +52,8 @@ There is a configurable number of attributes that are acceptable in one-line cas
 </button>
 
 <!-- ✗ BAD -->
-<input type="text" bind:value="{text}" {maxlength} {...attrs} readonly />
-<button type="button" on:click="{click}" {maxlength} {...attrs}>
+<input type="text" bind:value={text} {maxlength} {...attrs} readonly />
+<button type="button" on:click={click} {maxlength} {...attrs}>
   CLICK ME!
 </button>
 ```

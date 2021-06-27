@@ -20,7 +20,7 @@ This rule will enforce consistency of spacing after the start of a comment `<!--
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/spaced-html-comment: "error" */
 </script>

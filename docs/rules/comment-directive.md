@@ -34,7 +34,7 @@ This rule sends all `eslint-disable`-like comments to the post-process of the `.
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/comment-directive: "error", no-undef: "error" */
 </script>
@@ -51,7 +51,7 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 <!--eslint-skip-->
 
-```html
+```svelte
 <script>
   /* eslint @ota-meshi/svelte/comment-directive: "error", no-undef: "error" */
 </script>

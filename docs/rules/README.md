@@ -24,7 +24,7 @@ These rules relate to security vulnerabilities in Svelte code:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/no-at-html-tags](./no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack | :star: |
-| [@ota-meshi/svelte/no-target-blank](./no-target-blank.md) | disallow target="_blank" attribute without rel="noopener noreferrer" |  |
+| [@ota-meshi/svelte/no-target-blank](./no-target-blank.md) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |  |
 
 ## Best Practices
 
@@ -46,6 +46,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [@ota-meshi/svelte/indent](./indent.md) | enforce consistent indentation | :wrench: |
 | [@ota-meshi/svelte/max-attributes-per-line](./max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
 | [@ota-meshi/svelte/prefer-class-directive](./prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |
+| [@ota-meshi/svelte/shorthand-attribute](./shorthand-attribute.md) | enforce use of shorthand syntax in attribute | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](./spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## System

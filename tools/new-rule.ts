@@ -84,7 +84,7 @@ This rule reports ???.
 
 <!--eslint-skip-->
 
-\`\`\`html
+\`\`\`svelte
 <script>
   /* eslint @ota-meshi/svelte/${ruleId}: "error" */
 </script>
