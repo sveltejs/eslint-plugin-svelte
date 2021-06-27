@@ -25,19 +25,19 @@ This rule enforces the quotes style of HTML attributes.
 <eslint-code-block fix>
 
 <!--eslint-skip-->
-
+<!-- prettier-ignore -->
 ```html
 <script>
   /* eslint @ota-meshi/svelte/html-quotes: "error" */
 </script>
 
 <!-- ✓ GOOD -->
-<input type="text" bind:value="{text}" />
-<img src="{src}" alt="{name} dances." />
+<input type="text" bind:value={text} />
+<img {src} alt="{name} dances." />
 
 <!-- ✗ BAD -->
-<input type="text" bind:value="{text}" />
-<img src="{src}" alt="{name} dances." />
+<input type=text bind:value="{text}" />
+<img src="{src}" alt='{name} dances.' />
 ```
 
 </eslint-code-block>
