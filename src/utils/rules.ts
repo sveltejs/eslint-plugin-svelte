@@ -8,6 +8,7 @@ import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noInnerDeclarations from "../rules/no-inner-declarations"
+import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noTargetBlank from "../rules/no-target-blank"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -25,6 +26,7 @@ export const rules = [
   noAtHtmlTags,
   noDupeElseIfBlocks,
   noInnerDeclarations,
+  noObjectInTextMustaches,
   noTargetBlank,
   noUselessMustaches,
   preferClassDirective,

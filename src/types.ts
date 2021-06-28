@@ -20,7 +20,7 @@ type ASTNodeListenerMap<T extends ASTNodeWithParent = ASTNodeWithParent> = {
   [key in ASTNodeWithParent["type"]]: T extends { type: key } ? T : never
 }
 
-type ASTNodeListener = {
+export type ASTNodeListener = {
   [T in keyof ASTNodeListenerMap]?: (node: ASTNodeListenerMap[T]) => void
 }
 export interface RuleListener extends ASTNodeListener {
