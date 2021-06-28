@@ -7,7 +7,11 @@ type AnyToken = AST.Token | AST.Comment
 export function isWhitespace(
   token: AnyToken | ESTree.Comment | null | undefined,
 ): boolean {
-  return token != null && token.type === "HTMLText" && !token.value.trim()
+  return (
+    token != null &&
+    ((token.type === "HTMLText" && !token.value.trim()) ||
+      (token.type === "JSXText" && !token.value.trim()))
+  )
 }
 
 /**

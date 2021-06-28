@@ -464,40 +464,39 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node: ESTree.FunctionDeclaration | ESTree.FunctionExpression,
     ) {
       const firstToken = sourceCode.getFirstToken(node)
-      let leftParenToken, bodyBaseToken
+
+      const leftParenToken = sourceCode.getTokenBefore(
+        node.params[0] ||
+          (node as TSESTree.FunctionExpression).returnType ||
+          sourceCode.getTokenBefore(node.body),
+        {
+          filter: isOpeningParenToken,
+          includeComments: false,
+        },
+      )!
+      let bodyBaseToken
       if (firstToken.type === "Punctuator") {
         // method
-        leftParenToken = firstToken
         bodyBaseToken = sourceCode.getFirstToken(getParent(node)!)
       } else {
-        let nextToken = sourceCode.getTokenAfter(firstToken)
-        let nextTokenOffset = 0
-        while (
-          nextToken &&
-          !isOpeningParenToken(nextToken) &&
-          nextToken.value !== "<"
-        ) {
-          if (
-            nextToken.value === "*" ||
-            (node.id && nextToken.range[0] === node.id.range![0])
-          ) {
-            nextTokenOffset = 1
+        let tokenOffset = 0
+        for (const token of sourceCode.getTokensBetween(
+          firstToken,
+          leftParenToken,
+        )) {
+          if (token.value === "<") {
+            break
           }
-          offsets.setOffsetToken(nextToken, nextTokenOffset, firstToken)
-          nextToken = sourceCode.getTokenAfter(nextToken)
+          if (
+            token.value === "*" ||
+            (node.id && token.range[0] === node.id.range![0])
+          ) {
+            tokenOffset = 1
+          }
+          offsets.setOffsetToken(token, tokenOffset, firstToken)
         }
 
-        leftParenToken = nextToken!
         bodyBaseToken = firstToken
-      }
-
-      if (
-        !isOpeningParenToken(leftParenToken) &&
-        (node as TSESTree.FunctionExpression).typeParameters
-      ) {
-        leftParenToken = sourceCode.getTokenAfter(
-          (node as TSESTree.FunctionExpression).typeParameters!,
-        )!
       }
 
       const rightParenToken = sourceCode.getTokenAfter(
