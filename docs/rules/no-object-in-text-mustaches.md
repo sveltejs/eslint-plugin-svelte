@@ -44,9 +44,9 @@ Nothing.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/no-invalid-handler]
+- [@ota-meshi/svelte/no-not-function-handler]
 
-[@ota-meshi/svelte/no-invalid-handler]: ./no-invalid-handler.md
+[@ota-meshi/svelte/no-not-function-handler]: ./no-not-function-handler.md
 
 ## :mag: Implementation
 
