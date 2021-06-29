@@ -1,5 +1,10 @@
 import type { AST } from "svelte-eslint-parser"
-import { isNotClosingBraceToken, isNotOpeningBraceToken } from "eslint-utils"
+import {
+  isClosingParenToken,
+  isNotClosingBraceToken,
+  isNotOpeningBraceToken,
+  isOpeningParenToken,
+} from "eslint-utils"
 import type { NodeOrToken } from "../types"
 import { createRule } from "../utils"
 
@@ -227,8 +232,17 @@ export default createRule("html-quotes", {
       attr: AST.SvelteDirective | AST.SvelteSpecialDirective,
       valueNode: NonNullable<AST.SvelteDirective["expression"]>,
     ) {
-      const beforeToken = sourceCode.getTokenBefore(valueNode)
-      const afterToken = sourceCode.getTokenAfter(valueNode)
+      let beforeToken = sourceCode.getTokenBefore(valueNode)
+      let afterToken = sourceCode.getTokenAfter(valueNode)
+      while (
+        beforeToken &&
+        afterToken &&
+        isOpeningParenToken(beforeToken) &&
+        isClosingParenToken(afterToken)
+      ) {
+        beforeToken = sourceCode.getTokenBefore(beforeToken)
+        afterToken = sourceCode.getTokenAfter(afterToken)
+      }
       if (
         !beforeToken ||
         !afterToken ||
