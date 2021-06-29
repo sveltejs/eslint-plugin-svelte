@@ -1,6 +1,8 @@
-import type { ASTNode, SourceCode } from "../types"
+import type { ASTNode, RuleContext, SourceCode } from "../types"
 import type * as ESTree from "estree"
 import type { AST as SvAST } from "svelte-eslint-parser"
+import * as eslintUtils from "eslint-utils"
+import type { Scope } from "eslint"
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -190,4 +192,40 @@ export function getStaticAttributeValue(
     }
   }
   return str
+}
+
+/**
+ * Find the variable of a given name.
+ */
+export function findVariable(
+  context: RuleContext,
+  node: ESTree.Identifier,
+): Scope.Variable | null {
+  return eslintUtils.findVariable(getScope(context, node), node)
+}
+
+/**
+ * Gets the scope for the current node
+ */
+export function getScope(
+  context: RuleContext,
+  currentNode: ESTree.Node,
+): Scope.Scope {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  const scopeManager = (context.getSourceCode() as any).scopeManager
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  let node: any = currentNode
+  for (; node; node = node.parent || null) {
+    const scope = scopeManager.acquire(node, false)
+
+    if (scope) {
+      if (scope.type === "function-expression-name") {
+        return scope.childScopes[0]
+      }
+      return scope
+    }
+  }
+
+  return scopeManager.scopes[0]
 }

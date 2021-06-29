@@ -1,4 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
+import type { Scope } from "eslint"
+import type * as ESTree from "estree"
 type Token = { type: string; value: string }
 export function isArrowToken(token: Token): boolean
 export function isCommaToken(token: Token): boolean
@@ -22,3 +24,8 @@ export function isNotClosingBracketToken(token: Token): boolean
 export function isNotOpeningBraceToken(token: Token): boolean
 export function isNotClosingBraceToken(token: Token): boolean
 export function isNotCommentToken(token: Token): boolean
+
+export function findVariable(
+  initialScope: Scope.Scope,
+  nameOrNode: ESTree.Identifier | string,
+): Scope.Variable

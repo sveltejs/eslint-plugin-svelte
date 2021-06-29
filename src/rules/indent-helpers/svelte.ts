@@ -8,12 +8,9 @@ type NodeWithoutES = Exclude<
   AST.SvelteNode,
   AST.SvelteProgram | AST.SvelteReactiveStatement
 >
-type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
-  [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
-}
 
 type NodeListener = {
-  [T in keyof NodeListenerMap]: (node: NodeListenerMap[T]) => void
+  [key in NodeWithoutES["type"]]: (node: NodeWithoutES & { type: key }) => void
 }
 const PREFORMATTED_ELEMENT_NAMES = ["pre", "textarea"]
 
