@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-not-function-handler"
 description: "disallow use of not function in event handler"
+since: "v0.5.0"
 ---
 
 # @ota-meshi/svelte/no-not-function-handler
 
 > disallow use of not function in event handler
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -54,6 +54,10 @@ Nothing.
 - [@ota-meshi/svelte/no-object-in-text-mustaches]
 
 [@ota-meshi/svelte/no-object-in-text-mustaches]: ./no-object-in-text-mustaches.md
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0
 
 ## :mag: Implementation
 

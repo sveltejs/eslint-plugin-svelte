@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/html-quotes"
 description: "enforce quotes style of HTML attributes"
+since: "v0.5.0"
 ---
 
 # @ota-meshi/svelte/html-quotes
 
 > enforce quotes style of HTML attributes
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -66,6 +66,10 @@ This rule enforces the quotes style of HTML attributes.
 - `dynamic` ... Settings for dynamic attribute values and directive values using curly braces.
   - `quoted` ... If `true`, enforce the use of quotes. If `false`, do not allow the use of quotes. The default is `false`.
   - `avoidInvalidUnquotedInHTML` ... If `true`, enforces the use of quotes if they are invalid as HTML attribute when not using quotes. The default is `false`.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0
 
 ## :mag: Implementation
 
