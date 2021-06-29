@@ -16,12 +16,11 @@ export type ASTNode =
 type ASTNodeWithParent =
   | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNode })
   | AST.SvelteProgram
-type ASTNodeListenerMap<T extends ASTNodeWithParent = ASTNodeWithParent> = {
-  [key in ASTNodeWithParent["type"]]: T extends { type: key } ? T : never
-}
 
 export type ASTNodeListener = {
-  [T in keyof ASTNodeListenerMap]?: (node: ASTNodeListenerMap[T]) => void
+  [key in ASTNodeWithParent["type"]]?: (
+    node: ASTNodeWithParent & { type: key },
+  ) => void
 }
 export interface RuleListener extends ASTNodeListener {
   onCodePathStart?(codePath: Rule.CodePath, node: never): void

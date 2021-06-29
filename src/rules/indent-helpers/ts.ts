@@ -32,11 +32,8 @@ type NodeWithoutES = Exclude<
   | TSESTree.JSXSpreadChild
   | TSESTree.JSXText
 >
-type NodeListenerMap<T extends NodeWithoutES = NodeWithoutES> = {
-  [key in NodeWithoutES["type"]]: T extends { type: key } ? T : never
-}
 type NodeListener = {
-  [T in keyof NodeListenerMap]: (node: NodeListenerMap[T]) => void
+  [key in NodeWithoutES["type"]]: (node: NodeWithoutES & { type: key }) => void
 }
 
 /**

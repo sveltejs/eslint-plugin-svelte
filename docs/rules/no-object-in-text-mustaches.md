@@ -42,6 +42,12 @@ When you use an object for text interpolation, it is drawn as `[object Object]`.
 
 Nothing.
 
+## :couple: Related Rules
+
+- [@ota-meshi/svelte/no-invalid-handler]
+
+[@ota-meshi/svelte/no-invalid-handler]: ./no-invalid-handler.md
+
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-object-in-text-mustaches.ts)

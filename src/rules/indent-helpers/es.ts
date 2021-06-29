@@ -21,12 +21,11 @@ type NodeWithParent =
   | (Exclude<ESTree.Node, ESTree.Program> & { parent: ASTNode })
   | AST.SvelteProgram
   | AST.SvelteReactiveStatement
-type NodeListenerMap<T extends NodeWithParent = NodeWithParent> = {
-  [key in NodeWithParent["type"]]: T extends { type: key } ? T : never
-}
 
 type NodeListener = {
-  [T in keyof NodeListenerMap]: (node: NodeListenerMap[T]) => void
+  [key in NodeWithParent["type"]]: (
+    node: NodeWithParent & { type: key },
+  ) => void
 }
 
 /**
