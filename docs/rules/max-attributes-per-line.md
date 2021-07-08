@@ -74,8 +74,14 @@ There is a configurable number of attributes that are acceptable in one-line cas
 }
 ```
 
-- `singleline` ... The number of maximum attributes per line when the opening tag is in a single line. Default is `1`.
 - `multiline` ... The number of maximum attributes per line when the opening tag is in multiple lines. Default is `1`.
+- `singleline` ... The number of maximum attributes per line when the opening tag is in a single line. Default is `1`.
+
+## :couple: Related Rules
+
+- [@ota-meshi/svelte/first-attribute-linebreak]
+
+[@ota-meshi/svelte/first-attribute-linebreak]: ./first-attribute-linebreak.md
 
 ## :rocket: Version
 
