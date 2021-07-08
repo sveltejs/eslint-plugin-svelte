@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Expected a linebreak before this attribute.",
+    "line": 9,
+    "column": 9
+  },
+  {
+    "message": "Expected a linebreak before this attribute.",
+    "line": 13,
+    "column": 8
+  }
+]

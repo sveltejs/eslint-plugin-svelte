@@ -276,6 +276,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [@ota-meshi/svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak.html) | enforce the location of first attribute | :wrench: |
 | [@ota-meshi/svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes.html) | enforce quotes style of HTML attributes | :wrench: |
 | [@ota-meshi/svelte/indent](https://ota-meshi.github.io/eslint-plugin-svelte/rules/indent.html) | enforce consistent indentation | :wrench: |
 | [@ota-meshi/svelte/max-attributes-per-line](https://ota-meshi.github.io/eslint-plugin-svelte/rules/max-attributes-per-line.html) | enforce the maximum number of attributes per line | :wrench: |

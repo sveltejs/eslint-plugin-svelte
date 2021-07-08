@@ -44,6 +44,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [@ota-meshi/svelte/first-attribute-linebreak](./first-attribute-linebreak.md) | enforce the location of first attribute | :wrench: |
 | [@ota-meshi/svelte/html-quotes](./html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
 | [@ota-meshi/svelte/indent](./indent.md) | enforce consistent indentation | :wrench: |
 | [@ota-meshi/svelte/max-attributes-per-line](./max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
