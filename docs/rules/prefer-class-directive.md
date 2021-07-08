@@ -34,6 +34,10 @@ This rule aims to replace a class with ternary operator with the class directive
 
 </eslint-code-block>
 
+You cannot enforce this style by using [prettier-plugin-svelte]. That is, this rule does not conflict with [prettier-plugin-svelte] and can be used with [prettier-plugin-svelte].
+
+[prettier-plugin-svelte]: https://github.com/sveltejs/prettier-plugin-svelte
+
 ## :wrench: Options
 
 Nothing.
