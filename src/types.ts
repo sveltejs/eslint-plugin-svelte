@@ -125,6 +125,9 @@ export type RuleContext = {
   markVariableAsUsed(name: string): boolean
 
   report(descriptor: ReportDescriptor): void
+
+  // eslint@6 does not have this method.
+  getCwd?: () => string
 }
 
 export type NodeOrToken = {
