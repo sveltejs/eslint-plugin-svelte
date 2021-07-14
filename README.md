@@ -250,6 +250,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks.html) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [@ota-meshi/svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler.html) | disallow use of not function in event handler | :star: |
 | [@ota-meshi/svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches.html) | disallow objects in text mustache interpolation | :star: |
+| [@ota-meshi/svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile.html) | disallow warnings when compiling. |  |
 
 ## Security Vulnerability
 

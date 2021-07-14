@@ -17,6 +17,7 @@ import preferClassDirective from "../rules/prefer-class-directive"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
+import validCompile from "../rules/valid-compile"
 
 export const rules = [
   buttonHasType,
@@ -37,4 +38,5 @@ export const rules = [
   shorthandAttribute,
   spacedHtmlComment,
   system,
+  validCompile,
 ] as RuleModule[]
