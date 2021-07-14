@@ -8,3 +8,4 @@
 !/.github
 /prettier-playground
 /tests/fixtures/rules/indent/invalid/ts
+/tests/fixtures/rules/valid-compile/valid/ts
