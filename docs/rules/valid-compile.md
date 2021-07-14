@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/valid-compile"
 description: "disallow warnings when compiling."
+since: "v0.7.0"
 ---
 
 # @ota-meshi/svelte/valid-compile
 
 > disallow warnings when compiling.
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -39,6 +38,10 @@ Note that we exclude reports for some checks, such as `missing-declaration`, whi
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.7.0
 
 ## :mag: Implementation
 
