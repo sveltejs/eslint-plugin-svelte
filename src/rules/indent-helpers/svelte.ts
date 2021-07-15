@@ -2,6 +2,7 @@ import type { AST } from "svelte-eslint-parser"
 import type { ASTNode } from "../../types"
 import { isNotWhitespace } from "./ast"
 import type { IndentContext } from "./commons"
+import { isBeginningOfElement } from "./commons"
 import { isBeginningOfLine } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
 type NodeWithoutES = Exclude<
@@ -12,7 +13,7 @@ type NodeWithoutES = Exclude<
 type NodeListener = {
   [key in NodeWithoutES["type"]]: (node: NodeWithoutES & { type: key }) => void
 }
-const PREFORMATTED_ELEMENT_NAMES = ["pre", "textarea"]
+const PREFORMATTED_ELEMENT_NAMES = ["pre", "textarea", "template"]
 
 /**
  * Creates AST event handlers for svelte nodes.
@@ -169,7 +170,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       offsets.setOffsetToken(
         tokens,
-        isBeginningOfLine(sourceCode, first) ? 0 : 1,
+        isBeginningOfLine(sourceCode, first)
+          ? 0
+          : isBeginningOfElement(node)
+          ? 1
+          : 0,
         first,
       )
     },
