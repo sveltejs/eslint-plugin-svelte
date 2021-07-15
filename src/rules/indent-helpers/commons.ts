@@ -75,3 +75,36 @@ export function isBeginningOfLine(
 
   return !prevToken || prevToken.loc.end.line < node.loc!.start.line
 }
+
+/**
+ * Check whether the given node is the beginning of element.
+ */
+export function isBeginningOfElement(node: AST.SvelteText): boolean {
+  if (
+    node.parent.type === "SvelteElement" ||
+    node.parent.type === "SvelteAwaitCatchBlock" ||
+    node.parent.type === "SvelteAwaitPendingBlock" ||
+    node.parent.type === "SvelteAwaitThenBlock" ||
+    node.parent.type === "SvelteEachBlock" ||
+    node.parent.type === "SvelteElseBlock" ||
+    node.parent.type === "SvelteIfBlock" ||
+    node.parent.type === "SvelteKeyBlock" ||
+    node.parent.type === "SvelteStyleElement"
+  ) {
+    return node.parent.children[0] === node
+  }
+  if (node.parent.type === "Program") {
+    return node.parent.body[0] === node
+  }
+  assertNever(node.parent)
+  return false
+}
+
+/**
+ * Throws an error when invoked.
+ */
+function assertNever(value: never): never {
+  throw new Error(
+    `This part of the code should never be reached but ${value} made it through.`,
+  )
+}
