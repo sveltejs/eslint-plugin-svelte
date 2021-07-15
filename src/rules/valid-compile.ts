@@ -205,17 +205,17 @@ export default createRule("valid-compile", {
         } {
           decoded ??= decode(JSON.parse(output.sourceMapText!).mappings)
 
-          const lineMaps = decoded[pos.line]
+          const lineMaps = decoded[pos.line - 1]
 
           if (!lineMaps?.length) {
             for (let line = pos.line - 1; line >= 0; line--) {
               const prevLineMaps = decoded[line]
               if (prevLineMaps?.length) {
-                const [, , remapLine, remapCol] =
+                const [, , sourceCodeLine, sourceCodeColumn] =
                   prevLineMaps[prevLineMaps.length - 1]
                 return {
-                  line: remapLine!,
-                  column: remapCol!,
+                  line: sourceCodeLine! + 1,
+                  column: sourceCodeColumn!,
                 }
               }
             }
@@ -223,18 +223,23 @@ export default createRule("valid-compile", {
           }
 
           for (let index = 0; index < lineMaps.length - 1; index++) {
-            const [col, , remapLine, remapCol] = lineMaps[index]
-            if (col <= pos.column && pos.column < lineMaps[index + 1][0]) {
+            const [generateCodeColumn, , sourceCodeLine, sourceCodeColumn] =
+              lineMaps[index]
+            if (
+              generateCodeColumn <= pos.column &&
+              pos.column < lineMaps[index + 1][0]
+            ) {
               return {
-                line: remapLine!,
-                column: remapCol!,
+                line: sourceCodeLine! + 1,
+                column: sourceCodeColumn! + (pos.column - generateCodeColumn),
               }
             }
           }
-          const [, , remapLine, remapCol] = lineMaps[lineMaps.length - 1]
+          const [generateCodeColumn, , sourceCodeLine, sourceCodeColumn] =
+            lineMaps[lineMaps.length - 1]
           return {
-            line: remapLine!,
-            column: remapCol!,
+            line: sourceCodeLine! + 1,
+            column: sourceCodeColumn! + (pos.column - generateCodeColumn),
           }
         }
       }
@@ -258,6 +263,7 @@ export default createRule("valid-compile", {
           column: number
         }
       } {
+        const mapIndexes = this.mapIndexes
         const locs = (this.locs ??= new LinesAndColumns(this.code))
         let start:
           | {
@@ -273,24 +279,30 @@ export default createRule("valid-compile", {
           | undefined = undefined
         if (points.start) {
           const index = locs.getIndexFromLoc(points.start)
-          for (const mapIndex of this.mapIndexes) {
-            if (mapIndex.range[0] <= index && index < mapIndex.range[1]) {
-              start = sourceCode.getLocFromIndex(mapIndex.remap(index))
-              break
-            }
+          const remapped = remapIndex(index)
+          if (remapped) {
+            start = sourceCode.getLocFromIndex(remapped)
           }
         }
         if (points.end) {
           const index = locs.getIndexFromLoc(points.end)
-          for (const mapIndex of this.mapIndexes) {
-            if (mapIndex.range[0] <= index && index <= mapIndex.range[1]) {
-              end = sourceCode.getLocFromIndex(mapIndex.remap(index))
-              break
-            }
+          const remapped = remapIndex(index - 1 /* include index */)
+          if (remapped) {
+            end = sourceCode.getLocFromIndex(remapped + 1 /* restore */)
           }
         }
 
         return { start, end }
+
+        /** remap index */
+        function remapIndex(index: number) {
+          for (const mapIndex of mapIndexes) {
+            if (mapIndex.range[0] <= index && index < mapIndex.range[1]) {
+              return mapIndex.remap(index)
+            }
+          }
+          return null
+        }
       }
     }
 
