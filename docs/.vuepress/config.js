@@ -54,9 +54,9 @@ module.exports = {
     }
   },
 
-  //   head: [["link", { rel: "icon", type: "image/png", href: "/logo.png" }]],
+  head: [["link", { rel: "icon", type: "image/png", href: "/logo.png" }]],
   themeConfig: {
-    // logo: "/logo.svg",
+    logo: "/logo.svg",
     repo: "ota-meshi/eslint-plugin-svelte",
     docsRepo: "ota-meshi/eslint-plugin-svelte",
     docsDir: "docs",
