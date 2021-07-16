@@ -24,8 +24,8 @@ const CATEGORY_INDEX = {
   "Security Vulnerability": 2,
   "Best Practices": 3,
   "Stylistic Issues": 4,
-  System: 5,
-  "Extension Rules": 5.5,
+  "Extension Rules": 5,
+  System: 5.5,
   "eslint-core-rules@Possible Errors": 6,
   "eslint-core-rules@Best Practices": 7,
   "eslint-core-rules@Strict Mode": 8,
@@ -39,8 +39,8 @@ const CATEGORY_CLASSES = {
   "Security Vulnerability": "eslint-plugin-svelte__category",
   "Best Practices": "eslint-plugin-svelte__category",
   "Stylistic Issues": "eslint-plugin-svelte__category",
-  System: "eslint-plugin-svelte__category",
   "Extension Rules": "eslint-plugin-svelte__category",
+  System: "eslint-plugin-svelte__category",
 }
 
 const allRules = []
@@ -51,9 +51,7 @@ for (const k of Object.keys(plugin.rules)) {
     continue
   }
 
-  const category = rule.meta.docs.extensionRule
-    ? "Extension Rules"
-    : rule.meta.docs.category
+  const category = rule.meta.docs.category
 
   allRules.push({
     classes: "eslint-plugin-svelte__rule",

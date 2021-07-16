@@ -2,15 +2,14 @@ const path = require("path")
 // eslint-disable-next-line node/no-missing-require, node/no-unpublished-require -- no build
 const { rules } = require("../../lib/utils/rules")
 
-const svelteRules = rules.filter(
-  (rule) => !rule.meta.docs.extensionRule && !rule.meta.deprecated,
-)
+const svelteRules = rules.filter((rule) => !rule.meta.deprecated)
 
 const categories = [
   "Possible Errors",
   "Security Vulnerability",
   "Best Practices",
   "Stylistic Issues",
+  "Extension Rules",
   "System",
 ]
 svelteRules.forEach((rule) => {
@@ -24,10 +23,6 @@ const categoryRules = categories.map((cat) => {
     rules: svelteRules.filter((rule) => rule.meta.docs.category === cat),
   }
 })
-
-const extensionRules = rules.filter(
-  (rule) => rule.meta.docs.extensionRule && !rule.meta.deprecated,
-)
 
 function ruleToLink({
   meta: {
@@ -84,15 +79,6 @@ module.exports = {
             children: cat.rules.map(ruleToLink),
           }
         }),
-        ...(extensionRules.length
-          ? [
-              {
-                title: "Extension Rules",
-                collapsable: false,
-                children: extensionRules.map(ruleToLink),
-              },
-            ]
-          : []),
         // Rules in no category.
         ...(rules.some((rule) => rule.meta.deprecated)
           ? [

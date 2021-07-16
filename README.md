@@ -285,6 +285,14 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [@ota-meshi/svelte/shorthand-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-attribute.html) | enforce use of shorthand syntax in attribute | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment.html) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
+## Extension Rules
+
+These rules extend the rules provided by ESLint itself to work well in Svelte:
+
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [@ota-meshi/svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations.html) | disallow variable or `function` declarations in nested blocks | :star: |
+
 ## System
 
 These rules relate to this plugin works:
@@ -293,14 +301,6 @@ These rules relate to this plugin works:
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive.html) | support comment-directives in HTML template | :star: |
 | [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system.html) | system rule for working this plugin | :star: |
-
-## Extension Rules
-
-These rules extend the rules provided by ESLint itself to work well in Svelte:
-
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations.html) | disallow variable or `function` declarations in nested blocks | :star: |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

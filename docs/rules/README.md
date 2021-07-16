@@ -53,6 +53,14 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [@ota-meshi/svelte/shorthand-attribute](./shorthand-attribute.md) | enforce use of shorthand syntax in attribute | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](./spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
+## Extension Rules
+
+These rules extend the rules provided by ESLint itself to work well in Svelte:
+
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [@ota-meshi/svelte/no-inner-declarations](./no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
+
 ## System
 
 These rules relate to this plugin works:
@@ -61,11 +69,3 @@ These rules relate to this plugin works:
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/comment-directive](./comment-directive.md) | support comment-directives in HTML template | :star: |
 | [@ota-meshi/svelte/system](./system.md) | system rule for working this plugin | :star: |
-
-## Extension Rules
-
-These rules extend the rules provided by ESLint itself to work well in Svelte:
-
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/no-inner-declarations](./no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |

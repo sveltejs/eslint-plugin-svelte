@@ -60,6 +60,7 @@ export type RuleCategory =
   | "Security Vulnerability"
   | "Best Practices"
   | "Stylistic Issues"
+  | "Extension Rules"
   | "System"
 
 export interface RuleMetaData {

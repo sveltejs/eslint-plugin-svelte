@@ -6,6 +6,7 @@ const categories = [
   "Security Vulnerability",
   "Best Practices",
   "Stylistic Issues",
+  "Extension Rules",
   "System",
 ] as const
 
@@ -18,14 +19,13 @@ const descriptions: Record<typeof categories[number], string> = {
     "These rules relate to better ways of doing things to help you avoid problems:",
   "Stylistic Issues":
     "These rules relate to style guidelines, and are therefore quite subjective:",
+  "Extension Rules":
+    "These rules extend the rules provided by ESLint itself to work well in Svelte:",
   System: "These rules relate to this plugin works:",
 }
 
 const activeRules = rules.filter((rule) => !rule.meta.deprecated)
-const svelteRules = activeRules.filter((rule) => !rule.meta.docs.extensionRule)
-const extensionRules = activeRules.filter(
-  (rule) => rule.meta.docs.extensionRule,
-)
+const svelteRules = activeRules
 const deprecatedRules = rules.filter((rule) => rule.meta.deprecated)
 
 activeRules.forEach((rule) => {
@@ -87,17 +87,6 @@ ${cat.rules.map(toRuleRow).join("\n")}
 `
     })
     .join("")
-  if (extensionRules.length >= 1) {
-    rulesTableContent += `
-## Extension Rules
-
-These rules extend the rules provided by ESLint itself to work well in Svelte:
-
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-${extensionRules.map(toRuleRow).join("\n")}
-`
-  }
 
   // -----------------------------------------------------------------------------
   if (deprecatedRules.length >= 1) {
