@@ -14,5 +14,6 @@ export = {
     "@ota-meshi/svelte/no-not-function-handler": "error",
     "@ota-meshi/svelte/no-object-in-text-mustaches": "error",
     "@ota-meshi/svelte/system": "error",
+    "@ota-meshi/svelte/valid-compile": "error",
   },
 }
