@@ -18,7 +18,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [@ota-meshi/svelte/no-dupe-else-if-blocks](./no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [@ota-meshi/svelte/no-not-function-handler](./no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [@ota-meshi/svelte/no-object-in-text-mustaches](./no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
-| [@ota-meshi/svelte/valid-compile](./valid-compile.md) | disallow warnings when compiling. |  |
+| [@ota-meshi/svelte/valid-compile](./valid-compile.md) | disallow warnings when compiling. | :star: |
 
 ## Security Vulnerability
 
