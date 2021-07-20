@@ -80,6 +80,9 @@ export default createRule("valid-compile", {
     type: "problem",
   },
   create(context) {
+    if (!context.parserServices.isSvelte) {
+      return {}
+    }
     const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings)
     const sourceCode = context.getSourceCode()
     const text = sourceCode.text
