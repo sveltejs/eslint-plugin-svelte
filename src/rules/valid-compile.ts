@@ -67,11 +67,20 @@ export default createRule("valid-compile", {
       category: "Possible Errors",
       recommended: false,
     },
-    schema: [],
+    schema: [
+      {
+        type: "object",
+        properties: {
+          ignoreWarnings: { type: "boolean" },
+        },
+        additionalProperties: false,
+      },
+    ],
     messages: {},
     type: "problem",
   },
   create(context) {
+    const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings)
     const sourceCode = context.getSourceCode()
     const text = sourceCode.text
 
@@ -320,28 +329,31 @@ export default createRule("valid-compile", {
         report(getWarnings(code), (warn) => remapContext.remapLocs(warn))
       },
     }
+
+    /**
+     * Get compile warnings
+     */
+    function getWarnings(code: string): Warning[] {
+      try {
+        const result = compiler.compile(code, { generate: false })
+
+        if (ignoreWarnings) {
+          return []
+        }
+        return result.warnings
+      } catch (e) {
+        // console.log(code)
+        return [
+          {
+            message: e.message,
+            start: e.start,
+            end: e.end,
+          },
+        ]
+      }
+    }
   },
 })
-
-/**
- * Get compile warnings
- */
-function getWarnings(code: string): Warning[] {
-  try {
-    const result = compiler.compile(code, { generate: false })
-
-    return result.warnings
-  } catch (e) {
-    // console.log(code)
-    return [
-      {
-        message: e.message,
-        start: e.start,
-        end: e.end,
-      },
-    ]
-  }
-}
 
 /**
  * Checks if the given visitorKeys are the equals.

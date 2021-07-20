@@ -37,7 +37,34 @@ Note that we exclude reports for some checks, such as `missing-declaration`, whi
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "@ota-meshi/svelte/valid-compile": [
+    "error",
+    {
+      "ignoreWarnings": false
+    }
+  ]
+}
+```
+
+- `ignoreWarnings` ... If set to `true`, ignores any warnings other than fatal errors reported by the svelte compiler.
+
+<eslint-code-block>
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint @ota-meshi/svelte/valid-compile: ["error", { ignoreWarnings: true }] */
+  let src = "tutorial/image.gif"
+</script>
+
+<!-- Ignore -->
+<img {src} />
+```
+
+</eslint-code-block>
 
 ## :rocket: Version
 
