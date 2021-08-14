@@ -35,6 +35,7 @@ fs.writeFileSync(
     )
     .replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, "")
     .replace(
+      // eslint-disable-next-line regexp/no-super-linear-backtracking -- ignore
       /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)([^/]*\.html)?\)/gu,
       (_ptn, c1: string, c2: string) => {
         let result = `(.${c1}`

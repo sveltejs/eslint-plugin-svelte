@@ -1,7 +1,7 @@
 const RE_REGEXP_CHAR = /[$()*+.?[\\\]^{|}]/gu
 const RE_HAS_REGEXP_CHAR = new RegExp(RE_REGEXP_CHAR.source)
 
-const RE_REGEXP_STR = /^\/(.+)\/(.*)$/u
+const RE_REGEXP_STR = /^\/(.+)\/([A-Za-z]*)$/u
 
 /**
  * Escapes the `RegExp` special characters "^", "$", "\", ".", "*", "+",
