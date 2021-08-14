@@ -273,7 +273,7 @@ export default createRule("prefer-class-directive", {
       let canTransform = true
       for (const className of map.values()) {
         if (className) {
-          if (!/^\s*[\w-]*\s*$/u.test(className)) {
+          if (!/^[\w-]*$/u.test(className.trim())) {
             // Cannot be transformed to an attribute.
             canTransform = false
             break
