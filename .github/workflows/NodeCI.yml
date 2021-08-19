@@ -34,7 +34,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          npm i -D eslint@${{ matrix.eslint }}
+          npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
         if: matrix.eslint != 7
       - name: Install Packages
@@ -58,7 +58,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          npm i -D eslint@${{ matrix.eslint }}
+          npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
         if: matrix.eslint != 7
       - name: Install Packages
