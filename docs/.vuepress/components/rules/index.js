@@ -41,6 +41,13 @@ const CATEGORY_CLASSES = {
   "Stylistic Issues": "eslint-plugin-svelte__category",
   "Extension Rules": "eslint-plugin-svelte__category",
   System: "eslint-plugin-svelte__category",
+  "eslint-core-rules@Possible Errors": "eslint-category",
+  "eslint-core-rules@Best Practices": "eslint-category",
+  "eslint-core-rules@Strict Mode": "eslint-category",
+  "eslint-core-rules@Variables": "eslint-category",
+  "eslint-core-rules@Node.js and CommonJS": "eslint-category",
+  "eslint-core-rules@Stylistic Issues": "eslint-category",
+  "eslint-core-rules@ECMAScript 6": "eslint-category",
 }
 
 const allRules = []
@@ -64,6 +71,7 @@ for (const k of Object.keys(plugin.rules)) {
 for (const k of Object.keys(coreRules)) {
   const rule = coreRules[k]
   allRules.push({
+    classes: "eslint-rule",
     category: `eslint-core-rules@${rule.meta.docs.category}`,
     fallbackTitle: `ESLint core rules(${rule.meta.docs.category})`,
     ruleId: k,
