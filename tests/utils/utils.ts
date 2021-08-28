@@ -149,18 +149,6 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
   }
 }
 
-function exists(f: string) {
-  try {
-    fs.statSync(f)
-    return true
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return false
-    }
-    throw error
-  }
-}
-
 function writeFixtures(
   ruleName: string,
   inputFile: string,
@@ -190,7 +178,7 @@ function writeFixtures(
     },
     config.filename,
   )
-  if (force || !exists(errorFile)) {
+  if (force || !fs.existsSync(errorFile)) {
     fs.writeFileSync(
       errorFile,
       `${JSON.stringify(
@@ -206,7 +194,7 @@ function writeFixtures(
     )
   }
 
-  if (force || !exists(outputFile)) {
+  if (force || !fs.existsSync(outputFile)) {
     const output = applyFixes(config.code, result).output
 
     if (plugin.rules[ruleName].meta.fixable != null) {
@@ -229,10 +217,10 @@ function getConfig(ruleName: string, inputFile: string) {
   const code = fs.readFileSync(inputFile, "utf8")
   let config
   let configFile: string = inputFile.replace(/input\.svelte$/u, "config.json")
-  if (!exists(configFile)) {
+  if (!fs.existsSync(configFile)) {
     configFile = path.join(path.dirname(inputFile), "_config.json")
   }
-  if (exists(configFile)) {
+  if (fs.existsSync(configFile)) {
     config = JSON.parse(fs.readFileSync(configFile, "utf8"))
   }
   if (config && typeof config === "object") {

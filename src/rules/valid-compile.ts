@@ -344,7 +344,8 @@ export default createRule("valid-compile", {
           return []
         }
         return result.warnings
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+      } catch (e: any) {
         // console.log(code)
         return [
           {
