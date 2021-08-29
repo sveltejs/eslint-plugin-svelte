@@ -984,9 +984,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const firstToken = sourceCode.getFirstToken(node)
       let next = sourceCode.getTokenAfter(firstToken)
       while (next && isNotOpeningBraceToken(next)) {
-        offsets.setOffsetToken(next, 1, firstToken)
+        offsets.setOffsetToken(next, 0, firstToken)
         next = sourceCode.getTokenAfter(next)
       }
+      offsets.setOffsetToken(next, 0, firstToken)
       offsets.setOffsetElementList(
         node.body,
         next!,
