@@ -4,6 +4,7 @@ import {
   isClosingBracketToken,
   isClosingParenToken,
   isNotClosingParenToken,
+  isNotOpeningBraceToken,
   isOpeningBraceToken,
   isOpeningBracketToken,
   isOpeningParenToken,
@@ -296,15 +297,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
     TSIntersectionType(node: TSESTree.TSIntersectionType) {
       // A & B
       visitor.TSUnionType(node)
-    },
-    TSParenthesizedType(node: TSESTree.TSParenthesizedType) {
-      // (T)
-      offsets.setOffsetElementList(
-        [node.typeAnnotation],
-        sourceCode.getFirstToken(node),
-        sourceCode.getLastToken(node),
-        1,
-      )
     },
     TSMappedType(node: TSESTree.TSMappedType) {
       // {[key in foo]: bar}
@@ -728,8 +720,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     TSAbstractMethodDefinition(
       node:
         | TSESTree.TSAbstractMethodDefinition
-        | TSESTree.TSAbstractClassProperty
-        | TSESTree.ClassProperty
+        | TSESTree.TSAbstractPropertyDefinition
         | TSESTree.TSEnumMember,
     ) {
       const { keyNode, valueNode } =
@@ -777,7 +768,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         )
       }
     },
-    TSAbstractClassProperty(node: TSESTree.TSAbstractClassProperty) {
+    TSAbstractPropertyDefinition(node: TSESTree.TSAbstractPropertyDefinition) {
       visitor.TSAbstractMethodDefinition(node)
     },
     TSEnumMember(node: TSESTree.TSEnumMember) {
@@ -951,9 +942,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
     // ----------------------------------------------------------------------
     // NON-STANDARD NODES
     // ----------------------------------------------------------------------
-    ClassProperty(node: TSESTree.ClassProperty) {
-      visitor.TSAbstractMethodDefinition(node)
-    },
     Decorator(node: TSESTree.Decorator) {
       // @Decorator
       const [atToken, secondToken] = sourceCode.getFirstTokens(node, {
@@ -991,6 +979,21 @@ export function defineVisitor(context: IndentContext): NodeListener {
           sourceCode.getFirstToken(decorators[0]),
         )
       }
+    },
+    StaticBlock(node: TSESTree.StaticBlock) {
+      const firstToken = sourceCode.getFirstToken(node)
+      let next = sourceCode.getTokenAfter(firstToken)
+      while (next && isNotOpeningBraceToken(next)) {
+        offsets.setOffsetToken(next, 0, firstToken)
+        next = sourceCode.getTokenAfter(next)
+      }
+      offsets.setOffsetToken(next, 0, firstToken)
+      offsets.setOffsetElementList(
+        node.body,
+        next!,
+        sourceCode.getLastToken(node),
+        1,
+      )
     },
     // ----------------------------------------------------------------------
     // SINGLE TOKEN NODES
@@ -1080,10 +1083,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
   const commonsVisitor: any = {
     // Process semicolons.
     ["TSTypeAliasDeclaration, TSCallSignatureDeclaration, TSConstructSignatureDeclaration, TSImportEqualsDeclaration," +
-      "TSAbstractMethodDefinition, TSAbstractClassProperty, TSEnumMember, ClassProperty," +
-      "TSPropertySignature, TSIndexSignature, TSMethodSignature"](
-      node: ESTree.Node,
-    ) {
+      "TSAbstractMethodDefinition, TSAbstractPropertyDefinition, TSEnumMember," +
+      "TSPropertySignature, TSIndexSignature, TSMethodSignature," +
+      "TSAbstractClassProperty, ClassProperty"](node: ESTree.Node) {
       const firstToken = sourceCode.getFirstToken(node)
       const lastToken = sourceCode.getLastToken(node)
       if (isSemicolonToken(lastToken) && firstToken !== lastToken) {
@@ -1092,6 +1094,71 @@ export function defineVisitor(context: IndentContext): NodeListener {
           // End of line semicolons
           offsets.setOffsetToken(lastToken, 0, firstToken)
         }
+      }
+    },
+    // eslint-disable-next-line complexity -- ignore
+    "*[type=/^TS/]"(node: TSESTree.Node) {
+      if (
+        node.type !== "TSAnyKeyword" &&
+        node.type !== "TSArrayType" &&
+        node.type !== "TSBigIntKeyword" &&
+        node.type !== "TSBooleanKeyword" &&
+        node.type !== "TSConditionalType" &&
+        node.type !== "TSConstructorType" &&
+        node.type !== "TSFunctionType" &&
+        node.type !== "TSImportType" &&
+        node.type !== "TSIndexedAccessType" &&
+        node.type !== "TSInferType" &&
+        node.type !== "TSIntersectionType" &&
+        node.type !== "TSIntrinsicKeyword" &&
+        node.type !== "TSLiteralType" &&
+        node.type !== "TSMappedType" &&
+        node.type !== "TSNamedTupleMember" &&
+        node.type !== "TSNeverKeyword" &&
+        node.type !== "TSNullKeyword" &&
+        node.type !== "TSNumberKeyword" &&
+        node.type !== "TSObjectKeyword" &&
+        node.type !== "TSOptionalType" &&
+        node.type !== "TSRestType" &&
+        node.type !== "TSStringKeyword" &&
+        node.type !== "TSSymbolKeyword" &&
+        node.type !== "TSTemplateLiteralType" &&
+        node.type !== "TSThisType" &&
+        node.type !== "TSTupleType" &&
+        node.type !== "TSTypeLiteral" &&
+        node.type !== "TSTypeOperator" &&
+        node.type !== "TSTypePredicate" &&
+        node.type !== "TSTypeQuery" &&
+        node.type !== "TSTypeReference" &&
+        node.type !== "TSUndefinedKeyword" &&
+        node.type !== "TSUnionType" &&
+        node.type !== "TSUnknownKeyword" &&
+        node.type !== "TSVoidKeyword"
+      ) {
+        return
+      }
+      const typeNode: TSESTree.TypeNode = node
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+      if ((typeNode.parent as any).type === "TSParenthesizedType") {
+        return
+      }
+      // Process parentheses.
+      let leftToken = sourceCode.getTokenBefore(typeNode)
+      let rightToken = sourceCode.getTokenAfter(typeNode)
+      let firstToken = sourceCode.getFirstToken(typeNode)
+
+      while (
+        leftToken &&
+        isOpeningParenToken(leftToken) &&
+        rightToken &&
+        isClosingParenToken(rightToken)
+      ) {
+        offsets.setOffsetToken(firstToken, 1, leftToken)
+        offsets.setOffsetToken(rightToken, 0, leftToken)
+
+        firstToken = leftToken
+        leftToken = sourceCode.getTokenBefore(leftToken)
+        rightToken = sourceCode.getTokenAfter(rightToken)
       }
     },
   }
@@ -1125,11 +1192,34 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
     },
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  const deprecatedVisitor: any = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+    TSParenthesizedType(node: any) {
+      // (T)
+      offsets.setOffsetElementList(
+        [node.typeAnnotation],
+        sourceCode.getFirstToken(node),
+        sourceCode.getLastToken(node),
+        1,
+      )
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+    ClassProperty(node: any) {
+      visitor.TSAbstractMethodDefinition(node)
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+    TSAbstractClassProperty(node: any) {
+      visitor.TSAbstractMethodDefinition(node)
+    },
+  }
   const v: NodeListener = visitor
 
   return {
     ...v,
     ...commonsVisitor,
     ...extendsESVisitor,
+    ...deprecatedVisitor,
   }
 }

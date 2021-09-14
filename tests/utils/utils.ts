@@ -56,10 +56,12 @@ function getMinIndent(lines: string[]) {
  */
 export function loadTestCases(
   ruleName: string,
-  _options?: any,
-  additionals?: {
-    valid?: (RuleTester.ValidTestCase | string)[]
-    invalid?: RuleTester.InvalidTestCase[]
+  options?: {
+    additionals?: {
+      valid?: (RuleTester.ValidTestCase | string)[]
+      invalid?: RuleTester.InvalidTestCase[]
+    }
+    filter: (file: string) => boolean
   },
 ): {
   valid: RuleTester.ValidTestCase[]
@@ -74,44 +76,48 @@ export function loadTestCases(
     `../fixtures/rules/${ruleName}/invalid/`,
   )
 
-  const valid = listupInput(validFixtureRoot).map((inputFile) =>
-    getConfig(ruleName, inputFile),
-  )
+  const filter = options?.filter ?? (() => true)
+
+  const valid = listupInput(validFixtureRoot)
+    .filter(filter)
+    .map((inputFile) => getConfig(ruleName, inputFile))
 
   const fixable = plugin.rules[ruleName].meta.fixable != null
 
-  const invalid = listupInput(invalidFixtureRoot).map((inputFile) => {
-    const config = getConfig(ruleName, inputFile)
-    const errorFile = inputFile.replace(/input\.svelte$/u, "errors.json")
-    const outputFile = inputFile.replace(/input\.svelte$/u, "output.svelte")
-    let errors
-    try {
-      errors = fs.readFileSync(errorFile, "utf8")
-    } catch (e) {
-      writeFixtures(ruleName, inputFile)
-      errors = fs.readFileSync(errorFile, "utf8")
-    }
-    config.errors = JSON.parse(errors)
-    if (fixable) {
-      let output
+  const invalid = listupInput(invalidFixtureRoot)
+    .filter(filter)
+    .map((inputFile) => {
+      const config = getConfig(ruleName, inputFile)
+      const errorFile = inputFile.replace(/input\.svelte$/u, "errors.json")
+      const outputFile = inputFile.replace(/input\.svelte$/u, "output.svelte")
+      let errors
       try {
-        output = fs.readFileSync(outputFile, "utf8")
+        errors = fs.readFileSync(errorFile, "utf8")
       } catch (e) {
         writeFixtures(ruleName, inputFile)
-        output = fs.readFileSync(outputFile, "utf8")
+        errors = fs.readFileSync(errorFile, "utf8")
       }
-      config.output = output
-    }
+      config.errors = JSON.parse(errors)
+      if (fixable) {
+        let output
+        try {
+          output = fs.readFileSync(outputFile, "utf8")
+        } catch (e) {
+          writeFixtures(ruleName, inputFile)
+          output = fs.readFileSync(outputFile, "utf8")
+        }
+        config.output = output
+      }
 
-    return config
-  })
+      return config
+    })
 
-  if (additionals) {
-    if (additionals.valid) {
-      valid.push(...additionals.valid)
+  if (options?.additionals) {
+    if (options.additionals.valid) {
+      valid.push(...options.additionals.valid)
     }
-    if (additionals.invalid) {
-      invalid.push(...additionals.invalid)
+    if (options.additionals.invalid) {
+      invalid.push(...options.additionals.invalid)
     }
   }
   for (const test of valid) {
