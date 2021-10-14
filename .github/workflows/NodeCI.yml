@@ -36,7 +36,6 @@ jobs:
         run: |+
           npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
-        if: matrix.eslint != 7
       - name: Install Packages
         run: npm install --legacy-peer-deps
       - name: Test
@@ -60,7 +59,7 @@ jobs:
         run: |+
           npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
-        if: matrix.eslint != 7
+        if: matrix.eslint != 8
       - name: Install Packages
         run: npm install --legacy-peer-deps
       - name: Test
