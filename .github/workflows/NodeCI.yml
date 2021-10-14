@@ -18,13 +18,13 @@ jobs:
         run: npm install
       - name: Lint
         run: npm run lint
-  test-for-eslint7:
+  test-for-node10:
     name: "Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [10, 12, 14, 16]
+        node: [10]
         eslint: [7]
     steps:
       - uses: actions/checkout@v2
@@ -36,19 +36,18 @@ jobs:
         run: |+
           npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
-        if: matrix.eslint != 7
       - name: Install Packages
         run: npm install --legacy-peer-deps
       - name: Test
         run: npm test
-  test-for-eslint8:
+  test:
     name: "Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        eslint: [^8.0.0-0]
-        node: [14, 16]
+        eslint: [7, 8]
+        node: [12, 14, 16]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -60,8 +59,8 @@ jobs:
         run: |+
           npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
           npx rimraf node_modules
-        if: matrix.eslint != 7
+        if: matrix.eslint != 8
       - name: Install Packages
         run: npm install --legacy-peer-deps
       - name: Test
-        run: yarn test
+        run: npm test
