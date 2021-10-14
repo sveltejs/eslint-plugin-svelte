@@ -63,4 +63,4 @@ jobs:
       - name: Install Packages
         run: npm install --legacy-peer-deps
       - name: Test
-        run: yarn test
+        run: npm test
