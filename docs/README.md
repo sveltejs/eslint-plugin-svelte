@@ -32,7 +32,7 @@ The [svelte-eslint-parser] aims to make it easy to create your own rules for the
 
 The [svelte-eslint-parser] and the `@ota-meshi/eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
 
-[svelte-eslint-parser]: https://www.npmjs.com/package/svelte-eslint-parser
+[svelte-eslint-parser]: https://github.com/ota-meshi/svelte-eslint-parser
 [eslint-plugin-svelte3]: https://github.com/sveltejs/eslint-plugin-svelte3
 [eslint]: https://eslint.org/
 
