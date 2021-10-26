@@ -134,6 +134,7 @@ export default createRule("valid-compile", {
         // Added in v12.2.0
         Module.createRequire ||
         // Added in v10.12.0, but deprecated in v12.2.0.
+        // @ts-expect-error -- old type
         Module.createRequireFromPath
 
       const cwd = context.getCwd?.() ?? process.cwd()
