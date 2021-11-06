@@ -9,7 +9,7 @@ npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte svelte
 ::: tip Requirements
 
 - ESLint v7.0.0 and above
-- Node.js v10.13.0 and above
+- Node.js v12.22.x, v14.17.x, v16.x and above
 
 :::
 
