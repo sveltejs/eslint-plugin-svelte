@@ -14,6 +14,7 @@ module.exports = {
     "plugin:@ota-meshi/+typescript",
     "plugin:@ota-meshi/+eslint-plugin",
     "plugin:@ota-meshi/+vue2",
+    "plugin:@ota-meshi/+package-json",
     "plugin:@ota-meshi/+json",
     "plugin:@ota-meshi/+yaml",
     "plugin:@ota-meshi/+md",
