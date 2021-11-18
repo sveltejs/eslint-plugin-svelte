@@ -334,6 +334,27 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       offsets.setOffsetToken(fromToken, 0, exportToken)
       offsets.setOffsetToken(afterTokens, 1, fromToken)
+
+      // assertions
+      const lastToken = sourceCode.getLastToken(node)!
+      const assertionTokens = sourceCode.getTokensBetween(
+        node.source,
+        lastToken,
+      )
+      if (assertionTokens.length) {
+        const assertToken = assertionTokens.shift()!
+        offsets.setOffsetToken(assertToken, 0, exportToken)
+        const assertionOpen = assertionTokens.shift()
+        if (assertionOpen) {
+          offsets.setOffsetToken(assertionOpen, 1, assertToken)
+          offsets.setOffsetElementList(
+            assertionTokens,
+            assertionOpen,
+            lastToken,
+            1,
+          )
+        }
+      }
     },
     ExportDefaultDeclaration(node: ESTree.ExportDefaultDeclaration) {
       const exportToken = sourceCode.getFirstToken(node)
@@ -365,10 +386,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
             exportToken,
             firstSpecifier,
           )
-          const rightBraceToken = sourceCode.getLastToken(node, {
-            filter: isClosingBraceToken,
-            includeComments: false,
-          })!
+          const rightBraceToken = node.source
+            ? sourceCode.getTokenBefore(node.source, {
+                filter: isClosingBraceToken,
+                includeComments: false,
+              })!
+            : sourceCode.getLastToken(node, {
+                filter: isClosingBraceToken,
+                includeComments: false,
+              })!
           offsets.setOffsetToken(leftBraceTokens, 0, exportToken)
           offsets.setOffsetElementList(
             node.specifiers,
@@ -389,14 +415,41 @@ export function defineVisitor(context: IndentContext): NodeListener {
               1,
               fromToken,
             )
+
+            // assertions
+            const lastToken = sourceCode.getLastToken(node)!
+            const assertionTokens = sourceCode.getTokensBetween(
+              node.source,
+              lastToken,
+            )
+            if (assertionTokens.length) {
+              const assertToken = assertionTokens.shift()!
+              offsets.setOffsetToken(assertToken, 0, exportToken)
+              const assertionOpen = assertionTokens.shift()
+              if (assertionOpen) {
+                offsets.setOffsetToken(assertionOpen, 1, assertToken)
+                offsets.setOffsetElementList(
+                  assertionTokens,
+                  assertionOpen,
+                  lastToken,
+                  1,
+                )
+              }
+            }
           }
         } else {
           // maybe babel-eslint
         }
       }
     },
-    ExportSpecifier(node: ESTree.ExportSpecifier) {
-      const [firstToken, ...tokens] = sourceCode.getTokens(node)
+    ExportSpecifier(node: ESTree.ExportSpecifier | ESTree.ImportSpecifier) {
+      const tokens = sourceCode.getTokens(node)
+      let firstToken = tokens.shift()!
+      if (firstToken.value === "type") {
+        const typeToken = firstToken
+        firstToken = tokens.shift()!
+        offsets.setOffsetToken(firstToken, 0, typeToken)
+      }
       offsets.setOffsetToken(tokens, 1, firstToken)
     },
     ForInStatement(node: ESTree.ForInStatement | ESTree.ForOfStatement) {
@@ -618,6 +671,27 @@ export function defineVisitor(context: IndentContext): NodeListener {
         offsets.setOffsetToken(fromToken, 0, importToken)
         offsets.setOffsetToken(afterTokens, 1, fromToken)
       }
+
+      // assertions
+      const lastToken = sourceCode.getLastToken(node)!
+      const assertionTokens = sourceCode.getTokensBetween(
+        node.source,
+        lastToken,
+      )
+      if (assertionTokens.length) {
+        const assertToken = assertionTokens.shift()!
+        offsets.setOffsetToken(assertToken, 0, importToken)
+        const assertionOpen = assertionTokens.shift()
+        if (assertionOpen) {
+          offsets.setOffsetToken(assertionOpen, 1, assertToken)
+          offsets.setOffsetElementList(
+            assertionTokens,
+            assertionOpen,
+            lastToken,
+            1,
+          )
+        }
+      }
     },
     ImportExpression(node: ESTree.ImportExpression) {
       const firstToken = sourceCode.getFirstToken(node)
@@ -636,11 +710,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       offsets.setOffsetToken(tokens, 1, firstToken)
     },
     ImportSpecifier(node: ESTree.ImportSpecifier) {
-      if (node.local.range![0] !== node.imported.range![0]) {
-        const tokens = sourceCode.getTokens(node)
-        const firstToken = tokens.shift()!
-        offsets.setOffsetToken(tokens, 1, firstToken)
-      }
+      visitor.ExportSpecifier(node)
     },
     LabeledStatement(
       node: ESTree.LabeledStatement | AST.SvelteReactiveStatement,

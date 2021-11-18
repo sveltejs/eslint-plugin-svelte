@@ -995,6 +995,27 @@ export function defineVisitor(context: IndentContext): NodeListener {
         1,
       )
     },
+    ImportAttribute(node: TSESTree.ImportAttribute) {
+      const firstToken = sourceCode.getFirstToken(node)
+      const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
+      const prefixTokens = sourceCode.getTokensBetween(
+        firstToken,
+        keyTokens.firstToken,
+      )
+      offsets.setOffsetToken(prefixTokens, 0, firstToken)
+
+      offsets.setOffsetToken(keyTokens.firstToken, 0, firstToken)
+
+      const initToken = sourceCode.getFirstToken(node.value)
+      offsets.setOffsetToken(
+        [
+          ...sourceCode.getTokensBetween(keyTokens.lastToken, initToken),
+          initToken,
+        ],
+        1,
+        keyTokens.lastToken,
+      )
+    },
     // ----------------------------------------------------------------------
     // SINGLE TOKEN NODES
     // ----------------------------------------------------------------------
