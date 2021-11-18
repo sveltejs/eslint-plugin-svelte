@@ -5,8 +5,8 @@
       type
         :
         "json"
-      }
-    ;
+    }
+  ;
 </script>
 
 <!--tests/fixtures/rules/indent/invalid/ts/ts-import-assertion04-input-->

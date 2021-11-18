@@ -11,6 +11,7 @@ import {
   isClosingParenToken,
   isNotClosingParenToken,
   isNotOpeningParenToken,
+  isNotSemicolonToken,
   isOpeningBraceToken,
   isOpeningBracketToken,
   isOpeningParenToken,
@@ -336,7 +337,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
       offsets.setOffsetToken(afterTokens, 1, fromToken)
 
       // assertions
-      const lastToken = sourceCode.getLastToken(node)!
+      const lastToken = sourceCode.getLastToken(node, {
+        filter: isNotSemicolonToken,
+        includeComments: false,
+      })!
       const assertionTokens = sourceCode.getTokensBetween(
         node.source,
         lastToken,
@@ -382,10 +386,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
         const firstSpecifier = node.specifiers[0]
         if (!firstSpecifier || firstSpecifier.type === "ExportSpecifier") {
           // export {foo, bar}; or export {foo, bar} from "mod";
-          const leftBraceTokens = sourceCode.getTokensBetween(
-            exportToken,
-            firstSpecifier,
-          )
+          const leftBraceTokens = firstSpecifier
+            ? sourceCode.getTokensBetween(exportToken, firstSpecifier)
+            : [sourceCode.getTokenAfter(exportToken)!]
           const rightBraceToken = node.source
             ? sourceCode.getTokenBefore(node.source, {
                 filter: isClosingBraceToken,
@@ -417,7 +420,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
             )
 
             // assertions
-            const lastToken = sourceCode.getLastToken(node)!
+            const lastToken = sourceCode.getLastToken(node, {
+              filter: isNotSemicolonToken,
+              includeComments: false,
+            })!
             const assertionTokens = sourceCode.getTokensBetween(
               node.source,
               lastToken,
@@ -673,7 +679,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
 
       // assertions
-      const lastToken = sourceCode.getLastToken(node)!
+      const lastToken = sourceCode.getLastToken(node, {
+        filter: isNotSemicolonToken,
+        includeComments: false,
+      })!
       const assertionTokens = sourceCode.getTokensBetween(
         node.source,
         lastToken,
