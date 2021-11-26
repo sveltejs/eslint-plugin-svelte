@@ -10,6 +10,7 @@ export = {
     "@ota-meshi/svelte/no-at-debug-tags": "warn",
     "@ota-meshi/svelte/no-at-html-tags": "error",
     "@ota-meshi/svelte/no-dupe-else-if-blocks": "error",
+    "@ota-meshi/svelte/no-dynamic-slot-name": "error",
     "@ota-meshi/svelte/no-inner-declarations": "error",
     "@ota-meshi/svelte/no-not-function-handler": "error",
     "@ota-meshi/svelte/no-object-in-text-mustaches": "error",

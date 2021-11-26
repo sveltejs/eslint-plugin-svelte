@@ -35,7 +35,7 @@ This rule uses Svelte compiler to check the source code.
 
 </eslint-code-block>
 
-Note that we exclude reports for some checks, such as `missing-declaration`, which you can check with different ESLint rules.
+Note that we exclude reports for some checks, such as `missing-declaration`, and `dynamic-slot-name`, which you can check with different ESLint rules.
 
 ## :wrench: Options
 

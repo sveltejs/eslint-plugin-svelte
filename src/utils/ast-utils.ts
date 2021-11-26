@@ -229,3 +229,111 @@ export function getScope(
 
   return scopeManager.scopes[0]
 }
+
+export type QuoteAndRange = {
+  quote: "unquoted" | "double" | "single"
+  range: [number, number]
+}
+/** Get the quote and range from given attribute values */
+export function getAttributeValueQuoteAndRange(
+  attr:
+    | SvAST.SvelteAttribute
+    | SvAST.SvelteDirective
+    | SvAST.SvelteSpecialDirective,
+  context: RuleContext,
+): QuoteAndRange | null {
+  const sourceCode = context.getSourceCode()
+  const valueTokens = getAttributeValueRangeTokens(attr, sourceCode)
+  if (valueTokens == null) {
+    return null
+  }
+  const { firstToken: valueFirstToken, lastToken: valueLastToken } = valueTokens
+  const eqToken = sourceCode.getTokenAfter(attr.key)
+  if (
+    !eqToken ||
+    eqToken.value !== "=" ||
+    valueFirstToken.range[0] < eqToken.range[1]
+  ) {
+    // invalid
+    return null
+  }
+  const beforeTokens = sourceCode.getTokensBetween(eqToken, valueFirstToken)
+  if (beforeTokens.length === 0) {
+    return {
+      quote: "unquoted",
+      range: [valueFirstToken.range[0], valueLastToken.range[1]],
+    }
+  } else if (
+    beforeTokens.length > 1 ||
+    (beforeTokens[0].value !== '"' && beforeTokens[0].value !== "'")
+  ) {
+    // invalid
+    return null
+  }
+  const beforeToken = beforeTokens[0]
+  const afterToken = sourceCode.getTokenAfter(valueLastToken)
+  if (!afterToken || afterToken.value !== beforeToken.value) {
+    // invalid
+    return null
+  }
+
+  return {
+    quote: beforeToken.value === '"' ? "double" : "single",
+    range: [beforeToken.range[0], afterToken.range[1]],
+  }
+}
+
+/** Get the value tokens from given attribute */
+function getAttributeValueRangeTokens(
+  attr:
+    | SvAST.SvelteAttribute
+    | SvAST.SvelteDirective
+    | SvAST.SvelteSpecialDirective,
+  sourceCode: SourceCode,
+) {
+  if (attr.type === "SvelteAttribute") {
+    if (!attr.value.length) {
+      return null
+    }
+    const firstToken = attr.value[0]
+    const lastToken = attr.value[attr.value.length - 1]
+    return {
+      firstToken,
+      lastToken,
+    }
+  }
+  let firstToken, lastToken
+  if (attr.expression == null) {
+    return null
+  }
+  if (
+    attr.key.range[0] <= attr.expression.range![0] &&
+    attr.expression.range![1] <= attr.key.range[1]
+  ) {
+    // shorthand
+    return null
+  }
+  firstToken = sourceCode.getTokenBefore(attr.expression)
+  lastToken = sourceCode.getTokenAfter(attr.expression)
+  while (
+    firstToken &&
+    lastToken &&
+    eslintUtils.isOpeningParenToken(firstToken) &&
+    eslintUtils.isClosingParenToken(lastToken)
+  ) {
+    firstToken = sourceCode.getTokenBefore(firstToken)
+    lastToken = sourceCode.getTokenAfter(lastToken)
+  }
+  if (
+    !firstToken ||
+    !lastToken ||
+    eslintUtils.isNotOpeningBraceToken(firstToken) ||
+    eslintUtils.isNotClosingBraceToken(lastToken)
+  ) {
+    return null
+  }
+  return {
+    firstToken,
+    lastToken,
+  }
+}

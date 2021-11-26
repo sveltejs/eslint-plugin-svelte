@@ -8,6 +8,7 @@ import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
+import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
@@ -29,6 +30,7 @@ export const rules = [
   noAtDebugTags,
   noAtHtmlTags,
   noDupeElseIfBlocks,
+  noDynamicSlotName,
   noInnerDeclarations,
   noNotFunctionHandler,
   noObjectInTextMustaches,

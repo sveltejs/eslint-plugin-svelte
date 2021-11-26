@@ -5,8 +5,9 @@ import {
   isNotOpeningBraceToken,
   isOpeningParenToken,
 } from "eslint-utils"
-import type { NodeOrToken } from "../types"
 import { createRule } from "../utils"
+import type { QuoteAndRange } from "../utils/ast-utils"
+import { getAttributeValueQuoteAndRange } from "../utils/ast-utils"
 
 const QUOTE_CHARS = {
   double: '"',
@@ -60,56 +61,6 @@ export default createRule("html-quotes", {
     const avoidInvalidUnquotedInHTML = Boolean(
       context.options[0]?.dynamic?.avoidInvalidUnquotedInHTML,
     )
-
-    type QuoteAndRange = {
-      quote: "unquoted" | "double" | "single"
-      range: [number, number]
-    }
-
-    /** Get the quote and range from given attribute values */
-    function getQuoteAndRange(
-      attr:
-        | AST.SvelteAttribute
-        | AST.SvelteDirective
-        | AST.SvelteSpecialDirective,
-      valueTokens: NodeOrToken[],
-    ): QuoteAndRange | null {
-      const valueFirstToken = valueTokens[0]
-      const valueLastToken = valueTokens[valueTokens.length - 1]
-      const eqToken = sourceCode.getTokenAfter(attr.key)
-      if (
-        !eqToken ||
-        eqToken.value !== "=" ||
-        valueFirstToken.range![0] < eqToken.range[1]
-      ) {
-        // invalid
-        return null
-      }
-      const beforeTokens = sourceCode.getTokensBetween(eqToken, valueFirstToken)
-      if (beforeTokens.length === 0) {
-        return {
-          quote: "unquoted",
-          range: [valueFirstToken.range![0], valueLastToken.range![1]],
-        }
-      } else if (
-        beforeTokens.length > 1 ||
-        (beforeTokens[0].value !== '"' && beforeTokens[0].value !== "'")
-      ) {
-        // invalid
-        return null
-      }
-      const beforeToken = beforeTokens[0]
-      const afterToken = sourceCode.getTokenAfter(valueLastToken)
-      if (!afterToken || afterToken.value !== beforeToken.value) {
-        // invalid
-        return null
-      }
-
-      return {
-        quote: beforeToken.value === '"' ? "double" : "single",
-        range: [beforeToken.range[0], afterToken.range[1]],
-      }
-    }
 
     /** Checks whether the given text can remove quotes in HTML. */
     function canBeUnquotedInHTML(text: string) {
@@ -202,11 +153,8 @@ export default createRule("html-quotes", {
     }
 
     /** Verify for standard attribute */
-    function verifyForValues(
-      attr: AST.SvelteAttribute,
-      valueNodes: AST.SvelteAttribute["value"],
-    ) {
-      const quoteAndRange = getQuoteAndRange(attr, valueNodes)
+    function verifyForValues(attr: AST.SvelteAttribute) {
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
       verifyQuote(preferQuote, quoteAndRange)
     }
 
@@ -217,7 +165,7 @@ export default createRule("html-quotes", {
         kind: "text"
       },
     ) {
-      const quoteAndRange = getQuoteAndRange(attr, [valueNode])
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
       const text = sourceCode.text.slice(...valueNode.range)
       verifyQuote(
         avoidInvalidUnquotedInHTML && !canBeUnquotedInHTML(text)
@@ -251,7 +199,7 @@ export default createRule("html-quotes", {
       ) {
         return
       }
-      const quoteAndRange = getQuoteAndRange(attr, [beforeToken, afterToken])
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
       const text = sourceCode.text.slice(
         beforeToken.range[0],
         afterToken.range[1],
@@ -272,7 +220,7 @@ export default createRule("html-quotes", {
         ) {
           verifyForDynamicMustacheTag(node, node.value[0])
         } else if (node.value.length >= 1) {
-          verifyForValues(node, node.value)
+          verifyForValues(node)
         }
       },
       "SvelteDirective, SvelteSpecialDirective"(
