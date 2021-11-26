@@ -87,7 +87,7 @@ export default createRule("valid-compile", {
     const sourceCode = context.getSourceCode()
     const text = sourceCode.text
 
-    const ignores = ["missing-declaration"]
+    const ignores = ["missing-declaration", "dynamic-slot-name"]
 
     /**
      * report
