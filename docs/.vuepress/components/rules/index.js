@@ -1,7 +1,9 @@
-/* eslint node/no-unsupported-features/es-syntax: off -- not node */
-import * as coreRules from "../../../../node_modules/eslint4b/dist/core-rules"
-// eslint-disable-next-line node/no-missing-import -- no build
+// eslint-disable-next-line eslint-comments/disable-enable-pair -- DEMO
+/* eslint-disable node/no-unsupported-features/es-syntax -- DEMO */
+import { Linter } from "eslint/lib/linter"
 import plugin from "../../../../"
+
+const coreRules = Object.fromEntries(new Linter().getRules())
 
 const CATEGORY_TITLES = {
   "Possible Errors": "Svelte Rules(Possible Errors)",
@@ -10,14 +12,9 @@ const CATEGORY_TITLES = {
   "Stylistic Issues": "Svelte Rules(Stylistic Issues)",
   System: "Svelte Rules(System)",
   "Extension Rules": "Svelte Rules(Extension Rules)",
-  "eslint-core-rules@Possible Errors": "ESLint core rules(Possible Errors)",
-  "eslint-core-rules@Best Practices": "ESLint core rules(Best Practices)",
-  "eslint-core-rules@Strict Mode": "ESLint core rules(Strict Mode)",
-  "eslint-core-rules@Variables": "ESLint core rules(Variables)",
-  "eslint-core-rules@Node.js and CommonJS":
-    "ESLint core rules(Node.js and CommonJS)",
-  "eslint-core-rules@Stylistic Issues": "ESLint core rules(Stylistic Issues)",
-  "eslint-core-rules@ECMAScript 6": "ESLint core rules(ECMAScript 6)",
+  "eslint-core-rules@problem": "ESLint core rules(Possible Errors)",
+  "eslint-core-rules@suggestion": "ESLint core rules(Suggestions)",
+  "eslint-core-rules@layout": "ESLint core rules(Layout & Formatting)",
 }
 const CATEGORY_INDEX = {
   "Possible Errors": 1,
@@ -25,29 +22,21 @@ const CATEGORY_INDEX = {
   "Best Practices": 3,
   "Stylistic Issues": 4,
   "Extension Rules": 5,
-  System: 5.5,
-  "eslint-core-rules@Possible Errors": 6,
-  "eslint-core-rules@Best Practices": 7,
-  "eslint-core-rules@Strict Mode": 8,
-  "eslint-core-rules@Variables": 9,
-  "eslint-core-rules@Node.js and CommonJS": 10,
-  "eslint-core-rules@Stylistic Issues": 11,
-  "eslint-core-rules@ECMAScript 6": 12,
+  System: 6,
+  "eslint-core-rules@problem": 20,
+  "eslint-core-rules@suggestion": 21,
+  "eslint-core-rules@layout": 22,
 }
 const CATEGORY_CLASSES = {
-  "Possible Errors": "eslint-plugin-svelte__category",
-  "Security Vulnerability": "eslint-plugin-svelte__category",
-  "Best Practices": "eslint-plugin-svelte__category",
-  "Stylistic Issues": "eslint-plugin-svelte__category",
-  "Extension Rules": "eslint-plugin-svelte__category",
-  System: "eslint-plugin-svelte__category",
-  "eslint-core-rules@Possible Errors": "eslint-category",
-  "eslint-core-rules@Best Practices": "eslint-category",
-  "eslint-core-rules@Strict Mode": "eslint-category",
-  "eslint-core-rules@Variables": "eslint-category",
-  "eslint-core-rules@Node.js and CommonJS": "eslint-category",
-  "eslint-core-rules@Stylistic Issues": "eslint-category",
-  "eslint-core-rules@ECMAScript 6": "eslint-category",
+  "Possible Errors": "eslint-plugin-svelte-category",
+  "Security Vulnerability": "eslint-plugin-svelte-category",
+  "Best Practices": "eslint-plugin-svelte-category",
+  "Stylistic Issues": "eslint-plugin-svelte-category",
+  "Extension Rules": "eslint-plugin-svelte-category",
+  System: "eslint-plugin-svelte-category",
+  "eslint-core-rules@problem": "eslint-core-category",
+  "eslint-core-rules@suggestion": "eslint-core-category",
+  "eslint-core-rules@layout": "eslint-core-category",
 }
 
 const allRules = []
@@ -59,21 +48,23 @@ for (const k of Object.keys(plugin.rules)) {
   }
 
   const category = rule.meta.docs.category
-
   allRules.push({
-    classes: "eslint-plugin-svelte__rule",
+    classes: "eslint-plugin-svelte-rule",
     category,
     ruleId: rule.meta.docs.ruleId,
     url: rule.meta.docs.url,
-    initChecked: true,
+    initChecked: rule.meta.docs.recommended,
   })
 }
+
 for (const k of Object.keys(coreRules)) {
   const rule = coreRules[k]
+  if (rule.meta.deprecated) {
+    continue
+  }
   allRules.push({
-    classes: "eslint-rule",
-    category: `eslint-core-rules@${rule.meta.docs.category}`,
-    fallbackTitle: `ESLint core rules(${rule.meta.docs.category})`,
+    classes: "eslint-core-rule",
+    category: `eslint-core-rules@${rule.meta.type}`,
     ruleId: k,
     url: rule.meta.docs.url,
     initChecked: rule.meta.docs.recommended,
@@ -114,12 +105,27 @@ categories.sort((a, b) =>
 )
 
 export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {
-  if ([].includes(r.ruleId)) {
-    c[r.ruleId] = "error"
-  } else {
-    c[r.ruleId] = r.initChecked ? "error" : "off"
-  }
+  c[r.ruleId] = r.initChecked ? "error" : "off"
+
   return c
 }, {})
 
 export const rules = allRules
+
+export function getRule(ruleId) {
+  if (!ruleId) {
+    return null
+  }
+  for (const category of categories) {
+    for (const rule of category.rules) {
+      if (rule.ruleId === ruleId) {
+        return rule
+      }
+    }
+  }
+  return {
+    ruleId,
+    url: "",
+    classes: "",
+  }
+}

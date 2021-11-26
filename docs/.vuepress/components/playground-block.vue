@@ -20,9 +20,10 @@
               v-for="(msg, i) in messages"
               :key="msg.line + ':' + msg.column + ':' + msg.ruleId + '@' + i"
               class="message"
+              :class="getRule(msg.ruleId).classes"
             >
               [{{ msg.line }}:{{ msg.column }}]: {{ msg.message }} (<a
-                :href="getURL(msg.ruleId)"
+                :href="getRule(msg.ruleId).url"
                 target="_blank"
               >
                 {{ msg.ruleId }} </a
@@ -36,13 +37,11 @@
 </template>
 
 <script>
-import * as coreRules from "eslint4b/dist/core-rules"
-import plugin from "../../.."
 import PgEditor from "./components/PgEditor.vue"
 import RulesSettings from "./components/RulesSettings.vue"
 import SnsBar from "./components/SnsBar.vue"
 import { deserializeState, serializeState } from "./state"
-import { DEFAULT_RULES_CONFIG } from "./rules"
+import { DEFAULT_RULES_CONFIG, getRule } from "./rules"
 
 const DEFAULT_CODE =
   `<!-- Welcome to @ota-meshi/eslint-plugin-svelte -->
@@ -94,30 +93,15 @@ const DEFAULT_CODE =
 >foo</button>
 `
 
-const ruleURLs = {}
-for (const k of Object.keys(plugin.rules)) {
-  const rule = plugin.rules[k]
-  // @ts-ignore
-  ruleURLs[rule.meta.docs.ruleId] = rule.meta.docs.url
-}
-for (const k of Object.keys(coreRules)) {
-  const rule = coreRules[k]
-  // @ts-ignore
-  ruleURLs[k] = rule.meta.docs.url
-}
-
 export default {
   name: "PlaygroundBlock",
   components: { PgEditor, RulesSettings, SnsBar },
   data() {
     const serializedString =
-      // @ts-ignore
       (typeof window !== "undefined" && window.location.hash.slice(1)) || ""
     const state = deserializeState(serializedString)
     return {
-      // @ts-ignore
       code: state.code || DEFAULT_CODE,
-      // @ts-ignore
       rules: state.rules || Object.assign({}, DEFAULT_RULES_CONFIG),
       messages: [],
     }
@@ -126,13 +110,10 @@ export default {
     serializedString() {
       const defaultCode = DEFAULT_CODE
       const defaultRules = DEFAULT_RULES_CONFIG
-      // @ts-ignore
       const code = defaultCode === this.code ? undefined : this.code
-      // @ts-ignore
       const rules = equalsRules(defaultRules, this.rules)
         ? undefined
-        : // @ts-ignore
-          this.rules
+        : this.rules
       const serializedString = serializeState({
         code,
         rules,
@@ -141,59 +122,42 @@ export default {
     },
   },
   watch: {
-    // @ts-ignore
     serializedString(serializedString) {
-      // @ts-ignore
       if (typeof window !== "undefined") {
-        // @ts-ignore
         window.location.replace(`#${serializedString}`)
       }
     },
   },
   mounted() {
-    // @ts-ignore
     if (typeof window !== "undefined") {
-      // @ts-ignore
       window.addEventListener("hashchange", this.onUrlHashChange)
     }
   },
   beforeDestroey() {
-    // @ts-ignore
     if (typeof window !== "undefined") {
-      // @ts-ignore
       window.removeEventListener("hashchange", this.onUrlHashChange)
     }
   },
   methods: {
-    // @ts-ignore
     onChange({ messages }) {
-      // @ts-ignore
       this.messages = messages
     },
-    // @ts-ignore
-    getURL(ruleId) {
-      // @ts-ignore
-      return ruleURLs[ruleId] || ""
+    getRule(ruleId) {
+      return getRule(ruleId)
     },
     onUrlHashChange() {
       const serializedString =
-        // @ts-ignore
         (typeof window !== "undefined" && window.location.hash.slice(1)) || ""
-      // @ts-ignore
       if (serializedString !== this.serializedString) {
         const state = deserializeState(serializedString)
-        // @ts-ignore
         this.code = state.code || DEFAULT_CODE
-        // @ts-ignore
         this.rules = state.rules || Object.assign({}, DEFAULT_RULES_CONFIG)
-        // @ts-ignore
         this.script = state.script
       }
     },
   },
 }
 
-// @ts-ignore
 function equalsRules(a, b) {
   const akeys = Object.keys(a).filter((k) => a[k] !== "off")
   const bkeys = Object.keys(b).filter((k) => b[k] !== "off")
@@ -216,13 +180,13 @@ function equalsRules(a, b) {
   height: calc(100% - 100px);
   border: 1px solid #cfd4db;
   background-color: #282c34;
-  color: #f8c555;
+  color: #fff;
 }
 
 .main-content > .rules-settings {
   height: 100%;
   overflow: auto;
-  width: 25%;
+  width: 30%;
   box-sizing: border-box;
 }
 
@@ -251,7 +215,11 @@ function equalsRules(a, b) {
   font-size: 12px;
 }
 
-.main-content > .editor-content > .messages a {
+.eslint-core-rule a {
+  color: #8080f2;
+}
+
+.eslint-plugin-svelte-rule a {
   color: #40b3ff;
 }
 </style>

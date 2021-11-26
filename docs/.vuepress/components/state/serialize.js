@@ -26,7 +26,7 @@ export function serializeState(state) {
     rules: state.rules ? getEnabledRules(state.rules) : undefined,
   }
   const jsonString = JSON.stringify(saveData)
-  // eslint-disable-next-line node/no-unsupported-features/node-builtins -- ignore
+
   const uint8Arr = new TextEncoder().encode(jsonString)
   const compressedString = String.fromCharCode(...pako.deflate(uint8Arr))
   const base64 =

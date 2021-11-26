@@ -19,6 +19,7 @@
 
 <script>
 import EslintEditor from "vue-eslint-editor"
+import { Linter } from "eslint/lib/linter"
 import plugin from "../../../.."
 
 export default {
@@ -60,7 +61,6 @@ export default {
 
   data() {
     return {
-      eslint4b: null,
       svelteESLintParser: null,
       format: {
         insertSpaces: true,
@@ -103,16 +103,14 @@ export default {
         parser: this.parser,
         parserOptions: {
           sourceType: "script",
-          ecmaVersion: 2020,
+          ecmaVersion: 2021,
         },
       }
     },
     linter() {
-      if (!this.eslint4b || !this.svelteESLintParser) {
+      if (!this.svelteESLintParser) {
         return null
       }
-      const Linter = this.eslint4b
-
       const linter = new Linter()
       linter.defineParser("svelte-eslint-parser", this.svelteESLintParser)
 
@@ -126,13 +124,46 @@ export default {
   },
 
   async mounted() {
-    // Load linter asynchronously.
-    const [{ default: eslint4b }, svelteESLintParser] = await Promise.all([
-      import("eslint4b"),
+    // Load parser asynchronously.
+    const [svelteESLintParser] = await Promise.all([
       import("espree").then(() => import("svelte-eslint-parser")),
     ])
-    this.eslint4b = eslint4b
     this.svelteESLintParser = svelteESLintParser
+
+    const editor = this.$refs.editor
+
+    editor.$watch("monaco", () => {
+      const { monaco } = editor
+      // monaco.languages.j()
+      monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+        validate: false,
+      })
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        validate: false,
+      })
+    })
+    editor.$watch("codeEditor", () => {
+      if (editor.codeEditor) {
+        editor.codeEditor.onDidChangeModelDecorations(() =>
+          this.onDidChangeModelDecorations(editor.codeEditor),
+        )
+      }
+    })
+    editor.$watch("fixedCodeEditor", () => {
+      if (editor.fixedCodeEditor) {
+        editor.fixedCodeEditor.onDidChangeModelDecorations(() =>
+          this.onDidChangeModelDecorations(editor.fixedCodeEditor),
+        )
+      }
+    })
+  },
+
+  methods: {
+    onDidChangeModelDecorations(editor) {
+      const { monaco } = this.$refs.editor
+      const model = editor.getModel()
+      monaco.editor.setModelMarkers(model, "json", [])
+    },
   },
 }
 </script>
