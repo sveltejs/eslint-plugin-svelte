@@ -339,7 +339,9 @@ export default createRule("valid-compile", {
      */
     function getWarnings(code: string): Warning[] {
       try {
-        const result = compiler.compile(code, { generate: false })
+        const result = compiler.compile(code, {
+          generate: false,
+        })
 
         if (ignoreWarnings) {
           return []
@@ -348,8 +350,20 @@ export default createRule("valid-compile", {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
       } catch (e: any) {
         // console.log(code)
+        if (!ignoreWarnings) {
+          try {
+            const result = compiler.compile(code, {
+              generate: false,
+              errorMode: "warn",
+            })
+            return result.warnings
+          } catch {
+            // ignore
+          }
+        }
         return [
           {
+            code: e.code,
             message: e.message,
             start: e.start,
             end: e.end,
