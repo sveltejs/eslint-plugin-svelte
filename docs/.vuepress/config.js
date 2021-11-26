@@ -1,3 +1,4 @@
+/* eslint node/no-missing-require: 0 */
 const path = require("path")
 
 const { rules } = require("../../lib/utils/rules")
