@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/mustache-spacing"
 description: "enforce unified spacing in mustache"
+since: "v0.15.0"
 ---
 
 # @ota-meshi/svelte/mustache-spacing
 
 > enforce unified spacing in mustache
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -87,6 +87,10 @@ This rule aims at enforcing unified spacing in mustaches.
 - `attributesAndProps` ... Enforces the style of the mustache for the attributes and props. e.g. `<input value={text}`.
 - `directiveExpressions` ... Enforces the style of the mustache for the directive expressions. e.g. `<input bind:value={text}`.
 - `tags` ... Enforces the style of the mustache for the mustache tags. e.g. `{#if condition}`.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.15.0
 
 ## :mag: Implementation
 
