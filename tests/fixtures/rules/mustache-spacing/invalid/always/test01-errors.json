@@ -1,0 +1,512 @@
+[
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 18,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 18,
+    "column": 5
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 19,
+    "column": 19
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 19,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 19,
+    "column": 31
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 19,
+    "column": 37
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 19,
+    "column": 50
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 19,
+    "column": 58
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 20,
+    "column": 19
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 20,
+    "column": 22
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 21,
+    "column": 8
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 21,
+    "column": 17
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 22,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 22,
+    "column": 11
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 23,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 23,
+    "column": 11
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 24,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 24,
+    "column": 15
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 26,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 26,
+    "column": 16
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 26,
+    "column": 20
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 26,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 27,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 27,
+    "column": 16
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 27,
+    "column": 20
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 27,
+    "column": 40
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 27,
+    "column": 44
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 27,
+    "column": 48
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 28,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 28,
+    "column": 16
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 28,
+    "column": 20
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 28,
+    "column": 26
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 28,
+    "column": 30
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 28,
+    "column": 34
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 29,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 29,
+    "column": 16
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 29,
+    "column": 17
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 29,
+    "column": 23
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 29,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 29,
+    "column": 28
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 31,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 31,
+    "column": 20
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 31,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 31,
+    "column": 30
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 32,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 32,
+    "column": 27
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 32,
+    "column": 31
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 32,
+    "column": 37
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 33,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 33,
+    "column": 31
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 33,
+    "column": 35
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 33,
+    "column": 41
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 34,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 34,
+    "column": 38
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 34,
+    "column": 42
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 34,
+    "column": 48
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 35,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 35,
+    "column": 20
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 35,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 35,
+    "column": 30
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 35,
+    "column": 34
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 35,
+    "column": 40
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 37,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 37,
+    "column": 19
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 37,
+    "column": 23
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 37,
+    "column": 34
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 37,
+    "column": 38
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 37,
+    "column": 50
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 37,
+    "column": 54
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 37,
+    "column": 61
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 38,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 38,
+    "column": 19
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 38,
+    "column": 23
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 38,
+    "column": 34
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 38,
+    "column": 38
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 38,
+    "column": 45
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 39,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 39,
+    "column": 29
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 39,
+    "column": 33
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 39,
+    "column": 40
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 41,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 41,
+    "column": 30
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 41,
+    "column": 34
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 41,
+    "column": 41
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 42,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 42,
+    "column": 24
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 42,
+    "column": 28
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 42,
+    "column": 35
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 44,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 44,
+    "column": 25
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 44,
+    "column": 29
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 44,
+    "column": 36
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 46,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 46,
+    "column": 19
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 46,
+    "column": 23
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 46,
+    "column": 33
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 46,
+    "column": 44
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 46,
+    "column": 51
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 48,
+    "column": 1
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 48,
+    "column": 17
+  },
+  {
+    "message": "Expected 1 space after '{', but not found.",
+    "line": 48,
+    "column": 21
+  },
+  {
+    "message": "Expected 1 space before '}', but not found.",
+    "line": 48,
+    "column": 26
+  }
+]

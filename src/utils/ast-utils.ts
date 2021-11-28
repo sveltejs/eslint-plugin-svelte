@@ -240,9 +240,8 @@ export function getAttributeValueQuoteAndRange(
     | SvAST.SvelteAttribute
     | SvAST.SvelteDirective
     | SvAST.SvelteSpecialDirective,
-  context: RuleContext,
+  sourceCode: SourceCode,
 ): QuoteAndRange | null {
-  const sourceCode = context.getSourceCode()
   const valueTokens = getAttributeValueRangeTokens(attr, sourceCode)
   if (valueTokens == null) {
     return null
@@ -282,6 +281,91 @@ export function getAttributeValueQuoteAndRange(
     range: [beforeToken.range[0], afterToken.range[1]],
   }
 }
+export function getMustacheTokens(
+  node:
+    | SvAST.SvelteMustacheTag
+    | SvAST.SvelteShorthandAttribute
+    | SvAST.SvelteSpreadAttribute
+    | SvAST.SvelteDebugTag,
+  sourceCode: SourceCode,
+): {
+  openToken: SvAST.Token
+  closeToken: SvAST.Token
+}
+export function getMustacheTokens(
+  node:
+    | SvAST.SvelteDirective
+    | SvAST.SvelteSpecialDirective
+    | SvAST.SvelteMustacheTag
+    | SvAST.SvelteShorthandAttribute
+    | SvAST.SvelteSpreadAttribute
+    | SvAST.SvelteDebugTag,
+  sourceCode: SourceCode,
+): {
+  openToken: SvAST.Token
+  closeToken: SvAST.Token
+} | null
+/** Get the mustache tokens from given node */
+export function getMustacheTokens(
+  node:
+    | SvAST.SvelteDirective
+    | SvAST.SvelteSpecialDirective
+    | SvAST.SvelteMustacheTag
+    | SvAST.SvelteShorthandAttribute
+    | SvAST.SvelteSpreadAttribute
+    | SvAST.SvelteDebugTag,
+  sourceCode: SourceCode,
+): {
+  openToken: SvAST.Token
+  closeToken: SvAST.Token
+} | null {
+  if (
+    node.type === "SvelteMustacheTag" ||
+    node.type === "SvelteShorthandAttribute" ||
+    node.type === "SvelteSpreadAttribute" ||
+    node.type === "SvelteDebugTag"
+  ) {
+    const openToken = sourceCode.getFirstToken(node)
+    const closeToken = sourceCode.getLastToken(node)
+    return {
+      openToken,
+      closeToken,
+    }
+  }
+  if (node.expression == null) {
+    return null
+  }
+  if (
+    node.key.range[0] <= node.expression.range![0] &&
+    node.expression.range![1] <= node.key.range[1]
+  ) {
+    // shorthand
+    return null
+  }
+  let openToken = sourceCode.getTokenBefore(node.expression)
+  let closeToken = sourceCode.getTokenAfter(node.expression)
+  while (
+    openToken &&
+    closeToken &&
+    eslintUtils.isOpeningParenToken(openToken) &&
+    eslintUtils.isClosingParenToken(closeToken)
+  ) {
+    openToken = sourceCode.getTokenBefore(openToken)
+    closeToken = sourceCode.getTokenAfter(closeToken)
+  }
+  if (
+    !openToken ||
+    !closeToken ||
+    eslintUtils.isNotOpeningBraceToken(openToken) ||
+    eslintUtils.isNotClosingBraceToken(closeToken)
+  ) {
+    return null
+  }
+  return {
+    openToken,
+    closeToken,
+  }
+}
 
 /** Get the value tokens from given attribute */
 function getAttributeValueRangeTokens(
@@ -302,38 +386,12 @@ function getAttributeValueRangeTokens(
       lastToken,
     }
   }
-  let firstToken, lastToken
-  if (attr.expression == null) {
-    return null
-  }
-  if (
-    attr.key.range[0] <= attr.expression.range![0] &&
-    attr.expression.range![1] <= attr.key.range[1]
-  ) {
-    // shorthand
-    return null
-  }
-  firstToken = sourceCode.getTokenBefore(attr.expression)
-  lastToken = sourceCode.getTokenAfter(attr.expression)
-  while (
-    firstToken &&
-    lastToken &&
-    eslintUtils.isOpeningParenToken(firstToken) &&
-    eslintUtils.isClosingParenToken(lastToken)
-  ) {
-    firstToken = sourceCode.getTokenBefore(firstToken)
-    lastToken = sourceCode.getTokenAfter(lastToken)
-  }
-  if (
-    !firstToken ||
-    !lastToken ||
-    eslintUtils.isNotOpeningBraceToken(firstToken) ||
-    eslintUtils.isNotClosingBraceToken(lastToken)
-  ) {
+  const tokens = getMustacheTokens(attr, sourceCode)
+  if (!tokens) {
     return null
   }
   return {
-    firstToken,
-    lastToken,
+    firstToken: tokens.openToken,
+    lastToken: tokens.closeToken,
   }
 }

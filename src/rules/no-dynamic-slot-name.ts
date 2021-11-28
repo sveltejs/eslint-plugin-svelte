@@ -23,6 +23,7 @@ export default createRule("no-dynamic-slot-name", {
     type: "problem",
   },
   create(context) {
+    const sourceCode = context.getSourceCode()
     return {
       "SvelteElement[name.name='slot'] > SvelteStartTag.startTag > SvelteAttribute[key.name='name']"(
         node: AST.SvelteAttribute,
@@ -48,7 +49,7 @@ export default createRule("no-dynamic-slot-name", {
                 if (node.value.length === 1) {
                   const range = getAttributeValueQuoteAndRange(
                     node,
-                    context,
+                    sourceCode,
                   )!.range
                   return fixer.replaceTextRange(range, `"${text}"`)
                 }

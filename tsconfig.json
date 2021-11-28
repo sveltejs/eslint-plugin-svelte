@@ -30,5 +30,5 @@
     "tools/**/*"
     // "typings/**/*"
   ],
-  "exclude": ["lib/**/*"]
+  "exclude": ["lib/**/*", "tests/fixtures/**/*"]
 }

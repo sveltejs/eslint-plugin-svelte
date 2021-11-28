@@ -5,6 +5,7 @@ import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlQuotes from "../rules/html-quotes"
 import indent from "../rules/indent"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
+import mustacheSpacing from "../rules/mustache-spacing"
 import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
@@ -27,6 +28,7 @@ export const rules = [
   htmlQuotes,
   indent,
   maxAttributesPerLine,
+  mustacheSpacing,
   noAtDebugTags,
   noAtHtmlTags,
   noDupeElseIfBlocks,
