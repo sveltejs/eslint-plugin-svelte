@@ -15,6 +15,8 @@
   const list = []
 </script>
 
+<!-- prettier-ignore -->
+<div>
 {foo}
 <input bind:value={text} this={input} class="foo {myClass}" />
 <input bind:value {id} />
@@ -37,12 +39,10 @@
 {#await expression}...{:then name}...{:catch name}...{/await}
 {#await expression}...{:then name}...{/await}
 {#await expression then name}...{/await}
-<!-- prettier-ignore -->
 {#await expression catch name}...{/await}
 {#await expression then}...{/await}
-<!-- prettier-ignore -->
 {#await expression catch}...{/await}
-
 {#await expression}...{:then}...{:catch}...{/await}
 
 {#key expression}...{/key}
+</div>
