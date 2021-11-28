@@ -1,12 +1,7 @@
 import type { AST } from "svelte-eslint-parser"
-import {
-  isClosingParenToken,
-  isNotClosingBraceToken,
-  isNotOpeningBraceToken,
-  isOpeningParenToken,
-} from "eslint-utils"
 import { createRule } from "../utils"
 import type { QuoteAndRange } from "../utils/ast-utils"
+import { getMustacheTokens } from "../utils/ast-utils"
 import { getAttributeValueQuoteAndRange } from "../utils/ast-utils"
 
 const QUOTE_CHARS = {
@@ -154,7 +149,7 @@ export default createRule("html-quotes", {
 
     /** Verify for standard attribute */
     function verifyForValues(attr: AST.SvelteAttribute) {
-      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, sourceCode)
       verifyQuote(preferQuote, quoteAndRange)
     }
 
@@ -165,7 +160,7 @@ export default createRule("html-quotes", {
         kind: "text"
       },
     ) {
-      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, sourceCode)
       const text = sourceCode.text.slice(...valueNode.range)
       verifyQuote(
         avoidInvalidUnquotedInHTML && !canBeUnquotedInHTML(text)
@@ -178,31 +173,15 @@ export default createRule("html-quotes", {
     /** Verify for directive value */
     function verifyForDirective(
       attr: AST.SvelteDirective | AST.SvelteSpecialDirective,
-      valueNode: NonNullable<AST.SvelteDirective["expression"]>,
     ) {
-      let beforeToken = sourceCode.getTokenBefore(valueNode)
-      let afterToken = sourceCode.getTokenAfter(valueNode)
-      while (
-        beforeToken &&
-        afterToken &&
-        isOpeningParenToken(beforeToken) &&
-        isClosingParenToken(afterToken)
-      ) {
-        beforeToken = sourceCode.getTokenBefore(beforeToken)
-        afterToken = sourceCode.getTokenAfter(afterToken)
-      }
-      if (
-        !beforeToken ||
-        !afterToken ||
-        isNotOpeningBraceToken(beforeToken) ||
-        isNotClosingBraceToken(afterToken)
-      ) {
+      const mustacheTokens = getMustacheTokens(attr, sourceCode)
+      if (!mustacheTokens) {
         return
       }
-      const quoteAndRange = getAttributeValueQuoteAndRange(attr, context)
+      const quoteAndRange = getAttributeValueQuoteAndRange(attr, sourceCode)
       const text = sourceCode.text.slice(
-        beforeToken.range[0],
-        afterToken.range[1],
+        mustacheTokens.openToken.range[0],
+        mustacheTokens.closeToken.range[1],
       )
       verifyQuote(
         avoidInvalidUnquotedInHTML && !canBeUnquotedInHTML(text)
@@ -236,7 +215,7 @@ export default createRule("html-quotes", {
           // shorthand
           return
         }
-        verifyForDirective(node, node.expression)
+        verifyForDirective(node)
       },
     }
   },

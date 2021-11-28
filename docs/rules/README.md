@@ -50,6 +50,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [@ota-meshi/svelte/html-quotes](./html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
 | [@ota-meshi/svelte/indent](./indent.md) | enforce consistent indentation | :wrench: |
 | [@ota-meshi/svelte/max-attributes-per-line](./max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
+| [@ota-meshi/svelte/mustache-spacing](./mustache-spacing.md) | enforce unified spacing in mustache | :wrench: |
 | [@ota-meshi/svelte/prefer-class-directive](./prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |
 | [@ota-meshi/svelte/shorthand-attribute](./shorthand-attribute.md) | enforce use of shorthand syntax in attribute | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](./spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |

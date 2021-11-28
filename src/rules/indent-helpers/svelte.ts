@@ -411,17 +411,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
       offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     SvelteAwaitPendingBlock(node: AST.SvelteAwaitPendingBlock) {
-      const first = sourceCode.getFirstToken(node, {
-        includeComments: false,
-        filter: isNotWhitespace,
-      })!
-      const offset = isBeginningOfLine(sourceCode, first) ? 0 : 1
+      const openToken = sourceCode.getFirstToken(node)
       for (const child of node.children) {
         const token = sourceCode.getFirstToken(child, {
           includeComments: false,
           filter: isNotWhitespace,
         })
-        offsets.setOffsetToken(token, offset, first)
+        offsets.setOffsetToken(token, 1, openToken)
       }
     },
     SvelteAwaitThenBlock(node: AST.SvelteAwaitThenBlock) {
