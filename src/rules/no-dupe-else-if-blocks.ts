@@ -131,7 +131,9 @@ export default createRule("no-dupe-else-if-blocks", {
       let target = node
       while (
         target.parent.type === "SvelteElseBlock" &&
-        target.parent.children.includes(target) &&
+        (
+          target.parent.children as AST.SvelteElseBlock["children"][number][]
+        ).includes(target) &&
         target.parent.parent.type === "SvelteIfBlock"
       ) {
         yield target.parent.parent

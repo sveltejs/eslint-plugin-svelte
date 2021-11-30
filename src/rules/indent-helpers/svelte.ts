@@ -235,11 +235,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
           0,
           openToken,
         )
-        if (
-          node.else.children.length === 1 &&
-          node.else.children[0].type === "SvelteIfBlock" &&
-          node.else.children[0].elseif
-        ) {
+        if (node.else.elseif) {
           // else if
           return
         }
@@ -254,11 +250,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken)
     },
     SvelteElseBlock(node: AST.SvelteElseBlock) {
-      if (
-        node.children.length === 1 &&
-        node.children[0].type === "SvelteIfBlock" &&
-        node.children[0].elseif
-      ) {
+      if (node.elseif) {
         return
       }
       const [openToken, elseToken, closeToken] = sourceCode.getFirstTokens(
@@ -351,7 +343,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
 
       if (node.then) {
-        if (!node.pending) {
+        if (node.kind === "await-then") {
           // {#await expression then value}
           const thenToken = sourceCode.getTokenAfter(exp.lastToken)!
           offsets.setOffsetToken(thenToken, 1, openToken)
@@ -376,7 +368,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         }
       }
       if (node.catch) {
-        if (!node.pending && !node.then) {
+        if (node.kind === "await-catch") {
           // {#await expression catch error}
           const catchToken = sourceCode.getTokenAfter(exp.lastToken)!
           offsets.setOffsetToken(catchToken, 1, openToken)
@@ -421,8 +413,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
     },
     SvelteAwaitThenBlock(node: AST.SvelteAwaitThenBlock) {
-      const parent = node.parent
-      if (parent.pending) {
+      if (!node.awaitThen) {
         // {:then value}
         const [openToken, thenToken] = sourceCode.getFirstTokens(node, {
           count: 2,
@@ -449,8 +440,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
     },
     SvelteAwaitCatchBlock(node: AST.SvelteAwaitCatchBlock) {
-      const parent = node.parent
-      if (parent.pending || parent.then) {
+      if (!node.awaitCatch) {
         // {:catch error}
         const [openToken, catchToken] = sourceCode.getFirstTokens(node, {
           count: 2,

@@ -256,11 +256,7 @@ export default createRule("mustache-spacing", {
         )
       },
       SvelteElseBlock(node) {
-        if (
-          node.children.length === 1 &&
-          node.children[0].type === "SvelteIfBlock" &&
-          node.children[0].elseif
-        ) {
+        if (node.elseif) {
           return
         }
         const openToken = sourceCode.getFirstToken(node)
@@ -377,7 +373,7 @@ export default createRule("mustache-spacing", {
       SvelteAwaitThenBlock(node) {
         const openBlockOpeningToken = sourceCode.getFirstToken(node)
         const openBlockLast =
-          node.value || (node.parent.pending ? null : node.parent.expression)
+          node.value || (node.awaitThen ? node.parent.expression : null)
         const openBlockClosingToken = openBlockLast
           ? sourceCode.getTokenAfter(openBlockLast, {
               includeComments: false,
@@ -399,10 +395,7 @@ export default createRule("mustache-spacing", {
       SvelteAwaitCatchBlock(node) {
         const openBlockOpeningToken = sourceCode.getFirstToken(node)
         const openBlockLast =
-          node.error ||
-          (node.parent.pending || node.parent.then
-            ? null
-            : node.parent.expression)
+          node.error || (node.awaitCatch ? node.parent.expression : null)
         const openBlockClosingToken = openBlockLast
           ? sourceCode.getTokenAfter(openBlockLast, {
               includeComments: false,
