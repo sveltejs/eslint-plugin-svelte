@@ -22,7 +22,7 @@ An attribute is considered to be in a new line when there is a line break betwee
 
 There is a configurable number of attributes that are acceptable in one-line case (default 1), as well as how many attributes are acceptable per line in multi-line case (default 1).
 
-<eslint-code-block fix>
+<ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 
@@ -58,7 +58,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 </button>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

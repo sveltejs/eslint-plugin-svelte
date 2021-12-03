@@ -14,7 +14,7 @@ since: "v0.0.4"
 
 This rule aims to warn if no type or an invalid type is used on a button type attribute.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -34,7 +34,7 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 <button type="foo">Hello World</button>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

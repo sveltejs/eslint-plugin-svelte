@@ -16,7 +16,7 @@ since: "v0.5.0"
 
 This rule enforces the use of the shorthand syntax in attribute.
 
-<eslint-code-block fix>
+<ESLintCodeBlock fix>
 
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
@@ -35,7 +35,7 @@ This rule enforces the use of the shorthand syntax in attribute.
 
 <!-- prettier-ignore-end -->
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

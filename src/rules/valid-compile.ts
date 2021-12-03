@@ -203,8 +203,8 @@ export default createRule("valid-compile", {
         this.mapIndexes.push({
           range: [codeStart, this.code.length],
           remap: (index) => {
-            outputLocs ??= new LinesAndColumns(outputText)
-            inputLocs ??= new LinesAndColumns(inputText)
+            outputLocs = outputLocs ?? new LinesAndColumns(outputText)
+            inputLocs = inputLocs ?? new LinesAndColumns(inputText)
             const outputCodePos = outputLocs.getLocFromIndex(index - codeStart)
             const inputCodePos = remapPosition(outputCodePos)
             return inputLocs.getIndexFromLoc(inputCodePos) + start
@@ -216,7 +216,8 @@ export default createRule("valid-compile", {
           line: number
           column: number
         } {
-          decoded ??= decode(JSON.parse(output.sourceMapText!).mappings)
+          decoded =
+            decoded ?? decode(JSON.parse(output.sourceMapText!).mappings)
 
           const lineMaps = decoded[pos.line - 1]
 
@@ -277,7 +278,7 @@ export default createRule("valid-compile", {
         }
       } {
         const mapIndexes = this.mapIndexes
-        const locs = (this.locs ??= new LinesAndColumns(this.code))
+        const locs = (this.locs = this.locs ?? new LinesAndColumns(this.code))
         let start:
           | {
               line: number

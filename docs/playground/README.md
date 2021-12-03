@@ -1,11 +1,12 @@
 ---
 pageClass: "playground"
+hiddenMenu: true
 ---
 
 # Playground
 
-<playground-block>
+<ESLintPlayground>
 
 The playground is [here](https://ota-meshi.github.io/eslint-plugin-svelte/playground/)!!
 
-</playground-block>
+</ESLintPlayground>

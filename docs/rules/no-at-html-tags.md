@@ -16,7 +16,7 @@ since: "v0.0.1"
 
 This rule reports all uses of `{@html}` in order to reduce the risk of injecting potentially unsafe / unescaped html into the browser leading to Cross-Site Scripting (XSS) attacks.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -32,7 +32,7 @@ This rule reports all uses of `{@html}` in order to reduce the risk of injecting
 {@html foo}
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

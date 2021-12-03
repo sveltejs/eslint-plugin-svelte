@@ -16,7 +16,7 @@ since: "v0.7.0"
 
 This rule uses Svelte compiler to check the source code.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -33,7 +33,7 @@ This rule uses Svelte compiler to check the source code.
 <img {src} />
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 Note that we exclude reports for some checks, such as `missing-declaration`, and `dynamic-slot-name`, which you can check with different ESLint rules.
 
@@ -52,7 +52,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 
 - `ignoreWarnings` ... If set to `true`, ignores any warnings other than fatal errors reported by the svelte compiler.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -66,7 +66,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 <img {src} />
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :rocket: Version
 

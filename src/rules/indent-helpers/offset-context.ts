@@ -318,7 +318,7 @@ export class OffsetCalculator {
       if (offsetInfo == null) {
         continue
       }
-      offsetInfo.expectedIndent ??= expectedIndent
+      offsetInfo.expectedIndent = offsetInfo.expectedIndent ?? expectedIndent
     }
   }
 }

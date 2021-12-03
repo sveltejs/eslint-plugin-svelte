@@ -11,3 +11,8 @@
 /tests/fixtures/rules/indent/invalid/ts-v5
 /tests/fixtures/rules/valid-compile/invalid/ts
 /tests/fixtures/rules/valid-compile/valid/ts
+/.svelte-kit
+/svelte.config-dist.js
+/build
+/docs-svelte-kit/shim/eslint.mjs
+/docs-svelte-kit/shim/assert.mjs

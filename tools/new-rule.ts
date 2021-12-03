@@ -80,7 +80,7 @@ tester.run("${ruleId}", rule as any, loadTestCases("${ruleId}"))
 
 This rule reports ???.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -95,7 +95,7 @@ This rule reports ???.
 
 \`\`\`
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

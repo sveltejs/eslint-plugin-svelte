@@ -17,7 +17,7 @@ since: "v0.5.0"
 This rule reports where you used not function value in event handlers.  
 If you use a non-function value for the event handler, it event handler will not be called. It's almost always a mistake. You may have written a lot of unnecessary curly braces.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -43,7 +43,7 @@ If you use a non-function value for the event handler, it event handler will not
 <button on:click={bar} />
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

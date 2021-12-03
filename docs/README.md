@@ -1,3 +1,7 @@
+---
+title: "@ota-meshi/eslint-plugin-svelte"
+---
+
 # Introduction
 
 `@ota-meshi/eslint-plugin-svelte` is ESLint plugin for Svelte.  
@@ -46,6 +50,6 @@ See [Available Rules](./rules/README.md).
 
 ## :lock: License
 
-See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/LICENSE) file for license rights and limitations (MIT).
 
 [svelte]: https://svelte.dev/

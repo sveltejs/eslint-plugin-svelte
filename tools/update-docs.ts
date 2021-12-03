@@ -167,7 +167,7 @@ ${
     const { meta } = this.rule
 
     this.content = this.content.replace(
-      /<eslint-code-block(.*?)>/gu,
+      /<ESLintCodeBlock(.*?)>/gu,
       (_t, str) => {
         const ps = str
           .split(/\s+/u)
@@ -176,7 +176,7 @@ ${
         if (meta.fixable) {
           ps.unshift("fix")
         }
-        ps.unshift("<eslint-code-block")
+        ps.unshift("<ESLintCodeBlock")
         return `${ps.join(" ")}>`
       },
     )
@@ -186,12 +186,12 @@ ${
   public adjustCodeBlocks() {
     // Adjust the necessary blank lines before and after the code block so that GitHub can recognize `.md`.
     this.content = this.content.replace(
-      /(<eslint-code-block[\s\S]*?>)\n+```/gu,
+      /(<ESLintCodeBlock[\s\S]*?>)\n+```/gu,
       "$1\n\n```",
     )
     this.content = this.content.replace(
-      /```\n+<\/eslint-code-block>/gu,
-      "```\n\n</eslint-code-block>",
+      /```\n+<\/ESLintCodeBlock>/gu,
+      "```\n\n</ESLintCodeBlock>",
     )
     return this
   }

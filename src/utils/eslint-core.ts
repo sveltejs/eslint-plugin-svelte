@@ -2,6 +2,7 @@
 import type { RuleListener, RuleContext, RuleModule } from "../types"
 import type * as ESTree from "estree"
 import type { AST as SvAST } from "svelte-eslint-parser"
+import { Linter } from "eslint"
 
 /**
  * Define the wrapped core rule.
@@ -82,8 +83,7 @@ export function getCoreRule(ruleName: string): RuleModule {
   if (ruleMap) {
     map = ruleMap
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
-    ruleMap = map = new (require("eslint").Linter)().getRules()
+    ruleMap = map = (new Linter() as any).getRules()
   }
   return map.get(ruleName)!
 }
