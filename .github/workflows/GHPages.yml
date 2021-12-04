@@ -1,6 +1,7 @@
 name: GHPages
 
 on:
+  workflow_dispatch: null
   push:
     branches: [main]
 
