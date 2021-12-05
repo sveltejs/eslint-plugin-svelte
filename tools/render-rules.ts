@@ -43,7 +43,7 @@ const categoryRules = categories.map((cat) => {
 
 //eslint-disable-next-line require-jsdoc -- ignore
 export default function renderRulesTableContent(
-  buildRulePath = (ruleName: string) => `./${ruleName}.md`,
+  buildRulePath = (ruleName: string) => `./rules/${ruleName}.md`,
 ): string {
   // -----------------------------------------------------------------------------
 

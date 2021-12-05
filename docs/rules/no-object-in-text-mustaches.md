@@ -17,7 +17,7 @@ since: "v0.5.0"
 This rule disallows the use of objects in text mustache interpolation.  
 When you use an object for text interpolation, it is drawn as `[object Object]`. It's almost always a mistake. You may have written a lot of unnecessary curly braces.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -36,7 +36,7 @@ When you use an object for text interpolation, it is drawn as `[object Object]`.
 <input class="{{ foo }} bar" />
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

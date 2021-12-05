@@ -15,7 +15,7 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
       - name: Install Packages
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: test and build
         run: |
           npm run build

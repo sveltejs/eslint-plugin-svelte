@@ -1,8 +1,12 @@
+---
+title: "@ota-meshi/eslint-plugin-svelte"
+---
+
 # Introduction
 
 `@ota-meshi/eslint-plugin-svelte` is ESLint plugin for Svelte.  
 It provides many unique check rules by using the template AST.  
-You can check on the [Online DEMO](./playground/README.md).
+You can check on the [Online DEMO](./playground.md).
 
 ::: **_WORKS IN PROGRESS_** :::
 
@@ -38,14 +42,14 @@ The [svelte-eslint-parser] and the `@ota-meshi/eslint-plugin-svelte` can not be 
 
 ## :book: Usage
 
-See [User Guide](./user-guide/README.md).
+See [User Guide](./user-guide.md).
 
 ## :white_check_mark: Rules
 
-See [Available Rules](./rules/README.md).
+See [Available Rules](./rules.md).
 
 ## :lock: License
 
-See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/LICENSE) file for license rights and limitations (MIT).
 
 [svelte]: https://svelte.dev/

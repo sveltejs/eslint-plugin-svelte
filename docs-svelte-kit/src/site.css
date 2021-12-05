@@ -1,0 +1,141 @@
+/* @import "prismjs/themes/prism"; */
+@import "prismjs/themes/prism-tomorrow";
+
+/* theme */
+:root {
+  --primary-color: #ffffff;
+  --secondary-color: #ffffff;
+  --tertiary-color: #edf0f8;
+  --background-without-opacity: rgba(255, 255, 255, 0.95);
+}
+
+/*** markdown ***/
+
+:not(pre) > code {
+  padding: 0.4rem;
+  margin: 0 0.2rem;
+  top: -0.1rem;
+  background: #e5eef5;
+  position: relative;
+  border-radius: 0.3em;
+  white-space: nowrap;
+  color: #444;
+  -webkit-font-smoothing: initial;
+}
+
+blockquote {
+  padding: 1rem;
+  color: #09f;
+  border: 1px solid #40b3ff;
+  margin: 1.6rem 2.4rem 2.4rem;
+  padding: 0.5rem 2.4rem;
+  border-radius: 0.4rem;
+}
+blockquote p {
+  color: #09f;
+}
+
+table {
+  margin: 0 0 2em;
+  width: 100%;
+  font-size: var(--h5);
+}
+td,
+th {
+  text-align: left;
+  border-bottom: 1px solid rgba(0 0 0 / 0.1);
+  padding: 0.4rem 0.8rem 0.4rem 0;
+}
+
+/* header */
+
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+  color: var(--heading-color);
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1rem;
+}
+
+/*** custom container ***/
+
+.custom-block .custom-block-title {
+  font-weight: 600;
+  margin-bottom: -0.4rem;
+}
+
+.custom-block.danger,
+.custom-block.tip,
+.custom-block.warning {
+  padding: 0.1rem 1.5rem;
+  border-left-width: 4px;
+  border-left-style: solid;
+  margin: 1rem 0;
+}
+
+.custom-block.tip {
+  background-color: #f3f5f7;
+  border-color: #42b983;
+}
+
+.custom-block.warning {
+  background-color: rgba(255, 229, 100, 0.3);
+  border-color: #e7c000;
+  color: #6b5900;
+}
+
+.custom-block.warning .custom-block-title {
+  color: #b29400;
+}
+
+.custom-block.warning a {
+  color: #2c3e50;
+}
+
+.custom-block.danger {
+  background-color: #ffe6e6;
+  border-color: #c00;
+  color: #4d0000;
+}
+
+.custom-block.danger .custom-block-title {
+  color: #900;
+}
+
+.custom-block.danger a {
+  color: #2c3e50;
+}
+
+.custom-block.details {
+  display: block;
+  position: relative;
+  border-radius: 2px;
+  margin: 1.6em 0;
+  padding: 1.6em;
+  background-color: #eee;
+}
+
+.custom-block.details h4 {
+  margin-top: 0;
+}
+
+.custom-block.details figure:last-child,
+.custom-block.details p:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.custom-block.details summary {
+  outline: none;
+  cursor: pointer;
+}

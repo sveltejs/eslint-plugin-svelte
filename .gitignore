@@ -105,3 +105,8 @@ dist
 
 ## repo
 /lib
+/.svelte-kit
+/build
+/svelte.config-dist.js
+/docs-svelte-kit/shim/eslint.mjs
+/docs-svelte-kit/shim/assert.mjs

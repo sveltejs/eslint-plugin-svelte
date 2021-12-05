@@ -14,7 +14,7 @@ since: "v0.0.4"
 
 This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -30,7 +30,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 <a href="http://example.com" target="_blank">link</a>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 
@@ -51,7 +51,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ### `{ allowReferrer: false }` (default)
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -67,11 +67,11 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 <a href="http://example.com" target="_blank" rel="noopener">link</a>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ### `{ allowReferrer: true }`
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -87,11 +87,11 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 <a href="http://example.com" target="_blank">link</a>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ### `{ "enforceDynamicLinks": "always" }` (default)
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -107,11 +107,11 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 <a href={link} target="_blank">link</a>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ### `{ "enforceDynamicLinks": "never" }`
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -127,7 +127,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 <a href="http://example.com" target="_blank">link</a>
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :rocket: Version
 

@@ -94,7 +94,7 @@ const DEFAULT_CODE =
 `
 
 export default {
-  name: "PlaygroundBlock",
+  name: "ESLintPlayground",
   components: { PgEditor, RulesSettings, SnsBar },
   data() {
     const serializedString =

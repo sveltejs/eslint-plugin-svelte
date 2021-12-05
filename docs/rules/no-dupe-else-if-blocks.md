@@ -16,7 +16,7 @@ since: "v0.0.1"
 
 This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chain.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -55,11 +55,11 @@ This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chai
 {/if}
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 This rule can also detect some cases where the conditions are not identical, but the branch can never execute due to the logic of `||` and `&&` operators.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -110,7 +110,7 @@ This rule can also detect some cases where the conditions are not identical, but
 {/if}
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

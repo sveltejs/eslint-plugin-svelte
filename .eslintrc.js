@@ -36,6 +36,12 @@ module.exports = {
   },
   overrides: [
     {
+      files: ["*.mjs"],
+      parserOptions: {
+        sourceType: "module",
+      },
+    },
+    {
       files: ["*.svelte"],
       parser: "svelte-eslint-parser",
       parserOptions: {

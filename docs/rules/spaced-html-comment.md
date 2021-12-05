@@ -16,7 +16,7 @@ since: "v0.0.1"
 
 This rule will enforce consistency of spacing after the start of a comment `<!--` and before the end of a comment `-->`.
 
-<eslint-code-block fix>
+<ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 
@@ -30,7 +30,7 @@ This rule will enforce consistency of spacing after the start of a comment `<!--
 <!--✗ BAD-->
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 You cannot enforce this style by using [prettier-plugin-svelte]. That is, this rule does not conflict with [prettier-plugin-svelte] and can be used with [prettier-plugin-svelte].
 

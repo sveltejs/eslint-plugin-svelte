@@ -18,7 +18,7 @@ This rule reports all uses of `{@debug}`.
 
 The `{@debug}` should be removed when you no longer need it after you use it for debugging.
 
-<eslint-code-block>
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -33,7 +33,7 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 {@debug}
 ```
 
-</eslint-code-block>
+</ESLintCodeBlock>
 
 ## :wrench: Options
 

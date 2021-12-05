@@ -16,5 +16,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.fixAll.stylelint": true
-  }
+  },
+  "svelte.plugin.typescript.diagnostics.enable": false
 }

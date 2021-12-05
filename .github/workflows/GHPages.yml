@@ -1,6 +1,7 @@
 name: GHPages
 
 on:
+  workflow_dispatch: null
   push:
     branches: [main]
 
@@ -12,12 +13,12 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Install And Build
         run: |+
-          npm install
+          npm install --legacy-peer-deps
           npm run build
           npm run docs:build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/.vuepress/dist
+          publish_dir: ./build
           force_orphan: true
