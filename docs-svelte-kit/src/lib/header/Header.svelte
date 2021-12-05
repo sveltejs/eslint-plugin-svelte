@@ -1,13 +1,33 @@
 <script>
+  import { createEventDispatcher } from "svelte"
   import { isActive } from "../utils.js"
   import { page } from "$app/stores"
   import logo from "./logo.svg"
   import { base as baseUrl } from "$app/paths"
+
+  const dispatch = createEventDispatcher()
+
+  function handleToggleSidebar() {
+    dispatch("toggle-sidebar-open")
+  }
 </script>
 
 <header>
   <div class="corner">
-    <a href="{baseUrl}/">
+    <div class="sidebar-button" on:click={handleToggleSidebar}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        role="img"
+        viewBox="0 0 448 512"
+        class="icon"
+        ><path
+          fill="currentColor"
+          d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"
+        /></svg
+      >
+    </div>
+    <a href="{baseUrl}/" class="home-link">
       <img src={logo} alt="Logo" />
     </a>
   </div>
@@ -30,6 +50,11 @@
         <a sveltekit:prefetch href="{baseUrl}/playground/README">Playground</a>
       </li>
     </ul>
+    <div class="nav-title">
+      <a sveltekit:prefetch href="{baseUrl}/">
+        <img src={logo} alt="Logo" />@ota-meshi/eslint-plugin-svelte</a
+      >
+    </div>
     <svg viewBox="0 0 2 3" aria-hidden="true">
       <path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
     </svg>
@@ -72,7 +97,8 @@
     height: 3em;
   }
 
-  .corner a {
+  .corner a,
+  .sidebar-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,26 +106,64 @@
     height: 100%;
   }
 
+  .sidebar-button,
+  .nav-title {
+    display: none;
+  }
+  @media (max-width: 719px) {
+    .sidebar-button {
+      display: flex;
+    }
+    .corner .home-link {
+      display: none;
+    }
+    .nav-title {
+      display: flex;
+      background: var(--background-without-opacity);
+      max-width: calc(100vw - 170px);
+    }
+    .nav-title a {
+      height: 3rem;
+      object-fit: contain;
+      font-size: 0.5rem;
+    }
+    .nav-title img {
+      width: 2rem;
+      height: 2rem;
+      object-fit: contain;
+    }
+    nav ul {
+      display: none;
+    }
+  }
+
   .corner img {
     width: 2em;
     height: 2em;
     object-fit: contain;
   }
+  .corner svg {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+  .corner path {
+    fill: var(--heading-color);
+  }
 
   nav {
     display: flex;
     justify-content: center;
-    --background: rgba(255, 255, 255, 0.7);
   }
 
-  svg {
+  nav svg {
     width: 2em;
     height: 3em;
     display: block;
   }
 
-  path {
-    fill: var(--background);
+  nav path {
+    fill: var(--background-without-opacity);
   }
 
   ul {
@@ -111,7 +175,7 @@
     justify-content: center;
     align-items: center;
     list-style: none;
-    background: var(--background);
+    background: var(--background-without-opacity);
     background-size: contain;
   }
 
@@ -150,8 +214,14 @@
     color: var(--accent-color);
   }
 
+  .home-link,
+  .sidebar-button {
+    background: var(--background-without-opacity);
+    border-bottom-right-radius: 20%;
+  }
+
   .github-link {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--background-without-opacity);
     border-bottom-left-radius: 20%;
   }
 </style>

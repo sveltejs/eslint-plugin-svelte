@@ -80,8 +80,8 @@
     height: 0;
     position: absolute;
     top: calc(50% - var(--size));
-    left: 0;
+    right: 0;
     border: var(--size) solid transparent;
-    border-left: var(--size) solid var(--accent-color);
+    border-right: var(--size) solid var(--accent-color);
   }
 </style>

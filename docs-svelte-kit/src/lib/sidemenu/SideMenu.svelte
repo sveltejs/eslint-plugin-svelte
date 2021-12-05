@@ -1,11 +1,16 @@
 <script>
   import UlMenu from "./UlMenu.svelte"
   import { menuItems } from "../utils.js"
+
+  export let sidebarOpen = false
+  export let hiddenMenu = false
 </script>
 
-<aside>
-  <UlMenu children={$menuItems} />
-</aside>
+{#if !hiddenMenu || sidebarOpen}
+  <aside class:sidebar-open={sidebarOpen}>
+    <UlMenu children={$menuItems} />
+  </aside>
+{/if}
 
 <style>
   aside {
@@ -19,7 +24,7 @@
     left: 0;
     bottom: 0;
     box-sizing: border-box;
-    border-right: 1px solid rgba(255, 255, 255, 0.7);
+    border-right: 1px solid var(--background-without-opacity);
     overflow-y: auto;
   }
 
@@ -27,6 +32,18 @@
     aside {
       font-size: 15px;
       width: 16.4rem;
+    }
+  }
+  @media (max-width: 719px) {
+    aside {
+      top: 0;
+      padding-top: 3.6rem;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease;
+      background: #fff;
+    }
+    aside.sidebar-open {
+      transform: translateX(0);
     }
   }
 </style>

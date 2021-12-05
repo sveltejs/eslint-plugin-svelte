@@ -1,4 +1,53 @@
-@import "prismjs/themes/prism";
+/* @import "prismjs/themes/prism"; */
+@import "prismjs/themes/prism-tomorrow";
+
+/* theme */
+:root {
+  --primary-color: #ffffff;
+  --secondary-color: #ffffff;
+  --tertiary-color: #edf0f8;
+  --background-without-opacity: rgba(255, 255, 255, 0.95);
+}
+
+/*** markdown ***/
+
+:not(pre) > code {
+  padding: 0.4rem;
+  margin: 0 0.2rem;
+  top: -0.1rem;
+  background: #e5eef5;
+  position: relative;
+  border-radius: 0.3em;
+  white-space: nowrap;
+  color: #444;
+  -webkit-font-smoothing: initial;
+}
+
+blockquote {
+  padding: 1rem;
+  color: #09f;
+  border: 1px solid #40b3ff;
+  margin: 1.6rem 2.4rem 2.4rem;
+  padding: 0.5rem 2.4rem;
+  border-radius: 0.4rem;
+}
+blockquote p {
+  color: #09f;
+}
+
+table {
+  margin: 0 0 2em;
+  width: 100%;
+  font-size: var(--h5);
+}
+td,
+th {
+  text-align: left;
+  border-bottom: 1px solid rgba(0 0 0 / 0.1);
+  padding: 0.4rem 0.8rem 0.4rem 0;
+}
+
+/* header */
 
 h3,
 h4,
@@ -18,6 +67,8 @@ h6 {
   font-size: 1rem;
 }
 
+/*** custom container ***/
+
 .custom-block .custom-block-title {
   font-weight: 600;
   margin-bottom: -0.4rem;
@@ -27,7 +78,7 @@ h6 {
 .custom-block.tip,
 .custom-block.warning {
   padding: 0.1rem 1.5rem;
-  border-left-width: 0.5rem;
+  border-left-width: 4px;
   border-left-style: solid;
   margin: 1rem 0;
 }

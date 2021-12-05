@@ -1,4 +1,5 @@
 <script>
+  import Header from "$lib/header/Header.svelte"
   import SideMenu from "$lib/sidemenu/SideMenu.svelte"
   import Footer from "$lib/footer/Footer.svelte"
   import { tocStore } from "../utils.js"
@@ -6,11 +7,18 @@
   export let fileInfo = {}
   export let frontmatter = {}
   $: tocStore.update(() => toc)
+
+  let sidebarOpen = false
+
+  function handleToggleSidebar() {
+    sidebarOpen = !sidebarOpen
+  }
 </script>
 
-{#if !frontmatter.hiddenMenu}
-  <SideMenu />
-{/if}
+<Header on:toggle-sidebar-open={handleToggleSidebar} />
+
+<SideMenu {sidebarOpen} hiddenMenu={frontmatter.hiddenMenu} />
+
 <main class:hidden-menu={frontmatter.hiddenMenu}>
   <div class="main-content">
     <slot />
@@ -26,6 +34,11 @@
   @media (max-width: 959px) {
     main:not(.hidden-menu) {
       padding-left: 16.4rem;
+    }
+  }
+  @media (max-width: 719px) {
+    main:not(.hidden-menu) {
+      padding-left: 0;
     }
   }
 

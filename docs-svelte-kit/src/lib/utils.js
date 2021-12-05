@@ -42,11 +42,13 @@ const SIDE_MENU = {
       title: "Available Rules",
       children: categoryRules,
     },
+    { path: "/playground/README", title: "Playground" },
   ],
   "/": [
     { path: "/", title: "Introduction" },
     { path: "/user-guide/README", title: "User Guide" },
     { path: "/rules/README", title: "Available Rules" },
+    { path: "/playground/README", title: "Playground" },
   ],
 }
 

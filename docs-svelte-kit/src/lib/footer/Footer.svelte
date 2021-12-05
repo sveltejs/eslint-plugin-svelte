@@ -103,7 +103,7 @@
     display: flex;
   }
   .footer-move {
-    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-top: 1px solid var(--background-without-opacity);
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
@@ -129,6 +129,11 @@
   @media (max-width: 959px) {
     footer:not(.hidden-menu) {
       padding-left: 16.4rem;
+    }
+  }
+  @media (max-width: 719px) {
+    footer:not(.hidden-menu) {
+      padding-left: 0;
     }
   }
 
