@@ -8,9 +8,15 @@ loadLanguages(["markup", "css", "javascript"])
 
 /** Wrap pre tag */
 function wrapPre(code, lang) {
-  return `<pre class="language-${lang}"><code>${
-    lang === "text" ? escapeHtml(code) : code
-  }</code></pre>`
+  const htmlCode = lang === "text" ? escapeHtml(code) : code
+  // https://github.com/sveltejs/svelte/issues/6437
+  const avoidPreTrimmed = htmlCode.replace(
+    /(<\w+(?:\s[^/>]*)?>)(\s)/giu,
+    (_match, tag, space) => {
+      return `${tag}<span />${space}`
+    },
+  )
+  return `<pre class="language-${lang}"><code>${avoidPreTrimmed}</code></pre>`
 }
 
 const EXTENSION_MAPPINGS = {
