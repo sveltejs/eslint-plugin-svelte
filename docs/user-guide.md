@@ -42,7 +42,7 @@ This plugin provides configs:
 - `plugin:@ota-meshi/svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:@ota-meshi/svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
 
-See [the rule list](../rules/README.md) to get the `rules` that this plugin provides.
+See [the rule list](./rules.md) to get the `rules` that this plugin provides.
 
 ::: warning ❗ Attention
 

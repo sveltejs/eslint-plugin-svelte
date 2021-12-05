@@ -40,14 +40,14 @@
       <li class:active={isActive("/", $page)}>
         <a sveltekit:prefetch href="{baseUrl}/">Home</a>
       </li>
-      <li class:active={isActive("/user-guide/README", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/user-guide/README">User Guide</a>
+      <li class:active={isActive("/user-guide", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/user-guide">User Guide</a>
       </li>
-      <li class:active={isActive("/rules/README", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/rules/README">Rules</a>
+      <li class:active={isActive("/rules", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/rules">Rules</a>
       </li>
-      <li class:active={isActive("/playground/README", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/playground/README">Playground</a>
+      <li class:active={isActive("/playground", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/playground">Playground</a>
       </li>
     </ul>
     <div class="nav-title">

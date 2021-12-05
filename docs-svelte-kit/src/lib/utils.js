@@ -36,19 +36,19 @@ const categoryRules = categories.map((cat) => {
 const SIDE_MENU = {
   "/rules": [
     { path: "/", title: "Introduction" },
-    { path: "/user-guide/README", title: "User Guide" },
+    { path: "/user-guide", title: "User Guide" },
     {
-      path: "/rules/README",
+      path: "/rules",
       title: "Available Rules",
       children: categoryRules,
     },
-    { path: "/playground/README", title: "Playground" },
+    { path: "/playground", title: "Playground" },
   ],
   "/": [
     { path: "/", title: "Introduction" },
-    { path: "/user-guide/README", title: "User Guide" },
-    { path: "/rules/README", title: "Available Rules" },
-    { path: "/playground/README", title: "Playground" },
+    { path: "/user-guide", title: "User Guide" },
+    { path: "/rules", title: "Available Rules" },
+    { path: "/playground", title: "Playground" },
   ],
 }
 

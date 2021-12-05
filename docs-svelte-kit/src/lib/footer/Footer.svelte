@@ -42,7 +42,11 @@
   <div class="footer-tools">
     <div class="edit-link">
       <a
-        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{normalizedPath}.md"
+        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{normalizedPath.startsWith(
+          '/',
+        )
+          ? normalizedPath.slice(1)
+          : normalizedPath}.md"
         target="_blank"
         rel="noopener noreferrer">Edit this page</a
       >

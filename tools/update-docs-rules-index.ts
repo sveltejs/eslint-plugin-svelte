@@ -3,7 +3,7 @@ import fs from "fs"
 import renderRulesTableContent from "./render-rules"
 
 // -----------------------------------------------------------------------------
-const readmeFilePath = path.resolve(__dirname, "../docs/rules/README.md")
+const readmeFilePath = path.resolve(__dirname, "../docs/rules.md")
 fs.writeFileSync(
   readmeFilePath,
   `---

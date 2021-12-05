@@ -30,11 +30,11 @@ ${newReadme
   .replace("# @ota-meshi/eslint-plugin-svelte\n", "# Introduction\n")
   .replace(
     /<!--RULES_SECTION_START-->[\s\S]*<!--RULES_SECTION_END-->/u,
-    "See [Available Rules](./rules/README.md).",
+    "See [Available Rules](./rules.md).",
   )
   .replace(
     /<!--USAGE_SECTION_START-->[\s\S]*<!--USAGE_SECTION_END-->/u,
-    "See [User Guide](./user-guide/README.md).",
+    "See [User Guide](./user-guide.md).",
   )
   .replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, "")
   .replace(
@@ -46,7 +46,7 @@ ${newReadme
         result +=
           c2 === "index.html" ? "README.md" : c2.replace(/\.html$/, ".md")
       } else {
-        result += "README.md"
+        result += ".md"
       }
       result += ")"
       return result
