@@ -40,14 +40,14 @@
       <li class:active={isActive("/", $page)}>
         <a sveltekit:prefetch href="{baseUrl}/">Home</a>
       </li>
-      <li class:active={isActive("/user-guide", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/user-guide">User Guide</a>
+      <li class:active={isActive("/user-guide/", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/user-guide/">User Guide</a>
       </li>
-      <li class:active={isActive("/rules", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/rules">Rules</a>
+      <li class:active={isActive("/rules/", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/rules/">Rules</a>
       </li>
-      <li class:active={isActive("/playground", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/playground">Playground</a>
+      <li class:active={isActive("/playground/", $page)}>
+        <a sveltekit:prefetch href="{baseUrl}/playground/">Playground</a>
       </li>
     </ul>
     <div class="nav-title">
@@ -104,37 +104,6 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-  }
-
-  .sidebar-button,
-  .nav-title {
-    display: none;
-  }
-  @media (max-width: 719px) {
-    .sidebar-button {
-      display: flex;
-    }
-    .corner .home-link {
-      display: none;
-    }
-    .nav-title {
-      display: flex;
-      background: var(--background-without-opacity);
-      max-width: calc(100vw - 170px);
-    }
-    .nav-title a {
-      height: 3rem;
-      object-fit: contain;
-      font-size: 0.5rem;
-    }
-    .nav-title img {
-      width: 2rem;
-      height: 2rem;
-      object-fit: contain;
-    }
-    nav ul {
-      display: none;
-    }
   }
 
   .corner img {
@@ -214,8 +183,7 @@
     color: var(--accent-color);
   }
 
-  .home-link,
-  .sidebar-button {
+  .home-link {
     background: var(--background-without-opacity);
     border-bottom-right-radius: 20%;
   }
@@ -223,5 +191,44 @@
   .github-link {
     background: var(--background-without-opacity);
     border-bottom-left-radius: 20%;
+  }
+
+  .sidebar-button {
+    background: var(--background-without-opacity);
+  }
+  .sidebar-button,
+  .nav-title {
+    display: none;
+  }
+  @media (max-width: 719px) {
+    .sidebar-button {
+      display: flex;
+    }
+    .corner .home-link {
+      display: none;
+    }
+    .nav-title {
+      display: flex;
+      justify-content: center;
+      background: var(--background-without-opacity);
+      width: calc(100vw - 96px);
+    }
+    .nav-title a {
+      height: 3rem;
+      object-fit: contain;
+      font-size: 0.5rem;
+    }
+    .nav-title img {
+      width: 2rem;
+      height: 2rem;
+      object-fit: contain;
+    }
+    nav ul,
+    nav svg {
+      display: none;
+    }
+    .github-link {
+      border-bottom-left-radius: 0;
+    }
   }
 </style>

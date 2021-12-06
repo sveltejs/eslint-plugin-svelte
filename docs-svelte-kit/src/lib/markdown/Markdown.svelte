@@ -13,13 +13,19 @@
   function handleToggleSidebar() {
     sidebarOpen = !sidebarOpen
   }
+  function clickHandler() {
+    sidebarOpen = false
+  }
 </script>
 
 <Header on:toggle-sidebar-open={handleToggleSidebar} />
 
 <SideMenu {sidebarOpen} hiddenMenu={frontmatter.hiddenMenu} />
 
-<main class:hidden-menu={frontmatter.hiddenMenu}>
+<main
+  class:hidden-menu={frontmatter.hiddenMenu}
+  on:click={sidebarOpen ? clickHandler : null}
+>
   <div class="main-content">
     <slot />
   </div>

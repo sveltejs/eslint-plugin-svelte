@@ -28,7 +28,7 @@ const categoryRules = categories.map((cat) => {
       .map((rule) => {
         return {
           title: rule.meta.docs.ruleId,
-          path: `/rules/${rule.meta.docs.ruleName}`,
+          path: `/rules/${rule.meta.docs.ruleName}/`,
         }
       }),
   }
@@ -36,19 +36,19 @@ const categoryRules = categories.map((cat) => {
 const SIDE_MENU = {
   "/rules": [
     { path: "/", title: "Introduction" },
-    { path: "/user-guide", title: "User Guide" },
+    { path: "/user-guide/", title: "User Guide" },
     {
-      path: "/rules",
+      path: "/rules/",
       title: "Available Rules",
       children: categoryRules,
     },
-    { path: "/playground", title: "Playground" },
+    { path: "/playground/", title: "Playground" },
   ],
   "/": [
     { path: "/", title: "Introduction" },
-    { path: "/user-guide", title: "User Guide" },
-    { path: "/rules", title: "Available Rules" },
-    { path: "/playground", title: "Playground" },
+    { path: "/user-guide/", title: "User Guide" },
+    { path: "/rules/", title: "Available Rules" },
+    { path: "/playground/", title: "Playground" },
   ],
 }
 

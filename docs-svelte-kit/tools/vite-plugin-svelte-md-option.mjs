@@ -9,13 +9,19 @@ import markdownPlugin from "./markdown-it-markdown.mjs"
 import containerPluginOption from "./markdown-it-container-option.mjs"
 import slugify from "@sindresorhus/slugify"
 
-export default {
+export default (options = {}) => ({
   wrapperClasses: [],
   markdownItOptions: {
     highlight,
   },
   markdownItUses: [
-    replaceLinkPlugin,
+    [
+      replaceLinkPlugin,
+      {
+        baseUrl: options.baseUrl,
+        root: options.root,
+      },
+    ],
     emojiPlugin,
     [
       anchorPlugin,
@@ -34,4 +40,4 @@ export default {
     [containerPlugin, "danger", containerPluginOption("danger", "warning")],
     [containerPlugin, "details", containerPluginOption("details")],
   ],
-}
+})

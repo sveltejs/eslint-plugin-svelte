@@ -3,7 +3,7 @@ import fs from "fs"
 import renderRulesTableContent from "./render-rules"
 
 const insertText = `\n${renderRulesTableContent(
-  (name) => `https://ota-meshi.github.io/eslint-plugin-svelte/rules/${name}`,
+  (name) => `https://ota-meshi.github.io/eslint-plugin-svelte/rules/${name}/`,
 )}\n`
 
 const readmeFilePath = path.resolve(__dirname, "../README.md")

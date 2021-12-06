@@ -39,6 +39,8 @@ const config = {
       assets: path.join(dirname, "./docs-svelte-kit/statics"),
     },
 
+    trailingSlash: "always",
+
     vite: {
       server: {
         fs: { strict: false },
@@ -53,7 +55,14 @@ const config = {
           os: path.join(dirname, "./docs-svelte-kit/shim/os.mjs"),
         },
       },
-      plugins: [svelteMd(svelteMdOption)],
+      plugins: [
+        svelteMd(
+          svelteMdOption({
+            baseUrl: "/eslint-plugin-svelte",
+            root: path.join(dirname, "./docs"),
+          }),
+        ),
+      ],
     },
   },
 }
