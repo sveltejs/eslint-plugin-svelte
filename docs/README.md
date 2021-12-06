@@ -6,7 +6,7 @@ title: "@ota-meshi/eslint-plugin-svelte"
 
 `@ota-meshi/eslint-plugin-svelte` is ESLint plugin for Svelte.  
 It provides many unique check rules by using the template AST.  
-You can check on the [Online DEMO](./playground/.md).
+You can check on the [Online DEMO](./playground.md).
 
 ::: **_WORKS IN PROGRESS_** :::
 

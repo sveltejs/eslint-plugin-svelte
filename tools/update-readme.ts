@@ -38,17 +38,24 @@ ${newReadme
   )
   .replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, "")
   .replace(
-    // eslint-disable-next-line regexp/no-super-linear-backtracking -- ignore
-    /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)([^/]*\.html)?\)/gu,
-    (_ptn, c1: string, c2: string) => {
-      let result = `(.${c1}`
-      if (c2) {
+    /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)\)/gu,
+    (_ptn, path: string) => {
+      const [hash] = /(?:#.*)?$/u.exec(path)!
+      const pathWithoutHash = hash ? path.slice(0, -hash.length) : path
+      const normalizePathWithoutHash = pathWithoutHash.replace(/\/$/u, "")
+      const [file] = /[^/]+$/u.exec(normalizePathWithoutHash)!
+      const pathWithoutFile = file
+        ? normalizePathWithoutHash.slice(0, -file.length)
+        : normalizePathWithoutHash
+
+      let result = `(.${pathWithoutFile}`
+      if (file.endsWith(".html")) {
         result +=
-          c2 === "index.html" ? "README.md" : c2.replace(/\.html$/, ".md")
+          file === "index.html" ? "README.md" : file.replace(/\.html$/, ".md")
       } else {
-        result += ".md"
+        result += `${file}.md`
       }
-      result += ")"
+      result += `${hash})`
       return result
     },
   )
