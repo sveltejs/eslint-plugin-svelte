@@ -57,7 +57,11 @@ export function isActive(path, $page) {
 }
 
 export function normalizePath(path) {
-  return path === "/" ? "/README" : path
+  let normalized = path === "/" ? "/README/" : path
+  if (!normalized.endsWith("/")) {
+    normalized += "/"
+  }
+  return normalized
 }
 
 export const tocStore = writable([])

@@ -6,7 +6,7 @@
   export let frontmatter = {}
 
   let prev, next
-  $: normalizedPath = normalizePath($page.path)
+  $: markdownPath = normalizePath($page.path).replace(/^\/|\/$/g, "")
   $: {
     let prevItem, currItem
     for (const item of iterateMenuItem($menuItems)) {
@@ -42,11 +42,7 @@
   <div class="footer-tools">
     <div class="edit-link">
       <a
-        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{normalizedPath.startsWith(
-          '/',
-        )
-          ? normalizedPath.slice(1)
-          : normalizedPath}.md"
+        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{markdownPath}.md"
         target="_blank"
         rel="noopener noreferrer">Edit this page</a
       >
