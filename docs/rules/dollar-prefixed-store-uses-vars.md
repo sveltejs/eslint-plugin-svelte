@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/dollar-prefixed-store-uses-vars"
 description: "prevent $-prefixed variables to be marked as unused"
+since: "v0.18.0"
 ---
 
 # @ota-meshi/svelte/dollar-prefixed-store-uses-vars
 
 > prevent $-prefixed variables to be marked as unused
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
 
 ESLint `no-unused-vars` rule does not detect store variables used as $-prefixed.
@@ -40,6 +40,10 @@ Without this rule this code triggers warning:
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.18.0
 
 ## :mag: Implementation
 
