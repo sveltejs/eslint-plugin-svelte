@@ -17,8 +17,8 @@ build(
 /** build */
 function build(input, out, injects = []) {
   console.log(`build@ ${input}`)
-  let code = bundle(input, injects)
-  code = transform(code, injects)
+  let code = bundle(input, ["path", ...injects])
+  code = transform(code, ["path", ...injects])
   fs.writeFileSync(out, code, "utf8")
 }
 
@@ -28,7 +28,7 @@ function bundle(entryPoint, externals) {
     entryPoints: [entryPoint],
     format: "esm",
     bundle: true,
-    external: ["path", ...externals],
+    external: externals,
     write: false,
   })
 
