@@ -302,6 +302,7 @@ These rules relate to this plugin works:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :star: |
+| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | prevent $-prefixed variables to be marked as unused | :star: |
 | [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :star: |
 
 <!--RULES_TABLE_END-->
