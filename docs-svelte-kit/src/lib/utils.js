@@ -53,18 +53,15 @@ const SIDE_MENU = {
 }
 
 export function isActive(path, $page) {
-  return normalizePath($page.path) === normalizePath(path)
+  return markdownPath($page.path) === markdownPath(path)
 }
 
-export function normalizePath(path) {
-  let normalized = path === "/" ? "/README/" : path
-  if (!normalized.endsWith("/")) {
-    normalized += "/"
-  }
-  return normalized
+export function markdownPath(path) {
+  let normalized = path === "/" ? "README" : path.replace(/^\/|\/$/g, "")
+  return `${normalized}.md`
 }
 
-export const tocStore = writable([])
+export const tocStore = writable({ children: [] })
 
 export const menuItems = readable([], function start(set) {
   let pageData = {}

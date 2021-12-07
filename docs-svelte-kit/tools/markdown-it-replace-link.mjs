@@ -1,8 +1,5 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
 /* eslint-disable camelcase -- ignore */
-// markdown-it plugin for:
-// 1. adding target="_blank" to external links
-// 2. converting internal links to remove .md
 import path from "path"
 
 export default (md, options = {}) => {

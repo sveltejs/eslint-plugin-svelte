@@ -1,5 +1,4 @@
 <script>
-  import { onDestroy, onMount } from "svelte"
   import ESLintEditor from "../eslint/ESLintEditor.svelte"
   import RulesSettings from "../eslint/RulesSettings.svelte"
   import { deserializeState, serializeState } from "../eslint/scripts/state"
@@ -87,16 +86,6 @@
       window.location.replace(`#${serializedString}`)
     }
   }
-  onMount(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("hashchange", onUrlHashChange)
-    }
-  })
-  onDestroy(() => {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("hashchange", onUrlHashChange)
-    }
-  })
   function onLintedResult(evt) {
     messages = evt.detail.messages
     time = `${evt.detail.time}ms`
@@ -127,6 +116,8 @@
     return true
   }
 </script>
+
+<svelte:window on:hashchange={onUrlHashChange} />
 
 <div class="playground-root">
   <div class="playground-tools">

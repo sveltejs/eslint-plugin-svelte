@@ -34,13 +34,10 @@ class TOCRenderer {
 export default (md) => {
   md.core.ruler.push("custom_markdown", (state) => {
     const tokens = state.tokens
-    tokens.unshift(new state.Token("custom_markdown_open"))
-    tokens.push(new state.Token("custom_markdown_close"))
+    tokens.unshift(new state.Token("custom_markdown_data"))
   })
   // eslint-disable-next-line camelcase -- ignore
-  md.renderer.rules.custom_markdown_close = () => `</Markdown>`
-  // eslint-disable-next-line camelcase -- ignore
-  md.renderer.rules.custom_markdown_open = (
+  md.renderer.rules.custom_markdown_data = (
     tokens,
     _idx,
     _options,
@@ -79,13 +76,10 @@ export default (md) => {
       fileInfo.timestamp = timestamp
       fileInfo.lastUpdated = new Date(timestamp).toLocaleString()
     }
-    return `<script>
-  import Markdown from "$lib/markdown/Markdown.svelte"
-  const toc = ${JSON.stringify(renderer.toc())}
-  const fileInfo = ${JSON.stringify(fileInfo)}
+    return `<script context="module">
+  export const toc = ${JSON.stringify(renderer.toc())}
+  export const fileInfo = ${JSON.stringify(fileInfo)}
 </script>
-
-<Markdown {toc} {frontmatter} {fileInfo} >
   `
   }
 }

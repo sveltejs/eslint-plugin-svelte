@@ -1,12 +1,11 @@
 <script>
   import { page } from "$app/stores"
-  import { normalizePath, menuItems, isActive } from "../utils.js"
+  import { markdownPath, menuItems, isActive } from "../utils.js"
   import { base as baseUrl } from "$app/paths"
   export let fileInfo = {}
   export let frontmatter = {}
 
   let prev, next
-  $: markdownPath = normalizePath($page.path).replace(/^\/|\/$/g, "")
   $: {
     let prevItem, currItem
     for (const item of iterateMenuItem($menuItems)) {
@@ -42,7 +41,9 @@
   <div class="footer-tools">
     <div class="edit-link">
       <a
-        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{markdownPath}.md"
+        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{markdownPath(
+          $page.path,
+        )}"
         target="_blank"
         rel="noopener noreferrer">Edit this page</a
       >
