@@ -4,7 +4,11 @@ function dirname(p) {
   return p.split("/").slice(0, -1).join("/") || p
 }
 
-const posix = { dirname }
+function extname(p) {
+  return /\.[\w$-]+$/iu.exec(p)[0]
+}
+
+const posix = { dirname, extname }
 posix.posix = posix
-export { dirname, posix }
+export { dirname, extname, posix }
 export default posix

@@ -2,6 +2,8 @@
 import { rules as pluginRules } from "../../../../../src/utils/rules.ts"
 import { Linter } from "eslint"
 import * as svelteEslintParser from "svelte-eslint-parser"
+// eslint-disable-next-line node/file-extension-in-import -- ignore
+export { preprocess, postprocess } from "../../../../../src/processor/index.ts"
 
 const linter = new Linter()
 

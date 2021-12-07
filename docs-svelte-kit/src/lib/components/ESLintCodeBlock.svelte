@@ -1,7 +1,11 @@
 <script>
   import { onMount } from "svelte"
   import ESLintEditor from "../eslint/ESLintEditor.svelte"
-  import { createLinter } from "../eslint/scripts/linter.js"
+  import {
+    createLinter,
+    preprocess,
+    postprocess,
+  } from "../eslint/scripts/linter.js"
 
   const linter = createLinter()
 
@@ -11,6 +15,8 @@
   let time = ""
   let options = {
     filename: "example.svelte",
+    preprocess,
+    postprocess,
   }
   let showDiff = false
 

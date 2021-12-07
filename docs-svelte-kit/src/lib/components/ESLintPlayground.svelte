@@ -6,6 +6,8 @@
     DEFAULT_RULES_CONFIG,
     getURL,
     createLinter,
+    preprocess,
+    postprocess,
   } from "../eslint/scripts/linter.js"
 
   const linter = createLinter()
@@ -69,6 +71,8 @@
   let time = ""
   let options = {
     filename: "example.svelte",
+    preprocess,
+    postprocess,
   }
 
   $: serializedString = (() => {
