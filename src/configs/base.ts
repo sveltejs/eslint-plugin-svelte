@@ -11,6 +11,7 @@ export = {
 
         // @ota-meshi/eslint-plugin-svelte rules
         "@ota-meshi/svelte/comment-directive": "error",
+        "@ota-meshi/svelte/dollar-prefixed-store-uses-vars": "error",
         "@ota-meshi/svelte/system": "error",
       },
     },
