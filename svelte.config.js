@@ -6,7 +6,7 @@ const path = require("path")
 const babelCore = require("@babel/core")
 const pirates = require("pirates")
 
-/* Build config */
+/* -- Build config -- */
 esbuild.buildSync({
   entryPoints: [require.resolve("./svelte.config.esm.mjs")],
   outfile: path.join(__dirname, "./svelte.config-dist.js"),
@@ -20,18 +20,19 @@ esbuild.buildSync({
   ],
 })
 
-/* transpile */
+/* -- transpile -- */
 const { register } = require("esbuild-register/dist/node")
 register({
   format: "cjs",
   extensions: [".js", ".mjs", ".cjs", ".ts"],
 })
 
-/** transform '@sveltejs/kit/ssr' path */
+/* -- transform '@sveltejs/kit/ssr' path -- */
 pirates.addHook(transformImportSsr, {
   exts: [".js", ".mjs"],
 })
 
+/** transform '@sveltejs/kit/ssr' path */
 function transformImportSsr(code, _filename) {
   if (code.includes("@sveltejs/kit/ssr")) {
     const resolvedPath = require.resolve(
