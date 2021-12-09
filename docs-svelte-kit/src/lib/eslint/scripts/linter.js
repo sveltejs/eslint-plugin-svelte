@@ -10,41 +10,50 @@ const linter = new Linter()
 export const categories = [
   {
     title: "Possible Errors",
+    classes: "svelte-category",
     rules: [],
   },
   {
     title: "Security Vulnerability",
+    classes: "svelte-category",
     rules: [],
   },
   {
     title: "Best Practices",
+    classes: "svelte-category",
     rules: [],
   },
   {
     title: "Stylistic Issues",
+    classes: "svelte-category",
     rules: [],
   },
   {
     title: "Extension Rules",
+    classes: "svelte-category",
     rules: [],
   },
   {
     title: "System",
+    classes: "svelte-category",
     rules: [],
   },
   {
     type: "problem",
     title: "Possible Errors (CORE)",
+    classes: "core-category",
     rules: [],
   },
   {
     type: "suggestion",
     title: "Suggestions (CORE)",
+    classes: "core-category",
     rules: [],
   },
   {
     type: "layout",
     title: "Layout & Formatting (CORE)",
+    classes: "core-category",
     rules: [],
   },
 ]
@@ -58,6 +67,7 @@ for (const rule of pluginRules) {
   const data = {
     ruleId: rule.meta.docs.ruleId,
     rule,
+    classes: "svelte-rule",
     url: rule.meta.docs.url,
   }
   rules.push(data)
@@ -76,6 +86,7 @@ for (const [ruleId, rule] of linter.getRules()) {
   const data = {
     ruleId,
     rule,
+    classes: "core-rule",
     url: rule.meta.docs.url,
   }
   rules.push(data)
@@ -86,9 +97,17 @@ for (const [ruleId, rule] of linter.getRules()) {
     DEFAULT_RULES_CONFIG[ruleId] = "error"
   }
 }
-/** get url */
-export function getURL(ruleId) {
-  return linter.getRules().get(ruleId)?.meta.docs.url ?? ""
+
+/** Get rule data */
+export function getRule(ruleId) {
+  for (const cat of categories) {
+    for (const rule of cat.rules) {
+      if (rule.ruleId === ruleId) {
+        return rule
+      }
+    }
+  }
+  return ""
 }
 
 export function createLinter() {

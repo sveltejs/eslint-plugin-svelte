@@ -2,6 +2,25 @@
   import { categories } from "./scripts/linter.js"
 
   export let rules = {}
+
+  let filterValue = ""
+  let filteredCategories = categories
+  $: {
+    filteredCategories = []
+    for (const category of categories) {
+      let filteredRules = category.rules
+      if (filterValue) {
+        // eslint-disable-next-line no-loop-func -- ignore
+        filteredRules = filteredRules.filter((r) =>
+          r.ruleId.includes(filterValue),
+        )
+      }
+      filteredCategories.push({
+        ...category,
+        rules: filteredRules,
+      })
+    }
+  }
   let categoryState = Object.fromEntries(
     categories.map((c) => {
       return [
@@ -12,10 +31,12 @@
       ]
     }),
   )
-  function onAllClick(category, e) {
+
+  function onCategoryClick(category, e) {
+    const checked = e.target.checked
     const newRules = Object.assign({}, rules)
     for (const rule of category.rules) {
-      if (e.target.checked) {
+      if (checked) {
         newRules[rule.ruleId] = "error"
       } else {
         delete newRules[rule.ruleId]
@@ -24,8 +45,9 @@
     rules = newRules
   }
   function onClick(ruleId, e) {
+    const checked = e.target.checked
     const newRules = Object.assign({}, rules)
-    if (e.target.checked) {
+    if (checked) {
       newRules[ruleId] = "error"
     } else {
       delete newRules[ruleId]
@@ -35,13 +57,55 @@
   function isErrorState(rules, ruleId) {
     return rules[ruleId] === "error" || rules[ruleId] === 2
   }
+
+  function onAllClick(e) {
+    const checked = e.target.checked
+    const newRules = Object.assign({}, rules)
+    for (const category of filteredCategories) {
+      for (const rule of category.rules) {
+        if (checked) {
+          newRules[rule.ruleId] = "error"
+        } else {
+          delete newRules[rule.ruleId]
+        }
+      }
+    }
+    rules = newRules
+  }
 </script>
 
 <div class="rules-settings">
+  <div class="tools">
+    <label class="tool">
+      <span class="tool-label">Filter:</span>
+      <input
+        type="search"
+        placeholder="Rule Filter"
+        class="tool-form"
+        bind:value={filterValue}
+      />
+    </label>
+    <label class="tool">
+      <input
+        type="checkbox"
+        on:click={onAllClick}
+        checked={filteredCategories.every((category) =>
+          category.rules.every((rule) => isErrorState(rules, rule.ruleId)),
+        )}
+        indeterminate={filteredCategories.some((category) =>
+          category.rules.some((rule) => isErrorState(rules, rule.ruleId)),
+        ) &&
+          filteredCategories.some((category) =>
+            category.rules.some((rule) => !isErrorState(rules, rule.ruleId)),
+          )}
+      />
+      <span>All Rules</span>
+    </label>
+  </div>
   <ul class="categories">
-    {#each categories as category (category.title)}
+    {#each filteredCategories as category (category.title)}
       {#if category.rules.length}
-        <li class="category">
+        <li class="category {category.classes}">
           <button
             class="category-button"
             class:category-button--close={categoryState[category.title].close}
@@ -81,7 +145,7 @@
                   !category.rules.every(
                     (rule) => !isErrorState(rules, rule.ruleId),
                   )}
-                on:input={(e) => onAllClick(category, e)}
+                on:input={(e) => onCategoryClick(category, e)}
               />
               {category.title}
             </label>
@@ -186,7 +250,36 @@
     text-decoration: none;
   }
 
+  .tools {
+    background-color: #676778;
+  }
+  .tool {
+    padding: 4px;
+    display: flex;
+    align-items: center;
+  }
+  .tool-label {
+    width: 3.5rem;
+    flex-shrink: 0;
+  }
+  .tool-form {
+    width: 100%;
+  }
+
   .category {
     color: #fff;
+  }
+
+  .svelte-category .category-title {
+    color: #40b3ff;
+  }
+  .svelte-category a > svg {
+    color: #40b3ff;
+  }
+  .core-category .category-title {
+    color: #8080f2;
+  }
+  .core-category a > svg {
+    color: #8080f2;
   }
 </style>

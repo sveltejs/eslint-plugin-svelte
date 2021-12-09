@@ -4,7 +4,7 @@
   import { deserializeState, serializeState } from "../eslint/scripts/state"
   import {
     DEFAULT_RULES_CONFIG,
-    getURL,
+    getRule,
     createLinter,
     preprocess,
     postprocess,
@@ -128,7 +128,7 @@
     <span style="margin-left: 16px">{time}</span>
   </div>
   <div class="playground-content">
-    <RulesSettings bind:rules class="rules-settings" />
+    <RulesSettings bind:rules />
     <div class="editor-content">
       <ESLintEditor
         {linter}
@@ -146,7 +146,6 @@
           },
         }}
         {options}
-        class="eslint-playground"
         on:result={onLintedResult}
       />
       <div class="messages">
@@ -154,9 +153,13 @@
           {#each messages as msg, i (`${msg.line}:${msg.column}:${msg.ruleId}@${i}`)}
             <li class="message">
               [{msg.line}:{msg.column}]:
-              {msg.message} (<a href={getURL(msg.ruleId)} target="_blank">
-                {msg.ruleId}
-              </a>)
+              {msg.message}
+              <a
+                class="rule-link {getRule(msg.ruleId)?.classes}"
+                class:is-rule-error={msg.ruleId}
+                href={getRule(msg.ruleId)?.url}
+                target="_blank">({msg.ruleId})</a
+              >
             </li>
           {/each}
         </ol>
@@ -179,7 +182,7 @@
     height: calc(100% - 16px);
     border: 1px solid #cfd4db;
     background-color: #282c34;
-    color: #f8c555;
+    color: #fff;
   }
 
   .playground-content > .editor-content {
@@ -199,5 +202,26 @@
     border-top: 1px solid #cfd4db;
     padding: 8px;
     font-size: 12px;
+  }
+  .playground-content
+    > .editor-content
+    > .messages
+    .rule-link:not(.is-rule-error) {
+    display: none;
+  }
+  .rule-link {
+    transition: color 0.2s linear;
+  }
+  .rule-link.svelte-rule {
+    color: #40b3ff80;
+  }
+  .rule-link.svelte-rule:hover {
+    color: #40b3ff;
+  }
+  .rule-link.core-rule {
+    color: #8080f280;
+  }
+  .rule-link.core-rule:hover {
+    color: #8080f2;
   }
 </style>

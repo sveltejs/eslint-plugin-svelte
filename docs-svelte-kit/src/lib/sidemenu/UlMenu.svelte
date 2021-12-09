@@ -84,4 +84,11 @@
     border: var(--size) solid transparent;
     border-right: var(--size) solid var(--accent-color);
   }
+
+  a.sidebar-menu-item-title:not(.active) {
+    transition: color 0.2s linear;
+  }
+  a.sidebar-menu-item-title:not(.active):hover {
+    color: #40b3ff;
+  }
 </style>
