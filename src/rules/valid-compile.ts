@@ -1,7 +1,5 @@
 import Module from "module"
 import path from "path"
-import { VisitorKeys } from "svelte-eslint-parser"
-import type { SourceCode } from "../types"
 import { createRule } from "../utils"
 import * as compiler from "svelte/compiler"
 import type typescript from "typescript"
@@ -120,14 +118,14 @@ export default createRule("valid-compile", {
       }
     }
 
-    const parserVisitorKeys = sourceCode.visitorKeys
-    if (isEqualKeys(parserVisitorKeys, VisitorKeys)) {
+    if (!context.parserServices.esTreeNodeToTSNodeMap) {
       return {
         "Program:exit"() {
           report(getWarnings(text))
         },
       }
     }
+
     let ts: TS
     try {
       const createRequire: (filename: string) => (modName: string) => unknown =
@@ -374,37 +372,6 @@ export default createRule("valid-compile", {
     }
   },
 })
-
-/**
- * Checks if the given visitorKeys are the equals.
- */
-function isEqualKeys(
-  a: SourceCode["visitorKeys"],
-  b: SourceCode["visitorKeys"],
-): boolean {
-  const keysA = new Set(Object.keys(a))
-  const keysB = new Set(Object.keys(a))
-  if (keysA.size !== keysB.size) {
-    return false
-  }
-  for (const key of keysA) {
-    if (!keysB.has(key)) {
-      return false
-    }
-    const vKeysA = new Set(a[key])
-    const vKeysB = new Set(b[key])
-    if (vKeysA.size !== vKeysB.size) {
-      return false
-    }
-
-    for (const vKey of vKeysA) {
-      if (!vKeysB.has(vKey)) {
-        return false
-      }
-    }
-  }
-  return true
-}
 
 /**
  * @see https://github.com/sveltejs/eslint-plugin-svelte3/blob/259263ccaf69c59e473d9bfa39706b0955eccfbd/src/preprocess.js#L194
