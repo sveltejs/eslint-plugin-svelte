@@ -4,9 +4,21 @@
 
   /** @type {import('@sveltejs/kit').Load} */
   export async function load({ page }) {
+    const markdown = `./${markdownPath(page.path)}`
+    if (docs[markdown]) {
+      return {
+        props: {
+          moduleData: await docs[markdown](),
+        },
+      }
+    }
+
+    // 404
     return {
       props: {
-        moduleData: await docs[`./${markdownPath(page.path)}`](),
+        moduleData: {
+          frontmatter: { title: "404", hiddenMenu: true },
+        },
       },
     }
   }

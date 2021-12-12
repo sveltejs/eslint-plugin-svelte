@@ -13,6 +13,12 @@ const dirname =
         const metaUrl = Function(`return import.meta.url`)()
         return path.dirname(new URL(metaUrl).pathname)
       })()
+
+const baseStaticAdapter = staticAdapter({
+  // default options are shown
+  pages: "build",
+  assets: "build",
+})
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   compilerOptions: {
@@ -23,11 +29,15 @@ const config = {
     paths: {
       base: "/eslint-plugin-svelte",
     },
-    adapter: staticAdapter({
-      // default options are shown
-      pages: "build",
-      assets: "build",
-    }),
+    adapter: {
+      name: baseStaticAdapter.name,
+
+      async adapt(arg) {
+        await baseStaticAdapter.adapt(arg)
+        arg.utils.copy("build/404/index.html", "build/404.html")
+        arg.utils.rimraf("build/404")
+      },
+    },
 
     // hydrate the <div id="svelte"> element in src/app.html
     target: "#svelte",
