@@ -1,5 +1,5 @@
 /* global __dirname -- __dirname */
-import staticAdapter from "@sveltejs/adapter-static"
+import ghpagesAdapter from "svelte-adapter-ghpages"
 import path from "path"
 import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
@@ -14,11 +14,6 @@ const dirname =
         return path.dirname(new URL(metaUrl).pathname)
       })()
 
-const baseStaticAdapter = staticAdapter({
-  // default options are shown
-  pages: "build",
-  assets: "build",
-})
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   compilerOptions: {
@@ -29,15 +24,11 @@ const config = {
     paths: {
       base: "/eslint-plugin-svelte",
     },
-    adapter: {
-      name: baseStaticAdapter.name,
-
-      async adapt(arg) {
-        await baseStaticAdapter.adapt(arg)
-        arg.utils.copy("build/404/index.html", "build/404.html")
-        arg.utils.rimraf("build/404")
-      },
-    },
+    adapter: ghpagesAdapter({
+      // default options are shown
+      pages: "build",
+      assets: "build",
+    }),
 
     // hydrate the <div id="svelte"> element in src/app.html
     target: "#svelte",
