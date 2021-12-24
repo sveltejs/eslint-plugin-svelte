@@ -15,6 +15,7 @@ import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noTargetBlank from "../rules/no-target-blank"
+import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import shorthandAttribute from "../rules/shorthand-attribute"
@@ -39,6 +40,7 @@ export const rules = [
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noTargetBlank,
+  noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,
   shorthandAttribute,
