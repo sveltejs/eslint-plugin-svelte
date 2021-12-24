@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-unused-svelte-ignore"
 description: "disallow unused svelte-ignore comments"
+since: "v0.19.0"
 ---
 
 # @ota-meshi/svelte/no-unused-svelte-ignore
 
 > disallow unused svelte-ignore comments
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -43,6 +43,10 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte - Docs > Comments](https://svelte.dev/docs#template-syntax-comments)
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.19.0
 
 ## :mag: Implementation
 
