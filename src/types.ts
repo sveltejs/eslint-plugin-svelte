@@ -13,8 +13,8 @@ export type ASTNode =
   | AST.SvelteNode
   | ESTree.Node
   | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
-type ASTNodeWithParent =
-  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNode })
+export type ASTNodeWithParent =
+  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNodeWithParent })
   | AST.SvelteProgram
 
 export type ASTNodeListener = {
@@ -206,7 +206,7 @@ export interface SourceCode {
 
   getJSDocComment(node: NodeOrToken): AST.Comment | null
 
-  getNodeByRangeIndex(index: number): NodeOrToken | null
+  getNodeByRangeIndex(index: number): ASTNodeWithParent | null
 
   isSpaceBetweenTokens(first: AST.Token, second: AST.Token): boolean
 
