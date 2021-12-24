@@ -113,9 +113,14 @@ export default createRule("no-unused-svelte-ignore", {
     if (!ignoreComments.length) {
       return {}
     }
-    for (const warning of getSvelteCompileWarnings(context, {
+    const warnings = getSvelteCompileWarnings(context, {
+      warnings: "onlyWarnings",
       removeComments: new Set(ignoreComments.map((i) => i.token)),
-    })) {
+    })
+    if (!warnings) {
+      return {}
+    }
+    for (const warning of warnings) {
       if (!warning.code) {
         continue
       }

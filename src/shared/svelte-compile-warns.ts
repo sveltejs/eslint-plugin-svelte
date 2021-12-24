@@ -23,7 +23,7 @@ export type Warning = {
   message: string
 } & Loc
 export type GetSvelteWarningsOption = {
-  ignoreWarnings?: boolean
+  warnings: "ignoreWarnings" | "onlyWarnings" | null
   removeComments?: Iterable<AST.Token | AST.Comment>
 }
 
@@ -33,7 +33,7 @@ export type GetSvelteWarningsOption = {
 export function getSvelteCompileWarnings(
   context: RuleContext,
   option: GetSvelteWarningsOption,
-): Warning[] {
+): Warning[] | null {
   const sourceCode = context.getSourceCode()
   const text = !option.removeComments
     ? sourceCode.text
@@ -259,10 +259,14 @@ export function getSvelteCompileWarnings(
       }
     }
   }
-
   const code = remapContext.postprocess()
+  const baseWarnings = getWarningsFromCode(code, option)
+  if (!baseWarnings) {
+    return null
+  }
+
   const warnings: Warning[] = []
-  for (const warn of getWarningsFromCode(code, option)) {
+  for (const warn of baseWarnings) {
     let loc: Loc | null = null
 
     /** Get re-mapped location */
@@ -296,8 +300,10 @@ type TS = typeof typescript
  */
 function getWarningsFromCode(
   code: string,
-  { ignoreWarnings }: { ignoreWarnings?: boolean },
-): Warning[] {
+  { warnings }: GetSvelteWarningsOption,
+): Warning[] | null {
+  const ignoreWarnings = warnings === "ignoreWarnings"
+  const onlyWarnings = warnings === "onlyWarnings"
   try {
     const result = compiler.compile(code, {
       generate: false,
@@ -309,6 +315,9 @@ function getWarningsFromCode(
     return result.warnings as Warning[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   } catch (e: any) {
+    if (onlyWarnings) {
+      return null
+    }
     // console.log(code)
     if (!ignoreWarnings) {
       try {
