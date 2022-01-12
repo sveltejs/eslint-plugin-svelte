@@ -16,6 +16,10 @@ esbuild.buildSync({
     "path",
     "cross-spawn",
     "prismjs",
+    "os",
+    "fs",
+    "stream",
+    "zlib",
     "./docs-svelte-kit/build-system/build.js",
   ],
 })

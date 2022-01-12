@@ -42,7 +42,7 @@
     <div class="edit-link">
       <a
         href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{markdownPath(
-          $page.path,
+          $page.url.pathname,
         )}"
         target="_blank"
         rel="noopener noreferrer">Edit this page</a

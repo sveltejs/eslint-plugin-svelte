@@ -43,11 +43,7 @@ function ________adjustModule(m) {
       default: ________adjustModule(m.default)
     }
     for (const key of Object.keys(m.default)) {
-      if (typeof m.default[key] === 'function') {
-        result[key] = (...args) => m.default[key](...args);
-      } else {
-        result[key] = m.default[key]
-      }
+      result[key] = m.default[key]
     }
     return result
   }

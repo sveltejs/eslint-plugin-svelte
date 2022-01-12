@@ -3,8 +3,8 @@
   const docs = import.meta.glob("./**/*.md")
 
   /** @type {import('@sveltejs/kit').Load} */
-  export async function load({ page }) {
-    const markdown = `./${markdownPath(page.path)}`
+  export async function load({ url }) {
+    const markdown = `./${markdownPath(url.pathname)}`
     if (docs[markdown]) {
       return {
         props: {

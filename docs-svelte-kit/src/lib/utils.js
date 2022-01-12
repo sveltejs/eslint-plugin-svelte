@@ -3,6 +3,15 @@ import { rules } from "../../../src/utils/rules.ts"
 import { readable, writable } from "svelte/store"
 // eslint-disable-next-line node/no-missing-import -- ignore
 import { page } from "$app/stores"
+// eslint-disable-next-line node/no-missing-import -- ignore
+import { base as baseUrl } from "$app/paths"
+
+export function stripBaseUrl(path) {
+  if (path.startsWith(baseUrl)) {
+    return path.slice(baseUrl.length)
+  }
+  return path
+}
 
 const svelteRules = rules.filter((rule) => !rule.meta.deprecated)
 
@@ -53,10 +62,13 @@ const SIDE_MENU = {
 }
 
 export function isActive(path, $page) {
-  return markdownPath($page.path) === markdownPath(path)
+  return markdownPath($page.url.pathname) === markdownPath(path)
 }
 
 export function markdownPath(path) {
+  // eslint-disable-next-line no-param-reassign -- ignore
+  path = stripBaseUrl(path)
+
   let normalized = path === "/" ? "README" : path.replace(/^\/|\/$/g, "")
   return `${normalized}.md`
 }
@@ -84,8 +96,9 @@ export const menuItems = readable([], function start(set) {
 function generateMenu($page, toc) {
   const result = []
   const [, menus] =
-    Object.entries(SIDE_MENU).find(([k]) => $page.path.startsWith(k)) ||
-    SIDE_MENU["/"]
+    Object.entries(SIDE_MENU).find(([k]) =>
+      stripBaseUrl($page.url.pathname).startsWith(k),
+    ) || SIDE_MENU["/"]
   for (const { path, title, children } of menus) {
     const active = isActive(path, $page)
     if (active) {
