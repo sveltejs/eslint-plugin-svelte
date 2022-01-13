@@ -10,6 +10,8 @@
 <input type="text" bind:value />
 <!-- prettier-ignore -->
 <input type="text" bind:value={value} />
+<!-- prettier-ignore -->
+<input style:color={value} />
 
 <img {src} alt="{name} dances." />
 <!-- prettier-ignore -->

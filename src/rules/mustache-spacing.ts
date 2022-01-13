@@ -193,6 +193,8 @@ export default createRule("mustache-spacing", {
         let option: OptionValue
         if (node.parent.type === "SvelteAttribute") {
           option = options.attributesAndProps
+        } else if (node.parent.type === "SvelteStyleDirective") {
+          option = options.directiveExpressions
         } else {
           option = options.textExpressions
         }

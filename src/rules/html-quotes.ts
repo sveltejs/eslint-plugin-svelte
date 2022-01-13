@@ -148,17 +148,17 @@ export default createRule("html-quotes", {
     }
 
     /** Verify for standard attribute */
-    function verifyForValues(attr: AST.SvelteAttribute) {
+    function verifyForValues(
+      attr: AST.SvelteAttribute | AST.SvelteStyleDirective,
+    ) {
       const quoteAndRange = getAttributeValueQuoteAndRange(attr, sourceCode)
       verifyQuote(preferQuote, quoteAndRange)
     }
 
     /** Verify for dynamic attribute */
     function verifyForDynamicMustacheTag(
-      attr: AST.SvelteAttribute,
-      valueNode: AST.SvelteMustacheTag & {
-        kind: "text"
-      },
+      attr: AST.SvelteAttribute | AST.SvelteStyleDirective,
+      valueNode: AST.SvelteMustacheTagText,
     ) {
       const quoteAndRange = getAttributeValueQuoteAndRange(attr, sourceCode)
       const text = sourceCode.text.slice(...valueNode.range)
@@ -192,7 +192,9 @@ export default createRule("html-quotes", {
     }
 
     return {
-      SvelteAttribute(node) {
+      "SvelteAttribute, SvelteStyleDirective"(
+        node: AST.SvelteAttribute | AST.SvelteStyleDirective,
+      ) {
         if (
           node.value.length === 1 &&
           node.value[0].type === "SvelteMustacheTag"

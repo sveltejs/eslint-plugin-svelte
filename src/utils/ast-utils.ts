@@ -239,6 +239,7 @@ export function getAttributeValueQuoteAndRange(
   attr:
     | SvAST.SvelteAttribute
     | SvAST.SvelteDirective
+    | SvAST.SvelteStyleDirective
     | SvAST.SvelteSpecialDirective,
   sourceCode: SourceCode,
 ): QuoteAndRange | null {
@@ -372,10 +373,11 @@ function getAttributeValueRangeTokens(
   attr:
     | SvAST.SvelteAttribute
     | SvAST.SvelteDirective
+    | SvAST.SvelteStyleDirective
     | SvAST.SvelteSpecialDirective,
   sourceCode: SourceCode,
 ) {
-  if (attr.type === "SvelteAttribute") {
+  if (attr.type === "SvelteAttribute" || attr.type === "SvelteStyleDirective") {
     if (!attr.value.length) {
       return null
     }
