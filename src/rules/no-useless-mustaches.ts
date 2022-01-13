@@ -126,7 +126,10 @@ export default createRule("no-useless-mustaches", {
 
           const unescaped = text.replace(/\\([\s\S])/g, "$1")
 
-          if (node.parent.type === "SvelteAttribute") {
+          if (
+            node.parent.type === "SvelteAttribute" ||
+            node.parent.type === "SvelteStyleDirective"
+          ) {
             const div = sourceCode.text.slice(
               node.parent.key.range[1],
               node.parent.value[0].range[0],

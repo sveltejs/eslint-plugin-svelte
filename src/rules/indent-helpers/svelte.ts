@@ -87,6 +87,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node:
         | AST.SvelteAttribute
         | AST.SvelteDirective
+        | AST.SvelteStyleDirective
         | AST.SvelteSpecialDirective,
     ) {
       const keyToken = sourceCode.getFirstToken(node)
@@ -102,7 +103,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
         ) {
           offsets.setOffsetToken(valueStartToken, 1, keyToken)
 
-          const values = node.type === "SvelteAttribute" ? node.value : []
+          const values =
+            node.type === "SvelteAttribute" ||
+            node.type === "SvelteStyleDirective"
+              ? node.value
+              : []
           // process quoted
           let processedValues = false
           if (valueStartToken.type === "Punctuator") {
@@ -132,6 +137,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
     },
     SvelteDirective(node: AST.SvelteDirective) {
+      visitor.SvelteAttribute(node)
+    },
+    SvelteStyleDirective(node: AST.SvelteStyleDirective) {
       visitor.SvelteAttribute(node)
     },
     SvelteSpecialDirective(node: AST.SvelteSpecialDirective) {

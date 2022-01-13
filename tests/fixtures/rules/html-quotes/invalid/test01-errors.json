@@ -21,7 +21,12 @@
   },
   {
     "message": "Unexpected to be enclosed by any quotes.",
-    "line": 16,
+    "line": 14,
+    "column": 20
+  },
+  {
+    "message": "Unexpected to be enclosed by any quotes.",
+    "line": 18,
     "column": 10
   }
 ]
