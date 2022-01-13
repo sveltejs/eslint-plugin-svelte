@@ -18,6 +18,7 @@ import noTargetBlank from "../rules/no-target-blank"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
+import preferStyleDirective from "../rules/prefer-style-directive"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
@@ -43,6 +44,7 @@ export const rules = [
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,
+  preferStyleDirective,
   shorthandAttribute,
   spacedHtmlComment,
   system,

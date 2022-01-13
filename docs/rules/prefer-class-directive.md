@@ -42,6 +42,12 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 Nothing.
 
+## :couple: Related Rules
+
+- [@ota-meshi/svelte/prefer-style-directive]
+
+[@ota-meshi/svelte/prefer-style-directive]: ./prefer-style-directive.md
+
 ## :books: Further Reading
 
 - [Svelte - Tutorial > 13. Classes / The class directive](https://svelte.dev/tutorial/classes)
