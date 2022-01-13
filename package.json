@@ -1,6 +1,6 @@
 {
   "name": "@ota-meshi/eslint-plugin-svelte",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "publishConfig": {
     "access": "public"
   },
