@@ -24,6 +24,7 @@
     lastname: 'Lovelace'
   };
     let current = 'foo';
+  let color = 'red';
 <` +
     `/script>
 
@@ -60,6 +61,8 @@
   class={current === 'foo' ? 'selected' : ''}
   on:click="{() => current = 'foo'}"
 >foo</button>
+
+<div style="color: {color};">...</div>
 `
 
   const state = deserializeState(
