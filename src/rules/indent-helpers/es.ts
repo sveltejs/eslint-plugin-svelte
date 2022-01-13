@@ -1,7 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
-import type { ASTNode } from "../../types"
 import type { IndentContext } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
 import {
@@ -17,17 +16,9 @@ import {
   isOpeningParenToken,
   isSemicolonToken,
 } from "eslint-utils"
+import type { ESNodeListener } from "../../types-for-node"
 
-type NodeWithParent =
-  | (Exclude<ESTree.Node, ESTree.Program> & { parent: ASTNode })
-  | AST.SvelteProgram
-  | AST.SvelteReactiveStatement
-
-type NodeListener = {
-  [key in NodeWithParent["type"]]: (
-    node: NodeWithParent & { type: key },
-  ) => void
-}
+type NodeListener = ESNodeListener
 
 /**
  * Creates AST event handlers for ES nodes.

@@ -7,21 +7,13 @@ import type {
 } from "eslint"
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
-import type { TSESTree } from "@typescript-eslint/types"
+import type {
+  ASTNode,
+  ASTNodeWithParent,
+  ASTNodeListener,
+} from "./types-for-node"
 
-export type ASTNode =
-  | AST.SvelteNode
-  | ESTree.Node
-  | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
-export type ASTNodeWithParent =
-  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNodeWithParent })
-  | AST.SvelteProgram
-
-export type ASTNodeListener = {
-  [key in ASTNodeWithParent["type"]]?: (
-    node: ASTNodeWithParent & { type: key },
-  ) => void
-}
+export type { ASTNode, ASTNodeWithParent, ASTNodeListener }
 export interface RuleListener extends ASTNodeListener {
   onCodePathStart?(codePath: Rule.CodePath, node: never): void
 

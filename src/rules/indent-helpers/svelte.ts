@@ -1,18 +1,13 @@
 import type { AST } from "svelte-eslint-parser"
 import type { ASTNode } from "../../types"
+import type { SvelteNodeListener } from "../../types-for-node"
 import { isNotWhitespace } from "./ast"
 import type { IndentContext } from "./commons"
 import { isBeginningOfElement } from "./commons"
 import { isBeginningOfLine } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
-type NodeWithoutES = Exclude<
-  AST.SvelteNode,
-  AST.SvelteProgram | AST.SvelteReactiveStatement
->
 
-type NodeListener = {
-  [key in NodeWithoutES["type"]]: (node: NodeWithoutES & { type: key }) => void
-}
+type NodeListener = SvelteNodeListener
 const PREFORMATTED_ELEMENT_NAMES = ["pre", "textarea", "template"]
 
 /**

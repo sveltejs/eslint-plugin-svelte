@@ -13,29 +13,9 @@ import {
 import type { AnyToken, IndentContext } from "./commons"
 import { isBeginningOfLine } from "./commons"
 import { getFirstAndLastTokens } from "./commons"
+import type { TSNodeListener } from "../../types-for-node"
 
-type NodeWithoutES = Exclude<
-  TSESTree.Node,
-  | { type: ESTree.Node["type"] }
-  | TSESTree.JSXAttribute
-  | TSESTree.JSXClosingElement
-  | TSESTree.JSXClosingFragment
-  | TSESTree.JSXElement
-  | TSESTree.JSXEmptyExpression
-  | TSESTree.JSXExpressionContainer
-  | TSESTree.JSXFragment
-  | TSESTree.JSXIdentifier
-  | TSESTree.JSXMemberExpression
-  | TSESTree.JSXNamespacedName
-  | TSESTree.JSXOpeningElement
-  | TSESTree.JSXOpeningFragment
-  | TSESTree.JSXSpreadAttribute
-  | TSESTree.JSXSpreadChild
-  | TSESTree.JSXText
->
-type NodeListener = {
-  [key in NodeWithoutES["type"]]: (node: NodeWithoutES & { type: key }) => void
-}
+type NodeListener = TSNodeListener
 
 /**
  * Creates AST event handlers for svelte nodes.
