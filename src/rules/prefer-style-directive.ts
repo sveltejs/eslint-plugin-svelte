@@ -2,6 +2,15 @@ import type { AST } from "svelte-eslint-parser"
 import { parse as parseCss } from "postcss"
 import { createRule } from "../utils"
 
+/** Parse for CSS */
+function safeParseCss(cssCode: string) {
+  try {
+    return parseCss(cssCode)
+  } catch {
+    return null
+  }
+}
+
 export default createRule("prefer-style-directive", {
   meta: {
     docs: {
@@ -39,7 +48,10 @@ export default createRule("prefer-style-directive", {
             return sourceCode.getText(value)
           })
           .join("")
-        const root = parseCss(cssCode)
+        const root = safeParseCss(cssCode)
+        if (!root) {
+          return
+        }
         root.walkDecls((decl) => {
           if (
             node.parent.attributes.some(
