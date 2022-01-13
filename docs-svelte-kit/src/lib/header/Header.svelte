@@ -65,6 +65,7 @@
       href="https://github.com/ota-meshi/eslint-plugin-svelte"
       target="_blank"
       class="github-link"
+      rel="noopener noreferrer"
     >
       <svg
         version="1.1"

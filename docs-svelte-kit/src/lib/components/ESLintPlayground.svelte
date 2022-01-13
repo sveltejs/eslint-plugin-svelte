@@ -161,7 +161,8 @@
                 class="rule-link {getRule(msg.ruleId)?.classes}"
                 class:is-rule-error={msg.ruleId}
                 href={getRule(msg.ruleId)?.url}
-                target="_blank">({msg.ruleId})</a
+                target="_blank"
+                rel="noopener noreferrer">({msg.ruleId})</a
               >
             </li>
           {/each}

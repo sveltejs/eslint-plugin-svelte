@@ -221,7 +221,7 @@
   />
   <div class="eslint-editor__tools">
     {#if showApplyFix}
-      <button on:click={applyFix}>Apply Fix</button>
+      <button on:click={applyFix} type="button">Apply Fix</button>
     {/if}
   </div>
 </div>
