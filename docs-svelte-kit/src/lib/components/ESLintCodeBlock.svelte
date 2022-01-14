@@ -38,7 +38,7 @@
   <slot />
 </div>
 
-<div class="eslint-code-block-root" style="height: {blockHeight}">
+<div class="eslint-code-block-root" style:height={blockHeight}>
   <ESLintEditor
     {linter}
     bind:code
@@ -65,7 +65,7 @@
         Show Diff
       </label>
     {/if}
-    <span style="margin-left: 16px">{time}</span>
+    <span style:margin-left="16px">{time}</span>
   </div>
 </div>
 

@@ -58,7 +58,7 @@
     "eslint-utils": "^3.0.0",
     "postcss": "^8.4.5",
     "sourcemap-codec": "^1.4.8",
-    "svelte-eslint-parser": "^0.11.0"
+    "svelte-eslint-parser": "^0.12.0"
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
@@ -115,7 +115,7 @@
     "pako": "^2.0.3",
     "pirates": "^4.0.1",
     "prettier": "^2.2.1",
-    "prettier-plugin-svelte": "^2.5.1",
+    "prettier-plugin-svelte": "^2.6.0",
     "prism-svelte": "^0.4.7",
     "prismjs": "^1.25.0",
     "semver": "^7.3.5",
