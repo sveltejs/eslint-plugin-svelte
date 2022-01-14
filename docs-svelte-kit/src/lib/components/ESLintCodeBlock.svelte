@@ -18,7 +18,7 @@
     preprocess,
     postprocess,
   }
-  let showDiff = false
+  let showDiff = fix
 
   function onLintedResult(evt) {
     time = `${evt.detail.time}ms`
