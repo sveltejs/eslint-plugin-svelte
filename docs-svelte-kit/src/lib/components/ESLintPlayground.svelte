@@ -58,7 +58,7 @@
 
 <button
   type=button
-  class={current === 'foo' ? 'selected' : ''}
+  class="{active ? 'active' : ''} {current === 'foo' ? 'selected' : ''}"
   on:click="{() => current = 'foo'}"
 >foo</button>
 
