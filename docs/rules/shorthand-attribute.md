@@ -54,6 +54,12 @@ This rule enforces the use of the shorthand syntax in attribute.
   - `"always"` ... Expects that the shorthand will be used whenever possible. This is default.
   - `"never"` ... Ensures that no shorthand is used in any attribute.
 
+## :couple: Related Rules
+
+- [@ota-meshi/svelte/shorthand-directive]
+
+[@ota-meshi/svelte/shorthand-directive]: ./shorthand-directive.md
+
 ## :rocket: Version
 
 This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0

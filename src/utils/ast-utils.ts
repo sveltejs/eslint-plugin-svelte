@@ -233,6 +233,8 @@ export function getScope(
 export type QuoteAndRange = {
   quote: "unquoted" | "double" | "single"
   range: [number, number]
+  firstToken: SvAST.Token | SvAST.Comment
+  lastToken: SvAST.Token | SvAST.Comment
 }
 /** Get the quote and range from given attribute values */
 export function getAttributeValueQuoteAndRange(
@@ -262,6 +264,8 @@ export function getAttributeValueQuoteAndRange(
     return {
       quote: "unquoted",
       range: [valueFirstToken.range[0], valueLastToken.range[1]],
+      firstToken: valueFirstToken,
+      lastToken: valueLastToken,
     }
   } else if (
     beforeTokens.length > 1 ||
@@ -280,6 +284,8 @@ export function getAttributeValueQuoteAndRange(
   return {
     quote: beforeToken.value === '"' ? "double" : "single",
     range: [beforeToken.range[0], afterToken.range[1]],
+    firstToken: beforeToken,
+    lastToken: afterToken,
   }
 }
 export function getMustacheTokens(
@@ -381,11 +387,11 @@ function getAttributeValueRangeTokens(
     if (!attr.value.length) {
       return null
     }
-    const firstToken = attr.value[0]
-    const lastToken = attr.value[attr.value.length - 1]
+    const first = attr.value[0]
+    const last = attr.value[attr.value.length - 1]
     return {
-      firstToken,
-      lastToken,
+      firstToken: sourceCode.getFirstToken(first),
+      lastToken: sourceCode.getLastToken(last),
     }
   }
   const tokens = getMustacheTokens(attr, sourceCode)

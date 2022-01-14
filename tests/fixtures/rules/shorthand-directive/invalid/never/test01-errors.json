@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Expected regular directive syntax.",
+    "line": 8,
+    "column": 8
+  },
+  {
+    "message": "Expected regular directive syntax.",
+    "line": 9,
+    "column": 6
+  },
+  {
+    "message": "Expected regular directive syntax.",
+    "line": 10,
+    "column": 6
+  }
+]
