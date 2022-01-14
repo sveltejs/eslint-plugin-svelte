@@ -2,6 +2,7 @@ import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
 import { getStringIfConstant, needParentheses } from "../utils/ast-utils"
+import type { Rule } from "eslint"
 
 export default createRule("prefer-class-directive", {
   meta: {
@@ -217,7 +218,7 @@ export default createRule("prefer-class-directive", {
 
     /** Report */
     function report(
-      node: AST.SvelteMustacheTag,
+      node: AST.SvelteMustacheTagText,
       map: Map<Expr, string>,
       attr: AST.SvelteAttribute,
     ) {
@@ -237,10 +238,56 @@ export default createRule("prefer-class-directive", {
               space = className
             }
           }
-          if (attr.value.length === 1) {
+
+          const fixesBuffer: Rule.Fix[] = []
+          const index = attr.value.indexOf(node)
+          const beforeAttrValues = attr.value.slice(0, index)
+          const afterAttrValues = attr.value.slice(index + 1)
+          let valueNode
+          while ((valueNode = beforeAttrValues[beforeAttrValues.length - 1])) {
+            if (valueNode.type === "SvelteLiteral") {
+              if (!valueNode.value.trim()) {
+                // Before spaces
+                beforeAttrValues.pop()
+                fixesBuffer.push(fixer.remove(valueNode))
+                continue
+              }
+              if (valueNode.value.trimEnd() !== valueNode.value) {
+                // Before spaces
+                fixesBuffer.push(
+                  fixer.replaceText(valueNode, valueNode.value.trimEnd()),
+                )
+              }
+            }
+            break
+          }
+          while ((valueNode = afterAttrValues[0])) {
+            if (valueNode.type === "SvelteLiteral") {
+              if (!valueNode.value.trim()) {
+                // After spaces
+                afterAttrValues.shift()
+                fixesBuffer.push(fixer.remove(valueNode))
+                continue
+              }
+              if (valueNode.value.trimStart() !== valueNode.value) {
+                // After spaces
+                fixesBuffer.push(
+                  fixer.replaceText(valueNode, valueNode.value.trimStart()),
+                )
+              }
+            }
+            break
+          }
+
+          if (!beforeAttrValues.length && !afterAttrValues.length) {
             yield fixer.replaceText(attr, classDirectives.join(" "))
           } else {
-            yield fixer.replaceText(node, space)
+            yield* fixesBuffer
+            if (beforeAttrValues.length && afterAttrValues.length) {
+              yield fixer.replaceText(node, space || " ")
+            } else {
+              yield fixer.remove(node)
+            }
             yield fixer.insertTextAfterRange(
               [attr.range[1], attr.range[1]],
               ` ${classDirectives.join(" ")}`,
@@ -252,7 +299,7 @@ export default createRule("prefer-class-directive", {
 
     /** verify */
     function verify(
-      node: AST.SvelteMustacheTag,
+      node: AST.SvelteMustacheTagText,
       index: number,
       attr: AST.SvelteAttribute,
     ) {
