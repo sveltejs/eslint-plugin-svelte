@@ -25,6 +25,7 @@
   };
     let current = 'foo';
   let color = 'red';
+  let active = true;
 <` +
     `/script>
 
@@ -77,6 +78,7 @@
     preprocess,
     postprocess,
   }
+  let editor
 
   $: serializedString = (() => {
     const serializeCode = DEFAULT_CODE === code ? undefined : code
@@ -122,6 +124,23 @@
     }
     return true
   }
+
+  function onClickMessage(evt, msg) {
+    evt.stopPropagation()
+    evt.preventDefault()
+    if (editor) {
+      editor.setCursorPosition({
+        start: {
+          line: msg.line,
+          column: msg.column,
+        },
+        end: {
+          line: msg.endLine ?? msg.line,
+          column: msg.endColumn ?? msg.column,
+        },
+      })
+    }
+  }
 </script>
 
 <svelte:window on:hashchange={onUrlHashChange} />
@@ -134,6 +153,7 @@
     <RulesSettings bind:rules />
     <div class="editor-content">
       <ESLintEditor
+        bind:this={editor}
         {linter}
         bind:code
         config={{
@@ -155,7 +175,12 @@
         <ol>
           {#each messages as msg, i (`${msg.line}:${msg.column}:${msg.ruleId}@${i}`)}
             <li class="message">
-              [{msg.line}:{msg.column}]:
+              <!-- svelte-ignore a11y-invalid-attribute -->
+              <a
+                href="#"
+                on:click={(evt) => onClickMessage(evt, msg)}
+                class="message-link">[{msg.line}:{msg.column}]</a
+              >:
               {msg.message}
               <a
                 class="rule-link {getRule(msg.ruleId)?.classes}"
@@ -227,5 +252,8 @@
   }
   .rule-link.core-rule:hover {
     color: #8080f2;
+  }
+  .message-link {
+    color: #40b3ff;
   }
 </style>

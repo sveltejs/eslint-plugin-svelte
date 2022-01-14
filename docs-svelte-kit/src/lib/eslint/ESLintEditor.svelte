@@ -17,6 +17,13 @@
   let rightMarkers = []
 
   let messageMap = new Map()
+  let editor
+
+  export function setCursorPosition(loc) {
+    if (editor) {
+      editor.setCursorPosition(loc)
+    }
+  }
 
   $: showApplyFix = fix && fixedValue !== code
   $: {
@@ -211,6 +218,7 @@
 
 <div class="eslint-editor">
   <MonacoEditor
+    bind:this={editor}
     bind:code
     bind:rightCode={fixedValue}
     language="html"

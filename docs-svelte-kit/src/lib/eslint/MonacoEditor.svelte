@@ -185,15 +185,16 @@
     destroy()
   })
 
-  export function setCursorPosition(loc, { columnOffset = 0 } = {}) {
+  export function setCursorPosition(loc) {
     if (editor) {
       const leftEditor = diffEditor ? editor?.getOriginalEditor() : editor
       leftEditor.setSelection({
         startLineNumber: loc.start.line,
-        startColumn: loc.start.column + columnOffset,
+        startColumn: loc.start.column,
         endLineNumber: loc.end.line,
-        endColumn: loc.end.column + columnOffset,
+        endColumn: loc.end.column,
       })
+      leftEditor.revealLineInCenter(loc.start.line)
     }
   }
   async function updateMarkers(editor, markers) {
