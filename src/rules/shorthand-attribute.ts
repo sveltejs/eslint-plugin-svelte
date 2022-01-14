@@ -1,4 +1,5 @@
 import { createRule } from "../utils"
+import { getAttributeValueQuoteAndRange } from "../utils/ast-utils"
 
 export default createRule("shorthand-attribute", {
   meta: {
@@ -45,8 +46,28 @@ export default createRule("shorthand-attribute", {
                 node,
                 messageId: "expectedShorthand",
                 *fix(fixer) {
-                  yield fixer.remove(node.key)
-                  yield fixer.remove(sourceCode.getTokenAfter(node.key)!)
+                  const quoteAndRange = getAttributeValueQuoteAndRange(
+                    node,
+                    sourceCode,
+                  )
+                  if (!quoteAndRange) {
+                    return
+                  }
+                  if (
+                    quoteAndRange.quote === "double" ||
+                    quoteAndRange.quote === "single"
+                  ) {
+                    yield fixer.removeRange([
+                      node.range[0],
+                      quoteAndRange.firstToken.range[1],
+                    ])
+                    yield fixer.remove(quoteAndRange.lastToken)
+                  } else {
+                    yield fixer.removeRange([
+                      node.range[0],
+                      quoteAndRange.range[0],
+                    ])
+                  }
                 },
               })
             }

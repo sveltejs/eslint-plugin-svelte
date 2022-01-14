@@ -7,5 +7,11 @@
 <button {disabled}>...</button>
 
 <!-- prettier-ignore -->
-<button     {disabled}>...</button>
 <button {disabled}>...</button>
+<button {disabled}>...</button>
+<!-- prettier-ignore -->
+<button {disabled}>...</button>
+<!-- prettier-ignore -->
+<button {disabled}>...</button>
+<!-- prettier-ignore -->
+<button disabled  =  " {disabled} ">...</button>
