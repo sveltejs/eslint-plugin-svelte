@@ -8,5 +8,15 @@
     "message": "Expected shorthand attribute.",
     "line": 10,
     "column": 9
+  },
+  {
+    "message": "Expected shorthand attribute.",
+    "line": 13,
+    "column": 9
+  },
+  {
+    "message": "Expected shorthand attribute.",
+    "line": 15,
+    "column": 9
   }
 ]
