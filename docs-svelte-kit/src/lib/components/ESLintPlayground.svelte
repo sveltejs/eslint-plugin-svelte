@@ -128,7 +128,7 @@
 
 <div class="playground-root">
   <div class="playground-tools">
-    <span style="margin-left: 16px">{time}</span>
+    <span style:margin-left="16px">{time}</span>
   </div>
   <div class="playground-content">
     <RulesSettings bind:rules />
