@@ -20,6 +20,7 @@ import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import preferStyleDirective from "../rules/prefer-style-directive"
 import shorthandAttribute from "../rules/shorthand-attribute"
+import shorthandDirective from "../rules/shorthand-directive"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
@@ -46,6 +47,7 @@ export const rules = [
   preferClassDirective,
   preferStyleDirective,
   shorthandAttribute,
+  shorthandDirective,
   spacedHtmlComment,
   system,
   validCompile,

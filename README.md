@@ -286,6 +286,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [@ota-meshi/svelte/prefer-class-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-class-directive/) | require class directives instead of ternary expressions | :wrench: |
 | [@ota-meshi/svelte/prefer-style-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-style-directive/) | require style directives instead of style attribute | :wrench: |
 | [@ota-meshi/svelte/shorthand-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-attribute/) | enforce use of shorthand syntax in attribute | :wrench: |
+| [@ota-meshi/svelte/shorthand-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-directive/) | enforce use of shorthand syntax in directives | :wrench: |
 | [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment/) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## Extension Rules
