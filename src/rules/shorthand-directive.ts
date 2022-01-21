@@ -68,11 +68,8 @@ export default createRule("shorthand-directive", {
         }
 
         const expression = node.expression
-        if (!expression) {
-          // Invalid ?
-          return
-        }
         if (
+          !expression ||
           expression.type !== "Identifier" ||
           node.key.name.name !== expression.name
         ) {
@@ -80,13 +77,13 @@ export default createRule("shorthand-directive", {
           return
         }
         if (always) {
-          if (node.key.name.range![0] === expression.range![0]) {
+          if (node.shorthand) {
             // Use shorthand
             return
           }
           reportForAlways(node)
         } else {
-          if (node.key.name.range![1] < expression.range![0]) {
+          if (!node.shorthand) {
             // Use longform
             return
           }
