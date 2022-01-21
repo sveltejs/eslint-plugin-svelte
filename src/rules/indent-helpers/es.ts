@@ -644,10 +644,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
           { filter: isClosingBraceToken, includeComments: false },
         )!
         offsets.setOffsetElementList(namedSpecifiers, leftBrace, rightBrace, 1)
-        for (const token of sourceCode.getTokensBetween(
-          leftBrace,
+        for (const token of [
+          ...sourceCode.getTokensBetween(leftBrace, rightBrace),
           rightBrace,
-        )) {
+        ]) {
           const i = beforeTokens.indexOf(token)
           if (i >= 0) {
             beforeTokens.splice(i, 1)
