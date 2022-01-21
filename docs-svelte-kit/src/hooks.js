@@ -1,4 +1,4 @@
-export async function handle({ request, resolve }) {
-  const response = await resolve(request)
+export async function handle({ event, resolve }) {
+  const response = await resolve(event)
   return response
 }
