@@ -2,14 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    %svelte.head%
     <meta name="description" content="ESLint plugin for Svelte using AST" />
     <link
       rel="icon"
       type="image/png"
       href="/eslint-plugin-svelte/favicon.png"
     />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://ota-meshi.github.io/eslint-plugin-svelte/favicon.png"
+    />
+    <meta property="og:site_name" content="@ota-meshi/eslint-plugin-svelte" />
+    <meta
+      property="og:description"
+      content="ESLint plugin for Svelte using AST"
+    />
+    <meta name="twitter:card" content="summary" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    %svelte.head%
   </head>
   <body>
     <div id="svelte">%svelte.body%</div>
