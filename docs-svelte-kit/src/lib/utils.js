@@ -69,7 +69,8 @@ export function markdownPath(path) {
   // eslint-disable-next-line no-param-reassign -- ignore
   path = stripBaseUrl(path)
 
-  let normalized = path === "/" ? "README" : path.replace(/^\/|\/$/g, "")
+  let normalized =
+    !path.trim() || path === "/" ? "README" : path.replace(/^\/|\/$/g, "")
   return `${normalized}.md`
 }
 
@@ -95,10 +96,9 @@ export const menuItems = readable([], function start(set) {
 
 function generateMenu($page, toc) {
   const result = []
-  const [, menus] =
-    Object.entries(SIDE_MENU).find(([k]) =>
-      stripBaseUrl($page.url.pathname).startsWith(k),
-    ) || SIDE_MENU["/"]
+  const [, menus] = Object.entries(SIDE_MENU).find(([k]) =>
+    stripBaseUrl($page.url.pathname).startsWith(k),
+  ) || ["/", SIDE_MENU["/"]]
   for (const { path, title, children } of menus) {
     const active = isActive(path, $page)
     if (active) {
