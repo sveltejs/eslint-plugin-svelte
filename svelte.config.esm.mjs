@@ -29,9 +29,6 @@ const config = {
       pages: "build",
       assets: "build",
     }),
-
-    // hydrate the <div id="svelte"> element in src/app.html
-    target: "#svelte",
     files: {
       routes: path.join(dirname, "./docs"),
       template: path.join(dirname, "./docs-svelte-kit/src/app.html"),

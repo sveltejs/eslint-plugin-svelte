@@ -65,7 +65,8 @@ class DocFile {
       meta: {
         fixable,
         deprecated,
-        docs: { ruleId, description, recommended, replacedBy },
+        replacedBy,
+        docs: { ruleId, description, recommended },
       },
     } = this.rule
     const title = `# ${ruleId}\n\n> ${description}`

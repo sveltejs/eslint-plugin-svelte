@@ -7,7 +7,6 @@ export = {
   rules: {
     // @ota-meshi/eslint-plugin-svelte rules
     "@ota-meshi/svelte/comment-directive": "error",
-    "@ota-meshi/svelte/dollar-prefixed-store-uses-vars": "error",
     "@ota-meshi/svelte/no-at-debug-tags": "warn",
     "@ota-meshi/svelte/no-at-html-tags": "error",
     "@ota-meshi/svelte/no-dupe-else-if-blocks": "error",

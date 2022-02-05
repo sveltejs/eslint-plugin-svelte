@@ -10,7 +10,13 @@ since: "v0.18.0"
 
 > prevent $-prefixed variables to be marked as unused
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
+- :warning: This rule was **deprecated**.
+
+::: tip
+
+This rule is not needed when using `svelte-eslint-parser` v0.14.0 or later.
+
+:::
 
 ESLint `no-unused-vars` rule does not detect store variables used as $-prefixed.
 This rule will find imported store variables that are used as $-prefixed and marks them as used.

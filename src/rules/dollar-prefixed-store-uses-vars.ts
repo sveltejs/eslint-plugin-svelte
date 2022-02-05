@@ -12,6 +12,7 @@ export default createRule("dollar-prefixed-store-uses-vars", {
     schema: [],
     messages: {},
     type: "problem",
+    deprecated: true, // This rule is not needed when using svelte-eslint-parser@v0.14.0 or later.
   },
   create(context) {
     if (!context.parserServices.isSvelte) {

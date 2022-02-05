@@ -73,5 +73,13 @@ These rules relate to this plugin works:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template | :star: |
-| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](./rules/dollar-prefixed-store-uses-vars.md) | prevent $-prefixed variables to be marked as unused | :star: |
 | [@ota-meshi/svelte/system](./rules/system.md) | system rule for working this plugin | :star: |
+
+## Deprecated
+
+- :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
+- :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
+
+| Rule ID | Replaced by |
+|:--------|:------------|
+| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](./rules/dollar-prefixed-store-uses-vars.md) | (no replacement) |
