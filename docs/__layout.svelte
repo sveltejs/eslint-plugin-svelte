@@ -31,7 +31,6 @@
 
   import "../docs-svelte-kit/src/app.css"
   import "../docs-svelte-kit/src/site.css"
-  // eslint-disable-next-line no-unused-vars -- ignore
   import { tocStore } from "$lib/utils"
 
   export let moduleData
