@@ -304,8 +304,16 @@ These rules relate to this plugin works:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :star: |
-| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | prevent $-prefixed variables to be marked as unused | :star: |
 | [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :star: |
+
+## Deprecated
+
+- :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
+- :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
+
+| Rule ID | Replaced by |
+|:--------|:------------|
+| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | (no replacement) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
