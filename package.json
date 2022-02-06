@@ -81,7 +81,7 @@
     "@types/eslint": "^8.0.0",
     "@types/eslint-scope": "^3.7.0",
     "@types/eslint-visitor-keys": "^1.0.0",
-    "@types/estree": "^0.0.50",
+    "@types/estree": "^0.0.51",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
