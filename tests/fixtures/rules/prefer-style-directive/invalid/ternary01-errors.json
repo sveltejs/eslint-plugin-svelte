@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Can use style directives instead.",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "message": "Can use style directives instead.",
+    "line": 5,
+    "column": 6
+  },
+  {
+    "message": "Can use style directives instead.",
+    "line": 9,
+    "column": 13
+  }
+]
