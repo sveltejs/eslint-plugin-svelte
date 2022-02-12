@@ -20,6 +20,7 @@ Style directive were added in Svelte v3.46.
 
 <ESLintCodeBlock fix>
 
+<!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
 ```svelte
@@ -30,10 +31,24 @@ Style directive were added in Svelte v3.46.
 
 <!-- ✓ GOOD -->
 <div style:color={color}>...</div>
+<div
+  style:position="absolute"
+  style:top={position === "absolute" ? "20px" : null}
+  style:pointer-events={pointerEvents ? null : "none"}
+/>
 
 <!-- ✗ BAD -->
 <div style="color: {color};">...</div>
+<div
+  style="
+    position: {position};
+    {position === 'absolute' ? 'top: 20px;' : ''}
+    {pointerEvents === false ? 'pointer-events:none;' : ''}
+  "
+/>
 ```
+
+<!-- prettier-ignore-end -->
 
 </ESLintCodeBlock>
 
