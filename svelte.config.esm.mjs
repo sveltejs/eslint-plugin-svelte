@@ -37,7 +37,7 @@ const config = {
       assets: path.join(dirname, "./docs-svelte-kit/statics"),
     },
 
-    // trailingSlash: "always",
+    trailingSlash: "always",
 
     vite: {
       server: {
