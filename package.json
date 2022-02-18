@@ -26,7 +26,7 @@
     "update": "ts-node --transpile-only ./tools/update.ts && npm run format-for-gen-file",
     "format-for-gen-file": "eslint src/types-for-node.ts src/utils/rules.ts src/configs --fix",
     "new": "ts-node --transpile-only ./tools/new-rule.ts",
-    "docs:watch": "svelte-kit dev",
+    "docs:watch": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js dev",
     "docs:build": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js build",
     "docs:preview": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js preview",
     "pre_docs:watch": "npm run build:ts",
