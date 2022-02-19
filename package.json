@@ -116,7 +116,7 @@
     "pirates": "^4.0.1",
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^2.6.0",
-    "prism-svelte": "^0.4.7",
+    "prism-svelte": "^0.5.0",
     "prismjs": "^1.25.0",
     "semver": "^7.3.5",
     "stylelint": "^14.0.0",
