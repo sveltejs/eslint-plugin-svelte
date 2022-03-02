@@ -94,6 +94,12 @@ module.exports = {
       rules: {},
     },
     {
+      files: ["tests/**"],
+      rules: {
+        "@typescript-eslint/no-misused-promises": "off",
+      },
+    },
+    {
       files: ["scripts/**/*.ts", "tests/**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
