@@ -106,7 +106,7 @@
     "eslint-plugin-yml": "^0.14.0",
     "estree-walker": "^3.0.0",
     "locate-character": "^2.0.5",
-    "magic-string": "^0.25.7",
+    "magic-string": "^0.26.0",
     "markdown-it-anchor": "^8.4.1",
     "markdown-it-container": "^3.0.0",
     "markdown-it-emoji": "^2.0.0",
