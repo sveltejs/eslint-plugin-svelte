@@ -25,9 +25,9 @@ const ROOT = path.resolve(__dirname, "../docs/rules")
 
 //eslint-disable-next-line require-jsdoc -- tools
 function pickSince(content: string): string | null {
-  const fileIntro = /^---\n(.*\n)+---\n*/.exec(content)
+  const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content)
   if (fileIntro) {
-    const since = /since: "?(v\d+\.\d+\.\d+)"?/.exec(fileIntro[0])
+      const since = /since: "?(v\d+\.\d+\.\d+)"?/.exec(fileIntro[1])
     if (since) {
       return since[1]
     }
