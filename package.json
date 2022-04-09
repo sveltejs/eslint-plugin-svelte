@@ -58,7 +58,7 @@
     "eslint-utils": "^3.0.0",
     "postcss": "^8.4.5",
     "sourcemap-codec": "^1.4.8",
-    "svelte-eslint-parser": "^0.15.0"
+    "svelte-eslint-parser": "^0.16.0"
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
