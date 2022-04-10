@@ -27,9 +27,10 @@ export default (options = {}) => ({
       anchorPlugin,
       {
         slugify,
-        permalink: true,
-        permalinkBefore: true,
-        permalinkSymbol: "#",
+        permalink: anchorPlugin.permalink.linkInsideHeader({
+          symbol: "#",
+          placement: "before",
+        }),
       },
     ],
     autoInjectComponentsPlugin,
