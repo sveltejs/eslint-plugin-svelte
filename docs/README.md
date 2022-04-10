@@ -8,10 +8,6 @@ title: "@ota-meshi/eslint-plugin-svelte"
 It provides many unique check rules by using the template AST.  
 You can check on the [Online DEMO](./playground.md).
 
-::: **_WORKS IN PROGRESS_** :::
-
-::: **_This Plugin is still in an EXPERIMENTAL STATE_** :::
-
 [![NPM license](https://img.shields.io/npm/l/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
 [![NPM version](https://img.shields.io/npm/v/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
 [![NPM downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&colorB=green&suffix=/day&query=$.downloads&uri=https://api.npmjs.org//downloads/point/last-day/@ota-meshi/eslint-plugin-svelte&maxAge=3600)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
