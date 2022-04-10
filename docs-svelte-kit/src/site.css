@@ -12,9 +12,8 @@
 /*** markdown ***/
 
 :not(pre) > code {
-  padding: 0.4rem;
+  padding: 0.1rem 0.4rem 0;
   margin: 0 0.2rem;
-  top: -0.1rem;
   background: #e5eef5;
   position: relative;
   border-radius: 0.3em;
