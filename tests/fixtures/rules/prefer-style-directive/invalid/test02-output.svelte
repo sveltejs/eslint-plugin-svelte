@@ -1,1 +1,1 @@
-<div style=" width: 12px" style:color="{red}">...</div>
+<div style:color="{red}" style="width: 12px">...</div>

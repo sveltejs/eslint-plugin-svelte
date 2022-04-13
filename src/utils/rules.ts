@@ -14,6 +14,7 @@ import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
+import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
@@ -41,6 +42,7 @@ export const rules = [
   noInnerDeclarations,
   noNotFunctionHandler,
   noObjectInTextMustaches,
+  noShorthandStylePropertyOverrides,
   noTargetBlank,
   noUnusedSvelteIgnore,
   noUselessMustaches,

@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Unexpected shorthand 'background' after 'background-repeat'.",
+    "line": 8,
+    "column": 13
+  },
+  {
+    "message": "Unexpected shorthand 'background' after 'background-repeat'.",
+    "line": 8,
+    "column": 33
+  }
+]

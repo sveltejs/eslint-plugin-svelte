@@ -1,8 +1,13 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
-import type { SvelteStyleRoot } from "../utils/css-utils"
-import { parseStyleAttributeValue, safeParseCss } from "../utils/css-utils"
+import type {
+  SvelteStyleDeclaration,
+  SvelteStyleInline,
+  SvelteStyleRoot,
+} from "../utils/css-utils"
+import { parseStyleAttributeValue } from "../utils/css-utils"
+import type { RuleFixer } from "../types"
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(
@@ -34,72 +39,72 @@ export default createRule("prefer-style-directive", {
     function processStyleValue(
       node: AST.SvelteAttribute,
       root: SvelteStyleRoot,
-      mustacheTags: AST.SvelteMustacheTagText[],
     ) {
-      root.walk((decl) => {
-        if (decl.type !== "decl" || decl.important) return
-        if (
-          node.parent.attributes.some(
-            (attr) =>
-              attr.type === "SvelteStyleDirective" &&
-              attr.key.name.name === decl.prop,
-          )
-        ) {
-          // has style directive
-          return
+      for (const child of root.nodes) {
+        if (child.type === "decl") {
+          processDeclaration(node, root, child)
+        } else if (child.type === "inline") {
+          processInline(node, root, child)
         }
-
-        if (
-          mustacheTags.some(
-            (tag) =>
-              (tag.range[0] < decl.range[0] && decl.range[0] < tag.range[1]) ||
-              (tag.range[0] < decl.range[1] && decl.range[1] < tag.range[1]),
-          )
-        ) {
-          // intersection
-          return
-        }
-
-        context.report({
-          node,
-          messageId: "unexpected",
-          *fix(fixer) {
-            const styleDirective = `style:${decl.prop}="${sourceCode.text.slice(
-              ...decl.valueRange,
-            )}"`
-            if (root.nodes.length === 1 && root.nodes[0] === decl) {
-              yield fixer.replaceTextRange(node.range, styleDirective)
-            } else {
-              yield fixer.removeRange(decl.range)
-              yield fixer.insertTextAfterRange(node.range, ` ${styleDirective}`)
-            }
-          },
-        })
-      })
-    }
-
-    /**
-     * Process for `style="{a ? 'color: red;': ''}"`
-     */
-    function processMustacheTags(
-      mustacheTags: AST.SvelteMustacheTagText[],
-      attrNode: AST.SvelteAttribute,
-      root: SvelteStyleRoot | null,
-    ) {
-      for (const mustacheTag of mustacheTags) {
-        processMustacheTag(mustacheTag, attrNode, root)
       }
     }
 
     /**
-     * Process for `style="{a ? 'color: red;': ''}"`
+     * Process for declaration
      */
-    function processMustacheTag(
-      mustacheTag: AST.SvelteMustacheTagText,
+    function processDeclaration(
       attrNode: AST.SvelteAttribute,
-      root: SvelteStyleRoot | null,
+      root: SvelteStyleRoot,
+      decl: SvelteStyleDeclaration,
     ) {
-      const node = mustacheTag.expression
+      if (decl.important || decl.unsafe) return
+      if (
+        attrNode.parent.attributes.some(
+          (attr) =>
+            attr.type === "SvelteStyleDirective" &&
+            attr.key.name.name === decl.prop.name,
+        )
+      ) {
+        // has style directive
+        return
+      }
+      context.report({
+        node: attrNode,
+        loc: decl.loc,
+        messageId: "unexpected",
+        *fix(fixer) {
+          const styleDirective = `style:${
+            decl.prop.name
+          }="${sourceCode.text.slice(...decl.value.range)}"`
+          if (root.nodes.length === 1 && root.nodes[0] === decl) {
+            yield fixer.replaceTextRange(attrNode.range, styleDirective)
+          } else {
+            yield removeStyle(fixer, root, decl)
+            if (root.nodes[0] === decl) {
+              yield fixer.insertTextBeforeRange(
+                attrNode.range,
+                `${styleDirective} `,
+              )
+            } else {
+              yield fixer.insertTextAfterRange(
+                attrNode.range,
+                ` ${styleDirective}`,
+              )
+            }
+          }
+        },
+      })
+    }
+
+    /**
+     * Process for inline
+     */
+    function processInline(
+      attrNode: AST.SvelteAttribute,
+      root: SvelteStyleRoot,
+      inline: SvelteStyleInline,
+    ) {
+      const node = inline.node.expression
 
       if (node.type !== "ConditionalExpression") {
         return
@@ -115,24 +120,9 @@ export default createRule("prefer-style-directive", {
         return
       }
 
-      if (root) {
-        let foundIntersection = false
-        root.walk((n) => {
-          if (
-            mustacheTag.range[0] < n.range[1] &&
-            n.range[0] < mustacheTag.range[1]
-          ) {
-            foundIntersection = true
-          }
-        })
-        if (foundIntersection) {
-          return
-        }
-      }
-
-      const positive = node.alternate.value === ""
-      const inlineRoot = safeParseCss(
-        positive ? node.consequent.value : node.alternate.value,
+      const positive = !node.alternate.value
+      const inlineRoot = inline.getInlineStyle(
+        positive ? node.consequent : node.alternate,
       )
       if (!inlineRoot || inlineRoot.nodes.length !== 1) {
         return
@@ -145,7 +135,7 @@ export default createRule("prefer-style-directive", {
         attrNode.parent.attributes.some(
           (attr) =>
             attr.type === "SvelteStyleDirective" &&
-            attr.key.name.name === decl.prop,
+            attr.key.name.name === decl.prop.name,
         )
       ) {
         // has style directive
@@ -163,7 +153,7 @@ export default createRule("prefer-style-directive", {
           if (positive) {
             valueText +=
               sourceCode.text[node.consequent.range![0]] +
-              decl.value +
+              decl.value.value +
               sourceCode.text[node.consequent.range![1] - 1]
           } else {
             valueText += "null"
@@ -177,34 +167,46 @@ export default createRule("prefer-style-directive", {
           } else {
             valueText +=
               sourceCode.text[node.alternate.range![0]] +
-              decl.value +
+              decl.value.value +
               sourceCode.text[node.alternate.range![1] - 1]
           }
-          const styleDirective = `style:${decl.prop}={${valueText}}`
-          if (
-            attrNode.value
-              .filter((v) => v !== mustacheTag)
-              .every((v) => v.type === "SvelteLiteral" && !v.value.trim())
-          ) {
+          const styleDirective = `style:${decl.prop.name}={${valueText}}`
+          if (root.nodes.length === 1 && root.nodes[0] === inline) {
             yield fixer.replaceTextRange(attrNode.range, styleDirective)
           } else {
-            const first = attrNode.value[0]
-            if (first !== mustacheTag) {
-              yield fixer.replaceTextRange(
-                [first.range[0], mustacheTag.range[0]],
-                sourceCode.text
-                  .slice(first.range[0], mustacheTag.range[0])
-                  .trimEnd(),
+            yield removeStyle(fixer, root, inline)
+            if (root.nodes[0] === inline) {
+              yield fixer.insertTextBeforeRange(
+                attrNode.range,
+                `${styleDirective} `,
+              )
+            } else {
+              yield fixer.insertTextAfterRange(
+                attrNode.range,
+                ` ${styleDirective}`,
               )
             }
-            yield fixer.removeRange(mustacheTag.range)
-            yield fixer.insertTextAfterRange(
-              attrNode.range,
-              ` ${styleDirective}`,
-            )
           }
         },
       })
+    }
+
+    /** Remove style */
+    function removeStyle(
+      fixer: RuleFixer,
+      root: SvelteStyleRoot,
+      node: SvelteStyleDeclaration | SvelteStyleInline,
+    ) {
+      const index = root.nodes.indexOf(node)
+      const after = root.nodes[index + 1]
+      if (after) {
+        return fixer.removeRange([node.range[0], after.range[0]])
+      }
+      const before = root.nodes[index - 1]
+      if (before) {
+        return fixer.removeRange([before.range[1], node.range[1]])
+      }
+      return fixer.removeRange(node.range)
     }
 
     return {
@@ -216,14 +218,10 @@ export default createRule("prefer-style-directive", {
         if (node.key.name !== "style") {
           return
         }
-        const mustacheTags = node.value.filter(
-          (v): v is AST.SvelteMustacheTagText => v.type === "SvelteMustacheTag",
-        )
         const root = parseStyleAttributeValue(node, context)
         if (root) {
-          processStyleValue(node, root, mustacheTags)
+          processStyleValue(node, root)
         }
-        processMustacheTags(mustacheTags, node, root)
       },
     }
   },
