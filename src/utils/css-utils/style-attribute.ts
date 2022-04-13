@@ -49,7 +49,7 @@ export function parseStyleAttributeValue(
     (v): v is AST.SvelteMustacheTagText => v.type === "SvelteMustacheTag",
   )
 
-  const converted = convertRoot(root, mustacheTags, ctx)
+  const converted = convertRoot(root, mustacheTags, (e) => e.range, ctx)
   cache.set(node, converted)
   return converted
 }
@@ -59,15 +59,23 @@ export interface SvelteStyleNode {
   range: AST.Range
   loc: AST.SourceLocation
 }
-export interface SvelteStyleRoot {
+interface AbsSvelteStyleRoot<
+  E extends AST.SvelteMustacheTagText | ESTree.Expression,
+> {
   type: "root"
-  nodes: (SvelteStyleChildNode | SvelteStyleInline)[]
+  nodes: (SvelteStyleChildNode | SvelteStyleInline<E>)[]
 }
-export interface SvelteStyleInline extends SvelteStyleNode {
+export type SvelteStyleRoot = AbsSvelteStyleRoot<AST.SvelteMustacheTagText>
+export type SvelteStyleInlineRoot = AbsSvelteStyleRoot<ESTree.Expression>
+export interface SvelteStyleInline<
+  E extends
+    | AST.SvelteMustacheTagText
+    | ESTree.Expression = AST.SvelteMustacheTagText,
+> extends SvelteStyleNode {
   type: "inline"
-  node: AST.SvelteMustacheTagText
-  getInlineStyle(node: ESTree.Expression): SvelteStyleRoot | null
-  getAllInlineStyles(): Map<ESTree.Expression, SvelteStyleRoot>
+  node: E
+  getInlineStyle(node: ESTree.Expression): SvelteStyleInlineRoot | null
+  getAllInlineStyles(): Map<ESTree.Expression, SvelteStyleInlineRoot>
 }
 export interface SvelteStyleDeclaration extends SvelteStyleNode {
   type: "decl"
@@ -105,35 +113,36 @@ function isStringLiteral(
 }
 
 /** convert root node */
-function convertRoot(
+function convertRoot<E extends AST.SvelteMustacheTagText | ESTree.Expression>(
   root: Root,
-  mustacheTags: AST.SvelteMustacheTagText[],
+  interpolations: E[],
+  getRange: (e: E) => AST.Range,
   ctx: Ctx,
-): SvelteStyleRoot | null {
-  const nodes: (SvelteStyleChildNode | SvelteStyleInline)[] = []
+): AbsSvelteStyleRoot<E> | null {
+  const nodes: (SvelteStyleChildNode | SvelteStyleInline<E>)[] = []
   for (const child of root.nodes) {
     const converted = convertChild(child, ctx)
     if (!converted) {
       return null
     }
 
-    while (mustacheTags[0]) {
-      const tag = mustacheTags[0]
-      if (tag.range[1] <= converted.range[0]) {
-        nodes.push(buildSvelteStyleInline(tag))
-        mustacheTags.shift()
+    while (interpolations[0]) {
+      const tagOrExpr = interpolations[0]
+      if (tagOrExpr.range![1] <= converted.range[0]) {
+        nodes.push(buildSvelteStyleInline(tagOrExpr))
+        interpolations.shift()
         continue
       }
-      if (tag.range[0] < converted.range[1]) {
+      if (tagOrExpr.range![0] < converted.range[1]) {
         if (
-          (tag.range[0] < converted.range[0] &&
-            converted.range[0] < tag.range[1]) ||
-          (tag.range[0] < converted.range[1] &&
-            converted.range[1] < tag.range[1])
+          (tagOrExpr.range![0] < converted.range[0] &&
+            converted.range[0] < tagOrExpr.range![1]) ||
+          (tagOrExpr.range![0] < converted.range[1] &&
+            converted.range[1] < tagOrExpr.range![1])
         ) {
           converted.unsafe = true
         }
-        mustacheTags.shift()
+        interpolations.shift()
         continue
       }
       break
@@ -142,7 +151,7 @@ function convertRoot(
     nodes.push(converted)
   }
 
-  nodes.push(...mustacheTags.map(buildSvelteStyleInline))
+  nodes.push(...interpolations.map(buildSvelteStyleInline))
 
   return {
     type: "root",
@@ -150,21 +159,39 @@ function convertRoot(
   }
 
   /** Build SvelteStyleInline */
-  function buildSvelteStyleInline(
-    tag: AST.SvelteMustacheTagText,
-  ): SvelteStyleInline {
-    const inlineStyles = new Map<ESTree.Expression, SvelteStyleRoot | null>()
+  function buildSvelteStyleInline(tagOrExpr: E): SvelteStyleInline<E> {
+    const inlineStyles = new Map<
+      ESTree.Expression,
+      SvelteStyleInlineRoot | null
+    >()
+    let range: AST.Range | null = null
+
+    /** Get range */
+    function getRangeForInline() {
+      if (range) {
+        return range
+      }
+      return range ?? (range = getRange(tagOrExpr))
+    }
+
     return {
       type: "inline",
-      node: tag,
-      range: tag.range,
-      loc: tag.loc,
+      node: tagOrExpr,
+      get range() {
+        return getRangeForInline()
+      },
+      get loc() {
+        return toLoc(getRangeForInline(), ctx)
+      },
       getInlineStyle(node) {
         return getInlineStyle(node)
       },
       getAllInlineStyles() {
-        const allInlineStyles = new Map<ESTree.Expression, SvelteStyleRoot>()
-        for (const node of extractExpressions(tag.expression)) {
+        const allInlineStyles = new Map<
+          ESTree.Expression,
+          SvelteStyleInlineRoot
+        >()
+        for (const node of extractExpressions(tagOrExpr)) {
           const style = getInlineStyle(node)
           if (style) {
             allInlineStyles.set(node, style)
@@ -175,43 +202,65 @@ function convertRoot(
     }
 
     /** Get inline style node */
-    function getInlineStyle(node: ESTree.Expression) {
+    function getInlineStyle(
+      node: AST.SvelteMustacheTagText | ESTree.Expression,
+    ): SvelteStyleInlineRoot | null {
+      if (node.type === "SvelteMustacheTag") {
+        return getInlineStyle(node.expression)
+      }
       if (inlineStyles.has(node)) {
         return inlineStyles.get(node) || null
       }
+      const sourceCode = ctx.context.getSourceCode()
       inlineStyles.set(node, null)
-      const {
-        root,
-        startOffset = 0,
-      }: { root?: Root | null; startOffset?: number } = isStringLiteral(node)
-        ? { root: safeParseCss(node.value), startOffset: node.range![0] + 1 }
-        : node.type === "TemplateLiteral" && node.expressions.length === 0
-        ? {
-            root: safeParseCss(
-              node.quasis[0].value.cooked ?? node.quasis[0].value.raw,
-            ),
-            startOffset: node.quasis[0].range![0] + 1,
-          }
-        : {}
-      if (!root) {
+
+      let converted: SvelteStyleInlineRoot | null
+      if (isStringLiteral(node)) {
+        const root = safeParseCss(sourceCode.getText(node).slice(1, -1))
+        if (!root) {
+          return null
+        }
+        converted = convertRoot(root, [], () => [0, 0], {
+          ...ctx,
+          startOffset: node.range![0] + 1,
+        })
+      } else if (node.type === "TemplateLiteral") {
+        const root = safeParseCss(sourceCode.getText(node).slice(1, -1))
+        if (!root) {
+          return null
+        }
+        converted = convertRoot(
+          root,
+          [...node.expressions],
+          (e) => {
+            const index = node.expressions.indexOf(e)
+            return [
+              node.quasis[index].range![1] - 2,
+              node.quasis[index + 1].range![0] + 1,
+            ]
+          },
+          {
+            ...ctx,
+            startOffset: node.range![0] + 1,
+          },
+        )
+      } else {
         return null
       }
-      const converted = convertRoot(root, [], { ...ctx, startOffset })
       inlineStyles.set(node, converted)
       return converted
     }
 
     /** Extract all expressions */
     function* extractExpressions(
-      node: ESTree.Expression,
+      node: AST.SvelteMustacheTagText | ESTree.Expression,
     ): Iterable<(ESTree.Literal & { value: string }) | ESTree.TemplateLiteral> {
-      if (isStringLiteral(node)) {
+      if (node.type === "SvelteMustacheTag") {
+        yield* extractExpressions(node.expression)
+      } else if (isStringLiteral(node)) {
         yield node
-      }
-      if (node.type === "TemplateLiteral") {
-        if (node.expressions.length === 0) {
-          yield node
-        }
+      } else if (node.type === "TemplateLiteral") {
+        yield node
       } else if (node.type === "ConditionalExpression") {
         yield* extractExpressions(node.consequent)
         yield* extractExpressions(node.alternate)

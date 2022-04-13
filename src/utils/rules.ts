@@ -10,6 +10,7 @@ import mustacheSpacing from "../rules/mustache-spacing"
 import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
+import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
@@ -38,6 +39,7 @@ export const rules = [
   noAtDebugTags,
   noAtHtmlTags,
   noDupeElseIfBlocks,
+  noDupeStyleProperties,
   noDynamicSlotName,
   noInnerDeclarations,
   noNotFunctionHandler,

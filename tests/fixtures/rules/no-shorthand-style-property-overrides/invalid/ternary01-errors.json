@@ -7,6 +7,6 @@
   {
     "message": "Unexpected shorthand 'background' after 'background-repeat'.",
     "line": 8,
-    "column": 33
+    "column": 36
   }
 ]

@@ -16,6 +16,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
+| [@ota-meshi/svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md) | disallow duplicate style properties | :star: |
 | [@ota-meshi/svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md) | disallow dynamic slot name | :star::wrench: |
 | [@ota-meshi/svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [@ota-meshi/svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
