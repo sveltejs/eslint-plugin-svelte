@@ -37,18 +37,22 @@ export default createRule("require-optimized-style-attribute", {
         }
         const root = parseStyleAttributeValue(node, context)
         if (!root) {
+          context.report({
+            node,
+            messageId: "complex",
+          })
           return
         }
 
         for (const child of root.nodes) {
           if (child.type === "decl") {
-            if (child.unsafe) {
+            if (child.unknownInterpolations.length) {
               context.report({
                 node,
                 loc: child.loc,
                 messageId: "complex",
               })
-            } else if (child.prop.name.includes("{")) {
+            } else if (child.prop.interpolations.length) {
               context.report({
                 node,
                 loc: child.prop.loc,

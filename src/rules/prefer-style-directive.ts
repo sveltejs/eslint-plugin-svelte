@@ -38,7 +38,7 @@ export default createRule("prefer-style-directive", {
      */
     function processStyleValue(
       node: AST.SvelteAttribute,
-      root: SvelteStyleRoot,
+      root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
     ) {
       for (const child of root.nodes) {
         if (child.type === "decl") {
@@ -54,10 +54,15 @@ export default createRule("prefer-style-directive", {
      */
     function processDeclaration(
       attrNode: AST.SvelteAttribute,
-      root: SvelteStyleRoot,
-      decl: SvelteStyleDeclaration,
+      root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
+      decl: SvelteStyleDeclaration<AST.SvelteMustacheTagText>,
     ) {
-      if (decl.important || decl.unsafe) return
+      if (
+        decl.important ||
+        decl.unknownInterpolations.length ||
+        decl.prop.interpolations.length
+      )
+        return
       if (
         attrNode.parent.attributes.some(
           (attr) =>
@@ -101,8 +106,8 @@ export default createRule("prefer-style-directive", {
      */
     function processInline(
       attrNode: AST.SvelteAttribute,
-      root: SvelteStyleRoot,
-      inline: SvelteStyleInline,
+      root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
+      inline: SvelteStyleInline<AST.SvelteMustacheTagText>,
     ) {
       const node = inline.node.expression
 
@@ -194,8 +199,10 @@ export default createRule("prefer-style-directive", {
     /** Remove style */
     function removeStyle(
       fixer: RuleFixer,
-      root: SvelteStyleRoot,
-      node: SvelteStyleDeclaration | SvelteStyleInline,
+      root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
+      node:
+        | SvelteStyleDeclaration<AST.SvelteMustacheTagText>
+        | SvelteStyleInline<AST.SvelteMustacheTagText>,
     ) {
       const index = root.nodes.indexOf(node)
       const after = root.nodes[index + 1]

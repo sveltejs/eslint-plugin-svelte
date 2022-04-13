@@ -1,6 +1,9 @@
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
-import type { SvelteStyleInlineRoot, SvelteStyleRoot } from "../utils/css-utils"
+import type {
+  SvelteStyleInterpolation,
+  SvelteStyleRoot,
+} from "../utils/css-utils"
 import {
   getVendorPrefix,
   stripVendorPrefix,
@@ -91,9 +94,9 @@ export default createRule("no-shorthand-style-property-overrides", {
     }
 
     /** Iterate the style decl set from style root */
-    function* iterateStyleDeclSetFromStyleRoot(
-      root: SvelteStyleRoot | SvelteStyleInlineRoot,
-    ): Iterable<StyleDeclSet> {
+    function* iterateStyleDeclSetFromStyleRoot<
+      E extends SvelteStyleInterpolation,
+    >(root: SvelteStyleRoot<E>): Iterable<StyleDeclSet> {
       for (const child of root.nodes) {
         if (child.type === "decl") {
           yield {
