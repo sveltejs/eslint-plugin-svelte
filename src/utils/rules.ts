@@ -17,6 +17,7 @@ import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noTargetBlank from "../rules/no-target-blank"
+import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -46,6 +47,7 @@ export const rules = [
   noObjectInTextMustaches,
   noShorthandStylePropertyOverrides,
   noTargetBlank,
+  noUnknownStyleDirectiveProperty,
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,

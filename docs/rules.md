@@ -21,6 +21,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [@ota-meshi/svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [@ota-meshi/svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
 | [@ota-meshi/svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
+| [@ota-meshi/svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |
 | [@ota-meshi/svelte/valid-compile](./rules/valid-compile.md) | disallow warnings when compiling. | :star: |
 
 ## Security Vulnerability
