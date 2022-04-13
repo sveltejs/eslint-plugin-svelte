@@ -23,6 +23,7 @@ import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import preferStyleDirective from "../rules/prefer-style-directive"
+import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import shorthandDirective from "../rules/shorthand-directive"
 import spacedHtmlComment from "../rules/spaced-html-comment"
@@ -54,6 +55,7 @@ export const rules = [
   noUselessMustaches,
   preferClassDirective,
   preferStyleDirective,
+  requireOptimizedStyleAttribute,
   shorthandAttribute,
   shorthandDirective,
   spacedHtmlComment,

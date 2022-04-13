@@ -268,9 +268,9 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
-| [@ota-meshi/svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | disallow style attributes that cannot be optimized |  |
 | [@ota-meshi/svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [@ota-meshi/svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
+| [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
 
 ## Stylistic Issues
 
@@ -314,6 +314,7 @@ These rules relate to this plugin works:
 | Rule ID | Replaced by |
 |:--------|:------------|
 | [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | (no replacement) |
+| [@ota-meshi/svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/.md) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
