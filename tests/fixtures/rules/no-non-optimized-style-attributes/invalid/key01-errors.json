@@ -1,0 +1,7 @@
+[
+  {
+    "message": "It cannot be optimized because property of style declaration contain interpolation.",
+    "line": 6,
+    "column": 30
+  }
+]

@@ -41,6 +41,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [@ota-meshi/svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [@ota-meshi/svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
+| [@ota-meshi/svelte/no-non-optimized-style-attributes](./rules/no-non-optimized-style-attributes.md) | disallow style attributes that cannot be optimized |  |
 | [@ota-meshi/svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [@ota-meshi/svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 
