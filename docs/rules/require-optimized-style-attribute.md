@@ -77,7 +77,7 @@ Examples:
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-non-optimized-style-attributes: "error" */
+  /* eslint @ota-meshi/svelte/require-optimized-style-attribute: "error" */
   let color = "blue"
   let x = 12,
     y = 12
