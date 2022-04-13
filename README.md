@@ -314,7 +314,7 @@ These rules relate to this plugin works:
 | Rule ID | Replaced by |
 |:--------|:------------|
 | [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | (no replacement) |
-| [@ota-meshi/svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/.md) |
+| [@ota-meshi/svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

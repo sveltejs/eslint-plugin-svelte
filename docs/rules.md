@@ -87,4 +87,4 @@ These rules relate to this plugin works:
 | Rule ID | Replaced by |
 |:--------|:------------|
 | [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](./rules/dollar-prefixed-store-uses-vars.md) | (no replacement) |
-| [@ota-meshi/svelte/no-non-optimized-style-attributes](./rules/no-non-optimized-style-attributes.md) | [@ota-meshi/svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md.md) |
+| [@ota-meshi/svelte/no-non-optimized-style-attributes](./rules/no-non-optimized-style-attributes.md) | [@ota-meshi/svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) |
