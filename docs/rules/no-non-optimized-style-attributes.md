@@ -87,11 +87,11 @@ Examples:
 <div
   style="font-size: 12px; color: {color}; transform: translate({x}px, {y}px);"
 />
-<div style={pointerEvents === false ? "pointer-events:none;" : ""} />
+<div style:pointer-events={pointerEvents ? null : "none"} />
 
 <!-- ✗ BAD -->
 <div style="font-size: 12px; color: {color}; {transformStyle}" />
-<div style:pointer-events={pointerEvents ? null : "none"} />
+<div style={pointerEvents === false ? "pointer-events:none;" : ""} />
 
 <div style="font-size: 12px; /* comment */ color: {color};" />
 <div style="font-size: 12px; {key}: red;" />
