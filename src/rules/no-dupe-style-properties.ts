@@ -1,24 +1,18 @@
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import type { SvelteStyleInlineRoot, SvelteStyleRoot } from "../utils/css-utils"
-import {
-  getVendorPrefix,
-  stripVendorPrefix,
-  parseStyleAttributeValue,
-  SHORTHAND_PROPERTIES,
-} from "../utils/css-utils"
+import { parseStyleAttributeValue } from "../utils/css-utils"
 
-export default createRule("no-shorthand-style-property-overrides", {
+export default createRule("no-dupe-style-properties", {
   meta: {
     docs: {
-      description:
-        "disallow shorthand style properties that override related longhand properties",
+      description: "disallow duplicate style properties",
       category: "Possible Errors",
       recommended: true,
     },
     schema: [],
     messages: {
-      unexpected: "Unexpected shorthand '{{shorthand}}' after '{{original}}'.",
+      unexpected: "Duplicate property '{{name}}'.",
     },
     type: "problem",
   },
@@ -33,36 +27,27 @@ export default createRule("no-shorthand-style-property-overrides", {
 
     return {
       SvelteStartTag(node: AST.SvelteStartTag) {
-        const beforeDeclarations = new Set<string>()
+        const reported = new Set<StyleDecl>()
+        const beforeDeclarations = new Map<string, StyleDecl>()
         for (const { decls } of iterateStyleDeclSetFromAttrs(node.attributes)) {
           for (const decl of decls) {
-            const normalized = stripVendorPrefix(decl.prop)
-            const prefix = getVendorPrefix(decl.prop)
-
-            const longhandProps = SHORTHAND_PROPERTIES.get(normalized)
-            if (!longhandProps) {
-              continue
-            }
-
-            for (const longhandProp of longhandProps) {
-              const longhandPropWithPrefix = prefix + longhandProp
-              if (!beforeDeclarations.has(longhandPropWithPrefix)) {
-                continue
+            const already = beforeDeclarations.get(decl.prop)
+            if (already) {
+              for (const report of [already, decl].filter(
+                (n) => !reported.has(n),
+              )) {
+                context.report({
+                  node,
+                  loc: report.loc,
+                  messageId: "unexpected",
+                  data: { name: report.prop },
+                })
+                reported.add(report)
               }
-
-              context.report({
-                node,
-                loc: decl.loc,
-                messageId: "unexpected",
-                data: {
-                  shorthand: decl.prop,
-                  original: longhandPropWithPrefix,
-                },
-              })
             }
           }
           for (const decl of decls) {
-            beforeDeclarations.add(decl.prop)
+            beforeDeclarations.set(decl.prop, decl)
           }
         }
       },

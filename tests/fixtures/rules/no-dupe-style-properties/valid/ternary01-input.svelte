@@ -4,7 +4,7 @@
 
 <div
   style="
-    background-repeat: repeat;
+    background: blue;
     {red ? `background-color: ${red}` : 'background-color: green'}
   "
 >
