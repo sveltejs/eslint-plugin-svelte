@@ -13,6 +13,7 @@ import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noInnerDeclarations from "../rules/no-inner-declarations"
+import noNonOptimizedStyleAttributes from "../rules/no-non-optimized-style-attributes"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
@@ -43,6 +44,7 @@ export const rules = [
   noDupeStyleProperties,
   noDynamicSlotName,
   noInnerDeclarations,
+  noNonOptimizedStyleAttributes,
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noShorthandStylePropertyOverrides,
