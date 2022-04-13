@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-unknown-style-directive-property"
 description: "disallow unknown `style:property`"
+since: "v0.31.0"
 ---
 
 # @ota-meshi/svelte/no-unknown-style-directive-property
 
 > disallow unknown `style:property`
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
 
 ## :book: Rule Details
@@ -64,6 +64,10 @@ Note that this rule only checks the `style:property` directive. If you want to c
 - [Stylelint - property-no-unknown]
 
 [stylelint - property-no-unknown]: https://stylelint.io/user-guide/rules/list/property-no-unknown/
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.31.0
 
 ## :mag: Implementation
 

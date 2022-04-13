@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "@ota-meshi/svelte/no-non-optimized-style-attributes"
 description: "disallow style attributes that cannot be optimized"
+since: "v0.31.0"
 ---
 
 # @ota-meshi/svelte/no-non-optimized-style-attributes
 
 > disallow style attributes that cannot be optimized
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -103,6 +102,10 @@ Examples:
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.31.0
 
 ## :mag: Implementation
 
