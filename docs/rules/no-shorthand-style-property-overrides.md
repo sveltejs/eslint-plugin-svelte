@@ -45,6 +45,12 @@ This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-o
 
 Nothing.
 
+## :books: Further reading
+
+- [Stylelint - declaration-block-no-shorthand-property-overrides]
+
+[stylelint - declaration-block-no-shorthand-property-overrides]: https://stylelint.io/user-guide/rules/list/declaration-block-no-shorthand-property-overrides/
+
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-shorthand-style-property-overrides.ts)
