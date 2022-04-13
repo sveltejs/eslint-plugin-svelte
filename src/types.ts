@@ -44,7 +44,7 @@ export interface RuleListener extends ASTNodeListener {
 
 export interface RuleModule {
   meta: RuleMetaData
-  create(context: RuleContext): RuleListener
+  create: (context: RuleContext) => RuleListener
 }
 
 export type RuleCategory =
