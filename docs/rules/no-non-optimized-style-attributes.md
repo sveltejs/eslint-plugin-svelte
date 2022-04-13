@@ -36,7 +36,7 @@ compiled:
 ```js
 div.style.setProperty("font-size", "12px") // font-size style is not updated once it is initially set.
 div.style.setProperty("color", color) // color style is updated only when color variable is updated.
-div.style.setProperty("transform", `translate(${x}px, ${y}px)`) // transform style is updated only when x, or y variables is updated.
+div.style.setProperty("transform", `translate(${x}px, ${y}px)`) // transform style is updated only when x, or y variables are updated.
 ```
 
 However, if the optimization fails, it will be re-rendered triggered by the update of all variables described in the style attribute.
