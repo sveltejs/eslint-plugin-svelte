@@ -1,6 +1,11 @@
 [
   {
     "message": "Can use style directives instead.",
+    "line": 2,
+    "column": 3
+  },
+  {
+    "message": "Can use style directives instead.",
     "line": 4,
     "column": 6
   },

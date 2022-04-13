@@ -1,17 +1,8 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
-import type { Root } from "postcss"
-import { parse as parseCss } from "postcss"
 import { createRule } from "../utils"
-
-/** Parse for CSS */
-function safeParseCss(cssCode: string) {
-  try {
-    return parseCss(cssCode)
-  } catch {
-    return null
-  }
-}
+import type { SvelteStyleRoot } from "../utils/css-utils"
+import { parseStyleAttributeValue, safeParseCss } from "../utils/css-utils"
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(
@@ -42,12 +33,11 @@ export default createRule("prefer-style-directive", {
      */
     function processStyleValue(
       node: AST.SvelteAttribute,
-      root: Root,
+      root: SvelteStyleRoot,
       mustacheTags: AST.SvelteMustacheTagText[],
     ) {
-      const valueStartIndex = node.value[0].range[0]
-
-      root.walkDecls((decl) => {
+      root.walk((decl) => {
+        if (decl.type !== "decl" || decl.important) return
         if (
           node.parent.attributes.some(
             (attr) =>
@@ -59,38 +49,28 @@ export default createRule("prefer-style-directive", {
           return
         }
 
-        const declRange: AST.Range = [
-          valueStartIndex + decl.source!.start!.offset,
-          valueStartIndex + decl.source!.end!.offset + 1,
-        ]
         if (
           mustacheTags.some(
             (tag) =>
-              (tag.range[0] < declRange[0] && declRange[0] < tag.range[1]) ||
-              (tag.range[0] < declRange[1] && declRange[1] < tag.range[1]),
+              (tag.range[0] < decl.range[0] && decl.range[0] < tag.range[1]) ||
+              (tag.range[0] < decl.range[1] && decl.range[1] < tag.range[1]),
           )
         ) {
           // intersection
           return
         }
-        const declValueStartIndex =
-          declRange[0] + decl.prop.length + (decl.raws.between || "").length
-        const declValueRange: AST.Range = [
-          declValueStartIndex,
-          declValueStartIndex + (decl.raws.value?.value || decl.value).length,
-        ]
 
         context.report({
           node,
           messageId: "unexpected",
           *fix(fixer) {
             const styleDirective = `style:${decl.prop}="${sourceCode.text.slice(
-              ...declValueRange,
+              ...decl.valueRange,
             )}"`
             if (root.nodes.length === 1 && root.nodes[0] === decl) {
               yield fixer.replaceTextRange(node.range, styleDirective)
             } else {
-              yield fixer.removeRange(declRange)
+              yield fixer.removeRange(decl.range)
               yield fixer.insertTextAfterRange(node.range, ` ${styleDirective}`)
             }
           },
@@ -104,9 +84,10 @@ export default createRule("prefer-style-directive", {
     function processMustacheTags(
       mustacheTags: AST.SvelteMustacheTagText[],
       attrNode: AST.SvelteAttribute,
+      root: SvelteStyleRoot | null,
     ) {
       for (const mustacheTag of mustacheTags) {
-        processMustacheTag(mustacheTag, attrNode)
+        processMustacheTag(mustacheTag, attrNode, root)
       }
     }
 
@@ -116,6 +97,7 @@ export default createRule("prefer-style-directive", {
     function processMustacheTag(
       mustacheTag: AST.SvelteMustacheTagText,
       attrNode: AST.SvelteAttribute,
+      root: SvelteStyleRoot | null,
     ) {
       const node = mustacheTag.expression
 
@@ -132,14 +114,30 @@ export default createRule("prefer-style-directive", {
         // e.g. t ? 'top: 20px' : 'left: 30px'
         return
       }
+
+      if (root) {
+        let foundIntersection = false
+        root.walk((n) => {
+          if (
+            mustacheTag.range[0] < n.range[1] &&
+            n.range[0] < mustacheTag.range[1]
+          ) {
+            foundIntersection = true
+          }
+        })
+        if (foundIntersection) {
+          return
+        }
+      }
+
       const positive = node.alternate.value === ""
-      const root = safeParseCss(
+      const inlineRoot = safeParseCss(
         positive ? node.consequent.value : node.alternate.value,
       )
-      if (!root || root.nodes.length !== 1) {
+      if (!inlineRoot || inlineRoot.nodes.length !== 1) {
         return
       }
-      const decl = root.nodes[0]
+      const decl = inlineRoot.nodes[0]
       if (decl.type !== "decl") {
         return
       }
@@ -221,20 +219,11 @@ export default createRule("prefer-style-directive", {
         const mustacheTags = node.value.filter(
           (v): v is AST.SvelteMustacheTagText => v.type === "SvelteMustacheTag",
         )
-        const cssCode = node.value
-          .map((value) => {
-            if (value.type === "SvelteMustacheTag") {
-              return "_".repeat(value.range[1] - value.range[0])
-            }
-            return sourceCode.getText(value)
-          })
-          .join("")
-        const root = safeParseCss(cssCode)
+        const root = parseStyleAttributeValue(node, context)
         if (root) {
           processStyleValue(node, root, mustacheTags)
-        } else {
-          processMustacheTags(mustacheTags, node)
         }
+        processMustacheTags(mustacheTags, node, root)
       },
     }
   },

@@ -57,6 +57,7 @@
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
     "postcss": "^8.4.5",
+    "postcss-safe-parser": "^6.0.0",
     "sourcemap-codec": "^1.4.8",
     "svelte-eslint-parser": "^0.16.0"
   },
@@ -84,6 +85,7 @@
     "@types/estree": "^0.0.51",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.0.0",
+    "@types/postcss-safe-parser": "^5.0.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.1-0",
     "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
