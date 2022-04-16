@@ -93,7 +93,7 @@ for (const [ruleId, rule] of linter.getRules()) {
   const type = rule.meta.type
   categories.find((c) => c.type === type).rules.push(data)
 
-  if (rule.meta.docs.recommended) {
+  if (rule.meta.docs.recommended && ruleId !== "no-inner-declarations") {
     DEFAULT_RULES_CONFIG[ruleId] = "error"
   }
 }
