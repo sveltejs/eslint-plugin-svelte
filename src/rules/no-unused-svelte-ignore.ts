@@ -1,12 +1,19 @@
 import type { AST } from "svelte-eslint-parser"
 import { isOpeningParenToken } from "eslint-utils"
 import type { Warning } from "../shared/svelte-compile-warns"
-import { getSvelteCompileWarnings } from "../shared/svelte-compile-warns"
+import {
+  getSvelteCompileWarnings,
+  extractStyleElementsWithLangOtherThanCSS,
+} from "../shared/svelte-compile-warns"
 import { createRule } from "../utils"
 import type { ASTNodeWithParent } from "../types"
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m
-
+const CSS_WARN_CODES = new Set([
+  "css-unused-selector",
+  "css-invalid-global",
+  "css-invalid-global-selector",
+])
 type IgnoreItem = {
   range: [number, number]
   code: string
@@ -113,6 +120,7 @@ export default createRule("no-unused-svelte-ignore", {
     if (!ignoreComments.length) {
       return {}
     }
+
     const warnings = getSvelteCompileWarnings(context, {
       warnings: "onlyWarnings",
       removeComments: new Set(ignoreComments.map((i) => i.token)),
@@ -128,15 +136,24 @@ export default createRule("no-unused-svelte-ignore", {
       if (!node) {
         continue
       }
-      l: for (const comment of extractLeadingComments(node).reverse()) {
-        for (const ignoreItem of ignoreComments) {
-          if (
-            ignoreItem.token === comment &&
-            ignoreItem.code === warning.code
-          ) {
-            used.add(ignoreItem)
-            break l
-          }
+      for (const comment of extractLeadingComments(node).reverse()) {
+        const ignoreItem = ignoreComments.find(
+          (item) => item.token === comment && item.code === warning.code,
+        )
+        if (ignoreItem) {
+          used.add(ignoreItem)
+        }
+      }
+    }
+
+    // Styles with non-CSS lang attributes are ignored from compilation and cannot determine css errors.
+    for (const node of extractStyleElementsWithLangOtherThanCSS(context)) {
+      for (const comment of extractLeadingComments(node).reverse()) {
+        const ignoreItem = ignoreComments.find(
+          (item) => item.token === comment && CSS_WARN_CODES.has(item.code),
+        )
+        if (ignoreItem) {
+          used.add(ignoreItem)
         }
       }
     }
@@ -160,7 +177,10 @@ export default createRule("no-unused-svelte-ignore", {
       }
       let targetNode = sourceCode.getNodeByRangeIndex(index)
       while (targetNode) {
-        if (targetNode.type === "SvelteElement") {
+        if (
+          targetNode.type === "SvelteElement" ||
+          targetNode.type === "SvelteStyleElement"
+        ) {
           return targetNode
         }
         if (targetNode.parent) {
