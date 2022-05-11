@@ -35,22 +35,8 @@ export function getSvelteCompileWarnings(
   option: GetSvelteWarningsOption,
 ): Warning[] | null {
   const sourceCode = context.getSourceCode()
-  const text = !option.removeComments
-    ? sourceCode.text
-    : (() => {
-        let code = ""
-        let start = 0
-        for (const token of [...option.removeComments].sort(
-          (a, b) => a.range[0] - b.range[0],
-        )) {
-          code +=
-            sourceCode.text.slice(start, token.range[0]) +
-            sourceCode.text.slice(...token.range).replace(/[^\t\n\r ]/g, " ")
-          start = token.range[1]
-        }
-        code += sourceCode.text.slice(start)
-        return code
-      })()
+
+  const text = buildStrippedText(context, option)
 
   if (!context.parserServices.esTreeNodeToTSNodeMap) {
     return getWarningsFromCode(text, option)
@@ -291,6 +277,67 @@ export function getSvelteCompileWarnings(
   }
 
   return warnings
+}
+
+/**
+ * Extracts the style with the lang attribute other than CSS.
+ */
+export function* extractStyleElementsWithLangOtherThanCSS(
+  context: RuleContext,
+): Iterable<AST.SvelteStyleElement> {
+  const sourceCode = context.getSourceCode()
+  const root = sourceCode.ast
+  for (const node of root.body) {
+    if (node.type === "SvelteStyleElement") {
+      const langAttr = node.startTag.attributes.find(
+        (attr): attr is AST.SvelteAttribute =>
+          attr.type === "SvelteAttribute" && attr.key.name === "lang",
+      )
+      if (
+        langAttr &&
+        langAttr.value.length === 1 &&
+        langAttr.value[0].type === "SvelteLiteral" &&
+        langAttr.value[0].value.toLowerCase() !== "css"
+      ) {
+        yield node
+      }
+    }
+  }
+}
+
+/**
+ * Build the text stripped of tokens that are not needed for compilation.
+ */
+function buildStrippedText(
+  context: RuleContext,
+  option: GetSvelteWarningsOption,
+) {
+  const sourceCode = context.getSourceCode()
+  const baseText = sourceCode.text
+
+  const removeTokens: (AST.Token | AST.Comment | AST.SvelteText)[] =
+    option.removeComments ? [...option.removeComments] : []
+
+  // Strips the style with the lang attribute other than CSS.
+  for (const node of extractStyleElementsWithLangOtherThanCSS(context)) {
+    removeTokens.push(...node.children)
+  }
+  if (!removeTokens.length) {
+    return baseText
+  }
+
+  removeTokens.sort((a, b) => a.range[0] - b.range[0])
+
+  let code = ""
+  let start = 0
+  for (const token of removeTokens) {
+    code +=
+      baseText.slice(start, token.range[0]) +
+      baseText.slice(...token.range).replace(/[^\t\n\r ]/g, " ")
+    start = token.range[1]
+  }
+  code += baseText.slice(start)
+  return code
 }
 
 type TS = typeof typescript

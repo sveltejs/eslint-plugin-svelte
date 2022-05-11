@@ -56,7 +56,7 @@ Note that this rule only checks the `style:property` directive. If you want to c
 }
 ```
 
-- `ignoreProperties` ... You can specify property names or patterns that you want to ignore from checking.
+- `ignoreProperties` ... You can specify property names or patterns that you want to ignore from checking. When specifying a pattern, specify a string like a regex literal. e.g. `"/pattern/i"`
 - `ignorePrefixed` ... If `true`, ignores properties with vendor prefix from checking. Default is `true`.
 
 ## :books: Further reading
