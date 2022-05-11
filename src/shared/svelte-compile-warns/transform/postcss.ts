@@ -3,6 +3,7 @@ import postcss from "postcss"
 import postcssLoadConfig from "postcss-load-config"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
+
 /**
  * Transform with postcss
  */
@@ -44,7 +45,8 @@ export function transform(
       output: result.content,
       mappings: result.map.toJSON().mappings,
     }
-  } catch {
+  } catch (e) {
+    // console.log(e)
     return null
   }
 }

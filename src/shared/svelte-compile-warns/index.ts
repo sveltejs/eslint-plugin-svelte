@@ -16,6 +16,13 @@ const CSS_WARN_CODES = new Set([
   "css-invalid-global",
   "css-invalid-global-selector",
 ])
+const cacheAll = new WeakMap<AST.SvelteProgram, SvelteCompileWarnings>()
+export type SvelteCompileWarnings = {
+  warnings: Warning[]
+  unusedIgnores: IgnoreItem[]
+  kind: "warn" | "error"
+  stripStyleElements: AST.SvelteStyleElement[]
+}
 export type Loc = {
   start?: {
     line: number
@@ -34,12 +41,25 @@ export type Warning = {
 /**
  * Get svelte compile warnings
  */
-export function getSvelteCompileWarnings(context: RuleContext): {
-  warnings: Warning[]
-  unusedIgnores: IgnoreItem[]
-  kind: "warn" | "error"
-  stripStyleElements: AST.SvelteStyleElement[]
-} {
+export function getSvelteCompileWarnings(
+  context: RuleContext,
+): SvelteCompileWarnings {
+  const sourceCode = context.getSourceCode()
+  const cache = cacheAll.get(sourceCode.ast)
+  if (cache) {
+    return cache
+  }
+  const result = getSvelteCompileWarningsWithoutCache(context)
+  cacheAll.set(sourceCode.ast, result)
+  return result
+}
+
+/**
+ * Get svelte compile warnings
+ */
+function getSvelteCompileWarningsWithoutCache(
+  context: RuleContext,
+): SvelteCompileWarnings {
   const sourceCode = context.getSourceCode()
 
   // Process for styles
@@ -348,17 +368,19 @@ function buildStrippedText(
   const sourceCode = context.getSourceCode()
   const baseText = sourceCode.text
 
-  const stripTokens = [
+  const stripTokens = new Set([
     ...ignoreComments.map((item) => item.token),
     ...stripStyleTokens,
-  ]
-  if (!stripTokens.length) {
+  ])
+  if (!stripTokens.size) {
     return baseText
   }
 
   let code = ""
   let start = 0
-  for (const token of stripTokens.sort((a, b) => a.range[0] - b.range[0])) {
+  for (const token of [...stripTokens].sort(
+    (a, b) => a.range[0] - b.range[0],
+  )) {
     code +=
       baseText.slice(start, token.range[0]) +
       baseText.slice(...token.range).replace(/[^\t\n\r ]/g, " ")

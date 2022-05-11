@@ -141,6 +141,9 @@ You can change the behavior of this plugin with some settings.
 
 - `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
   For example, set rules on the template that cannot avoid false positives.
+- `compileOptions` (optional) ... Specifies options for Svelte compile. Affects rules that use Svelte compile. The target rules are [@ota-meshi/svelte/valid-compile](./rules/valid-compile.md) and [@ota-meshi/svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md).
+  - `postcss` (optional) ... Specifies options related to PostCSS.
+    - `configFilePath` (optional) ... Specifies the path of the directory containing the PostCSS configuration.
 
 e.g.
 
@@ -153,6 +156,11 @@ module.exports = {
         "@typescript-eslint/no-unsafe-assignment",
         "@typescript-eslint/no-unsafe-member-access",
       ],
+      compileOptions: {
+        postcss: {
+          configFilePath: "./path/to/my/postcss.config.js",
+        },
+      },
     },
   },
   // ...

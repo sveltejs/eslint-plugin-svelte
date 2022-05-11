@@ -8,7 +8,17 @@ function extname(p) {
   return /\.[\w$-]+$/iu.exec(p)[0]
 }
 
-const posix = { dirname, extname }
+function relative(s) {
+  return s
+}
+
+function resolve(s) {
+  return s
+}
+
+const sep = "/"
+
+const posix = { dirname, extname, resolve, relative, sep }
 posix.posix = posix
-export { dirname, extname, posix }
+export { dirname, extname, posix, resolve, relative, sep }
 export default posix
