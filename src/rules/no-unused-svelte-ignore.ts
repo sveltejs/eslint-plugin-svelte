@@ -1,10 +1,7 @@
 import type { AST } from "svelte-eslint-parser"
 import { isOpeningParenToken } from "eslint-utils"
 import type { Warning } from "../shared/svelte-compile-warns"
-import {
-  getSvelteCompileWarnings,
-  extractStyleElementsWithLangOtherThanCSS,
-} from "../shared/svelte-compile-warns"
+import { getSvelteCompileWarnings } from "../shared/svelte-compile-warns"
 import { createRule } from "../utils"
 import type { ASTNodeWithParent } from "../types"
 
@@ -128,7 +125,7 @@ export default createRule("no-unused-svelte-ignore", {
     if (!warnings) {
       return {}
     }
-    for (const warning of warnings) {
+    for (const warning of warnings.warnings) {
       if (!warning.code) {
         continue
       }
@@ -146,8 +143,8 @@ export default createRule("no-unused-svelte-ignore", {
       }
     }
 
-    // Styles with non-CSS lang attributes are ignored from compilation and cannot determine css errors.
-    for (const node of extractStyleElementsWithLangOtherThanCSS(context)) {
+    // Stripped styles are ignored from compilation and cannot determine css errors.
+    for (const node of warnings.stripStyleElements) {
       for (const comment of extractLeadingComments(node).reverse()) {
         const ignoreItem = ignoreComments.find(
           (item) => item.token === comment && CSS_WARN_CODES.has(item.code),

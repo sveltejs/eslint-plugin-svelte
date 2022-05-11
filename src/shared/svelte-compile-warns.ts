@@ -7,6 +7,8 @@ import type { SourceMapMappings } from "sourcemap-codec"
 import { decode } from "sourcemap-codec"
 import type { RuleContext } from "../types"
 import { LinesAndColumns } from "../utils/lines-and-columns"
+import postcss from "postcss"
+import postcssrc from "postcss-load-config"
 
 export type Loc = {
   start?: {
@@ -33,29 +35,54 @@ export type GetSvelteWarningsOption = {
 export function getSvelteCompileWarnings(
   context: RuleContext,
   option: GetSvelteWarningsOption,
-): Warning[] | null {
+): {
+  warnings: Warning[]
+  stripStyleElements: AST.SvelteStyleElement[]
+} | null {
   const sourceCode = context.getSourceCode()
 
-  const text = buildStrippedText(context, option)
-
-  if (!context.parserServices.esTreeNodeToTSNodeMap) {
-    return getWarningsFromCode(text, option)
+  // Process for styles
+  const styleElementsWithNotCSS = [
+    ...extractStyleElementsWithLangOtherThanCSS(context),
+  ]
+  const stripStyleElements: AST.SvelteStyleElement[] = []
+  const transformResults: TransformResult[] = []
+  for (const style of styleElementsWithNotCSS) {
+    if (style.lang === "postcss") {
+      const result = transformWithPostcss(style.node, context)
+      if (result) {
+        transformResults.push(result)
+        continue
+      }
+    }
+    stripStyleElements.push(style.node)
   }
 
-  let ts: TS
-  try {
-    const createRequire: (filename: string) => (modName: string) => unknown =
-      // Added in v12.2.0
-      Module.createRequire ||
-      // Added in v10.12.0, but deprecated in v12.2.0.
-      // @ts-expect-error -- old type
-      Module.createRequireFromPath
+  const stripStyleTokens = stripStyleElements.flatMap((e) => e.children)
 
-    const cwd = context.getCwd?.() ?? process.cwd()
-    const relativeTo = path.join(cwd, "__placeholder__.js")
-    ts = createRequire(relativeTo)("typescript") as TS
-  } catch {
-    return []
+  const stripTokens: (AST.Token | AST.Comment | AST.SvelteText)[] =
+    option.removeComments
+      ? [...option.removeComments, ...stripStyleTokens]
+      : stripStyleTokens
+
+  const text = buildStrippedText(context, stripTokens)
+
+  if (context.parserServices.esTreeNodeToTSNodeMap) {
+    const root = sourceCode.ast
+
+    for (const node of root.body) {
+      if (node.type === "SvelteScriptElement") {
+        const result = transpileWithTypescript(node, context)
+        if (result) {
+          transformResults.push(result)
+        }
+      }
+    }
+  }
+
+  if (!transformResults.length) {
+    const warnings = getWarningsFromCode(text, option)
+    return warnings ? { warnings, stripStyleElements } : null
   }
 
   class RemapContext {
@@ -89,21 +116,13 @@ export function getSvelteCompileWarnings(
       return this.code
     }
 
-    public appendTranspile(endIndex: number) {
+    public appendTranspile(output: TransformResult) {
+      const endIndex: number = output.inputRange[1]
       const codeStart = this.code.length
       const start = this.originalStart
       const inputText = text.slice(start, endIndex)
 
-      const output = ts.transpileModule(inputText, {
-        reportDiagnostics: false,
-        compilerOptions: {
-          target: ts.ScriptTarget.ESNext,
-          importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
-          sourceMap: true,
-        },
-      })
-
-      const outputText = `${output.outputText}\n`
+      const outputText = `${output.output}\n`
 
       this.code += outputText
       this.originalStart = endIndex
@@ -127,7 +146,7 @@ export function getSvelteCompileWarnings(
         line: number
         column: number
       } {
-        decoded = decoded ?? decode(JSON.parse(output.sourceMapText!).mappings)
+        decoded = decoded ?? decode(output.mappings)
 
         const lineMaps = decoded[pos.line - 1]
 
@@ -232,16 +251,13 @@ export function getSvelteCompileWarnings(
 
   const remapContext = new RemapContext()
 
-  const root = sourceCode.ast
-
-  for (const node of root.body) {
-    if (node.type === "SvelteScriptElement") {
-      if (node.endTag) {
-        remapContext.appendOriginal(node.startTag.range[1])
-        remapContext.appendTranspile(node.endTag.range[0])
-      }
-    }
+  for (const result of transformResults.sort(
+    (a, b) => a.inputRange[0] - b.inputRange[0],
+  )) {
+    remapContext.appendOriginal(result.inputRange[0])
+    remapContext.appendTranspile(result)
   }
+
   const code = remapContext.postprocess()
   const baseWarnings = getWarningsFromCode(code, option)
   if (!baseWarnings) {
@@ -273,15 +289,18 @@ export function getSvelteCompileWarnings(
     })
   }
 
-  return warnings
+  return { warnings, stripStyleElements }
 }
 
 /**
  * Extracts the style with the lang attribute other than CSS.
  */
-export function* extractStyleElementsWithLangOtherThanCSS(
+function* extractStyleElementsWithLangOtherThanCSS(
   context: RuleContext,
-): Iterable<AST.SvelteStyleElement> {
+): Iterable<{
+  node: AST.SvelteStyleElement
+  lang: string
+}> {
   const sourceCode = context.getSourceCode()
   const root = sourceCode.ast
   for (const node of root.body) {
@@ -296,9 +315,89 @@ export function* extractStyleElementsWithLangOtherThanCSS(
         langAttr.value[0].type === "SvelteLiteral" &&
         langAttr.value[0].value.toLowerCase() !== "css"
       ) {
-        yield node
+        yield { node, lang: langAttr.value[0].value.toLowerCase() }
       }
     }
+  }
+}
+
+type TransformResult = {
+  inputRange: AST.Range
+  output: string
+  mappings: string
+}
+
+/**
+ * Transpile with typescript
+ */
+function transpileWithTypescript(
+  node: AST.SvelteScriptElement,
+  context: RuleContext,
+): TransformResult | null {
+  const ts = loadTs(context)
+  if (!ts) {
+    return null
+  }
+  let inputRange: AST.Range
+  if (node.endTag) {
+    inputRange = [node.startTag.range[1], node.endTag.range[0]]
+  } else {
+    inputRange = [node.startTag.range[1], node.range[1]]
+  }
+  const code = context.getSourceCode().text.slice(...inputRange)
+
+  const output = ts.transpileModule(code, {
+    reportDiagnostics: false,
+    compilerOptions: {
+      target: ts.ScriptTarget.ESNext,
+      importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
+      sourceMap: true,
+    },
+  })
+
+  return {
+    inputRange,
+    output: output.outputText,
+    mappings: JSON.parse(output.sourceMapText!).mappings,
+  }
+}
+
+/**
+ * Transform with postcss
+ */
+function transformWithPostcss(
+  node: AST.SvelteStyleElement,
+  context: RuleContext,
+): TransformResult | null {
+  let inputRange: AST.Range
+  if (node.endTag) {
+    inputRange = [node.startTag.range[1], node.endTag.range[0]]
+  } else {
+    inputRange = [node.startTag.range[1], node.range[1]]
+  }
+  const code = context.getSourceCode().text.slice(...inputRange)
+
+  const filename = `${context.getFilename()}.css`
+  try {
+    const config = postcssrc.sync({
+      cwd: context.getCwd?.() ?? process.cwd(),
+      from: filename,
+    })
+
+    const result = postcss(config.plugins).process(code, {
+      ...config.options,
+      map: {
+        inline: false,
+      },
+    })
+
+    return {
+      inputRange,
+      output: result.content,
+      mappings: result.map.toJSON().mappings,
+    }
+  } catch {
+    return null
   }
 }
 
@@ -307,27 +406,18 @@ export function* extractStyleElementsWithLangOtherThanCSS(
  */
 function buildStrippedText(
   context: RuleContext,
-  option: GetSvelteWarningsOption,
+  stripTokens: (AST.Token | AST.Comment | AST.SvelteText)[],
 ) {
   const sourceCode = context.getSourceCode()
   const baseText = sourceCode.text
 
-  const removeTokens: (AST.Token | AST.Comment | AST.SvelteText)[] =
-    option.removeComments ? [...option.removeComments] : []
-
-  // Strips the style with the lang attribute other than CSS.
-  for (const node of extractStyleElementsWithLangOtherThanCSS(context)) {
-    removeTokens.push(...node.children)
-  }
-  if (!removeTokens.length) {
+  if (!stripTokens.length) {
     return baseText
   }
 
-  removeTokens.sort((a, b) => a.range[0] - b.range[0])
-
   let code = ""
   let start = 0
-  for (const token of removeTokens) {
+  for (const token of stripTokens.sort((a, b) => a.range[0] - b.range[0])) {
     code +=
       baseText.slice(start, token.range[0]) +
       baseText.slice(...token.range).replace(/[^\t\n\r ]/g, " ")
@@ -382,5 +472,34 @@ function getWarningsFromCode(
         end: e.end,
       },
     ]
+  }
+}
+
+const cacheTs = new WeakMap<AST.SvelteProgram, TS>()
+
+/**
+ * Load typescript
+ */
+function loadTs(context: RuleContext) {
+  const key = context.getSourceCode().ast
+  const ts = cacheTs.get(key)
+  if (ts) {
+    return ts
+  }
+  try {
+    const createRequire: (filename: string) => (modName: string) => unknown =
+      // Added in v12.2.0
+      Module.createRequire ||
+      // Added in v10.12.0, but deprecated in v12.2.0.
+      // @ts-expect-error -- old type
+      Module.createRequireFromPath
+
+    const cwd = context.getCwd?.() ?? process.cwd()
+    const relativeTo = path.join(cwd, "__placeholder__.js")
+    const ts = createRequire(relativeTo)("typescript") as TS
+    cacheTs.set(key, ts)
+    return ts
+  } catch {
+    return null
   }
 }

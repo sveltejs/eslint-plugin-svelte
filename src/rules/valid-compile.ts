@@ -52,7 +52,7 @@ export default createRule("valid-compile", {
         report(
           getSvelteCompileWarnings(context, {
             warnings: ignoreWarnings ? "ignoreWarnings" : null,
-          })!,
+          })!.warnings,
         )
       },
     }
