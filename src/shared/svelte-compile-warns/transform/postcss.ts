@@ -11,6 +11,11 @@ export function transform(
   node: AST.SvelteStyleElement,
   context: RuleContext,
 ): TransformResult | null {
+  const postcssConfig =
+    context.settings?.["@ota-meshi/svelte"]?.compileOptions?.postcss
+  if (postcssConfig === false) {
+    return null
+  }
   let inputRange: AST.Range
   if (node.endTag) {
     inputRange = [node.startTag.range[1], node.endTag.range[0]]
@@ -21,9 +26,7 @@ export function transform(
 
   const filename = `${context.getFilename()}.css`
   try {
-    const configFilePath =
-      context.settings?.["@ota-meshi/svelte"]?.compileOptions?.postcss
-        ?.configFilePath
+    const configFilePath = postcssConfig?.configFilePath
 
     const config = postcssLoadConfig.sync(
       {
