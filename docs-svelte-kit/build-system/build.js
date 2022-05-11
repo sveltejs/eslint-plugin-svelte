@@ -44,7 +44,7 @@ function transform(code, injects) {
   //   plugins: [
   //     {
   //       visitor: {
-  //         AssignmentExpression(path) {
+  //         CallExpression(path) {
   //           const callee = path.get("callee")
   //           if (
   //             callee.type === "Identifier" &&
