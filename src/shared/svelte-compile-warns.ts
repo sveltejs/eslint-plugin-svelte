@@ -115,9 +115,6 @@ export function getSvelteCompileWarnings(
           importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
           sourceMap: true,
         },
-        transformers: {
-          before: [createTsImportTransformer(ts)],
-        },
       })
 
       const outputText = `${output.outputText}\n`
@@ -338,40 +335,5 @@ function getWarningsFromCode(
         end: e.end,
       },
     ]
-  }
-}
-
-/**
- * @see https://github.com/sveltejs/eslint-plugin-svelte3/blob/259263ccaf69c59e473d9bfa39706b0955eccfbd/src/preprocess.js#L194
- * MIT License @ Conduitry
- */
-function createTsImportTransformer(
-  ts: TS,
-): typescript.TransformerFactory<typescript.SourceFile> {
-  const factory = ts.factory
-  /**
-   * https://github.com/sveltejs/svelte-preprocess/blob/main/src/transformers/typescript.ts
-   * TypeScript transformer for preserving imports correctly when preprocessing TypeScript files
-   */
-  return (context: typescript.TransformationContext) => {
-    /** visitor */
-    function visit(node: typescript.Node): typescript.Node {
-      if (ts.isImportDeclaration(node)) {
-        if (node.importClause && node.importClause.isTypeOnly) {
-          return factory.createEmptyStatement()
-        }
-
-        return factory.createImportDeclaration(
-          node.decorators,
-          node.modifiers,
-          node.importClause,
-          node.moduleSpecifier,
-        )
-      }
-
-      return ts.visitEachChild(node, (child) => visit(child), context)
-    }
-
-    return (node: typescript.SourceFile) => ts.visitNode(node, visit)
   }
 }
