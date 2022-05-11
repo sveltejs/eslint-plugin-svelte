@@ -32,7 +32,9 @@ export default createRule("system", {
       return {}
     }
     const ignoreTests: ((ruleId: string) => boolean)[] = []
-    for (const ignoreWarning of ignoreWarnings || []) {
+    for (const ignoreWarning of Array.isArray(ignoreWarnings)
+      ? ignoreWarnings
+      : []) {
       if (typeof ignoreWarning !== "string") {
         context.report({
           loc: { line: 1, column: 0 },

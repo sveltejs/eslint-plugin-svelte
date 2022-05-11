@@ -1,14 +1,12 @@
 import type { AST } from "svelte-eslint-parser"
-import Module from "module"
-import path from "path"
 import * as compiler from "svelte/compiler"
-import type typescript from "typescript"
 import type { SourceMapMappings } from "sourcemap-codec"
 import { decode } from "sourcemap-codec"
-import type { RuleContext } from "../types"
-import { LinesAndColumns } from "../utils/lines-and-columns"
-import postcss from "postcss"
-import postcssrc from "postcss-load-config"
+import type { RuleContext } from "../../types"
+import { LinesAndColumns } from "../../utils/lines-and-columns"
+import type { TransformResult } from "./transform/types"
+import { transform as transformWithTypescript } from "./transform/typescript"
+import { transform as transformWithPostCSS } from "./transform/postcss"
 
 export type Loc = {
   start?: {
@@ -25,7 +23,6 @@ export type Warning = {
   message: string
 } & Loc
 export type GetSvelteWarningsOption = {
-  warnings: "ignoreWarnings" | "onlyWarnings" | null
   removeComments?: Iterable<AST.Token | AST.Comment>
 }
 
@@ -37,8 +34,9 @@ export function getSvelteCompileWarnings(
   option: GetSvelteWarningsOption,
 ): {
   warnings: Warning[]
+  kind: "warn" | "error"
   stripStyleElements: AST.SvelteStyleElement[]
-} | null {
+} {
   const sourceCode = context.getSourceCode()
 
   // Process for styles
@@ -49,7 +47,7 @@ export function getSvelteCompileWarnings(
   const transformResults: TransformResult[] = []
   for (const style of styleElementsWithNotCSS) {
     if (style.lang === "postcss") {
-      const result = transformWithPostcss(style.node, context)
+      const result = transformWithPostCSS(style.node, context)
       if (result) {
         transformResults.push(result)
         continue
@@ -72,7 +70,7 @@ export function getSvelteCompileWarnings(
 
     for (const node of root.body) {
       if (node.type === "SvelteScriptElement") {
-        const result = transpileWithTypescript(node, context)
+        const result = transformWithTypescript(node, context)
         if (result) {
           transformResults.push(result)
         }
@@ -81,8 +79,8 @@ export function getSvelteCompileWarnings(
   }
 
   if (!transformResults.length) {
-    const warnings = getWarningsFromCode(text, option)
-    return warnings ? { warnings, stripStyleElements } : null
+    const warnings = getWarningsFromCode(text)
+    return { ...warnings, stripStyleElements }
   }
 
   class RemapContext {
@@ -259,13 +257,10 @@ export function getSvelteCompileWarnings(
   }
 
   const code = remapContext.postprocess()
-  const baseWarnings = getWarningsFromCode(code, option)
-  if (!baseWarnings) {
-    return null
-  }
+  const baseWarnings = getWarningsFromCode(code)
 
   const warnings: Warning[] = []
-  for (const warn of baseWarnings) {
+  for (const warn of baseWarnings.warnings) {
     let loc: Loc | null = null
 
     /** Get re-mapped location */
@@ -289,7 +284,7 @@ export function getSvelteCompileWarnings(
     })
   }
 
-  return { warnings, stripStyleElements }
+  return { warnings, kind: baseWarnings.kind, stripStyleElements }
 }
 
 /**
@@ -321,86 +316,6 @@ function* extractStyleElementsWithLangOtherThanCSS(
   }
 }
 
-type TransformResult = {
-  inputRange: AST.Range
-  output: string
-  mappings: string
-}
-
-/**
- * Transpile with typescript
- */
-function transpileWithTypescript(
-  node: AST.SvelteScriptElement,
-  context: RuleContext,
-): TransformResult | null {
-  const ts = loadTs(context)
-  if (!ts) {
-    return null
-  }
-  let inputRange: AST.Range
-  if (node.endTag) {
-    inputRange = [node.startTag.range[1], node.endTag.range[0]]
-  } else {
-    inputRange = [node.startTag.range[1], node.range[1]]
-  }
-  const code = context.getSourceCode().text.slice(...inputRange)
-
-  const output = ts.transpileModule(code, {
-    reportDiagnostics: false,
-    compilerOptions: {
-      target: ts.ScriptTarget.ESNext,
-      importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
-      sourceMap: true,
-    },
-  })
-
-  return {
-    inputRange,
-    output: output.outputText,
-    mappings: JSON.parse(output.sourceMapText!).mappings,
-  }
-}
-
-/**
- * Transform with postcss
- */
-function transformWithPostcss(
-  node: AST.SvelteStyleElement,
-  context: RuleContext,
-): TransformResult | null {
-  let inputRange: AST.Range
-  if (node.endTag) {
-    inputRange = [node.startTag.range[1], node.endTag.range[0]]
-  } else {
-    inputRange = [node.startTag.range[1], node.range[1]]
-  }
-  const code = context.getSourceCode().text.slice(...inputRange)
-
-  const filename = `${context.getFilename()}.css`
-  try {
-    const config = postcssrc.sync({
-      cwd: context.getCwd?.() ?? process.cwd(),
-      from: filename,
-    })
-
-    const result = postcss(config.plugins).process(code, {
-      ...config.options,
-      map: {
-        inline: false,
-      },
-    })
-
-    return {
-      inputRange,
-      output: result.content,
-      mappings: result.map.toJSON().mappings,
-    }
-  } catch {
-    return null
-  }
-}
-
 /**
  * Build the text stripped of tokens that are not needed for compilation.
  */
@@ -427,79 +342,31 @@ function buildStrippedText(
   return code
 }
 
-type TS = typeof typescript
-
 /**
  * Get compile warnings
  */
-function getWarningsFromCode(
-  code: string,
-  { warnings }: GetSvelteWarningsOption,
-): Warning[] | null {
-  const ignoreWarnings = warnings === "ignoreWarnings"
-  const onlyWarnings = warnings === "onlyWarnings"
+function getWarningsFromCode(code: string): {
+  warnings: Warning[]
+  kind: "warn" | "error"
+} {
   try {
     const result = compiler.compile(code, {
       generate: false,
     })
 
-    if (ignoreWarnings) {
-      return []
-    }
-    return result.warnings as Warning[]
+    return { warnings: result.warnings as Warning[], kind: "warn" }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   } catch (e: any) {
-    if (onlyWarnings) {
-      return null
+    return {
+      warnings: [
+        {
+          code: e.code,
+          message: e.message,
+          start: e.start,
+          end: e.end,
+        },
+      ],
+      kind: "error",
     }
-    // console.log(code)
-    if (!ignoreWarnings) {
-      try {
-        const result = compiler.compile(code, {
-          generate: false,
-          errorMode: "warn",
-        })
-        return result.warnings as Warning[]
-      } catch {
-        // ignore
-      }
-    }
-    return [
-      {
-        code: e.code,
-        message: e.message,
-        start: e.start,
-        end: e.end,
-      },
-    ]
-  }
-}
-
-const cacheTs = new WeakMap<AST.SvelteProgram, TS>()
-
-/**
- * Load typescript
- */
-function loadTs(context: RuleContext) {
-  const key = context.getSourceCode().ast
-  const ts = cacheTs.get(key)
-  if (ts) {
-    return ts
-  }
-  try {
-    const createRequire: (filename: string) => (modName: string) => unknown =
-      // Added in v12.2.0
-      Module.createRequire ||
-      // Added in v10.12.0, but deprecated in v12.2.0.
-      // @ts-expect-error -- old type
-      Module.createRequireFromPath
-
-    const cwd = context.getCwd?.() ?? process.cwd()
-    const relativeTo = path.join(cwd, "__placeholder__.js")
-    const ts = createRequire(relativeTo)("typescript") as TS
-    cacheTs.set(key, ts)
-    return ts
-  } catch {
-    return null
   }
 }

@@ -4,63 +4,14 @@ import type { Warning } from "../shared/svelte-compile-warns"
 import { getSvelteCompileWarnings } from "../shared/svelte-compile-warns"
 import { createRule } from "../utils"
 import type { ASTNodeWithParent } from "../types"
+import type { IgnoreItem } from "../shared/svelte-compile-warns/ignore-comment"
+import { getSvelteIgnoreItems } from "../shared/svelte-compile-warns/ignore-comment"
 
-const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m
 const CSS_WARN_CODES = new Set([
   "css-unused-selector",
   "css-invalid-global",
   "css-invalid-global-selector",
 ])
-type IgnoreItem = {
-  range: [number, number]
-  code: string
-  token: AST.Token | AST.Comment
-}
-
-/** Checks whether given comment has missing code svelte-ignore */
-function hasMissingCodeIgnore(text: string) {
-  const m1 = SVELTE_IGNORE_PATTERN.exec(text)
-  if (!m1) {
-    return false
-  }
-  const ignoreStart = m1.index + m1[0].length
-  const beforeText = text.slice(ignoreStart)
-  return !beforeText.trim()
-}
-
-/** Extract svelte-ignore rule names */
-function extractSvelteIgnore(
-  text: string,
-  startIndex: number,
-  token: AST.Token | AST.Comment,
-): IgnoreItem[] | null {
-  const m1 = SVELTE_IGNORE_PATTERN.exec(text)
-  if (!m1) {
-    return null
-  }
-  const ignoreStart = m1.index + m1[0].length
-  const beforeText = text.slice(ignoreStart)
-  if (!/^\s/.test(beforeText) || !beforeText.trim()) {
-    return null
-  }
-  let start = startIndex + ignoreStart
-
-  const results: IgnoreItem[] = []
-  for (const code of beforeText.split(/\s/)) {
-    const end = start + code.length
-    const trimmed = code.trim()
-    if (trimmed) {
-      results.push({
-        code: trimmed,
-        range: [start, end],
-        token,
-      })
-    }
-    start = end + 1 /* space */
-  }
-
-  return results
-}
 
 export default createRule("no-unused-svelte-ignore", {
   meta: {
@@ -77,54 +28,32 @@ export default createRule("no-unused-svelte-ignore", {
     type: "suggestion",
   },
 
-  // eslint-disable-next-line complexity -- X(
   create(context) {
     const sourceCode = context.getSourceCode()
 
     const ignoreComments: IgnoreItem[] = []
-    const used = new Set<IgnoreItem>()
-    for (const comment of sourceCode.getAllComments()) {
-      const ignores = extractSvelteIgnore(
-        comment.value,
-        comment.range[0] + 2,
-        comment,
-      )
-      if (ignores) {
-        ignoreComments.push(...ignores)
-      } else if (hasMissingCodeIgnore(comment.value)) {
+    for (const item of getSvelteIgnoreItems(context)) {
+      if (item.code == null) {
         context.report({
-          node: comment,
+          node: item.token,
           messageId: "missingCode",
         })
+      } else {
+        ignoreComments.push(item)
       }
     }
-    for (const token of sourceCode.ast.tokens) {
-      if (token.type === "HTMLComment") {
-        const text = token.value.slice(4, -3)
-        const ignores = extractSvelteIgnore(text, token.range[0] + 4, token)
-        if (ignores) {
-          ignoreComments.push(...ignores)
-        } else if (hasMissingCodeIgnore(text)) {
-          context.report({
-            node: token,
-            messageId: "missingCode",
-          })
-        }
-      }
-    }
-    ignoreComments.sort((a, b) => b.range[0] - a.range[0])
 
     if (!ignoreComments.length) {
       return {}
     }
 
     const warnings = getSvelteCompileWarnings(context, {
-      warnings: "onlyWarnings",
       removeComments: new Set(ignoreComments.map((i) => i.token)),
     })
-    if (!warnings) {
+    if (warnings.kind === "error") {
       return {}
     }
+    const used = new Set<IgnoreItem>()
     for (const warning of warnings.warnings) {
       if (!warning.code) {
         continue
