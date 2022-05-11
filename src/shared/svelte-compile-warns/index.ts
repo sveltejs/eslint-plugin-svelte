@@ -7,7 +7,15 @@ import { LinesAndColumns } from "../../utils/lines-and-columns"
 import type { TransformResult } from "./transform/types"
 import { transform as transformWithTypescript } from "./transform/typescript"
 import { transform as transformWithPostCSS } from "./transform/postcss"
+import type { IgnoreItem } from "./ignore-comment"
+import { getSvelteIgnoreItems } from "./ignore-comment"
+import { extractLeadingComments } from "./extract-leading-comments"
 
+const CSS_WARN_CODES = new Set([
+  "css-unused-selector",
+  "css-invalid-global",
+  "css-invalid-global-selector",
+])
 export type Loc = {
   start?: {
     line: number
@@ -22,18 +30,13 @@ export type Warning = {
   code?: string
   message: string
 } & Loc
-export type GetSvelteWarningsOption = {
-  removeComments?: Iterable<AST.Token | AST.Comment>
-}
 
 /**
  * Get svelte compile warnings
  */
-export function getSvelteCompileWarnings(
-  context: RuleContext,
-  option: GetSvelteWarningsOption,
-): {
+export function getSvelteCompileWarnings(context: RuleContext): {
   warnings: Warning[]
+  unusedIgnores: IgnoreItem[]
   kind: "warn" | "error"
   stripStyleElements: AST.SvelteStyleElement[]
 } {
@@ -57,13 +60,11 @@ export function getSvelteCompileWarnings(
   }
 
   const stripStyleTokens = stripStyleElements.flatMap((e) => e.children)
+  const ignoreComments = getSvelteIgnoreItems(context).filter(
+    (item): item is IgnoreItem => item.code != null,
+  )
 
-  const stripTokens: (AST.Token | AST.Comment | AST.SvelteText)[] =
-    option.removeComments
-      ? [...option.removeComments, ...stripStyleTokens]
-      : stripStyleTokens
-
-  const text = buildStrippedText(context, stripTokens)
+  const text = buildStrippedText(context, ignoreComments, stripStyleTokens)
 
   if (context.parserServices.esTreeNodeToTSNodeMap) {
     const root = sourceCode.ast
@@ -80,7 +81,17 @@ export function getSvelteCompileWarnings(
 
   if (!transformResults.length) {
     const warnings = getWarningsFromCode(text)
-    return { ...warnings, stripStyleElements }
+    return {
+      ...processIgnore(
+        warnings.warnings,
+        warnings.kind,
+        stripStyleElements,
+        ignoreComments,
+        context,
+      ),
+      kind: warnings.kind,
+      stripStyleElements,
+    }
   }
 
   class RemapContext {
@@ -284,7 +295,17 @@ export function getSvelteCompileWarnings(
     })
   }
 
-  return { warnings, kind: baseWarnings.kind, stripStyleElements }
+  return {
+    ...processIgnore(
+      warnings,
+      baseWarnings.kind,
+      stripStyleElements,
+      ignoreComments,
+      context,
+    ),
+    kind: baseWarnings.kind,
+    stripStyleElements,
+  }
 }
 
 /**
@@ -321,11 +342,16 @@ function* extractStyleElementsWithLangOtherThanCSS(
  */
 function buildStrippedText(
   context: RuleContext,
-  stripTokens: (AST.Token | AST.Comment | AST.SvelteText)[],
+  ignoreComments: IgnoreItem[],
+  stripStyleTokens: AST.SvelteText[],
 ) {
   const sourceCode = context.getSourceCode()
   const baseText = sourceCode.text
 
+  const stripTokens = [
+    ...ignoreComments.map((item) => item.token),
+    ...stripStyleTokens,
+  ]
   if (!stripTokens.length) {
     return baseText
   }
@@ -368,5 +394,103 @@ function getWarningsFromCode(code: string): {
       ],
       kind: "error",
     }
+  }
+}
+
+/** Ignore process */
+function processIgnore(
+  warnings: Warning[],
+  kind: "warn" | "error",
+  stripStyleElements: AST.SvelteStyleElement[],
+  ignoreComments: IgnoreItem[],
+  context: RuleContext,
+): {
+  warnings: Warning[]
+  unusedIgnores: IgnoreItem[]
+} {
+  if (kind === "error") {
+    return {
+      warnings,
+      unusedIgnores: ignoreComments,
+    }
+  }
+  const sourceCode = context.getSourceCode()
+  const unusedIgnores = new Set(ignoreComments)
+  const remainingWarning = new Set(warnings)
+
+  for (const warning of warnings) {
+    if (!warning.code) {
+      continue
+    }
+    const node = getWarningNode(warning)
+    if (!node) {
+      continue
+    }
+    for (const comment of extractLeadingComments(context, node).reverse()) {
+      const ignoreItem = ignoreComments.find(
+        (item) => item.token === comment && item.code === warning.code,
+      )
+      if (ignoreItem) {
+        unusedIgnores.delete(ignoreItem)
+        remainingWarning.delete(warning)
+        break
+      }
+    }
+  }
+  // Stripped styles are ignored from compilation and cannot determine css errors.
+  for (const node of stripStyleElements) {
+    for (const comment of extractLeadingComments(context, node).reverse()) {
+      const ignoreItem = ignoreComments.find(
+        (item) => item.token === comment && CSS_WARN_CODES.has(item.code),
+      )
+      if (ignoreItem) {
+        unusedIgnores.delete(ignoreItem)
+        break
+      }
+    }
+  }
+  return {
+    warnings: [...remainingWarning],
+    unusedIgnores: [...unusedIgnores],
+  }
+
+  /** Get warning node */
+  function getWarningNode(warning: Warning) {
+    const index = getWarningIndex(warning)
+    if (index == null) {
+      return null
+    }
+    let targetNode = sourceCode.getNodeByRangeIndex(index)
+    while (targetNode) {
+      if (
+        targetNode.type === "SvelteElement" ||
+        targetNode.type === "SvelteStyleElement"
+      ) {
+        return targetNode
+      }
+      if (targetNode.parent) {
+        if (
+          targetNode.parent.type === "Program" ||
+          targetNode.parent.type === "SvelteScriptElement"
+        ) {
+          return targetNode
+        }
+      } else {
+        return null
+      }
+      targetNode = targetNode.parent || null
+    }
+
+    return null
+  }
+
+  /** Get warning index */
+  function getWarningIndex(warning: Warning) {
+    const start = warning.start && sourceCode.getIndexFromLoc(warning.start)
+    const end = warning.end && sourceCode.getIndexFromLoc(warning.end)
+    if (start != null && end != null) {
+      return Math.floor(start + (end - start) / 2)
+    }
+    return start ?? end
   }
 }
