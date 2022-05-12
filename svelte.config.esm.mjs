@@ -75,6 +75,11 @@ const config = {
           }),
         ),
       ],
+      build: {
+        commonjsOptions: {
+          ignoreDynamicRequires: true,
+        },
+      },
     },
   },
 }
