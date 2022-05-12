@@ -11,12 +11,22 @@ import {
 } from "./transform/typescript"
 import { transform as transformWithBabel } from "./transform/babel"
 import { transform as transformWithPostCSS } from "./transform/postcss"
+import { transform as transformWithSass } from "./transform/sass"
 import type { IgnoreItem } from "./ignore-comment"
 import { getSvelteIgnoreItems } from "./ignore-comment"
 import { extractLeadingComments } from "./extract-leading-comments"
 import { getLangValue } from "../../utils/ast-utils"
 import path from "path"
 import fs from "fs"
+
+const STYLE_TRANSFORMS: Record<
+  string,
+  typeof transformWithPostCSS | undefined
+> = {
+  postcss: transformWithPostCSS,
+  scss: (node, context) => transformWithSass(node, context, "scss"),
+  sass: (node, context) => transformWithSass(node, context, "sass"),
+}
 
 const CSS_WARN_CODES = new Set([
   "css-unused-selector",
@@ -76,8 +86,9 @@ function getSvelteCompileWarningsWithoutCache(
   const stripStyleElements: AST.SvelteStyleElement[] = []
   const transformResults: TransformResult[] = []
   for (const style of styleElementsWithNotCSS) {
-    if (style.lang === "postcss") {
-      const result = transformWithPostCSS(style.node, context)
+    const transform = STYLE_TRANSFORMS[style.lang]
+    if (transform) {
+      const result = transform(style.node, context)
       if (result) {
         transformResults.push(result)
         continue
@@ -331,7 +342,7 @@ function* extractStyleElementsWithLangOtherThanCSS(
   context: RuleContext,
 ): Iterable<{
   node: AST.SvelteStyleElement
-  lang: string
+  readonly lang: string
 }> {
   const sourceCode = context.getSourceCode()
   const root = sourceCode.ast

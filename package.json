@@ -126,6 +126,7 @@
     "prettier-plugin-svelte": "^2.6.0",
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.25.0",
+    "sass": "^1.51.0",
     "semver": "^7.3.5",
     "stylelint": "^14.0.0",
     "stylelint-config-standard": "^25.0.0",
