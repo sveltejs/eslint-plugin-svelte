@@ -16,9 +16,17 @@ function resolve(s) {
   return s
 }
 
+function isAbsolute() {
+  return false
+}
+
+function join(...args) {
+  return args.join("/")
+}
+
 const sep = "/"
 
-const posix = { dirname, extname, resolve, relative, sep }
+const posix = { dirname, extname, resolve, relative, sep, isAbsolute, join }
 posix.posix = posix
-export { dirname, extname, posix, resolve, relative, sep }
+export { dirname, extname, posix, resolve, relative, sep, isAbsolute, join }
 export default posix

@@ -62,6 +62,9 @@ const config = {
           path: path.join(dirname, "./docs-svelte-kit/shim/path.mjs"),
           url: path.join(dirname, "./docs-svelte-kit/shim/url.mjs"),
           os: path.join(dirname, "./docs-svelte-kit/shim/os.mjs"),
+          fs: path.join(dirname, "./docs-svelte-kit/shim/fs.mjs"),
+          globby: path.join(dirname, "./docs-svelte-kit/shim/globby.mjs"),
+          tslib: path.join(dirname, "./node_modules/tslib/tslib.es6.js"),
         },
       },
       plugins: [

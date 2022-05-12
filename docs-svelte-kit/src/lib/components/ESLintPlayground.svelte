@@ -9,8 +9,17 @@
     preprocess,
     postprocess,
   } from "../eslint/scripts/linter.js"
-
-  const linter = createLinter()
+  import { loadModulesForBrowser } from "../../../../src/shared/svelte-compile-warns/transform/load-module"
+  const linter = loadModulesForBrowser()
+    .then(async () => {
+      const parser = await import("@typescript-eslint/parser")
+      if (typeof window !== "undefined") {
+        window.require.define("@typescript-eslint/parser", parser)
+      }
+    })
+    .then(() => {
+      return createLinter()
+    })
 
   const DEFAULT_CODE =
     `<!-- Welcome to @ota-meshi/eslint-plugin-svelte -->
@@ -161,6 +170,10 @@
           parserOptions: {
             ecmaVersion: 2020,
             sourceType: "module",
+            parser: {
+              ts: "@typescript-eslint/parser",
+              typescript: "@typescript-eslint/parser",
+            },
           },
           rules,
           env: {

@@ -26,6 +26,7 @@ module.exports = {
     "no-lonely-if": "off",
     "new-cap": "off",
     "no-shadow": "off",
+    "no-void": ["error", { allowAsStatement: true }],
     "prettier/prettier": [
       "error",
       {},
