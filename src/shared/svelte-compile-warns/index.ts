@@ -26,6 +26,7 @@ const STYLE_TRANSFORMS: Record<
   typeof transformWithPostCSS | undefined
 > = {
   postcss: transformWithPostCSS,
+  pcss: transformWithPostCSS,
   scss: (node, context) => transformWithSass(node, context, "scss"),
   sass: (node, context) => transformWithSass(node, context, "sass"),
   less: transformWithLess,
