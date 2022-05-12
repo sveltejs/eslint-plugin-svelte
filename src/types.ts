@@ -103,6 +103,7 @@ export type RuleContext = {
     ["@ota-meshi/svelte"]?: {
       ignoreWarnings?: unknown
       compileOptions?: {
+        babel?: boolean
         postcss?: false | { configFilePath?: unknown }
       }
     }

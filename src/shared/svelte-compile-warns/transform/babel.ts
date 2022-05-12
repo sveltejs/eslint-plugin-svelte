@@ -1,21 +1,21 @@
 import type { AST } from "svelte-eslint-parser"
 import Module from "module"
 import path from "path"
-import type typescript from "typescript"
+import type babelCore from "@babel/core"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
 
-type TS = typeof typescript
-const cacheTs = new WeakMap<AST.SvelteProgram, TS>()
+type BabelCore = typeof babelCore
+const cacheBabel = new WeakMap<AST.SvelteProgram, BabelCore>()
 /**
- * Transpile with typescript
+ * Transpile with babel
  */
 export function transform(
   node: AST.SvelteScriptElement,
   context: RuleContext,
 ): TransformResult | null {
-  const ts = loadTs(context)
-  if (!ts) {
+  const babel = loadBabel(context)
+  if (!babel) {
     return null
   }
   let inputRange: AST.Range
@@ -27,38 +27,40 @@ export function transform(
   const code = context.getSourceCode().text.slice(...inputRange)
 
   try {
-    const output = ts.transpileModule(code, {
-      reportDiagnostics: false,
-      compilerOptions: {
-        target: ts.ScriptTarget.ESNext,
-        importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
-        sourceMap: true,
-      },
+    const output = babel.transformSync(code, {
+      sourceType: "module",
+      sourceMaps: true,
+      minified: false,
+      ast: false,
+      code: true,
+      cwd: context.getCwd?.() ?? process.cwd(),
     })
-
+    if (!output) {
+      return null
+    }
     return {
       inputRange,
-      output: output.outputText,
-      mappings: JSON.parse(output.sourceMapText!).mappings,
+      output: output.code!,
+      mappings: output.map!.mappings,
     }
-  } catch {
+  } catch (e) {
     return null
   }
 }
 
-/** Check if project has TypeScript. */
-export function hasTypeScript(context: RuleContext): boolean {
-  return Boolean(loadTs(context))
+/** Check if project has Babel. */
+export function hasBabel(context: RuleContext): boolean {
+  return Boolean(loadBabel(context))
 }
 
 /**
- * Load typescript
+ * Load babel
  */
-function loadTs(context: RuleContext) {
+function loadBabel(context: RuleContext) {
   const key = context.getSourceCode().ast
-  const ts = cacheTs.get(key)
-  if (ts) {
-    return ts
+  const babel = cacheBabel.get(key)
+  if (babel) {
+    return babel
   }
   try {
     const createRequire: (filename: string) => (modName: string) => unknown =
@@ -70,9 +72,9 @@ function loadTs(context: RuleContext) {
 
     const cwd = context.getCwd?.() ?? process.cwd()
     const relativeTo = path.join(cwd, "__placeholder__.js")
-    const ts = createRequire(relativeTo)("typescript") as TS
-    cacheTs.set(key, ts)
-    return ts
+    const babel = createRequire(relativeTo)("@babel/core") as BabelCore
+    cacheBabel.set(key, babel)
+    return babel
   } catch {
     return null
   }

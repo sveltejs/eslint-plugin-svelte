@@ -193,6 +193,15 @@ export function getStaticAttributeValue(
   }
   return str
 }
+/**
+ * Get the static attribute value from given attribute
+ */
+export function getLangValue(
+  node: SvAST.SvelteScriptElement | SvAST.SvelteStyleElement,
+): string | null {
+  const langAttr = findAttribute(node, "lang")
+  return langAttr && getStaticAttributeValue(langAttr)
+}
 
 /**
  * Find the variable of a given name.

@@ -5,11 +5,16 @@ import { decode } from "sourcemap-codec"
 import type { RuleContext } from "../../types"
 import { LinesAndColumns } from "../../utils/lines-and-columns"
 import type { TransformResult } from "./transform/types"
-import { transform as transformWithTypescript } from "./transform/typescript"
+import {
+  hasTypeScript,
+  transform as transformWithTypescript,
+} from "./transform/typescript"
+import { hasBabel, transform as transformWithBabel } from "./transform/babel"
 import { transform as transformWithPostCSS } from "./transform/postcss"
 import type { IgnoreItem } from "./ignore-comment"
 import { getSvelteIgnoreItems } from "./ignore-comment"
 import { extractLeadingComments } from "./extract-leading-comments"
+import { getLangValue } from "../../utils/ast-utils"
 
 const CSS_WARN_CODES = new Set([
   "css-unused-selector",
@@ -86,18 +91,7 @@ function getSvelteCompileWarningsWithoutCache(
 
   const text = buildStrippedText(context, ignoreComments, stripStyleTokens)
 
-  if (context.parserServices.esTreeNodeToTSNodeMap) {
-    const root = sourceCode.ast
-
-    for (const node of root.body) {
-      if (node.type === "SvelteScriptElement") {
-        const result = transformWithTypescript(node, context)
-        if (result) {
-          transformResults.push(result)
-        }
-      }
-    }
-  }
+  transformResults.push(...transformScripts(context))
 
   if (!transformResults.length) {
     const warnings = getWarningsFromCode(text)
@@ -341,17 +335,9 @@ function* extractStyleElementsWithLangOtherThanCSS(
   const root = sourceCode.ast
   for (const node of root.body) {
     if (node.type === "SvelteStyleElement") {
-      const langAttr = node.startTag.attributes.find(
-        (attr): attr is AST.SvelteAttribute =>
-          attr.type === "SvelteAttribute" && attr.key.name === "lang",
-      )
-      if (
-        langAttr &&
-        langAttr.value.length === 1 &&
-        langAttr.value[0].type === "SvelteLiteral" &&
-        langAttr.value[0].value.toLowerCase() !== "css"
-      ) {
-        yield { node, lang: langAttr.value[0].value.toLowerCase() }
+      const lang = getLangValue(node)
+      if (lang != null && lang.toLowerCase() !== "css") {
+        yield { node, lang: lang.toLowerCase() }
       }
     }
   }
@@ -388,6 +374,33 @@ function buildStrippedText(
   }
   code += baseText.slice(start)
   return code
+}
+
+/** Returns the result of transforming the required script for the transform. */
+function* transformScripts(context: RuleContext) {
+  const transform = isUseTypeScript(context)
+    ? hasTypeScript(context)
+      ? transformWithTypescript
+      : hasBabel(context)
+      ? transformWithBabel
+      : null
+    : context.settings?.["@ota-meshi/svelte"]?.compileOptions?.babel &&
+      hasBabel(context)
+    ? transformWithBabel
+    : null
+
+  const sourceCode = context.getSourceCode()
+  if (transform) {
+    const root = sourceCode.ast
+    for (const node of root.body) {
+      if (node.type === "SvelteScriptElement") {
+        const result = transform(node, context)
+        if (result) {
+          yield result
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -515,4 +528,23 @@ function processIgnore(
     }
     return start ?? end
   }
+}
+
+/**
+ * Check if using TypeScript.
+ */
+function isUseTypeScript(context: RuleContext) {
+  if (context.parserServices.esTreeNodeToTSNodeMap) return true
+  const sourceCode = context.getSourceCode()
+  const root = sourceCode.ast
+
+  for (const node of root.body) {
+    if (node.type === "SvelteScriptElement") {
+      const lang = getLangValue(node)?.toLowerCase()
+      if (lang === "ts" || lang === "typescript") {
+        return true
+      }
+    }
+  }
+  return false
 }
