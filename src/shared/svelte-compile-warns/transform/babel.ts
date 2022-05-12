@@ -1,12 +1,10 @@
 import type { AST } from "svelte-eslint-parser"
-import Module from "module"
-import path from "path"
 import type babelCore from "@babel/core"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
+import { loadModule } from "./load-module"
 
 type BabelCore = typeof babelCore
-const cacheBabel = new WeakMap<AST.SvelteProgram, BabelCore>()
 /**
  * Transpile with babel
  */
@@ -56,26 +54,6 @@ export function hasBabel(context: RuleContext): boolean {
 /**
  * Load babel
  */
-function loadBabel(context: RuleContext) {
-  const key = context.getSourceCode().ast
-  const babel = cacheBabel.get(key)
-  if (babel) {
-    return babel
-  }
-  try {
-    const createRequire: (filename: string) => (modName: string) => unknown =
-      // Added in v12.2.0
-      Module.createRequire ||
-      // Added in v10.12.0, but deprecated in v12.2.0.
-      // @ts-expect-error -- old type
-      Module.createRequireFromPath
-
-    const cwd = context.getCwd?.() ?? process.cwd()
-    const relativeTo = path.join(cwd, "__placeholder__.js")
-    const babel = createRequire(relativeTo)("@babel/core") as BabelCore
-    cacheBabel.set(key, babel)
-    return babel
-  } catch {
-    return null
-  }
+function loadBabel(context: RuleContext): BabelCore | null {
+  return loadModule(context, "babel")
 }

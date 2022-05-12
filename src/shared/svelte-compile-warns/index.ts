@@ -12,6 +12,7 @@ import {
 import { transform as transformWithBabel } from "./transform/babel"
 import { transform as transformWithPostCSS } from "./transform/postcss"
 import { transform as transformWithSass } from "./transform/sass"
+import { transform as transformWithLess } from "./transform/less"
 import type { IgnoreItem } from "./ignore-comment"
 import { getSvelteIgnoreItems } from "./ignore-comment"
 import { extractLeadingComments } from "./extract-leading-comments"
@@ -26,6 +27,7 @@ const STYLE_TRANSFORMS: Record<
   postcss: transformWithPostCSS,
   scss: (node, context) => transformWithSass(node, context, "scss"),
   sass: (node, context) => transformWithSass(node, context, "sass"),
+  less: transformWithLess,
 }
 
 const CSS_WARN_CODES = new Set([

@@ -1,12 +1,10 @@
 import type { AST } from "svelte-eslint-parser"
-import Module from "module"
-import path from "path"
 import type typescript from "typescript"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
+import { loadModule } from "./load-module"
 
 type TS = typeof typescript
-const cacheTs = new WeakMap<AST.SvelteProgram, TS>()
 /**
  * Transpile with typescript
  */
@@ -54,26 +52,6 @@ export function hasTypeScript(context: RuleContext): boolean {
 /**
  * Load typescript
  */
-function loadTs(context: RuleContext) {
-  const key = context.getSourceCode().ast
-  const ts = cacheTs.get(key)
-  if (ts) {
-    return ts
-  }
-  try {
-    const createRequire: (filename: string) => (modName: string) => unknown =
-      // Added in v12.2.0
-      Module.createRequire ||
-      // Added in v10.12.0, but deprecated in v12.2.0.
-      // @ts-expect-error -- old type
-      Module.createRequireFromPath
-
-    const cwd = context.getCwd?.() ?? process.cwd()
-    const relativeTo = path.join(cwd, "__placeholder__.js")
-    const ts = createRequire(relativeTo)("typescript") as TS
-    cacheTs.set(key, ts)
-    return ts
-  } catch {
-    return null
-  }
+function loadTs(context: RuleContext): TS | null {
+  return loadModule(context, "typescript")
 }

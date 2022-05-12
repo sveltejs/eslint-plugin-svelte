@@ -1,20 +1,19 @@
 import type { AST } from "svelte-eslint-parser"
-import type sass from "sass"
+import type less from "less"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
 import { loadModule } from "./load-module"
 
-type Sass = typeof sass
+type Less = typeof less
 /**
- * Transpile with sass
+ * Transpile with less
  */
 export function transform(
   node: AST.SvelteStyleElement,
   context: RuleContext,
-  type: "scss" | "sass",
 ): TransformResult | null {
-  const sass = loadSass(context)
-  if (!sass) {
+  const less = loadLess(context)
+  if (!less) {
     return null
   }
   let inputRange: AST.Range
@@ -25,18 +24,29 @@ export function transform(
   }
   const code = context.getSourceCode().text.slice(...inputRange)
 
+  const filename = `${context.getFilename()}.less`
   try {
-    const output = sass.compileString(code, {
-      sourceMap: true,
-      syntax: type === "sass" ? "indented" : undefined,
-    })
+    let output: Awaited<ReturnType<Less["render"]>> | undefined
+
+    less.render(
+      code,
+      {
+        sourceMap: {},
+        syncImport: true,
+        filename,
+        lint: false,
+      },
+      (_error, result) => {
+        output = result
+      },
+    )
     if (!output) {
       return null
     }
     return {
       inputRange,
       output: output.css,
-      mappings: output.sourceMap!.mappings,
+      mappings: JSON.parse(output.map).mappings,
     }
   } catch (e) {
     return null
@@ -44,8 +54,8 @@ export function transform(
 }
 
 /**
- * Load sass
+ * Load less
  */
-function loadSass(context: RuleContext): Sass | null {
-  return loadModule(context, "sass")
+function loadLess(context: RuleContext): Less | null {
+  return loadModule(context, "less")
 }
