@@ -55,5 +55,5 @@ export function hasBabel(context: RuleContext): boolean {
  * Load babel
  */
 function loadBabel(context: RuleContext): BabelCore | null {
-  return loadModule(context, "babel")
+  return loadModule(context, "@babel/core")
 }
