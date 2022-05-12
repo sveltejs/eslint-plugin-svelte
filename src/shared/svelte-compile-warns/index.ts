@@ -381,9 +381,7 @@ function* transformScripts(context: RuleContext) {
   const transform = isUseTypeScript(context)
     ? hasTypeScript(context)
       ? transformWithTypescript
-      : hasBabel(context)
-      ? transformWithBabel
-      : null
+      : transformWithBabel
     : context.settings?.["@ota-meshi/svelte"]?.compileOptions?.babel &&
       hasBabel(context)
     ? transformWithBabel
