@@ -50,6 +50,10 @@ const config = {
         alias: {
           eslint: path.join(dirname, "./docs-svelte-kit/shim/eslint.mjs"),
           assert: path.join(dirname, "./docs-svelte-kit/shim/assert.mjs"),
+          "postcss-load-config": path.join(
+            dirname,
+            "./docs-svelte-kit/shim/postcss-load-config.mjs",
+          ),
           module: path.join(dirname, "./docs-svelte-kit/shim/module.mjs"),
           path: path.join(dirname, "./docs-svelte-kit/shim/path.mjs"),
           url: path.join(dirname, "./docs-svelte-kit/shim/url.mjs"),

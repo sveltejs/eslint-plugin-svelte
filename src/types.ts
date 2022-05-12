@@ -99,8 +99,15 @@ export type RuleContext = {
   id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   options: any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  settings: { [name: string]: any }
+  settings?: {
+    ["@ota-meshi/svelte"]?: {
+      ignoreWarnings?: unknown
+      compileOptions?: {
+        babel?: boolean
+        postcss?: false | { configFilePath?: unknown }
+      }
+    }
+  }
   parserPath: string
   parserOptions: Linter.ParserOptions
   parserServices: ESLintSourceCode.ParserServices

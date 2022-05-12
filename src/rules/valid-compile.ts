@@ -49,11 +49,11 @@ export default createRule("valid-compile", {
 
     return {
       "Program:exit"() {
-        report(
-          getSvelteCompileWarnings(context, {
-            warnings: ignoreWarnings ? "ignoreWarnings" : null,
-          })!,
-        )
+        const result = getSvelteCompileWarnings(context)
+        if (ignoreWarnings && result.kind === "warn") {
+          return
+        }
+        report(result.warnings)
       },
     }
   },
