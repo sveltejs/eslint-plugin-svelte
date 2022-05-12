@@ -1,9 +1,5 @@
 {
-  "settings": {
-    "@ota-meshi/svelte": {
-      "compileOptions": {
-        "babel": true
-      }
-    }
+  "parserOptions": {
+    "parser": "@babel/eslint-parser"
   }
 }

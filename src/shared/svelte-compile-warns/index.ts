@@ -9,12 +9,14 @@ import {
   hasTypeScript,
   transform as transformWithTypescript,
 } from "./transform/typescript"
-import { hasBabel, transform as transformWithBabel } from "./transform/babel"
+import { transform as transformWithBabel } from "./transform/babel"
 import { transform as transformWithPostCSS } from "./transform/postcss"
 import type { IgnoreItem } from "./ignore-comment"
 import { getSvelteIgnoreItems } from "./ignore-comment"
 import { extractLeadingComments } from "./extract-leading-comments"
 import { getLangValue } from "../../utils/ast-utils"
+import path from "path"
+import fs from "fs"
 
 const CSS_WARN_CODES = new Set([
   "css-unused-selector",
@@ -382,8 +384,7 @@ function* transformScripts(context: RuleContext) {
     ? hasTypeScript(context)
       ? transformWithTypescript
       : transformWithBabel
-    : context.settings?.["@ota-meshi/svelte"]?.compileOptions?.babel &&
-      hasBabel(context)
+    : isUseBabel(context)
     ? transformWithBabel
     : null
 
@@ -545,4 +546,74 @@ function isUseTypeScript(context: RuleContext) {
     }
   }
   return false
+}
+
+/**
+ * Check if using Babel.
+ */
+function isUseBabel(context: RuleContext) {
+  const parser = context.parserOptions?.parser
+  if (!parser) {
+    return false
+  }
+  const sourceCode = context.getSourceCode()
+  const root = sourceCode.ast
+
+  let scriptLang = "js"
+
+  for (const node of root.body) {
+    if (node.type === "SvelteScriptElement") {
+      const lang = getLangValue(node)?.toLowerCase()
+      if (lang === "ts" || lang === "typescript") {
+        scriptLang = lang
+        break
+      }
+    }
+  }
+
+  const parserName = getParserName(scriptLang, parser)
+  if (!parserName) {
+    return false
+  }
+  if (parserName === "@babel/eslint-parser") {
+    return true
+  }
+  if (parserName.includes("@babel/eslint-parser")) {
+    let targetPath = parserName
+    while (targetPath) {
+      const pkgPath = path.join(targetPath, "package.json")
+      if (fs.existsSync(pkgPath)) {
+        try {
+          return (
+            JSON.parse(fs.readFileSync(pkgPath, "utf-8"))?.name ===
+            "@babel/eslint-parser"
+          )
+        } catch {
+          return false
+        }
+      }
+      const parent = path.dirname(targetPath)
+      if (targetPath === parent) {
+        break
+      }
+      targetPath = parent
+    }
+  }
+  return false
+
+  /** Get script parser name */
+  function getParserName(
+    lang: string,
+    parser: string | Record<string, string>,
+  ): string | null {
+    if (typeof parser === "string") {
+      return parser
+    } else if (typeof parser === "object") {
+      const name = parser[lang]
+      if (typeof name === "string") {
+        return name
+      }
+    }
+    return null
+  }
 }
