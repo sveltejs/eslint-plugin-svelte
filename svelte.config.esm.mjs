@@ -54,6 +54,10 @@ const config = {
             dirname,
             "./docs-svelte-kit/shim/postcss-load-config.mjs",
           ),
+          "source-map-js": path.join(
+            dirname,
+            "./docs-svelte-kit/shim/source-map-js.mjs",
+          ),
           module: path.join(dirname, "./docs-svelte-kit/shim/module.mjs"),
           path: path.join(dirname, "./docs-svelte-kit/shim/path.mjs"),
           url: path.join(dirname, "./docs-svelte-kit/shim/url.mjs"),
