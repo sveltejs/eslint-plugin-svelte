@@ -130,7 +130,7 @@
     "typescript": "^4.5.2",
     "vite-plugin-svelte-md": "^0.1.3",
     "vue-eslint-editor": "^1.1.0",
-    "vue-eslint-parser": "^8.0.0",
+    "vue-eslint-parser": "^9.0.0",
     "vuepress": "^1.8.2"
   }
 }
