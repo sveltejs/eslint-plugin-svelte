@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Install And Build
         run: |+
+          NODE_OPTIONS="--max-old-space-size=1024"
           npm install --legacy-peer-deps
           npm run build
           npm run docs:build
