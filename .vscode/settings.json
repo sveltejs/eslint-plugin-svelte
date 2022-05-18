@@ -2,7 +2,6 @@
   "eslint.validate": [
     "javascript",
     "typescript",
-    "vue",
     "markdown",
     "svelte",
     "json",
