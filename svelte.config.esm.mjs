@@ -1,4 +1,4 @@
-/* global __dirname -- __dirname */
+/* global __dirname, URL -- __dirname, URL */
 import ghpagesAdapter from "svelte-adapter-ghpages"
 import path from "path"
 import svelteMd from "vite-plugin-svelte-md"

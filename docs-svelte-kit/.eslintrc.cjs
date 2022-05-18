@@ -1,6 +1,10 @@
 // eslint-disable-next-line no-undef -- ignore
 module.exports = {
   extends: ["plugin:@ota-meshi/svelte/recommended"],
+  env: {
+    browser: true,
+    es2022: true,
+  },
   parserOptions: {
     sourceType: "module",
   },

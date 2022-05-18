@@ -13,7 +13,6 @@ module.exports = {
     "plugin:@ota-meshi/+node",
     "plugin:@ota-meshi/+typescript",
     "plugin:@ota-meshi/+eslint-plugin",
-    "plugin:@ota-meshi/+vue2",
     "plugin:@ota-meshi/+package-json",
     "plugin:@ota-meshi/+json",
     "plugin:@ota-meshi/+yaml",
@@ -110,28 +109,6 @@ module.exports = {
       rules: {
         "require-jsdoc": "off",
         "no-console": "off",
-      },
-    },
-    {
-      files: ["*.vue"],
-      parserOptions: {
-        sourceType: "module",
-      },
-      globals: {
-        require: true,
-      },
-    },
-    {
-      files: ["docs/.vuepress/**"],
-      parserOptions: {
-        sourceType: "module",
-        ecmaVersion: 2020,
-      },
-      globals: {
-        window: true,
-      },
-      rules: {
-        "require-jsdoc": "off",
       },
     },
   ],

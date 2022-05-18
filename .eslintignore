@@ -1,8 +1,6 @@
 /.nyc_output
 /coverage
 /lib
-!/docs/.vuepress
-/docs/.vuepress/dist
 /node_modules
 !/.vscode
 !/.github

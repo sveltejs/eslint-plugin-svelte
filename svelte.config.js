@@ -20,6 +20,7 @@ esbuild.buildSync({
     "fs",
     "stream",
     "zlib",
+    "util",
     "./docs-svelte-kit/build-system/build.js",
   ],
 })

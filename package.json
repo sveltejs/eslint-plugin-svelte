@@ -29,9 +29,6 @@
     "docs:watch": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js dev",
     "docs:build": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js build",
     "docs:preview": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js preview",
-    "pre_docs:watch": "npm run build:ts",
-    "_docs:watch": "vuepress dev --debug docs",
-    "_docs:build": "vuepress build docs --no-cache",
     "preversion": "npm test && git add .",
     "version": "env-cmd -e version npm run update && git add ."
   },
@@ -96,6 +93,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.1-0",
     "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
+    "assert": "^2.0.0",
     "env-cmd": "^10.1.0",
     "esbuild": "^0.14.1",
     "esbuild-register": "^3.2.0",
@@ -111,7 +109,6 @@
     "eslint-plugin-node-dependencies": "^0.8.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-regexp": "^1.0.0",
-    "eslint-plugin-vue": "^8.0.0",
     "eslint-plugin-yml": "^0.15.0",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",
@@ -138,9 +135,6 @@
     "svelte-adapter-ghpages": "0.0.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.5.2",
-    "vite-plugin-svelte-md": "^0.1.3",
-    "vue-eslint-editor": "^1.1.0",
-    "vue-eslint-parser": "^9.0.0",
-    "vuepress": "^1.8.2"
+    "vite-plugin-svelte-md": "^0.1.3"
   }
 }
