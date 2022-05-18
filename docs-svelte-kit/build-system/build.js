@@ -7,7 +7,7 @@ const fs = require("fs")
 build(
   require.resolve("./src/eslint.mjs"),
   path.join(__dirname, "../shim/eslint.mjs"),
-  ["assert"],
+  ["assert", "util"],
 )
 build(
   require.resolve("../../node_modules/assert"),
@@ -16,6 +16,7 @@ build(
 
 /** build */
 function build(input, out, injects = []) {
+  // eslint-disable-next-line no-console -- ignore
   console.log(`build@ ${input}`)
   let code = bundle(input, ["path", ...injects])
   code = transform(code, ["path", ...injects])

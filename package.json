@@ -93,6 +93,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.1-0",
     "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
+    "assert": "^2.0.0",
     "env-cmd": "^10.1.0",
     "esbuild": "^0.14.1",
     "esbuild-register": "^3.2.0",
