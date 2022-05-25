@@ -49,7 +49,7 @@
   "bugs": {
     "url": "https://github.com/ota-meshi/eslint-plugin-svelte/issues"
   },
-  "homepage": "https://github.com/ota-meshi/eslint-plugin-svelte#readme",
+  "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte/",
   "dependencies": {
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
