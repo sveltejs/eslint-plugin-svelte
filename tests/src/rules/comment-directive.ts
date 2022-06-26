@@ -9,7 +9,7 @@ import plugin from "../../../src/index"
 // Initialize linter.
 const linter = new eslint.ESLint({
   plugins: {
-    "@ota-meshi/svelte": plugin,
+    "@ota-meshi/svelte": plugin as never,
   },
   baseConfig: {
     parser: require.resolve("svelte-eslint-parser"),
