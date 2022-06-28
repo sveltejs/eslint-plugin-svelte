@@ -32,7 +32,7 @@ export default createRule("require-optimized-style-attribute", {
         })
       },
       SvelteAttribute(node) {
-        if (node.key.name !== "style") {
+        if (node.key.name !== "style" || !node.value.length) {
           return
         }
         const root = parseStyleAttributeValue(node, context)
