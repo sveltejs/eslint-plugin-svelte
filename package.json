@@ -31,7 +31,7 @@
     "docs:preview": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js preview",
     "preversion": "npm test && git add .",
     "version": "env-cmd -e version npm run update && git add .",
-    "prepare": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
