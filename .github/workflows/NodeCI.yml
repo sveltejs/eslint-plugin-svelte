@@ -46,10 +46,10 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          yarn add -D eslint@${{ matrix.eslint }}
+          yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
           yarn run rimraf node_modules
         if: matrix.eslint != 8
       - name: Install Packages
-        run: yarn install
+        run: yarn install --ignore-engines
       - name: Test
         run: yarn test
