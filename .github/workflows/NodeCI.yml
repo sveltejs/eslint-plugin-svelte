@@ -12,10 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with:
-          node-version: 14
       - name: Install Packages
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Lint
         run: |+
           npm run build
@@ -25,10 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with:
-          node-version: 14
       - name: Install Packages
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Build
         run: |+
           npm run update
@@ -40,7 +36,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         eslint: [7, 8]
-        node: [12, 14, 16, 17]
+        node: [14, 16, 17, 18]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

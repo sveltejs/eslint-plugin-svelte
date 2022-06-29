@@ -46,7 +46,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 > **Requirements**
 >
 > - ESLint v7.0.0 and above
-> - Node.js v12.22.x, v14.17.x, v16.x and above
+> - Node.js v14.17.x, v16.x and above
 
 <!--DOCS_IGNORE_END-->
 
@@ -313,16 +313,6 @@ These rules relate to this plugin works:
 |:--------|:------------|:---|
 | [svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :star: |
 | [svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :star: |
-
-## Deprecated
-
-- :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
-- :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
-
-| Rule ID | Replaced by |
-|:--------|:------------|
-| [svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | (no replacement) |
-| [svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

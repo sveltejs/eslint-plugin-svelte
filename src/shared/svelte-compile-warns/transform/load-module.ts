@@ -17,16 +17,9 @@ export function loadModule<R>(context: RuleContext, name: string): R | null {
   const mod = modules[name] || cache4b.get(name)
   if (mod) return mod as R
   try {
-    const createRequire: (filename: string) => (modName: string) => unknown =
-      // Added in v12.2.0
-      Module.createRequire ||
-      // Added in v10.12.0, but deprecated in v12.2.0.
-      // @ts-expect-error -- old type
-      Module.createRequireFromPath
-
     const cwd = context.getCwd?.() ?? process.cwd()
     const relativeTo = path.join(cwd, "__placeholder__.js")
-    return (modules[name] = createRequire(relativeTo)(name) as R)
+    return (modules[name] = Module.createRequire(relativeTo)(name) as R)
   } catch {
     return null
   }

@@ -78,13 +78,3 @@ These rules relate to this plugin works:
 |:--------|:------------|:---|
 | [svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template | :star: |
 | [svelte/system](./rules/system.md) | system rule for working this plugin | :star: |
-
-## Deprecated
-
-- :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
-- :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
-
-| Rule ID | Replaced by |
-|:--------|:------------|
-| [svelte/dollar-prefixed-store-uses-vars](./rules/dollar-prefixed-store-uses-vars.md) | (no replacement) |
-| [svelte/no-non-optimized-style-attributes](./rules/no-non-optimized-style-attributes.md) | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) |
