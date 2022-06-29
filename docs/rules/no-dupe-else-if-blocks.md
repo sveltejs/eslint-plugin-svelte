@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-dupe-else-if-blocks"
+title: "svelte/no-dupe-else-if-blocks"
 description: "disallow duplicate conditions in `{#if}` / `{:else if}` chains"
 since: "v0.0.1"
 ---
 
-# @ota-meshi/svelte/no-dupe-else-if-blocks
+# svelte/no-dupe-else-if-blocks
 
 > disallow duplicate conditions in `{#if}` / `{:else if}` chains
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -22,7 +22,7 @@ This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chai
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-dupe-else-if-blocks: "error" */
+  /* eslint svelte/no-dupe-else-if-blocks: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -65,7 +65,7 @@ This rule can also detect some cases where the conditions are not identical, but
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-dupe-else-if-blocks: "error" */
+  /* eslint svelte/no-dupe-else-if-blocks: "error" */
 </script>
 
 <!-- ✗ BAD -->
@@ -124,7 +124,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
+This rule was introduced in eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 

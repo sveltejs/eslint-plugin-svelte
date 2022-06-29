@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/indent"
+title: "svelte/indent"
 description: "enforce consistent indentation"
 since: "v0.3.0"
 ---
 
-# @ota-meshi/svelte/indent
+# svelte/indent
 
 > enforce consistent indentation
 
@@ -26,7 +26,7 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/indent: "error" */
+  /* eslint svelte/indent: "error" */
   function click() {}
 </script>
 
@@ -63,7 +63,7 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
     {
       "files": ["*.svelte"],
       "rules": {
-        "@ota-meshi/svelte/indent": "error",
+        "svelte/indent": "error",
         "indent": "off"
       }
     }
@@ -75,7 +75,7 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 
 ```json
 {
-  "@ota-meshi/svelte/indent": [
+  "svelte/indent": [
     "error",
     {
       "indent": 2,
@@ -94,7 +94,7 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.3.0
+This rule was introduced in eslint-plugin-svelte v0.3.0
 
 ## :mag: Implementation
 

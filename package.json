@@ -1,6 +1,6 @@
 {
-  "name": "@ota-meshi/eslint-plugin-svelte",
-  "version": "0.34.1",
+  "name": "eslint-plugin-svelte",
+  "version": "2.0.0",
   "publishConfig": {
     "access": "public"
   },
@@ -16,7 +16,7 @@
     "prebuild": "npm run -s clean",
     "build": "npm run build:ts",
     "build:ts": "tsc --project ./tsconfig.build.json",
-    "clean": "rimraf .nyc_output dist coverage",
+    "clean": "rimraf .nyc_output lib coverage build .svelte-kit svelte.config-dist.js",
     "pretest:base": "cross-env DEBUG=eslint-plugin-svelte*",
     "test": "mocha --require ts-node/register \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "cover": "nyc --reporter=lcov npm run test",
@@ -30,7 +30,8 @@
     "docs:build": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js build",
     "docs:preview": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/@sveltejs/kit/svelte-kit.js preview",
     "preversion": "npm test && git add .",
-    "version": "env-cmd -e version npm run update && git add ."
+    "version": "env-cmd -e version npm run update && git add .",
+    "prepare": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,9 @@
     "sveltejs"
   ],
   "author": "Yosuke Ota (https://github.com/ota-meshi)",
+  "contributors": [
+    "JounQin (https://github.com/JounQin)"
+  ],
   "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
   "bugs": {
@@ -76,7 +80,6 @@
     "@babel/types": "^7.16.0",
     "@fontsource/fira-mono": "^4.5.0",
     "@ota-meshi/eslint-plugin": "^0.10.0",
-    "@ota-meshi/eslint-plugin-svelte": "^0.34.0",
     "@sindresorhus/slugify": "^2.1.0",
     "@sveltejs/adapter-static": "^1.0.0-next.26",
     "@sveltejs/kit": "^1.0.0-next.240",
@@ -109,6 +112,7 @@
     "eslint-plugin-node-dependencies": "^0.8.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-regexp": "^1.0.0",
+    "eslint-plugin-svelte": "file:.",
     "eslint-plugin-yml": "^1.0.0",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",

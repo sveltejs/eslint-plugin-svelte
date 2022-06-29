@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/valid-compile"
+title: "svelte/valid-compile"
 description: "disallow warnings when compiling."
 since: "v0.7.0"
 ---
 
-# @ota-meshi/svelte/valid-compile
+# svelte/valid-compile
 
 > disallow warnings when compiling.
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -22,7 +22,7 @@ This rule uses Svelte compiler to check the source code.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/valid-compile: "error" */
+  /* eslint svelte/valid-compile: "error" */
   let src = "tutorial/image.gif"
 </script>
 
@@ -41,7 +41,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 
 ```json
 {
-  "@ota-meshi/svelte/valid-compile": [
+  "svelte/valid-compile": [
     "error",
     {
       "ignoreWarnings": false
@@ -58,7 +58,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/valid-compile: ["error", { ignoreWarnings: true }] */
+  /* eslint svelte/valid-compile: ["error", { ignoreWarnings: true }] */
   let src = "tutorial/image.gif"
 </script>
 
@@ -70,7 +70,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.7.0
+This rule was introduced in eslint-plugin-svelte v0.7.0
 
 ## :mag: Implementation
 

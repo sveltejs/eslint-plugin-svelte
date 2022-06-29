@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/mustache-spacing"
+title: "svelte/mustache-spacing"
 description: "enforce unified spacing in mustache"
 since: "v0.15.0"
 ---
 
-# @ota-meshi/svelte/mustache-spacing
+# svelte/mustache-spacing
 
 > enforce unified spacing in mustache
 
@@ -23,7 +23,7 @@ This rule aims at enforcing unified spacing in mustaches.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/mustache-spacing: "error" */
+  /* eslint svelte/mustache-spacing: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -65,7 +65,7 @@ This rule aims at enforcing unified spacing in mustaches.
 
 ```json
 {
-  "@ota-meshi/svelte/mustache-spacing": [
+  "svelte/mustache-spacing": [
     "error",
     {
       "textExpressions": "never", // or "always"
@@ -90,7 +90,7 @@ This rule aims at enforcing unified spacing in mustaches.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.15.0
+This rule was introduced in eslint-plugin-svelte v0.15.0
 
 ## :mag: Implementation
 

@@ -72,7 +72,7 @@ tester.run("${ruleId}", rule as any, loadTestCases("${ruleId}"))
   )
   fs.writeFileSync(
     docFile,
-    `#  (@ota-meshi/svelte/${ruleId})
+    `#  (svelte/${ruleId})
 
 > description
 
@@ -86,7 +86,7 @@ This rule reports ???.
 
 \`\`\`svelte
 <script>
-  /* eslint @ota-meshi/svelte/${ruleId}: "error" */
+  /* eslint svelte/${ruleId}: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -101,7 +101,7 @@ This rule reports ???.
 
 \`\`\`json
 {
-  "@ota-meshi/svelte/${ruleId}": ["error", {
+  "svelte/${ruleId}": ["error", {
    
   }]
 }

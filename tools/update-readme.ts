@@ -23,11 +23,11 @@ const docsReadmeFilePath = path.resolve(__dirname, "../docs/README.md")
 fs.writeFileSync(
   docsReadmeFilePath,
   `---
-title: "@ota-meshi/eslint-plugin-svelte"
+title: "eslint-plugin-svelte"
 ---
 
 ${newReadme
-  .replace("# @ota-meshi/eslint-plugin-svelte\n", "# Introduction\n")
+  .replace("# eslint-plugin-svelte\n", "# Introduction\n")
   .replace(
     /<!--RULES_SECTION_START-->[\s\S]*<!--RULES_SECTION_END-->/u,
     "See [Available Rules](./rules.md).",

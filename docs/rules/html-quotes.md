@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/html-quotes"
+title: "svelte/html-quotes"
 description: "enforce quotes style of HTML attributes"
 since: "v0.5.0"
 ---
 
-# @ota-meshi/svelte/html-quotes
+# svelte/html-quotes
 
 > enforce quotes style of HTML attributes
 
@@ -29,7 +29,7 @@ This rule enforces the quotes style of HTML attributes.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/html-quotes: "error" */
+  /* eslint svelte/html-quotes: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -49,7 +49,7 @@ This rule enforces the quotes style of HTML attributes.
 
 ```json
 {
-  "@ota-meshi/svelte/html-quotes": [
+  "svelte/html-quotes": [
     "error",
     {
       "prefer": "double", // or "single"
@@ -69,7 +69,7 @@ This rule enforces the quotes style of HTML attributes.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0
+This rule was introduced in eslint-plugin-svelte v0.5.0
 
 ## :mag: Implementation
 

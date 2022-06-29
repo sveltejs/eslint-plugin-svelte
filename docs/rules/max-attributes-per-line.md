@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/max-attributes-per-line"
+title: "svelte/max-attributes-per-line"
 description: "enforce the maximum number of attributes per line"
 since: "v0.2.0"
 ---
 
-# @ota-meshi/svelte/max-attributes-per-line
+# svelte/max-attributes-per-line
 
 > enforce the maximum number of attributes per line
 
@@ -28,7 +28,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/max-attributes-per-line: "error" */
+  /* eslint svelte/max-attributes-per-line: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -64,7 +64,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 ```json
 {
-  "@ota-meshi/svelte/max-attributes-per-line": [
+  "svelte/max-attributes-per-line": [
     "error",
     {
       "multiline": 1,
@@ -79,13 +79,13 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/first-attribute-linebreak]
+- [svelte/first-attribute-linebreak]
 
-[@ota-meshi/svelte/first-attribute-linebreak]: ./first-attribute-linebreak.md
+[svelte/first-attribute-linebreak]: ./first-attribute-linebreak.md
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.2.0
+This rule was introduced in eslint-plugin-svelte v0.2.0
 
 ## :mag: Implementation
 

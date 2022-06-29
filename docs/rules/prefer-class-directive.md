@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/prefer-class-directive"
+title: "svelte/prefer-class-directive"
 description: "require class directives instead of ternary expressions"
 since: "v0.0.1"
 ---
 
-# @ota-meshi/svelte/prefer-class-directive
+# svelte/prefer-class-directive
 
 > require class directives instead of ternary expressions
 
@@ -22,7 +22,7 @@ This rule aims to replace a class with ternary operator with the class directive
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/prefer-class-directive: "error" */
+  /* eslint svelte/prefer-class-directive: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -44,9 +44,9 @@ Nothing.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/prefer-style-directive]
+- [svelte/prefer-style-directive]
 
-[@ota-meshi/svelte/prefer-style-directive]: ./prefer-style-directive.md
+[svelte/prefer-style-directive]: ./prefer-style-directive.md
 
 ## :books: Further Reading
 
@@ -54,7 +54,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
+This rule was introduced in eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 

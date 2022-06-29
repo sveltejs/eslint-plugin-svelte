@@ -100,7 +100,7 @@ export type RuleContext = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   options: any[]
   settings?: {
-    ["@ota-meshi/svelte"]?: {
+    ["svelte"]?: {
       ignoreWarnings?: unknown
       compileOptions?: {
         babel?: boolean

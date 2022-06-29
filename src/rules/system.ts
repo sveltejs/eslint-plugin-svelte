@@ -18,16 +18,14 @@ export default createRule("system", {
     if (!shared) return {}
 
     const directives = shared.newCommentDirectives({
-      ruleId: "@ota-meshi/svelte/system",
+      ruleId: "svelte/system",
     })
 
-    const ignoreWarnings =
-      context.settings?.["@ota-meshi/svelte"]?.ignoreWarnings
+    const ignoreWarnings = context.settings?.svelte?.ignoreWarnings
     if (ignoreWarnings && !Array.isArray(ignoreWarnings)) {
       context.report({
         loc: { line: 1, column: 0 },
-        message:
-          'The settings["@ota-meshi/svelte"].ignoreWarnings must be an array.',
+        message: "The `settings.svelte.ignoreWarnings` must be an array.",
       })
       return {}
     }
@@ -39,7 +37,7 @@ export default createRule("system", {
         context.report({
           loc: { line: 1, column: 0 },
           message:
-            'The array element in the settings["@ota-meshi/svelte"].ignoreWarnings must be a string.',
+            "The array element in the `settings.svelte.ignoreWarnings` must be a string.",
         })
         return {}
       }

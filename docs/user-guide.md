@@ -3,7 +3,7 @@
 ## :cd: Installation
 
 ```bash
-npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte svelte
+npm install --save-dev eslint eslint-plugin-svelte svelte
 ```
 
 ::: tip Requirements
@@ -28,25 +28,25 @@ module.exports = {
   extends: [
     // add more generic rule sets here, such as:
     // 'eslint:recommended',
-    "plugin:@ota-meshi/svelte/recommended",
+    "plugin:svelte/recommended",
   ],
   rules: {
     // override/add rules settings here, such as:
-    // '@ota-meshi/svelte/rule-name': 'error'
+    // 'svelte/rule-name': 'error'
   },
 }
 ```
 
 This plugin provides configs:
 
-- `plugin:@ota-meshi/svelte/base` ... Configuration to enable correct Svelte parsing.
-- `plugin:@ota-meshi/svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
+- `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
+- `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
 
 See [the rule list](./rules.md) to get the `rules` that this plugin provides.
 
 ::: warning ❗ Attention
 
-The `@ota-meshi/eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
+The `eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
 If you are using [eslint-plugin-svelte3] you need to remove it.
 
 ```diff
@@ -66,7 +66,7 @@ For example, if you are using the `"@babel/eslint-parser"`, configure it as foll
 ```js
 module.exports = {
   // ...
-  extends: ["plugin:@ota-meshi/svelte/recommended"],
+  extends: ["plugin:svelte/recommended"],
   // ...
   parser: "@babel/eslint-parser",
   // Add an `overrides` section to add a parser configuration for svelte.
@@ -86,7 +86,7 @@ For example, if you are using the `"@typescript-eslint/parser"`, and if you want
 ```js
 module.exports = {
   // ...
-  extends: ["plugin:@ota-meshi/svelte/recommended"],
+  extends: ["plugin:svelte/recommended"],
   // ...
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -135,13 +135,13 @@ module.exports = {
 
 See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
 
-#### settings["@ota-meshi/svelte"]
+#### settings["svelte"]
 
 You can change the behavior of this plugin with some settings.
 
 - `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
   For example, set rules on the template that cannot avoid false positives.
-- `compileOptions` (optional) ... Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [@ota-meshi/svelte/valid-compile](./rules/valid-compile.md) and [@ota-meshi/svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md). **Note that it has no effect on ESLint's custom parser**.
+- `compileOptions` (optional) ... Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [svelte/valid-compile](./rules/valid-compile.md) and [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md). **Note that it has no effect on ESLint's custom parser**.
   - `postcss` (optional) ... Specifies options related to PostCSS. You can disable the PostCSS process by specifying `false`.
     - `configFilePath` (optional) ... Specifies the path of the directory containing the PostCSS configuration.
 
@@ -151,7 +151,7 @@ e.g.
 module.exports = {
   // ...
   settings: {
-    "@ota-meshi/svelte": {
+    svelte: {
       ignoreWarnings: [
         "@typescript-eslint/no-unsafe-assignment",
         "@typescript-eslint/no-unsafe-member-access",

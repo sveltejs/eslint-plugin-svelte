@@ -1,20 +1,20 @@
 ---
-title: "@ota-meshi/eslint-plugin-svelte"
+title: "eslint-plugin-svelte"
 ---
 
 # Introduction
 
-`@ota-meshi/eslint-plugin-svelte` is [ESLint] plugin for [Svelte].  
+`eslint-plugin-svelte` is [ESLint] plugin for [Svelte].  
 It provides many unique check rules by using the template AST.  
 You can check on the [Online DEMO](./playground.md).
 
-[![NPM license](https://img.shields.io/npm/l/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
-[![NPM version](https://img.shields.io/npm/v/@ota-meshi/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte)
-[![NPM downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&colorB=green&suffix=/day&query=$.downloads&uri=https://api.npmjs.org//downloads/point/last-day/@ota-meshi/eslint-plugin-svelte&maxAge=3600)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
-[![NPM downloads](https://img.shields.io/npm/dw/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
-[![NPM downloads](https://img.shields.io/npm/dm/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
-[![NPM downloads](https://img.shields.io/npm/dy/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
-[![NPM downloads](https://img.shields.io/npm/dt/@ota-meshi/eslint-plugin-svelte.svg)](http://www.npmtrends.com/@ota-meshi/eslint-plugin-svelte)
+[![NPM license](https://img.shields.io/npm/l/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
+[![NPM version](https://img.shields.io/npm/v/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
+[![NPM downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&colorB=green&suffix=/day&query=$.downloads&uri=https://api.npmjs.org//downloads/point/last-day/eslint-plugin-svelte&maxAge=3600)](http://www.npmtrends.com/eslint-plugin-svelte)
+[![NPM downloads](https://img.shields.io/npm/dw/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
+[![NPM downloads](https://img.shields.io/npm/dm/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
+[![NPM downloads](https://img.shields.io/npm/dy/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
+[![NPM downloads](https://img.shields.io/npm/dt/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
 
 ## :name_badge: What is this plugin?
@@ -30,7 +30,7 @@ The [svelte-eslint-parser] aims to make it easy to create your own rules for the
 
 ### ❗ Attention
 
-The [svelte-eslint-parser] and the `@ota-meshi/eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
+The [svelte-eslint-parser] and the `eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
 
 [svelte-eslint-parser]: https://github.com/ota-meshi/svelte-eslint-parser
 [eslint-plugin-svelte3]: https://github.com/sveltejs/eslint-plugin-svelte3

@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-useless-mustaches"
+title: "svelte/no-useless-mustaches"
 description: "disallow unnecessary mustache interpolations"
 since: "v0.0.4"
 ---
 
-# @ota-meshi/svelte/no-useless-mustaches
+# svelte/no-useless-mustaches
 
 > disallow unnecessary mustache interpolations
 
@@ -23,7 +23,7 @@ The mustache interpolation with a string literal value can be changed to a stati
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-useless-mustaches: "error" */
+  /* eslint svelte/no-useless-mustaches: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -44,7 +44,7 @@ Lorem ipsum {foo}
 
 ```json
 {
-  "@ota-meshi/svelte/no-useless-mustaches": [
+  "svelte/no-useless-mustaches": [
     "error",
     {
       "ignoreIncludesComment": false,
@@ -65,7 +65,7 @@ Lorem ipsum {foo}
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-useless-mustaches: ["error", { "ignoreIncludesComment": true }] */
+  /* eslint svelte/no-useless-mustaches: ["error", { "ignoreIncludesComment": true }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -91,7 +91,7 @@ Lorem ipsum {foo}
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.4
+This rule was introduced in eslint-plugin-svelte v0.0.4
 
 ## :mag: Implementation
 

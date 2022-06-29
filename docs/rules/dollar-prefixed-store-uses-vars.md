@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/dollar-prefixed-store-uses-vars"
+title: "svelte/dollar-prefixed-store-uses-vars"
 description: "prevent $-prefixed variables to be marked as unused"
 since: "v0.18.0"
 ---
 
-# @ota-meshi/svelte/dollar-prefixed-store-uses-vars
+# svelte/dollar-prefixed-store-uses-vars
 
 > prevent $-prefixed variables to be marked as unused
 
@@ -33,7 +33,7 @@ Without this rule this code triggers warning:
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/dollar-prefixed-store-uses-vars: "error" */
+  /* eslint svelte/dollar-prefixed-store-uses-vars: "error" */
   import { a } from "./my-stores"
 
   // The variable doesn't look like it's being referenced, but it may be used externally.
@@ -49,7 +49,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.18.0
+This rule was introduced in eslint-plugin-svelte v0.18.0
 
 ## :mag: Implementation
 

@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/require-optimized-style-attribute"
+title: "svelte/require-optimized-style-attribute"
 description: "require style attributes that can be optimized"
 since: "v0.32.0"
 ---
 
-# @ota-meshi/svelte/require-optimized-style-attribute
+# svelte/require-optimized-style-attribute
 
 > require style attributes that can be optimized
 
@@ -77,7 +77,7 @@ Examples:
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/require-optimized-style-attribute: "error" */
+  /* eslint svelte/require-optimized-style-attribute: "error" */
   let color = "blue"
   let x = 12,
     y = 12
@@ -105,7 +105,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.32.0
+This rule was introduced in eslint-plugin-svelte v0.32.0
 
 ## :mag: Implementation
 

@@ -12,7 +12,7 @@ function readRules() {
     .readdirSync(rulesLibRoot)
     .filter((n) => n.endsWith(".ts"))) {
     const ruleName = name.replace(/\.ts$/u, "")
-    const ruleId = `@ota-meshi/svelte/${ruleName}`
+    const ruleId = `svelte/${ruleName}`
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore
     const rule = require(path.join(rulesLibRoot, name)).default
 

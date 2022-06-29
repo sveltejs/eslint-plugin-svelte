@@ -75,7 +75,7 @@ class DocFile {
     if (deprecated) {
       if (replacedBy) {
         const replacedRules = replacedBy.map(
-          (name) => `[@ota-meshi/svelte/${name}](${name}.md) rule`,
+          (name) => `[svelte/${name}](${name}.md) rule`,
         )
         notes.push(
           `- :warning: This rule was **deprecated** and replaced by ${formatItems(
@@ -89,11 +89,11 @@ class DocFile {
       if (recommended) {
         if (recommended === "base") {
           notes.push(
-            '- :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.',
+            '- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.',
           )
         } else {
           notes.push(
-            '- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.',
+            '- :gear: This rule is included in `"plugin:svelte/recommended"`.',
           )
         }
       }
@@ -137,7 +137,7 @@ class DocFile {
       this.since
         ? `## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte ${this.since}
+This rule was introduced in eslint-plugin-svelte ${this.since}
 
 `
         : ""
