@@ -32,7 +32,7 @@ export function parseStyleAttributeValue(
     return cache.get(node) || null
   }
   cache.set(node, null)
-  if (!node.value.length) {
+  if (!node.value?.length) {
     return null
   }
   const startOffset = node.value[0].range[0]
