@@ -46,7 +46,7 @@ npm install --save-dev eslint @ota-meshi/eslint-plugin-svelte svelte
 > **Requirements**
 >
 > - ESLint v7.0.0 and above
-> - Node.js v12.22.x, v14.17.x, v16.x and above
+> - Node.js v14.17.x, v16.x and above
 
 <!--DOCS_IGNORE_END-->
 
@@ -248,80 +248,80 @@ The rules with the following star :star: are included in the configs.
 
 These rules relate to possible syntax or logic errors in Svelte code:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
-| [@ota-meshi/svelte/no-dupe-style-properties](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
-| [@ota-meshi/svelte/no-dynamic-slot-name](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
-| [@ota-meshi/svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
-| [@ota-meshi/svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
-| [@ota-meshi/svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |
-| [@ota-meshi/svelte/no-unknown-style-directive-property](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
-| [@ota-meshi/svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :star: |
+| Rule ID                                                                                                                                                  | Description                                                                   |                |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :------------- |
+| [@ota-meshi/svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/)                               | disallow duplicate conditions in `{#if}` / `{:else if}` chains                | :star:         |
+| [@ota-meshi/svelte/no-dupe-style-properties](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/)                           | disallow duplicate style properties                                           | :star:         |
+| [@ota-meshi/svelte/no-dynamic-slot-name](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/)                                   | disallow dynamic slot name                                                    | :star::wrench: |
+| [@ota-meshi/svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler/)                             | disallow use of not function in event handler                                 | :star:         |
+| [@ota-meshi/svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/)                     | disallow objects in text mustache interpolation                               | :star:         |
+| [@ota-meshi/svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star:         |
+| [@ota-meshi/svelte/no-unknown-style-directive-property](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/)     | disallow unknown `style:property`                                             | :star:         |
+| [@ota-meshi/svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/)                                                 | disallow warnings when compiling.                                             | :star:         |
 
 ## Security Vulnerability
 
 These rules relate to security vulnerabilities in Svelte code:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags/) | disallow use of `{@html}` to prevent XSS attack | :star: |
-| [@ota-meshi/svelte/no-target-blank](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-target-blank/) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |  |
+| Rule ID                                                                                                      | Description                                                              |        |
+| :----------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------- | :----- |
+| [@ota-meshi/svelte/no-at-html-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-html-tags/) | disallow use of `{@html}` to prevent XSS attack                          | :star: |
+| [@ota-meshi/svelte/no-target-blank](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-target-blank/) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |        |
 
 ## Best Practices
 
 These rules relate to better ways of doing things to help you avoid problems:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
-| [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
-| [@ota-meshi/svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
-| [@ota-meshi/svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
-| [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
+| Rule ID                                                                                                                                          | Description                                                 |          |
+| :----------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------- | :------- |
+| [@ota-meshi/svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/)                                     | disallow usage of button without an explicit type attribute |          |
+| [@ota-meshi/svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/)                                   | disallow the use of `{@debug}`                              | :star:   |
+| [@ota-meshi/svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/)                     | disallow unused svelte-ignore comments                      | :star:   |
+| [@ota-meshi/svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/)                           | disallow unnecessary mustache interpolations                | :wrench: |
+| [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized              |          |
 
 ## Stylistic Issues
 
 These rules relate to style guidelines, and are therefore quite subjective:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
-| [@ota-meshi/svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute | :wrench: |
-| [@ota-meshi/svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes/) | enforce quotes style of HTML attributes | :wrench: |
-| [@ota-meshi/svelte/indent](https://ota-meshi.github.io/eslint-plugin-svelte/rules/indent/) | enforce consistent indentation | :wrench: |
-| [@ota-meshi/svelte/max-attributes-per-line](https://ota-meshi.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/) | enforce the maximum number of attributes per line | :wrench: |
-| [@ota-meshi/svelte/mustache-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/mustache-spacing/) | enforce unified spacing in mustache | :wrench: |
-| [@ota-meshi/svelte/prefer-class-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-class-directive/) | require class directives instead of ternary expressions | :wrench: |
-| [@ota-meshi/svelte/prefer-style-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-style-directive/) | require style directives instead of style attribute | :wrench: |
-| [@ota-meshi/svelte/shorthand-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-attribute/) | enforce use of shorthand syntax in attribute | :wrench: |
-| [@ota-meshi/svelte/shorthand-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-directive/) | enforce use of shorthand syntax in directives | :wrench: |
-| [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment/) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| Rule ID                                                                                                                          | Description                                                                        |          |
+| :------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
+| [@ota-meshi/svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute                                            | :wrench: |
+| [@ota-meshi/svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes/)                             | enforce quotes style of HTML attributes                                            | :wrench: |
+| [@ota-meshi/svelte/indent](https://ota-meshi.github.io/eslint-plugin-svelte/rules/indent/)                                       | enforce consistent indentation                                                     | :wrench: |
+| [@ota-meshi/svelte/max-attributes-per-line](https://ota-meshi.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/)     | enforce the maximum number of attributes per line                                  | :wrench: |
+| [@ota-meshi/svelte/mustache-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/mustache-spacing/)                   | enforce unified spacing in mustache                                                | :wrench: |
+| [@ota-meshi/svelte/prefer-class-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-class-directive/)       | require class directives instead of ternary expressions                            | :wrench: |
+| [@ota-meshi/svelte/prefer-style-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-style-directive/)       | require style directives instead of style attribute                                | :wrench: |
+| [@ota-meshi/svelte/shorthand-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-attribute/)             | enforce use of shorthand syntax in attribute                                       | :wrench: |
+| [@ota-meshi/svelte/shorthand-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/shorthand-directive/)             | enforce use of shorthand syntax in directives                                      | :wrench: |
+| [@ota-meshi/svelte/spaced-html-comment](https://ota-meshi.github.io/eslint-plugin-svelte/rules/spaced-html-comment/)             | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## Extension Rules
 
 These rules extend the rules provided by ESLint itself to work well in Svelte:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
+| Rule ID                                                                                                                  | Description                                                   |        |
+| :----------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------ | :----- |
 | [@ota-meshi/svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
 
 ## System
 
 These rules relate to this plugin works:
 
-| Rule ID | Description |    |
-|:--------|:------------|:---|
+| Rule ID                                                                                                          | Description                                 |        |
+| :--------------------------------------------------------------------------------------------------------------- | :------------------------------------------ | :----- |
 | [@ota-meshi/svelte/comment-directive](https://ota-meshi.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :star: |
-| [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :star: |
+| [@ota-meshi/svelte/system](https://ota-meshi.github.io/eslint-plugin-svelte/rules/system/)                       | system rule for working this plugin         | :star: |
 
 ## Deprecated
 
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID | Replaced by |
-|:--------|:------------|
-| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/) | (no replacement) |
+| Rule ID                                                                                                                                          | Replaced by                                                                                                                                      |
+| :----------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@ota-meshi/svelte/dollar-prefixed-store-uses-vars](https://ota-meshi.github.io/eslint-plugin-svelte/rules/dollar-prefixed-store-uses-vars/)     | (no replacement)                                                                                                                                 |
 | [@ota-meshi/svelte/no-non-optimized-style-attributes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-non-optimized-style-attributes/) | [@ota-meshi/svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) |
 
 <!--RULES_TABLE_END-->
