@@ -1,7 +1,6 @@
 import type { RuleModule } from "../types"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
-import dollarPrefixedStoreUsesVars from "../rules/dollar-prefixed-store-uses-vars"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlQuotes from "../rules/html-quotes"
 import indent from "../rules/indent"
@@ -13,7 +12,6 @@ import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noInnerDeclarations from "../rules/no-inner-declarations"
-import noNonOptimizedStyleAttributes from "../rules/no-non-optimized-style-attributes"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
@@ -33,7 +31,6 @@ import validCompile from "../rules/valid-compile"
 export const rules = [
   buttonHasType,
   commentDirective,
-  dollarPrefixedStoreUsesVars,
   firstAttributeLinebreak,
   htmlQuotes,
   indent,
@@ -45,7 +42,6 @@ export const rules = [
   noDupeStyleProperties,
   noDynamicSlotName,
   noInnerDeclarations,
-  noNonOptimizedStyleAttributes,
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noShorthandStylePropertyOverrides,
