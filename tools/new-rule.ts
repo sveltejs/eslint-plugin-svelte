@@ -6,7 +6,7 @@ const logger = console
 // main
 ;((ruleId) => {
   if (ruleId == null) {
-    logger.error("Usage: npm run new <RuleID>")
+    logger.error("Usage: yarn new <RuleID>")
     process.exitCode = 1
     return
   }
