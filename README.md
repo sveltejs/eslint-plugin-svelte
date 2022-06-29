@@ -33,6 +33,10 @@ The [svelte-eslint-parser] and the `eslint-plugin-svelte` can not be used with t
 
 <!--DOCS_IGNORE_START-->
 
+## Migration Guide
+
+To migrate from `eslint-plugin-svelte` v1, or `@ota-meshi/eslint-plugin-svelte`, please refer to the [migration guide](https://ota-meshi.github.io/eslint-plugin-svelte/migration/).
+
 ## :book: Documentation
 
 See [documents](https://ota-meshi.github.io/eslint-plugin-svelte/).
@@ -173,7 +177,7 @@ module.exports = {
 
 See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
 
-#### settings["svelte"]
+#### settings.svelte
 
 You can change the behavior of this plugin with some settings.
 

@@ -135,7 +135,7 @@ module.exports = {
 
 See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
 
-#### settings["svelte"]
+#### settings.svelte
 
 You can change the behavior of this plugin with some settings.
 
