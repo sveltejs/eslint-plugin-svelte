@@ -231,6 +231,9 @@ export type ASTNodeListener = {
     node: TSESTree.TSExternalModuleReference & ASTNodeWithParent,
   ) => void
   TSFunctionType?: (node: TSESTree.TSFunctionType & ASTNodeWithParent) => void
+  TSInstantiationExpression?: (
+    node: TSESTree.TSInstantiationExpression & ASTNodeWithParent,
+  ) => void
   TSImportEqualsDeclaration?: (
     node: TSESTree.TSImportEqualsDeclaration & ASTNodeWithParent,
   ) => void
@@ -567,6 +570,9 @@ export type TSNodeListener = {
     node: TSESTree.TSExternalModuleReference & ASTNodeWithParent,
   ) => void
   TSFunctionType?: (node: TSESTree.TSFunctionType & ASTNodeWithParent) => void
+  TSInstantiationExpression?: (
+    node: TSESTree.TSInstantiationExpression & ASTNodeWithParent,
+  ) => void
   TSImportEqualsDeclaration?: (
     node: TSESTree.TSImportEqualsDeclaration & ASTNodeWithParent,
   ) => void
