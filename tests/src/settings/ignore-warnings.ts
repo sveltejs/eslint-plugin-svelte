@@ -14,27 +14,27 @@ describe("ignore-warnings", () => {
 
     const linter = new eslint.ESLint({
       plugins: {
-        "@ota-meshi/svelte": plugin as never,
+        svelte: plugin as never,
       },
       baseConfig: {
         parser: require.resolve("svelte-eslint-parser"),
         parserOptions: {
           ecmaVersion: 2020,
         },
-        plugins: ["@ota-meshi/svelte"],
+        plugins: ["svelte"],
         rules: {
           "no-undef": "error",
           "space-infix-ops": "error",
-          "@ota-meshi/svelte/no-at-html-tags": "error",
-          "@ota-meshi/svelte/no-at-debug-tags": "error",
-          "@ota-meshi/svelte/system": "error",
+          "svelte/no-at-html-tags": "error",
+          "svelte/no-at-debug-tags": "error",
+          "svelte/system": "error",
         },
         settings: {
-          "@ota-meshi/svelte": {
+          svelte: {
             ignoreWarnings: [
               "no-undef",
               "space-infix-ops",
-              "@ota-meshi/svelte/no-at-debug-tags",
+              "svelte/no-at-debug-tags",
             ],
           },
         },
@@ -48,7 +48,7 @@ describe("ignore-warnings", () => {
       messages.map((m) => ({ ruleId: m.ruleId, line: m.line })),
       [
         {
-          ruleId: "@ota-meshi/svelte/no-at-html-tags",
+          ruleId: "svelte/no-at-html-tags",
           line: 2,
         },
         {
@@ -77,23 +77,23 @@ describe("ignore-warnings", () => {
 
     const linter = new eslint.ESLint({
       plugins: {
-        "@ota-meshi/svelte": plugin as never,
+        svelte: plugin as never,
       },
       baseConfig: {
         parser: require.resolve("svelte-eslint-parser"),
         parserOptions: {
           ecmaVersion: 2020,
         },
-        plugins: ["@ota-meshi/svelte"],
+        plugins: ["svelte"],
         rules: {
           "no-undef": "error",
           "space-infix-ops": "error",
-          "@ota-meshi/svelte/no-at-html-tags": "error",
-          "@ota-meshi/svelte/no-at-debug-tags": "error",
-          "@ota-meshi/svelte/system": "error",
+          "svelte/no-at-html-tags": "error",
+          "svelte/no-at-debug-tags": "error",
+          "svelte/system": "error",
         },
         settings: {
-          "@ota-meshi/svelte": {
+          svelte: {
             ignoreWarnings: ["no-undef", "/debug/", "/^space/"],
           },
         },
@@ -108,7 +108,7 @@ describe("ignore-warnings", () => {
       [
         {
           line: 2,
-          ruleId: "@ota-meshi/svelte/no-at-html-tags",
+          ruleId: "svelte/no-at-html-tags",
         },
         {
           ruleId: "no-undef",
@@ -137,16 +137,16 @@ describe("ignore-warnings", () => {
 
     const linter = new eslint.ESLint({
       plugins: {
-        "@ota-meshi/svelte": plugin as never,
+        svelte: plugin as never,
       },
       baseConfig: {
         parser: require.resolve("svelte-eslint-parser"),
         parserOptions: {
           ecmaVersion: 2020,
         },
-        plugins: ["@ota-meshi/svelte"],
+        plugins: ["svelte"],
         rules: {
-          "@ota-meshi/svelte/system": "error",
+          "svelte/system": "error",
         },
       },
       useEslintrc: false,

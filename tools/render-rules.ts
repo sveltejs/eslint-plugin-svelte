@@ -67,7 +67,7 @@ export default function renderRulesTableContent(
     )})`
     const replacedRules = rule.meta.replacedBy || []
     const replacedBy = replacedRules
-      .map((name) => `[@ota-meshi/svelte/${name}](${buildRulePath(name)})`)
+      .map((name) => `[svelte/${name}](${buildRulePath(name)})`)
       .join(", ")
 
     return `| ${link} | ${replacedBy || "(no replacement)"} |`

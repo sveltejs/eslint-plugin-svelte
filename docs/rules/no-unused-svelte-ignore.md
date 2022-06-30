@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-unused-svelte-ignore"
+title: "svelte/no-unused-svelte-ignore"
 description: "disallow unused svelte-ignore comments"
 since: "v0.19.0"
 ---
 
-# @ota-meshi/svelte/no-unused-svelte-ignore
+# svelte/no-unused-svelte-ignore
 
 > disallow unused svelte-ignore comments
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -22,7 +22,7 @@ This rule warns unnecessary `svelte-ignore` comments.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-unused-svelte-ignore: "error" */
+  /* eslint svelte/no-unused-svelte-ignore: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -46,7 +46,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.19.0
+This rule was introduced in eslint-plugin-svelte v0.19.0
 
 ## :mag: Implementation
 

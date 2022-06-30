@@ -13,10 +13,10 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Install And Build
         run: |+
-          npm install --legacy-peer-deps
-          npm run build
+          yarn install
+          yarn build
           export NODE_OPTIONS="--max-old-space-size=8192"
-          npm run docs:build
+          yarn docs:build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

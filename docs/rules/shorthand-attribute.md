@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/shorthand-attribute"
+title: "svelte/shorthand-attribute"
 description: "enforce use of shorthand syntax in attribute"
 since: "v0.5.0"
 ---
 
-# @ota-meshi/svelte/shorthand-attribute
+# svelte/shorthand-attribute
 
 > enforce use of shorthand syntax in attribute
 
@@ -23,7 +23,7 @@ This rule enforces the use of the shorthand syntax in attribute.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/shorthand-attribute: "error" */
+  /* eslint svelte/shorthand-attribute: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -41,7 +41,7 @@ This rule enforces the use of the shorthand syntax in attribute.
 
 ```json
 {
-  "@ota-meshi/svelte/shorthand-attribute": [
+  "svelte/shorthand-attribute": [
     "error",
     {
       "prefer": "always" // "never"
@@ -56,13 +56,13 @@ This rule enforces the use of the shorthand syntax in attribute.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/shorthand-directive]
+- [svelte/shorthand-directive]
 
-[@ota-meshi/svelte/shorthand-directive]: ./shorthand-directive.md
+[svelte/shorthand-directive]: ./shorthand-directive.md
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0
+This rule was introduced in eslint-plugin-svelte v0.5.0
 
 ## :mag: Implementation
 

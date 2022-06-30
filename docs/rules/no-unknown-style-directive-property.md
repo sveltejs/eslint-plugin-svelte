@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-unknown-style-directive-property"
+title: "svelte/no-unknown-style-directive-property"
 description: "disallow unknown `style:property`"
 since: "v0.31.0"
 ---
 
-# @ota-meshi/svelte/no-unknown-style-directive-property
+# svelte/no-unknown-style-directive-property
 
 > disallow unknown `style:property`
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -26,7 +26,7 @@ Note that this rule only checks the `style:property` directive. If you want to c
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-unknown-style-directive-property: "error" */
+  /* eslint svelte/no-unknown-style-directive-property: "error" */
   let red = "red"
   let color = red
 </script>
@@ -46,7 +46,7 @@ Note that this rule only checks the `style:property` directive. If you want to c
 
 ```json
 {
-  "@ota-meshi/svelte/no-unknown-style-directive-property": [
+  "svelte/no-unknown-style-directive-property": [
     "error",
     {
       "ignoreProperties": [],
@@ -67,7 +67,7 @@ Note that this rule only checks the `style:property` directive. If you want to c
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.31.0
+This rule was introduced in eslint-plugin-svelte v0.31.0
 
 ## :mag: Implementation
 

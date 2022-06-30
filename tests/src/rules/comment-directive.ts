@@ -9,19 +9,19 @@ import plugin from "../../../src/index"
 // Initialize linter.
 const linter = new eslint.ESLint({
   plugins: {
-    "@ota-meshi/svelte": plugin as never,
+    svelte: plugin as never,
   },
   baseConfig: {
     parser: require.resolve("svelte-eslint-parser"),
     parserOptions: {
       ecmaVersion: 2020,
     },
-    plugins: ["@ota-meshi/svelte"],
+    plugins: ["svelte"],
     rules: {
       "no-undef": "error",
       "space-infix-ops": "error",
-      "@ota-meshi/svelte/no-at-html-tags": "error",
-      "@ota-meshi/svelte/comment-directive": "error",
+      "svelte/no-at-html-tags": "error",
+      "svelte/comment-directive": "error",
     },
   },
   useEslintrc: false,
@@ -49,10 +49,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 3)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "no-undef")
     })
@@ -68,10 +65,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 4)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[0].line, 5)
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[1].line, 5)
@@ -83,7 +77,7 @@ describe("comment-directive", () => {
 
     it("enable specific rules if <!-- eslint-enable space-infix-ops -->", async () => {
       const code = `
-      <!-- eslint-disable @ota-meshi/svelte/no-at-html-tags, space-infix-ops -->
+      <!-- eslint-disable svelte/no-at-html-tags, space-infix-ops -->
       {@html a+b}
       <!-- eslint-enable space-infix-ops -->
       {@html a+b}
@@ -119,9 +113,9 @@ describe("comment-directive", () => {
       assert.strictEqual(messages[0].ruleId, "no-undef")
     })
 
-    it("disable specific rules if <!-- eslint-disable space-infix-ops ,, , @ota-meshi/svelte/no-at-html-tags -->", async () => {
+    it("disable specific rules if <!-- eslint-disable space-infix-ops ,, , svelte/no-at-html-tags -->", async () => {
       const code = `
-      <!-- eslint-disable space-infix-ops ,, , @ota-meshi/svelte/no-at-html-tags -->
+      <!-- eslint-disable space-infix-ops ,, , svelte/no-at-html-tags -->
       {@html a+b}
       `
       const result = await linter.lintText(code, { filePath: "test.svelte" })
@@ -152,10 +146,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 3)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "no-undef")
     })
@@ -170,10 +161,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 4)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "space-infix-ops")
       assert.strictEqual(messages[3].ruleId, "no-undef")
@@ -201,10 +189,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 3)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "no-undef")
     })
@@ -221,10 +206,7 @@ describe("comment-directive", () => {
 
       assert.strictEqual(messages.length, 4)
 
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[0].line, 4)
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[1].line, 4)
@@ -236,7 +218,7 @@ describe("comment-directive", () => {
 
     it("should affect only the next line", async () => {
       const code = `
-      <!-- eslint-disable-next-line @ota-meshi/svelte/no-at-html-tags, space-infix-ops -->
+      <!-- eslint-disable-next-line svelte/no-at-html-tags, space-infix-ops -->
       {@html a+b}
       {@html a+b}
       `
@@ -249,10 +231,7 @@ describe("comment-directive", () => {
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[1].line, 3)
 
-      assert.strictEqual(
-        messages[2].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[2].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[2].line, 4)
       assert.strictEqual(messages[3].ruleId, "no-undef")
       assert.strictEqual(messages[3].line, 4)
@@ -286,10 +265,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 4)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[0].line, 5)
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[1].line, 5)
@@ -301,7 +277,7 @@ describe("comment-directive", () => {
 
     it("enable specific rules if <!-- eslint-enable space-infix-ops -- description -->", async () => {
       const code = `
-      <!-- eslint-disable @ota-meshi/svelte/no-at-html-tags, space-infix-ops -- description -->
+      <!-- eslint-disable svelte/no-at-html-tags, space-infix-ops -- description -->
       {@html a+b}
       <!-- eslint-enable space-infix-ops -- description -->
       {@html a+b}
@@ -340,10 +316,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 3)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "no-undef")
     })
@@ -368,10 +341,7 @@ describe("comment-directive", () => {
       const messages = result[0].messages
 
       assert.strictEqual(messages.length, 3)
-      assert.strictEqual(
-        messages[0].ruleId,
-        "@ota-meshi/svelte/no-at-html-tags",
-      )
+      assert.strictEqual(messages[0].ruleId, "svelte/no-at-html-tags")
       assert.strictEqual(messages[1].ruleId, "no-undef")
       assert.strictEqual(messages[2].ruleId, "no-undef")
     })
@@ -390,7 +360,7 @@ describe("comment-directive", () => {
   //         "error",
   //         { reportUnusedDisableDirectives: true },
   //       ],
-  //       "@ota-meshi/svelte/no-at-html-tags": "error",
+  //       "svelte/no-at-html-tags": "error",
   //       "space-infix-ops": "error",
   //     },
   //     useEslintrc: false,
@@ -450,10 +420,10 @@ describe("comment-directive", () => {
   //     assert.strictEqual(messages[0].column, 11)
   //   })
 
-  //   it("report unused <!-- eslint-disable space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->", () => {
+  //   it("report unused <!-- eslint-disable space-infix-ops, svelte/no-at-html-tags -->", () => {
   //     const code = `
   //        <template>
-  //          <!-- eslint-disable space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->
+  //          <!-- eslint-disable space-infix-ops, svelte/no-at-html-tags -->
   //          <div id="a">Hello</div>
   //        </template>
   //      `
@@ -473,16 +443,16 @@ describe("comment-directive", () => {
   //     assert.strictEqual(messages[1].ruleId, "vue/comment-directive")
   //     assert.strictEqual(
   //       messages[1].message,
-  //       "Unused eslint-disable directive (no problems were reported from '@ota-meshi/svelte/no-at-html-tags').",
+  //       "Unused eslint-disable directive (no problems were reported from 'svelte/no-at-html-tags').",
   //     )
   //     assert.strictEqual(messages[1].line, 3)
   //     assert.strictEqual(messages[1].column, 60)
   //   })
 
-  //   it("report unused <!-- eslint-disable-next-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->", () => {
+  //   it("report unused <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->", () => {
   //     const code = `
   //        <template>
-  //          <!-- eslint-disable-next-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->
+  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
   //          <div id="a">Hello</div>
   //          <div id id="b">Hello</div>
   //        </template>
@@ -503,24 +473,24 @@ describe("comment-directive", () => {
   //     assert.strictEqual(messages[1].ruleId, "vue/comment-directive")
   //     assert.strictEqual(
   //       messages[1].message,
-  //       "Unused eslint-disable-next-line directive (no problems were reported from '@ota-meshi/svelte/no-at-html-tags').",
+  //       "Unused eslint-disable-next-line directive (no problems were reported from 'svelte/no-at-html-tags').",
   //     )
   //     assert.strictEqual(messages[1].line, 3)
   //     assert.strictEqual(messages[1].column, 70)
 
   //     assert.strictEqual(
   //       messages[2].ruleId,
-  //       "@ota-meshi/svelte/no-at-html-tags",
+  //       "svelte/no-at-html-tags",
   //     )
   //     assert.strictEqual(messages[2].line, 5)
   //     assert.strictEqual(messages[3].ruleId, "space-infix-ops")
   //     assert.strictEqual(messages[3].line, 5)
   //   })
 
-  //   it("dont report used <!-- eslint-disable-next-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->", () => {
+  //   it("dont report used <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->", () => {
   //     const code = `
   //        <template>
-  //          <!-- eslint-disable-next-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->
+  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
   //          <div id id="a">Hello</div>
   //        </template>
   //      `
@@ -534,8 +504,8 @@ describe("comment-directive", () => {
   //     const code = `
   //        <template>
   //          <!-- eslint-disable -->
-  //          <!-- eslint-disable-next-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->
-  //          <div id id="a">Hello</div><!-- eslint-disable-line space-infix-ops, @ota-meshi/svelte/no-at-html-tags -->
+  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
+  //          <div id id="a">Hello</div><!-- eslint-disable-line space-infix-ops, svelte/no-at-html-tags -->
   //        </template>
   //      `
   //     const messages = linter.executeOnText(code, "test.vue").results[0]

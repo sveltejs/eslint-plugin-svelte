@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/shorthand-directive"
+title: "svelte/shorthand-directive"
 description: "enforce use of shorthand syntax in directives"
 since: "v0.24.0"
 ---
 
-# @ota-meshi/svelte/shorthand-directive
+# svelte/shorthand-directive
 
 > enforce use of shorthand syntax in directives
 
@@ -23,7 +23,7 @@ This rule enforces the use of the shorthand syntax in directives.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/shorthand-directive: "error" */
+  /* eslint svelte/shorthand-directive: "error" */
   let value = 'hello!'
   let active = true
   let color = 'red'
@@ -48,7 +48,7 @@ This rule enforces the use of the shorthand syntax in directives.
 
 ```json
 {
-  "@ota-meshi/svelte/shorthand-directive": [
+  "svelte/shorthand-directive": [
     "error",
     {
       "prefer": "always" // "never"
@@ -63,13 +63,13 @@ This rule enforces the use of the shorthand syntax in directives.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/shorthand-attribute]
+- [svelte/shorthand-attribute]
 
-[@ota-meshi/svelte/shorthand-attribute]: ./shorthand-directive.md
+[svelte/shorthand-attribute]: ./shorthand-directive.md
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.24.0
+This rule was introduced in eslint-plugin-svelte v0.24.0
 
 ## :mag: Implementation
 

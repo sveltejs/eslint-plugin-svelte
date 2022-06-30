@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-dupe-style-properties"
+title: "svelte/no-dupe-style-properties"
 description: "disallow duplicate style properties"
 since: "v0.31.0"
 ---
 
-# @ota-meshi/svelte/no-dupe-style-properties
+# svelte/no-dupe-style-properties
 
 > disallow duplicate style properties
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -22,7 +22,7 @@ This rule reports duplicate style properties.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-dupe-style-properties: "error" */
+  /* eslint svelte/no-dupe-style-properties: "error" */
   let red = "red"
 </script>
 
@@ -43,7 +43,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.31.0
+This rule was introduced in eslint-plugin-svelte v0.31.0
 
 ## :mag: Implementation
 

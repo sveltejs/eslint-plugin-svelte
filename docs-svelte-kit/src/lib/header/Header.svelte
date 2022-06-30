@@ -52,7 +52,7 @@
     </ul>
     <div class="nav-title">
       <a sveltekit:prefetch href="{baseUrl}/">
-        <img src={logo} alt="Logo" />@ota-meshi/eslint-plugin-svelte</a
+        <img src={logo} alt="Logo" />eslint-plugin-svelte</a
       >
     </div>
     <svg viewBox="0 0 2 3" aria-hidden="true">

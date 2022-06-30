@@ -101,6 +101,7 @@ dist
 .tern-port
 
 ## repo
+/yarn.lock
 /lib
 /.svelte-kit
 /build

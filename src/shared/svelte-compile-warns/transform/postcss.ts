@@ -11,8 +11,7 @@ export function transform(
   node: AST.SvelteStyleElement,
   context: RuleContext,
 ): TransformResult | null {
-  const postcssConfig =
-    context.settings?.["@ota-meshi/svelte"]?.compileOptions?.postcss
+  const postcssConfig = context.settings?.svelte?.compileOptions?.postcss
   if (postcssConfig === false) {
     return null
   }

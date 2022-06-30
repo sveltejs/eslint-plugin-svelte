@@ -22,7 +22,7 @@
     })
 
   const DEFAULT_CODE =
-    `<!-- Welcome to @ota-meshi/eslint-plugin-svelte -->
+    `<!-- Welcome to eslint-plugin-svelte -->
 <script>
   let a = 1;
   let b = 2;

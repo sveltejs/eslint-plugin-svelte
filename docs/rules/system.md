@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/system"
+title: "svelte/system"
 description: "system rule for working this plugin"
 since: "v0.0.13"
 ---
 
-# @ota-meshi/svelte/system
+# svelte/system
 
 > system rule for working this plugin
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -22,7 +22,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.13
+This rule was introduced in eslint-plugin-svelte v0.0.13
 
 ## :mag: Implementation
 

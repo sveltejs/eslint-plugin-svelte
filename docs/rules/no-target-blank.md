@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-target-blank"
+title: "svelte/no-target-blank"
 description: "disallow `target=\"_blank\"` attribute without `rel=\"noopener noreferrer\"`"
 since: "v0.0.4"
 ---
 
-# @ota-meshi/svelte/no-target-blank
+# svelte/no-target-blank
 
 > disallow `target="_blank"` attribute without `rel="noopener noreferrer"`
 
@@ -20,7 +20,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-target-blank: "error" */
+  /* eslint svelte/no-target-blank: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -36,7 +36,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```json
 {
-  "@ota-meshi/svelte/no-target-blank": [
+  "svelte/no-target-blank": [
     "error",
     {
       "allowReferrer": true,
@@ -57,7 +57,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-target-blank: ['error', { allowReferrer: false }] */
+  /* eslint svelte/no-target-blank: ['error', { allowReferrer: false }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -77,7 +77,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-target-blank: ['error', { allowReferrer: true }] */
+  /* eslint svelte/no-target-blank: ['error', { allowReferrer: true }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -97,7 +97,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-target-blank: ['error', { enforceDynamicLinks: 'always' }] */
+  /* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'always' }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -117,7 +117,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-target-blank: ['error', { enforceDynamicLinks: 'never' }] */
+  /* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'never' }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -131,7 +131,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.4
+This rule was introduced in eslint-plugin-svelte v0.0.4
 
 ## :mag: Implementation
 

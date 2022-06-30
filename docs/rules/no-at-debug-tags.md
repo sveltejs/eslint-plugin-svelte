@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-at-debug-tags"
+title: "svelte/no-at-debug-tags"
 description: "disallow the use of `{@debug}`"
 since: "v0.0.1"
 ---
 
-# @ota-meshi/svelte/no-at-debug-tags
+# svelte/no-at-debug-tags
 
 > disallow the use of `{@debug}`
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -24,7 +24,7 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-at-debug-tags: "error" */
+  /* eslint svelte/no-at-debug-tags: "error" */
 </script>
 
 <!-- ✗ BAD -->
@@ -45,7 +45,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.1
+This rule was introduced in eslint-plugin-svelte v0.0.1
 
 ## :mag: Implementation
 

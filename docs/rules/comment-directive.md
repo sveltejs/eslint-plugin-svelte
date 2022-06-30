@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/comment-directive"
+title: "svelte/comment-directive"
 description: "support comment-directives in HTML template"
 since: "v0.0.13"
 ---
 
-# @ota-meshi/svelte/comment-directive
+# svelte/comment-directive
 
 > support comment-directives in HTML template
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/base"` and `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.
 
 Sole purpose of this rule is to provide `eslint-disable` functionality in the template HTML.
 It supports usage of the following comments:
@@ -36,7 +36,7 @@ This rule sends all `eslint-disable`-like comments to the post-process of the `.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/comment-directive: "error", no-undef: "error" */
+  /* eslint svelte/comment-directive: "error", no-undef: "error" */
 </script>
 
 <!-- eslint-disable-next-line no-undef -->
@@ -53,7 +53,7 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/comment-directive: "error", no-undef: "error" */
+  /* eslint svelte/comment-directive: "error", no-undef: "error" */
 </script>
 
 <!-- eslint-disable-next-line no-undef -- Here's a description about why this disabling is necessary. -->
@@ -74,7 +74,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.13
+This rule was introduced in eslint-plugin-svelte v0.0.13
 
 ## :mag: Implementation
 

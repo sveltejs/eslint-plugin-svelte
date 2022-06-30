@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-shorthand-style-property-overrides"
+title: "svelte/no-shorthand-style-property-overrides"
 description: "disallow shorthand style properties that override related longhand properties"
 since: "v0.31.0"
 ---
 
-# @ota-meshi/svelte/no-shorthand-style-property-overrides
+# svelte/no-shorthand-style-property-overrides
 
 > disallow shorthand style properties that override related longhand properties
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -24,7 +24,7 @@ This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-o
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-shorthand-style-property-overrides: "error" */
+  /* eslint svelte/no-shorthand-style-property-overrides: "error" */
   let red = "red"
 </script>
 
@@ -53,7 +53,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.31.0
+This rule was introduced in eslint-plugin-svelte v0.31.0
 
 ## :mag: Implementation
 

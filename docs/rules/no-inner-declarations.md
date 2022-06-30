@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-inner-declarations"
+title: "svelte/no-inner-declarations"
 description: "disallow variable or `function` declarations in nested blocks"
 since: "v0.0.8"
 ---
 
-# @ota-meshi/svelte/no-inner-declarations
+# svelte/no-inner-declarations
 
 > disallow variable or `function` declarations in nested blocks
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -27,7 +27,7 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-inner-declarations: "error" */
+  /* eslint svelte/no-inner-declarations: "error" */
 
   /* ✓ GOOD */
   function doSomething() {}
@@ -49,7 +49,7 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 ```json
 {
-  "@ota-meshi/svelte/no-inner-declarations": [
+  "svelte/no-inner-declarations": [
     "error",
     "functions" // or "both"
   ]
@@ -66,7 +66,7 @@ Same as [no-inner-declarations] rule option. See [here](https://eslint.org/docs/
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.0.8
+This rule was introduced in eslint-plugin-svelte v0.0.8
 
 ## :mag: Implementation
 

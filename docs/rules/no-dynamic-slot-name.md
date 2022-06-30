@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-dynamic-slot-name"
+title: "svelte/no-dynamic-slot-name"
 description: "disallow dynamic slot name"
 since: "v0.14.0"
 ---
 
-# @ota-meshi/svelte/no-dynamic-slot-name
+# svelte/no-dynamic-slot-name
 
 > disallow dynamic slot name
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -26,7 +26,7 @@ The auto-fix of this rule can be replaced with a static `<slot>` name if the exp
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-dynamic-slot-name: "error" */
+  /* eslint svelte/no-dynamic-slot-name: "error" */
   const SLOT_NAME = "bad"
 </script>
 
@@ -45,7 +45,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.14.0
+This rule was introduced in eslint-plugin-svelte v0.14.0
 
 ## :mag: Implementation
 

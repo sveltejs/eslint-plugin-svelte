@@ -13,20 +13,22 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Install Packages
-        run: npm install --legacy-peer-deps
+        run: yarn install
       - name: Lint
-        run: npm run lint
+        run: |+
+          yarn build
+          yarn lint
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Install Packages
-        run: npm install --legacy-peer-deps
+        run: yarn install
       - name: Build
         run: |+
-          npm run update
-          npm run build
+          yarn update
+          yarn build
   test:
     name: "Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}"
     runs-on: ${{ matrix.os }}
@@ -44,10 +46,10 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          npm i -D eslint@${{ matrix.eslint }} --legacy-peer-deps
-          npx rimraf node_modules
+          yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
+          rm -rf node_modules
         if: matrix.eslint != 8
       - name: Install Packages
-        run: npm install --legacy-peer-deps
+        run: yarn install --ignore-engines
       - name: Test
-        run: npm test
+        run: yarn test

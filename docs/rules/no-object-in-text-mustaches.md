@@ -1,16 +1,16 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/no-object-in-text-mustaches"
+title: "svelte/no-object-in-text-mustaches"
 description: "disallow objects in text mustache interpolation"
 since: "v0.5.0"
 ---
 
-# @ota-meshi/svelte/no-object-in-text-mustaches
+# svelte/no-object-in-text-mustaches
 
 > disallow objects in text mustache interpolation
 
-- :gear: This rule is included in `"plugin:@ota-meshi/svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
@@ -23,7 +23,7 @@ When you use an object for text interpolation, it is drawn as `[object Object]`.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/no-object-in-text-mustaches: "error" */
+  /* eslint svelte/no-object-in-text-mustaches: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -44,13 +44,13 @@ Nothing.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/no-not-function-handler]
+- [svelte/no-not-function-handler]
 
-[@ota-meshi/svelte/no-not-function-handler]: ./no-not-function-handler.md
+[svelte/no-not-function-handler]: ./no-not-function-handler.md
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.5.0
+This rule was introduced in eslint-plugin-svelte v0.5.0
 
 ## :mag: Implementation
 

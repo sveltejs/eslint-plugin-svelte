@@ -55,7 +55,7 @@ export default createRule("comment-directive", {
       options.reportUnusedDisableDirectives,
     )
     const directives = shared.newCommentDirectives({
-      ruleId: "@ota-meshi/svelte/comment-directive",
+      ruleId: "svelte/comment-directive",
       reportUnusedDisableDirectives,
     })
 

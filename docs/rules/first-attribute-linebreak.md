@@ -1,12 +1,12 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "@ota-meshi/svelte/first-attribute-linebreak"
+title: "svelte/first-attribute-linebreak"
 description: "enforce the location of first attribute"
 since: "v0.6.0"
 ---
 
-# @ota-meshi/svelte/first-attribute-linebreak
+# svelte/first-attribute-linebreak
 
 > enforce the location of first attribute
 
@@ -23,7 +23,7 @@ This rule aims to enforce a consistent location for the first attribute.
 
 ```svelte
 <script>
-  /* eslint @ota-meshi/svelte/first-attribute-linebreak: "error" */
+  /* eslint svelte/first-attribute-linebreak: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -50,7 +50,7 @@ This rule aims to enforce a consistent location for the first attribute.
 
 ```json
 {
-  "@ota-meshi/svelte/first-attribute-linebreak": [
+  "svelte/first-attribute-linebreak": [
     "error",
     {
       "multiline": "below", // or "beside"
@@ -69,13 +69,13 @@ This rule aims to enforce a consistent location for the first attribute.
 
 ## :couple: Related Rules
 
-- [@ota-meshi/svelte/max-attributes-per-line]
+- [svelte/max-attributes-per-line]
 
-[@ota-meshi/svelte/max-attributes-per-line]: ./max-attributes-per-line.md
+[svelte/max-attributes-per-line]: ./max-attributes-per-line.md
 
 ## :rocket: Version
 
-This rule was introduced in @ota-meshi/eslint-plugin-svelte v0.6.0
+This rule was introduced in eslint-plugin-svelte v0.6.0
 
 ## :mag: Implementation
 
