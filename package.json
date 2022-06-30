@@ -113,7 +113,7 @@
     "eslint-plugin-node-dependencies": "^0.8.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-regexp": "^1.0.0",
-    "eslint-plugin-svelte": "link:.",
+    "eslint-plugin-svelte": "^2.0.0",
     "eslint-plugin-yml": "^1.0.0",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",
