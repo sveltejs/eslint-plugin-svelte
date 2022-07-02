@@ -4,11 +4,11 @@
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
   "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
-  "funding": "https://github.com/sponsors/ota-meshi",
   "author": "Yosuke Ota (https://github.com/ota-meshi)",
   "contributors": [
     "JounQin (https://github.com/JounQin)"
   ],
+  "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
   "packageManager": "yarn@1.22.19",
   "engines": {
@@ -122,7 +122,7 @@
     "pirates": "^4.0.1",
     "postcss-nested": "^5.0.6",
     "prettier": "^2.2.1",
-    "prettier-plugin-pkg": "^0.14.1",
+    "prettier-plugin-pkg": "^0.15.0",
     "prettier-plugin-svelte": "^2.6.0",
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.25.0",
