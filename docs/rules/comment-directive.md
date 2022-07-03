@@ -64,7 +64,41 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "svelte/comment-directive": [
+    "error",
+    {
+      "reportUnusedDisableDirectives": false
+    }
+  ]
+}
+```
+
+- `reportUnusedDisableDirectives` ... If `true`, to report unused `eslint-disable` HTML comments. default `false`
+
+### `{ "reportUnusedDisableDirectives": true }`
+
+<ESLintCodeBlock>
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/comment-directive: ["error", { "reportUnusedDisableDirectives": true }], no-undef: "error" */
+  import DefinedComponent from "./DefinedComponent.svelte"
+</script>
+
+<!-- ✓ GOOD -->
+<!-- eslint-disable-next-line no-undef -->
+<UndefComponent />
+
+<!-- ✗ BAD -->
+<!-- eslint-disable-next-line no-undef -->
+<DefinedComponent />
+```
+
+</ESLintCodeBlock>
 
 ## :books: Further Reading
 
