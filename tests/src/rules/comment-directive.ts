@@ -347,171 +347,203 @@ describe("comment-directive", () => {
     })
   })
 
-  // describe("reportUnusedDisableDirectives", () => {
-  //   const linter = new eslint.CLIEngine({
-  //     parser: require.resolve("vue-eslint-parser"),
-  //     parserOptions: {
-  //       ecmaVersion: 2015,
-  //     },
-  //     plugins: ["vue"],
-  //     rules: {
-  //       "no-unused-vars": "error",
-  //       "vue/comment-directive": [
-  //         "error",
-  //         { reportUnusedDisableDirectives: true },
-  //       ],
-  //       "svelte/no-at-html-tags": "error",
-  //       "space-infix-ops": "error",
-  //     },
-  //     useEslintrc: false,
-  //   })
-  //   it("report unused <!-- eslint-disable -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable -->
-  //          <div id="a">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+  describe("reportUnusedDisableDirectives", () => {
+    const linter = new eslint.ESLint({
+      plugins: {
+        svelte: plugin as never,
+      },
+      baseConfig: {
+        parser: require.resolve("svelte-eslint-parser"),
+        parserOptions: {
+          ecmaVersion: 2015,
+        },
+        plugins: ["svelte"],
+        rules: {
+          "no-unused-vars": "error",
+          "svelte/comment-directive": [
+            "error",
+            { reportUnusedDisableDirectives: true },
+          ],
+          "svelte/no-at-html-tags": "error",
+          "svelte/no-at-debug-tags": "error",
+        },
+      },
+      useEslintrc: false,
+    })
+    it("report unused <!-- eslint-disable -->", async () => {
+      const code = `
+        <!-- eslint-disable -->
+        <div>Hello</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 1)
-  //     assert.strictEqual(messages[0].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[0].message,
-  //       "Unused eslint-disable directive (no problems were reported).",
-  //     )
-  //     assert.strictEqual(messages[0].line, 3)
-  //     assert.strictEqual(messages[0].column, 11)
-  //   })
+      assert.strictEqual(messages.length, 1)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-disable directive (no problems were reported).",
+      )
+      assert.strictEqual(messages[0].line, 2)
+      assert.strictEqual(messages[0].column, 9)
+    })
 
-  //   it("dont report unused <!-- eslint-disable -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable -->
-  //          <div id id="a">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+    it("dont report unused <!-- eslint-disable -->", async () => {
+      const code = `
+        <!-- eslint-disable -->
+        <div>{@html foo}{@debug foo}</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 0)
-  //   })
-  //   it("disable and report unused <!-- eslint-disable -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable -->
-  //          <div id id="a">Hello</div>
-  //          <!-- eslint-enable -->
-  //          <!-- eslint-disable -->
-  //          <div id="b">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+      assert.strictEqual(messages.length, 0)
+    })
+    it("disable and report unused <!-- eslint-disable -->", async () => {
+      const code = `
+        <!-- eslint-disable -->
+        <div>{@html foo}{@debug foo}</div>
+        <!-- eslint-enable -->
+        <!-- eslint-disable -->
+        <div>Hello</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 1)
-  //     assert.strictEqual(messages[0].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[0].message,
-  //       "Unused eslint-disable directive (no problems were reported).",
-  //     )
-  //     assert.strictEqual(messages[0].line, 6)
-  //     assert.strictEqual(messages[0].column, 11)
-  //   })
+      assert.strictEqual(messages.length, 1)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-disable directive (no problems were reported).",
+      )
+      assert.strictEqual(messages[0].line, 5)
+      assert.strictEqual(messages[0].column, 9)
+    })
 
-  //   it("report unused <!-- eslint-disable space-infix-ops, svelte/no-at-html-tags -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable space-infix-ops, svelte/no-at-html-tags -->
-  //          <div id="a">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+    it("report unused <!-- eslint-disable svelte/no-at-debug-tags, svelte/no-at-html-tags -->", async () => {
+      const code = `
+        <!-- eslint-disable svelte/no-at-debug-tags, svelte/no-at-html-tags -->
+        <div>Hello</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 2)
+      assert.strictEqual(messages.length, 2)
 
-  //     assert.strictEqual(messages[0].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[0].message,
-  //       "Unused eslint-disable directive (no problems were reported from 'space-infix-ops').",
-  //     )
-  //     assert.strictEqual(messages[0].line, 3)
-  //     assert.strictEqual(messages[0].column, 31)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-disable directive (no problems were reported from 'svelte/no-at-debug-tags').",
+      )
+      assert.strictEqual(messages[0].line, 2)
+      assert.strictEqual(messages[0].column, 29)
 
-  //     assert.strictEqual(messages[1].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[1].message,
-  //       "Unused eslint-disable directive (no problems were reported from 'svelte/no-at-html-tags').",
-  //     )
-  //     assert.strictEqual(messages[1].line, 3)
-  //     assert.strictEqual(messages[1].column, 60)
-  //   })
+      assert.strictEqual(messages[1].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[1].message,
+        "Unused eslint-disable directive (no problems were reported from 'svelte/no-at-html-tags').",
+      )
+      assert.strictEqual(messages[1].line, 2)
+      assert.strictEqual(messages[1].column, 54)
+    })
 
-  //   it("report unused <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
-  //          <div id="a">Hello</div>
-  //          <div id id="b">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+    it("report unused <!-- eslint-disable-next-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->", async () => {
+      const code = `
+        <!-- eslint-disable-next-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->
+        <div>Hello</div>
+        <div>{@html foo}{@debug foo}</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 4)
+      assert.strictEqual(messages.length, 4)
 
-  //     assert.strictEqual(messages[0].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[0].message,
-  //       "Unused eslint-disable-next-line directive (no problems were reported from 'space-infix-ops').",
-  //     )
-  //     assert.strictEqual(messages[0].line, 3)
-  //     assert.strictEqual(messages[0].column, 41)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-disable-next-line directive (no problems were reported from 'svelte/no-at-debug-tags').",
+      )
+      assert.strictEqual(messages[0].line, 2)
+      assert.strictEqual(messages[0].column, 39)
 
-  //     assert.strictEqual(messages[1].ruleId, "vue/comment-directive")
-  //     assert.strictEqual(
-  //       messages[1].message,
-  //       "Unused eslint-disable-next-line directive (no problems were reported from 'svelte/no-at-html-tags').",
-  //     )
-  //     assert.strictEqual(messages[1].line, 3)
-  //     assert.strictEqual(messages[1].column, 70)
+      assert.strictEqual(messages[1].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[1].message,
+        "Unused eslint-disable-next-line directive (no problems were reported from 'svelte/no-at-html-tags').",
+      )
+      assert.strictEqual(messages[1].line, 2)
+      assert.strictEqual(messages[1].column, 64)
 
-  //     assert.strictEqual(
-  //       messages[2].ruleId,
-  //       "svelte/no-at-html-tags",
-  //     )
-  //     assert.strictEqual(messages[2].line, 5)
-  //     assert.strictEqual(messages[3].ruleId, "space-infix-ops")
-  //     assert.strictEqual(messages[3].line, 5)
-  //   })
+      assert.strictEqual(messages[2].ruleId, "svelte/no-at-html-tags")
+      assert.strictEqual(messages[2].line, 4)
+      assert.strictEqual(messages[3].ruleId, "svelte/no-at-debug-tags")
+      assert.strictEqual(messages[3].line, 4)
+    })
 
-  //   it("dont report used <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
-  //          <div id id="a">Hello</div>
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+    it("dont report used <!-- eslint-disable-next-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->", async () => {
+      const code = `
+        <!-- eslint-disable-next-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->
+        <div>{@html foo}{@debug foo}</div>
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 0)
-  //   })
+      assert.deepStrictEqual(messages, [])
+    })
 
-  //   it("dont report used, with duplicate eslint-disable", () => {
-  //     const code = `
-  //        <template>
-  //          <!-- eslint-disable -->
-  //          <!-- eslint-disable-next-line space-infix-ops, svelte/no-at-html-tags -->
-  //          <div id id="a">Hello</div><!-- eslint-disable-line space-infix-ops, svelte/no-at-html-tags -->
-  //        </template>
-  //      `
-  //     const messages = linter.executeOnText(code, "test.vue").results[0]
-  //       .messages
+    it("dont report used, with duplicate eslint-disable", async () => {
+      const code = `
+        <!-- eslint-disable -->
+        <!-- eslint-disable-next-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->
+        <div>{@html foo}</div><!-- eslint-disable-line svelte/no-at-debug-tags, svelte/no-at-html-tags -->
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
 
-  //     assert.strictEqual(messages.length, 0)
-  //   })
-  // })
+      assert.deepStrictEqual(messages, [])
+    })
+
+    it("report unused <!-- eslint-enable -->", async () => {
+      const code = `
+        <!-- eslint-enable -->
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
+
+      assert.strictEqual(messages.length, 1)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-enable directive (reporting is not suppressed).",
+      )
+      assert.strictEqual(messages[0].line, 2)
+      assert.strictEqual(messages[0].column, 9)
+    })
+    it("report unused <!-- eslint-enable svelte/no-at-debug-tags -->", async () => {
+      const code = `
+        <!-- eslint-disable svelte/no-at-html-tags -->
+        <div>{@html foo}</div>
+        <!-- eslint-enable svelte/no-at-debug-tags -->
+      `
+      const messages = (
+        await linter.lintText(code, { filePath: "test.svelte" })
+      )[0].messages
+
+      assert.strictEqual(messages.length, 1)
+      assert.strictEqual(messages[0].ruleId, "svelte/comment-directive")
+      assert.strictEqual(
+        messages[0].message,
+        "Unused eslint-enable directive (reporting from 'svelte/no-at-debug-tags' is not suppressed).",
+      )
+      assert.strictEqual(messages[0].line, 4)
+      assert.strictEqual(messages[0].column, 28)
+    })
+  })
 })

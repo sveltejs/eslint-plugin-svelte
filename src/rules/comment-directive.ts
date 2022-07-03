@@ -44,7 +44,14 @@ export default createRule("comment-directive", {
         additionalProperties: false,
       },
     ],
-    messages: {},
+    messages: {
+      unused: "Unused {{kind}} directive (no problems were reported).",
+      unusedRule:
+        "Unused {{kind}} directive (no problems were reported from '{{rule}}').",
+      unusedEnable: "Unused {{kind}} directive (reporting is not suppressed).",
+      unusedEnableRule:
+        "Unused {{kind}} directive (reporting from '{{rule}}' is not suppressed).",
+    },
     type: "problem",
   },
   create(context) {
@@ -121,7 +128,7 @@ export default createRule("comment-directive", {
                   data: { rule: rule.ruleId, kind: parsed.type },
                 })
               }
-              directives.disableBlock(comment.loc.start, rule.ruleId, {
+              directives.disableBlock(comment.loc.end, rule.ruleId, {
                 loc: rule.loc.start,
               })
             }
@@ -133,7 +140,7 @@ export default createRule("comment-directive", {
                 data: { kind: parsed.type },
               })
             }
-            directives.disableBlock(comment.loc.start, ALL_RULES, {
+            directives.disableBlock(comment.loc.end, ALL_RULES, {
               loc: comment.loc.start,
             })
           }
@@ -143,7 +150,7 @@ export default createRule("comment-directive", {
               if (reportUnusedDisableDirectives) {
                 context.report({
                   loc: rule.loc,
-                  messageId: "unusedRule",
+                  messageId: "unusedEnableRule",
                   data: { rule: rule.ruleId, kind: parsed.type },
                 })
               }
@@ -155,7 +162,7 @@ export default createRule("comment-directive", {
             if (reportUnusedDisableDirectives) {
               context.report({
                 loc: comment.loc,
-                messageId: "unused",
+                messageId: "unusedEnable",
                 data: { kind: parsed.type },
               })
             }
