@@ -88,6 +88,7 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 ```
 
 - `indent` (`number | "tab"`) ... The type of indentation. Default is `2`. If this is a number, it's the number of spaces for one indent. If this is `"tab"`, it uses one tab for one indent.
+- `indentScript` (`boolean`) ... If contents within a `<script>` block should be indented a level or not. Default is `true`.
 - `ignoredNodes` ... Can be used to disable indentation checking for any AST node. This accepts an array of [selectors](https://eslint.org/docs/developer-guide/selectors). If an AST node is matched by any of the selectors, the indentation of tokens which are direct children of that node will be ignored. This can be used as an escape hatch to relax the rule if you disagree with the indentation that it enforces for a particular syntactic pattern.
 - `switchCase` ... Enforces indentation level for case clauses in switch statements. Default is `1`.
 - `alignAttributesVertically` ... Condition for whether attributes should be vertically aligned to the first attribute in multiline case or not. Default is `false`

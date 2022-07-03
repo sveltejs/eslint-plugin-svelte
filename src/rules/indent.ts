@@ -16,6 +16,7 @@ export default createRule("indent", {
           indent: {
             anyOf: [{ type: "integer", minimum: 1 }, { enum: ["tab"] }],
           },
+          indentScript: { type: "boolean" },
           switchCase: { type: "integer", minimum: 0 },
           alignAttributesVertically: { type: "boolean" },
           ignoredNodes: {

@@ -13,6 +13,7 @@ export type MaybeNode = {
 
 export type IndentOptions = {
   indentChar: " " | "\t"
+  indentScript: boolean
   indentSize: number
   switchCase: number
   alignAttributesVertically: boolean
