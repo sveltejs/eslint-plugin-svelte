@@ -331,8 +331,37 @@ Please use GitHub's Issues/PRs.
 
 ### Development Tools
 
-- `yarn test` runs tests and measures coverage.
+- `yarn test` runs tests.
+- `yarn cover` runs tests and measures coverage.
 - `yarn update` runs in order to update readme and recommended configuration.
+
+### Test the Rule
+
+Rule testing almost always uses fixtures.  
+For example, for an `indent` rule, the `.ts` file that runs the test is `tests/src/rules/indent.ts` and the fixture is in `tests/fixtures/rules/indent`.  
+The fixture directory has an `invalid` directory and a `valid` directory.
+
+- The `invalid` directory contains test cases where the rule reports problems.
+- The `valid` directory contains test cases where the rule does not report a problem.
+
+The fixture input file should be named `*-input.svelte`. It is automatically collected and tested.  
+If your test requires configuration, you need to add a json file with the configuration.
+
+- If you want to apply a configuration to `my-test-input.svelte`, add `my-test-config.json`.
+- If you want to apply the same configuration to all the fixtures in that directory, add `_config.json`.
+
+To verify the output of invalid test cases requires `*-errors.json`, and `*-output.svelte` (for auto-fix). However, you don't have to add them yourself. If they do not exist, they will be automatically generated when you run the test. In other words, delete them manually when you want to recreate them.
+
+**Tips**:
+
+If you want to test only one rule, run the following command (for `indent` rule):
+
+```sh
+yarn mocha "tests/src/**/indent.ts" --reporter dot --timeout 60000
+```
+
+If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
+(Note that `{"only": true}` must be removed before making a pull request.)
 
 ### Working With Rules
 
