@@ -357,7 +357,7 @@ To verify the output of invalid test cases requires `*-errors.json`, and `*-outp
 If you want to test only one rule, run the following command (for `indent` rule):
 
 ```sh
-yarn mocha "tests/src/**/indent.ts" --reporter dot --timeout 60000
+yarn test -g indent
 ```
 
 If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
