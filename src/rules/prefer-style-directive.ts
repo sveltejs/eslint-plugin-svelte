@@ -222,7 +222,7 @@ export default createRule("prefer-style-directive", {
           parent: AST.SvelteStartTag
         },
       ) {
-        if (node.key.name !== "style") {
+        if (!isHTMLElement(node.parent.parent) || node.key.name !== "style") {
           return
         }
         const root = parseStyleAttributeValue(node, context)
@@ -230,6 +230,24 @@ export default createRule("prefer-style-directive", {
           processStyleValue(node, root)
         }
       },
+    }
+
+    /** Checks whether the given node is the html element node. */
+    function isHTMLElement(
+      node:
+        | AST.SvelteElement
+        | AST.SvelteScriptElement
+        | AST.SvelteStyleElement,
+    ) {
+      if (node.type === "SvelteElement") {
+        if (node.kind === "html") {
+          return true
+        }
+        if (node.kind === "special") {
+          return node.name.name === "svelte:element"
+        }
+      }
+      return false
     }
   },
 })
