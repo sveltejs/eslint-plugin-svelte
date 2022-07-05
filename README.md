@@ -360,6 +360,8 @@ If you want to test only one rule, run the following command (for `indent` rule)
 yarn test -g indent
 ```
 
+Take https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha as reference for details.
+
 If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
 (Note that `{"only": true}` must be removed before making a pull request.)
 
