@@ -109,15 +109,18 @@ export function isHTMLElementLike(
   | (SvAST.SvelteSpecialElement & {
       name: SvAST.SvelteName & { name: "svelte:element" }
     }) {
-  if (node.type === "SvelteElement") {
-    if (node.kind === "html") {
-      return true
-    }
-    if (node.kind === "special") {
-      return node.name.name === "svelte:element"
-    }
+  if (node.type !== "SvelteElement") {
+    return false
   }
-  return false
+
+  switch (node.kind) {
+    case "html":
+      return true
+    case "special":
+      return node.name.name === "svelte:element"
+    default:
+      return false
+  }
 }
 
 /**
