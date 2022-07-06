@@ -98,6 +98,31 @@ export function needParentheses(
   return false
 }
 
+/** Checks whether the given node is the html element node or <svelte:element> node. */
+export function isHTMLElementLike(
+  node:
+    | SvAST.SvelteElement
+    | SvAST.SvelteScriptElement
+    | SvAST.SvelteStyleElement,
+): node is
+  | SvAST.SvelteHTMLElement
+  | (SvAST.SvelteSpecialElement & {
+      name: SvAST.SvelteName & { name: "svelte:element" }
+    }) {
+  if (node.type !== "SvelteElement") {
+    return false
+  }
+
+  switch (node.kind) {
+    case "html":
+      return true
+    case "special":
+      return node.name.name === "svelte:element"
+    default:
+      return false
+  }
+}
+
 /**
  * Find the attribute from the given element node
  */
