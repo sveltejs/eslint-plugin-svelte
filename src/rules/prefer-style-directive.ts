@@ -8,6 +8,7 @@ import type {
 } from "../utils/css-utils"
 import { parseStyleAttributeValue } from "../utils/css-utils"
 import type { RuleFixer } from "../types"
+import { isHTMLElementLike } from "../utils/ast-utils"
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(
@@ -222,7 +223,10 @@ export default createRule("prefer-style-directive", {
           parent: AST.SvelteStartTag
         },
       ) {
-        if (!isHTMLElement(node.parent.parent) || node.key.name !== "style") {
+        if (
+          !isHTMLElementLike(node.parent.parent) ||
+          node.key.name !== "style"
+        ) {
           return
         }
         const root = parseStyleAttributeValue(node, context)
@@ -230,24 +234,6 @@ export default createRule("prefer-style-directive", {
           processStyleValue(node, root)
         }
       },
-    }
-
-    /** Checks whether the given node is the html element node. */
-    function isHTMLElement(
-      node:
-        | AST.SvelteElement
-        | AST.SvelteScriptElement
-        | AST.SvelteStyleElement,
-    ) {
-      if (node.type === "SvelteElement") {
-        if (node.kind === "html") {
-          return true
-        }
-        if (node.kind === "special") {
-          return node.name.name === "svelte:element"
-        }
-      }
-      return false
     }
   },
 })

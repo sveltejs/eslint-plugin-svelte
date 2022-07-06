@@ -1,7 +1,11 @@
 import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
-import { getStringIfConstant, needParentheses } from "../utils/ast-utils"
+import {
+  getStringIfConstant,
+  isHTMLElementLike,
+  needParentheses,
+} from "../utils/ast-utils"
 import type { Rule } from "eslint"
 
 export default createRule("prefer-class-directive", {
@@ -348,12 +352,15 @@ export default createRule("prefer-class-directive", {
     }
 
     return {
-      "SvelteElement > SvelteStartTag > SvelteAttribute"(
+      "SvelteStartTag > SvelteAttribute"(
         node: AST.SvelteAttribute & {
-          parent: AST.SvelteStartTag & { parent: AST.SvelteElement }
+          parent: AST.SvelteStartTag
         },
       ) {
-        if (node.key.name !== "class") {
+        if (
+          !isHTMLElementLike(node.parent.parent) ||
+          node.key.name !== "class"
+        ) {
           return
         }
 
