@@ -43,7 +43,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
             node.children.filter(isNotEmptyTextNode),
             node.startTag,
             node.endTag,
-            options.indentScript ? 1 : 0,
+            1,
           )
         }
       } else {
