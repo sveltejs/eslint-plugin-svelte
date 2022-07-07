@@ -14,6 +14,7 @@ export default createRule("prefer-class-directive", {
       description: "require class directives instead of ternary expressions",
       category: "Stylistic Issues",
       recommended: false,
+      conflictWithPrettier: false,
     },
     fixable: "code",
     schema: [],

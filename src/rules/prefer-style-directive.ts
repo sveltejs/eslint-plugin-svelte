@@ -23,6 +23,7 @@ export default createRule("prefer-style-directive", {
       description: "require style directives instead of style attribute",
       category: "Stylistic Issues",
       recommended: false,
+      conflictWithPrettier: false,
     },
     fixable: "code",
     schema: [],

@@ -83,6 +83,7 @@ This plugin provides configs:
 
 - `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
+- `plugin:svelte/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/) ([prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte)).
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-svelte/rules/) to get the `rules` that this plugin provides.
 
@@ -360,7 +361,7 @@ If you want to test only one rule, run the following command (for `indent` rule)
 yarn test -g indent
 ```
 
-Take https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha as reference for details.
+Take <https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha> as reference for details.
 
 If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
 (Note that `{"only": true}` must be removed before making a pull request.)
