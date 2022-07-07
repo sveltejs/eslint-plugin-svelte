@@ -12,6 +12,7 @@ import { OffsetContext } from "./offset-context"
 
 type IndentUserOptions = {
   indent?: number | "tab"
+  indentScript?: boolean
   switchCase?: number
   alignAttributesVertically?: boolean
   ignoredNodes?: string[]
@@ -30,6 +31,7 @@ function parseOptions(
 ): IndentOptions {
   const ret: IndentOptions = {
     indentChar: " ",
+    indentScript: true,
     indentSize: 2,
     switchCase: 1,
     alignAttributesVertically: false,
@@ -42,6 +44,10 @@ function parseOptions(
   } else if (options.indent === "tab") {
     ret.indentChar = "\t"
     ret.indentSize = 1
+  }
+
+  if (typeof options.indentScript === "boolean") {
+    ret.indentScript = options.indentScript
   }
 
   if (options.switchCase != null && Number.isSafeInteger(options.switchCase)) {

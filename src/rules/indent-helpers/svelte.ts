@@ -23,7 +23,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
     // ELEMENTS
     // ----------------------------------------------------------------------
     SvelteScriptElement(node: AST.SvelteScriptElement) {
-      offsets.setOffsetElementList(node.body, node.startTag, node.endTag, 1)
+      offsets.setOffsetElementList(
+        node.body,
+        node.startTag,
+        node.endTag,
+        options.indentScript ? 1 : 0,
+      )
     },
     SvelteStyleElement(node: AST.SvelteStyleElement) {
       node.children.forEach((n) => offsets.ignore(n))
