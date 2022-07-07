@@ -35,7 +35,7 @@ The [svelte-eslint-parser] and the `eslint-plugin-svelte` can not be used with t
 
 ## Migration Guide
 
-To migrate from `eslint-plugin-svelte` v1, or `@ota-meshi/eslint-plugin-svelte`, please refer to the [migration guide](https://ota-meshi.github.io/eslint-plugin-svelte/migration/).
+To migrate from `eslint-plugin-svelte` v1, or [`@ota-meshi/eslint-plugin-svelte`](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte), please refer to the [migration guide](https://ota-meshi.github.io/eslint-plugin-svelte/migration/).
 
 ## :book: Documentation
 
