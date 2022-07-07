@@ -2,25 +2,22 @@
 import babelCore from "@babel/core"
 import * as t from "@babel/types"
 
-import pirates from "pirates"
-
-pirates.addHook(transform, {
-  exts: [".js", ".mjs"],
-})
-
 /** transform code */
-function transform(code, _filename) {
-  if (code.includes("import(")) {
+function transform(code, filename) {
+  if (
+    filename.includes("/@sveltejs/kit/") &&
+    code.includes("svelte.config.js")
+  ) {
     let transformed = false
     const newCode = babelCore.transformSync(code, {
       babelrc: false,
       plugins: [
         {
           visitor: {
-            CallExpression(path) {
-              const callee = path.get("callee")
-              if (callee.type === "Import") {
-                callee.replaceWith(t.identifier("$$$import"))
+            StringLiteral(path) {
+              if (path.node.value === "svelte.config.js") {
+                // The configuration file loads `svelte.config.mjs`.
+                path.replaceWith(t.stringLiteral("svelte.config.mjs"))
                 transformed = true
               }
             },
@@ -31,25 +28,7 @@ function transform(code, _filename) {
     if (!transformed) {
       return code
     }
-    return `${newCode.code}
-async function $$$import(module, ...args) {
-  const m = await import(module)
-  return ________adjustModule(m)
-}
-function ________adjustModule(m) {
-  const keys = Object.keys(m);
-  if(m.default && keys.length === 1 && keys[0] === 'default' && typeof m.default === 'object') {
-    const result = {
-      default: ________adjustModule(m.default)
-    }
-    for (const key of Object.keys(m.default)) {
-      result[key] = m.default[key]
-    }
-    return result
-  }
-  return m
-}
-`
+    return `${newCode.code}`
   }
 
   return code
@@ -70,7 +49,7 @@ export async function load(url, context, defaultLoad) {
   const result = await defaultLoad(url, context, defaultLoad)
   return {
     format: result.format,
-    source: transform(`${result.source}`),
+    source: transform(`${result.source}`, url),
   }
 }
 
@@ -90,6 +69,6 @@ export async function transformSource(source, context, defaultTransformSource) {
     defaultTransformSource,
   )
   return {
-    source: transform(`${result.source}`),
+    source: transform(`${result.source}`, context.url),
   }
 }

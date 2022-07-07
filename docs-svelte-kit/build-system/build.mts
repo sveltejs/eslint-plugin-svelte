@@ -1,21 +1,28 @@
-const esbuild = require("esbuild")
-const path = require("path")
-const fs = require("fs")
+import esbuild from "esbuild"
+import path from "path"
+import fs from "fs"
 // const babelCore = require("@babel/core")
 // const t = require("@babel/types")
 
+const dirname = path.dirname(
+  new URL(
+    // @ts-expect-error -- Cannot change `module` option
+    import.meta.url,
+  ).pathname,
+)
+
 build(
-  require.resolve("./src/eslint.mjs"),
-  path.join(__dirname, "../shim/eslint.mjs"),
+  path.join(dirname, "./src/eslint.mjs"),
+  path.join(dirname, "../shim/eslint.mjs"),
   ["assert", "util"],
 )
 build(
-  require.resolve("../../node_modules/assert"),
-  path.join(__dirname, "../shim/assert.mjs"),
+  path.join(dirname, "../../node_modules/assert"),
+  path.join(dirname, "../shim/assert.mjs"),
 )
 
 /** build */
-function build(input, out, injects = []) {
+function build(input: string, out: string, injects: string[] = []) {
   // eslint-disable-next-line no-console -- ignore
   console.log(`build@ ${input}`)
   let code = bundle(input, ["path", ...injects])
@@ -24,21 +31,21 @@ function build(input, out, injects = []) {
 }
 
 /** bundle */
-function bundle(entryPoint, externals) {
+function bundle(entryPoint: string, externals: string[]) {
   const result = esbuild.buildSync({
     entryPoints: [entryPoint],
     format: "esm",
     bundle: true,
     external: externals,
     write: false,
-    inject: [require.resolve("./src/process-shim.mjs")],
+    inject: [path.join(dirname, "./src/process-shim.mjs")],
   })
 
   return `${result.outputFiles[0].text}`
 }
 
 /** transform code */
-function transform(code, injects) {
+function transform(code: string, injects: string[]) {
   const newCode = code.replace(/"[a-z]+" = "[a-z]+";/, "")
   // const newCode = babelCore.transformSync(code, {
   //   babelrc: false,

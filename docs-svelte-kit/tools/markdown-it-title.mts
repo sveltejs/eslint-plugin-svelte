@@ -1,7 +1,8 @@
+import type Md from "markdown-it"
 /**
  * @param {import('markdown-it')} md
  */
-export default (md) => {
+export default (md: Md) => {
   const headingOpen = md.renderer.rules.heading_open
   // eslint-disable-next-line camelcase -- ignore
   md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
@@ -13,8 +14,8 @@ export default (md) => {
     if (level > 1) {
       return head
     }
-    const title = tokens[idx + 1].children
-      .filter(
+    const title = tokens[idx + 1]
+      .children!.filter(
         (token) =>
           token.type === "text" ||
           token.type === "emoji" ||

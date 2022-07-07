@@ -8,8 +8,9 @@ import titlePlugin from "./markdown-it-title.mjs"
 import markdownPlugin from "./markdown-it-markdown.mjs"
 import containerPluginOption from "./markdown-it-container-option.mjs"
 import slugify from "@sindresorhus/slugify"
+import type { Options } from "vite-plugin-svelte-md"
 
-export default (options = {}) => ({
+export default (options: { baseUrl: string; root: string }): Options => ({
   wrapperClasses: [],
   markdownItOptions: {
     highlight,

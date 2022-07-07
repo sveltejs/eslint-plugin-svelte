@@ -1,13 +1,15 @@
+import type Md from "markdown-it"
+import type Token from "markdown-it/lib/token"
 /**
  * @param {import('markdown-it')} md
  */
-export default (md) => {
+export default (md: Md) => {
   md.core.ruler.push("auto_inject_components", (state) => {
     const injected = new Set(extractInjectedComponents(state.tokens))
     for (const component of new Set(
       extractComponents(state.tokens, injected),
     )) {
-      const newToken = new state.Token("auto_inject_component")
+      const newToken = new state.Token("auto_inject_component", "", 0)
       newToken.content = `<script>
 import ${component} from '$lib/components/${component}.svelte'
 </script>`
@@ -15,7 +17,7 @@ import ${component} from '$lib/components/${component}.svelte'
     }
 
     /** Extract imported components */
-    function* extractInjectedComponents(tokens) {
+    function* extractInjectedComponents(tokens: Token[]): Iterable<string> {
       for (const token of tokens) {
         if (
           (token.type === "html_inline" || token.type === "html_block") &&
@@ -33,7 +35,10 @@ import ${component} from '$lib/components/${component}.svelte'
     }
 
     /** Extract inject components */
-    function* extractComponents(tokens, injected) {
+    function* extractComponents(
+      tokens: Token[],
+      injected: Set<string>,
+    ): Iterable<string> {
       for (const token of tokens) {
         if (token.type === "html_inline" || token.type === "html_block") {
           const match = /<([A-Z][\w$]*)/u.exec(token.content)
