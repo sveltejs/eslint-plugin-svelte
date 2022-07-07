@@ -41,6 +41,7 @@ This plugin provides configs:
 
 - `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
+- `plugin:svelte/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/) ([prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte)).
 
 See [the rule list](./rules.md) to get the `rules` that this plugin provides.
 

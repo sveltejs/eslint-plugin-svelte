@@ -30,6 +30,7 @@ export default createRule("max-attributes-per-line", {
       description: "enforce the maximum number of attributes per line",
       category: "Stylistic Issues",
       recommended: false,
+      conflictWithPrettier: true,
     },
     fixable: "whitespace",
     schema: [

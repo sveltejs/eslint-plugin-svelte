@@ -62,7 +62,23 @@ const recommendedFilePath = path.resolve(
 // Update file.
 fs.writeFileSync(recommendedFilePath, recommendedContent)
 
-// Format files.
-// const linter = new eslint.CLIEngine({ fix: true })
-// const report = linter.executeOnFiles([filePath])
-// eslint.CLIEngine.outputFixes(report)
+const prettierContent = `import path from "path"
+const base = require.resolve("./base")
+const baseExtend =
+  path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
+export = {
+  extends: [baseExtend],
+  rules: {
+    // eslint-plugin-svelte rules
+    ${rules
+      .filter((rule) => rule.meta.docs.conflictWithPrettier)
+      .map((rule) => `"${rule.meta.docs.ruleId}": "off"`)
+      .join(",\n    ")},
+  },
+}
+`
+
+const prettierFilePath = path.resolve(__dirname, "../src/configs/prettier.ts")
+
+// Update file.
+fs.writeFileSync(prettierFilePath, prettierContent)

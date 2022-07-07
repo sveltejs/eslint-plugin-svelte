@@ -65,6 +65,7 @@ export interface RuleMetaData {
     ruleId: string
     ruleName: string
     default?: "error" | "warn"
+    conflictWithPrettier?: boolean
   }
   messages: { [messageId: string]: string }
   fixable?: "code" | "whitespace"
@@ -82,11 +83,19 @@ export interface PartialRuleModule {
 export interface PartialRuleMetaData {
   docs: {
     description: string
-    category: RuleCategory
     recommended: boolean | "base"
     extensionRule?: string
     default?: "error" | "warn"
-  }
+  } & (
+    | {
+        category: Exclude<RuleCategory, "Stylistic Issues">
+        conflictWithPrettier?: boolean
+      }
+    | {
+        category: "Stylistic Issues"
+        conflictWithPrettier: boolean
+      }
+  )
   messages: { [messageId: string]: string }
   fixable?: "code" | "whitespace"
   schema: JSONSchema4 | JSONSchema4[]
