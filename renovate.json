@@ -13,6 +13,5 @@
       "depTypeList": ["devDependencies"],
       "automerge": true
     }
-  ],
-  "ignoreDeps": ["@sveltejs/kit"]
+  ]
 }
