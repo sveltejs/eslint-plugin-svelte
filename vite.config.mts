@@ -5,7 +5,7 @@ import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
 
 import "./docs-svelte-kit/build-system/build.mts"
-import { UserConfig } from "vite"
+import type { UserConfig } from "vite"
 
 const dirname = path.dirname(
   new URL(

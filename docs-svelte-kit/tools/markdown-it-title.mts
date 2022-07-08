@@ -2,15 +2,15 @@ import type Md from "markdown-it"
 /**
  * @param {import('markdown-it')} md
  */
-export default (md: Md) => {
+export default (md: Md): void => {
   const headingOpen = md.renderer.rules.heading_open
-  // eslint-disable-next-line camelcase -- ignore
+
   md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
     const head = headingOpen
       ? headingOpen(tokens, idx, options, env, self)
       : self.renderToken(tokens, idx, options)
     const token = tokens[idx]
-    let level = Number(token.tag.substr(1))
+    const level = Number(token.tag.substr(1))
     if (level > 1) {
       return head
     }

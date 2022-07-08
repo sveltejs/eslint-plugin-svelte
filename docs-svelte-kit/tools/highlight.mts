@@ -28,7 +28,7 @@ const EXTENSION_MAPPINGS: Record<string, string | undefined> = {
   rs: "rust",
 }
 
-export default (str: string, lang: string) => {
+export default (str: string, lang: string): string => {
   if (!lang) {
     return wrapPre(str, "text")
   }

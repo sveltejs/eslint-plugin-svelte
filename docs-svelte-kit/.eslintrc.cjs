@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef -- ignore
 module.exports = {
   extends: ["plugin:svelte/recommended"],
   env: {
@@ -15,5 +14,6 @@ module.exports = {
     "svelte/prefer-class-directive": "error",
     "svelte/prefer-style-directive": "error",
     "svelte/spaced-html-comment": "error",
+    "node/file-extension-in-import": "off",
   },
 }

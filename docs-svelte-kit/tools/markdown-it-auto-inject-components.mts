@@ -3,7 +3,7 @@ import type Token from "markdown-it/lib/token"
 /**
  * @param {import('markdown-it')} md
  */
-export default (md: Md) => {
+export default (md: Md): void => {
   md.core.ruler.push("auto_inject_components", (state) => {
     const injected = new Set(extractInjectedComponents(state.tokens))
     for (const component of new Set(
@@ -52,7 +52,7 @@ import ${component} from '$lib/components/${component}.svelte'
       }
     }
   })
-  // eslint-disable-next-line camelcase -- ignore
+
   md.renderer.rules.auto_inject_component = (tokens, idx, _options) => {
     return tokens[idx].content
   }

@@ -8,17 +8,17 @@ type TreeItem = {
 type TreeStack = { item: TreeItem; level: number; upper: TreeStack | null }
 
 class TOCRenderer {
-  private tree: TreeItem
+  private readonly tree: TreeItem
 
   private stack: TreeStack
 
-  constructor() {
+  public constructor() {
     const item: TreeItem = { children: [] }
     this.tree = item
     this.stack = { item, level: 1, upper: null }
   }
 
-  addMenu(level: number, id: string, title: string) {
+  public addMenu(level: number, id: string, title: string) {
     if (this.stack.level < level) {
       const parent = this.stack.item
       const item = parent.children[parent.children.length - 1]
@@ -33,19 +33,19 @@ class TOCRenderer {
     this.stack.item.children.push(item)
   }
 
-  toc() {
+  public toc() {
     return this.tree
   }
 }
 /**
  * @param {import('markdown-it')} md
  */
-export default (md: Md) => {
+export default (md: Md): void => {
   md.core.ruler.push("custom_markdown", (state) => {
     const tokens = state.tokens
     tokens.unshift(new state.Token("custom_markdown_data", "", 0))
   })
-  // eslint-disable-next-line camelcase -- ignore
+
   md.renderer.rules.custom_markdown_data = (
     tokens,
     _idx,
@@ -60,7 +60,7 @@ export default (md: Md) => {
       if (token.type !== "heading_open") {
         continue
       }
-      let level = Number(token.tag.slice(1))
+      const level = Number(token.tag.slice(1))
       if (level > 3) {
         continue
       }
@@ -74,7 +74,7 @@ export default (md: Md) => {
         )
         .reduce((acc, t) => acc + t.content, "")
 
-      let slug = token.attrGet("id")!
+      const slug = token.attrGet("id")!
       renderer.addMenu(level, slug, title)
     }
 

@@ -1,10 +1,8 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
-/* eslint-disable camelcase -- ignore */
 import path from "path"
 import type Md from "markdown-it"
 import type Token from "markdown-it/lib/token"
 
-export default (md: Md, options: { baseUrl: string; root: string }) => {
+export default (md: Md, options: { baseUrl: string; root: string }): void => {
   const base = options.baseUrl
   const root = path.resolve(options.root)
 
