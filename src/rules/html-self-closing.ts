@@ -13,6 +13,7 @@ enum TypeMessages {
   unknown = "unknown elements",
 }
 
+// TODO: add / remove closing from void elements
 export default createRule("html-self-closing", {
   meta: {
     docs: {
@@ -86,6 +87,20 @@ export default createRule("html-self-closing", {
     /**
      *
      */
+    function isElementEmpty(node: AST.SvelteElement): boolean {
+      if (node.children.length <= 0) return true
+
+      for (const child of node.children) {
+        if (child.type !== "SvelteText") return false
+        if (!/^\s*$/.test(child.value)) return false
+      }
+
+      return true
+    }
+
+    /**
+     *
+     */
     function report(node: AST.SvelteElement, close: boolean) {
       const elementType = getElementType(node)
 
@@ -97,6 +112,10 @@ export default createRule("html-self-closing", {
         },
         *fix(fixer) {
           if (close) {
+            for (const child of node.children) {
+              yield fixer.removeRange(child.range)
+            }
+
             yield fixer.insertTextBeforeRange(
               [node.startTag.range[1] - 1, node.startTag.range[1]],
               "/",
@@ -117,13 +136,12 @@ export default createRule("html-self-closing", {
 
     return {
       SvelteElement(node: AST.SvelteElement) {
-        if (node.children.length > 0) return
+        if (!isElementEmpty(node)) return
 
         const elementType = getElementType(node)
 
         if (elementType === "void") return
         const shouldBeClosed = options[elementType] === "always"
-        // const hasEndTag = Boolean(node.endTag)
 
         if (shouldBeClosed && !node.startTag.selfClosing) {
           report(node, true)

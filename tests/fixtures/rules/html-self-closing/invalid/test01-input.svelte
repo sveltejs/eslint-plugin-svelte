@@ -1,5 +1,5 @@
 <!-- prettier-ignore -->
 <div>
   <div></div>
-  <CustomElement></CustomElement>
+  <CustomElement> </CustomElement>
 </div>
