@@ -13,7 +13,6 @@ enum TypeMessages {
   unknown = "unknown elements",
 }
 
-// TODO: add / remove closing from void elements
 export default createRule("html-self-closing", {
   meta: {
     docs: {
@@ -35,6 +34,9 @@ export default createRule("html-self-closing", {
           html: {
             type: "object",
             properties: {
+              void: {
+                enum: ["never", "always"],
+              },
               normal: {
                 enum: ["never", "always"],
               },
@@ -50,7 +52,9 @@ export default createRule("html-self-closing", {
     ],
   },
   create(ctx) {
+    const source = ctx.getSourceCode()
     const options: { [key: string]: "never" | "always" } = {
+      void: ctx.options?.[0]?.html?.void ?? "never",
       normal: ctx.options?.[0]?.html?.normal ?? "always",
       component: ctx.options?.[0]?.html?.component ?? "always",
     }
@@ -128,7 +132,8 @@ export default createRule("html-self-closing", {
               node.startTag.range[1] - 1,
             ])
 
-            yield fixer.insertTextAfter(node, `</${getNodeName(node)}>`)
+            if (!isVoidHtmlElement(node))
+              yield fixer.insertTextAfter(node, `</${getNodeName(node)}>`)
           }
         },
       })
@@ -140,12 +145,18 @@ export default createRule("html-self-closing", {
 
         const elementType = getElementType(node)
 
-        if (elementType === "void") return
+        // if (elementType === "void") return
         const shouldBeClosed = options[elementType] === "always"
+        const startTagSrc = source.getText(node.startTag)
+        const selfClosing =
+          startTagSrc.slice(
+            Math.max(startTagSrc.length - 2, 0),
+            Math.max(startTagSrc.length - 1, 0),
+          ) === "/"
 
-        if (shouldBeClosed && !node.startTag.selfClosing) {
+        if (shouldBeClosed && !selfClosing) {
           report(node, true)
-        } else if (!shouldBeClosed && node.startTag.selfClosing) {
+        } else if (!shouldBeClosed && selfClosing) {
           report(node, false)
         }
       },

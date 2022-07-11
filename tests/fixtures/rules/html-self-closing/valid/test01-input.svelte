@@ -1,5 +1,6 @@
+<!-- prettier-ignore -->
 <div class="hello">
   <div />
   <div>hello</div>
-  <img />
+  <img>
 </div>
