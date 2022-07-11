@@ -18,6 +18,7 @@
     //     "*": ["typings/*"]
     // },
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "outDir": "lib",
     "paths": {
       "*": ["typings/*"]

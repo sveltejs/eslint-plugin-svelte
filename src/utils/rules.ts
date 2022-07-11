@@ -3,6 +3,7 @@ import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlQuotes from "../rules/html-quotes"
+import htmlSelfClosing from "../rules/html-self-closing"
 import indent from "../rules/indent"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import mustacheSpacing from "../rules/mustache-spacing"
@@ -33,6 +34,7 @@ export const rules = [
   commentDirective,
   firstAttributeLinebreak,
   htmlQuotes,
+  htmlSelfClosing,
   indent,
   maxAttributesPerLine,
   mustacheSpacing,
