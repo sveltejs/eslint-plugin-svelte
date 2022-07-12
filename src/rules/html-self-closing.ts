@@ -10,7 +10,7 @@ enum TypeMessages {
   normal = "HTML elements",
   void = "HTML void elements",
   component = "Svelte custom components",
-  unknown = "unknown elements",
+  // unknown = "unknown elements",
 }
 
 export default createRule("html-self-closing", {
@@ -24,8 +24,8 @@ export default createRule("html-self-closing", {
     type: "layout",
     fixable: "code",
     messages: {
-      requireClosing: "Require self-closing on {{type}}",
-      disallowClosing: "Disallow self-closing on {{type}}",
+      requireClosing: "Require self-closing on {{type}}.",
+      disallowClosing: "Disallow self-closing on {{type}}.",
     },
     schema: [
       {
@@ -79,12 +79,10 @@ export default createRule("html-self-closing", {
       switch (type) {
         case "component":
           return TypeMessages.component
-        case "normal":
-          return TypeMessages.normal
         case "void":
           return TypeMessages.void
         default:
-          return TypeMessages.unknown
+          return TypeMessages.normal
       }
     }
 
@@ -145,7 +143,6 @@ export default createRule("html-self-closing", {
 
         const elementType = getElementType(node)
 
-        // if (elementType === "void") return
         const shouldBeClosed = options[elementType] === "always"
         const startTagSrc = source.getText(node.startTag)
         const selfClosing =

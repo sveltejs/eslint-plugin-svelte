@@ -1,0 +1,27 @@
+[
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 3,
+    "column": 11
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 4,
+    "column": 11
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 5,
+    "column": 11
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 6,
+    "column": 11
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 8,
+    "column": 11
+  }
+]

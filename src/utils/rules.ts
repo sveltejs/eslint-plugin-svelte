@@ -18,6 +18,7 @@ import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
+import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -47,6 +48,7 @@ export const rules = [
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noShorthandStylePropertyOverrides,
+  noSpacesAroundEqualSignsInAttribute,
   noTargetBlank,
   noUnknownStyleDirectiveProperty,
   noUnusedSvelteIgnore,
