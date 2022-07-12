@@ -6,12 +6,13 @@ import {
   isVoidHtmlElement,
 } from "../utils/template-utils"
 
-enum TypeMessages {
-  normal = "HTML elements",
-  void = "HTML void elements",
-  component = "Svelte custom components",
-  // unknown = "unknown elements",
+const TYPE_MESSAGES = {
+  normal: "HTML elements",
+  void: "HTML void elements",
+  component: "Svelte custom components",
 }
+
+type ElementTypes = "normal" | "void" | "component"
 
 export default createRule("html-self-closing", {
   meta: {
@@ -53,18 +54,19 @@ export default createRule("html-self-closing", {
   },
   create(ctx) {
     const source = ctx.getSourceCode()
-    const options: { [key: string]: "never" | "always" } = {
-      void: ctx.options?.[0]?.html?.void ?? "never",
-      normal: ctx.options?.[0]?.html?.normal ?? "always",
-      component: ctx.options?.[0]?.html?.component ?? "always",
+    const options = {
+      html: {
+        void: "never",
+        normal: "always",
+        component: "always",
+      },
+      ...ctx.options?.[0],
     }
 
     /**
      *
      */
-    function getElementType(
-      node: AST.SvelteElement,
-    ): "component" | "void" | "normal" {
+    function getElementType(node: AST.SvelteElement): ElementTypes {
       if (isCustomComponent(node)) return "component"
       if (isVoidHtmlElement(node)) return "void"
       return "normal"
@@ -73,17 +75,8 @@ export default createRule("html-self-closing", {
     /**
      *
      */
-    function elementTypeMessages(
-      type: "component" | "void" | "normal",
-    ): TypeMessages {
-      switch (type) {
-        case "component":
-          return TypeMessages.component
-        case "void":
-          return TypeMessages.void
-        default:
-          return TypeMessages.normal
-      }
+    function elementTypeMessages(type: ElementTypes): string {
+      return TYPE_MESSAGES[type]
     }
 
     /**
@@ -143,7 +136,7 @@ export default createRule("html-self-closing", {
 
         const elementType = getElementType(node)
 
-        const shouldBeClosed = options[elementType] === "always"
+        const shouldBeClosed = options.html[elementType] === "always"
         const startTagSrc = source.getText(node.startTag)
         const selfClosing =
           startTagSrc.slice(
