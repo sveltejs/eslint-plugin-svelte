@@ -20,7 +20,7 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
     const source = ctx.getSourceCode()
 
     /**
-     *
+     * Returns source text between attribute key and value, and range of that source
      */
     function getAttrEq(node: AST.SvelteAttribute): [string, AST.Range] {
       const attrSource = source.getText(node)
@@ -37,9 +37,9 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
     }
 
     /**
-     *
+     * Returns true if string contains whitespace characters
      */
-    function containsSpaces(string: string): boolean {
+    function containsWhitespace(string: string): boolean {
       return /.*\s.*/s.test(string)
     }
 
@@ -47,7 +47,7 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
       SvelteAttribute(node: AST.SvelteAttribute) {
         const [eqSource, range] = getAttrEq(node)
 
-        if (!containsSpaces(eqSource)) return
+        if (!containsWhitespace(eqSource)) return
 
         const loc = {
           start: source.getLocFromIndex(range[0]),

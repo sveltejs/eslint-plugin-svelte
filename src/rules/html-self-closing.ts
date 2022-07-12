@@ -64,7 +64,10 @@ export default createRule("html-self-closing", {
     }
 
     /**
-     *
+     * Get SvelteElement type.
+     * If element is custom component "component" is returned
+     * If element is void element "void" is returned
+     * otherwise "normal" is returned
      */
     function getElementType(node: AST.SvelteElement): ElementTypes {
       if (isCustomComponent(node)) return "component"
@@ -73,14 +76,7 @@ export default createRule("html-self-closing", {
     }
 
     /**
-     *
-     */
-    function elementTypeMessages(type: ElementTypes): string {
-      return TYPE_MESSAGES[type]
-    }
-
-    /**
-     *
+     * Returns true if element has no children, or has only whitespace text
      */
     function isElementEmpty(node: AST.SvelteElement): boolean {
       if (node.children.length <= 0) return true
@@ -94,7 +90,7 @@ export default createRule("html-self-closing", {
     }
 
     /**
-     *
+     * Report
      */
     function report(node: AST.SvelteElement, close: boolean) {
       const elementType = getElementType(node)
@@ -103,7 +99,7 @@ export default createRule("html-self-closing", {
         node,
         messageId: close ? "requireClosing" : "disallowClosing",
         data: {
-          type: elementTypeMessages(elementType),
+          type: TYPE_MESSAGES[elementType],
         },
         *fix(fixer) {
           if (close) {
