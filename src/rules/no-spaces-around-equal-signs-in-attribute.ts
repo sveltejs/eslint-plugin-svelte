@@ -25,14 +25,14 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
     function getAttrEq(node: AST.SvelteAttribute): [string, AST.Range] {
       const attrSource = source.getText(node)
       const keyRange = node.key.range
-      const valueStart = node.value?.[0]?.range?.[0] ?? keyRange[1]
-      let eqSource = attrSource.slice(
+      const index =
+        /[^\s=]/.exec(attrSource.slice(keyRange[1] - keyRange[0]))?.index ?? 0
+      const valueStart = keyRange[1] + index
+      const eqSource = attrSource.slice(
         keyRange[1] - keyRange[0],
         valueStart - keyRange[0],
       )
 
-      if (['"', "'"].includes(eqSource[eqSource.length - 1]))
-        eqSource = eqSource.slice(0, eqSource.length - 1)
       return [eqSource, [keyRange[1], keyRange[1] + eqSource.length]]
     }
 
@@ -51,7 +51,7 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
 
         const loc = {
           start: source.getLocFromIndex(range[0]),
-          end: source.getLocFromIndex(range[1] - 1),
+          end: source.getLocFromIndex(range[1]),
         }
 
         ctx.report({
