@@ -27,7 +27,9 @@
     "src/**/*",
     "tests/src/**/*",
     "tests/utils/**/*",
-    "tools/**/*"
+    "tools/**/*",
+    "vite.config.mts",
+    "docs-svelte-kit/**/*.mts"
     // "typings/**/*"
   ],
   "exclude": ["lib/**/*", "tests/fixtures/**/*"]

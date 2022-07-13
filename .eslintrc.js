@@ -52,7 +52,7 @@ module.exports = {
       },
     },
     {
-      files: ["*.ts"],
+      files: ["*.ts", "*.mts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         sourceType: "module",

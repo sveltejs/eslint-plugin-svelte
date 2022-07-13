@@ -7,12 +7,12 @@ import "prism-svelte"
 loadLanguages(["markup", "css", "javascript"])
 
 /** Wrap pre tag */
-function wrapPre(code, lang) {
+function wrapPre(code: string, lang: string) {
   const htmlCode = lang === "text" ? escapeHtml(code) : code
   return `<pre class="language-${lang}"><code>${htmlCode}</code></pre>`
 }
 
-const EXTENSION_MAPPINGS = {
+const EXTENSION_MAPPINGS: Record<string, string | undefined> = {
   vue: "markup",
   html: "markup",
   svelte: "svelte",
@@ -28,7 +28,7 @@ const EXTENSION_MAPPINGS = {
   rs: "rust",
 }
 
-export default (str, lang) => {
+export default (str: string, lang: string): string => {
   if (!lang) {
     return wrapPre(str, "text")
   }

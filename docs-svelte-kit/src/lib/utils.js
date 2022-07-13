@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/file-extension-in-import -- ignore
 import { rules } from "../../../src/utils/rules.ts"
 import { readable, writable } from "svelte/store"
 // eslint-disable-next-line node/no-missing-import -- ignore

@@ -1,7 +1,7 @@
 /* eslint require-jsdoc:0 -- shim */
-function createRequire() {
+function _createRequire() {
   return () => null
 }
 
-export { createRequire }
-export default { createRequire }
+export { _createRequire as createRequire }
+export default { createRequire: _createRequire }
