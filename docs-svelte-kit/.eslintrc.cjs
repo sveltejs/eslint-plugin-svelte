@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef -- ignore
 module.exports = {
   extends: ["plugin:svelte/recommended"],
   env: {

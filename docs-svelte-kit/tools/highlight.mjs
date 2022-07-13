@@ -1,5 +1,5 @@
 import prism from "prismjs"
-import loadLanguages from "prismjs/components/index.js"
+import loadLanguages from "prismjs/components/index"
 import escapeHtml from "escape-html"
 import "prism-svelte"
 

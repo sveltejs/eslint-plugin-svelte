@@ -36,13 +36,13 @@ export default createRule("html-self-closing", {
             type: "object",
             properties: {
               void: {
-                enum: ["never", "always"],
+                enum: ["never", "always", "any"],
               },
               normal: {
-                enum: ["never", "always"],
+                enum: ["never", "always", "any"],
               },
               component: {
-                enum: ["never", "always"],
+                enum: ["never", "always", "any"],
               },
             },
             additionalProperties: false,
@@ -132,7 +132,9 @@ export default createRule("html-self-closing", {
 
         const elementType = getElementType(node)
 
-        const shouldBeClosed = options.html[elementType] === "always"
+        const elementTypeOptions = options.html[elementType]
+        if (elementTypeOptions === "any") return
+        const shouldBeClosed = elementTypeOptions === "always"
         const startTagSrc = source.getText(node.startTag)
         const selfClosing =
           startTagSrc.slice(

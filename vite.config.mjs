@@ -4,7 +4,7 @@ import path from "path"
 import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
 
-import "./docs-svelte-kit/build-system/build.js"
+import "./docs-svelte-kit/build-system/build"
 
 const dirname = path.dirname(new URL(import.meta.url).pathname)
 
