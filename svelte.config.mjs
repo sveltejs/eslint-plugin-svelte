@@ -1,14 +1,18 @@
-/* global __dirname, URL -- __dirname, URL */
 import ghpagesAdapter from "svelte-adapter-ghpages"
 import path from "path"
+import fs from "fs"
 
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : (() => {
-        const metaUrl = Function(`return import.meta.url`)()
-        return path.dirname(new URL(metaUrl).pathname)
-      })()
+const dirname = path.dirname(new URL(import.meta.url).pathname)
+
+// This project can't be ESM yet, so hack it to get svelte-kit to work.
+// A hack that treats files in the `.svelte-kit` directory as ESM.
+if (!fs.existsSync(path.join(dirname, ".svelte-kit"))) {
+  fs.mkdirSync(path.join(dirname, ".svelte-kit"))
+}
+fs.writeFileSync(
+  path.join(dirname, ".svelte-kit/package.json"),
+  JSON.stringify({ type: "module" }),
+)
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

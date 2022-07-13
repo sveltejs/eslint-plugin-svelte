@@ -1,15 +1,24 @@
 import path from "path"
 import spawn from "cross-spawn"
+import type Md from "markdown-it"
+
+type TreeItem = {
+  children: TreeItem[]
+}
+type TreeStack = { item: TreeItem; level: number; upper: TreeStack | null }
 
 class TOCRenderer {
-  constructor(name) {
-    const item = { children: [] }
+  private readonly tree: TreeItem
+
+  private stack: TreeStack
+
+  public constructor() {
+    const item: TreeItem = { children: [] }
     this.tree = item
     this.stack = { item, level: 1, upper: null }
-    this.name = name
   }
 
-  addMenu(level, id, title) {
+  public addMenu(level: number, id: string, title: string) {
     if (this.stack.level < level) {
       const parent = this.stack.item
       const item = parent.children[parent.children.length - 1]
@@ -24,19 +33,19 @@ class TOCRenderer {
     this.stack.item.children.push(item)
   }
 
-  toc() {
+  public toc() {
     return this.tree
   }
 }
 /**
  * @param {import('markdown-it')} md
  */
-export default (md) => {
+export default (md: Md): void => {
   md.core.ruler.push("custom_markdown", (state) => {
     const tokens = state.tokens
-    tokens.unshift(new state.Token("custom_markdown_data"))
+    tokens.unshift(new state.Token("custom_markdown_data", "", 0))
   })
-  // eslint-disable-next-line camelcase -- ignore
+
   md.renderer.rules.custom_markdown_data = (
     tokens,
     _idx,
@@ -44,21 +53,20 @@ export default (md) => {
     env,
     _self,
   ) => {
-    const name = path.basename(env.id).replace(/\.md$/, "")
-    const renderer = new TOCRenderer(name)
+    const renderer = new TOCRenderer()
     for (let idx = 0; idx < tokens.length; idx++) {
       const token = tokens[idx]
 
       if (token.type !== "heading_open") {
         continue
       }
-      let level = Number(token.tag.substr(1))
+      const level = Number(token.tag.slice(1))
       if (level > 3) {
         continue
       }
       // Aggregate the next token children text.
-      const title = tokens[idx + 1].children
-        .filter(
+      const title = tokens[idx + 1]
+        .children!.filter(
           (token) =>
             token.type === "text" ||
             token.type === "emoji" ||
@@ -66,11 +74,11 @@ export default (md) => {
         )
         .reduce((acc, t) => acc + t.content, "")
 
-      let slug = token.attrGet("id")
+      const slug = token.attrGet("id")!
       renderer.addMenu(level, slug, title)
     }
 
-    const fileInfo = {}
+    const fileInfo: { timestamp?: number; lastUpdated?: string } = {}
     const timestamp = getGitLastUpdatedTimestamp(env.id)
     if (timestamp) {
       fileInfo.timestamp = timestamp
@@ -85,7 +93,7 @@ export default (md) => {
 }
 
 /** Get last updated timestamp */
-function getGitLastUpdatedTimestamp(filePath) {
+function getGitLastUpdatedTimestamp(filePath: string) {
   let lastUpdated
   try {
     lastUpdated =

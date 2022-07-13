@@ -1,15 +1,21 @@
-/* global URL -- URL */
+// @ts-expect-error -- Missing type information
 import { sveltekit } from "@sveltejs/kit/vite"
 import path from "path"
 import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
 
-import "./docs-svelte-kit/build-system/build"
+import "./docs-svelte-kit/build-system/build.mts"
+import type { UserConfig } from "vite"
 
-const dirname = path.dirname(new URL(import.meta.url).pathname)
+const dirname = path.dirname(
+  new URL(
+    // @ts-expect-error -- Cannot change `module` option
+    import.meta.url,
+  ).pathname,
+)
 
 /** @type {import('vite').UserConfig} */
-const config = {
+const config: UserConfig = {
   plugins: [
     svelteMd(
       svelteMdOption({
@@ -41,6 +47,18 @@ const config = {
       fs: path.join(dirname, "./docs-svelte-kit/shim/fs.mjs"),
       globby: path.join(dirname, "./docs-svelte-kit/shim/globby.mjs"),
       tslib: path.join(dirname, "./node_modules/tslib/tslib.es6.js"),
+
+      // Alias to CJS
+      "svelte/compiler": path.join(
+        dirname,
+        "./node_modules/svelte/compiler.js",
+      ),
+      "eslint-visitor-keys": path.join(
+        dirname,
+        "./node_modules/eslint-visitor-keys/dist/eslint-visitor-keys.cjs",
+      ),
+      espree: path.join(dirname, "./node_modules/espree/dist/espree.cjs"),
+      acorn: path.join(dirname, "./node_modules/acorn/dist/acorn.js"),
     },
   },
   build: {

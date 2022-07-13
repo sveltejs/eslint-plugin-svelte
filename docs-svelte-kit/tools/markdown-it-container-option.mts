@@ -1,8 +1,13 @@
+import type containerPlugin from "markdown-it-container"
+type ContainerPluginOption = Parameters<typeof containerPlugin>[2]
 /**
  * Generate markdown-it-container option
  * @see https://github.com/markdown-it/markdown-it-container
  */
-export default (type, defaultTitle = type.toUpperCase()) => {
+export default (
+  type: string,
+  defaultTitle = type.toUpperCase(),
+): ContainerPluginOption => {
   return {
     render(tokens, index) {
       const token = tokens[index]

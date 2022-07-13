@@ -1,17 +1,17 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
-/* eslint-disable camelcase -- ignore */
 import path from "path"
+import type Md from "markdown-it"
+import type Token from "markdown-it/lib/token"
 
-export default (md, options = {}) => {
+export default (md: Md, options: { baseUrl: string; root: string }): void => {
   const base = options.baseUrl
   const root = path.resolve(options.root)
 
   /** Normalize href */
-  function normalizeHref(curr, href) {
+  function normalizeHref(curr: string, href: string) {
     let absolutePath
     let hash = ""
     if (/\.md(?:#.*)?$/.test(href)) {
-      hash = /\.md(#.*)?$/.exec(href)[1] || ""
+      hash = /\.md(#.*)?$/.exec(href)![1] || ""
       absolutePath = path.join(
         path.dirname(curr),
         hash ? href.slice(0, -hash.length) : href,
@@ -31,23 +31,23 @@ export default (md, options = {}) => {
     const token = tokens[idx]
     const hrefIndex = token.attrIndex("href")
     if (hrefIndex >= 0) {
-      const link = token.attrs[hrefIndex]
+      const link = token.attrs![hrefIndex]
       const href = link[1]
       if (/^https?:/.test(href)) {
         const proxyToken = {
           ...token,
-          attrs: [...token.attrs, ["target", "_blank"]],
-        }
+          attrs: [...token.attrs!, ["target", "_blank"]],
+        } as Token
         return self.renderToken([proxyToken], 0, options)
       } else if (/\.md(?:#.*)?$/.test(href) || /^#.*$/.test(href)) {
         const proxyToken = {
           ...token,
           attrs: [
-            ...token.attrs.slice(0, hrefIndex - 1),
+            ...token.attrs!.slice(0, hrefIndex - 1),
             [link[0], normalizeHref(env.id, href)],
-            ...token.attrs.slice(hrefIndex + 1),
+            ...token.attrs!.slice(hrefIndex + 1),
           ],
-        }
+        } as Token
         return self.renderToken([proxyToken], 0, options)
       }
     }

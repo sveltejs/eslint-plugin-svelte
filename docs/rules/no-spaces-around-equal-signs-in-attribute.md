@@ -36,8 +36,7 @@ This rule disallows spaces around equal signs in attributes
 <p style ="color: red;">hi</p>
 <img src
     =
-    "img.png"
-    alt   = "A photo of a very cute {animal}"
+    "img.png" alt   = "A photo of a very cute {animal}">
 ```
 
 <!-- prettier-ignore-end -->
