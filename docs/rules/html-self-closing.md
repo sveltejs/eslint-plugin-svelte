@@ -16,10 +16,8 @@ since: "v2.3.0"
 
 You can choose either two styles for elements without content
 
-- always: `<divi />`
+- always: `<div />`
 - never: `<div></div>`
-
-This rule enforces the quotes style of HTML attributes.
 
 <ESLintCodeBlock fix>
 

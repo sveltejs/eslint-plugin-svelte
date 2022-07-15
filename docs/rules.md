@@ -52,6 +52,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md) | enforce the location of first attribute | :wrench: |
+| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md) | Require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](./rules/html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
 | [svelte/html-self-closing](./rules/html-self-closing.md) | Enforce self-closing style | :wrench: |
 | [svelte/indent](./rules/indent.md) | enforce consistent indentation | :wrench: |

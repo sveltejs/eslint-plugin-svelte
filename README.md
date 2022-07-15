@@ -292,6 +292,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute | :wrench: |
+| [svelte/html-closing-bracket-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/) | Require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes/) | enforce quotes style of HTML attributes | :wrench: |
 | [svelte/html-self-closing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-self-closing/) | Enforce self-closing style | :wrench: |
 | [svelte/indent](https://ota-meshi.github.io/eslint-plugin-svelte/rules/indent/) | enforce consistent indentation | :wrench: |
