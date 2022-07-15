@@ -3,7 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-spaces-around-equal-signs-in-attribute"
 description: "Disallow spaces around equal signs in attribute"
-since: "v2.2.0"
+since: "v2.3.0"
 ---
 
 # svelte/no-spaces-around-equal-signs-in-attribute
@@ -53,7 +53,7 @@ This rule disallows spaces around equal signs in attributes
 
 ## :rocket: Version
 
-This rule was introduced in eslint-plugin-svelte v2.2.0
+This rule was introduced in eslint-plugin-svelte v2.3.0
 
 ## :mag: Implementation
 

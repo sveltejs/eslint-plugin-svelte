@@ -3,7 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/html-self-closing"
 description: "Enforce self-closing style"
-since: "v2.2.0"
+since: "v2.3.0"
 ---
 
 # svelte/html-self-closing
@@ -76,7 +76,7 @@ Every option can be set to
 
 ## :rocket: Version
 
-This rule was introduced in eslint-plugin-svelte v2.2.0
+This rule was introduced in eslint-plugin-svelte v2.3.0
 
 ## :mag: Implementation
 
