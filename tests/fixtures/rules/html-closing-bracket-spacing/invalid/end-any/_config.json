@@ -1,5 +1,7 @@
 {
-  "options": [{
-    "endTag": "any"
-  }]
+  "options": [
+    {
+      "endTag": "any"
+    }
+  ]
 }

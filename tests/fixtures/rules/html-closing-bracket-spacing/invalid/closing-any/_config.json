@@ -1,5 +1,7 @@
 {
-  "options": [{
-    "selfClosingTag": "any"
-  }]
+  "options": [
+    {
+      "selfClosingTag": "any"
+    }
+  ]
 }

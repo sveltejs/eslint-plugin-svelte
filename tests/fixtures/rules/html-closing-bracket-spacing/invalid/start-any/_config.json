@@ -1,5 +1,7 @@
 {
-  "options": [{
-    "startTag": "any"
-  }]
+  "options": [
+    {
+      "startTag": "any"
+    }
+  ]
 }
