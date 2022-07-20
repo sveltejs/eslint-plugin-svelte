@@ -211,6 +211,10 @@
 </div>
 
 <style>
+  :global(.main-content) {
+    max-width: 100% !important;
+  }
+
   .playground-root {
     height: calc(100vh - 180px);
   }
