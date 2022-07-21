@@ -8,6 +8,7 @@ export = {
     // eslint-plugin-svelte rules
     "svelte/first-attribute-linebreak": "off",
     "svelte/html-quotes": "off",
+    "svelte/html-self-closing": "off",
     "svelte/indent": "off",
     "svelte/max-attributes-per-line": "off",
     "svelte/mustache-spacing": "off",
