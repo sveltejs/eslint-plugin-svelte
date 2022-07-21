@@ -63,7 +63,7 @@ You can choose either two styles for elements without content
 }
 ```
 
-- `html.void` (`"never"` by default)... Style of HTML void elements
+- `html.void` (`"always"` by default)... Style of HTML void elements
 - `html.component` (`"always"` by default)... Style of svelte components
 - `html.normal` (`"always"` by default)... Style of other elements
 
