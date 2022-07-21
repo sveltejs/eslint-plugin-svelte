@@ -1,4 +1,4 @@
 <!-- prettier-ignore -->
 <div>
-  <img/>
+  <img />
 </div>

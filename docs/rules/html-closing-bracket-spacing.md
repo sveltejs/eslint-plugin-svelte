@@ -2,14 +2,14 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/html-closing-bracket-spacing"
-description: "Require or disallow a space before tag's closing brackets"
-since: "v2.3.0"
+description: "require or disallow a space before tag's closing brackets"
 ---
 
 # svelte/html-closing-bracket-spacing
 
-> Require or disallow a space before tag's closing brackets
+> require or disallow a space before tag's closing brackets
 
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -54,9 +54,9 @@ You can choose either two styles for spacing before closing bracket
   "svelte/html-closing-bracket-spacing": [
     "error",
     {
-      "startTag": "never", // or "always" or "any"
-      "endTag": "never", // or "always" or "any"
-      "selfClosingTag": "always" // or "never" or "any"
+      "startTag": "never", // or "always" or "ignore"
+      "endTag": "never", // or "always" or "ignore"
+      "selfClosingTag": "always" // or "never" or "ignore"
     }
   ]
 }
@@ -69,11 +69,7 @@ You can choose either two styles for spacing before closing bracket
 Every option can be set to
 - "always" (`<div />`)
 - "never" (`<div/>`)
-- "any" (either `<div />` or `<div/>`)
-
-## :rocket: Version
-
-This rule was introduced in eslint-plugin-svelte v2.3.0
+- "ignore" (either `<div />` or `<div/>`)
 
 ## :mag: Implementation
 

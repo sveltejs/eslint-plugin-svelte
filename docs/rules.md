@@ -52,13 +52,13 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md) | enforce the location of first attribute | :wrench: |
-| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md) | Require or disallow a space before tag's closing brackets | :wrench: |
+| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md) | require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](./rules/html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
-| [svelte/html-self-closing](./rules/html-self-closing.md) | Enforce self-closing style | :wrench: |
+| [svelte/html-self-closing](./rules/html-self-closing.md) | enforce self-closing style | :wrench: |
 | [svelte/indent](./rules/indent.md) | enforce consistent indentation | :wrench: |
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md) | enforce unified spacing in mustache | :wrench: |
-| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | Disallow spaces around equal signs in attribute | :wrench: |
+| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute | :wrench: |
 | [svelte/prefer-class-directive](./rules/prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |
 | [svelte/prefer-style-directive](./rules/prefer-style-directive.md) | require style directives instead of style attribute | :wrench: |
 | [svelte/shorthand-attribute](./rules/shorthand-attribute.md) | enforce use of shorthand syntax in attribute | :wrench: |

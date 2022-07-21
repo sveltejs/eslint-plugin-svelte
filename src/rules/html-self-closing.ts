@@ -17,7 +17,7 @@ type ElementTypes = "normal" | "void" | "component"
 export default createRule("html-self-closing", {
   meta: {
     docs: {
-      description: "Enforce self-closing style",
+      description: "enforce self-closing style",
       category: "Stylistic Issues",
       recommended: false,
       conflictWithPrettier: true,
@@ -36,13 +36,13 @@ export default createRule("html-self-closing", {
             type: "object",
             properties: {
               void: {
-                enum: ["never", "always", "any"],
+                enum: ["never", "always", "ignore"],
               },
               normal: {
-                enum: ["never", "always", "any"],
+                enum: ["never", "always", "ignore"],
               },
               component: {
-                enum: ["never", "always", "any"],
+                enum: ["never", "always", "ignore"],
               },
             },
             additionalProperties: false,
@@ -56,7 +56,7 @@ export default createRule("html-self-closing", {
     const source = ctx.getSourceCode()
     const options = {
       html: {
-        void: "never",
+        void: "always",
         normal: "always",
         component: "always",
       },
@@ -133,7 +133,7 @@ export default createRule("html-self-closing", {
         const elementType = getElementType(node)
 
         const elementTypeOptions = options.html[elementType]
-        if (elementTypeOptions === "any") return
+        if (elementTypeOptions === "ignore") return
         const shouldBeClosed = elementTypeOptions === "always"
         const startTagSrc = source.getText(node.startTag)
         const selfClosing =

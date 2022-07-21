@@ -2,7 +2,7 @@
   "options": [
     {
       "html": {
-        "void": "always"
+        "normal": "ignore"
       }
     }
   ]

@@ -2,7 +2,7 @@
   "options": [
     {
       "html": {
-        "normal": "any"
+        "void": "never"
       }
     }
   ]

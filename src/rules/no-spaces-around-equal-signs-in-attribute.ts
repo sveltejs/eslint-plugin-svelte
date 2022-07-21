@@ -4,7 +4,7 @@ import type { AST } from "svelte-eslint-parser"
 export default createRule("no-spaces-around-equal-signs-in-attribute", {
   meta: {
     docs: {
-      description: "Disallow spaces around equal signs in attribute",
+      description: "disallow spaces around equal signs in attribute",
       category: "Stylistic Issues",
       recommended: false,
       conflictWithPrettier: true,
