@@ -11,6 +11,7 @@ export = {
     "svelte/indent": "off",
     "svelte/max-attributes-per-line": "off",
     "svelte/mustache-spacing": "off",
+    "svelte/no-spaces-around-equal-signs-in-attribute": "off",
     "svelte/shorthand-attribute": "off",
     "svelte/shorthand-directive": "off",
   },
