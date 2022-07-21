@@ -4,7 +4,6 @@ import commentDirective from "../rules/comment-directive"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
 import htmlQuotes from "../rules/html-quotes"
-import htmlSelfClosing from "../rules/html-self-closing"
 import indent from "../rules/indent"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import mustacheSpacing from "../rules/mustache-spacing"
@@ -17,7 +16,6 @@ import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
-import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
@@ -37,7 +35,6 @@ export const rules = [
   firstAttributeLinebreak,
   htmlClosingBracketSpacing,
   htmlQuotes,
-  htmlSelfClosing,
   indent,
   maxAttributesPerLine,
   mustacheSpacing,
@@ -50,7 +47,6 @@ export const rules = [
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noShorthandStylePropertyOverrides,
-  noSpacesAroundEqualSignsInAttribute,
   noTargetBlank,
   noUnknownStyleDirectiveProperty,
   noUnusedSvelteIgnore,

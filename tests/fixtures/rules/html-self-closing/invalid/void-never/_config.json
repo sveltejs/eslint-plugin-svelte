@@ -1,9 +1,0 @@
-{
-  "options": [
-    {
-      "html": {
-        "void": "never"
-      }
-    }
-  ]
-}
