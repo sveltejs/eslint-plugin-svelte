@@ -108,6 +108,3 @@ dist
 /svelte.config-dist.js
 /docs-svelte-kit/shim/eslint.mjs
 /docs-svelte-kit/shim/assert.mjs
-
-# Intellij IDES
-.idea

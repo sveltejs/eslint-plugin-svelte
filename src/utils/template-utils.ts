@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import voidElements from "./void-elements.json"
+import voidElements from "./void-elements"
 
 /**
  * Returns name of SvelteElement

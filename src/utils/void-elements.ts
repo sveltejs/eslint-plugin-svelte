@@ -1,4 +1,4 @@
-[
+const voidElements = [
   "area",
   "base",
   "br",
@@ -14,5 +14,7 @@
   "param",
   "source",
   "track",
-  "wbr"
+  "wbr",
 ]
+
+export default voidElements
