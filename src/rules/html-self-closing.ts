@@ -53,7 +53,6 @@ export default createRule("html-self-closing", {
     ],
   },
   create(ctx) {
-    const source = ctx.getSourceCode()
     const options = {
       html: {
         void: "always",
@@ -135,16 +134,10 @@ export default createRule("html-self-closing", {
         const elementTypeOptions = options.html[elementType]
         if (elementTypeOptions === "ignore") return
         const shouldBeClosed = elementTypeOptions === "always"
-        const startTagSrc = source.getText(node.startTag)
-        const selfClosing =
-          startTagSrc.slice(
-            Math.max(startTagSrc.length - 2, 0),
-            Math.max(startTagSrc.length - 1, 0),
-          ) === "/"
 
-        if (shouldBeClosed && !selfClosing) {
+        if (shouldBeClosed && !node.startTag.selfClosing) {
           report(node, true)
-        } else if (!shouldBeClosed && selfClosing) {
+        } else if (!shouldBeClosed && node.startTag.selfClosing) {
           report(node, false)
         }
       },

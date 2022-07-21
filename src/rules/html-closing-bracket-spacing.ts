@@ -14,13 +14,13 @@ export default createRule("html-closing-bracket-spacing", {
         type: "object",
         properties: {
           startTag: {
-            enum: ["always", "never", "any"],
+            enum: ["always", "never", "ignore"],
           },
           endTag: {
-            enum: ["always", "never", "any"],
+            enum: ["always", "never", "ignore"],
           },
           selfClosingTag: {
-            enum: ["always", "never", "any"],
+            enum: ["always", "never", "ignore"],
           },
         },
         additionalProperties: false,
@@ -85,24 +85,16 @@ export default createRule("html-closing-bracket-spacing", {
       "SvelteStartTag, SvelteEndTag"(
         node: AST.SvelteStartTag | AST.SvelteEndTag,
       ) {
-        if (node.type === "SvelteEndTag" && options.endTag === "any") return
-
-        const tagSrc = src.getText(node)
-        const selfClosing =
-          tagSrc.slice(
-            Math.max(tagSrc.length - 2, 0),
-            Math.max(tagSrc.length - 1, 0),
-          ) === "/"
-
         const tagType =
           node.type === "SvelteEndTag"
             ? "endTag"
-            : selfClosing
+            : node.selfClosing
             ? "selfClosingTag"
             : "startTag"
 
-        if (node.type === "SvelteStartTag" && options[tagType] === "any") return
+        if (options[tagType] === "ignore") return
 
+        const tagSrc = src.getText(node)
         const match = /(\s*)\/?>$/.exec(tagSrc)
         if (containsNewline(match![1])) return
 

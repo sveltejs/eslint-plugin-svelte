@@ -1,7 +1,7 @@
 {
   "options": [
     {
-      "startTag": "any"
+      "startTag": "ignore"
     }
   ]
 }
