@@ -30,7 +30,7 @@ export default createRule("html-closing-bracket-spacing", {
       expectedSpace: "Expected space before '>', but not found.",
       unexpectedSpace: "Expected no space before '>', but found.",
     },
-    fixable: "code",
+    fixable: "whitespace",
     type: "layout",
   },
   create(ctx) {
