@@ -1,4 +1,4 @@
-<p class="test" style="" />
-<p class="sus" style />
+<p class="test" style="" bind:test={value} />
+<p class="test2" style style:width="10px" />
 <!-- prettier-ignore -->
-<p class=p></p>
+<p class=p this={expression} />

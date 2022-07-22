@@ -38,5 +38,25 @@
     "message": "Unexpected spaces found around equal signs.",
     "line": 12,
     "column": 11
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 13,
+    "column": 15
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 13,
+    "column": 35
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 14,
+    "column": 17
+  },
+  {
+    "message": "Unexpected spaces found around equal signs.",
+    "line": 16,
+    "column": 10
   }
 ]

@@ -10,7 +10,7 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
       conflictWithPrettier: true,
     },
     schema: {},
-    fixable: "code",
+    fixable: "whitespace",
     messages: {
       noSpaces: "Unexpected spaces found around equal signs.",
     },
@@ -22,29 +22,36 @@ export default createRule("no-spaces-around-equal-signs-in-attribute", {
     /**
      * Returns source text between attribute key and value, and range of that source
      */
-    function getAttrEq(node: AST.SvelteAttribute): [string, AST.Range] {
-      const attrSource = source.getText(node)
+    function getAttrEq(
+      node:
+        | AST.SvelteAttribute
+        | AST.SvelteDirective
+        | AST.SvelteStyleDirective
+        | AST.SvelteSpecialDirective,
+    ): [string, AST.Range] {
       const keyRange = node.key.range
-      const index =
-        /[^\s=]/.exec(attrSource.slice(keyRange[1] - keyRange[0]))?.index ?? 0
-      const valueStart = keyRange[1] + index
-      const eqSource = attrSource.slice(
-        keyRange[1] - keyRange[0],
-        valueStart - keyRange[0],
-      )
-
-      return [eqSource, [keyRange[1], keyRange[1] + eqSource.length]]
+      const eqSource = /^[\s=]*/u.exec(
+        source.text.slice(keyRange[1], node.range[1]),
+      )![0]
+      const valueStart = keyRange[1] + eqSource.length
+      return [eqSource, [keyRange[1], valueStart]]
     }
 
     /**
      * Returns true if string contains whitespace characters
      */
     function containsWhitespace(string: string): boolean {
-      return /.*\s.*/s.test(string)
+      return /\s/u.test(string)
     }
 
     return {
-      SvelteAttribute(node: AST.SvelteAttribute) {
+      "SvelteAttribute, SvelteDirective, SvelteStyleDirective, SvelteSpecialDirective"(
+        node:
+          | AST.SvelteAttribute
+          | AST.SvelteDirective
+          | AST.SvelteStyleDirective
+          | AST.SvelteSpecialDirective,
+      ) {
         const [eqSource, range] = getAttrEq(node)
 
         if (!containsWhitespace(eqSource)) return
