@@ -1,0 +1,7 @@
+{
+  "options": [{
+    "html": {
+      "special": "never"
+    }
+  }]
+}

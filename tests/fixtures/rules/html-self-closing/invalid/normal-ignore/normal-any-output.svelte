@@ -2,5 +2,5 @@
 <div>
   <div />
   <div></div>
-  <img >
+  <img/>
 </div>

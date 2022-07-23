@@ -1,0 +1,2 @@
+<!-- prettier-ignore -->
+<svelte:head />

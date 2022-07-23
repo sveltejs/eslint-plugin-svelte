@@ -5,14 +5,19 @@ import voidElements from "./void-elements"
  * Returns name of SvelteElement
  */
 export function getNodeName(node: AST.SvelteElement): string {
-  return "name" in node.name ? node.name.name : node.name.property.name
-}
-
-/**
- * Returns true if Element is custom component
- */
-export function isCustomComponent(node: AST.SvelteElement): boolean {
-  return node.kind === "component"
+  if ("name" in node.name) {
+    return node.name.name
+  }
+  let object = ""
+  let currentObject = node.name.object
+  while ("object" in currentObject) {
+    object = `${currentObject.property.name}.${object}`
+    currentObject = currentObject.object
+  }
+  if ("name" in currentObject) {
+    object = `${currentObject.name}.${object}`
+  }
+  return object + node.name.property.name
 }
 
 /**

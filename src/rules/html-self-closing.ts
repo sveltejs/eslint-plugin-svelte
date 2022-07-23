@@ -2,7 +2,6 @@ import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import {
   getNodeName,
-  isCustomComponent,
   isVoidHtmlElement,
 } from "../utils/template-utils"
 
@@ -10,9 +9,10 @@ const TYPE_MESSAGES = {
   normal: "HTML elements",
   void: "HTML void elements",
   component: "Svelte custom components",
+  svelte: "Svelte special elements",
 }
 
-type ElementTypes = "normal" | "void" | "component"
+type ElementTypes = "normal" | "void" | "component" | "svelte"
 
 export default createRule("html-self-closing", {
   meta: {
@@ -44,6 +44,9 @@ export default createRule("html-self-closing", {
               component: {
                 enum: ["never", "always", "ignore"],
               },
+              svelte: {
+                enum: ["never", "always", "ignore"],
+              },
             },
             additionalProperties: false,
           },
@@ -54,22 +57,26 @@ export default createRule("html-self-closing", {
   },
   create(ctx) {
     const options = {
+      ...ctx.options?.[0],
       html: {
         void: "always",
         normal: "always",
         component: "always",
+        svelte: "always",
+        ...ctx.options?.[0]?.html,
       },
-      ...ctx.options?.[0],
     }
 
     /**
      * Get SvelteElement type.
      * If element is custom component "component" is returned
+     * If element is svelte special element such as svelte:self "svelte" is returned
      * If element is void element "void" is returned
      * otherwise "normal" is returned
      */
     function getElementType(node: AST.SvelteElement): ElementTypes {
-      if (isCustomComponent(node)) return "component"
+      if (node.kind === "component") return "component"
+      if (node.kind === "special") return "svelte"
       if (isVoidHtmlElement(node)) return "void"
       return "normal"
     }
