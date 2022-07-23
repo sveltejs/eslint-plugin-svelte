@@ -103,7 +103,7 @@ The default order is:
 
 ## :wrench: Options
 
-```json
+```jsonc
 {
   "svelte/sort-attributes": [
     "error",
