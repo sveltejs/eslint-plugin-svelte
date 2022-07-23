@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Disallow self-closing on Svelte special elements.",
+    "line": 2,
+    "column": 1
+  }
+]

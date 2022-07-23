@@ -33,13 +33,15 @@ You can choose either two styles for elements without content
 <div />
 <p>Hello</p>
 <div><div /></div>
-<img>
+<img />
+<svelte:head />
 
 <!-- ✗ BAD -->
 <div></div>
 <p> </p>
 <div><div></div></div>
-<img />
+<img>
+<svelte:head></svelte:head>
 ```
 
 <!-- prettier-ignore-end -->
@@ -48,7 +50,7 @@ You can choose either two styles for elements without content
 
 ## :wrench: Options
 
-```json
+```jsonc
 {
   "svelte/html-self-closing": [
     "error",
@@ -56,7 +58,8 @@ You can choose either two styles for elements without content
       "html": {
         "void": "always", // or "always" or "ignore"
         "normal": "always", // or "never" or "ignore"
-        "component": "always" // or "never" or "ignore"
+        "component": "always", // or "never" or "ignore"
+        "svelte": "always" // or "never" or "ignore"
       }
     }
   ]
@@ -65,6 +68,7 @@ You can choose either two styles for elements without content
 
 - `html.void` (`"always"` by default)... Style of HTML void elements
 - `html.component` (`"always"` by default)... Style of svelte components
+- `html.svelte` (`"always"` by default)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
 - `html.normal` (`"always"` by default)... Style of other elements
 
 Every option can be set to

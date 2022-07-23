@@ -1,9 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
-import {
-  getNodeName,
-  isVoidHtmlElement,
-} from "../utils/template-utils"
+import { getNodeName, isVoidHtmlElement } from "../utils/template-utils"
 
 const TYPE_MESSAGES = {
   normal: "HTML elements",
