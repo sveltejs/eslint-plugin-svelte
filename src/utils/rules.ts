@@ -24,6 +24,7 @@ import preferStyleDirective from "../rules/prefer-style-directive"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import shorthandDirective from "../rules/shorthand-directive"
+import sortAttributes from "../rules/sort-attributes"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
@@ -54,6 +55,7 @@ export const rules = [
   requireOptimizedStyleAttribute,
   shorthandAttribute,
   shorthandDirective,
+  sortAttributes,
   spacedHtmlComment,
   system,
   validCompile,

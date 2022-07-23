@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Attribute '--style-props' should go before 'abc'.",
+    "line": 24,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'out:fn' should go before 'animate:name'.",
+    "line": 39,
+    "column": 3
+  }
+]

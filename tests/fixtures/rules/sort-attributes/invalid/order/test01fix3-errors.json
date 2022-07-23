@@ -1,0 +1,27 @@
+[
+  {
+    "message": "Attribute 'data-value' should go before 'style'.",
+    "line": 20,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'animate:name' should go before 'bind:this'.",
+    "line": 21,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'in:fn' should go before 'bind:this'.",
+    "line": 22,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'out:fn' should go before 'bind:this'.",
+    "line": 23,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'transition:fn' should go before 'bind:this'.",
+    "line": 24,
+    "column": 3
+  }
+]

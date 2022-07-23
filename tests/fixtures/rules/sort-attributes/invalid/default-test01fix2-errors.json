@@ -1,0 +1,32 @@
+[
+  {
+    "message": "Attribute 'data-foo' should go before 'def'.",
+    "line": 21,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'abc' should go before 'def'.",
+    "line": 22,
+    "column": 3
+  },
+  {
+    "message": "Attribute '--style-props' should go before 'def'.",
+    "line": 24,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'transition:fn' should go before 'animate:name'.",
+    "line": 37,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'in:fn' should go before 'animate:name'.",
+    "line": 38,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'out:fn' should go before 'animate:name'.",
+    "line": 39,
+    "column": 3
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Attribute 'out:fn' should go before 'bind:this'.",
+    "line": 24,
+    "column": 3
+  }
+]

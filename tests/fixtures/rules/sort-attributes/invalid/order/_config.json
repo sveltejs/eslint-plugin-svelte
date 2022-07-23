@@ -1,0 +1,32 @@
+{
+  "options": [
+    {
+      "order": [
+        "id",
+        "class",
+        "/^class:/u",
+        "value",
+        "src",
+        "/^data-/u",
+        "style",
+        "/^style:/u",
+        "/^on:/u",
+        "/^use:/u",
+        "/^animate:/u",
+        "/^transition:/u",
+        "/^in:/u",
+        "/^out:/u",
+        "bind:this",
+        ["/^bind:/u", "!bind:this"],
+        {
+          "match": [
+            "!/:/u",
+            "!/^(?:id|class|value|src|style)$/u",
+            "!/^data-/u"
+          ],
+          "sort": "alphabetical"
+        }
+      ]
+    }
+  ]
+}
