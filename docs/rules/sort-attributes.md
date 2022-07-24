@@ -102,6 +102,28 @@ The default order is:
 
 </ESLintCodeBlock>
 
+If there is a spread attribute between the attributes, it will not be reported as changing the order can change the behavior.
+
+<ESLintCodeBlock fix>
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/sort-attributes: "error" */
+</script>
+
+<!-- ✓ GOOD -->
+<div c d {...attrs} a b />
+
+<!-- ✗ BAD -->
+<div d c {...attrs} b a />
+```
+
+<!-- prettier-ignore-end -->
+
+</ESLintCodeBlock>
+
 ## :wrench: Options
 
 ```jsonc
