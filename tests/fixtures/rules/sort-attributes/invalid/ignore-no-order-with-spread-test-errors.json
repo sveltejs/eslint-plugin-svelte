@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Attribute 'order-a' should go before 'order-c'.",
+    "line": 5,
+    "column": 33
+  },
+  {
+    "message": "Attribute 'order-a' should go before 'order-c'.",
+    "line": 8,
+    "column": 47
+  }
+]
