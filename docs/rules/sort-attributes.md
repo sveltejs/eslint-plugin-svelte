@@ -120,8 +120,6 @@ If there is a spread attribute between the attributes, it will not be reported a
 <div d c {...attrs} b a />
 ```
 
-<!-- prettier-ignore-end -->
-
 </ESLintCodeBlock>
 
 ## :wrench: Options
