@@ -9,6 +9,11 @@ type UserOrderObjectOption = {
 }
 type UserOrderOption = string | string[] | UserOrderObjectOption
 
+type ParsedOption = {
+  ignore: (keyText: string) => boolean
+  compare: (a: string, b: string) => number
+}
+
 type CompiledOption = {
   match: (str: string) => boolean
   sort: "alphabetical" | "ignore"
@@ -51,13 +56,12 @@ const DEFAULT_ORDER: UserOrderOption[] = [
   { match: "/^out:/u", sort: "alphabetical" },
   // `animate:` directives. (Alphabetical order within the same group.)
   { match: "/^animate:/u", sort: "alphabetical" },
+  // `let:` directives. (Alphabetical order within the same group.)
+  { match: "/^let:/u", sort: "alphabetical" },
 ]
 
 /** Parse options */
-function parseOption(option?: { order: UserOrderOption[] }): {
-  ignore: (keyText: string) => boolean
-  compare: (a: string, b: string) => number
-} {
+function parseOption(option?: { order: UserOrderOption[] }): ParsedOption {
   const order: UserOrderOption[] = option?.order ?? DEFAULT_ORDER
 
   const compiled: CompiledOption[] = order.map(compileOption)
@@ -111,34 +115,33 @@ function compileOption(option: UserOrderOption): CompiledOption {
       const match = compileMatcher(option)
       return { match, sort: "ignore" }
     }
-    const match = compileMatcher(
-      Array.isArray(option.match) ? option.match : [option.match],
-    )
+    const { match } = compileOptionWithoutCache(option.match)
     return { match, sort: option.sort || "ignore" }
   }
 }
 
 /** Compile matcher */
 function compileMatcher(pattern: string[]): (str: string) => boolean {
-  let hasPositive = false
   const rules: { negative: boolean; match: (str: string) => boolean }[] = []
   for (const p of pattern) {
-    let negative = false
-    let patternStr: string
+    let negative: boolean, patternStr: string
     if (p.startsWith("!")) {
+      // If there is `!` at the beginning, it will be parsed with a negative pattern.
       negative = true
       patternStr = p.substring(1)
     } else {
+      negative = false
       patternStr = p
     }
     const regex = toRegExp(patternStr)
     rules.push({ negative, match: (str) => regex.test(str) })
-    if (!negative) hasPositive = true
   }
   return (str) => {
-    let result = !hasPositive
+    // If the first rule is a negative pattern, they are considered to match if they do not match that pattern.
+    let result = Boolean(rules[0]?.negative)
     for (const { negative, match } of rules) {
       if (result === !negative) {
+        // Even if it matches, the result does not change, so skip it.
         continue
       }
       if (match(str)) {
@@ -172,6 +175,7 @@ export default createRule("sort-attributes", {
                     type: "string",
                   },
                   uniqueItems: true,
+                  minItems: 1,
                 },
                 {
                   type: "object",
@@ -185,6 +189,7 @@ export default createRule("sort-attributes", {
                             type: "string",
                           },
                           uniqueItems: true,
+                          minItems: 1,
                         },
                       ],
                     },
@@ -219,8 +224,8 @@ export default createRule("sort-attributes", {
 
     /** Get key text */
     function getKeyText(node: HasKeyAttr) {
-      const r = cacheKeyText.get(node)
-      if (r != null) return r
+      const k = cacheKeyText.get(node)
+      if (k != null) return k
 
       const result = getAttributeKeyText(node)
       cacheKeyText.set(node, result)
@@ -242,27 +247,11 @@ export default createRule("sort-attributes", {
         fix(fixer) {
           const attributes = node.parent.attributes
 
-          let isMoveUp: (node: Attr) => boolean
-
-          if (node.type === "SvelteAttribute") {
-            // prev, {...spread}, foo -> {...spread}, foo, prev
-            isMoveUp = (node) => node.type === "SvelteSpreadAttribute"
-          } else {
-            isMoveUp = () => false
-          }
-
           const previousNodes = attributes.slice(
             attributes.indexOf(previousNode),
             attributes.indexOf(node),
           )
-          const moveNodes: Attr[] = [node]
-          for (const node of previousNodes) {
-            if (isMoveUp(node)) {
-              moveNodes.unshift(node)
-            } else {
-              moveNodes.push(node)
-            }
-          }
+          const moveNodes = [node, ...previousNodes]
           const sourceCode = context.getSourceCode()
           return moveNodes.map((moveNode, index) => {
             const text = sourceCode.getText(moveNode)
@@ -272,9 +261,53 @@ export default createRule("sort-attributes", {
       })
     }
 
+    /**
+     * Checks whether have a spread attribute between the node and the previous node.
+     */
+    function hasSpreadAttribute(
+      node: AST.SvelteAttribute,
+      previousNode: HasKeyAttr,
+    ): node is AST.SvelteAttribute {
+      const attributes = node.parent.attributes
+      const previousNodes = attributes.slice(
+        attributes.indexOf(previousNode),
+        attributes.indexOf(node),
+      )
+      return previousNodes.some((a) => a.type === "SvelteSpreadAttribute")
+    }
+
+    /**
+     * Verify the order for which the spread attribute exists.
+     */
+    function verifyForSpreadAttributeExist(node: AST.SvelteAttribute) {
+      const previousNodes: HasKeyAttr[] = []
+      const attributes = node.parent.attributes
+      for (const previousNode of attributes
+        .slice(0, attributes.indexOf(node))
+        .reverse()) {
+        if (previousNode.type === "SvelteSpreadAttribute") {
+          break
+        }
+        previousNodes.unshift(previousNode)
+      }
+      const key = getKeyText(node)
+      const invalidPreviousNode = previousNodes.find((previousNode) => {
+        const prevKey = getKeyText(previousNode)
+        if (option.ignore(prevKey)) {
+          return false
+        }
+
+        return option.compare(prevKey, key) > 0
+      })
+
+      if (invalidPreviousNode) {
+        report(node, invalidPreviousNode)
+      }
+    }
+
     return {
       SvelteStartTag(node) {
-        const validPreviousNodes = []
+        const validPreviousNodes: HasKeyAttr[] = []
         for (const attr of node.attributes) {
           if (attr.type === "SvelteSpreadAttribute") {
             continue
@@ -283,17 +316,22 @@ export default createRule("sort-attributes", {
           if (option.ignore(key)) {
             continue
           }
-          let valid = true
-          for (const previousNode of validPreviousNodes) {
-            valid = option.compare(getKeyText(previousNode), key) <= 0
-            if (!valid) {
-              report(attr, previousNode)
-              break
+          const invalidPreviousNode = validPreviousNodes.find(
+            (previousNode) => option.compare(getKeyText(previousNode), key) > 0,
+          )
+          if (invalidPreviousNode) {
+            if (
+              attr.type !== "SvelteAttribute" ||
+              !hasSpreadAttribute(attr, invalidPreviousNode)
+            ) {
+              report(attr, invalidPreviousNode)
+            } else {
+              // Verify the order for which the spread attribute exists.
+              verifyForSpreadAttributeExist(attr)
             }
-          }
-          if (!valid) {
             continue
           }
+
           validPreviousNodes.push(attr)
         }
       },

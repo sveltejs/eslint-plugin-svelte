@@ -15,13 +15,13 @@
 
 <svelte:component
   this={component}
-  --style-props={style}
-  {abc}
   data-foo
   {def}
   bind:value={componentValue}
   on:changeValue={handleChange}
+  {abc}
   bind:metaData
+  --style-props={color}
 />
 <input
   bind:this={foo}
@@ -34,8 +34,8 @@
   bind:value={inputValue}
   use:action
   transition:fn
+  animate:name
   in:fn
   out:fn
-  animate:name
 />
 <slot name="content" {abc} data-foo {def} />

@@ -13,30 +13,29 @@
   function action() {}
 </script>
 
-<!-- prettier-ignore -->
 <svelte:component
-  bind:value={componentValue}
   this={component}
-  on:changeValue={handleChange}
-  {def}
-  data-foo
   {abc}
+  data-foo
+  {def}
+  bind:value={componentValue}
+  on:changeValue={handleChange}
   bind:metaData
-  --style-props={style}
+  --style-props={color}
 />
 <input
-  id="foo"
   bind:this={foo}
+  id="foo"
   style:color
   style="width: 150px;"
   class="my-input"
-  class:enable={!disable}
   class:disable
-  animate:name
+  class:enable={!disable}
+  bind:value={inputValue}
   use:action
   transition:fn
-  bind:value={inputValue}
   in:fn
+  animate:name
   out:fn
 />
-<slot name="content" {def} {abc} data-foo />
+<slot name="content" {abc} data-foo {def} />

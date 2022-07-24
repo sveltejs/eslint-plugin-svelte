@@ -28,10 +28,11 @@ The default order is:
 - other attributes. (Alphabetical order within the same group.)
 - `bind:` directives (other then `bind:this`), and `on:` directives.
 - `use:` directives. (Alphabetical order within the same group.)
-- `transition:` directives. (Alphabetical order within the same group.)
-- `in:` directives. (Alphabetical order within the same group.)
-- `out:` directives. (Alphabetical order within the same group.)
-- `animate:` directives. (Alphabetical order within the same group.)
+- `transition:` directive.
+- `in:` directive.
+- `out:` directive.
+- `animate:` directive.
+- `let:` directives. (Alphabetical order within the same group.)
 
 <ESLintCodeBlock fix>
 
@@ -46,7 +47,7 @@ The default order is:
 <!-- ✓ GOOD -->
 <svelte:component
   this={component}
-  --style-props={style}
+  --style-props={color}
   bind:value={componentValue}
   on:changeValue={handleChange}
   bind:metaData
@@ -77,7 +78,7 @@ The default order is:
   data-foo
   {abc}
   bind:metaData
-  --style-props={style}
+  --style-props={color}
 />
 <input
   id="foo"
@@ -134,14 +135,16 @@ The default order is:
         ["/^bind:/u", "!bind:this", "/^on:/u"],
         // `use:` directives. (Alphabetical order within the same group.)
         { "match": "/^use:/u", "sort": "alphabetical" },
-        // `transition:` directives. (Alphabetical order within the same group.)
+        // `transition:` directive.
         { "match": "/^transition:/u", "sort": "alphabetical" },
-        // `in:` directives. (Alphabetical order within the same group.)
+        // `in:` directive.
         { "match": "/^in:/u", "sort": "alphabetical" },
-        // `out:` directives. (Alphabetical order within the same group.)
+        // `out:` directive.
         { "match": "/^out:/u", "sort": "alphabetical" },
-        // `animate:` directives. (Alphabetical order within the same group.)
-        { "match": "/^animate:/u", "sort": "alphabetical" }
+        // `animate:` directive.
+        { "match": "/^animate:/u", "sort": "alphabetical" },
+        // `let:` directives. (Alphabetical order within the same group.)
+        { "match": "/^let:/u", "sort": "alphabetical" }
       ]
     }
   ]
@@ -165,8 +168,8 @@ You can use the following formats for names or patterns:
 
 - `"foo"` ... Matches only the `foo` attribute name.
 - `"/foo/"` ... Matches attribute names that match the `/foo/` regex. That is, it matches the attribute name including `foo`.
-- `"!foo"` ... Exclude `foo` attribute from the matched attribute names. When used alone, matches other than the `foo` attribute name.
-- `"!/foo/"` ... Excludes attributes that match the `/foo/` regex from the matched attribute names. When used alone, matches an attribute name that does not match the `/foo/` regex.
+- `"!foo"` ... Exclude `foo` attribute from the matched attribute names. When used first in the array or alone, matches other than the `foo` attribute name.
+- `"!/foo/"` ... Excludes attributes that match the `/foo/` regex from the matched attribute names. When used first in the array or alone, matches an attribute name that does not match the `/foo/` regex.
 - `["style", "/^style:/u"]` ... Matches the `style` attribute or the attribute name that matches the `/^style:/u` regex.
 - `["/^bind:/u", "!bind:this", "/^on:/u"]` ... Matches an attribute name that matches `/^bind:/u` and other than `bind:this`, or an attribute name that matches `/^on:/u`.
 

@@ -13,7 +13,6 @@
   function action() {}
 </script>
 
-<!-- prettier-ignore -->
 <svelte:component
   this={component}
   bind:value={componentValue}
@@ -22,7 +21,7 @@
   data-foo
   {abc}
   bind:metaData
-  --style-props={style}
+  --style-props={color}
 />
 <input
   bind:this={foo}

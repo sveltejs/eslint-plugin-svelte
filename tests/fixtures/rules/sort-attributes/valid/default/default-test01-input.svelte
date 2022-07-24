@@ -15,19 +15,19 @@
 
 <svelte:component
   this={component}
+  --style-props={color}
   {abc}
   data-foo
   {def}
   bind:value={componentValue}
   on:changeValue={handleChange}
   bind:metaData
-  --style-props={style}
 />
 <input
   bind:this={foo}
   id="foo"
-  style:color
   style="width: 150px;"
+  style:color
   class="my-input"
   class:disable
   class:enable={!disable}
@@ -35,7 +35,7 @@
   use:action
   transition:fn
   in:fn
-  animate:name
   out:fn
+  animate:name
 />
-<slot name="content" {abc} data-foo {def} />
+<slot name="content" {abc} {def} />
