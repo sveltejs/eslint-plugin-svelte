@@ -408,7 +408,7 @@ export function getMustacheTokens(
   }
 }
 
-/** Get directive name */
+/** Get attribute key text */
 export function getAttributeKeyText(
   node:
     | SvAST.SvelteAttribute
