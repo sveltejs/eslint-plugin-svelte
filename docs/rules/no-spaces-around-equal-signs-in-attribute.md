@@ -45,11 +45,7 @@ This rule disallows spaces around equal signs in attributes
 
 ## :wrench: Options
 
-```json
-{
-  "svelte/no-spaces-around-equal-signs-in-attribute": ["error"]
-}
-```
+Nothing.
 
 ## :mag: Implementation
 
