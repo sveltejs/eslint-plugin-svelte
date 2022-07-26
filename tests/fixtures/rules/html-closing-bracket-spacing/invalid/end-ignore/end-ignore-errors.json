@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Expected no space before '>', but found.",
+    "line": 2,
+    "column": 3
+  },
+  {
+    "message": "Expected space before '>', but not found.",
+    "line": 5,
+    "column": 5
+  }
+]
