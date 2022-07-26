@@ -2,6 +2,7 @@ import type { RuleModule } from "../types"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
+import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
 import htmlQuotes from "../rules/html-quotes"
 import indent from "../rules/indent"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
@@ -33,6 +34,7 @@ export const rules = [
   buttonHasType,
   commentDirective,
   firstAttributeLinebreak,
+  htmlClosingBracketSpacing,
   htmlQuotes,
   indent,
   maxAttributesPerLine,
