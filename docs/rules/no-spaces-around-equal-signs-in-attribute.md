@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-spaces-around-equal-signs-in-attribute"
 description: "disallow spaces around equal signs in attribute"
+since: "v2.3.0"
 ---
 
 # svelte/no-spaces-around-equal-signs-in-attribute
 
 > disallow spaces around equal signs in attribute
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -46,6 +46,10 @@ This rule disallows spaces around equal signs in attributes
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.3.0
 
 ## :mag: Implementation
 
