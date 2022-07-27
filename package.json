@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
   "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
@@ -66,7 +66,7 @@
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
     "sourcemap-codec": "^1.4.8",
-    "svelte-eslint-parser": "^0.16.0"
+    "svelte-eslint-parser": "^0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -106,7 +106,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-eslint-plugin": "^5.0.0",
-    "eslint-plugin-json-schema-validator": "^3.0.0",
+    "eslint-plugin-json-schema-validator": "^4.0.0",
     "eslint-plugin-jsonc": "^2.0.0",
     "eslint-plugin-markdown": "^3.0.0",
     "eslint-plugin-node": "^11.1.0",
@@ -115,6 +115,7 @@
     "eslint-plugin-regexp": "^1.0.0",
     "eslint-plugin-svelte": "^2.0.0",
     "eslint-plugin-yml": "^1.0.0",
+    "eslint-scope": "^7.1.1",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",
     "locate-character": "^2.0.5",

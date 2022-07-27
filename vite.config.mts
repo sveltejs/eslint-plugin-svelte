@@ -58,6 +58,10 @@ const config: UserConfig = {
         "./node_modules/eslint-visitor-keys/dist/eslint-visitor-keys.cjs",
       ),
       espree: path.join(dirname, "./node_modules/espree/dist/espree.cjs"),
+      "eslint-scope": path.join(
+        dirname,
+        "./node_modules/eslint-scope/dist/eslint-scope.cjs",
+      ),
       acorn: path.join(dirname, "./node_modules/acorn/dist/acorn.js"),
     },
   },
