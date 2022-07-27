@@ -21,6 +21,7 @@ The default order is:
 - `bind:this` directive.
 - `id` attribute.
 - `name` attribute.
+- `slot` attribute.
 - `--style-props` (Alphabetical order within the same group.)
 - `style` attribute, and `style:` directives.
 - `class` attribute.
@@ -138,6 +139,8 @@ If there is a spread attribute between the attributes, it will not be reported a
         "id",
         // `name` attribute.
         "name",
+        // `slot` attribute.
+        "slot",
         // `--style-props` (Alphabetical order within the same group.)
         { "match": "/^--/u", "sort": "alphabetical" },
         // `style` attribute, and `style:` directives.

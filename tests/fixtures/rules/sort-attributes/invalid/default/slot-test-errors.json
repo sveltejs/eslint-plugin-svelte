@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Attribute 'slot' should go before 'let:item'.",
+    "line": 7,
+    "column": 30
+  },
+  {
+    "message": "Attribute 'slot' should go before 'class'.",
+    "line": 8,
+    "column": 21
+  }
+]

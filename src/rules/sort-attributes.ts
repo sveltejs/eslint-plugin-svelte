@@ -31,6 +31,8 @@ const DEFAULT_ORDER: UserOrderOption[] = [
   "id",
   // `name` attribute.
   "name",
+  // `slot` attribute.
+  "slot",
   // `--style-props` (Alphabetical order within the same group.)
   { match: "/^--/u", sort: "alphabetical" },
   // `style` attribute, and `style:` directives.
