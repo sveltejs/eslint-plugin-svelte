@@ -3,6 +3,7 @@ import type * as ESTree from "estree"
 import type { AST as SvAST } from "svelte-eslint-parser"
 import * as eslintUtils from "eslint-utils"
 import type { Scope } from "eslint"
+import voidElements from "./void-elements"
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -436,4 +437,31 @@ function getAttributeValueRangeTokens(
     firstToken: tokens.openToken,
     lastToken: tokens.closeToken,
   }
+}
+
+/**
+ * Returns name of SvelteElement
+ */
+export function getNodeName(node: SvAST.SvelteElement): string {
+  if ("name" in node.name) {
+    return node.name.name
+  }
+  let object = ""
+  let currentObject = node.name.object
+  while ("object" in currentObject) {
+    object = `${currentObject.property.name}.${object}`
+    currentObject = currentObject.object
+  }
+  if ("name" in currentObject) {
+    object = `${currentObject.name}.${object}`
+  }
+  return object + node.name.property.name
+}
+
+/**
+ * Returns true if element is known void element
+ * {@link https://developer.mozilla.org/en-US/docs/Glossary/Empty_element}
+ */
+export function isVoidHtmlElement(node: SvAST.SvelteElement): boolean {
+  return voidElements.includes(getNodeName(node))
 }

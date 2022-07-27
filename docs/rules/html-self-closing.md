@@ -55,21 +55,19 @@ You can choose either two styles for elements without content
   "svelte/html-self-closing": [
     "error",
     {
-      "html": {
-        "void": "always", // or "always" or "ignore"
-        "normal": "always", // or "never" or "ignore"
-        "component": "always", // or "never" or "ignore"
-        "svelte": "always" // or "never" or "ignore"
-      }
+      "void": "always", // or "always" or "ignore"
+      "normal": "always", // or "never" or "ignore"
+      "component": "always", // or "never" or "ignore"
+      "svelte": "always" // or "never" or "ignore"
     }
   ]
 }
 ```
 
-- `html.void` (`"always"` by default)... Style of HTML void elements
-- `html.component` (`"always"` by default)... Style of svelte components
-- `html.svelte` (`"always"` by default)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
-- `html.normal` (`"always"` by default)... Style of other elements
+- `void` (`"always"` by default)... Style of HTML void elements
+- `component` (`"always"` by default)... Style of svelte components
+- `svelte` (`"always"` by default)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
+- `normal` (`"always"` by default)... Style of other elements
 
 Every option can be set to
 - "always" (`<div />`)

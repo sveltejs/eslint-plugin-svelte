@@ -1,9 +1,7 @@
 {
   "options": [
     {
-      "html": {
-        "component": "never"
-      }
+      "component": "never"
     }
   ]
 }

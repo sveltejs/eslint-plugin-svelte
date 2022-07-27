@@ -1,9 +1,7 @@
 {
   "options": [
     {
-      "html": {
-        "normal": "ignore"
-      }
+      "normal": "ignore"
     }
   ]
 }

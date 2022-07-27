@@ -1,9 +1,7 @@
 {
   "options": [
     {
-      "html": {
-        "svelte": "never"
-      }
+      "svelte": "never"
     }
   ]
 }

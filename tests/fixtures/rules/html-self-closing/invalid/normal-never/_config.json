@@ -1,9 +1,7 @@
 {
   "options": [
     {
-      "html": {
-        "normal": "never"
-      }
+      "normal": "never"
     }
   ]
 }

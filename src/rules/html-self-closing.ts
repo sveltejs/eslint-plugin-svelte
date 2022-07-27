@@ -1,6 +1,6 @@
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
-import { getNodeName, isVoidHtmlElement } from "../utils/template-utils"
+import { getNodeName, isVoidHtmlElement } from "../utils/ast-utils"
 
 const TYPE_MESSAGES = {
   normal: "HTML elements",
@@ -29,23 +29,17 @@ export default createRule("html-self-closing", {
       {
         type: "object",
         properties: {
-          html: {
-            type: "object",
-            properties: {
-              void: {
-                enum: ["never", "always", "ignore"],
-              },
-              normal: {
-                enum: ["never", "always", "ignore"],
-              },
-              component: {
-                enum: ["never", "always", "ignore"],
-              },
-              svelte: {
-                enum: ["never", "always", "ignore"],
-              },
-            },
-            additionalProperties: false,
+          void: {
+            enum: ["never", "always", "ignore"],
+          },
+          normal: {
+            enum: ["never", "always", "ignore"],
+          },
+          component: {
+            enum: ["never", "always", "ignore"],
+          },
+          svelte: {
+            enum: ["never", "always", "ignore"],
           },
         },
         additionalProperties: false,
@@ -54,14 +48,11 @@ export default createRule("html-self-closing", {
   },
   create(ctx) {
     const options = {
+      void: "always",
+      normal: "always",
+      component: "always",
+      svelte: "always",
       ...ctx.options?.[0],
-      html: {
-        void: "always",
-        normal: "always",
-        component: "always",
-        svelte: "always",
-        ...ctx.options?.[0]?.html,
-      },
     }
 
     /**
@@ -135,7 +126,7 @@ export default createRule("html-self-closing", {
 
         const elementType = getElementType(node)
 
-        const elementTypeOptions = options.html[elementType]
+        const elementTypeOptions = options[elementType]
         if (elementTypeOptions === "ignore") return
         const shouldBeClosed = elementTypeOptions === "always"
 

@@ -1,9 +1,7 @@
 {
   "options": [
     {
-      "html": {
-        "void": "never"
-      }
+      "void": "never"
     }
   ]
 }
