@@ -20,6 +20,7 @@ import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-prope
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
+import noUnnecessaryReactiveCurlies from "../rules/no-unnecessary-reactive-curlies"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -53,6 +54,7 @@ export const rules = [
   noSpacesAroundEqualSignsInAttribute,
   noTargetBlank,
   noUnknownStyleDirectiveProperty,
+  noUnnecessaryReactiveCurlies,
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,

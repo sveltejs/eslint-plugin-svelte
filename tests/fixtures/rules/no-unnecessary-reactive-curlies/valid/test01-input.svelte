@@ -1,0 +1,3 @@
+<script>
+  $: foo = info
+</script>
