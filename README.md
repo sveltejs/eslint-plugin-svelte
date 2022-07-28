@@ -336,6 +336,7 @@ Please use GitHub's Issues/PRs.
 
 - `yarn test` runs tests.
 - `yarn cover` runs tests and measures coverage.
+- `yarn new [new-rule-name]` generate the files needed to implement the new rule.
 - `yarn update` runs in order to update readme and recommended configuration.
 
 ### Test the Rule
