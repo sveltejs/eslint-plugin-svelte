@@ -61,7 +61,7 @@ export function loadTestCases(
       valid?: (RuleTester.ValidTestCase | string)[]
       invalid?: RuleTester.InvalidTestCase[]
     }
-    filter: (file: string) => boolean
+    filter?: (file: string) => boolean
   },
 ): {
   valid: RuleTester.ValidTestCase[]
@@ -88,8 +88,8 @@ export function loadTestCases(
     .filter(filter)
     .map((inputFile) => {
       const config = getConfig(ruleName, inputFile)
-      const errorFile = inputFile.replace(/input\.svelte$/u, "errors.json")
-      const outputFile = inputFile.replace(/input\.svelte$/u, "output.svelte")
+      const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+      const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
       let errors
       try {
         errors = fs.readFileSync(errorFile, "utf8")
@@ -147,7 +147,7 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
       continue
     }
     const abs = path.join(rootDir, filename)
-    if (filename.endsWith("input.svelte")) {
+    if (path.basename(filename, path.extname(filename)).endsWith("input")) {
       yield abs
     } else if (fs.statSync(abs).isDirectory()) {
       yield* itrListupInput(abs)
@@ -161,8 +161,8 @@ function writeFixtures(
   { force }: { force?: boolean } = {},
 ) {
   const linter = getLinter(ruleName)
-  const errorFile = inputFile.replace(/input\.svelte$/u, "errors.json")
-  const outputFile = inputFile.replace(/input\.svelte$/u, "output.svelte")
+  const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+  const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
 
   const config = getConfig(ruleName, inputFile)
 
@@ -222,23 +222,20 @@ function getConfig(ruleName: string, inputFile: string) {
   const filename = inputFile.slice(inputFile.indexOf(ruleName))
   const code = fs.readFileSync(inputFile, "utf8")
   let config
-  let configFile: string = inputFile.replace(/input\.svelte$/u, "config.json")
+  let configFile: string = inputFile.replace(/input\.[a-z]+$/u, "config.json")
   if (!fs.existsSync(configFile)) {
     configFile = path.join(path.dirname(inputFile), "_config.json")
   }
   if (fs.existsSync(configFile)) {
     config = JSON.parse(fs.readFileSync(configFile, "utf8"))
   }
+  const parser =
+    path.extname(filename) === ".svelte"
+      ? require.resolve("svelte-eslint-parser")
+      : undefined
   if (config && typeof config === "object") {
-    return Object.assign(
-      { parser: require.resolve("svelte-eslint-parser") },
-      config,
-      { code, filename },
-    )
+    return Object.assign({ parser }, config, { code, filename })
   }
   // default
-  return Object.assign(
-    { parser: require.resolve("svelte-eslint-parser") },
-    { code, filename },
-  )
+  return Object.assign({ parser }, { code, filename })
 }
