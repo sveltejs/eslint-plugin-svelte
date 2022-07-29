@@ -37,6 +37,13 @@ This rule reports if curly brackets (`{` and `}`) are used unnecessarily around 
 
 Nothing.
 
+## :heart: Compatibility
+
+This rule was taken from [@tivac/eslint-plugin-svelte].  
+This rule is compatible with `@tivac/svelte/reactive-curlies` rule.
+
+[@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
+
 ## :rocket: Version
 
 This rule was introduced in eslint-plugin-svelte v2.4.0
