@@ -19,6 +19,9 @@ export default createRule("no-unused-svelte-ignore", {
   },
 
   create(context) {
+    if (!context.parserServices.isSvelte) {
+      return {}
+    }
     const sourceCode = context.getSourceCode()
 
     const ignoreComments: IgnoreItem[] = []
