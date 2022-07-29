@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Do not assign literal values inside reactive statements unless absolutely necessary.",
+    "line": 3,
+    "column": 5
+  },
+  {
+    "message": "Do not assign literal values inside reactive statements unless absolutely necessary.",
+    "line": 4,
+    "column": 5
+  },
+  {
+    "message": "Do not assign literal values inside reactive statements unless absolutely necessary.",
+    "line": 5,
+    "column": 5
+  }
+]
