@@ -8,7 +8,6 @@ export default createRule("no-unnecessary-reactive-curlies", {
         "disallow wrapping single reactive statements in curly braces",
       category: "Stylistic Issues",
       recommended: false,
-      conflictWithPrettier: true,
     },
     fixable: "code",
     schema: [],
