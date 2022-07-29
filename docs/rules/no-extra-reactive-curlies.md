@@ -1,11 +1,11 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "svelte/no-unnecessary-reactive-curlies"
+title: "svelte/no-extra-reactive-curlies"
 description: "disallow unnecessary curly braces around reactive statements"
 ---
 
-# svelte/no-unnecessary-reactive-curlies
+# svelte/no-extra-reactive-curlies
 
 > disallow unnecessary curly braces around reactive statements
 
@@ -19,14 +19,14 @@ This rule reports if curly brackets (`{` and `}`) are used unnecessarily around 
 
 ```svelte
 <script>
-  /* eslint svelte/no-unnecessary-reactive-curlies: "error" */
-  
+  /* eslint svelte/no-extra-reactive-curlies: "error" */
+
   /* ✓ GOOD */
-  $: foo = "red";
+  $: foo = "red"
 
   /* ✗ BAD */
   $: {
-    foo = "red";
+    foo = "red"
   }
 </script>
 ```
@@ -50,5 +50,5 @@ This rule was introduced in eslint-plugin-svelte v2.4.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-unnecessary-reactive-curlies.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/no-unnecessary-reactive-curlies.ts)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-extra-reactive-curlies.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/no-extra-reactive-curlies.ts)

@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Do not wrap reactive statements in curly braces unless necessary.",
+    "line": 3,
+    "column": 6
+  }
+]

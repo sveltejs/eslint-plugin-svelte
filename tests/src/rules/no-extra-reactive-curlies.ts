@@ -1,5 +1,5 @@
 import { RuleTester } from "eslint"
-import rule from "../../../src/rules/no-unnecessary-reactive-curlies"
+import rule from "../../../src/rules/no-extra-reactive-curlies"
 import { loadTestCases } from "../../utils/utils"
 
 const tester = new RuleTester({
@@ -10,7 +10,7 @@ const tester = new RuleTester({
 })
 
 tester.run(
-  "no-unnecessary-reactive-curlies",
+  "no-extra-reactive-curlies",
   rule as any,
-  loadTestCases("no-unnecessary-reactive-curlies"),
+  loadTestCases("no-extra-reactive-curlies"),
 )

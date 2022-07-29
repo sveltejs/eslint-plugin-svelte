@@ -1,3 +1,0 @@
-<script>
-  $: foo = info
-</script>
