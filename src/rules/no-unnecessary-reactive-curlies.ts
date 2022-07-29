@@ -29,7 +29,7 @@ export default createRule("no-unnecessary-reactive-curlies", {
           messageId: "unnecessaryCurlies",
 
           fix(fixer) {
-            const tokens = source.getTokens(node)
+            const tokens = source.getTokens(node, { includeComments: true })
 
             // Remove everything up to the second token, and the entire last token since
             // those are known to be "{" and "}"
