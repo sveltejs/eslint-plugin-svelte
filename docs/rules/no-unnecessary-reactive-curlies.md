@@ -3,7 +3,6 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-unnecessary-reactive-curlies"
 description: "disallow unnecessary curly braces around reactive statements"
-since: "v2.4.0"
 ---
 
 # svelte/no-unnecessary-reactive-curlies
