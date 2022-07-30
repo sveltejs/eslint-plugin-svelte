@@ -1,6 +1,6 @@
 <!-- prettier-ignore -->
 <script>
-    $: foo = "bar" + "baz"
+    $: foo = `${"bar"}baz`
     $: bar = [ "bar" ]
     $: baz = { qux : true }
 </script>
