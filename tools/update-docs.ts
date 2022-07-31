@@ -64,6 +64,7 @@ class DocFile {
     const {
       meta: {
         fixable,
+        hasSuggestions,
         deprecated,
         replacedBy,
         docs: { ruleId, description, recommended },
@@ -101,6 +102,11 @@ class DocFile {
     if (fixable) {
       notes.push(
         "- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.",
+      )
+    }
+    if (hasSuggestions) {
+      notes.push(
+        "- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).",
       )
     }
     if (!this.since) {

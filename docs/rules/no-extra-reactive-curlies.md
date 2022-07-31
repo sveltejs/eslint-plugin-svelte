@@ -10,6 +10,7 @@ description: "disallow wrapping single reactive statements in curly braces"
 > disallow wrapping single reactive statements in curly braces
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
 
