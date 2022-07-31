@@ -1,20 +1,4 @@
-const RE_REGEXP_CHAR = /[$()*+.?[\\\]^{|}]/gu
-const RE_HAS_REGEXP_CHAR = new RegExp(RE_REGEXP_CHAR.source)
-
 const RE_REGEXP_STR = /^\/(.+)\/([A-Za-z]*)$/u
-
-/**
- * Escapes the `RegExp` special characters "^", "$", "\", ".", "*", "+",
- * "?", "(", ")", "[", "]", "{", "}", and "|" in `string`.
- *
- * @param {string} string The string to escape.
- * @returns {string} Returns the escaped string.
- */
-function escape(string: string) {
-  return string && RE_HAS_REGEXP_CHAR.test(string)
-    ? string.replace(RE_REGEXP_CHAR, "\\$&")
-    : string
-}
 
 /**
  * Convert a string to the `RegExp`.
@@ -24,12 +8,12 @@ function escape(string: string) {
  * @param {string} string The string to convert.
  * @returns {RegExp} Returns the `RegExp`.
  */
-export function toRegExp(string: string): RegExp {
+export function toRegExp(string: string): { test(s: string): boolean } {
   const parts = RE_REGEXP_STR.exec(string)
   if (parts) {
     return new RegExp(parts[1], parts[2])
   }
-  return new RegExp(`^${escape(string)}$`)
+  return { test: (s) => s === string }
 }
 
 /**

@@ -1,0 +1,52 @@
+[
+  {
+    "message": "Attribute 'data-foo' should go before 'bind:this'.",
+    "line": 11,
+    "column": 53
+  },
+  {
+    "message": "Attribute 'id' should go before 'class'.",
+    "line": 15,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'style:color' should go before 'bind:this'.",
+    "line": 18,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'style' should go before 'bind:this'.",
+    "line": 19,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'data-value' should go before 'bind:this'.",
+    "line": 20,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'animate:name' should go before 'bind:this'.",
+    "line": 21,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'in:fn' should go before 'bind:this'.",
+    "line": 22,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'out:fn' should go before 'bind:this'.",
+    "line": 23,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'transition:fn' should go before 'bind:this'.",
+    "line": 24,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'id' should go before 'src'.",
+    "line": 26,
+    "column": 22
+  }
+]

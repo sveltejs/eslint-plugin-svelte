@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Attribute 'items' should go before 'let:a'.",
+    "line": 6,
+    "column": 26
+  },
+  {
+    "message": "Attribute 'items' should go before 'let:a'.",
+    "line": 10,
+    "column": 41
+  },
+  {
+    "message": "Attribute 'let:a' should go before 'let:b'.",
+    "line": 14,
+    "column": 35
+  }
+]

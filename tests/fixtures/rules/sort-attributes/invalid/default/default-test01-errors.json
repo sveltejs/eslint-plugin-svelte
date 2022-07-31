@@ -1,0 +1,72 @@
+[
+  {
+    "message": "Attribute 'this' should go before 'bind:value'.",
+    "line": 19,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'def' should go before 'bind:value'.",
+    "line": 21,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'data-foo' should go before 'bind:value'.",
+    "line": 22,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'abc' should go before 'bind:value'.",
+    "line": 23,
+    "column": 3
+  },
+  {
+    "message": "Attribute '--style-props' should go before 'bind:value'.",
+    "line": 25,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'bind:this' should go before 'id'.",
+    "line": 29,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'class:disable' should go before 'class:enable'.",
+    "line": 34,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'use:action' should go before 'animate:name'.",
+    "line": 36,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'transition:fn' should go before 'animate:name'.",
+    "line": 37,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'bind:value' should go before 'animate:name'.",
+    "line": 38,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'in:fn' should go before 'animate:name'.",
+    "line": 39,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'out:fn' should go before 'animate:name'.",
+    "line": 40,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'abc' should go before 'def'.",
+    "line": 42,
+    "column": 28
+  },
+  {
+    "message": "Attribute 'data-foo' should go before 'def'.",
+    "line": 42,
+    "column": 34
+  }
+]

@@ -408,6 +408,63 @@ export function getMustacheTokens(
   }
 }
 
+/** Get attribute key text */
+export function getAttributeKeyText(
+  node:
+    | SvAST.SvelteAttribute
+    | SvAST.SvelteShorthandAttribute
+    | SvAST.SvelteStyleDirective
+    | SvAST.SvelteDirective
+    | SvAST.SvelteSpecialDirective,
+): string {
+  switch (node.type) {
+    case "SvelteAttribute":
+    case "SvelteShorthandAttribute":
+      return node.key.name
+    case "SvelteStyleDirective":
+      return `style:${node.key.name.name}`
+    case "SvelteSpecialDirective":
+      return node.kind
+    case "SvelteDirective": {
+      const dir = getDirectiveName(node)
+      return `${dir}:${node.key.name.name}${
+        node.key.modifiers.length ? `|${node.key.modifiers.join("|")}` : ""
+      }`
+    }
+    default:
+      throw new Error(
+        `Unknown node type: ${
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
+          (node as any).type
+        }`,
+      )
+  }
+}
+
+/** Get directive name */
+export function getDirectiveName(node: SvAST.SvelteDirective): string {
+  switch (node.kind) {
+    case "Action":
+      return "use"
+    case "Animation":
+      return "animate"
+    case "Binding":
+      return "bind"
+    case "Class":
+      return "class"
+    case "EventHandler":
+      return "on"
+    case "Let":
+      return "let"
+    case "Transition":
+      return node.intro && node.outro ? "transition" : node.intro ? "in" : "out"
+    case "Ref":
+      return "ref"
+    default:
+      throw new Error("Unknown directive kind")
+  }
+}
+
 /** Get the value tokens from given attribute */
 function getAttributeValueRangeTokens(
   attr:

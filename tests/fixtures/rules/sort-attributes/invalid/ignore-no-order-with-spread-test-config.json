@@ -1,0 +1,12 @@
+{
+  "options": [
+    {
+      "order": [
+        {
+          "match": ["/^order-/u"],
+          "sort": "alphabetical"
+        }
+      ]
+    }
+  ]
+}

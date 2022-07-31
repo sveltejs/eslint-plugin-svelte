@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Attribute 'out:fn' should go before 'bind:this'.",
+    "line": 23,
+    "column": 3
+  },
+  {
+    "message": "Attribute 'transition:fn' should go before 'in:fn'.",
+    "line": 24,
+    "column": 3
+  }
+]

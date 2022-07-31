@@ -26,6 +26,7 @@ const EXTENSION_MAPPINGS: Record<string, string | undefined> = {
   styl: "stylus",
   kt: "kotlin",
   rs: "rust",
+  jsonc: "json5",
 }
 
 export default (str: string, lang: string): string => {
