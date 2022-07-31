@@ -1,6 +1,15 @@
-#  (svelte/no-reactive-literals)
+---
+pageClass: "rule-details"
+sidebarDepth: 0
+title: "svelte/no-reactive-literals"
+description: "Don't assign literal values in reactive statements"
+---
+
+# svelte/no-reactive-literals
 
 > Don't assign literal values in reactive statements
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -20,6 +29,7 @@ This rule reports on any assignment of a static, unchanging value within a react
   $: foo = "bar";
 </script>
 ```
+
 </ESLintCodeBlock>
 
 ## :wrench: Options
