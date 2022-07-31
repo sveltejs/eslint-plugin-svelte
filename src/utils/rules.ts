@@ -12,6 +12,7 @@ import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
+import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
@@ -20,7 +21,6 @@ import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-prope
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
-import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -46,6 +46,7 @@ export const rules = [
   noDupeElseIfBlocks,
   noDupeStyleProperties,
   noDynamicSlotName,
+  noExtraReactiveCurlies,
   noInnerDeclarations,
   noNotFunctionHandler,
   noObjectInTextMustaches,
@@ -54,7 +55,6 @@ export const rules = [
   noSpacesAroundEqualSignsInAttribute,
   noTargetBlank,
   noUnknownStyleDirectiveProperty,
-  noExtraReactiveCurlies,
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,

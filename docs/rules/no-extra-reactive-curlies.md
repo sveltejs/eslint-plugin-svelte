@@ -2,12 +2,14 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-extra-reactive-curlies"
-description: "disallow unnecessary curly braces around reactive statements"
+description: "disallow wrapping single reactive statements in curly braces"
 ---
 
 # svelte/no-extra-reactive-curlies
 
-> disallow unnecessary curly braces around reactive statements
+> disallow wrapping single reactive statements in curly braces
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -43,10 +45,6 @@ This rule was taken from [@tivac/eslint-plugin-svelte].
 This rule is compatible with `@tivac/svelte/reactive-curlies` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
-
-## :rocket: Version
-
-This rule was introduced in eslint-plugin-svelte v2.4.0
 
 ## :mag: Implementation
 
