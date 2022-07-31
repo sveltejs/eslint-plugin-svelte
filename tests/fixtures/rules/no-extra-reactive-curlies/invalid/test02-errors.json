@@ -2,6 +2,13 @@
   {
     "message": "Do not wrap reactive statements in curly braces unless necessary.",
     "line": 3,
-    "column": 6
+    "column": 6,
+    "suggestions": [
+      {
+        "desc": "Remove the unnecessary curly braces.",
+        "messageId": "removeExtraCurlies",
+        "output": "<!-- prettier-ignore -->\r\n<script>\r\n  $: foo = info;\r\n</script>\r\n"
+      }
+    ]
   }
 ]
