@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/sort-attributes"
 description: "enforce order of attributes"
+since: "v2.4.0"
 ---
 
 # svelte/sort-attributes
 
 > enforce order of attributes
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -268,6 +268,10 @@ You can use the following formats for names or patterns:
 ```
 
 </ESLintCodeBlock>
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.4.0
 
 ## :mag: Implementation
 
