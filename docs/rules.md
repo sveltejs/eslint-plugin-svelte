@@ -45,6 +45,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | Don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
+| [svelte/prefer-reactive-destructuring](./rules/prefer-reactive-destructuring.md) | Prefer destructuring from objects in reactive statements |  |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |
 
 ## Stylistic Issues

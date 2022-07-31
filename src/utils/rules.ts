@@ -24,6 +24,7 @@ import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
+import preferReactiveDestructuring from "../rules/prefer-reactive-destructuring"
 import preferStyleDirective from "../rules/prefer-style-directive"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import shorthandAttribute from "../rules/shorthand-attribute"
@@ -59,6 +60,7 @@ export const rules = [
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,
+  preferReactiveDestructuring,
   preferStyleDirective,
   requireOptimizedStyleAttribute,
   shorthandAttribute,

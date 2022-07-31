@@ -1,0 +1,26 @@
+[
+  {
+    "message": "Prefer destructuring in reactive statements",
+    "line": 3,
+    "column": 8,
+    "suggestions": [
+      {
+        "desc": "Use destructuring to get finer-grained redraws",
+        "messageId": "suggestDestructuring",
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: ({ info } = foo)\n    $: bar = foo.something\n</script>\n"
+      }
+    ]
+  },
+  {
+    "message": "Prefer destructuring in reactive statements",
+    "line": 4,
+    "column": 8,
+    "suggestions": [
+      {
+        "desc": "Use destructuring to get finer-grained redraws",
+        "messageId": "suggestDestructuring",
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: info = foo.info\n    $: ({ something: bar } = foo)\n</script>\n"
+      }
+    ]
+  }
+]
