@@ -18,7 +18,7 @@ export default createRule("no-reactive-literals", {
   },
   create(context) {
     return {
-      [`SvelteReactiveStatement > ExpressionStatement > AssignmentExpression${[
+      [`SvelteReactiveStatement > ExpressionStatement > AssignmentExpression:matches(${[
         // $: foo = "foo";
         // $: foo = 1;
         `[right.type="Literal"]`,
@@ -28,7 +28,7 @@ export default createRule("no-reactive-literals", {
 
         // $: foo = {};
         `[right.type="ObjectExpression"][right.properties.length=0]`,
-      ].join(",")}`](node: TSESTree.AssignmentExpression) {
+      ].join(",")})`](node: TSESTree.AssignmentExpression) {
         // Move upwards to include the entire reactive statement
         const parent = node.parent?.parent
 
