@@ -10,49 +10,45 @@ export default createRule("no-extra-reactive-curlies", {
       recommended: false,
       conflictWithPrettier: false,
     },
-    fixable: "code",
+    hasSuggestions: true,
     schema: [],
     messages: {
       extraCurlies: `Do not wrap reactive statements in curly braces unless necessary.`,
+      removeExtraCurlies: `Remove the unnecessary curly braces.`,
     },
     type: "suggestion",
   },
   create(context) {
     return {
+      // $: { foo = "bar"; }
       [`SvelteReactiveStatement > BlockStatement[body.length=1]`]: (
         node: TSESTree.BlockStatement,
       ) => {
-        // $: { foo = "bar"; }
-        // Only want to transform if the contents of the block is a single assignment
-        // Anything else gets us into potentially weird territory and probably isn't worth handling
-        if (
-          node.body[0].type !== "ExpressionStatement" ||
-          node.body[0].expression.type !== "AssignmentExpression"
-        ) {
-          return false
-        }
-
         const source = context.getSourceCode()
 
         return context.report({
           node,
           loc: node.loc,
           messageId: "extraCurlies",
+          suggest: [
+            {
+              messageId: "removeExtraCurlies",
+              fix(fixer) {
+                const tokens = source.getTokens(node, { includeComments: true })
 
-          fix(fixer) {
-            const tokens = source.getTokens(node, { includeComments: true })
+                // Remove everything up to the second token, and the entire last token since
+                // those are known to be "{" and "}"
+                return [
+                  fixer.removeRange([tokens[0].range[0], tokens[1].range[0]]),
 
-            // Remove everything up to the second token, and the entire last token since
-            // those are known to be "{" and "}"
-            return [
-              fixer.removeRange([tokens[0].range[0], tokens[1].range[0]]),
-
-              fixer.removeRange([
-                tokens[tokens.length - 2].range[1],
-                tokens[tokens.length - 1].range[1],
-              ]),
-            ]
-          },
+                  fixer.removeRange([
+                    tokens[tokens.length - 2].range[1],
+                    tokens[tokens.length - 1].range[1],
+                  ]),
+                ]
+              },
+            },
+          ],
         })
       },
     }
