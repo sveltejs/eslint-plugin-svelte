@@ -27,8 +27,6 @@ export default createRule("prefer-destructured-store-props", {
       ) {
         const store = (node.object as TSESTree.Identifier).name
 
-        console.log(node)
-
         // Since the regex can't specify positioning of the "$", we need to check again
         if (!store.startsWith("$")) {
           return false
