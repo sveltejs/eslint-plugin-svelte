@@ -7,7 +7,7 @@
       {
         "desc": "Remove the unnecessary curly braces.",
         "messageId": "removeExtraCurlies",
-        "output": "<!-- prettier-ignore -->\r\n<script>\r\n  $: foo = info;\r\n</script>\r\n"
+        "output": "<!-- prettier-ignore -->\n<script>\n  $: foo = info;\n</script>\n"
       }
     ]
   }
