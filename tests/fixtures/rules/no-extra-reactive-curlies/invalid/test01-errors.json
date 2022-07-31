@@ -1,0 +1,14 @@
+[
+  {
+    "message": "Do not wrap reactive statements in curly braces unless necessary.",
+    "line": 2,
+    "column": 6,
+    "suggestions": [
+      {
+        "desc": "Remove the unnecessary curly braces.",
+        "messageId": "removeExtraCurlies",
+        "output": "<script>\n  $: foo = info\n</script>\n"
+      }
+    ]
+  }
+]
