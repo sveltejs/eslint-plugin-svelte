@@ -130,6 +130,7 @@ export function loadTestCases(
       throw new Error(`Empty code: ${test.filename}`)
     }
   }
+
   return {
     valid,
     invalid,
@@ -153,6 +154,14 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
       yield* itrListupInput(abs)
     }
   }
+}
+
+// Necessary because of this:
+// https://github.com/eslint/eslint/issues/14936#issuecomment-906746754
+function applySuggestion(code: string, suggestion: Linter.LintSuggestion) {
+  const { fix } = suggestion
+
+  return `${code.slice(0, fix.range[0])}${fix.text}${code.slice(fix.range[1])}`
 }
 
 function writeFixtures(
@@ -184,6 +193,7 @@ function writeFixtures(
     },
     config.filename,
   )
+
   if (force || !fs.existsSync(errorFile)) {
     fs.writeFileSync(
       errorFile,
@@ -192,6 +202,14 @@ function writeFixtures(
           message: m.message,
           line: m.line,
           column: m.column,
+          suggestions: m.suggestions
+            ? m.suggestions.map((s) => ({
+                desc: s.desc,
+                messageId: s.messageId,
+                // Need to have this be the *fixed* output, not just the fix content or anything
+                output: applySuggestion(config.code, s),
+              }))
+            : null,
         })),
         null,
         2,

@@ -281,6 +281,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
+| [svelte/no-reactive-literals](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | Don't assign literal values in reactive statements |  |
 | [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
