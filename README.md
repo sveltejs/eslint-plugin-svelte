@@ -244,8 +244,9 @@ Example **.vscode/settings.json**:
 
 <!--RULES_SECTION_START-->
 
-The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) automatically fixes problems reported by rules which have a wrench :wrench: below.  
-The rules with the following star :star: are included in the configs.
+:wrench: Indicates that the rule is fixable, and using `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the reported problems.  
+:bulb: Indicates that some problems reported by the rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).  
+:star: Indicates that the rule is included in the `plugin:svelte/recommended` config.
 
 <!--RULES_TABLE_START-->
 
