@@ -22,16 +22,10 @@ export default createRule("prefer-destructured-store-props", {
       // should be
       // $: ({ bar } = $foo);
       // {bar + baz}
-      [`MemberExpression[object.name=/$/][property.type="Identifier"]`](
+      [`MemberExpression[object.name=/^\\$/][property.type="Identifier"]`](
         node: TSESTree.MemberExpression,
       ) {
         const store = (node.object as TSESTree.Identifier).name
-
-        // Since the regex can't specify positioning of the "$", we need to check again
-        if (!store.startsWith("$")) {
-          return false
-        }
-
         const prop = (node.property as TSESTree.Identifier).name
 
         return context.report({
