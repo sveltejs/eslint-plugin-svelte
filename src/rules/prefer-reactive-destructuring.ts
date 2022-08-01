@@ -29,8 +29,11 @@ export default createRule("prefer-reactive-destructuring", {
         const prop = (right.property as TSESTree.Identifier).name
 
         const source = context.getSourceCode()
-        const lTokens = source.getTokens(left)
-        const rTokens = source.getTokens(right)
+        const lToken = source.getFirstToken(left)
+        const rTokens = source.getLastTokens(right, {
+          includeComments: true,
+          count: 2,
+        })
         const matched = prop === left.name
 
         return context.report({
@@ -42,18 +45,15 @@ export default createRule("prefer-reactive-destructuring", {
               messageId: "suggestDestructuring",
               fix: (fixer) => [
                 fixer.insertTextBefore(
-                  lTokens[0],
+                  lToken,
                   matched ? `({ ` : `({ ${prop}: `,
                 ),
-                fixer.insertTextAfter(lTokens[0], ` }`),
+                fixer.insertTextAfter(lToken, ` }`),
                 fixer.replaceTextRange(
-                  [
-                    rTokens[rTokens.length - 2].range[0],
-                    rTokens[rTokens.length - 1].range[1],
-                  ],
+                  [rTokens[0].range[0], rTokens[1].range[1]],
                   "",
                 ),
-                fixer.insertTextAfter(rTokens[rTokens.length - 1], ")"),
+                fixer.insertTextAfter(rTokens[1], ")"),
               ],
             },
           ],
