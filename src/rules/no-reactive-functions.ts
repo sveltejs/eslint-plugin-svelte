@@ -1,10 +1,12 @@
 import type { TSESTree } from "@typescript-eslint/types"
+import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("no-reactive-functions", {
   meta: {
     docs: {
-      description: "",
+      description:
+        "It's not necessary to define functions in reactive statements",
       category: "Best Practices",
       recommended: false,
     },
@@ -39,12 +41,20 @@ export default createRule("no-reactive-functions", {
             {
               messageId: "fixReactiveFns",
               fix(fixer) {
-                const tokens = source.getTokens(parent)
+                const tokens = source.getFirstTokens(parent, {
+                  includeComments: false,
+                  count: 3,
+                })
+
+                const noExtraSpace = source.isSpaceBetweenTokens(
+                  tokens[1] as AST.Token,
+                  tokens[2] as AST.Token,
+                )
 
                 // Replace the entire reactive label with "const"
                 return fixer.replaceTextRange(
                   [tokens[0].range[0], tokens[1].range[1]],
-                  "const",
+                  noExtraSpace ? "const" : "const ",
                 )
               },
             },

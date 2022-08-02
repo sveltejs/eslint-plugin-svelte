@@ -2,4 +2,5 @@
 <script>
     $: arrow = () => {}
     $: fn = function() {}
+    $:nospace = () => {}
 </script>
