@@ -1,0 +1,8 @@
+- message: Unexpected array in text mustache interpolation.
+  line: 5
+  column: 1
+  suggestions: null
+- message: Unexpected array in text mustache interpolation.
+  line: 6
+  column: 15
+  suggestions: null

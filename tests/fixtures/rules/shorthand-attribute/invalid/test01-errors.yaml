@@ -1,0 +1,8 @@
+- message: Expected shorthand attribute.
+  line: 6
+  column: 9
+  suggestions: null
+- message: Expected shorthand attribute.
+  line: 10
+  column: 9
+  suggestions: null

@@ -1,0 +1,8 @@
+- message: Expected regular attribute syntax.
+  line: 7
+  column: 9
+  suggestions: null
+- message: Expected regular attribute syntax.
+  line: 11
+  column: 9
+  suggestions: null

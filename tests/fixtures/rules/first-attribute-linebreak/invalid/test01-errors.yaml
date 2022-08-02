@@ -1,0 +1,8 @@
+- message: Expected no linebreak before this attribute.
+  line: 7
+  column: 3
+  suggestions: null
+- message: Expected a linebreak before this attribute.
+  line: 9
+  column: 9
+  suggestions: null

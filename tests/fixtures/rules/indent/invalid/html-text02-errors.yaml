@@ -1,0 +1,12 @@
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 3
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 4
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 5
+  column: 1
+  suggestions: null

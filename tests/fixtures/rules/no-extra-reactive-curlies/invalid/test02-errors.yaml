@@ -1,0 +1,11 @@
+- message: Do not wrap reactive statements in curly braces unless necessary.
+  line: 3
+  column: 6
+  suggestions:
+    - desc: Remove the unnecessary curly braces.
+      messageId: removeExtraCurlies
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+          $: foo = info;
+        </script>

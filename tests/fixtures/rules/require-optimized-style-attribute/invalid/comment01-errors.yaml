@@ -1,0 +1,4 @@
+- message: It cannot be optimized because contains comments.
+  line: 5
+  column: 30
+  suggestions: null

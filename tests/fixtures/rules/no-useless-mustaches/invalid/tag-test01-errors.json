@@ -1,7 +1,0 @@
-[
-  {
-    "message": "Unexpected mustache interpolation with a string literal value.",
-    "line": 1,
-    "column": 1
-  }
-]

@@ -85,6 +85,7 @@
     "@types/eslint-scope": "^3.7.0",
     "@types/eslint-visitor-keys": "^1.0.0",
     "@types/estree": "^1.0.0",
+    "@types/js-yaml": "^4.0.5",
     "@types/less": "^3.0.3",
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-it-container": "^2.0.5",

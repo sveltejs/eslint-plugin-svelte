@@ -1,7 +1,0 @@
-[
-  {
-    "message": "`{@html}` can lead to XSS attack.",
-    "line": 5,
-    "column": 4
-  }
-]

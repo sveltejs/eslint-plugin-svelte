@@ -1,0 +1,16 @@
+- message: Missing an explicit type attribute for button.
+  line: 1
+  column: 1
+  suggestions: null
+- message: A value must be set for button type attribute.
+  line: 2
+  column: 9
+  suggestions: null
+- message: A value must be set for button type attribute.
+  line: 3
+  column: 9
+  suggestions: null
+- message: foo is an invalid value for button type attribute.
+  line: 4
+  column: 9
+  suggestions: null

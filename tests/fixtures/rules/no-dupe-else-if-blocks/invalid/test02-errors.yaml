@@ -1,0 +1,36 @@
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 12
+  column: 11
+  suggestions: null
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 20
+  column: 11
+  suggestions: null
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 26
+  column: 11
+  suggestions: null
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 32
+  column: 11
+  suggestions: null
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 38
+  column: 11
+  suggestions: null
+- message: >-
+    This branch can never execute. Its condition is a duplicate or covered by
+    previous conditions in the `{#if}` / `{:else if}` chain.
+  line: 46
+  column: 17
+  suggestions: null

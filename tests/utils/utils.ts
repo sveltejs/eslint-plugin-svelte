@@ -6,6 +6,7 @@ import * as svelteESLintParser from "svelte-eslint-parser"
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require("../../src/index")
 import { applyFixes } from "./source-code-fixer"
+import { load, dump } from "js-yaml"
 
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
@@ -88,7 +89,7 @@ export function loadTestCases(
     .filter(filter)
     .map((inputFile) => {
       const config = getConfig(ruleName, inputFile)
-      const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+      const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.yaml")
       const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
       let errors
       try {
@@ -97,7 +98,7 @@ export function loadTestCases(
         writeFixtures(ruleName, inputFile)
         errors = fs.readFileSync(errorFile, "utf8")
       }
-      config.errors = JSON.parse(errors)
+      config.errors = load(errors)
       if (fixable) {
         let output
         try {
@@ -170,7 +171,7 @@ function writeFixtures(
   { force }: { force?: boolean } = {},
 ) {
   const linter = getLinter(ruleName)
-  const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+  const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.yaml")
   const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
 
   const config = getConfig(ruleName, inputFile)
@@ -197,7 +198,7 @@ function writeFixtures(
   if (force || !fs.existsSync(errorFile)) {
     fs.writeFileSync(
       errorFile,
-      `${JSON.stringify(
+      `${dump(
         result.map((m) => ({
           message: m.message,
           line: m.line,
@@ -211,9 +212,10 @@ function writeFixtures(
               }))
             : null,
         })),
-        null,
-        2,
-      )}\n`,
+        {
+          quotingType: '"',
+        },
+      )}`,
       "utf8",
     )
   }

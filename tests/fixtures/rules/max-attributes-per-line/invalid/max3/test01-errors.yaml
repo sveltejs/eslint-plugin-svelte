@@ -1,0 +1,4 @@
+- message: "'{...attrs}' should be on a new line."
+  line: 8
+  column: 50
+  suggestions: null
