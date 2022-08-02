@@ -1,37 +1,37 @@
 [
   {
     "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 2,
-    "column": 2,
-    "suggestions": [
-      {
-        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
-        "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n{$: ({ bar } = $foo);\nbar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
-      }
-    ]
-  },
-  {
-    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 3,
-    "column": 2,
-    "suggestions": [
-      {
-        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
-        "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n{$foo.bar}\n{$: ({ bar } = $foo);\nbar}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
-      }
-    ]
-  },
-  {
-    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
     "line": 6,
     "column": 2,
     "suggestions": [
       {
         "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
         "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n{$foo.bar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$: ({ bar } = $foo);\nbar}\n"
+        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{bar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
+      }
+    ]
+  },
+  {
+    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
+    "line": 7,
+    "column": 2,
+    "suggestions": [
+      {
+        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
+        "messageId": "fixUseDestructuring",
+        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{$foo.bar}\n{bar}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
+      }
+    ]
+  },
+  {
+    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
+    "line": 10,
+    "column": 2,
+    "suggestions": [
+      {
+        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
+        "messageId": "fixUseDestructuring",
+        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{$foo.bar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{bar}\n"
       }
     ]
   }

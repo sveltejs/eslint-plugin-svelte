@@ -1,0 +1,20 @@
+[
+  {
+    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
+    "line": 2,
+    "column": 2,
+    "suggestions": null
+  },
+  {
+    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
+    "line": 3,
+    "column": 2,
+    "suggestions": null
+  },
+  {
+    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
+    "line": 6,
+    "column": 2,
+    "suggestions": null
+  }
+]
