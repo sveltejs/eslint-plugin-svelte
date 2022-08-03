@@ -1,0 +1,45 @@
+- message: >-
+    Do not assign literal values inside reactive statements unless absolutely
+    necessary.
+  line: 3
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            let foo = "foo"
+            $: bar = [];
+            $: baz = {};
+        </script>
+- message: >-
+    Do not assign literal values inside reactive statements unless absolutely
+    necessary.
+  line: 4
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            $: foo = "foo";
+            let bar = []
+            $: baz = {};
+        </script>
+- message: >-
+    Do not assign literal values inside reactive statements unless absolutely
+    necessary.
+  line: 5
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            $: foo = "foo";
+            $: bar = [];
+            let baz = {}
+        </script>

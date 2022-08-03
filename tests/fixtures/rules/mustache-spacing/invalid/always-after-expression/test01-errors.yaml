@@ -1,0 +1,136 @@
+- message: Expected 1 space after '{', but not found.
+  line: 18
+  column: 1
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 18
+  column: 5
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 19
+  column: 19
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 19
+  column: 24
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 19
+  column: 31
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 19
+  column: 37
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 19
+  column: 50
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 19
+  column: 58
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 20
+  column: 19
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 20
+  column: 22
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 21
+  column: 8
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 21
+  column: 17
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 22
+  column: 11
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 23
+  column: 11
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 24
+  column: 15
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 26
+  column: 16
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 27
+  column: 16
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 27
+  column: 40
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 28
+  column: 16
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 29
+  column: 16
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 31
+  column: 20
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 32
+  column: 27
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 33
+  column: 31
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 34
+  column: 38
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 35
+  column: 20
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 37
+  column: 19
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 37
+  column: 34
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 37
+  column: 50
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 38
+  column: 19
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 38
+  column: 34
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 39
+  column: 29
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 41
+  column: 30
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 46
+  column: 19
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 48
+  column: 17
+  suggestions: null

@@ -1,0 +1,16 @@
+- message: Duplicate property 'background'.
+  line: 10
+  column: 13
+  suggestions: null
+- message: Duplicate property 'background'.
+  line: 10
+  column: 32
+  suggestions: null
+- message: Duplicate property 'background'.
+  line: 11
+  column: 12
+  suggestions: null
+- message: Duplicate property 'background'.
+  line: 11
+  column: 38
+  suggestions: null

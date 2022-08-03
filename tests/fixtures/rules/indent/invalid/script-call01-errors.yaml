@@ -1,0 +1,144 @@
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 3
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 4
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 5
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 6
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 7
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 8
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 9
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 10
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 11
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 12
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 13
+  column: 1
+  suggestions: null
+- message: Expected indentation of 8 spaces but found 0 spaces.
+  line: 14
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 15
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 16
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 17
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 18
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 19
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 20
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 21
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 22
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 23
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 25
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 26
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 27
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 28
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 29
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 30
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 31
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 32
+  column: 1
+  suggestions: null
+- message: Expected indentation of 8 spaces but found 0 spaces.
+  line: 33
+  column: 1
+  suggestions: null
+- message: Expected indentation of 8 spaces but found 0 spaces.
+  line: 34
+  column: 1
+  suggestions: null
+- message: Expected indentation of 8 spaces but found 0 spaces.
+  line: 35
+  column: 1
+  suggestions: null
+- message: Expected indentation of 6 spaces but found 0 spaces.
+  line: 36
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 37
+  column: 1
+  suggestions: null
+- message: Expected indentation of 2 spaces but found 0 spaces.
+  line: 39
+  column: 1
+  suggestions: null
+- message: Expected indentation of 4 spaces but found 0 spaces.
+  line: 40
+  column: 1
+  suggestions: null

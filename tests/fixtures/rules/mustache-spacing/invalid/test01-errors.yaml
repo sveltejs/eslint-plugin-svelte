@@ -1,0 +1,408 @@
+- message: Expected no space after '{', but found.
+  line: 20
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 20
+  column: 6
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 21
+  column: 19
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 21
+  column: 25
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 21
+  column: 33
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 21
+  column: 40
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 21
+  column: 54
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 21
+  column: 63
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 22
+  column: 19
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 22
+  column: 23
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 23
+  column: 8
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 23
+  column: 18
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 24
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 24
+  column: 12
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 25
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 25
+  column: 12
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 26
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 26
+  column: 16
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 28
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 28
+  column: 17
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 28
+  column: 22
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 28
+  column: 27
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 29
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 29
+  column: 17
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 29
+  column: 22
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 29
+  column: 43
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 29
+  column: 48
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 29
+  column: 53
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 30
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 30
+  column: 17
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 30
+  column: 22
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 30
+  column: 29
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 30
+  column: 34
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 30
+  column: 39
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 31
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 31
+  column: 17
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 31
+  column: 19
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 31
+  column: 26
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 31
+  column: 28
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 31
+  column: 33
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 33
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 33
+  column: 21
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 33
+  column: 26
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 33
+  column: 33
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 34
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 34
+  column: 28
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 34
+  column: 33
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 34
+  column: 40
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 35
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 35
+  column: 32
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 35
+  column: 37
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 35
+  column: 44
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 36
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 36
+  column: 39
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 36
+  column: 44
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 36
+  column: 51
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 37
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 37
+  column: 21
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 37
+  column: 26
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 37
+  column: 33
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 37
+  column: 38
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 37
+  column: 45
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 39
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 39
+  column: 20
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 39
+  column: 25
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 39
+  column: 37
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 39
+  column: 42
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 39
+  column: 55
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 39
+  column: 60
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 39
+  column: 68
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 40
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 40
+  column: 20
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 40
+  column: 25
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 40
+  column: 37
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 40
+  column: 42
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 40
+  column: 50
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 41
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 41
+  column: 30
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 41
+  column: 35
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 41
+  column: 43
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 42
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 42
+  column: 31
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 42
+  column: 36
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 42
+  column: 44
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 43
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 43
+  column: 25
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 43
+  column: 30
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 43
+  column: 38
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 44
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 44
+  column: 26
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 44
+  column: 31
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 44
+  column: 39
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 45
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 45
+  column: 20
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 45
+  column: 25
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 45
+  column: 36
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 45
+  column: 48
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 45
+  column: 56
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 47
+  column: 1
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 47
+  column: 18
+  suggestions: null
+- message: Expected no space after '{', but found.
+  line: 47
+  column: 23
+  suggestions: null
+- message: Expected no space before '}', but found.
+  line: 47
+  column: 29
+  suggestions: null

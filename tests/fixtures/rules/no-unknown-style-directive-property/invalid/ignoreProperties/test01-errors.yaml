@@ -1,0 +1,12 @@
+- message: Unexpected unknown style directive property 'unknown-color'.
+  line: 8
+  column: 12
+  suggestions: null
+- message: Unexpected unknown style directive property 'unknown'.
+  line: 9
+  column: 12
+  suggestions: null
+- message: Unexpected unknown style directive property 'foo-bar'.
+  line: 15
+  column: 12
+  suggestions: null

@@ -1,0 +1,4 @@
+- message: Attribute 'use:a' should go before 'use:b'.
+  line: 6
+  column: 12
+  suggestions: null

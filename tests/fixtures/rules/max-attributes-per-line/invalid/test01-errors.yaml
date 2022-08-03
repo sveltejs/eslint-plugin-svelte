@@ -1,0 +1,12 @@
+- message: "'bind:value' should be on a new line."
+  line: 8
+  column: 20
+  suggestions: null
+- message: "'on:click' should be on a new line."
+  line: 10
+  column: 23
+  suggestions: null
+- message: "'{...attrs}' should be on a new line."
+  line: 11
+  column: 15
+  suggestions: null

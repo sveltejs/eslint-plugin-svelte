@@ -1,0 +1,8 @@
+- message: Expected no space before '>', but found.
+  line: 2
+  column: 3
+  suggestions: null
+- message: Expected no space before '>', but found.
+  line: 2
+  column: 14
+  suggestions: null

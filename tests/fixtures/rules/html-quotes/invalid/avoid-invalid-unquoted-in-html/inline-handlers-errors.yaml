@@ -1,0 +1,4 @@
+- message: Expected to be enclosed by double quotes.
+  line: 5
+  column: 19
+  suggestions: null

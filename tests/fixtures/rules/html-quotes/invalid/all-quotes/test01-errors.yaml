@@ -1,0 +1,16 @@
+- message: Expected to be enclosed by double quotes.
+  line: 9
+  column: 13
+  suggestions: null
+- message: Expected to be enclosed by double quotes.
+  line: 12
+  column: 13
+  suggestions: null
+- message: Expected to be enclosed by double quotes.
+  line: 18
+  column: 10
+  suggestions: null
+- message: Expected to be enclosed by quotes.
+  line: 20
+  column: 10
+  suggestions: null
