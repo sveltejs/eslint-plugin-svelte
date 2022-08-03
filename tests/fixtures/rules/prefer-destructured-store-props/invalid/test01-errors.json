@@ -7,32 +7,20 @@
       {
         "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
         "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{bar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
+        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{bar}\n\n{$foo[baz]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo[\"qux\"]}\n"
       }
     ]
   },
   {
-    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 7,
+    "message": "Destructure baz from store $foo for better change tracking & fewer redraws",
+    "line": 8,
     "column": 2,
-    "suggestions": [
-      {
-        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
-        "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{$foo.bar}\n{bar}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{$foo.bar}\n"
-      }
-    ]
+    "suggestions": null
   },
   {
-    "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 10,
+    "message": "Destructure qux from store $foo for better change tracking & fewer redraws",
+    "line": 11,
     "column": 2,
-    "suggestions": [
-      {
-        "desc": "Using destructuring like $: ({ bar } = $foo); will run faster",
-        "messageId": "fixUseDestructuring",
-        "output": "<!-- prettier-ignore -->\n<script>\n\n$: ({ bar } = $foo);\n</script>\n\n{$foo.bar}\n{$foo[bar]}\n\n<!-- eslint-disable-next-line dot-notation -- tests -->\n{bar}\n"
-      }
-    ]
+    "suggestions": null
   }
 ]

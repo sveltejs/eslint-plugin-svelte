@@ -1,6 +1,10 @@
+import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
+import { getStringIfConstant } from "../utils/ast-utils"
+
+type NodeRecord = { property: string; node: TSESTree.MemberExpression }
 
 export default createRule("prefer-destructured-store-props", {
   meta: {
@@ -13,61 +17,82 @@ export default createRule("prefer-destructured-store-props", {
     hasSuggestions: true,
     schema: [],
     messages: {
-      useDestructuring: `Destructure {{prop}} from store {{store}} for better change tracking & fewer redraws`,
-      fixUseDestructuring: `Using destructuring like $: ({ {{prop}} } = {{store}}); will run faster`,
+      useDestructuring: `Destructure {{property}} from store {{store}} for better change tracking & fewer redraws`,
+      fixUseDestructuring: `Using destructuring like $: ({ {{property}} } = {{store}}); will run faster`,
     },
     type: "suggestion",
   },
   create(context) {
     let script: AST.SvelteScriptElement
-    const reports: TSESTree.MemberExpression[] = []
+    const reports: NodeRecord[] = []
 
     return {
       [`SvelteScriptElement`](node: AST.SvelteScriptElement) {
         script = node
       },
 
-      // {$foo.bar + baz}
+      // {$foo.bar}
       // should be
       // $: ({ bar } = $foo);
-      // {bar + baz}
-      [`MemberExpression[object.name=/^\\$/][property.type="Identifier"]`](
+      // {bar}
+      // Same with {$foo["bar"]}
+      [`MemberExpression[object.name=/^\\$/]`](
         node: TSESTree.MemberExpression,
       ) {
-        reports.push(node)
+        const property =
+          node.property.type === "Identifier"
+            ? node.property.name
+            : getStringIfConstant(node.property as ESTree.Expression)
+
+        if (!property) {
+          return
+        }
+
+        reports.push({ property, node })
       },
 
       [`Program:exit`]() {
-        reports.forEach((node) => {
+        reports.forEach(({ property, node }) => {
           const store = (node.object as TSESTree.Identifier).name
-          const prop = (node.property as TSESTree.Identifier).name
+          // let prop: string | null = null
+
+          // if (node.property.type === "Literal") {
+          //   prop = node.property.value as string
+          // } else if (node.property.type === "Identifier") {
+          //   prop = node.property.name
+          // }
 
           context.report({
             node,
             messageId: "useDestructuring",
             data: {
               store,
-              prop,
+              property,
             },
+
             suggest: [
               {
                 messageId: "fixUseDestructuring",
                 data: {
                   store,
-                  prop,
+                  property,
                 },
 
                 fix(fixer) {
-                  if (!script || !script.endTag) {
+                  // Avoid autofix suggestions for:
+                  //  dynamic accesses like {$foo[bar]}
+                  //  no <script> tag
+                  //  no <script> ending
+                  if (node.computed || !script || !script.endTag) {
                     return []
                   }
 
                   return [
                     fixer.insertTextAfterRange(
                       [script.endTag.range[0], script.endTag.range[0]],
-                      `$: ({ ${prop} } = ${store});\n`,
+                      `$: ({ ${property} } = ${store});\n`,
                     ),
-                    fixer.replaceText(node, prop),
+                    fixer.replaceText(node, property),
                   ]
                 },
               },

@@ -4,7 +4,8 @@
 </script>
 
 {$foo.bar}
-{$foo[bar]}
+
+{$foo[baz]}
 
 <!-- eslint-disable-next-line dot-notation -- tests -->
-{$foo.bar}
+{$foo["qux"]}

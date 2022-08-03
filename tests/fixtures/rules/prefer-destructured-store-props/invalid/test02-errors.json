@@ -7,13 +7,13 @@
   },
   {
     "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 3,
+    "line": 4,
     "column": 2,
     "suggestions": null
   },
   {
     "message": "Destructure bar from store $foo for better change tracking & fewer redraws",
-    "line": 6,
+    "line": 7,
     "column": 2,
     "suggestions": null
   }
