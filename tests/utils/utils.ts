@@ -6,7 +6,7 @@ import * as svelteESLintParser from "svelte-eslint-parser"
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require("../../src/index")
 import { applyFixes } from "./source-code-fixer"
-import { load, dump } from "js-yaml"
+import { parse as parseYaml, stringify as stringifyYaml } from "yaml"
 
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
@@ -106,7 +106,7 @@ export function loadTestCases(
         writeFixtures(ruleName, inputFile)
         errors = fs.readFileSync(errorFile, "utf8")
       }
-      config.errors = load(errors)
+      config.errors = parseYaml(errors)
       if (fixable) {
         let output
         try {
@@ -206,7 +206,7 @@ function writeFixtures(
   if (force || !fs.existsSync(errorFile)) {
     fs.writeFileSync(
       errorFile,
-      `${dump(
+      `${stringifyYaml(
         result.map((m) => ({
           message: m.message,
           line: m.line,
