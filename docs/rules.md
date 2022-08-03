@@ -42,8 +42,8 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
-| [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | (no description) |  |
-| [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | Don't assign literal values in reactive statements |  |
+| [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | It's not necessary to define functions in reactive statements | :bulb: |
+| [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | Don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |

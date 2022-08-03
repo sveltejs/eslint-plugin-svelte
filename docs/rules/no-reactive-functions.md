@@ -2,14 +2,15 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-reactive-functions"
-description: ""
+description: "It's not necessary to define functions in reactive statements"
 ---
 
 # svelte/no-reactive-functions
 
-> Don't assign functions in reactive statements
+> It's not necessary to define functions in reactive statements
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
 
