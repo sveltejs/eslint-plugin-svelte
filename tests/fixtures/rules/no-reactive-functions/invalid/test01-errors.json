@@ -1,0 +1,38 @@
+[
+  {
+    "message": "Do not create functions inside reactive statements unless absolutely necessary.",
+    "line": 3,
+    "column": 5,
+    "suggestions": [
+      {
+        "desc": "Move the function out of the reactive statement",
+        "messageId": "fixReactiveFns",
+        "output": "<!-- prettier-ignore -->\n<script>\n    const arrow = () => {}\n    $: fn = function() {}\n    $:nospace = () => {}\n</script>\n"
+      }
+    ]
+  },
+  {
+    "message": "Do not create functions inside reactive statements unless absolutely necessary.",
+    "line": 4,
+    "column": 5,
+    "suggestions": [
+      {
+        "desc": "Move the function out of the reactive statement",
+        "messageId": "fixReactiveFns",
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: arrow = () => {}\n    const fn = function() {}\n    $:nospace = () => {}\n</script>\n"
+      }
+    ]
+  },
+  {
+    "message": "Do not create functions inside reactive statements unless absolutely necessary.",
+    "line": 5,
+    "column": 5,
+    "suggestions": [
+      {
+        "desc": "Move the function out of the reactive statement",
+        "messageId": "fixReactiveFns",
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: arrow = () => {}\n    $: fn = function() {}\n    const nospace = () => {}\n</script>\n"
+      }
+    ]
+  }
+]
