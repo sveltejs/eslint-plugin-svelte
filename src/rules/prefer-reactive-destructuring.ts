@@ -40,23 +40,27 @@ export default createRule("prefer-reactive-destructuring", {
           node,
           loc: node.loc,
           messageId: "useDestructuring",
-          suggest: [
-            {
-              messageId: "suggestDestructuring",
-              fix: (fixer) => [
-                fixer.insertTextBefore(
-                  lToken,
-                  matched ? `({ ` : `({ ${prop}: `,
-                ),
-                fixer.insertTextAfter(lToken, ` }`),
-                fixer.replaceTextRange(
-                  [rTokens[0].range[0], rTokens[1].range[1]],
-                  "",
-                ),
-                fixer.insertTextAfter(rTokens[1], ")"),
-              ],
-            },
-          ],
+          suggest:
+            // Don't show suggestions for entries like $: info = foo.bar.info, the destructuring
+            // just looks too gross and complicates the rule too much
+            right.object.type === "MemberExpression"
+              ? []
+              : [
+                  {
+                    messageId: "suggestDestructuring",
+                    fix: (fixer) => [
+                      fixer.insertTextBefore(
+                        lToken,
+                        matched ? `({ ` : `({ ${prop}: `,
+                      ),
+                      fixer.insertTextAfter(lToken, ` }`),
+                      fixer.replaceTextRange(
+                        [rTokens[0].range[0], rTokens[1].range[1]],
+                        ")",
+                      ),
+                    ],
+                  },
+                ],
         })
       },
     }
