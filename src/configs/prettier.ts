@@ -9,6 +9,7 @@ export = {
     "svelte/first-attribute-linebreak": "off",
     "svelte/html-closing-bracket-spacing": "off",
     "svelte/html-quotes": "off",
+    "svelte/html-self-closing": "off",
     "svelte/indent": "off",
     "svelte/max-attributes-per-line": "off",
     "svelte/mustache-spacing": "off",

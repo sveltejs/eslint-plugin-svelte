@@ -4,6 +4,7 @@ import commentDirective from "../rules/comment-directive"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
 import htmlQuotes from "../rules/html-quotes"
+import htmlSelfClosing from "../rules/html-self-closing"
 import indent from "../rules/indent"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import mustacheSpacing from "../rules/mustache-spacing"
@@ -40,6 +41,7 @@ export const rules = [
   firstAttributeLinebreak,
   htmlClosingBracketSpacing,
   htmlQuotes,
+  htmlSelfClosing,
   indent,
   maxAttributesPerLine,
   mustacheSpacing,
