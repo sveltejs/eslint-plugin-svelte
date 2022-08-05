@@ -65,6 +65,9 @@ const config: UserConfig = {
       acorn: path.join(dirname, "./node_modules/acorn/dist/acorn.js"),
     },
   },
+  ssr: {
+    external: ["svelte-eslint-parser"],
+  },
   build: {
     commonjsOptions: {
       ignoreDynamicRequires: true,
