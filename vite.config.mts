@@ -65,6 +65,13 @@ const config: UserConfig = {
       acorn: path.join(dirname, "./node_modules/acorn/dist/acorn.js"),
     },
   },
+  ssr: {
+    // vite-plugin-svelte recognizes svelte-eslint-parser as a library that runs on svelte.
+    // This confuses the SSR on the Dev server.
+    // This is the workaround for that.
+    // https://github.com/sveltejs/vite-plugin-svelte/blob/a1d141e890ac0d1572a46e2bec705aa090236560/packages/vite-plugin-svelte/src/utils/dependencies.ts#L114
+    external: ["svelte-eslint-parser"],
+  },
   build: {
     commonjsOptions: {
       ignoreDynamicRequires: true,

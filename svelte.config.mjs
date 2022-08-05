@@ -19,6 +19,8 @@ fs.writeFileSync(
   JSON.stringify({ type: "module" }),
 )
 
+const outDir = path.join(dirname, "build/eslint-plugin-svelte")
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   compilerOptions: {
@@ -31,8 +33,8 @@ const config = {
     },
     adapter: ghpagesAdapter({
       // default options are shown
-      pages: "build",
-      assets: "build",
+      pages: outDir,
+      assets: outDir,
     }),
     prerender: {
       default: true,
