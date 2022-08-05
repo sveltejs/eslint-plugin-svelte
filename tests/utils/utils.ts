@@ -266,5 +266,5 @@ function getConfig(ruleName: string, inputFile: string) {
       ? require.resolve("svelte-eslint-parser")
       : undefined
 
-  return { parser, ...config, parserOptions: {}, code, filename }
+  return Object.assign({ parser }, config, { code, filename })
 }
