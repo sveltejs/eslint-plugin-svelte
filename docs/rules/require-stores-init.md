@@ -41,6 +41,13 @@ export const d2 = derived([a, b], () => {})
 
 Nothing.
 
+## :heart: Compatibility
+
+This rule was taken from [@tivac/eslint-plugin-svelte].  
+This rule is compatible with `@tivac/svelte/stores-initial-value` rule.
+
+[@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
+
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/require-stores-init.ts)
