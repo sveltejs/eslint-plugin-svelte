@@ -184,13 +184,17 @@ function writeFixtures(
 
   const config = getConfig(ruleName, inputFile)
 
+  const parser =
+    path.extname(inputFile) === ".svelte"
+      ? require.resolve("svelte-eslint-parser")
+      : undefined
   const result = linter.verify(
     config.code,
     {
       rules: {
         [ruleName]: ["error", ...(config.options || [])],
       },
-      parser: "svelte-eslint-parser",
+      parser,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
@@ -262,5 +266,5 @@ function getConfig(ruleName: string, inputFile: string) {
       ? require.resolve("svelte-eslint-parser")
       : undefined
 
-  return Object.assign({ parser }, config, { code, filename })
+  return { parser, ...config, parserOptions: {}, code, filename }
 }

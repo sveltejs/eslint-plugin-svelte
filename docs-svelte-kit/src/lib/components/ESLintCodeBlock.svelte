@@ -12,9 +12,10 @@
   let code = ""
   export let rules = {}
   export let fix = false
+  export let language = "html"
   let time = ""
-  let options = {
-    filename: "example.svelte",
+  $: options = {
+    filename: language === "html" ? "example.svelte" : "example.js",
     preprocess,
     postprocess,
   }
@@ -43,7 +44,7 @@
     {linter}
     bind:code
     config={{
-      parser: "svelte-eslint-parser",
+      parser: language === "html" ? "svelte-eslint-parser" : undefined,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
@@ -54,6 +55,7 @@
         es2021: true,
       },
     }}
+    {language}
     {options}
     on:result={onLintedResult}
     showDiff={showDiff && fix}

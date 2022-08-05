@@ -28,6 +28,7 @@ import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import preferStyleDirective from "../rules/prefer-style-directive"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
+import requireStoresInit from "../rules/require-stores-init"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import shorthandDirective from "../rules/shorthand-directive"
 import sortAttributes from "../rules/sort-attributes"
@@ -65,6 +66,7 @@ export const rules = [
   preferClassDirective,
   preferStyleDirective,
   requireOptimizedStyleAttribute,
+  requireStoresInit,
   shorthandAttribute,
   shorthandDirective,
   sortAttributes,

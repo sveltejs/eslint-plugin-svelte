@@ -11,6 +11,7 @@
   export let options = {}
   export let fix = true
   export let showDiff = true
+  export let language = "html"
 
   let fixedValue = code
   let leftMarkers = []
@@ -221,7 +222,7 @@
     bind:this={editor}
     bind:code
     bind:rightCode={fixedValue}
-    language="html"
+    {language}
     diffEditor={fix && showDiff}
     markers={leftMarkers}
     {rightMarkers}
