@@ -8,7 +8,7 @@ if (typeof self === "undefined") {
   globalThis.self = globalThis
 }
 
-const dirname = fileURLToPath(new URL(".", import.meta.url))
+const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // This project can't be ESM yet, so hack it to get svelte-kit to work.
 // A hack that treats files in the `.svelte-kit` directory as ESM.

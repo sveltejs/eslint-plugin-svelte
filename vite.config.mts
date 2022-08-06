@@ -8,9 +8,8 @@ import "./docs-svelte-kit/build-system/build.mts"
 import type { UserConfig } from "vite"
 import { fileURLToPath } from "url"
 
-const dirname = fileURLToPath(
-  new URL(
-    ".",
+const dirname = path.dirname(
+  fileURLToPath(
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
   ),

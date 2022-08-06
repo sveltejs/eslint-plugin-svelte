@@ -5,9 +5,8 @@ import { fileURLToPath } from "url"
 // const babelCore = require("@babel/core")
 // const t = require("@babel/types")
 
-const dirname = fileURLToPath(
-  new URL(
-    ".",
+const dirname = path.dirname(
+  fileURLToPath(
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
   ),
