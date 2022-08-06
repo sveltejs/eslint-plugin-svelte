@@ -33,14 +33,13 @@ function build(input: string, out: string, injects: string[] = []) {
 
 /** bundle */
 function bundle(entryPoint: string, externals: string[]) {
-  const injectPath = path.join(dirname, "./src/process-shim.mjs")
   const result = esbuild.buildSync({
     entryPoints: [entryPoint],
     format: "esm",
     bundle: true,
     external: externals,
     write: false,
-    inject: [injectPath],
+    inject: [path.join(dirname, "./src/process-shim.mjs")],
   })
 
   return `${result.outputFiles[0].text}`
