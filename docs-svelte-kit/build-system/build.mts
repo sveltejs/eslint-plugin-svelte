@@ -1,14 +1,15 @@
 import esbuild from "esbuild"
 import path from "path"
 import fs from "fs"
+import { fileURLToPath } from "url"
 // const babelCore = require("@babel/core")
 // const t = require("@babel/types")
 
 const dirname = path.dirname(
-  new URL(
+  fileURLToPath(
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
-  ).pathname,
+  ),
 )
 
 build(

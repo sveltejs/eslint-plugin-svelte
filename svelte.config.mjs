@@ -1,13 +1,14 @@
 import ghpagesAdapter from "svelte-adapter-ghpages"
 import path from "path"
 import fs from "fs"
+import { fileURLToPath } from "url"
 
 // eslint-disable-next-line no-undef -- There seems to be a package that uses `self`.
 if (typeof self === "undefined") {
   globalThis.self = globalThis
 }
 
-const dirname = path.dirname(new URL(import.meta.url).pathname)
+const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // This project can't be ESM yet, so hack it to get svelte-kit to work.
 // A hack that treats files in the `.svelte-kit` directory as ESM.

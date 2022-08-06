@@ -6,12 +6,13 @@ import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option
 
 import "./docs-svelte-kit/build-system/build.mts"
 import type { UserConfig } from "vite"
+import { fileURLToPath } from "url"
 
 const dirname = path.dirname(
-  new URL(
+  fileURLToPath(
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
-  ).pathname,
+  ),
 )
 
 /** @type {import('vite').UserConfig} */
