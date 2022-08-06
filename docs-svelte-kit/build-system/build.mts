@@ -1,14 +1,16 @@
 import esbuild from "esbuild"
 import path from "path"
 import fs from "fs"
+import { fileURLToPath } from "url"
 // const babelCore = require("@babel/core")
 // const t = require("@babel/types")
 
-const dirname = path.dirname(
+const dirname = fileURLToPath(
   new URL(
+    ".",
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
-  ).pathname,
+  ),
 )
 
 build(
@@ -32,13 +34,14 @@ function build(input: string, out: string, injects: string[] = []) {
 
 /** bundle */
 function bundle(entryPoint: string, externals: string[]) {
+  const injectPath = path.join(dirname, "./src/process-shim.mjs")
   const result = esbuild.buildSync({
     entryPoints: [entryPoint],
     format: "esm",
     bundle: true,
     external: externals,
     write: false,
-    inject: [path.join(dirname, "./src/process-shim.mjs")],
+    inject: [injectPath],
   })
 
   return `${result.outputFiles[0].text}`
