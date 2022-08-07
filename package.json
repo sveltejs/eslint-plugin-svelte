@@ -83,6 +83,7 @@
     "@types/escape-html": "^1.0.2",
     "@types/eslint": "^8.0.0",
     "@types/eslint-scope": "^3.7.0",
+    "@types/eslint-utils": "^3.0.1",
     "@types/eslint-visitor-keys": "^1.0.0",
     "@types/estree": "^1.0.0",
     "@types/less": "^3.0.3",

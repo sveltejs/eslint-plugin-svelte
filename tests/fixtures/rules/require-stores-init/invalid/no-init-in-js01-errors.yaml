@@ -1,0 +1,12 @@
+- message: Always set a default value for svelte stores.
+  line: 2
+  column: 18
+  suggestions: null
+- message: Always set a default value for svelte stores.
+  line: 3
+  column: 18
+  suggestions: null
+- message: Always set a default value for svelte stores.
+  line: 4
+  column: 18
+  suggestions: null

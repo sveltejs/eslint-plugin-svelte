@@ -47,6 +47,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |
+| [svelte/require-stores-init](./rules/require-stores-init.md) | require initial value in store |  |
 
 ## Stylistic Issues
 

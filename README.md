@@ -287,6 +287,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
+| [svelte/require-stores-init](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 
 ## Stylistic Issues
 
