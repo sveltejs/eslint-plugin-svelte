@@ -1,6 +1,7 @@
 <!-- prettier-ignore -->
 <script>
   import store from "./store.js";
+  import baz from "somewhere"
 	
   let foo, bar
   $: {
@@ -14,4 +15,7 @@
 </div>
 <div>
   bar: {bar + " " + Date.now()}
+</div>
+<div>
+  baz: {$store.baz}
 </div>

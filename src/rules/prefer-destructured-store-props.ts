@@ -3,7 +3,6 @@ import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import { getStringIfConstant } from "../utils/ast-utils"
-import { returnStatement } from "@babel/types"
 
 type NodeRecord = { property: string; node: TSESTree.MemberExpression }
 
@@ -37,6 +36,16 @@ export default createRule("prefer-destructured-store-props", {
         script = node
       },
 
+      // Capture import names
+      [`ImportSpecifier, ImportDefaultSpecifier, ImportNamespaceSpecifier`](
+        node: TSESTree.ImportSpecifier,
+      ) {
+        const { name } = node.local
+
+        defined.add(name)
+      },
+
+      // Capture variable names
       [`VariableDeclarator[id.type="Identifier"]`](
         node: TSESTree.VariableDeclarator,
       ) {
