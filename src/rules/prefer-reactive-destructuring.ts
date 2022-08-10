@@ -41,9 +41,8 @@ export default createRule("prefer-reactive-destructuring", {
           loc: node.loc,
           messageId: "useDestructuring",
           suggest:
-            // Don't show suggestions for entries like $: info = foo.bar.info, the destructuring
-            // just looks too gross and complicates the rule too much
-            right.object.type === "MemberExpression"
+            // Don't show suggestions for complex right-hand values, too tricky to get it right
+            right.object.type !== "Identifier" || right.computed
               ? []
               : [
                   {

@@ -7,7 +7,7 @@
       {
         "desc": "Use destructuring to get finer-grained redraws",
         "messageId": "suggestDestructuring",
-        "output": "<!-- prettier-ignore -->\n<script>\n    $: ({ info } = foo)\n    $: bar = foo.something\n    $: baz = foo.bar.baz\n</script>\n"
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: ({ info } = foo)\n    $: bar = foo.something\n    $: baz = foo.bar.baz\n    $: qux = foo[bar]\n    $: dux = foo.baz().bar\n</script>\n"
       }
     ]
   },
@@ -19,13 +19,25 @@
       {
         "desc": "Use destructuring to get finer-grained redraws",
         "messageId": "suggestDestructuring",
-        "output": "<!-- prettier-ignore -->\n<script>\n    $: info = foo.info\n    $: ({ something: bar } = foo)\n    $: baz = foo.bar.baz\n</script>\n"
+        "output": "<!-- prettier-ignore -->\n<script>\n    $: info = foo.info\n    $: ({ something: bar } = foo)\n    $: baz = foo.bar.baz\n    $: qux = foo[bar]\n    $: dux = foo.baz().bar\n</script>\n"
       }
     ]
   },
   {
     "message": "Prefer destructuring in reactive statements",
     "line": 5,
+    "column": 8,
+    "suggestions": null
+  },
+  {
+    "message": "Prefer destructuring in reactive statements",
+    "line": 6,
+    "column": 8,
+    "suggestions": null
+  },
+  {
+    "message": "Prefer destructuring in reactive statements",
+    "line": 7,
     "column": 8,
     "suggestions": null
   }
