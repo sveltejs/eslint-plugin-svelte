@@ -13,7 +13,7 @@
   },
   {
     "message": "Destructure baz from $store for better change tracking & fewer redraws",
-    "line": 20,
+    "line": 22,
     "column": 9,
     "suggestions": null
   }

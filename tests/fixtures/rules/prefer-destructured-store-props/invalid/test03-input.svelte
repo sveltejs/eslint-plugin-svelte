@@ -11,9 +11,11 @@
 </script>
 
 <div>
+  <!-- eslint-disable-next-line prefer-template-->
   foo: {foo + " " + Date.now()}
 </div>
 <div>
+  <!-- eslint-disable-next-line prefer-template-->
   bar: {bar + " " + Date.now()}
 </div>
 <div>
