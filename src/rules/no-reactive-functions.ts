@@ -6,7 +6,7 @@ export default createRule("no-reactive-functions", {
   meta: {
     docs: {
       description:
-        "It's not necessary to define functions in reactive statements",
+        "it's not necessary to define functions in reactive statements",
       category: "Best Practices",
       recommended: false,
     },
