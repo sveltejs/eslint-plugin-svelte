@@ -3,5 +3,6 @@
   <div />
   <TestCompnent />
   <img />
-  <svelte:head />
 </div>
+<!-- prettier-ignore -->
+<svelte:head />
