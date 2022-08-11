@@ -65,7 +65,7 @@ export default createRule("html-self-closing", {
           void: "never",
           normal: "never",
           component: "never",
-          svete: "never",
+          svelte: "never",
         }
         break
       case "html":
