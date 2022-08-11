@@ -27,6 +27,10 @@ export default createRule("html-self-closing", {
     },
     schema: [
       {
+        enum: ["all", "html", "none"],
+        default: "all",
+      },
+      {
         type: "object",
         properties: {
           void: {
@@ -43,16 +47,43 @@ export default createRule("html-self-closing", {
           },
         },
         additionalProperties: false,
+        optional: true,
       },
     ],
   },
   create(ctx) {
-    const options = {
-      void: "always",
-      normal: "always",
-      component: "always",
-      svelte: "always",
-      ...ctx.options?.[0],
+    let options
+    
+    switch(ctx.options) {
+      case "none":
+        options = {
+          void: "never",
+          normal: "never",
+          component: "never",
+          svete: "never",
+        }
+        break
+      case "html":
+        options = {
+          void: "always",
+          normal: "never",
+          component: "never",
+          svelte: "always",
+        }
+        break
+      default:
+        options = {
+          void: "always",
+          normal: "aways",
+          compoment: "always",
+          svelte: "aways"
+        }
+        break
+    }
+
+    options = {
+      ...options,
+      ...ctx.options?.[1],
     }
 
     /**
