@@ -1,5 +1,6 @@
 {
   "options": [
+    "all",
     {
       "component": "never"
     }
