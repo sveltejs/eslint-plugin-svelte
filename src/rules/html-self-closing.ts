@@ -56,10 +56,10 @@ export default createRule("html-self-closing", {
       void: "always",
       normal: "always",
       component: "always",
-      svelte: "always", 
+      svelte: "always",
     }
-    
-    switch(ctx.options?.[0] ?? "") {
+
+    switch (ctx.options?.[0] ?? "") {
       case "none":
         options = {
           void: "never",
@@ -75,6 +75,8 @@ export default createRule("html-self-closing", {
           component: "never",
           svelte: "always",
         }
+        break
+      default:
         break
     }
 
