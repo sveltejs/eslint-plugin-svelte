@@ -52,9 +52,14 @@ export default createRule("html-self-closing", {
     ],
   },
   create(ctx) {
-    let options
+    let options = {
+      void: "always",
+      normal: "always",
+      component: "always",
+      svelte: "always", 
+    }
     
-    switch(ctx.options) {
+    switch(ctx.options?.[0] ?? "") {
       case "none":
         options = {
           void: "never",
@@ -69,14 +74,6 @@ export default createRule("html-self-closing", {
           normal: "never",
           component: "never",
           svelte: "always",
-        }
-        break
-      default:
-        options = {
-          void: "always",
-          normal: "aways",
-          compoment: "always",
-          svelte: "aways"
         }
         break
     }
