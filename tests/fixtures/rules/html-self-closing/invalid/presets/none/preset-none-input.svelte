@@ -1,5 +1,7 @@
-<!-- prettier-disable -->
-<div />
-<TestCompnent />
-<img />
-<svelte:head />
+<!-- prettier-ignore -->
+<div>
+  <div />
+  <TestCompnent />
+  <img />
+  <svelte:head />
+</div>
