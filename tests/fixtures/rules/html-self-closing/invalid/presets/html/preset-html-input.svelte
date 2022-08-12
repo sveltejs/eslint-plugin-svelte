@@ -2,7 +2,7 @@
 <div>
   <div />
   <img>
-  <TestCompoment />
+  <TestComponent />
 </div>
 <!-- prettier-ignore -->
 <svelte:head></svelte:head>

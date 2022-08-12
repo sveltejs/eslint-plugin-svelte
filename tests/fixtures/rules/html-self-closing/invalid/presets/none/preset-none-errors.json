@@ -5,7 +5,7 @@
     "column": 3
   },
   {
-    "message": "Disalllow self-closing on Svelte custom components.",
+    "message": "Disallow self-closing on Svelte custom components.",
     "line": 4,
     "column": 3
   },
