@@ -79,7 +79,7 @@ export default createRule("html-self-closing", {
         }
         break
       default:
-        if (typeof option !== 'object' || option === null) break
+        if (typeof option !== "object" || option === null) break
 
         options = {
           ...options,
