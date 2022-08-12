@@ -14,7 +14,7 @@ since: "v0.5.0"
 
 ## :book: Rule Details
 
-This rule disallows the use of objects in text mustache interpolation.\
+This rule disallows the use of objects in text mustache interpolation.  
 When you use an object for text interpolation, it is drawn as `[object Object]`. It's almost always a mistake. You may have written a lot of unnecessary curly braces.
 
 <ESLintCodeBlock>
