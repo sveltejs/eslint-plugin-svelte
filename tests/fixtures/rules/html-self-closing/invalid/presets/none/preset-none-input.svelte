@@ -1,7 +1,7 @@
 <!-- prettier-ignore -->
 <div>
   <div />
-  <TestCompnent />
+  <TestComponent />
   <img />
 </div>
 <!-- prettier-ignore -->
