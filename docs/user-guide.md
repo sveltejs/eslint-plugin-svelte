@@ -19,7 +19,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
 
@@ -134,7 +134,7 @@ module.exports = {
 }
 ```
 
-See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 #### settings.svelte
 

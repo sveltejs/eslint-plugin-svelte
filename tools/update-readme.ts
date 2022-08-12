@@ -81,7 +81,8 @@ fs.writeFileSync(
     )
     .replace(
       /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)\)/gu,
-      (_s, c: string) => `(.${c.endsWith("/") ? c.slice(0, -1) : c}.md)`,
+      (_s: string, c: string) =>
+        `(.${c.endsWith("/") ? c.slice(0, -1) : c}.md)`,
     ),
   "utf8",
 )

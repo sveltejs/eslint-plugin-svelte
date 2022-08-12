@@ -13,6 +13,12 @@ You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-sve
 [![NPM downloads](https://img.shields.io/npm/dt/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
 
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ota-meshi/eslint-plugin-svelte.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ota-meshi/eslint-plugin-svelte/context:javascript)
+[![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fota-meshi%2Feslint-plugin-svelte%2Fmain%2Fpackage.json)](https://github.com/plantain-00/type-coverage)
+[![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![changesets](https://img.shields.io/badge/maintained%20with-changesets-176de3.svg)](https://github.com/atlassian/changesets)
+
 ## :name_badge: What is this plugin?
 
 [ESLint] plugin for [Svelte].  
@@ -61,7 +67,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
 
@@ -176,7 +182,7 @@ module.exports = {
 }
 ```
 
-See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 #### settings.svelte
 
@@ -242,6 +248,7 @@ Example **.vscode/settings.json**:
 
 ## :white_check_mark: Rules
 
+<!-- prettier-ignore-start -->
 <!--RULES_SECTION_START-->
 
 :wrench: Indicates that the rule is fixable, and using `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the reported problems.  
@@ -330,6 +337,7 @@ These rules relate to this plugin works:
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
+<!-- prettier-ignore-end -->
 
 <!--DOCS_IGNORE_START-->
 

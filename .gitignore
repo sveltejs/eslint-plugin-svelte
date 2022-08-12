@@ -104,6 +104,7 @@ dist
 /yarn.lock
 /lib
 /.svelte-kit
+/.type-coverage
 /build
 /svelte.config-dist.js
 /docs-svelte-kit/shim/eslint.mjs

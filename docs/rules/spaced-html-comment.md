@@ -48,7 +48,7 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 ```
 
 - `"always"` ... There must be at least one whitespace after `<!--` and before `-->`.
-- `"never"` ... There should be no leading or trailing whitespace.　 There should be no whitespace following.
+- `"never"` ... There should be no leading or trailing whitespace. There should be no whitespace following.
 
 ## :rocket: Version
 

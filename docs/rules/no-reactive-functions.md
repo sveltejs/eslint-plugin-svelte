@@ -25,12 +25,20 @@ This rule reports whenever a function is defined in a reactive statement. This i
   /* eslint svelte/no-reactive-functions: "error" */
 
   /* ✓ GOOD */
-  const arrowFn = () => { /* ... */ }
-  const func = function() { /* ... */ }
-  
+  const arrowFn = () => {
+    /* ... */
+  }
+  const func = function () {
+    /* ... */
+  }
+
   /* ✗ BAD */
-  $: arrowFn = () => { /* ... */ }
-  $: func = function() { /* ... */ }
+  $: arrowFn = () => {
+    /* ... */
+  }
+  $: func = function () {
+    /* ... */
+  }
 </script>
 ```
 
@@ -46,6 +54,7 @@ This rule was taken from [@tivac/eslint-plugin-svelte].
 This rule is compatible with `@tivac/svelte/reactive-functions` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
+
 ## :rocket: Version
 
 This rule was introduced in eslint-plugin-svelte v2.5.0

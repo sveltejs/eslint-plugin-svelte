@@ -36,6 +36,13 @@ module.exports = {
   },
   overrides: [
     {
+      files: ["*.md"],
+      extends: "plugin:mdx/recommended",
+      settings: {
+        "mdx/code-blocks": true,
+      },
+    },
+    {
       files: ["*.mjs"],
       parserOptions: {
         sourceType: "module",
