@@ -27,27 +27,28 @@ export default createRule("html-self-closing", {
     },
     schema: [
       {
-        enum: ["all", "html", "none"],
-        default: "all",
-      },
-      {
-        type: "object",
-        properties: {
-          void: {
-            enum: ["never", "always", "ignore"],
+        oneOf: [
+          {
+            properties: {
+              void: {
+                enum: ["never", "always", "ignore"],
+              },
+              normal: {
+                enum: ["never", "always", "ignore"],
+              },
+              component: {
+                enum: ["never", "always", "ignore"],
+              },
+              svelte: {
+                enum: ["never", "always", "ignore"],
+              },
+            },
+            additionalProperties: false,
           },
-          normal: {
-            enum: ["never", "always", "ignore"],
-          },
-          component: {
-            enum: ["never", "always", "ignore"],
-          },
-          svelte: {
-            enum: ["never", "always", "ignore"],
-          },
-        },
-        additionalProperties: false,
-        optional: true,
+          {
+            enum: ["all", "html", "none"],
+          }
+        ],
       },
     ],
   },
@@ -59,30 +60,33 @@ export default createRule("html-self-closing", {
       svelte: "always",
     }
 
-    switch (ctx.options?.[0] ?? "") {
-      case "none":
-        options = {
-          void: "never",
-          normal: "never",
-          component: "never",
-          svelte: "never",
-        }
-        break
-      case "html":
-        options = {
-          void: "always",
-          normal: "never",
-          component: "never",
-          svelte: "always",
-        }
-        break
-      default:
-        break
-    }
+    if (typeof ctx.options?.[0] === 'object') {
+      options = {
+        ...options,
+        ...AST.options?.[0] ?? {}
+      }
+    } else {
 
-    options = {
-      ...options,
-      ...ctx.options?.[1],
+      switch (ctx.options?.[0] ?? "") {
+        case "none":
+          options = {
+            void: "never",
+            normal: "never",
+            component: "never",
+            svelte: "never",
+          }
+          break
+        case "html":
+          options = {
+            void: "always",
+            normal: "never",
+            component: "never",
+            svelte: "always",
+          }
+          break
+        default:
+          break
+      }
     }
 
     /**

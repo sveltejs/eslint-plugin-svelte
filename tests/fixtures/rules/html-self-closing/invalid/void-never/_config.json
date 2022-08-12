@@ -1,6 +1,5 @@
 {
   "options": [
-    "all",
     {
       "void": "never"
     }
