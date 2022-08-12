@@ -10,12 +10,12 @@
     "column": 3
   },
   {
-    "message": "Disallow self-closing on HTML void elements.",
+    "message": "Disallow self-closing on HTML void components.",
     "line": 5,
     "column": 3
   },
   {
-    "message": "Disallow self-closing on Svelte special components.",
+    "message": "Disallow self-closing on Svelte special elements.",
     "line": 8,
     "column": 1
   }
