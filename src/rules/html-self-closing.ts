@@ -63,7 +63,7 @@ export default createRule("html-self-closing", {
     if (typeof ctx.options?.[0] === 'object') {
       options = {
         ...options,
-        ...AST.options?.[0] ?? {}
+        ...ctx.options?.[0] ?? {}
       }
     } else {
 
