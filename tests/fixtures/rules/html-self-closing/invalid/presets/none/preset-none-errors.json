@@ -10,7 +10,7 @@
     "column": 3
   },
   {
-    "message": "Disallow self-closing on HTML void components.",
+    "message": "Disallow self-closing on HTML void elements.",
     "line": 5,
     "column": 3
   },
