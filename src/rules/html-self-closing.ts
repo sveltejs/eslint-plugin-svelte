@@ -47,7 +47,7 @@ export default createRule("html-self-closing", {
           },
           {
             enum: ["all", "html", "none"],
-          }
+          },
         ],
       },
     ],
@@ -60,13 +60,12 @@ export default createRule("html-self-closing", {
       svelte: "always",
     }
 
-    if (typeof ctx.options?.[0] === 'object') {
+    if (typeof ctx.options?.[0] === "object") {
       options = {
         ...options,
-        ...ctx.options?.[0] ?? {}
+        ...(ctx.options?.[0] ?? {}),
       }
     } else {
-
       switch (ctx.options?.[0] ?? "") {
         case "none":
           options = {
