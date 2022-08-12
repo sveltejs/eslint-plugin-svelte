@@ -27,7 +27,7 @@ export default createRule("html-self-closing", {
     },
     schema: [
       {
-        oneOf: [
+        anyOf: [
           {
             properties: {
               void: {
