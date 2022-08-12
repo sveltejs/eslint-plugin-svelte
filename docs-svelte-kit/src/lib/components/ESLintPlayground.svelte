@@ -10,12 +10,10 @@
     postprocess,
   } from "../eslint/scripts/linter.js"
   import { loadModulesForBrowser } from "../../../../src/shared/svelte-compile-warns/transform/load-module"
+  let tsParser = null
   const linter = loadModulesForBrowser()
     .then(async () => {
-      const parser = await import("@typescript-eslint/parser")
-      if (typeof window !== "undefined") {
-        window.require.define("@typescript-eslint/parser", parser)
-      }
+      tsParser = await import("@typescript-eslint/parser")
     })
     .then(() => {
       return createLinter()
@@ -171,8 +169,8 @@
             ecmaVersion: 2020,
             sourceType: "module",
             parser: {
-              ts: "@typescript-eslint/parser",
-              typescript: "@typescript-eslint/parser",
+              ts: tsParser,
+              typescript: tsParser,
             },
           },
           rules,
