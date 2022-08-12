@@ -64,7 +64,7 @@ export default createRule("html-self-closing", {
     switch (option) {
       case "none":
         options = {
-           void: "never",
+          void: "never",
           normal: "never",
           component: "never",
           svelte: "never",
@@ -79,7 +79,6 @@ export default createRule("html-self-closing", {
         }
         break
       default:
-
         if (typeof option !== 'object' || option === null) break
 
         options = {
