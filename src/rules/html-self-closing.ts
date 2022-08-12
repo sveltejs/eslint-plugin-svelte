@@ -27,32 +27,66 @@ export default createRule("html-self-closing", {
     },
     schema: [
       {
-        type: "object",
-        properties: {
-          void: {
-            enum: ["never", "always", "ignore"],
+        anyOf: [
+          {
+            properties: {
+              void: {
+                enum: ["never", "always", "ignore"],
+              },
+              normal: {
+                enum: ["never", "always", "ignore"],
+              },
+              component: {
+                enum: ["never", "always", "ignore"],
+              },
+              svelte: {
+                enum: ["never", "always", "ignore"],
+              },
+            },
+            additionalProperties: false,
           },
-          normal: {
-            enum: ["never", "always", "ignore"],
+          {
+            enum: ["all", "html", "none"],
           },
-          component: {
-            enum: ["never", "always", "ignore"],
-          },
-          svelte: {
-            enum: ["never", "always", "ignore"],
-          },
-        },
-        additionalProperties: false,
+        ],
       },
     ],
   },
   create(ctx) {
-    const options = {
+    let options = {
       void: "always",
       normal: "always",
       component: "always",
       svelte: "always",
-      ...ctx.options?.[0],
+    }
+
+    const option = ctx.options?.[0]
+    switch (option) {
+      case "none":
+        options = {
+          void: "never",
+          normal: "never",
+          component: "never",
+          svelte: "never",
+        }
+        break
+      case "html":
+        options = {
+          void: "always",
+          normal: "never",
+          component: "never",
+          svelte: "always",
+        }
+        break
+      default:
+        if (typeof option !== "object" || option === null) break
+
+        options = {
+          ...options,
+          ...option,
+        }
+
+        break
     }
 
     /**

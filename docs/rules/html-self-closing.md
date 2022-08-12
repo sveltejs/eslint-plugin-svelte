@@ -50,26 +50,43 @@ You can choose either two styles for elements without content
 
 ## :wrench: Options
 
+presets:
+```jsonc
+{
+  "svelte/html-self-closing": [
+    "error",
+    "all", // or "html" or "none"
+  ]
+}
+```
+
+config object:
 ```jsonc
 {
   "svelte/html-self-closing": [
     "error",
     {
-      "void": "always", // or "always" or "ignore"
+      "void": "always", // or "never" or "ignore"
       "normal": "always", // or "never" or "ignore"
       "component": "always", // or "never" or "ignore"
-      "svelte": "always" // or "never" or "ignore"
+      "svelte": "always" // or "never" or "igore"
     }
   ]
 }
 ```
 
-- `void` (`"always"` by default)... Style of HTML void elements
-- `component` (`"always"` by default)... Style of svelte components
-- `svelte` (`"always"` by default)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
-- `normal` (`"always"` by default)... Style of other elements
+presets:
+- `all` - all elements should be self closing (unless they have children)
+- `html` - html-compliant - only void elements and svelte special elements should be self closing
+- `none` - no elements should be self closing
 
-Every option can be set to
+config object:
+- `void` (`"always"` in default preset)... Style of HTML void elements
+- `component` (`"always"` in default preset)... Style of svelte components
+- `svelte` (`"always"` in  default preset)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
+- `normal` (`"always"` in default preset)... Style of other elements
+
+Every config oject option can be set to
 - "always" (`<div />`)
 - "never" (`<div></div>`)
 - "ignore" (either `<div />` or `<div></div>`)
