@@ -21,6 +21,7 @@ Style directive were added in Svelte v3.46.
 <ESLintCodeBlock fix>
 
 <!-- prettier-ignore-start -->
+
 <!--eslint-skip-->
 
 ```svelte

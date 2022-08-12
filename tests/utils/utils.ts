@@ -224,9 +224,6 @@ function writeFixtures(
               }))
             : null,
         })),
-        {
-          quotingType: '"',
-        },
       )}`,
       "utf8",
     )

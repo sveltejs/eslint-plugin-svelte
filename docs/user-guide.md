@@ -19,7 +19,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
 
@@ -134,13 +134,13 @@ module.exports = {
 }
 ```
 
-See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 #### settings.svelte
 
 You can change the behavior of this plugin with some settings.
 
-- `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
+- `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.\
   For example, set rules on the template that cannot avoid false positives.
 - `compileOptions` (optional) ... Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [svelte/valid-compile](./rules/valid-compile.md) and [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md). **Note that it has no effect on ESLint's custom parser**.
   - `postcss` (optional) ... Specifies options related to PostCSS. You can disable the PostCSS process by specifying `false`.

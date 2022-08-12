@@ -19,6 +19,7 @@ This rule enforces the use of the shorthand syntax in directives.
 <ESLintCodeBlock fix>
 
 <!-- prettier-ignore-start -->
+
 <!--eslint-skip-->
 
 ```svelte

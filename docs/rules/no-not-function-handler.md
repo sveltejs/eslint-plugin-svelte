@@ -14,7 +14,7 @@ since: "v0.5.0"
 
 ## :book: Rule Details
 
-This rule reports where you used not function value in event handlers.  
+This rule reports where you used not function value in event handlers.\
 If you use a non-function value for the event handler, it event handler will not be called. It's almost always a mistake. You may have written a lot of unnecessary curly braces.
 
 <ESLintCodeBlock>
