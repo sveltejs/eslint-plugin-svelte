@@ -60,32 +60,34 @@ export default createRule("html-self-closing", {
       svelte: "always",
     }
 
-    if (typeof ctx.options?.[0] === "object") {
-      options = {
-        ...options,
-        ...(ctx.options?.[0] ?? {}),
-      }
-    } else {
-      switch (ctx.options?.[0] ?? "") {
-        case "none":
-          options = {
-            void: "never",
-            normal: "never",
-            component: "never",
-            svelte: "never",
-          }
-          break
-        case "html":
-          options = {
-            void: "always",
-            normal: "never",
-            component: "never",
-            svelte: "always",
-          }
-          break
-        default:
-          break
-      }
+    const option = ctx.options?.[0]
+    switch (option) {
+      case "none":
+        options = {
+           void: "never",
+          normal: "never",
+          component: "never",
+          svelte: "never",
+        }
+        break
+      case "html":
+        options = {
+          void: "always",
+          normal: "never",
+          component: "never",
+          svelte: "always",
+        }
+        break
+      default:
+
+        if (typeof option !== 'object' || option === null) break
+
+        options = {
+          ...options,
+          ...option,
+        }
+
+        break
     }
 
     /**
