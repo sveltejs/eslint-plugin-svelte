@@ -2,13 +2,13 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-reactive-literals"
-description: "Don't assign literal values in reactive statements"
+description: "don't assign literal values in reactive statements"
 since: "v2.4.0"
 ---
 
 # svelte/no-reactive-literals
 
-> Don't assign literal values in reactive statements
+> don't assign literal values in reactive statements
 
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 

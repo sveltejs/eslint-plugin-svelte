@@ -3,13 +3,13 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/html-self-closing"
 description: "enforce self-closing style"
+since: "v2.5.0"
 ---
 
 # svelte/html-self-closing
 
 > enforce self-closing style
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -73,6 +73,10 @@ Every option can be set to
 - "always" (`<div />`)
 - "never" (`<div></div>`)
 - "ignore" (either `<div />` or `<div></div>`)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.5.0
 
 ## :mag: Implementation
 

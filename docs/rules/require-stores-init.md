@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-stores-init"
 description: "require initial value in store"
+since: "v2.5.0"
 ---
 
 # svelte/require-stores-init
 
 > require initial value in store
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -47,6 +46,10 @@ This rule was taken from [@tivac/eslint-plugin-svelte].
 This rule is compatible with `@tivac/svelte/stores-initial-value` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.5.0
 
 ## :mag: Implementation
 
