@@ -1,0 +1,57 @@
+---
+pageClass: "rule-details"
+sidebarDepth: 0
+title: "svelte/no-store-async"
+description: "disallow using async/await inside svelte stores"
+since: "v3.1.0"
+---
+
+# svelte/no-store-async
+
+> disallow using async/await inside svelte stores
+
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
+## :book: Rule Details
+
+This rule reports all uses of async/await inside svelte stores.
+Because it causes issues with the auto-unsubscribing features.
+
+<ESLintCodeBlock language="javascript">
+
+<!--eslint-skip-->
+
+```js
+/* eslint svelte/no-store-async: "error" */
+
+import { writable, readable, derived } from "svelte/store"
+
+/* ✓ GOOD */
+const w1 = writable(false, () => {})
+const r1 = readable(false, () => {})
+const d1 = derived(a1, ($a1) => {})
+
+/* ✗ BAD */
+const w2 = writable(false, async () => {})
+const r2 = readable(false, async () => {})
+const d2 = derived(a1, async ($a1) => {})
+```
+
+</ESLintCodeBlock>
+
+## :wrench: Options
+
+Nothing.
+
+## :books: Further Reading
+
+- [Svelte - Docs > 4. Prefix stores with $ to access their values / Store contract](https://svelte.dev/docs#component-format-script-4-prefix-stores-with-$-to-access-their-values-store-contract)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.1.0
+
+## :mag: Implementation
+
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-store-async.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/no-store-async.ts)
