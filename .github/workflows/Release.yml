@@ -30,8 +30,6 @@ jobs:
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: yarn release
-          # this expects you to have a npm script called version that runs some logic and then calls `changeset version`.
-          version: yarn version
           commit: "chore: release eslint-plugin-svelte"
           title: "chore: release eslint-plugin-svelte"
         env:
