@@ -109,3 +109,5 @@ dist
 /svelte.config-dist.js
 /docs-svelte-kit/shim/eslint.mjs
 /docs-svelte-kit/shim/assert.mjs
+/docs-svelte-kit/src/routes/*.md
+/docs-svelte-kit/src/routes/**/*.md

@@ -41,7 +41,7 @@ const config = {
       default: true,
     },
     files: {
-      routes: path.join(dirname, "./docs"),
+      routes: path.join(dirname, "./docs-svelte-kit/src/routes"),
       template: path.join(dirname, "./docs-svelte-kit/src/app.html"),
       hooks: path.join(dirname, "./docs-svelte-kit/src/hooks"),
       lib: path.join(dirname, "./docs-svelte-kit/src/lib"),

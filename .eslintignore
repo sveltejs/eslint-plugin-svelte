@@ -17,3 +17,5 @@
 /docs-svelte-kit/shim/eslint.mjs
 /docs-svelte-kit/shim/assert.mjs
 !/.*.js
+/docs-svelte-kit/src/routes/*.md
+/docs-svelte-kit/src/routes/**/*.md

@@ -5,8 +5,11 @@ import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
 
 import "./docs-svelte-kit/build-system/build.mts"
+import generateRoutes from "./docs-svelte-kit/tools/generate-routes.mjs"
 import type { UserConfig } from "vite"
 import { fileURLToPath } from "url"
+
+generateRoutes()
 
 const dirname = path.dirname(
   fileURLToPath(

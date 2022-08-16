@@ -1,40 +1,15 @@
-<script context="module">
-  import { markdownPath } from "$lib/utils.js"
-  const docs = import.meta.glob("./**/*.md")
-
-  /** @type {import('@sveltejs/kit').Load} */
-  export async function load({ url }) {
-    const markdown = `./${markdownPath(url.pathname)}`
-    if (docs[markdown]) {
-      return {
-        props: {
-          moduleData: await docs[markdown](),
-        },
-      }
-    }
-
-    // 404
-    return {
-      props: {
-        moduleData: {
-          frontmatter: { title: "404", hiddenMenu: true },
-        },
-      },
-    }
-  }
-</script>
-
 <script>
   import Header from "$lib/header/Header.svelte"
   import SideMenu from "$lib/sidemenu/SideMenu.svelte"
   import Footer from "$lib/footer/Footer.svelte"
 
-  import "../docs-svelte-kit/src/app.css"
-  import "../docs-svelte-kit/src/site.css"
+  import "../app.css"
+  import "../site.css"
   import { tocStore } from "$lib/utils"
 
-  export let moduleData
-
+  /** @type {import('./$types').PageData */
+  export let data
+  $: ({ moduleData } = data)
   $: frontmatter = moduleData.frontmatter
   $: fileInfo = moduleData.fileInfo
   $: {
