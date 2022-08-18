@@ -1,1 +1,4 @@
-.env-cmdrc
+.svelte-kit
+.type-coverage
+build
+lib
