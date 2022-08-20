@@ -21,7 +21,9 @@ export default createRule("no-store-async", {
       Program() {
         for (const { node } of extractStoreReferences(context)) {
           const [, fn] = node.arguments
-          if (fn.type !== "ArrowFunctionExpression" || !fn.async) continue
+          if (!fn || fn.type !== "ArrowFunctionExpression" || !fn.async) {
+            continue
+          }
 
           const start = fn.loc?.start ?? { line: 1, column: 0 }
           context.report({
