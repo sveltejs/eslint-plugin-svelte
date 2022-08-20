@@ -3,7 +3,6 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-store-async"
 description: "disallow using async/await inside svelte stores"
-since: "v3.1.0"
 ---
 
 # svelte/no-store-async
