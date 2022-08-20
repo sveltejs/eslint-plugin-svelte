@@ -1,5 +1,5 @@
 import { createRule } from "../utils"
-import type * as ESTree from "estree"
+import { extractStoreReferences } from "./reference-helpers/svelte-store"
 
 export default createRule("no-store-async", {
   meta: {
@@ -18,26 +18,24 @@ export default createRule("no-store-async", {
   },
   create(context) {
     return {
-      CallExpression(node: ESTree.CallExpression) {
-        if (node.callee.type !== "Identifier") return
-        const { name } = node.callee
-        if (name !== "writable" && name !== "readable" && name !== "derived")
-          return
-        const [, fn] = node.arguments
-        if (fn.type !== "ArrowFunctionExpression" || !fn.async) return
+      Program() {
+        for (const { node } of extractStoreReferences(context)) {
+          const [, fn] = node.arguments
+          if (fn.type !== "ArrowFunctionExpression" || !fn.async) continue
 
-        const start = fn.loc?.start ?? { line: 1, column: 0 }
-        context.report({
-          node: fn,
-          loc: {
-            start,
-            end: {
-              line: start.line,
-              column: start.column + 5,
+          const start = fn.loc?.start ?? { line: 1, column: 0 }
+          context.report({
+            node: fn,
+            loc: {
+              start,
+              end: {
+                line: start.line,
+                column: start.column + 5,
+              },
             },
-          },
-          messageId: "unexpected",
-        })
+            messageId: "unexpected",
+          })
+        }
       },
     }
   },
