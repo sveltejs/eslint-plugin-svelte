@@ -29,6 +29,7 @@ jobs:
       - name: Install And Build
         run: |+
           yarn install
+          yarn update
           yarn build
           export NODE_OPTIONS="--max-old-space-size=8192"
           yarn docs:build
