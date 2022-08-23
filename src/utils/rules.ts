@@ -23,6 +23,7 @@ import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-prope
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noStoreAsync from "../rules/no-store-async"
 import noTargetBlank from "../rules/no-target-blank"
+import noTrailingSpaces from "../rules/no-trailing-spaces"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
@@ -62,6 +63,7 @@ export const rules = [
   noSpacesAroundEqualSignsInAttribute,
   noStoreAsync,
   noTargetBlank,
+  noTrailingSpaces,
   noUnknownStyleDirectiveProperty,
   noUnusedSvelteIgnore,
   noUselessMustaches,

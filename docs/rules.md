@@ -79,6 +79,7 @@ These rules extend the rules provided by ESLint itself to work well in Svelte:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
+| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## System
 
