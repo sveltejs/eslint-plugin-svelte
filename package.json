@@ -51,7 +51,8 @@
     "ts": "node -r esbuild-register",
     "typecov": "type-coverage",
     "update": "yarn ts ./tools/update.ts && yarn format-for-gen-file",
-    "version": "env-cmd -e version yarn update && changeset version"
+    "version": "env-cmd -e version yarn update",
+    "version:ci": "env-cmd -e version-ci yarn update && changeset version"
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
@@ -169,7 +170,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 98.63,
+    "atLeast": 98.64,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,
