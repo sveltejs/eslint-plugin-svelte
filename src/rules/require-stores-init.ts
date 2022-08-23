@@ -1,6 +1,5 @@
 import { createRule } from "../utils"
-import type * as ESTree from "estree"
-import { ReferenceTracker } from "eslint-utils"
+import { extractStoreReferences } from "./reference-helpers/svelte-store"
 
 export default createRule("require-stores-init", {
   meta: {
@@ -16,33 +15,9 @@ export default createRule("require-stores-init", {
     type: "suggestion",
   },
   create(context) {
-    /** Extract 'svelte/store' references */
-    function* extractStoreReferences() {
-      const referenceTracker = new ReferenceTracker(context.getScope())
-      for (const { node, path } of referenceTracker.iterateEsmReferences({
-        "svelte/store": {
-          [ReferenceTracker.ESM]: true,
-          writable: {
-            [ReferenceTracker.CALL]: true,
-          },
-          readable: {
-            [ReferenceTracker.CALL]: true,
-          },
-          derived: {
-            [ReferenceTracker.CALL]: true,
-          },
-        },
-      })) {
-        yield {
-          node: node as ESTree.CallExpression,
-          name: path[path.length - 1],
-        }
-      }
-    }
-
     return {
       Program() {
-        for (const { node, name } of extractStoreReferences()) {
+        for (const { node, name } of extractStoreReferences(context)) {
           const minArgs =
             name === "writable" || name === "readable"
               ? 1

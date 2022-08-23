@@ -21,6 +21,7 @@ import noReactiveFunctions from "../rules/no-reactive-functions"
 import noReactiveLiterals from "../rules/no-reactive-literals"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
+import noStoreAsync from "../rules/no-store-async"
 import noTargetBlank from "../rules/no-target-blank"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
@@ -59,6 +60,7 @@ export const rules = [
   noReactiveLiterals,
   noShorthandStylePropertyOverrides,
   noSpacesAroundEqualSignsInAttribute,
+  noStoreAsync,
   noTargetBlank,
   noUnknownStyleDirectiveProperty,
   noUnusedSvelteIgnore,
