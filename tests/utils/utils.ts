@@ -185,9 +185,7 @@ function writeFixtures(
   const config = getConfig(ruleName, inputFile)
 
   const parser =
-    path.extname(inputFile) === ".svelte"
-      ? require.resolve("svelte-eslint-parser")
-      : undefined
+    path.extname(inputFile) === ".svelte" ? "svelte-eslint-parser" : undefined
   const result = linter.verify(
     config.code,
     {
