@@ -1,4 +1,4 @@
 .svelte-kit
 .type-coverage
 build
-lib
+/lib
