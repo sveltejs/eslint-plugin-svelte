@@ -2,14 +2,13 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-store-async"
-description: "disallow using async/await inside svelte stores"
+description: "disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features"
+since: "v2.7.0"
 ---
 
 # svelte/no-store-async
 
-> disallow using async/await inside svelte stores
-
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+> disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features
 
 ## :book: Rule Details
 
@@ -48,7 +47,7 @@ Nothing.
 
 ## :rocket: Version
 
-This rule was introduced in eslint-plugin-svelte v3.1.0
+This rule was introduced in eslint-plugin-svelte v2.7.0
 
 ## :mag: Implementation
 
