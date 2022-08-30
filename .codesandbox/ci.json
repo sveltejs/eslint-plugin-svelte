@@ -1,5 +1,5 @@
 {
-  "installCommand": "yarn --ignore-engines",
+  "installCommand": "install --ignore-engines",
   "node": "16",
   "sandboxes": []
 }
