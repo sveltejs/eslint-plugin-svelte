@@ -165,7 +165,7 @@
     "vite": "^3.0.0-0",
     "vite-plugin-svelte-md": "^0.1.5",
     "yaml": "^2.1.1",
-    "yarn-deduplicate": "^5.0.0"
+    "yarn-deduplicate": "^6.0.0"
   },
   "publishConfig": {
     "access": "public"
