@@ -1,0 +1,48 @@
+---
+pageClass: "rule-details"
+sidebarDepth: 0
+title: "svelte/derived-has-same-inputs-outputs"
+description: "derived store should use same variable names between values and callback"
+---
+
+#  svelte/derived-has-same-inputs-outputs
+
+> derived store should use same variable names between values and callback
+
+## :book: Rule Details
+
+This rule reports where variable names and callback function's argument names are different.
+This is mainly a recommended rule to avoid implementation confusion.
+
+<ESLintCodeBlock language="javascript">
+
+<!--eslint-skip-->
+
+```js
+/* eslint svelte/derived-has-same-inputs-outputs: "error" */
+
+import { derived } from "svelte/store"
+
+/* ✓ GOOD */
+derived(a, ($a) => {});
+derived(a, ($a, set) => {})
+derived([ a, b ], ([ $a, $b ]) => {})
+
+/* ✗ BAD */
+derived(a, (b) => {});
+derived(a, (b, set) => {});
+derived([ a, b ], ([ one, two ]) => {})
+```
+
+</ESLintCodeBlock>
+
+## :wrench: Options
+
+Nothing.
+
+
+## :books: Further Reading
+
+- [Svelte - Docs > RUN TIME > svelte/store > derived](https://svelte.dev/docs#run-time-svelte-store-derived)
+
+

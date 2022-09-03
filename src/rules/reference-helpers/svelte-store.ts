@@ -2,22 +2,25 @@ import type * as ESTree from "estree"
 import { ReferenceTracker } from "eslint-utils"
 import type { RuleContext } from "../../types"
 
+type StoreName = "writable" | "readable" | "derived"
+
 /** Extract 'svelte/store' references */
 export function* extractStoreReferences(
   context: RuleContext,
+  storeNames: StoreName[] = ["writable", "readable", "derived"],
 ): Generator<{ node: ESTree.CallExpression; name: string }, void> {
   const referenceTracker = new ReferenceTracker(context.getScope())
   for (const { node, path } of referenceTracker.iterateEsmReferences({
     "svelte/store": {
       [ReferenceTracker.ESM]: true,
       writable: {
-        [ReferenceTracker.CALL]: true,
+        [ReferenceTracker.CALL]: storeNames.includes("writable"),
       },
       readable: {
-        [ReferenceTracker.CALL]: true,
+        [ReferenceTracker.CALL]: storeNames.includes("readable"),
       },
       derived: {
-        [ReferenceTracker.CALL]: true,
+        [ReferenceTracker.CALL]: storeNames.includes("derived"),
       },
     },
   })) {
