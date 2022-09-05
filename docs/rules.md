@@ -42,6 +42,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
+| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md) | derived store should use same variable names between values and callback |  |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
 | [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | it's not necessary to define functions in reactive statements | :bulb: |
 | [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | don't assign literal values in reactive statements | :bulb: |
