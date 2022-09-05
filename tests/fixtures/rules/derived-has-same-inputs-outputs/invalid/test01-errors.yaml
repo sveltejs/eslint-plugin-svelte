@@ -22,3 +22,11 @@
   line: 12
   column: 22
   suggestions: null
+- message: The argument name should be '$l'.
+  line: 15
+  column: 26
+  suggestions: null
+- message: The argument name should be '$o'.
+  line: 18
+  column: 22
+  suggestions: null

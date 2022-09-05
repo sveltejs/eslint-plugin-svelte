@@ -12,3 +12,9 @@ derived([e, f], ([g, h]) => {
 derived([i, j], ([k, l], set) => {
   /** do nothing */
 })
+derived([null, l], ([$m, $n]) => {
+  /** do nothing */
+})
+derived([o, null], ([$p, $q]) => {
+  /** do nothing */
+})
