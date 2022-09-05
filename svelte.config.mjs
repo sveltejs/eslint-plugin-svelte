@@ -37,12 +37,9 @@ const config = {
       pages: outDir,
       assets: outDir,
     }),
-    prerender: {
-      default: true,
-    },
     files: {
       routes: path.join(dirname, "./docs-svelte-kit/src/routes"),
-      template: path.join(dirname, "./docs-svelte-kit/src/app.html"),
+      appTemplate: path.join(dirname, "./docs-svelte-kit/src/app.html"),
       hooks: path.join(dirname, "./docs-svelte-kit/src/hooks"),
       lib: path.join(dirname, "./docs-svelte-kit/src/lib"),
       assets: path.join(dirname, "./docs-svelte-kit/statics"),
