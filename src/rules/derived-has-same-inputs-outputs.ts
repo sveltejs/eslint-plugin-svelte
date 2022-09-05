@@ -6,9 +6,11 @@ import { extractStoreReferences } from "./reference-helpers/svelte-store"
 export default createRule("derived-has-same-inputs-outputs", {
   meta: {
     docs: {
-      description: "",
-      category: "Best Practices",
+      description:
+        "derived store should use same variable names between values and callback",
+      category: "Stylistic Issues",
       recommended: false,
+      conflictWithPrettier: false,
     },
     schema: [],
     messages: {
@@ -52,10 +54,7 @@ export default createRule("derived-has-same-inputs-outputs", {
       if (expectedName !== fnParam.name) {
         context.report({
           node: fn,
-          loc: {
-            start: fnParam.loc?.start ?? { line: 1, column: 0 },
-            end: fnParam.loc?.end ?? { line: 1, column: 0 },
-          },
+          loc: fnParam.loc!,
           messageId: "unexpected",
           data: { name: expectedName },
         })
@@ -77,15 +76,13 @@ export default createRule("derived-has-same-inputs-outputs", {
         return element && element.type === "Identifier" ? element.name : null
       })
       fnParam.elements.forEach((element, index) => {
-        if (element && element.type === "Identifier") {
-          const expectedName = `$${argNames[index]}`
+        const argName = argNames[index]
+        if (element && element.type === "Identifier" && argName) {
+          const expectedName = `$${argName}`
           if (expectedName !== element.name) {
             context.report({
               node: fn,
-              loc: {
-                start: element.loc?.start ?? { line: 1, column: 0 },
-                end: element.loc?.end ?? { line: 1, column: 0 },
-              },
+              loc: element.loc!,
               messageId: "unexpected",
               data: { name: expectedName },
             })
