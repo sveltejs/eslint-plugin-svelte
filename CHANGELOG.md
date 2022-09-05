@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.8.0
+
+### Minor Changes
+
+- [#249](https://github.com/ota-meshi/eslint-plugin-svelte/pull/249) [`6d0b89f`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/6d0b89f644b160b94293f4f0a63d5cef4bb032e4) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/derived-has-same-inputs-outputs` rule
+
 ## 2.7.0
 
 ### Minor Changes

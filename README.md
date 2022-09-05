@@ -289,7 +289,6 @@ These rules relate to better ways of doing things to help you avoid problems:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
-| [svelte/derived-has-same-inputs-outputs](https://ota-meshi.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/) | derived store should use same variable names between values and callback |  |
 | [svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
 | [svelte/no-reactive-functions](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :bulb: |
 | [svelte/no-reactive-literals](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
@@ -304,6 +303,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/derived-has-same-inputs-outputs](https://ota-meshi.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/) | derived store should use same variable names between values and callback |  |
 | [svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute | :wrench: |
 | [svelte/html-closing-bracket-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/) | require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes/) | enforce quotes style of HTML attributes | :wrench: |
