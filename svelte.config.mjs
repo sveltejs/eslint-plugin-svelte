@@ -40,7 +40,10 @@ const config = {
     files: {
       routes: path.join(dirname, "./docs-svelte-kit/src/routes"),
       appTemplate: path.join(dirname, "./docs-svelte-kit/src/app.html"),
-      hooks: path.join(dirname, "./docs-svelte-kit/src/hooks"),
+      hooks: {
+        server: path.join(dirname, "./docs-svelte-kit/src/hooks/server"),
+        client: path.join(dirname, "./docs-svelte-kit/src/hooks/client"),
+      },
       lib: path.join(dirname, "./docs-svelte-kit/src/lib"),
       assets: path.join(dirname, "./docs-svelte-kit/statics"),
     },
