@@ -129,6 +129,7 @@
   nav {
     display: flex;
     justify-content: center;
+    min-width: 1px;
   }
 
   nav svg {

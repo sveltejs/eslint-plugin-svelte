@@ -15,7 +15,6 @@
 <style>
   aside {
     font-size: 16px;
-    /* background-color: #fff; */
     width: 20rem;
     position: fixed;
     z-index: 10;
@@ -41,7 +40,6 @@
       padding-top: 3.6rem;
       transform: translateX(-100%);
       transition: transform 0.2s ease;
-      background: #fff;
     }
     aside.sidebar-open {
       transform: translateX(0);
