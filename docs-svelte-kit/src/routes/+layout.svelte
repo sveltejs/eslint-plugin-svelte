@@ -45,6 +45,9 @@
 <Footer {frontmatter} {fileInfo} />
 
 <style>
+  main {
+    margin-top: 64px;
+  }
   main:not(.hidden-menu) {
     padding-left: 20rem;
   }

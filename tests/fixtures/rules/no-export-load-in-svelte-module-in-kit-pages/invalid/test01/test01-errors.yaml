@@ -1,0 +1,3 @@
+- message: "`load` function should implement at `+page.(js|ts)` or `+layout.(js|ts)`"
+  line: 2
+  column: 10
