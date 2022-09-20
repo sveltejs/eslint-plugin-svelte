@@ -26,6 +26,7 @@
     box-sizing: border-box;
     border-right: 1px solid var(--background-without-opacity);
     overflow-y: auto;
+    background-color: var(--secondary-color);
   }
 
   @media (max-width: 959px) {
