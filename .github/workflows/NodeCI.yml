@@ -49,10 +49,13 @@ jobs:
           yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
           rm -rf node_modules
         if: matrix.eslint != 8
-      - name: Install Packages
+      - name: Remove @sveltejs/kit
+        # Use npm because yarn remove needs the lock file.
         run: |+
-          yarn remove @sveltejs/kit
-          yarn install --ignore-engines
+          npm uninstall @sveltejs/kit
+          rm -rf node_modules
+      - name: Install Packages
+        run: yarn install --ignore-engines
       - name: Test
         run: yarn test
       - name: Type Coverage
