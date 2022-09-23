@@ -50,7 +50,9 @@ jobs:
           rm -rf node_modules
         if: matrix.eslint != 8
       - name: Install Packages
-        run: yarn install --ignore-engines
+        run: |+
+          yarn remove @sveltejs/kit
+          yarn install --ignore-engines
       - name: Test
         run: yarn test
       - name: Type Coverage
