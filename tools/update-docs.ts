@@ -158,8 +158,12 @@ This rule was introduced in eslint-plugin-svelte ${await this.since}
 - [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/${ruleName}.ts)
 ${
   extensionRule
-    ? `
+    ? typeof extensionRule === "string"
+      ? `
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/${extensionRule})</sup>
+`
+      : `
+<sup>Taken with ❤️ [from ${extensionRule.plugin}](${extensionRule.url})</sup>
 `
     : ""
 }`

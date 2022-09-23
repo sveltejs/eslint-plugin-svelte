@@ -20,7 +20,7 @@ const descriptions: Record<typeof categories[number], string> = {
   "Stylistic Issues":
     "These rules relate to style guidelines, and are therefore quite subjective:",
   "Extension Rules":
-    "These rules extend the rules provided by ESLint itself to work well in Svelte:",
+    "These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:",
   System: "These rules relate to this plugin works:",
 }
 

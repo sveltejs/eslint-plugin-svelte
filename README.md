@@ -322,10 +322,11 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 ## Extension Rules
 
-These rules extend the rules provided by ESLint itself to work well in Svelte:
+These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/@typescript-eslint/no-unnecessary-condition](https://ota-meshi.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | disallow conditionals where the type is always truthy or always falsy | :wrench: |
 | [svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
 | [svelte/no-trailing-spaces](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
 

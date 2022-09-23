@@ -1,0 +1,4 @@
+- message: Unnecessary conditional, value is always truthy.
+  line: 5
+  column: 14
+  suggestions: null

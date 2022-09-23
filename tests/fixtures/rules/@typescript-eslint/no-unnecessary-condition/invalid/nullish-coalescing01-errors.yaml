@@ -1,0 +1,5 @@
+- message: Unnecessary conditional, left-hand side of `??` operator is always
+    `null` or `undefined`.
+  line: 5
+  column: 13
+  suggestions: null
