@@ -68,11 +68,8 @@ export function getTypeScript(context: RuleContext): TypeScript | undefined {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
     cacheTypeScript ??= require("typescript")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  } catch (e: any) {
-    if (e.code !== "MODULE_NOT_FOUND") {
-      throw e
-    }
+  } catch {
+    // ignore
   }
   return cacheTypeScript
 }

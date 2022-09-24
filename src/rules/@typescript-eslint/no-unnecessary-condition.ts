@@ -307,6 +307,12 @@ export default createRule("@typescript-eslint/no-unnecessary-condition", {
       // Since typescript array index signature types don't represent the
       //  possibility of out-of-bounds access, if we're indexing into an array
       //  just skip the check, to avoid false positives
+      if (isArrayIndexExpression(node)) {
+        return
+      }
+
+      // When checking logical expressions, only check the right side
+      //  as the left side has been checked by checkLogicalExpressionForUnnecessaryConditionals
       //
       // Unless the node is nullish coalescing, as it's common to use patterns like `nullBool ?? true` to to strict
       //  boolean checks if we inspect the right here, it'll usually be a constant condition on purpose.
