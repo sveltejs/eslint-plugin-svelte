@@ -11,7 +11,6 @@
 /tests/fixtures/rules/valid-compile/valid/babel
 /tests/fixtures/rules/valid-compile/valid/ts
 /tests/fixtures/rules/prefer-style-directive
-/tests/fixtures/rules/@typescript-eslint
 /.svelte-kit
 /svelte.config-dist.js
 /build
