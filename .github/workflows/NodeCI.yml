@@ -44,6 +44,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+      - name: Remove @sveltejs/kit # Remove @sveltejs/kit because postinstall fails on old node.
+        # Use npm because yarn remove needs the lock file.
+        run: |+
+          npm uninstall @sveltejs/kit --legacy-peer-deps
+          rm -rf node_modules
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
           yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
