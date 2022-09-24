@@ -14,21 +14,25 @@ description: "disallow conditionals where the type is always truthy or always fa
 
 ## :book: Rule Details
 
-This rule reports ???.
+This rule extends the base `@typescript-eslint`'s [@typescript-eslint/no-unnecessary-condition] rule.
+The [@typescript-eslint/no-unnecessary-condition] rule does not understand reactive or rerendering of Svelte components and has false positives when used with Svelte components. This rule understands reactive and rerendering of Svelte components.
 
 <ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 
 ```svelte
-<script>
+<script lang="ts">
   /* eslint svelte/@typescript-eslint/no-unnecessary-condition: "error" */
+  export let foo: number | null = null
+  /* ✗ BAD */
+  let b = foo || 42
+  /* ✓ GOOD */
+  $: a = foo || 42
 </script>
 
 <!-- ✓ GOOD -->
-
-<!-- ✗ BAD -->
-
+{foo || 42}
 ```
 
 </ESLintCodeBlock>
@@ -37,17 +41,24 @@ This rule reports ???.
 
 ```json
 {
-  "svelte/@typescript-eslint/no-unnecessary-condition": ["error", {
-   
-  }]
+  "@typescript-eslint/no-unnecessary-condition": "off",
+  "svelte/@typescript-eslint/no-unnecessary-condition": [
+    "error",
+    {
+      "allowConstantLoopConditions": false,
+      "allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing": false
+    }
+  ]
 }
 ```
 
-- 
+Same as [@typescript-eslint/no-unnecessary-condition] rule option. See [here](https://typescript-eslint.io/rules/no-unnecessary-condition/#options) for details.
 
-## :books: Further Reading
+## :couple: Related rules
 
--
+- [@typescript-eslint/no-unnecessary-condition]
+
+[@typescript-eslint/no-unnecessary-condition]: https://typescript-eslint.io/rules/no-unnecessary-condition/
 
 ## :mag: Implementation
 

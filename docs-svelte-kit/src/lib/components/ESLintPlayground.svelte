@@ -9,11 +9,12 @@
     preprocess,
     postprocess,
   } from "../eslint/scripts/linter.js"
+  import { loadTsParser } from "../eslint/scripts/ts-parser.js"
   import { loadModulesForBrowser } from "../../../../src/shared/svelte-compile-warns/transform/load-module"
   let tsParser = null
   const linter = loadModulesForBrowser()
     .then(async () => {
-      tsParser = await import("@typescript-eslint/parser")
+      tsParser = await loadTsParser()
     })
     .then(() => {
       return createLinter()

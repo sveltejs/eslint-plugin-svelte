@@ -4,4 +4,8 @@
 
   const a = foo ?? bar
   $: b = foo ?? bar
+  $: {
+    let baz: null | boolean = null
+    c = baz ?? bar
+  }
 </script>

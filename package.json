@@ -112,6 +112,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.1-0",
     "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
+    "@typescript/vfs": "^1.4.0",
     "assert": "^2.0.0",
     "commitlint": "^17.0.3",
     "env-cmd": "^10.1.0",

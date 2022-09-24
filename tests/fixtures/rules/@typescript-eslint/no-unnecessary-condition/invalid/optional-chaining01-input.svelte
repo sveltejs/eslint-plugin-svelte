@@ -3,4 +3,8 @@
 
   const a = foo?.length
   $: b = foo?.length
+  $: {
+    let bar: null | string = "abc"
+    c = bar?.length
+  }
 </script>
