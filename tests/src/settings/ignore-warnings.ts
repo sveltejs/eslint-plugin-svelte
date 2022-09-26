@@ -10,6 +10,8 @@ describe("ignore-warnings", () => {
       <script>
         a+b;
       </script>
+      {@html a+b}
+      {@debug a}
       `
 
     const linter = new eslint.ESLint({
@@ -63,6 +65,10 @@ describe("ignore-warnings", () => {
           ruleId: "no-undef",
           line: 5,
         },
+        {
+          ruleId: "svelte/no-at-html-tags",
+          line: 7,
+        },
       ],
     )
   })
@@ -73,6 +79,8 @@ describe("ignore-warnings", () => {
       <script>
         a+b;
       </script>
+      {@html a+b}
+      {@debug a}
       `
 
     const linter = new eslint.ESLint({
@@ -122,6 +130,10 @@ describe("ignore-warnings", () => {
           ruleId: "no-undef",
           line: 5,
         },
+        {
+          ruleId: "svelte/no-at-html-tags",
+          line: 7,
+        },
       ],
     )
   })
@@ -133,6 +145,8 @@ describe("ignore-warnings", () => {
       <script>
         a+b;
       </script>
+      {@html a+b}
+      {@debug a}
       `
 
     const linter = new eslint.ESLint({

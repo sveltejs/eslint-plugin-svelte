@@ -63,7 +63,7 @@ export default createRule("system", {
           loc: node.startTag.loc.end,
         })
         if (node.endTag) {
-          directives.enableBlock(node.endTag.loc.start, isIgnoreRule, {
+          directives.disableBlock(node.endTag.loc.start, isIgnoreRule, {
             loc: node.endTag.loc.start,
           })
         }
