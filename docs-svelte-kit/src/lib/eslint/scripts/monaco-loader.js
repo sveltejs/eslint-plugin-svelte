@@ -45,17 +45,23 @@ function appendMonacoEditorScript() {
 let setupedMonaco = null
 let editorLoaded = null
 
-export async function loadMonacoEditor() {
-  await (setupedMonaco || (setupedMonaco = setupMonaco()))
+export function loadMonacoEngine() {
+  return setupedMonaco || (setupedMonaco = setupMonaco())
+}
+export function loadMonacoEditor() {
   return (
     editorLoaded ||
-    (editorLoaded = new Promise((resolve) => {
-      if (typeof window !== "undefined") {
-        // eslint-disable-next-line node/no-missing-require -- ignore
-        window.require(["vs/editor/editor.main"], (r) => {
-          resolve(r)
-        })
-      }
-    }))
+    (editorLoaded = loadModuleFromMonaco("vs/editor/editor.main"))
   )
+}
+
+export async function loadModuleFromMonaco(moduleName) {
+  await loadMonacoEngine()
+  return new Promise((resolve) => {
+    if (typeof window !== "undefined") {
+      window.require([moduleName], (r) => {
+        resolve(r)
+      })
+    }
+  })
 }

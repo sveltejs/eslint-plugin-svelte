@@ -1,4 +1,5 @@
 import type { RuleModule } from "../types"
+import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/no-unnecessary-condition"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import derivedHasSameInputsOutputs from "../rules/derived-has-same-inputs-outputs"
@@ -40,6 +41,7 @@ import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
 
 export const rules = [
+  typescriptEslintNoUnnecessaryCondition,
   buttonHasType,
   commentDirective,
   derivedHasSameInputsOutputs,

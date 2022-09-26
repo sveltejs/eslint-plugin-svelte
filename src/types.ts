@@ -60,7 +60,12 @@ export interface RuleMetaData {
     description: string
     category: RuleCategory
     recommended: boolean | "base"
-    extensionRule?: string
+    extensionRule?:
+      | string
+      | {
+          plugin: string
+          url: string
+        }
     url: string
     ruleId: string
     ruleName: string
@@ -85,7 +90,12 @@ export interface PartialRuleMetaData {
   docs: {
     description: string
     recommended: boolean | "base"
-    extensionRule?: string
+    extensionRule?:
+      | string
+      | {
+          plugin: string
+          url: string
+        }
     default?: "error" | "warn"
   } & (
     | {

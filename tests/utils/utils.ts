@@ -52,6 +52,19 @@ function getMinIndent(lines: string[]) {
   return Math.min(...lineIndents)
 }
 
+export const FIXTURES_ROOT = path.resolve(__dirname, `../fixtures/`)
+export const RULES_PROJECT = path.resolve(
+  FIXTURES_ROOT,
+  "./rules/tsconfig.json",
+)
+
+/**
+ * Get the rule fixtures root directory
+ */
+export function getRuleFixturesRoot(ruleName: string): string {
+  return path.resolve(FIXTURES_ROOT, `./rules/${ruleName}`)
+}
+
 /**
  * Load test cases
  */
@@ -68,14 +81,9 @@ export function loadTestCases(
   valid: RuleTester.ValidTestCase[]
   invalid: RuleTester.InvalidTestCase[]
 } {
-  const validFixtureRoot = path.resolve(
-    __dirname,
-    `../fixtures/rules/${ruleName}/valid/`,
-  )
-  const invalidFixtureRoot = path.resolve(
-    __dirname,
-    `../fixtures/rules/${ruleName}/invalid/`,
-  )
+  const rootDir = getRuleFixturesRoot(ruleName)
+  const validFixtureRoot = path.resolve(rootDir, `./valid/`)
+  const invalidFixtureRoot = path.resolve(rootDir, `./invalid/`)
 
   const filter = options?.filter ?? (() => true)
 
@@ -200,6 +208,7 @@ function writeFixtures(
           ts: "@typescript-eslint/parser",
           js: "espree",
         },
+        ...config.parserOptions,
       },
     },
     config.filename,
@@ -261,5 +270,19 @@ function getConfig(ruleName: string, inputFile: string) {
       ? require.resolve("svelte-eslint-parser")
       : undefined
 
-  return Object.assign({ parser }, config, { code, filename })
+  return Object.assign(
+    {
+      parser,
+      parserOptions: {
+        project: RULES_PROJECT,
+        parser: {
+          ts: "@typescript-eslint/parser",
+          js: "espree",
+        },
+        extraFileExtensions: [".svelte"],
+      },
+    },
+    config,
+    { code, filename: inputFile },
+  )
 }

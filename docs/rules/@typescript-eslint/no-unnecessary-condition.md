@@ -1,0 +1,68 @@
+---
+pageClass: "rule-details"
+sidebarDepth: 0
+title: "svelte/@typescript-eslint/no-unnecessary-condition"
+description: "disallow conditionals where the type is always truthy or always falsy"
+---
+
+# svelte/@typescript-eslint/no-unnecessary-condition
+
+> disallow conditionals where the type is always truthy or always falsy
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+
+## :book: Rule Details
+
+This rule extends the base `@typescript-eslint`'s [@typescript-eslint/no-unnecessary-condition] rule.
+The [@typescript-eslint/no-unnecessary-condition] rule does not understand reactive or rerendering of Svelte components and has false positives when used with Svelte components. This rule understands reactive and rerendering of Svelte components.
+
+<ESLintCodeBlock fix>
+
+<!--eslint-skip-->
+
+```svelte
+<script lang="ts">
+  /* eslint svelte/@typescript-eslint/no-unnecessary-condition: "error" */
+  export let foo: number | null = null
+  /* ✗ BAD */
+  let b = foo || 42
+  /* ✓ GOOD */
+  $: a = foo || 42
+</script>
+
+<!-- ✓ GOOD -->
+{foo || 42}
+```
+
+</ESLintCodeBlock>
+
+## :wrench: Options
+
+```json
+{
+  "@typescript-eslint/no-unnecessary-condition": "off",
+  "svelte/@typescript-eslint/no-unnecessary-condition": [
+    "error",
+    {
+      "allowConstantLoopConditions": false,
+      "allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing": false
+    }
+  ]
+}
+```
+
+Same as [@typescript-eslint/no-unnecessary-condition] rule option. See [here](https://typescript-eslint.io/rules/no-unnecessary-condition/#options) for details.
+
+## :couple: Related rules
+
+- [@typescript-eslint/no-unnecessary-condition]
+
+[@typescript-eslint/no-unnecessary-condition]: https://typescript-eslint.io/rules/no-unnecessary-condition/
+
+## :mag: Implementation
+
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
+
+<sup>Taken with ❤️ [from @typescript-eslint/eslint-plugin](https://typescript-eslint.io/rules/no-unnecessary-condition/)</sup>

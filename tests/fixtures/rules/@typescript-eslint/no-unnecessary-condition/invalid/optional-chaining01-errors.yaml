@@ -1,0 +1,8 @@
+- message: Unnecessary optional chain on a non-nullish value.
+  line: 4
+  column: 16
+  suggestions: null
+- message: Unnecessary optional chain on a non-nullish value.
+  line: 8
+  column: 12
+  suggestions: null

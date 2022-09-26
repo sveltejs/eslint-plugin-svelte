@@ -6,8 +6,13 @@
     preprocess,
     postprocess,
   } from "../eslint/scripts/linter.js"
+  import { loadTsParser } from "../eslint/scripts/ts-parser.js"
+  import { loadModulesForBrowser } from "../../../../src/shared/svelte-compile-warns/transform/load-module"
 
-  const linter = createLinter()
+  const modulesForBrowser = loadModulesForBrowser()
+  const loadLinter = createLinter()
+
+  let tsParser = null
 
   let code = ""
   export let rules = {}
@@ -19,6 +24,18 @@
     preprocess,
     postprocess,
   }
+  $: hasLangTs =
+    /lang\s*=\s*(?:"ts"|ts|'ts'|"typescript"|typescript|'typescript')/u.test(
+      code,
+    )
+  $: linter = modulesForBrowser.then(
+    hasLangTs && !tsParser
+      ? async () => {
+          tsParser = await loadTsParser()
+          return loadLinter
+        }
+      : () => loadLinter,
+  )
   let showDiff = fix
 
   function onLintedResult(evt) {
@@ -48,6 +65,10 @@
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
+        parser: {
+          ts: tsParser,
+          typescript: tsParser,
+        },
       },
       rules,
       env: {

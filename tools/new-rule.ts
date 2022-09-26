@@ -10,11 +10,13 @@ const logger = console
     process.exitCode = 1
     return
   }
-  if (!/^[\w-]+$/u.test(ruleId)) {
+  if (!/^[\w\-/@]+$/u.test(ruleId)) {
     logger.error("Invalid RuleID '%s'.", ruleId)
     process.exitCode = 1
     return
   }
+  const utilsPath = path.resolve(__dirname, `../src/utils`)
+  const testUtilsPath = path.resolve(__dirname, `../tests/utils/utils.ts`)
 
   const ruleFile = path.resolve(__dirname, `../src/rules/${ruleId}.ts`)
   const testFile = path.resolve(__dirname, `../tests/src/rules/${ruleId}.ts`)
@@ -24,9 +26,23 @@ const logger = console
     `../tests/fixtures/rules/${ruleId}/`,
   )
   try {
-    fs.mkdirSync(fixturesRoot)
-    fs.mkdirSync(path.resolve(fixturesRoot, "valid"))
-    fs.mkdirSync(path.resolve(fixturesRoot, "invalid"))
+    fs.mkdirSync(path.dirname(ruleFile), { recursive: true })
+  } catch {
+    // ignore
+  }
+  try {
+    fs.mkdirSync(path.dirname(testFile), { recursive: true })
+  } catch {
+    // ignore
+  }
+  try {
+    fs.mkdirSync(path.dirname(docFile), { recursive: true })
+  } catch {
+    // ignore
+  }
+  try {
+    fs.mkdirSync(path.resolve(fixturesRoot, "valid"), { recursive: true })
+    fs.mkdirSync(path.resolve(fixturesRoot, "invalid"), { recursive: true })
   } catch {
     // ignore
   }
@@ -34,7 +50,7 @@ const logger = console
   fs.writeFileSync(
     ruleFile,
     `import { AST } from "svelte-eslint-parser"
-import { createRule } from "../utils"
+import { createRule } from "${getModulePath(ruleFile, utilsPath)}"
 
 export default createRule("${ruleId}", {
     meta: {
@@ -57,8 +73,8 @@ export default createRule("${ruleId}", {
   fs.writeFileSync(
     testFile,
     `import { RuleTester } from "eslint"
-import rule from "../../../src/rules/${ruleId}"
-import { loadTestCases } from "../../utils/utils"
+import rule from "${getModulePath(testFile, ruleFile)}"
+import { loadTestCases } from "${getModulePath(testFile, testUtilsPath)}"
 
 const tester = new RuleTester({
     parserOptions: {
@@ -120,3 +136,8 @@ This rule reports ???.
   cp.execSync(`code "${testFile}"`)
   cp.execSync(`code "${docFile}"`)
 })(process.argv[2])
+
+/** Get module path */
+function getModulePath(from: string, module: string): string {
+  return path.relative(path.dirname(from), module).replace(/.ts$/u, "")
+}

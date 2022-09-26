@@ -1,0 +1,8 @@
+- message: Unnecessary conditional, both sides of the expression are literal values.
+  line: 4
+  column: 13
+  suggestions: null
+- message: Unnecessary conditional, both sides of the expression are literal values.
+  line: 8
+  column: 9
+  suggestions: null
