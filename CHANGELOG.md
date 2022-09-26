@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.9.0
+
+### Minor Changes
+
+- [#262](https://github.com/ota-meshi/eslint-plugin-svelte/pull/262) [`b732ec6`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/b732ec621b1832ddf214ca3bb556d1c0b9ead463) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/@typescript-eslint/no-unnecessary-condition` rule
+
+### Patch Changes
+
+- [#261](https://github.com/ota-meshi/eslint-plugin-svelte/pull/261) [`3dae5ab`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/3dae5abe1ac9487697784109e31370641efb204f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false report in `settings.ignoreWarnings`
+
 ## 2.8.0
 
 ### Minor Changes
