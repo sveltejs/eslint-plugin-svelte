@@ -28,6 +28,7 @@ export const language = {
     ],
 
     svelteMustache: [
+      [/[\t\n\r ]+/], // whitespace
       [/(:)(else if)/, ["delimiter.svelte", "keyword.flow"]],
       [/([#/:@])([^\s}]+)/, ["delimiter.svelte", "keyword.flow"]],
       [/\}/, "delimiter", "@pop"],
@@ -79,12 +80,23 @@ export const language = {
     otherTag: [
       [/\/?>/, "delimiter", "@pop"],
       [
-        /([=])\s*(["'])/,
+        /([=])(["'])/,
         [
           "delimiter",
           {
             token: "attribute.value",
             next: "@attributeValue.$2",
+          },
+        ],
+      ],
+      [
+        /([=])(\s+)(["'])/,
+        [
+          "delimiter",
+          "",
+          {
+            token: "attribute.value",
+            next: "@attributeValue.$3",
           },
         ],
       ],
