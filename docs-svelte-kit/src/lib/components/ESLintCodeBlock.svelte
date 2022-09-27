@@ -61,7 +61,7 @@
     {linter}
     bind:code
     config={{
-      parser: language === "html" ? "svelte-eslint-parser" : undefined,
+      parser: language === "svelte" ? "svelte-eslint-parser" : undefined,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
