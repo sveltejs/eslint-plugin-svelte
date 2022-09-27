@@ -111,7 +111,7 @@
     "@types/stylus": "^0.48.38",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.1-0",
-    "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
+    "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@5",
     "@typescript/vfs": "^1.4.0",
     "assert": "^2.0.0",
     "commitlint": "^17.0.3",
