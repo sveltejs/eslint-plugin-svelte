@@ -11,7 +11,7 @@
   export let options = {}
   export let fix = true
   export let showDiff = true
-  export let language = "html"
+  export let language = "svelte"
 
   let fixedValue = code
   let leftMarkers = []

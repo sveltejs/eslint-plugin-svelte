@@ -17,10 +17,10 @@
   let code = ""
   export let rules = {}
   export let fix = false
-  export let language = "html"
+  export let language = "svelte"
   let time = ""
   $: options = {
-    filename: language === "html" ? "example.svelte" : "example.js",
+    filename: language === "svelte" ? "example.svelte" : "example.js",
     preprocess,
     postprocess,
   }
