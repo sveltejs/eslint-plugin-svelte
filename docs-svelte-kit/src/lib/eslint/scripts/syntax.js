@@ -28,8 +28,8 @@ export const language = {
     ],
 
     svelteMustache: [
-      [/(:)(else if)/, ["delimiter.svelte", "keyword"]],
-      [/([#/:@])([^\s}]+)/, ["delimiter.svelte", "keyword"]],
+      [/(:)(else if)/, ["delimiter.svelte", "keyword.flow"]],
+      [/([#/:@])([^\s}]+)/, ["delimiter.svelte", "keyword.flow"]],
       [/\}/, "delimiter", "@pop"],
       [/\{/, "delimiter.bracket", "@svelteMustacheInBrackets"],
       [
@@ -91,6 +91,10 @@ export const language = {
       [/[=]\s*\{/, "delimiter", "@svelteMustache"],
       [/"([^"]*)"/, "attribute.value"],
       [/'([^']*)'/, "attribute.value"],
+      [
+        /(\w+)(:)([\w-]+)/,
+        ["keyword.flow", "delimiter.svelte", "attribute.name"],
+      ],
       [/[\w-]+/, "attribute.name"],
       [/[=]/, "delimiter"],
       [/[\t\n\r ]+/], // whitespace
