@@ -41,7 +41,7 @@ export function transform(
       output: output.code!,
       mappings: output.map!.mappings,
     }
-  } catch (e) {
+  } catch (_e) {
     return null
   }
 }

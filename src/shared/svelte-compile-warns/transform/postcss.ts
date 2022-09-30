@@ -47,7 +47,7 @@ export function transform(
       output: result.content,
       mappings: result.map.toJSON().mappings,
     }
-  } catch (e) {
+  } catch (_e) {
     // console.log(e)
     return null
   }
