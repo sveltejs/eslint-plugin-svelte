@@ -1,0 +1,8 @@
+- message: Attribute 'class:a' should go before 'class:b'.
+  line: 6
+  column: 26
+  suggestions: null
+- message: Attribute 'class' should go before 'class:a'.
+  line: 7
+  column: 14
+  suggestions: null

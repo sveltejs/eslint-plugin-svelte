@@ -1,0 +1,16 @@
+- message: Attribute 'b-foo' should go before 'a-foo'.
+  line: 1
+  column: 12
+  suggestions: null
+- message: Attribute 'c-foo' should go before 'a-foo'.
+  line: 1
+  column: 18
+  suggestions: null
+- message: Attribute 'c-b' should go before 'c-c'.
+  line: 4
+  column: 10
+  suggestions: null
+- message: Attribute 'c-a' should go before 'c-c'.
+  line: 4
+  column: 14
+  suggestions: null

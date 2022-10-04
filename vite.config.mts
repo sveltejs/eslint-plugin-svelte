@@ -5,13 +5,17 @@ import svelteMd from "vite-plugin-svelte-md"
 import svelteMdOption from "./docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs"
 
 import "./docs-svelte-kit/build-system/build.mts"
+import generateRoutes from "./docs-svelte-kit/tools/generate-routes.mjs"
 import type { UserConfig } from "vite"
+import { fileURLToPath } from "url"
+
+generateRoutes()
 
 const dirname = path.dirname(
-  new URL(
+  fileURLToPath(
     // @ts-expect-error -- Cannot change `module` option
     import.meta.url,
-  ).pathname,
+  ),
 )
 
 /** @type {import('vite').UserConfig} */
@@ -64,6 +68,13 @@ const config: UserConfig = {
       ),
       acorn: path.join(dirname, "./node_modules/acorn/dist/acorn.js"),
     },
+  },
+  ssr: {
+    // vite-plugin-svelte recognizes svelte-eslint-parser as a library that runs on svelte.
+    // This confuses the SSR on the Dev server.
+    // This is the workaround for that.
+    // https://github.com/sveltejs/vite-plugin-svelte/blob/a1d141e890ac0d1572a46e2bec705aa090236560/packages/vite-plugin-svelte/src/utils/dependencies.ts#L114
+    external: ["svelte-eslint-parser"],
   },
   build: {
     commonjsOptions: {

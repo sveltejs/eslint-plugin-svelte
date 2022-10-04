@@ -1,0 +1,4 @@
+- message: Unexpected object in event handler.
+  line: 5
+  column: 19
+  suggestions: null

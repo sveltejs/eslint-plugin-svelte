@@ -11,6 +11,7 @@
   export let options = {}
   export let fix = true
   export let showDiff = true
+  export let language = "svelte"
 
   let fixedValue = code
   let leftMarkers = []
@@ -33,6 +34,8 @@
   onMount(() => {
     lint(linter, code, config, options)
   })
+
+  let lastResult = {}
 
   async function lint(linter, code, config, options) {
     messageMap.clear()
@@ -68,12 +71,23 @@
       fixedMessages: fixResult.messages,
     })
 
-    leftMarkers = await Promise.all(
+    lastResult = { messages, fixResult }
+
+    const markers = await Promise.all(
       messages.map((m) => messageToMarker(m, messageMap)),
     )
-    rightMarkers = await Promise.all(
+    const fixedMarkers = await Promise.all(
       fixResult.messages.map((m) => messageToMarker(m)),
     )
+    if (
+      lastResult.messages !== messages ||
+      lastResult.fixResult !== fixResult
+    ) {
+      // If the result has changed, don't update the markers
+      return
+    }
+    leftMarkers = markers
+    rightMarkers = fixedMarkers
   }
 
   function applyFix() {
@@ -221,7 +235,7 @@
     bind:this={editor}
     bind:code
     bind:rightCode={fixedValue}
-    language="html"
+    {language}
     diffEditor={fix && showDiff}
     markers={leftMarkers}
     {rightMarkers}

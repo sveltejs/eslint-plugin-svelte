@@ -24,7 +24,10 @@ export default (md: Md, options: { baseUrl: string; root: string }): void => {
 
     return `${base}/${path
       .relative(root, absolutePath)
-      .replace(/\.md$/, "")}/${hash}`.replace(/\\/gu, "/")
+      .replace(/README\.md$/, "")
+      .replace(/\.md$/, "")}/${hash}`
+      .replace(/\\/gu, "/")
+      .replace(/\/+/gu, "/")
   }
 
   md.renderer.rules.link_open = (tokens, idx, options, env, self) => {

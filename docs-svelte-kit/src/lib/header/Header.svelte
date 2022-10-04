@@ -21,11 +21,12 @@
         role="img"
         viewBox="0 0 448 512"
         class="icon"
-        ><path
+      >
+        <path
           fill="currentColor"
           d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"
-        /></svg
-      >
+        />
+      </svg>
     </div>
     <a href="{baseUrl}/" class="home-link">
       <img src={logo} alt="Logo" />
@@ -88,9 +89,13 @@
   header {
     display: flex;
     justify-content: space-between;
-    position: sticky;
+    padding: 0.5em 2em;
+    position: fixed;
     top: 0;
+    width: calc(100% - 4em);
     z-index: 100;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .corner {
@@ -124,6 +129,7 @@
   nav {
     display: flex;
     justify-content: center;
+    min-width: 1px;
   }
 
   nav svg {
@@ -154,16 +160,8 @@
     height: 100%;
   }
 
-  li.active::before {
-    --size: 6px;
-    content: "";
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: 0;
-    left: calc(50% - var(--size));
-    border: var(--size) solid transparent;
-    border-top: var(--size) solid var(--accent-color);
+  li.active > a {
+    color: var(--accent-color);
   }
 
   nav a {

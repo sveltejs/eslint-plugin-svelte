@@ -29,15 +29,16 @@ jobs:
       - name: Install And Build
         run: |+
           yarn install
+          yarn update
           yarn build
           export NODE_OPTIONS="--max-old-space-size=8192"
           yarn docs:build
       - name: Setup Pages
-        uses: actions/configure-pages@v1
+        uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./build
+          path: ./build/eslint-plugin-svelte
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1

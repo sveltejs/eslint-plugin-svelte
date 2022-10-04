@@ -1,0 +1,20 @@
+- message: Expected shorthand directive.
+  line: 14
+  column: 8
+  suggestions: null
+- message: Expected shorthand directive.
+  line: 16
+  column: 6
+  suggestions: null
+- message: Expected shorthand directive.
+  line: 18
+  column: 6
+  suggestions: null
+- message: Expected shorthand directive.
+  line: 21
+  column: 6
+  suggestions: null
+- message: Expected shorthand directive.
+  line: 23
+  column: 6
+  suggestions: null

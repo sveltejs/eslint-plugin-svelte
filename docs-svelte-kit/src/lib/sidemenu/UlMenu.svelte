@@ -52,7 +52,7 @@
   }
   .sidebar-menu-item,
   .sidebar-menu-item-title {
-    color: var(--heading-color);
+    color: white;
   }
   .sidebar-menu-item-title {
     padding: 0.25rem 1rem 0.25rem 1.25rem;
@@ -69,10 +69,6 @@
   .sidebar-menu-item-title {
     position: relative;
   }
-  .sidebar-menu-item.active,
-  .sidebar-menu-item-title.active {
-    color: var(--accent-color);
-  }
   .sidebar-menu-item-title.active::before {
     --size: 6px;
     content: "";
@@ -82,9 +78,8 @@
     top: calc(50% - var(--size));
     right: 0;
     border: var(--size) solid transparent;
-    border-right: var(--size) solid var(--accent-color);
+    border-right: var(--size) solid white;
   }
-
   a.sidebar-menu-item-title:not(.active) {
     transition: color 0.2s linear;
   }

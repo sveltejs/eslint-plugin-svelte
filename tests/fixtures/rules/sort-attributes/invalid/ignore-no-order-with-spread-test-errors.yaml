@@ -1,0 +1,8 @@
+- message: Attribute 'order-a' should go before 'order-c'.
+  line: 5
+  column: 33
+  suggestions: null
+- message: Attribute 'order-a' should go before 'order-c'.
+  line: 8
+  column: 47
+  suggestions: null

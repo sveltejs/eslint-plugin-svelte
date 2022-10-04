@@ -13,6 +13,12 @@ You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-sve
 [![NPM downloads](https://img.shields.io/npm/dt/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
 
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ota-meshi/eslint-plugin-svelte.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ota-meshi/eslint-plugin-svelte/context:javascript)
+[![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fota-meshi%2Feslint-plugin-svelte%2Fmain%2Fpackage.json)](https://github.com/plantain-00/type-coverage)
+[![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![changesets](https://img.shields.io/badge/maintained%20with-changesets-176de3.svg)](https://github.com/atlassian/changesets)
+
 ## :name_badge: What is this plugin?
 
 [ESLint] plugin for [Svelte].  
@@ -61,7 +67,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
 
@@ -83,7 +89,7 @@ This plugin provides configs:
 
 - `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
-- `plugin:svelte/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/) ([prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte)).
+- `plugin:svelte/prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-svelte/rules/) to get the `rules` that this plugin provides.
 
@@ -176,7 +182,7 @@ module.exports = {
 }
 ```
 
-See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 #### settings.svelte
 
@@ -242,6 +248,7 @@ Example **.vscode/settings.json**:
 
 ## :white_check_mark: Rules
 
+<!-- prettier-ignore-start -->
 <!--RULES_SECTION_START-->
 
 :wrench: Indicates that the rule is fixable, and using `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the reported problems.  
@@ -262,6 +269,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |
+| [svelte/no-store-async](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
 | [svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :star: |
 
@@ -282,11 +290,13 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [svelte/button-has-type](https://ota-meshi.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
-| [svelte/no-reactive-literals](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | Don't assign literal values in reactive statements | :bulb: |
+| [svelte/no-reactive-functions](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :bulb: |
+| [svelte/no-reactive-literals](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-destructured-store-props](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | (no description) |  |
 | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
+| [svelte/require-stores-init](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 
 ## Stylistic Issues
 
@@ -294,9 +304,11 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/derived-has-same-inputs-outputs](https://ota-meshi.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/) | derived store should use same variable names between values and callback |  |
 | [svelte/first-attribute-linebreak](https://ota-meshi.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute | :wrench: |
 | [svelte/html-closing-bracket-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/) | require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-quotes/) | enforce quotes style of HTML attributes | :wrench: |
+| [svelte/html-self-closing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/html-self-closing/) | enforce self-closing style | :wrench: |
 | [svelte/indent](https://ota-meshi.github.io/eslint-plugin-svelte/rules/indent/) | enforce consistent indentation | :wrench: |
 | [svelte/max-attributes-per-line](https://ota-meshi.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/) | enforce the maximum number of attributes per line | :wrench: |
 | [svelte/mustache-spacing](https://ota-meshi.github.io/eslint-plugin-svelte/rules/mustache-spacing/) | enforce unified spacing in mustache | :wrench: |
@@ -311,11 +323,13 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 ## Extension Rules
 
-These rules extend the rules provided by ESLint itself to work well in Svelte:
+These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/@typescript-eslint/no-unnecessary-condition](https://ota-meshi.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | disallow conditionals where the type is always truthy or always falsy | :wrench: |
 | [svelte/no-inner-declarations](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
+| [svelte/no-trailing-spaces](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## System
 
@@ -328,6 +342,7 @@ These rules relate to this plugin works:
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
+<!-- prettier-ignore-end -->
 
 <!--DOCS_IGNORE_START-->
 
@@ -337,43 +352,7 @@ Welcome contributing!
 
 Please use GitHub's Issues/PRs.
 
-### Development Tools
-
-- `yarn test` runs tests.
-- `yarn cover` runs tests and measures coverage.
-- `yarn new [new-rule-name]` generate the files needed to implement the new rule.
-- `yarn update` runs in order to update readme and recommended configuration.
-- `yarn docs:watch` launch the document site in development mode.
-
-### Test the Rule
-
-Rule testing almost always uses fixtures.  
-For example, for an `indent` rule, the `.ts` file that runs the test is `tests/src/rules/indent.ts` and the fixture is in `tests/fixtures/rules/indent`.  
-The fixture directory has an `invalid` directory and a `valid` directory.
-
-- The `invalid` directory contains test cases where the rule reports problems.
-- The `valid` directory contains test cases where the rule does not report a problem.
-
-The fixture input file should be named `*-input.svelte`. It is automatically collected and tested.  
-If your test requires configuration, you need to add a json file with the configuration.
-
-- If you want to apply a configuration to `my-test-input.svelte`, add `my-test-config.json`.
-- If you want to apply the same configuration to all the fixtures in that directory, add `_config.json`.
-
-To verify the output of invalid test cases requires `*-errors.json`, and `*-output.svelte` (for auto-fix). However, you don't have to add them yourself. If they do not exist, they will be automatically generated when you run the test. In other words, delete them manually when you want to recreate them.
-
-**Tips**:
-
-If you want to test only one rule, run the following command (for `indent` rule):
-
-```sh
-yarn test -g indent
-```
-
-Take <https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha> as reference for details.
-
-If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
-(Note that `{"only": true}` must be removed before making a pull request.)
+See also [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ### Working With Rules
 

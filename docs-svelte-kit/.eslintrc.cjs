@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["plugin:svelte/recommended"],
+  extends: ["plugin:@ota-meshi/+svelte"],
   env: {
     browser: true,
     es2022: true,
@@ -10,10 +10,6 @@ module.exports = {
   rules: {
     "svelte/no-target-blank": "error",
     "svelte/button-has-type": "error",
-    "svelte/no-useless-mustaches": "error",
-    "svelte/prefer-class-directive": "error",
-    "svelte/prefer-style-directive": "error",
-    "svelte/spaced-html-comment": "error",
     "node/file-extension-in-import": "off",
   },
 }

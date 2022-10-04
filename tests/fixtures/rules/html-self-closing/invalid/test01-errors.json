@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Require self-closing on HTML elements.",
+    "line": 3,
+    "column": 3
+  },
+  {
+    "message": "Require self-closing on Svelte custom components.",
+    "line": 4,
+    "column": 3
+  },
+  {
+    "message": "Require self-closing on HTML void elements.",
+    "line": 5,
+    "column": 3
+  }
+]

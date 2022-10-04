@@ -19,7 +19,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
 
@@ -41,7 +41,7 @@ This plugin provides configs:
 
 - `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
-- `plugin:svelte/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/) ([prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte)).
+- `plugin:svelte/prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
 
 See [the rule list](./rules.md) to get the `rules` that this plugin provides.
 
@@ -134,7 +134,7 @@ module.exports = {
 }
 ```
 
-See also [https://github.com/ota-meshi/svelte-eslint-parser#readme](https://github.com/ota-meshi/svelte-eslint-parser#readme).
+See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 #### settings.svelte
 

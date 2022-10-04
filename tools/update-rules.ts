@@ -10,19 +10,30 @@ function camelCase(str: string) {
   return str.replace(/[-_](\w)/gu, (_, c) => (c ? c.toUpperCase() : ""))
 }
 
+/**
+ * Convert text to identifier
+ */
+function toIdentifier(str: string) {
+  const clean = str
+    .replace(/^[^\p{ID_Start}$_]/u, "")
+    .replace(/[^\p{ID_Continue}$\u200c\u200d]/gu, "-")
+
+  return camelCase(clean)
+}
+
 const content = `
 import type { RuleModule } from "../types"
 ${rules
   .map(
     (rule) =>
-      `import ${camelCase(rule.meta.docs.ruleName)} from "../rules/${
+      `import ${toIdentifier(rule.meta.docs.ruleName)} from "../rules/${
         rule.meta.docs.ruleName
       }"`,
   )
   .join("\n")}
 
 export const rules = [
-    ${rules.map((rule) => camelCase(rule.meta.docs.ruleName)).join(",")}
+    ${rules.map((rule) => toIdentifier(rule.meta.docs.ruleName)).join(",")}
 ] as RuleModule[]
 `
 

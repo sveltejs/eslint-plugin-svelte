@@ -86,7 +86,7 @@ export function applyFixes<M extends Message>(
   }
 
   // clone the array
-  const remainingMessages = []
+  const remainingMessages: M[] = []
   const fixes: (HasFixMessage & M)[] = []
   const bom = sourceText.startsWith(BOM) ? BOM : ""
   const text = bom ? sourceText.slice(1) : sourceText
@@ -105,7 +105,7 @@ export function applyFixes<M extends Message>(
 
     // Remain it as a problem if it's overlapped or it's a negative range
     if (lastPos >= start || start > end) {
-      remainingMessages.push(problem)
+      remainingMessages.push(problem as M)
       return false
     }
 

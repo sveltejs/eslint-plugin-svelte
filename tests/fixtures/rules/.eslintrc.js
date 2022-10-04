@@ -1,6 +1,7 @@
-"use strict"
-
 module.exports = {
+  parserOptions: {
+    sourceType: "module",
+  },
   overrides: [
     {
       files: ["*output.svelte"],
@@ -17,5 +18,6 @@ module.exports = {
     "no-empty-function": "off",
     "one-var": "off",
     "func-style": "off",
+    "node/no-unsupported-features/es-syntax": "off",
   },
 }

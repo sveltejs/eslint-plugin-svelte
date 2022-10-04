@@ -1,0 +1,15 @@
+.*ignore
+.npmrc
+LICENSE
+*.png
+*.json
+*.lock
+*.log
+*.svg
+*.yaml
+*.yml
+/tests/fixtures/rules
+# TODO: enable the following
+# should we ignore markdown files?
+*.md
+/docs-svelte-kit/

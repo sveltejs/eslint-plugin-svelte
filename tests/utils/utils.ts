@@ -6,6 +6,7 @@ import * as svelteESLintParser from "svelte-eslint-parser"
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require("../../src/index")
 import { applyFixes } from "./source-code-fixer"
+import { parse as parseYaml, stringify as stringifyYaml } from "yaml"
 
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
@@ -51,6 +52,19 @@ function getMinIndent(lines: string[]) {
   return Math.min(...lineIndents)
 }
 
+export const FIXTURES_ROOT = path.resolve(__dirname, `../fixtures/`)
+export const RULES_PROJECT = path.resolve(
+  FIXTURES_ROOT,
+  "./rules/tsconfig.json",
+)
+
+/**
+ * Get the rule fixtures root directory
+ */
+export function getRuleFixturesRoot(ruleName: string): string {
+  return path.resolve(FIXTURES_ROOT, `./rules/${ruleName}`)
+}
+
 /**
  * Load test cases
  */
@@ -67,14 +81,9 @@ export function loadTestCases(
   valid: RuleTester.ValidTestCase[]
   invalid: RuleTester.InvalidTestCase[]
 } {
-  const validFixtureRoot = path.resolve(
-    __dirname,
-    `../fixtures/rules/${ruleName}/valid/`,
-  )
-  const invalidFixtureRoot = path.resolve(
-    __dirname,
-    `../fixtures/rules/${ruleName}/invalid/`,
-  )
+  const rootDir = getRuleFixturesRoot(ruleName)
+  const validFixtureRoot = path.resolve(rootDir, `./valid/`)
+  const invalidFixtureRoot = path.resolve(rootDir, `./invalid/`)
 
   const filter = options?.filter ?? (() => true)
 
@@ -88,21 +97,29 @@ export function loadTestCases(
     .filter(filter)
     .map((inputFile) => {
       const config = getConfig(ruleName, inputFile)
-      const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+      const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.yaml")
       const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
       let errors
-      try {
+      if (fs.existsSync(errorFile)) {
         errors = fs.readFileSync(errorFile, "utf8")
-      } catch (e) {
+      } else if (
+        fs.existsSync(inputFile.replace(/input\.[a-z]+$/u, "errors.json"))
+      ) {
+        // Workaround to not block PRs.
+        errors = fs.readFileSync(
+          inputFile.replace(/input\.[a-z]+$/u, "errors.json"),
+          "utf8",
+        )
+      } else {
         writeFixtures(ruleName, inputFile)
         errors = fs.readFileSync(errorFile, "utf8")
       }
-      config.errors = JSON.parse(errors)
+      config.errors = parseYaml(errors)
       if (fixable) {
         let output
         try {
           output = fs.readFileSync(outputFile, "utf8")
-        } catch (e) {
+        } catch (_e) {
           writeFixtures(ruleName, inputFile)
           output = fs.readFileSync(outputFile, "utf8")
         }
@@ -170,18 +187,20 @@ function writeFixtures(
   { force }: { force?: boolean } = {},
 ) {
   const linter = getLinter(ruleName)
-  const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.json")
+  const errorFile = inputFile.replace(/input\.[a-z]+$/u, "errors.yaml")
   const outputFile = inputFile.replace(/input\.[a-z]+$/u, "output.svelte")
 
   const config = getConfig(ruleName, inputFile)
 
+  const parser =
+    path.extname(inputFile) === ".svelte" ? "svelte-eslint-parser" : undefined
   const result = linter.verify(
     config.code,
     {
       rules: {
         [ruleName]: ["error", ...(config.options || [])],
       },
-      parser: "svelte-eslint-parser",
+      parser,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
@@ -189,6 +208,7 @@ function writeFixtures(
           ts: "@typescript-eslint/parser",
           js: "espree",
         },
+        ...config.parserOptions,
       },
     },
     config.filename,
@@ -197,7 +217,7 @@ function writeFixtures(
   if (force || !fs.existsSync(errorFile)) {
     fs.writeFileSync(
       errorFile,
-      `${JSON.stringify(
+      `${stringifyYaml(
         result.map((m) => ({
           message: m.message,
           line: m.line,
@@ -211,9 +231,7 @@ function writeFixtures(
               }))
             : null,
         })),
-        null,
-        2,
-      )}\n`,
+      )}`,
       "utf8",
     )
   }
@@ -252,5 +270,19 @@ function getConfig(ruleName: string, inputFile: string) {
       ? require.resolve("svelte-eslint-parser")
       : undefined
 
-  return Object.assign({ parser }, config, { code, filename })
+  return Object.assign(
+    {
+      parser,
+      parserOptions: {
+        project: RULES_PROJECT,
+        parser: {
+          ts: "@typescript-eslint/parser",
+          js: "espree",
+        },
+        extraFileExtensions: [".svelte"],
+      },
+    },
+    config,
+    { code, filename: inputFile },
+  )
 }

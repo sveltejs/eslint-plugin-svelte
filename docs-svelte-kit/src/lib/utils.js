@@ -1,8 +1,6 @@
 import { rules } from "../../../src/utils/rules.ts"
 import { readable, writable } from "svelte/store"
-// eslint-disable-next-line node/no-missing-import -- ignore
 import { page } from "$app/stores"
-// eslint-disable-next-line node/no-missing-import -- ignore
 import { base as baseUrl } from "$app/paths"
 
 export function stripBaseUrl(path) {

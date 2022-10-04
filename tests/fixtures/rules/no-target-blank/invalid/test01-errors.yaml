@@ -1,0 +1,20 @@
+- message: Using target="_blank" without rel="noopener noreferrer" is a security risk.
+  line: 5
+  column: 31
+  suggestions: null
+- message: Using target="_blank" without rel="noopener noreferrer" is a security risk.
+  line: 6
+  column: 31
+  suggestions: null
+- message: Using target="_blank" without rel="noopener noreferrer" is a security risk.
+  line: 7
+  column: 16
+  suggestions: null
+- message: Using target="_blank" without rel="noopener noreferrer" is a security risk.
+  line: 8
+  column: 16
+  suggestions: null
+- message: Using target="_blank" without rel="noopener noreferrer" is a security risk.
+  line: 9
+  column: 31
+  suggestions: null

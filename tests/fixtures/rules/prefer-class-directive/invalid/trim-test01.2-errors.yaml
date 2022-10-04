@@ -1,0 +1,4 @@
+- message: Unexpected class using the ternary operator.
+  line: 6
+  column: 15
+  suggestions: null

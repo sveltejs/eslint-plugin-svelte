@@ -4,7 +4,7 @@ import { createRule } from "../utils"
 export default createRule("no-reactive-literals", {
   meta: {
     docs: {
-      description: "Don't assign literal values in reactive statements",
+      description: "don't assign literal values in reactive statements",
       category: "Best Practices",
       recommended: false,
     },

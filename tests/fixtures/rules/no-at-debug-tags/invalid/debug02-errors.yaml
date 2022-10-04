@@ -1,0 +1,4 @@
+- message: Unexpected `{@debug}`.
+  line: 11
+  column: 1
+  suggestions: null

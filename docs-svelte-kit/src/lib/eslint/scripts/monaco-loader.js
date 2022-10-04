@@ -1,3 +1,5 @@
+import { language } from "./syntax.js"
+
 async function setupMonaco() {
   if (typeof window !== "undefined") {
     const monacoScript =
@@ -24,7 +26,7 @@ function appendMonacoEditorScript() {
   return new Promise((resolve) => {
     const script = document.createElement("script")
     script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/loader.min.js"
+      "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.min.js"
     script.onload = () => {
       script.onload = null
 
@@ -45,17 +47,29 @@ function appendMonacoEditorScript() {
 let setupedMonaco = null
 let editorLoaded = null
 
-export async function loadMonacoEditor() {
-  await (setupedMonaco || (setupedMonaco = setupMonaco()))
-  return (
-    editorLoaded ||
-    (editorLoaded = new Promise((resolve) => {
-      if (typeof window !== "undefined") {
-        // eslint-disable-next-line node/no-missing-require -- ignore
-        window.require(["vs/editor/editor.main"], (r) => {
-          resolve(r)
-        })
-      }
-    }))
-  )
+export function loadMonacoEngine() {
+  return setupedMonaco || (setupedMonaco = setupMonaco())
+}
+export function loadMonacoEditor() {
+  if (editorLoaded) {
+    return editorLoaded
+  }
+  return (editorLoaded = (async () => {
+    const monaco = await loadModuleFromMonaco("vs/editor/editor.main")
+
+    monaco.languages.register({ id: "svelte" })
+    monaco.languages.setMonarchTokensProvider("svelte", language)
+    return monaco
+  })())
+}
+
+export async function loadModuleFromMonaco(moduleName) {
+  await loadMonacoEngine()
+  return new Promise((resolve) => {
+    if (typeof window !== "undefined") {
+      window.require([moduleName], (r) => {
+        resolve(r)
+      })
+    }
+  })
 }

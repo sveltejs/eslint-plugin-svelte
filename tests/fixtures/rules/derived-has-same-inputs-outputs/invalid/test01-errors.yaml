@@ -1,0 +1,32 @@
+- message: The argument name should be '$a'.
+  line: 3
+  column: 13
+  suggestions: null
+- message: The argument name should be '$c'.
+  line: 6
+  column: 13
+  suggestions: null
+- message: The argument name should be '$e'.
+  line: 9
+  column: 19
+  suggestions: null
+- message: The argument name should be '$f'.
+  line: 9
+  column: 22
+  suggestions: null
+- message: The argument name should be '$i'.
+  line: 12
+  column: 19
+  suggestions: null
+- message: The argument name should be '$j'.
+  line: 12
+  column: 22
+  suggestions: null
+- message: The argument name should be '$l'.
+  line: 15
+  column: 26
+  suggestions: null
+- message: The argument name should be '$o'.
+  line: 18
+  column: 22
+  suggestions: null

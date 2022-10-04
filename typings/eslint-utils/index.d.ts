@@ -1,6 +1,10 @@
 import type { AST } from "svelte-eslint-parser"
 import type { Scope } from "eslint"
 import type * as ESTree from "estree"
+export {
+  ReferenceTracker,
+  TrackedReferences,
+} from "../../node_modules/@types/eslint-utils"
 type Token = { type: string; value: string }
 export function isArrowToken(token: Token): boolean
 export function isCommaToken(token: Token): boolean

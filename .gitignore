@@ -50,8 +50,8 @@ jspm_packages/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
-.eslintcache
+# Optional eslint/stylelint cache, etc
+.*cache
 
 # Microbundle cache
 .rpt2_cache/
@@ -104,7 +104,10 @@ dist
 /yarn.lock
 /lib
 /.svelte-kit
+/.type-coverage
 /build
 /svelte.config-dist.js
 /docs-svelte-kit/shim/eslint.mjs
 /docs-svelte-kit/shim/assert.mjs
+/docs-svelte-kit/src/routes/*.md
+/docs-svelte-kit/src/routes/**/*.md

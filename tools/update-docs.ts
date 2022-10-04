@@ -2,6 +2,7 @@ import path from "path"
 import fs from "fs"
 import { rules } from "../src/utils/rules"
 import type { RuleModule } from "../src/types"
+import { getNewVersion } from "./lib/changesets-util"
 
 //eslint-disable-next-line require-jsdoc -- tools
 function formatItems(items: string[]) {
@@ -24,7 +25,7 @@ function yamlValue(val: unknown) {
 const ROOT = path.resolve(__dirname, "../docs/rules")
 
 //eslint-disable-next-line require-jsdoc -- tools
-function pickSince(content: string): string | null {
+function pickSince(content: string): string | null | Promise<string> {
   const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content)
   if (fileIntro) {
     const since = /since: "?(v\d+\.\d+\.\d+)"?/.exec(fileIntro[1])
@@ -37,6 +38,10 @@ function pickSince(content: string): string | null {
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore
     return `v${require("../package.json").version}`
   }
+  // eslint-disable-next-line no-process-env -- ignore
+  if (process.env.IN_VERSION_CI_SCRIPT) {
+    return getNewVersion().then((v) => `v${v}`)
+  }
   return null
 }
 
@@ -47,7 +52,7 @@ class DocFile {
 
   private content: string
 
-  private readonly since: string | null
+  private readonly since: string | null | Promise<string>
 
   public constructor(rule: RuleModule) {
     this.rule = rule
@@ -135,7 +140,7 @@ class DocFile {
     return this
   }
 
-  public updateFooter() {
+  public async updateFooter() {
     const { ruleName, extensionRule } = this.rule.meta.docs
     const footerPattern =
       /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s
@@ -143,7 +148,7 @@ class DocFile {
       this.since
         ? `## :rocket: Version
 
-This rule was introduced in eslint-plugin-svelte ${this.since}
+This rule was introduced in eslint-plugin-svelte ${await this.since}
 
 `
         : ""
@@ -153,8 +158,12 @@ This rule was introduced in eslint-plugin-svelte ${this.since}
 - [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/${ruleName}.ts)
 ${
   extensionRule
-    ? `
+    ? typeof extensionRule === "string"
+      ? `
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/${extensionRule})</sup>
+`
+      : `
+<sup>Taken with ❤️ [from ${extensionRule.plugin}](${extensionRule.url})</sup>
 `
     : ""
 }`
@@ -203,7 +212,7 @@ ${
     return this
   }
 
-  public updateFileIntro() {
+  public async updateFileIntro() {
     const { ruleId, description } = this.rule.meta.docs
 
     const fileIntro = {
@@ -211,7 +220,7 @@ ${
       sidebarDepth: 0,
       title: ruleId,
       description,
-      ...(this.since ? { since: this.since } : {}),
+      ...(this.since ? { since: await this.since } : {}),
     }
     const computed = `---\n${Object.keys(fileIntro)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- tool
@@ -239,12 +248,17 @@ ${
   }
 }
 
-for (const rule of rules) {
-  DocFile.read(rule)
-    .updateHeader()
-    .updateFooter()
-    .updateCodeBlocks()
-    .updateFileIntro()
-    .adjustCodeBlocks()
-    .write()
+void main()
+
+/** main */
+async function main() {
+  for (const rule of rules) {
+    const doc = DocFile.read(rule)
+    doc.updateHeader()
+    await doc.updateFooter()
+    doc.updateCodeBlocks()
+    await doc.updateFileIntro()
+    doc.adjustCodeBlocks()
+    doc.write()
+  }
 }

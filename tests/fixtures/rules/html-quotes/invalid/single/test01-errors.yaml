@@ -1,0 +1,36 @@
+- message: Expected to be enclosed by single quotes.
+  line: 9
+  column: 13
+  suggestions: null
+- message: Unexpected to be enclosed by any quotes.
+  line: 9
+  column: 29
+  suggestions: null
+- message: Expected to be enclosed by single quotes.
+  line: 10
+  column: 13
+  suggestions: null
+- message: Unexpected to be enclosed by any quotes.
+  line: 12
+  column: 31
+  suggestions: null
+- message: Expected to be enclosed by single quotes.
+  line: 14
+  column: 16
+  suggestions: null
+- message: Unexpected to be enclosed by any quotes.
+  line: 16
+  column: 10
+  suggestions: null
+- message: Expected to be enclosed by single quotes.
+  line: 16
+  column: 22
+  suggestions: null
+- message: Expected to be enclosed by single quotes.
+  line: 18
+  column: 20
+  suggestions: null
+- message: Expected to be enclosed by single quotes.
+  line: 20
+  column: 42
+  suggestions: null

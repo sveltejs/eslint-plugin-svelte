@@ -1,7 +1,0 @@
-[
-  {
-    "message": "Attribute 'in:b' should go before 'out:a'.",
-    "line": 6,
-    "column": 12
-  }
-]

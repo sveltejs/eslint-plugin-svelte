@@ -1,0 +1,8 @@
+- message: Attribute 'c' should go before 'd'.
+  line: 5
+  column: 8
+  suggestions: null
+- message: Attribute 'a' should go before 'b'.
+  line: 5
+  column: 23
+  suggestions: null

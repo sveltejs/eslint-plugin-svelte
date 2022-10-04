@@ -22,6 +22,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
+| [svelte/no-store-async](./rules/no-store-async.md) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |
 | [svelte/valid-compile](./rules/valid-compile.md) | disallow warnings when compiling. | :star: |
 
@@ -42,11 +43,13 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
-| [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | Don't assign literal values in reactive statements | :bulb: |
+| [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | it's not necessary to define functions in reactive statements | :bulb: |
+| [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md) | (no description) |  |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |
+| [svelte/require-stores-init](./rules/require-stores-init.md) | require initial value in store |  |
 
 ## Stylistic Issues
 
@@ -54,9 +57,11 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md) | derived store should use same variable names between values and callback |  |
 | [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md) | enforce the location of first attribute | :wrench: |
 | [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md) | require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](./rules/html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
+| [svelte/html-self-closing](./rules/html-self-closing.md) | enforce self-closing style | :wrench: |
 | [svelte/indent](./rules/indent.md) | enforce consistent indentation | :wrench: |
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md) | enforce unified spacing in mustache | :wrench: |
@@ -71,11 +76,13 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 ## Extension Rules
 
-These rules extend the rules provided by ESLint itself to work well in Svelte:
+These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | disallow conditionals where the type is always truthy or always falsy | :wrench: |
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
+| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## System
 

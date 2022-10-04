@@ -1,0 +1,5 @@
+{
+  "installCommand": "install-with-ignore-engines",
+  "node": "16",
+  "sandboxes": []
+}

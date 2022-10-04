@@ -17,6 +17,12 @@ You can check on the [Online DEMO](./playground.md).
 [![NPM downloads](https://img.shields.io/npm/dt/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
 
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ota-meshi/eslint-plugin-svelte.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ota-meshi/eslint-plugin-svelte/context:javascript)
+[![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fota-meshi%2Feslint-plugin-svelte%2Fmain%2Fpackage.json)](https://github.com/plantain-00/type-coverage)
+[![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![changesets](https://img.shields.io/badge/maintained%20with-changesets-176de3.svg)](https://github.com/atlassian/changesets)
+
 ## :name_badge: What is this plugin?
 
 [ESLint] plugin for [Svelte].  
@@ -41,7 +47,9 @@ See [User Guide](./user-guide.md).
 
 ## :white_check_mark: Rules
 
+<!-- prettier-ignore-start -->
 See [Available Rules](./rules.md).
+<!-- prettier-ignore-end -->
 
 ## :lock: License
 

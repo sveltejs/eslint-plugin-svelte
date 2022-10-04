@@ -1,0 +1,8 @@
+- message: Expected space or tab after '<!--' in comment.
+  line: 1
+  column: 1
+  suggestions: null
+- message: Expected space or tab before '-->' in comment.
+  line: 1
+  column: 1
+  suggestions: null

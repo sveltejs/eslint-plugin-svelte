@@ -1,0 +1,4 @@
+- message: Attribute '--a' should go before '--b'.
+  line: 6
+  column: 26
+  suggestions: null

@@ -1,0 +1,24 @@
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 5
+  column: 45
+  suggestions: null
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 6
+  column: 45
+  suggestions: null
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 10
+  column: 5
+  suggestions: null
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 18
+  column: 5
+  suggestions: null
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 23
+  column: 46
+  suggestions: null
+- message: Unexpected shorthand 'background' after 'background-repeat'.
+  line: 24
+  column: 46
+  suggestions: null
