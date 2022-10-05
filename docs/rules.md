@@ -47,7 +47,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
-| [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md) | (no description) |  |
+| [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |
 | [svelte/require-stores-init](./rules/require-stores-init.md) | require initial value in store |  |
 

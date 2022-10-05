@@ -294,7 +294,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-reactive-literals](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
-| [svelte/prefer-destructured-store-props](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | (no description) |  |
+| [svelte/prefer-destructured-store-props](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
 | [svelte/require-stores-init](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 

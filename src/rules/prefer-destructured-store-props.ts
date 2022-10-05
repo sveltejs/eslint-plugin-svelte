@@ -1,16 +1,83 @@
-import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
+import { findVariable } from "eslint-utils"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
-import { getStringIfConstant } from "../utils/ast-utils"
+import { findAttribute, isExpressionIdentifier } from "../utils/ast-utils"
 
-type NodeRecord = { property: string; node: TSESTree.MemberExpression }
+type StoreMemberExpression = TSESTree.MemberExpression & {
+  object: TSESTree.Identifier & { name: string }
+}
 
+const keywords = new Set([
+  "abstract",
+  "arguments",
+  "boolean",
+  "break",
+  "byte",
+  "case",
+  "catch",
+  "char",
+  "class",
+  "const",
+  "continue",
+  "debugger",
+  "default",
+  "delete",
+  "do",
+  "double",
+  "else",
+  "enum",
+  "eval",
+  "export",
+  "extends",
+  "false",
+  "final",
+  "finally",
+  "float",
+  "for",
+  "function",
+  "goto",
+  "if",
+  "implements",
+  "import",
+  "in",
+  "instanceof",
+  "int",
+  "interface",
+  "let",
+  "long",
+  "native",
+  "new",
+  "null",
+  "package",
+  "private",
+  "protected",
+  "public",
+  "return",
+  "short",
+  "static",
+  "super",
+  "switch",
+  "synchronized",
+  "this",
+  "throw",
+  "throws",
+  "transient",
+  "true",
+  "try",
+  "typeof",
+  "var",
+  "void",
+  "volatile",
+  "while",
+  "with",
+  "yield",
+])
 export default createRule("prefer-destructured-store-props", {
   meta: {
     docs: {
       description:
-        "Destructure values from object stores for better change tracking & fewer redraws",
+        "destructure values from object stores for better change tracking & fewer redraws",
       category: "Best Practices",
       recommended: false,
     },
@@ -23,35 +90,48 @@ export default createRule("prefer-destructured-store-props", {
     type: "suggestion",
   },
   create(context) {
-    let script: AST.SvelteScriptElement
+    let mainScript: AST.SvelteScriptElement | null = null
 
     // Store off instances of probably-destructurable statements
-    const reports: NodeRecord[] = []
+    const reports: StoreMemberExpression[] = []
+    let inScriptElement = false
 
-    // Store off defined variable names so we can avoid offering a suggestion in those cases
-    const defined: Set<string> = new Set()
+    const storeMemberAccessStack: {
+      node: StoreMemberExpression
+      // A list of Identifiers that make up the member expression.
+      identifiers: TSESTree.Identifier[]
+    }[] = []
+
+    /** Checks whether the given name is already defined as a variable. */
+    function hasTopLevelVariable(name: string) {
+      const scopeManager = context.getSourceCode().scopeManager
+      if (scopeManager.globalScope?.set.has(name)) {
+        return true
+      }
+      const moduleScope = scopeManager.globalScope?.childScopes.find(
+        (s) => s.type === "module",
+      )
+      return moduleScope?.set.has(name) ?? false
+    }
 
     return {
-      [`SvelteScriptElement`](node: AST.SvelteScriptElement) {
-        script = node
+      SvelteScriptElement(node) {
+        inScriptElement = true
+        const scriptContext = findAttribute(node, "context")
+        const contextValue =
+          scriptContext?.value.length === 1 && scriptContext.value[0]
+        if (
+          contextValue &&
+          contextValue.type === "SvelteLiteral" &&
+          contextValue.value === "module"
+        ) {
+          // It is <script context="module">
+          return
+        }
+        mainScript = node
       },
-
-      // Capture import names
-      [`ImportSpecifier, ImportDefaultSpecifier, ImportNamespaceSpecifier`](
-        node: TSESTree.ImportSpecifier,
-      ) {
-        const { name } = node.local
-
-        defined.add(name)
-      },
-
-      // Capture variable names
-      [`VariableDeclarator[id.type="Identifier"]`](
-        node: TSESTree.VariableDeclarator,
-      ) {
-        const { name } = node.id as TSESTree.Identifier
-
-        defined.add(name)
+      "SvelteScriptElement:exit"() {
+        inScriptElement = false
       },
 
       // {$foo.bar}
@@ -59,31 +139,52 @@ export default createRule("prefer-destructured-store-props", {
       // $: ({ bar } = $foo);
       // {bar}
       // Same with {$foo["bar"]}
-      [`MemberExpression[object.name=/^\\$/]`](
-        node: TSESTree.MemberExpression,
+      "MemberExpression[object.type='Identifier'][object.name=/^\\$/]"(
+        node: StoreMemberExpression,
       ) {
-        const property =
-          node.property.type === "Identifier"
-            ? node.property.name
-            : getStringIfConstant(node.property as ESTree.Expression)
+        if (inScriptElement) return // Within a script tag
+        storeMemberAccessStack.unshift({ node, identifiers: [] })
+      },
+      Identifier(node: TSESTree.Identifier) {
+        storeMemberAccessStack[0]?.identifiers.push(node)
+      },
+      "MemberExpression[object.type='Identifier'][object.name=/^\\$/]:exit"(
+        node: StoreMemberExpression,
+      ) {
+        if (storeMemberAccessStack[0]?.node !== node) return
+        const { identifiers } = storeMemberAccessStack.shift()!
 
-        if (!property) {
-          return
+        for (const id of identifiers) {
+          if (!isExpressionIdentifier(id)) continue
+          const variable = findVariable(context.getScope(), id)
+          const isTopLevel =
+            !variable ||
+            variable.scope.type === "module" ||
+            variable.scope.type === "global"
+          if (!isTopLevel) {
+            // Member expressions may use variables defined with {#each} etc.
+            return
+          }
         }
-
-        reports.push({ property, node })
+        reports.push(node)
       },
 
-      [`Program:exit`]() {
-        reports.forEach(({ property, node }) => {
-          const store = (node.object as TSESTree.Identifier).name
+      "Program:exit"() {
+        const scriptEndTag = mainScript && mainScript.endTag
+        for (const node of reports) {
+          const store = node.object.name
 
           context.report({
             node,
             messageId: "useDestructuring",
             data: {
               store,
-              property,
+              property: !node.computed
+                ? node.property.name
+                : context
+                    .getSourceCode()
+                    .getText(node.property)
+                    .replace(/\s+/g, " "),
             },
 
             // Avoid suggestions for:
@@ -92,38 +193,46 @@ export default createRule("prefer-destructured-store-props", {
             //  no <script> ending
             //  variable name already defined
             suggest:
-              node.computed ||
-              !script ||
-              !script.endTag ||
-              defined.has(property)
+              node.computed || !scriptEndTag
                 ? []
                 : [
                     {
                       messageId: "fixUseDestructuring",
                       data: {
                         store,
-                        property,
+                        property: node.property.name,
                       },
 
                       fix(fixer) {
-                        // This is only necessary to make TS shut up about script.endTag maybe being null
-                        // but since we already checked it above that warning is just wrong
-                        if (!script.endTag) {
-                          return []
+                        const propName = node.property.name
+
+                        let varName = propName
+                        if (varName.startsWith("$")) {
+                          varName = varName.slice(1)
+                        }
+                        const baseName = varName
+                        let suffix = 0
+                        if (keywords.has(varName)) {
+                          varName = `${baseName}${++suffix}`
+                        }
+                        while (hasTopLevelVariable(varName)) {
+                          varName = `${baseName}${++suffix}`
                         }
 
                         return [
                           fixer.insertTextAfterRange(
-                            [script.endTag.range[0], script.endTag.range[0]],
-                            `$: ({ ${property} } = ${store});\n`,
+                            [scriptEndTag.range[0], scriptEndTag.range[0]],
+                            `$: ({ ${propName}${
+                              propName !== varName ? `: ${varName}` : ""
+                            } } = ${store});\n`,
                           ),
-                          fixer.replaceText(node, property),
+                          fixer.replaceText(node, varName),
                         ]
                       },
                     },
                   ],
           })
-        })
+        }
       },
     }
   },

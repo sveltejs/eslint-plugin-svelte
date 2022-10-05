@@ -1,0 +1,4 @@
+- message: Destructure bar from $foo for better change tracking & fewer redraws
+  line: 4
+  column: 2
+  suggestions: null

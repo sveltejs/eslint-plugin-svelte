@@ -2,18 +2,19 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/prefer-destructured-store-props"
-description: "Destructure store props for more efficient redraws"
+description: "destructure values from object stores for better change tracking & fewer redraws"
 ---
 
 # svelte/prefer-destructured-store-props
 
-> Destructure store props for more efficient redraws
+> destructure values from object stores for better change tracking & fewer redraws
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
 
-This rule reports on directly accessing properties of a store containing an object. These usages can instead be written as a reactive statement using destructuring to allow for more granular change-tracking and reduced redraws in the component.
+This rule reports on directly accessing properties of a store containing an object in templates. These usages can instead be written as a reactive statement using destructuring to allow for more granular change-tracking and reduced redraws in the component.
 
 An example of the improvements can be see in this [REPL](https://svelte.dev/repl/7de86fea94ff40c48abb82da534dfb89)
 

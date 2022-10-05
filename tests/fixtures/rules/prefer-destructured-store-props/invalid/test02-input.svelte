@@ -1,4 +1,3 @@
-<!-- prettier-ignore -->
 {$foo.bar}
 
 {$foo[bar]}

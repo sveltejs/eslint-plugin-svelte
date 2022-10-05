@@ -1,22 +1,18 @@
-<!-- prettier-ignore -->
 <script>
-  import store from "./store.js";
-  import baz from "somewhere"
-	
+  import store from "./store.js"
+
   let foo, bar
   $: {
-    foo = $store.foo;
-    bar = $store.bar;
+    foo = $store.foo
+    bar = $store.bar
   }
 </script>
 
 <div>
-  <!-- eslint-disable-next-line prefer-template-->
-  foo: {foo + " " + Date.now()}
+  foo: {`${foo} ${Date.now()}`}
 </div>
 <div>
-  <!-- eslint-disable-next-line prefer-template-->
-  bar: {bar + " " + Date.now()}
+  bar: {`${bar} ${Date.now()}`}
 </div>
 <div>
   baz: {$store.baz}

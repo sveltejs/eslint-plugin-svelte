@@ -1,0 +1,108 @@
+- message: Destructure $foo from $store for better change tracking & fewer redraws
+  line: 5
+  column: 8
+  suggestions:
+    - desc: "Using destructuring like $: ({ $foo } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ $foo: foo } = $store);
+        </script>
+
+        $foo: {foo}
+        bar: {$store.bar}
+        baz: {$store.baz}
+        var: {$store.var}
+        null: {$store.null}
+        undefined: {$store.undefined}
+- message: Destructure bar from $store for better change tracking & fewer redraws
+  line: 6
+  column: 7
+  suggestions:
+    - desc: "Using destructuring like $: ({ bar } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ bar } = $store);
+        </script>
+
+        $foo: {$store.$foo}
+        bar: {bar}
+        baz: {$store.baz}
+        var: {$store.var}
+        null: {$store.null}
+        undefined: {$store.undefined}
+- message: Destructure baz from $store for better change tracking & fewer redraws
+  line: 7
+  column: 7
+  suggestions:
+    - desc: "Using destructuring like $: ({ baz } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ baz } = $store);
+        </script>
+
+        $foo: {$store.$foo}
+        bar: {$store.bar}
+        baz: {baz}
+        var: {$store.var}
+        null: {$store.null}
+        undefined: {$store.undefined}
+- message: Destructure var from $store for better change tracking & fewer redraws
+  line: 8
+  column: 7
+  suggestions:
+    - desc: "Using destructuring like $: ({ var } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ var: var1 } = $store);
+        </script>
+
+        $foo: {$store.$foo}
+        bar: {$store.bar}
+        baz: {$store.baz}
+        var: {var1}
+        null: {$store.null}
+        undefined: {$store.undefined}
+- message: Destructure null from $store for better change tracking & fewer redraws
+  line: 9
+  column: 8
+  suggestions:
+    - desc: "Using destructuring like $: ({ null } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ null: null1 } = $store);
+        </script>
+
+        $foo: {$store.$foo}
+        bar: {$store.bar}
+        baz: {$store.baz}
+        var: {$store.var}
+        null: {null1}
+        undefined: {$store.undefined}
+- message: Destructure undefined from $store for better change tracking & fewer redraws
+  line: 10
+  column: 13
+  suggestions:
+    - desc: "Using destructuring like $: ({ undefined } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ undefined: undefined1 } = $store);
+        </script>
+
+        $foo: {$store.$foo}
+        bar: {$store.bar}
+        baz: {$store.baz}
+        var: {$store.var}
+        null: {$store.null}
+        undefined: {undefined1}

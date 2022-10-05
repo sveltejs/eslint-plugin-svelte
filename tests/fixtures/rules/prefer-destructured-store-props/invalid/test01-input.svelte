@@ -1,6 +1,4 @@
-<!-- prettier-ignore -->
 <script>
-
 </script>
 
 {$foo.bar}
