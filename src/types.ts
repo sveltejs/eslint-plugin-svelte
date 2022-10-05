@@ -168,7 +168,7 @@ interface ReportDescriptorOptionsBase {
 }
 
 type SuggestionDescriptorMessage = { desc: string } | { messageId: string }
-type SuggestionReportDescriptor = SuggestionDescriptorMessage &
+export type SuggestionReportDescriptor = SuggestionDescriptorMessage &
   ReportDescriptorOptionsBase
 
 interface ReportDescriptorOptions extends ReportDescriptorOptionsBase {

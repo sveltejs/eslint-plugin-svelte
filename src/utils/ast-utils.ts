@@ -237,9 +237,21 @@ export function getLangValue(
  */
 export function findVariable(
   context: RuleContext,
-  node: ESTree.Identifier,
+  node: ESTree.Identifier | TSESTree.Identifier,
 ): Scope.Variable | null {
-  return eslintUtils.findVariable(getScope(context, node), node)
+  const initialScope = eslintUtils.getInnermostScope(
+    getScope(context, node),
+    node,
+  )
+  const variable = eslintUtils.findVariable(initialScope, node)
+  if (variable) {
+    return variable
+  }
+  if (!node.name.startsWith("$")) {
+    return variable
+  }
+  // Remove the $ and search for the variable again, as it may be a store access variable.
+  return eslintUtils.findVariable(initialScope, node.name.slice(1))
 }
 
 /**

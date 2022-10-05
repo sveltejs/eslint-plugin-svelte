@@ -1,8 +1,13 @@
 import type { TSESTree } from "@typescript-eslint/types"
-import { findVariable } from "eslint-utils"
+import { getPropertyName } from "eslint-utils"
 import type { AST } from "svelte-eslint-parser"
+import type { SuggestionReportDescriptor } from "../types"
 import { createRule } from "../utils"
-import { findAttribute, isExpressionIdentifier } from "../utils/ast-utils"
+import {
+  findAttribute,
+  isExpressionIdentifier,
+  findVariable,
+} from "../utils/ast-utils"
 
 type StoreMemberExpression = TSESTree.MemberExpression & {
   object: TSESTree.Identifier & { name: string }
@@ -86,6 +91,7 @@ export default createRule("prefer-destructured-store-props", {
     messages: {
       useDestructuring: `Destructure {{property}} from {{store}} for better change tracking & fewer redraws`,
       fixUseDestructuring: `Using destructuring like $: ({ {{property}} } = {{store}}); will run faster`,
+      fixUseVariable: `Using the predefined reactive variable {{variable}}`,
     },
     type: "suggestion",
   },
@@ -102,6 +108,79 @@ export default createRule("prefer-destructured-store-props", {
       identifiers: TSESTree.Identifier[]
     }[] = []
 
+    /** Find for defined reactive variables. */
+    function* findReactiveVariable(
+      object: TSESTree.Identifier,
+      propName: string,
+    ): Iterable<TSESTree.Identifier> {
+      const storeVar = findVariable(context, object)
+      if (!storeVar) {
+        return
+      }
+
+      for (const reference of storeVar.references) {
+        const id = reference.identifier as TSESTree.Identifier
+        if (id.name !== object.name) continue
+        if (isReactiveVariableDefinitionWithMemberExpression(id)) {
+          // $: target = $store.prop
+          yield id.parent.parent.left
+        } else if (isReactiveVariableDefinitionWithDestructuring(id)) {
+          const prop = id.parent.left.properties.find(
+            (
+              prop,
+            ): prop is TSESTree.Property & { value: TSESTree.Identifier } =>
+              prop.type === "Property" &&
+              prop.value.type === "Identifier" &&
+              getPropertyName(prop) === propName,
+          )
+          if (prop) {
+            yield prop.value
+          }
+        }
+      }
+
+      /** Checks whether the given node is reactive variable definition with member expression. */
+      function isReactiveVariableDefinitionWithMemberExpression(
+        node: TSESTree.Identifier,
+      ): node is TSESTree.Identifier & {
+        parent: TSESTree.MemberExpression & {
+          parent: TSESTree.AssignmentExpression & { left: TSESTree.Identifier }
+        }
+      } {
+        return (
+          node.parent?.type === "MemberExpression" &&
+          node.parent.object === node &&
+          getPropertyName(node.parent) === propName &&
+          node.parent.parent?.type === "AssignmentExpression" &&
+          node.parent.parent.right === node.parent &&
+          node.parent.parent.left.type === "Identifier" &&
+          node.parent.parent.parent?.type === "ExpressionStatement" &&
+          (
+            node.parent.parent.parent
+              .parent as never as AST.SvelteReactiveStatement
+          )?.type === "SvelteReactiveStatement"
+        )
+      }
+
+      /** Checks whether the given node is reactive variable definition with destructuring. */
+      function isReactiveVariableDefinitionWithDestructuring(
+        node: TSESTree.Identifier,
+      ): node is TSESTree.Identifier & {
+        parent: TSESTree.AssignmentExpression & {
+          left: TSESTree.ObjectPattern
+        }
+      } {
+        return (
+          node.parent?.type === "AssignmentExpression" &&
+          node.parent.right === node &&
+          node.parent.left.type === "ObjectPattern" &&
+          node.parent.parent?.type === "ExpressionStatement" &&
+          (node.parent.parent.parent as never as AST.SvelteReactiveStatement)
+            ?.type === "SvelteReactiveStatement"
+        )
+      }
+    }
+
     /** Checks whether the given name is already defined as a variable. */
     function hasTopLevelVariable(name: string) {
       const scopeManager = context.getSourceCode().scopeManager
@@ -111,7 +190,7 @@ export default createRule("prefer-destructured-store-props", {
       const moduleScope = scopeManager.globalScope?.childScopes.find(
         (s) => s.type === "module",
       )
-      return moduleScope?.set.has(name) ?? false
+      return moduleScope?.set.has(name) || false
     }
 
     return {
@@ -156,7 +235,7 @@ export default createRule("prefer-destructured-store-props", {
 
         for (const id of identifiers) {
           if (!isExpressionIdentifier(id)) continue
-          const variable = findVariable(context.getScope(), id)
+          const variable = findVariable(context, id)
           const isTopLevel =
             !variable ||
             variable.scope.type === "module" ||
@@ -174,6 +253,71 @@ export default createRule("prefer-destructured-store-props", {
         for (const node of reports) {
           const store = node.object.name
 
+          const suggest: SuggestionReportDescriptor[] = []
+          if (
+            // Avoid suggestions for:
+            //  dynamic accesses like {$foo[bar]}
+            !node.computed
+          ) {
+            for (const variable of findReactiveVariable(
+              node.object,
+              node.property.name,
+            )) {
+              suggest.push({
+                messageId: "fixUseVariable",
+                data: {
+                  variable: variable.name,
+                },
+
+                fix(fixer) {
+                  return fixer.replaceText(node, variable.name)
+                },
+              })
+            }
+
+            if (
+              // Avoid suggestions for:
+              //  no <script> tag
+              //  no <script> ending
+              scriptEndTag
+            ) {
+              suggest.push({
+                messageId: "fixUseDestructuring",
+                data: {
+                  store,
+                  property: node.property.name,
+                },
+
+                fix(fixer) {
+                  const propName = node.property.name
+
+                  let varName = propName
+                  if (varName.startsWith("$")) {
+                    varName = varName.slice(1)
+                  }
+                  const baseName = varName
+                  let suffix = 0
+                  if (keywords.has(varName)) {
+                    varName = `${baseName}${++suffix}`
+                  }
+                  while (hasTopLevelVariable(varName)) {
+                    varName = `${baseName}${++suffix}`
+                  }
+
+                  return [
+                    fixer.insertTextAfterRange(
+                      [scriptEndTag.range[0], scriptEndTag.range[0]],
+                      `$: ({ ${propName}${
+                        propName !== varName ? `: ${varName}` : ""
+                      } } = ${store});\n`,
+                    ),
+                    fixer.replaceText(node, varName),
+                  ]
+                },
+              })
+            }
+          }
+
           context.report({
             node,
             messageId: "useDestructuring",
@@ -187,50 +331,7 @@ export default createRule("prefer-destructured-store-props", {
                     .replace(/\s+/g, " "),
             },
 
-            // Avoid suggestions for:
-            //  dynamic accesses like {$foo[bar]}
-            //  no <script> tag
-            //  no <script> ending
-            //  variable name already defined
-            suggest:
-              node.computed || !scriptEndTag
-                ? []
-                : [
-                    {
-                      messageId: "fixUseDestructuring",
-                      data: {
-                        store,
-                        property: node.property.name,
-                      },
-
-                      fix(fixer) {
-                        const propName = node.property.name
-
-                        let varName = propName
-                        if (varName.startsWith("$")) {
-                          varName = varName.slice(1)
-                        }
-                        const baseName = varName
-                        let suffix = 0
-                        if (keywords.has(varName)) {
-                          varName = `${baseName}${++suffix}`
-                        }
-                        while (hasTopLevelVariable(varName)) {
-                          varName = `${baseName}${++suffix}`
-                        }
-
-                        return [
-                          fixer.insertTextAfterRange(
-                            [scriptEndTag.range[0], scriptEndTag.range[0]],
-                            `$: ({ ${propName}${
-                              propName !== varName ? `: ${varName}` : ""
-                            } } = ${store});\n`,
-                          ),
-                          fixer.replaceText(node, varName),
-                        ]
-                      },
-                    },
-                  ],
+            suggest,
           })
         }
       },
