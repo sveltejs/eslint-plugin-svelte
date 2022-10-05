@@ -25,6 +25,7 @@ An example of the improvements can be see in this [REPL](https://svelte.dev/repl
 ```svelte
 <script>
   /* eslint svelte/prefer-destructured-store-props: "error" */
+  import store from "./store.js"
   $: ({ foo } = $store)
 </script>
 

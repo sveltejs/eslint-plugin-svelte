@@ -58,7 +58,7 @@
           monaco.languages.registerCodeActionProvider(language, {
             provideCodeActions(model, range, context) {
               const editor = getLeftEditor?.()
-              if (editor?.getModel().url !== model.url) {
+              if (editor?.getModel().uri !== model.uri) {
                 return {
                   actions: [],
                   dispose() {

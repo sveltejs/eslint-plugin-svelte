@@ -1,6 +1,7 @@
 import type { TSESTree } from "@typescript-eslint/types"
 import { getPropertyName } from "eslint-utils"
 import type { AST } from "svelte-eslint-parser"
+import { keyword } from "esutils"
 import type { SuggestionReportDescriptor } from "../types"
 import { createRule } from "../utils"
 import {
@@ -13,71 +14,6 @@ type StoreMemberExpression = TSESTree.MemberExpression & {
   object: TSESTree.Identifier & { name: string }
 }
 
-const keywords = new Set([
-  "abstract",
-  "arguments",
-  "boolean",
-  "break",
-  "byte",
-  "case",
-  "catch",
-  "char",
-  "class",
-  "const",
-  "continue",
-  "debugger",
-  "default",
-  "delete",
-  "do",
-  "double",
-  "else",
-  "enum",
-  "eval",
-  "export",
-  "extends",
-  "false",
-  "final",
-  "finally",
-  "float",
-  "for",
-  "function",
-  "goto",
-  "if",
-  "implements",
-  "import",
-  "in",
-  "instanceof",
-  "int",
-  "interface",
-  "let",
-  "long",
-  "native",
-  "new",
-  "null",
-  "package",
-  "private",
-  "protected",
-  "public",
-  "return",
-  "short",
-  "static",
-  "super",
-  "switch",
-  "synchronized",
-  "this",
-  "throw",
-  "throws",
-  "transient",
-  "true",
-  "try",
-  "typeof",
-  "var",
-  "void",
-  "volatile",
-  "while",
-  "with",
-  "yield",
-])
 export default createRule("prefer-destructured-store-props", {
   meta: {
     docs: {
@@ -134,6 +70,7 @@ export default createRule("prefer-destructured-store-props", {
               getPropertyName(prop) === propName,
           )
           if (prop) {
+            // $: ({prop: target} = $store)
             yield prop.value
           }
         }
@@ -297,7 +234,10 @@ export default createRule("prefer-destructured-store-props", {
                   }
                   const baseName = varName
                   let suffix = 0
-                  if (keywords.has(varName)) {
+                  if (
+                    keyword.isReservedWordES6(varName, true) ||
+                    keyword.isRestrictedWord(varName)
+                  ) {
                     varName = `${baseName}${++suffix}`
                   }
                   while (hasTopLevelVariable(varName)) {

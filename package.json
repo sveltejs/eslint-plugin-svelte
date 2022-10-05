@@ -67,6 +67,7 @@
   "dependencies": {
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
+    "esutils": "^2.0.3",
     "known-css-properties": "^0.25.0",
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
@@ -100,6 +101,7 @@
     "@types/eslint-utils": "^3.0.1",
     "@types/eslint-visitor-keys": "^1.0.0",
     "@types/estree": "^1.0.0",
+    "@types/esutils": "^2.0.0",
     "@types/less": "^3.0.3",
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-it-container": "^2.0.5",
@@ -172,7 +174,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 98.69,
+    "atLeast": 98.71,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,
