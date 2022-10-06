@@ -1,0 +1,25 @@
+- message: Destructure bar from $foo for better change tracking & fewer redraws
+  line: 4
+  column: 2
+  suggestions:
+    - desc: "Using destructuring like $: ({ bar } = $foo); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+        $: ({ bar } = $foo);
+        </script>
+
+        {bar}
+
+        {$foo[baz]}
+
+        <!-- eslint-disable-next-line dot-notation -- tests -->
+        {$foo["qux"]}
+- message: Destructure baz from $foo for better change tracking & fewer redraws
+  line: 6
+  column: 2
+  suggestions: null
+- message: Destructure "qux" from $foo for better change tracking & fewer redraws
+  line: 9
+  column: 2
+  suggestions: null

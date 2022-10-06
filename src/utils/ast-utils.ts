@@ -1,5 +1,6 @@
 import type { ASTNode, RuleContext, SourceCode } from "../types"
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { AST as SvAST } from "svelte-eslint-parser"
 import * as eslintUtils from "eslint-utils"
 import type { Scope } from "eslint"
@@ -38,7 +39,9 @@ export function equalTokens(
 /**
  * Get the value of a given node if it's a literal or a template literal.
  */
-export function getStringIfConstant(node: ESTree.Expression): string | null {
+export function getStringIfConstant(
+  node: ESTree.Expression | TSESTree.Expression,
+): string | null {
   if (node.type === "Literal") {
     if (typeof node.value === "string") return node.value
   } else if (node.type === "TemplateLiteral") {
@@ -234,9 +237,21 @@ export function getLangValue(
  */
 export function findVariable(
   context: RuleContext,
-  node: ESTree.Identifier,
+  node: ESTree.Identifier | TSESTree.Identifier,
 ): Scope.Variable | null {
-  return eslintUtils.findVariable(getScope(context, node), node)
+  const initialScope = eslintUtils.getInnermostScope(
+    getScope(context, node),
+    node,
+  )
+  const variable = eslintUtils.findVariable(initialScope, node)
+  if (variable) {
+    return variable
+  }
+  if (!node.name.startsWith("$")) {
+    return variable
+  }
+  // Remove the $ and search for the variable again, as it may be a store access variable.
+  return eslintUtils.findVariable(initialScope, node.name.slice(1))
 }
 
 /**
@@ -521,4 +536,52 @@ export function getNodeName(node: SvAST.SvelteElement): string {
  */
 export function isVoidHtmlElement(node: SvAST.SvelteElement): boolean {
   return voidElements.includes(getNodeName(node))
+}
+
+/* eslint-disable complexity -- better than refactoring because type guards work well. */
+/** Checks whether the given identifier node is used as an expression. */
+export function isExpressionIdentifier(
+  /* eslint-enable complexity -- :) */
+  node: TSESTree.Identifier,
+): boolean {
+  const parent = node.parent
+  if (!parent) {
+    return true
+  }
+  if (parent.type === "MemberExpression") {
+    return !parent.computed || parent.property !== node
+  }
+  if (
+    parent.type === "Property" ||
+    parent.type === "MethodDefinition" ||
+    parent.type === "PropertyDefinition"
+  ) {
+    return !parent.computed || parent.key !== node
+  }
+  if (
+    parent.type === "FunctionDeclaration" ||
+    parent.type === "FunctionExpression" ||
+    parent.type === "ClassDeclaration" ||
+    parent.type === "ClassExpression"
+  ) {
+    return parent.id !== node
+  }
+  if (
+    parent.type === "LabeledStatement" ||
+    parent.type === "BreakStatement" ||
+    parent.type === "ContinueStatement"
+  ) {
+    return parent.label !== node
+  }
+  if (parent.type === "MetaProperty") {
+    return parent.property !== node
+  }
+  if (parent.type === "ImportSpecifier") {
+    return parent.imported !== node
+  }
+  if (parent.type === "ExportSpecifier") {
+    return parent.exported !== node
+  }
+
+  return true
 }

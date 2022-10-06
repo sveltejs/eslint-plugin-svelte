@@ -50,6 +50,7 @@ module.exports = {
     },
     {
       files: ["*.svelte"],
+      extends: ["plugin:svelte/base"],
       parser: "svelte-eslint-parser",
       parserOptions: {
         parser: {

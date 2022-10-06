@@ -219,10 +219,11 @@
         edits: [
           {
             resource: model.uri,
-            edit: {
+            textEdit: {
               range: editRange,
               text: fix.text,
             },
+            versionId: model.getVersionId(),
           },
         ],
       },

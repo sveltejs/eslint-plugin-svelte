@@ -1,9 +1,12 @@
 import type { AST } from "svelte-eslint-parser"
 import type { Scope } from "eslint"
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 export {
   ReferenceTracker,
   TrackedReferences,
+  getPropertyName,
+  getInnermostScope,
 } from "../../node_modules/@types/eslint-utils"
 type Token = { type: string; value: string }
 export function isArrowToken(token: Token): boolean
@@ -31,5 +34,21 @@ export function isNotCommentToken(token: Token): boolean
 
 export function findVariable(
   initialScope: Scope.Scope,
-  nameOrNode: ESTree.Identifier | string,
+  nameOrNode: ESTree.Identifier | TSESTree.Identifier | string,
 ): Scope.Variable
+
+/**
+ * Get the property name from a MemberExpression node or a Property node.
+ */
+export function getPropertyName(
+  node:
+    | ESTree.MemberExpression
+    | ESTree.MethodDefinition
+    | ESTree.Property
+    | ESTree.PropertyDefinition
+    | TSESTree.MemberExpression
+    | TSESTree.MethodDefinition
+    | TSESTree.Property
+    | TSESTree.PropertyDefinition,
+  initialScope?: Scope.Scope,
+): string | null

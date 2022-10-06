@@ -1,0 +1,28 @@
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 5
+  column: 11
+  suggestions:
+    - desc: "Using destructuring like $: ({ foo } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ foo } = $store);
+        </script>
+
+        foo.bar: {foo.bar}
+        foo.baz: {$store.foo.baz}
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 6
+  column: 11
+  suggestions:
+    - desc: "Using destructuring like $: ({ foo } = $store); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+          import store from "./store.js"
+        $: ({ foo } = $store);
+        </script>
+
+        foo.bar: {$store.foo.bar}
+        foo.baz: {foo.baz}
