@@ -102,14 +102,6 @@ export function loadTestCases(
       let errors
       if (fs.existsSync(errorFile)) {
         errors = fs.readFileSync(errorFile, "utf8")
-      } else if (
-        fs.existsSync(inputFile.replace(/input\.[a-z]+$/u, "errors.json"))
-      ) {
-        // Workaround to not block PRs.
-        errors = fs.readFileSync(
-          inputFile.replace(/input\.[a-z]+$/u, "errors.json"),
-          "utf8",
-        )
       } else {
         writeFixtures(ruleName, inputFile)
         errors = fs.readFileSync(errorFile, "utf8")

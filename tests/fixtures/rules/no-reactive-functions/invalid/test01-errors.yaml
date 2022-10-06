@@ -1,0 +1,42 @@
+- message: Do not create functions inside reactive statements unless absolutely
+    necessary.
+  line: 3
+  column: 5
+  suggestions:
+    - desc: Move the function out of the reactive statement
+      messageId: fixReactiveFns
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            const arrow = () => {}
+            $: fn = function() {}
+            $:nospace = () => {}
+        </script>
+- message: Do not create functions inside reactive statements unless absolutely
+    necessary.
+  line: 4
+  column: 5
+  suggestions:
+    - desc: Move the function out of the reactive statement
+      messageId: fixReactiveFns
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            $: arrow = () => {}
+            const fn = function() {}
+            $:nospace = () => {}
+        </script>
+- message: Do not create functions inside reactive statements unless absolutely
+    necessary.
+  line: 5
+  column: 5
+  suggestions:
+    - desc: Move the function out of the reactive statement
+      messageId: fixReactiveFns
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            $: arrow = () => {}
+            $: fn = function() {}
+            const nospace = () => {}
+        </script>
