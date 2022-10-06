@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.10.0
+
+### Minor Changes
+
+- [#270](https://github.com/ota-meshi/eslint-plugin-svelte/pull/270) [`dc60b36`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/dc60b36007d26ce5bc639a87d2a57072d7cf6c89) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/prefer-destructured-store-props` rule
+
 ## 2.9.0
 
 ### Minor Changes
