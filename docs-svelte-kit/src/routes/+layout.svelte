@@ -36,6 +36,7 @@
 <main
   class:hidden-menu={frontmatter.hiddenMenu}
   on:click={sidebarOpen ? resetSidebarOpen : null}
+  on:keydown={sidebarOpen ? resetSidebarOpen : null}
 >
   <div class="main-content">
     <slot />

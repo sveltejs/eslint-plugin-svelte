@@ -4,6 +4,7 @@
 /node_modules
 !/.vscode
 !/.github
+!/.devcontainer
 /prettier-playground
 /tests/fixtures/rules/indent/invalid/ts
 /tests/fixtures/rules/indent/invalid/ts-v5
