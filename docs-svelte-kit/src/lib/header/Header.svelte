@@ -14,7 +14,12 @@
 
 <header>
   <div class="corner">
-    <div class="sidebar-button" on:click={handleToggleSidebar}>
+    <div
+      class="sidebar-button"
+      on:click={handleToggleSidebar}
+      on:keydown={(e) =>
+        (e.code === "Enter" || e.code === "Space") && handleToggleSidebar()}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
