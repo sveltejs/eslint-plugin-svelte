@@ -80,14 +80,20 @@ class DocFile {
 
     if (deprecated) {
       if (replacedBy) {
-        const replacedRules = replacedBy.map(
-          (name) => `[svelte/${name}](${name}.md) rule`,
-        )
-        notes.push(
-          `- :warning: This rule was **deprecated** and replaced by ${formatItems(
-            replacedRules,
-          )}.`,
-        )
+        if (Array.isArray(replacedBy)) {
+          const replacedRules = replacedBy.map(
+            (name) => `[svelte/${name}](${name}.md) rule`,
+          )
+          notes.push(
+            `- :warning: This rule was **deprecated** and replaced by ${formatItems(
+              replacedRules,
+            )}.`,
+          )
+        } else {
+          notes.push(
+            `- :warning: This rule was **deprecated**. ${replacedBy.note}`,
+          )
+        }
       } else {
         notes.push("- :warning: This rule was **deprecated**.")
       }

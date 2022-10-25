@@ -10,9 +10,12 @@ since: "v2.9.0"
 
 > disallow conditionals where the type is always truthy or always falsy
 
+- :warning: This rule was **deprecated**. This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
+
+**This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.**
 
 This rule extends the base `@typescript-eslint`'s [@typescript-eslint/no-unnecessary-condition] rule.
 The [@typescript-eslint/no-unnecessary-condition] rule does not understand reactive or rerendering of Svelte components and has false positives when used with Svelte components. This rule understands reactive and rerendering of Svelte components.
