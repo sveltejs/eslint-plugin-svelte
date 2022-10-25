@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.11.0
+
+### Minor Changes
+
+- [#274](https://github.com/ota-meshi/eslint-plugin-svelte/pull/274) [`9a9ba19`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/9a9ba19ee6301de01196a26696fc2ed350238c7f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to v0.19.0. See [release note](https://github.com/ota-meshi/svelte-eslint-parser/releases/tag/v0.19.0)
+
+- [#276](https://github.com/ota-meshi/eslint-plugin-svelte/pull/276) [`e9f7bcf`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/e9f7bcf8f96bf33d7f24cac2178b5dbd95f1b72d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: deprecate `svelte/@typescript-eslint/no-unnecessary-condition` rule
+
 ## 2.10.0
 
 ### Minor Changes
