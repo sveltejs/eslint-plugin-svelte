@@ -80,7 +80,6 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | disallow conditionals where the type is always truthy or always falsy | :wrench: |
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
 | [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md) | disallow trailing whitespace at the end of lines | :wrench: |
 
@@ -92,3 +91,12 @@ These rules relate to this plugin works:
 |:--------|:------------|:---|
 | [svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template | :star: |
 | [svelte/system](./rules/system.md) | system rule for working this plugin | :star: |
+
+## Deprecated
+
+- :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
+- :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
+
+| Rule ID | Replaced by |
+|:--------|:------------|
+| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |

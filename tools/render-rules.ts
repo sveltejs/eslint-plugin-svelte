@@ -68,9 +68,11 @@ export default function renderRulesTableContent(
       rule.meta.docs.ruleName || "",
     )})`
     const replacedRules = rule.meta.replacedBy || []
-    const replacedBy = replacedRules
-      .map((name) => `[svelte/${name}](${buildRulePath(name)})`)
-      .join(", ")
+    const replacedBy = Array.isArray(replacedRules)
+      ? replacedRules
+          .map((name) => `[svelte/${name}](${buildRulePath(name)})`)
+          .join(", ")
+      : replacedRules.note
 
     return `| ${link} | ${replacedBy || "(no replacement)"} |`
   }

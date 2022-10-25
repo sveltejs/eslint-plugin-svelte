@@ -77,7 +77,7 @@ export interface RuleMetaData {
   hasSuggestions?: boolean
   schema: JSONSchema4 | JSONSchema4[]
   deprecated?: boolean
-  replacedBy?: string[]
+  replacedBy?: string[] | { note: string }
   type: "problem" | "suggestion" | "layout"
 }
 
@@ -112,7 +112,7 @@ export interface PartialRuleMetaData {
   hasSuggestions?: boolean
   schema: JSONSchema4 | JSONSchema4[]
   deprecated?: boolean
-  replacedBy?: string[]
+  replacedBy?: string[] | { note: string }
   type: "problem" | "suggestion" | "layout"
 }
 
