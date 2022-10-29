@@ -35,6 +35,12 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
   create(context) {
     if (!hasSvelteKit) return {}
     let isModule = false
+
+    // return false if it's not a Svelte Kit page component.
+    const routes = context.settings?.kit?.files?.routes || "src/routes"
+    const filePath = context.getFilename().replace(context.getCwd?.() ?? "", "")
+    if (filePath.includes(routes)) return {}
+
     return {
       // <script context="module">
       [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute > SvelteLiteral[value="module"]`]:

@@ -39,11 +39,16 @@ And the API has changed.
 
 ```json
 {
-  "svelte/no-export-load-in-svelte-module-in-kit-pages": ["error", {}]
+  "svelte/no-export-load-in-svelte-module-in-kit-pages": [
+    "error",
+    {
+      "routes": "src/routes"
+    }
+  ]
 }
 ```
 
--
+- `routes`: Please set a value if `kit.files.routes` of `svelte.config.js` is not `src/routes`.
 
 ## :books: Further Reading
 
