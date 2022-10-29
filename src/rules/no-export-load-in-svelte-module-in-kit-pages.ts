@@ -5,7 +5,10 @@ import fs from "fs"
 const hasSvelteKit = (() => {
   try {
     const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"))
-    return Boolean(packageJson.dependencies["@sveltejs/kit"])
+    return Boolean(
+      packageJson.dependencies["@sveltejs/kit"] ??
+        packageJson.devDependencies["@sveltejs/kit"],
+    )
   } catch (_e) {
     return false
   }
