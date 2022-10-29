@@ -171,8 +171,8 @@ module.exports = {
 #### settings.kit
 
 If you use SvelteKit with not default configuration, you need to set below configurations.
-Object of it is subset of SvelteKit's configuration.
-THerefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for each configuration.
+The schema is subset of SvelteKit's configuration.
+Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for each configuration.
 
 e.g.
 
