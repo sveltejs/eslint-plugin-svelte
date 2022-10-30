@@ -37,7 +37,7 @@ And the API has changed.
 
 ## :wrench: Options
 
-Nothing. But if use are using not default routes folder, please set configuration according the [user guide](../user-guide.md#settings-kit).
+Nothing. But if use are using not default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-kit).
 
 ## :books: Further Reading
 
