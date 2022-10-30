@@ -9,7 +9,7 @@ import fs from "fs"
 export function isKitPageComponent(context: RuleContext): boolean {
   // return false if it's not a Svelte Kit page component.
   const routes =
-    context.settings?.kit?.files?.routes?.replace(/^\//, "") || "src/routes"
+    context.settings?.kit?.files?.routes?.replace(/^\//, "") ?? "src/routes"
   const filePath = context
     .getFilename()
     .replace(context.getCwd?.() ?? "", "")
@@ -18,6 +18,8 @@ export function isKitPageComponent(context: RuleContext): boolean {
 }
 
 export const hasSvelteKit = (() => {
+  // Hack: if it runs on browser, it regards as Svelte Kit project.
+  if (!fs.readFileSync) return true
   try {
     const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"))
     // Hack: CI removes `@sveltejs/kit` and it returns false and test failed.

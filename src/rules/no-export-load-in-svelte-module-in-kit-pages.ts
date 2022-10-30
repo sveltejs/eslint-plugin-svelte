@@ -22,13 +22,13 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
     let isModule = false
     return {
       // <script context="module">
-      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute > SvelteLiteral[value="module"]`]:
+      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value="module"]`]:
         () => {
           isModule = true
         },
 
       // <script>
-      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute > SvelteLiteral[value!="module"]`]:
+      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value!="module"]`]:
         () => {
           isModule = false
         },

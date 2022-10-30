@@ -17,7 +17,19 @@ This rule reports unexpected exported `load` function at `<script context="modul
 At SvelteKit v1.0.0-next.405, `load` function has been moved into a separate file — `+page.js` for pages, `+layout.js` for layouts.
 And the API has changed.
 
-<ESLintCodeBlock>
+<script>
+  const config = {
+    settings: {
+      kit: {
+        files: {
+          routes: "",
+        },
+      },
+    },
+  }
+</script>
+
+<ESLintCodeBlock config="{config}">
 
 <!--eslint-skip-->
 
