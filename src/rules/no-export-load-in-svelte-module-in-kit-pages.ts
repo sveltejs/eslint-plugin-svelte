@@ -1,21 +1,6 @@
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
-import fs from "fs"
-
-const hasSvelteKit = (() => {
-  try {
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"))
-    // Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
-    // So always it returns true if it runs on the package.
-    if (packageJson.name === "eslint-plugin-svelte") return true
-    return Boolean(
-      packageJson.dependencies["@sveltejs/kit"] ??
-        packageJson.devDependencies["@sveltejs/kit"],
-    )
-  } catch (_e) {
-    return false
-  }
-})()
+import { isKitPageComponent, hasSvelteKit } from "./kit-helpers/kit-helpers"
 
 export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
   meta: {
@@ -33,19 +18,8 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
     type: "problem",
   },
   create(context) {
-    if (!hasSvelteKit) return {}
+    if (!hasSvelteKit || !isKitPageComponent(context)) return {}
     let isModule = false
-
-    // return false if it's not a Svelte Kit page component.
-    const routes =
-      context.settings?.kit?.files?.routes?.replace(/^\//, "") || "src/routes"
-
-    const filePath = context
-      .getFilename()
-      .replace(context.getCwd?.() ?? "", "")
-      .replace(/^\//, "")
-    if (!filePath.startsWith(routes)) return {}
-
     return {
       // <script context="module">
       [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute > SvelteLiteral[value="module"]`]:
