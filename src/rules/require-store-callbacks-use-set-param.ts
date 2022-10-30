@@ -1,11 +1,10 @@
-// import { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import { extractStoreReferences } from "./reference-helpers/svelte-store"
 
 export default createRule("require-store-callbacks-use-set-param", {
   meta: {
     docs: {
-      description: "",
+      description: "store callbacks must use `set` param",
       category: "Possible Errors",
       recommended: false,
     },
@@ -13,7 +12,7 @@ export default createRule("require-store-callbacks-use-set-param", {
     messages: {
       unexpected: "Store callbacks must use `set` param.",
     },
-    type: "suggestion", // "problem", or "layout",
+    type: "suggestion",
   },
   create(context) {
     return {

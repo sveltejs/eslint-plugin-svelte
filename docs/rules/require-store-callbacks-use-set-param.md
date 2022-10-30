@@ -2,7 +2,7 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-store-callbacks-use-set-param"
-description: ""
+description: "store callbacks must use `set` param"
 ---
 
 # svelte/require-store-callbacks-use-set-param
