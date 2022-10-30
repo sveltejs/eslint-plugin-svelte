@@ -48,6 +48,17 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
           isModule = true
         },
 
+      // <script>
+      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute > SvelteLiteral[value!="module"]`]:
+        () => {
+          isModule = false
+        },
+
+      // </script>
+      ["SvelteEndTag"]: () => {
+        isModule = false
+      },
+
       // export function load() {}
       // export const load = () => {}
       [`ExportNamedDeclaration :matches(FunctionDeclaration, VariableDeclaration > VariableDeclarator) > Identifier[name="load"]`]:
