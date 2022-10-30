@@ -172,7 +172,7 @@ module.exports = {
 
 If you use SvelteKit with not default configuration, you need to set below configurations.
 The schema is subset of SvelteKit's configuration.
-Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for each configuration.
+Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for more details.
 
 e.g.
 

@@ -37,18 +37,7 @@ And the API has changed.
 
 ## :wrench: Options
 
-```json
-{
-  "svelte/no-export-load-in-svelte-module-in-kit-pages": [
-    "error",
-    {
-      "routes": "src/routes"
-    }
-  ]
-}
-```
-
-- `routes`: Please set a value if `kit.files.routes` of `svelte.config.js` is not `src/routes`.
+Nothing. But if use are using not default routes folder, please set configuration according the [user guide](../user-guide.md#settings-kit).
 
 ## :books: Further Reading
 
