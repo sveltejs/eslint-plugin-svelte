@@ -37,9 +37,14 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
     let isModule = false
 
     // return false if it's not a Svelte Kit page component.
-    const routes = context.settings?.kit?.files?.routes || "src/routes"
-    const filePath = context.getFilename().replace(context.getCwd?.() ?? "", "")
-    if (filePath.includes(routes)) return {}
+    const routes =
+      context.settings?.kit?.files?.routes?.replace(/^\//, "") || "src/routes"
+
+    const filePath = context
+      .getFilename()
+      .replace(context.getCwd?.() ?? "", "")
+      .replace(/^\//, "")
+    if (!filePath.startsWith(routes)) return {}
 
     return {
       // <script context="module">
