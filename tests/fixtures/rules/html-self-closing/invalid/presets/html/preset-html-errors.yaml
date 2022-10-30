@@ -1,0 +1,16 @@
+- message: Disallow self-closing on HTML elements.
+  line: 3
+  column: 3
+  suggestions: null
+- message: Require self-closing on HTML void elements.
+  line: 4
+  column: 3
+  suggestions: null
+- message: Disallow self-closing on Svelte custom components.
+  line: 5
+  column: 3
+  suggestions: null
+- message: Require self-closing on Svelte special elements.
+  line: 8
+  column: 1
+  suggestions: null
