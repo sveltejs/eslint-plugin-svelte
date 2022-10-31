@@ -30,12 +30,6 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
           isModule = true
         },
 
-      // <script>
-      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value!="module"]`]:
-        () => {
-          isModule = false
-        },
-
       // </script>
       "Program > SvelteScriptElement:exit": () => {
         isModule = false
