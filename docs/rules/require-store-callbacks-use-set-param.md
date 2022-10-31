@@ -11,7 +11,8 @@ description: "store callbacks must use `set` param"
 
 ## :book: Rule Details
 
-This rule disallows if readable / writable store's setter function doesn't use `set` parameter.
+This rule disallows if `readable` / `writable` store's setter function doesn't use `set` parameter.<br>
+This rule doesn't check `derived` store. Therefore if you set a updated value asynchronously, please don't forget to use `set` function.
 
 <ESLintCodeBlock>
 
@@ -23,13 +24,22 @@ This rule disallows if readable / writable store's setter function doesn't use `
   import { readable, writable, derived } from "svelte/store"
 
   /** ✓ GOOD  */
-  readable(false, (set) => set(true))
+  readable(null, (set) => {
+    set(new Date())
+    const interval = setInterval(() => set(new Date()), 1000)
+    return () => clearInterval(interval)
+  })
+
   // `set` is unused but this rule doesn't report.
   // For that, please use `no-unused-vars` rule.
   // refer: https://eslint.org/docs/latest/rules/no-unused-vars
   readable(false, (set) => true)
 
-  writable(false, (set) => set(true))
+  writable(null, (set) => {
+    set(1)
+    return () => { /* no more subscribers */ }
+  })
+
   writable(false, (set) => true)
 
   derived(a, ($a) => $a * 2)
