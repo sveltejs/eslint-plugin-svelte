@@ -7,7 +7,7 @@ description: "disallow exporting load functions in `*.svelte` module in Svelte K
 
 # svelte/no-export-load-in-svelte-module-in-kit-pages
 
-> Disallow exporting load functions in `*.svelte` module in Svelte Kit page components.
+> disallow exporting load functions in `*.svelte` module in Svelte Kit page components.
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
