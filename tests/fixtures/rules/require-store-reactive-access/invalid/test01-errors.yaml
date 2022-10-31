@@ -1,0 +1,15 @@
+- message: Use $ prefix or get function, instead of using raw store in text
+    mustache interpolation.
+  line: 17
+  column: 5
+  suggestions: null
+- message: Use $ prefix or get function, instead of using raw store in text
+    mustache interpolation.
+  line: 18
+  column: 5
+  suggestions: null
+- message: Use $ prefix or get function, instead of using raw store in text
+    mustache interpolation.
+  line: 19
+  column: 5
+  suggestions: null
