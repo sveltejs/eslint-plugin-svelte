@@ -17,7 +17,7 @@ const isRunOnBrowser = !fs.readFileSync
 export function isKitPageComponent(context: RuleContext): boolean {
   // Hack: if it runs on browser, it regards as Svelte Kit project.
   if (isRunOnBrowser) return true
-
+  if (!hasSvelteKit(context.getFilename())) return false
   const routes =
     context.settings?.kit?.files?.routes?.replace(/^\//, "") ?? "src/routes"
   const filePath = context.getFilename()
@@ -33,7 +33,7 @@ export function isKitPageComponent(context: RuleContext): boolean {
  * @param filePath A file path.
  * @returns
  */
-export function hasSvelteKit(filePath: string): boolean {
+function hasSvelteKit(filePath: string): boolean {
   // Hack: if it runs on browser, it regards as Svelte Kit project.
   if (isRunOnBrowser) return true
   try {
