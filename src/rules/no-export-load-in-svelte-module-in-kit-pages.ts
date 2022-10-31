@@ -1,6 +1,6 @@
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
-import { isKitPageComponent, hasSvelteKit } from "./kit-helpers/kit-helpers"
+import { isKitPageComponent, hasSvelteKit } from "../utils/svelte-kit"
 
 export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
   meta: {
@@ -19,7 +19,9 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
     type: "problem",
   },
   create(context) {
-    if (!hasSvelteKit || !isKitPageComponent(context)) return {}
+    if (!hasSvelteKit(context.getFilename()) || !isKitPageComponent(context)) {
+      return {}
+    }
     let isModule = false
     return {
       // <script context="module">
