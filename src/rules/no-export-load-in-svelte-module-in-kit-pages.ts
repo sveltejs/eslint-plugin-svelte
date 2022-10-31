@@ -35,7 +35,7 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
         },
 
       // </script>
-      ["SvelteEndTag"]: () => {
+      "Program > SvelteScriptElement:exit": () => {
         isModule = false
       },
 
