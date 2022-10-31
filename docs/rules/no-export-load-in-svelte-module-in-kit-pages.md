@@ -2,14 +2,14 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-export-load-in-svelte-module-in-kit-pages"
-description: "disallow exporting load functions in `*.svelte` module in Svelte Kit page components"
+description: "disallow exporting load functions in `*.svelte` module in Svelte Kit page components."
 ---
 
 # svelte/no-export-load-in-svelte-module-in-kit-pages
 
 > disallow exporting load functions in `*.svelte` module in Svelte Kit page components.
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
