@@ -22,7 +22,11 @@ export default createRule("require-store-callbacks-use-set-param", {
           "writable",
         ])) {
           const [_, fn] = node.arguments
-          if (!fn || fn.type !== "ArrowFunctionExpression") {
+          if (
+            !fn ||
+            (fn.type !== "ArrowFunctionExpression" &&
+              fn.type !== "FunctionExpression")
+          ) {
             continue
           }
           const param = fn.params[0]
