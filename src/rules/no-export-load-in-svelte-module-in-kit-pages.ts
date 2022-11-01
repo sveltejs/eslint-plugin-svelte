@@ -37,7 +37,7 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
 
       // export function load() {}
       // export const load = () => {}
-      [`ExportNamedDeclaration :matches(FunctionDeclaration, VariableDeclaration > VariableDeclarator) > Identifier[name="load"]`]:
+      [`:matches(ExportNamedDeclaration > FunctionDeclaration, ExportNamedDeclaration > VariableDeclaration > VariableDeclarator) > Identifier.id[name="load"]`]:
         (node: ESTree.Identifier) => {
           if (!isModule) return {}
           return context.report({
