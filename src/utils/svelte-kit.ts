@@ -19,7 +19,8 @@ export function isKitPageComponent(context: RuleContext): boolean {
   if (isRunOnBrowser) return true
   if (!hasSvelteKit(context.getFilename())) return false
   const routes =
-    context.settings?.kit?.files?.routes?.replace(/^\//, "") ?? "src/routes"
+    context.settings?.svelte?.kit?.files?.routes?.replace(/^\//, "") ??
+    "src/routes"
   const filePath = context.getFilename()
   const projectRootDir = getProjectRootDir(context.getFilename()) ?? ""
   return filePath.startsWith(path.join(projectRootDir, routes))
