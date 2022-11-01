@@ -302,7 +302,6 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-style-properties](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dynamic-slot-name](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
-| [svelte/valid-prop-names-in-kit-pages](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in Svelte Kit page components. |  |
 | [svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |
@@ -310,6 +309,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-unknown-style-directive-property](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
 | [svelte/require-store-callbacks-use-set-param](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param |  |
 | [svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :star: |
+| [svelte/valid-prop-names-in-kit-pages](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in Svelte Kit page components. |  |
 
 ## Security Vulnerability
 
