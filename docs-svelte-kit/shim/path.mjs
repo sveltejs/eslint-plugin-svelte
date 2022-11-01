@@ -21,12 +21,44 @@ function isAbsolute() {
 }
 
 function join(...args) {
-  return args.join("/")
+  return args.length ? normalize(args.join("/")) : "."
+}
+
+function normalize(path) {
+  let result = []
+  for (const part of path.replace(/\/+/gu, "/").split("/")) {
+    if (part === "..") {
+      if (result.length) result.pop()
+    } else if (part === ".") {
+      // noop
+    } else {
+      result.push(part)
+    }
+  }
+  return result.join("/")
 }
 
 const sep = "/"
-
-const posix = { dirname, extname, resolve, relative, sep, isAbsolute, join }
+const posix = {
+  dirname,
+  extname,
+  resolve,
+  relative,
+  sep,
+  isAbsolute,
+  join,
+  normalize,
+}
 posix.posix = posix
-export { dirname, extname, posix, resolve, relative, sep, isAbsolute, join }
+export {
+  dirname,
+  extname,
+  posix,
+  resolve,
+  relative,
+  sep,
+  isAbsolute,
+  join,
+  normalize,
+}
 export default posix
