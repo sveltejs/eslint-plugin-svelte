@@ -58,23 +58,15 @@ function createStoreCheckerForES(
   const variables = new Set<Variable>()
   for (const { node } of extractStoreReferences(context)) {
     const parent = getParent(node)
-    if (!parent) {
-      continue
-    }
-    const id =
-      // e.g. const id = writable()
-      parent.type === "VariableDeclarator" && parent.id.type === "Identifier"
-        ? parent.id
-        : // e.g. id = writable()
-        parent.type === "AssignmentExpression" &&
-          parent.left.type === "Identifier"
-        ? parent.left
-        : null
-    if (!id) {
+    if (
+      !parent ||
+      parent.type !== "VariableDeclarator" ||
+      parent.id.type !== "Identifier"
+    ) {
       continue
     }
 
-    const variable = findVariable(context, id)
+    const variable = findVariable(context, parent.id)
     if (variable) {
       variables.add(variable)
     }

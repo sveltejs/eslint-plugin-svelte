@@ -14,7 +14,8 @@ description: "disallow to render store itself. Need to use $ prefix or get funct
 
 ## :book: Rule Details
 
-This rule reports ???.
+This rule disallow to render store itself.  
+You should access the store value using the `$` prefix or the `get` function.
 
 <ESLintCodeBlock fix>
 
@@ -23,31 +24,67 @@ This rule reports ???.
 ```svelte
 <script>
   /* eslint svelte/require-store-reactive-access: "error" */
+  import { writable, get } from "svelte/store"
+  const storeValue = writable("hello")
+  const color = writable("red")
 </script>
 
 <!-- ✓ GOOD -->
+<p>{$storeValue}</p>
+<p>{get(storeValue)}</p>
+
+<p class={$storeValue} />
+<p style:color={$color} />
+
+<MyComponent prop="Hello {$storeValue}" />
+<MyComponent bind:this={$storeValue} />
+<MyComponent --style-props={$storeValue} />
+<MyComponent {...$storeValue} />
 
 <!-- ✗ BAD -->
+<p>{storeValue}</p>
 
+<p class={storeValue} />
+<p style:color />
+
+<MyComponent prop="Hello {storeValue}" />
+<MyComponent bind:this={storeValue} />
+<MyComponent --style-props={storeValue} />
+<MyComponent {...storeValue} />
 ```
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+This rule checks the usage of store variables only if the store can be determined within a single file.  
+However, when using `@typescript-eslint/parser` and full type information, this rule uses the type information to determine if the expression is a store.
 
-```json
-{
-  "svelte/require-store-reactive-access": ["error", {
-   
-  }]
-}
+<!--eslint-skip-->
+
+```ts
+// fileName: my-stores.ts
+import { writable } from "svelte/store"
+export const storeValue = writable("hello")
 ```
 
-- 
+<!--eslint-skip-->
 
-## :books: Further Reading
+```svelte
+<script lang="ts">
+  /* eslint svelte/require-store-reactive-access: "error" */
+  import { get } from "svelte/store"
+  import { storeValue } from "./my-stores"
+</script>
 
--
+<!-- ✓ GOOD -->
+<p>{$storeValue}</p>
+
+<!-- ✗ BAD -->
+<p>{storeValue}</p>
+```
+
+## :wrench: Options
+
+Nothing.
 
 ## :mag: Implementation
 
