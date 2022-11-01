@@ -26,7 +26,7 @@ export default createRule("valid-prop-names-in-kit-pages", {
     let isScript = false
     return {
       // <script>
-      [`Program > SvelteScriptElement > SvelteStartTag`]: (
+      "Program > SvelteScriptElement > SvelteStartTag": (
         node: AST.SvelteStartTag,
       ) => {
         // except for <script context="module">
@@ -45,18 +45,39 @@ export default createRule("valid-prop-names-in-kit-pages", {
         isScript = false
       },
 
-      // export let xxx
-      [`ExportNamedDeclaration > VariableDeclaration > VariableDeclarator > Identifier`]:
-        (node: ESTree.Identifier) => {
-          if (!isScript) return {}
-          const { name } = node
-          if (EXPECTED_PROP_NAMES.includes(name)) return {}
-          return context.report({
-            node,
-            loc: node.loc!,
-            messageId: "unexpected",
-          })
-        },
+      "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator": (
+        node: ESTree.VariableDeclarator,
+      ) => {
+        if (!isScript) return
+
+        // export let foo
+        if (node.id.type === "Identifier") {
+          if (!EXPECTED_PROP_NAMES.includes(node.id.name)) {
+            context.report({
+              node,
+              loc: node.loc!,
+              messageId: "unexpected",
+            })
+          }
+          return
+        }
+
+        // export let { xxx, yyy } = zzz
+        if (node.id.type !== "ObjectPattern") return
+        for (const p of node.id.properties) {
+          if (
+            p.type === "Property" &&
+            p.value.type === "Identifier" &&
+            !EXPECTED_PROP_NAMES.includes(p.value.name)
+          ) {
+            context.report({
+              node: p.value,
+              loc: p.value.loc!,
+              messageId: "unexpected",
+            })
+          }
+        }
+      },
     }
   },
 })
