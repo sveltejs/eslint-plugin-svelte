@@ -27,7 +27,7 @@ export function isKitPageComponent(context: RuleContext): boolean {
   return (
     filePath.startsWith(path.join(projectRootDir, routes)) &&
     // MEMO: check only `+` and file extension for maintainability
-    Boolean(/\+.+\.svelte/.test(fileName))
+    Boolean(/^\+.+\.svelte$/.test(fileName))
   )
 }
 
