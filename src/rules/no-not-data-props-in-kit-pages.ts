@@ -9,7 +9,7 @@ export default createRule("no-not-data-props-in-kit-pages", {
   meta: {
     docs: {
       description:
-        "Disallow props other than data or errors in Svelte Kit page components.",
+        "disallow props other than data or errors in Svelte Kit page components.",
       category: "Possible Errors",
       // TODO Switch to recommended in the major version.
       recommended: false,
@@ -17,7 +17,7 @@ export default createRule("no-not-data-props-in-kit-pages", {
     schema: [],
     messages: {
       unexpected:
-        "Disallow props other than data or errors in Svelte Kit page components.",
+        "disallow props other than data or errors in Svelte Kit page components.",
     },
     type: "problem",
   },
