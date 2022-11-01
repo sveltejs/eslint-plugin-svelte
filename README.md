@@ -216,6 +216,28 @@ module.exports = {
 }
 ```
 
+#### settings.kit
+
+If you use SvelteKit with not default configuration, you need to set below configurations.
+The schema is subset of SvelteKit's configuration.
+Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for more details.
+
+e.g.
+
+```js
+module.exports = {
+  // ...
+  settings: {
+    kit: {
+      files: {
+        routes: "src/routes",
+      },
+    },
+  },
+  // ...
+}
+```
+
 ### Running ESLint from the command line
 
 If you want to run `eslint` from the command line, make sure you include the `.svelte` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
@@ -266,6 +288,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-else-if-blocks](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-style-properties](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dynamic-slot-name](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
 | [svelte/no-not-function-handler](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |

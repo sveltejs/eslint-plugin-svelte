@@ -15,6 +15,7 @@ import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
+import noExportLoadInSvelteModuleInKitPages from "../rules/no-export-load-in-svelte-module-in-kit-pages"
 import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
@@ -59,6 +60,7 @@ export const rules = [
   noDupeElseIfBlocks,
   noDupeStyleProperties,
   noDynamicSlotName,
+  noExportLoadInSvelteModuleInKitPages,
   noExtraReactiveCurlies,
   noInnerDeclarations,
   noNotFunctionHandler,

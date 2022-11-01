@@ -1,0 +1,4 @@
+- message: "disallow exporting load functions in `*.svelte` module in Svelte Kit page components."
+  line: 2
+  column: 16
+  suggestions: null

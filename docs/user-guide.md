@@ -168,6 +168,28 @@ module.exports = {
 }
 ```
 
+#### settings.kit
+
+If you use SvelteKit with not default configuration, you need to set below configurations.
+The schema is subset of SvelteKit's configuration.
+Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for more details.
+
+e.g.
+
+```js
+module.exports = {
+  // ...
+  settings: {
+    kit: {
+      files: {
+        routes: "src/routes",
+      },
+    },
+  },
+  // ...
+}
+```
+
 ### Running ESLint from the command line
 
 If you want to run `eslint` from the command line, make sure you include the `.svelte` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
