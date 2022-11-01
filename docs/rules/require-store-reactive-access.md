@@ -71,7 +71,6 @@ export const storeValue = writable("hello")
 ```svelte
 <script lang="ts">
   /* eslint svelte/require-store-reactive-access: "error" */
-  import { get } from "svelte/store"
   import { storeValue } from "./my-stores"
 </script>
 
