@@ -18,6 +18,7 @@ import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noExportLoadInSvelteModuleInKitPages from "../rules/no-export-load-in-svelte-module-in-kit-pages"
 import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noInnerDeclarations from "../rules/no-inner-declarations"
+import noNotDataPropsInKitPages from "../rules/no-not-data-props-in-kit-pages"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noReactiveFunctions from "../rules/no-reactive-functions"
@@ -63,6 +64,7 @@ export const rules = [
   noExportLoadInSvelteModuleInKitPages,
   noExtraReactiveCurlies,
   noInnerDeclarations,
+  noNotDataPropsInKitPages,
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noReactiveFunctions,
