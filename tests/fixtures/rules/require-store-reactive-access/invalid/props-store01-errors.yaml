@@ -1,20 +1,16 @@
-- message: Use $ prefix or get function, instead of using raw store in text
-    mustache interpolation.
+- message: Use $ prefix or get function, instead of using raw stores in template.
   line: 7
   column: 27
   suggestions: null
-- message: Use $ prefix or get function, instead of using raw store in text
-    mustache interpolation.
+- message: Use $ prefix or get function, instead of using raw stores in template.
   line: 8
   column: 25
   suggestions: null
-- message: Use $ prefix or get function, instead of using raw store in text
-    mustache interpolation.
+- message: Use $ prefix or get function, instead of using raw stores in template.
   line: 9
   column: 30
   suggestions: null
-- message: Use $ prefix or get function, instead of using raw store in text
-    mustache interpolation.
+- message: Use $ prefix or get function, instead of using raw stores in template.
   line: 10
   column: 18
   suggestions: null

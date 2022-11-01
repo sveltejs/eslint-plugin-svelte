@@ -17,7 +17,7 @@ export default createRule("require-store-reactive-access", {
     schema: [],
     messages: {
       usingRawStoreInText:
-        "Use $ prefix or get function, instead of using raw store in text mustache interpolation.",
+        "Use $ prefix or get function, instead of using raw stores in template.",
     },
     type: "problem",
   },
