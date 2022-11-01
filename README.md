@@ -188,12 +188,6 @@ See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
 You can change the behavior of this plugin with some settings.
 
-- `ignoreWarnings` (optional) ... Specifies an array of rules that ignore reports in the template.  
-  For example, set rules on the template that cannot avoid false positives.
-- `compileOptions` (optional) ... Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) and [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/). **Note that it has no effect on ESLint's custom parser**.
-  - `postcss` (optional) ... Specifies options related to PostCSS. You can disable the PostCSS process by specifying `false`.
-    - `configFilePath` (optional) ... Specifies the path of the directory containing the PostCSS configuration.
-
 e.g.
 
 ```js
@@ -210,13 +204,30 @@ module.exports = {
           configFilePath: "./path/to/my/postcss.config.js",
         },
       },
+      kit: {
+        files: {
+          routes: "src/routes",
+        },
+      },
     },
   },
   // ...
 }
 ```
 
-#### settings.kit
+#### settings.svelte.ignoreWarnings
+
+Specifies an array of rules that ignore reports in the template.  
+For example, set rules on the template that cannot avoid false positives.
+
+#### settings.svelte.compileOptions
+
+Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) and [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/). **Note that it has no effect on ESLint's custom parser**.
+
+- `postcss` ... Specifies options related to PostCSS. You can disable the PostCSS process by specifying `false`.
+  - `configFilePath` ... Specifies the path of the directory containing the PostCSS configuration.
+
+#### settings.svelte.kit
 
 If you use SvelteKit with not default configuration, you need to set below configurations.
 The schema is subset of SvelteKit's configuration.
@@ -228,9 +239,11 @@ e.g.
 module.exports = {
   // ...
   settings: {
-    kit: {
-      files: {
-        routes: "src/routes",
+    svelte: {
+      kit: {
+        files: {
+          routes: "src/routes",
+        },
       },
     },
   },
@@ -294,7 +307,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-shorthand-style-property-overrides](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |
 | [svelte/no-store-async](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
-| [svelte/require-store-callbacks-use-set-param](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | (no description) |  |
+| [svelte/require-store-callbacks-use-set-param](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param |  |
 | [svelte/valid-compile](https://ota-meshi.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :star: |
 
 ## Security Vulnerability
