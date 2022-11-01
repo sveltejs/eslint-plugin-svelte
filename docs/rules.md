@@ -14,93 +14,92 @@ sidebarDepth: 0
 
 These rules relate to possible syntax or logic errors in Svelte code:
 
-| Rule ID                                                                                                        | Description                                                                                                   |                |
-| :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ | :------------- |
-| [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md)                                             | disallow duplicate conditions in `{#if}` / `{:else if}` chains                                                | :star:         |
-| [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md)                                         | disallow duplicate style properties                                                                           | :star:         |
-| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md)                                                 | disallow dynamic slot name                                                                                    | :star::wrench: |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components.                         |                |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | Disallow exporting load functions in `*.svelte` module in Svelte Kit page components.                         | :star:         |
-| [svelte/no-not-data-props-in-kit-pages](./rules/no-not-data-props-in-kit-pages.md)                             | Disallow props other than data or errors in Svelte Kit page components.                                       |                |
-| [svelte/no-not-function-handler](./rules/no-not-function-handler.md)                                           | disallow use of not function in event handler                                                                 | :star:         |
-| [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md)                                   | disallow objects in text mustache interpolation                                                               | :star:         |
-| [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md)               | disallow shorthand style properties that override related longhand properties                                 | :star:         |
-| [svelte/no-store-async](./rules/no-store-async.md)                                                             | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |                |
-| [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md)                   | disallow unknown `style:property`                                                                             | :star:         |
-| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md)               | (no description)                                                                                              |                |
-| [svelte/valid-compile](./rules/valid-compile.md)                                                               | disallow warnings when compiling.                                                                             | :star:         |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
+| [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md) | disallow duplicate style properties | :star: |
+| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md) | disallow dynamic slot name | :star::wrench: |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
+| [svelte/no-not-data-props-in-kit-pages](./rules/no-not-data-props-in-kit-pages.md) | Disallow props other than data or errors in Svelte Kit page components. |  |
+| [svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
+| [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
+| [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
+| [svelte/no-store-async](./rules/no-store-async.md) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
+| [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |
+| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param |  |
+| [svelte/valid-compile](./rules/valid-compile.md) | disallow warnings when compiling. | :star: |
 
 ## Security Vulnerability
 
 These rules relate to security vulnerabilities in Svelte code:
 
-| Rule ID                                              | Description                                                              |        |
-| :--------------------------------------------------- | :----------------------------------------------------------------------- | :----- |
-| [svelte/no-at-html-tags](./rules/no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack                          | :star: |
-| [svelte/no-target-blank](./rules/no-target-blank.md) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |        |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/no-at-html-tags](./rules/no-at-html-tags.md) | disallow use of `{@html}` to prevent XSS attack | :star: |
+| [svelte/no-target-blank](./rules/no-target-blank.md) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |  |
 
 ## Best Practices
 
 These rules relate to better ways of doing things to help you avoid problems:
 
-| Rule ID                                                                                  | Description                                                                      |          |
-| :--------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------- | :------- |
-| [svelte/button-has-type](./rules/button-has-type.md)                                     | disallow usage of button without an explicit type attribute                      |          |
-| [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md)                                   | disallow the use of `{@debug}`                                                   | :star:   |
-| [svelte/no-reactive-functions](./rules/no-reactive-functions.md)                         | it's not necessary to define functions in reactive statements                    | :bulb:   |
-| [svelte/no-reactive-literals](./rules/no-reactive-literals.md)                           | don't assign literal values in reactive statements                               | :bulb:   |
-| [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md)                     | disallow unused svelte-ignore comments                                           | :star:   |
-| [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md)                           | disallow unnecessary mustache interpolations                                     | :wrench: |
-| [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md)     | destructure values from object stores for better change tracking & fewer redraws | :bulb:   |
-| [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized                                   |          |
-| [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                   |          |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
+| [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
+| [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | it's not necessary to define functions in reactive statements | :bulb: |
+| [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | don't assign literal values in reactive statements | :bulb: |
+| [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |
+| [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md) | disallow unnecessary mustache interpolations | :wrench: |
+| [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
+| [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized |  |
+| [svelte/require-stores-init](./rules/require-stores-init.md) | require initial value in store |  |
 
 ## Stylistic Issues
 
 These rules relate to style guidelines, and are therefore quite subjective:
 
-| Rule ID                                                                                                  | Description                                                                        |          |
-| :------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
-| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md)                     | derived store should use same variable names between values and callback           |          |
-| [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md)                                 | enforce the location of first attribute                                            | :wrench: |
-| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md)                           | require or disallow a space before tag's closing brackets                          | :wrench: |
-| [svelte/html-quotes](./rules/html-quotes.md)                                                             | enforce quotes style of HTML attributes                                            | :wrench: |
-| [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                         | :wrench: |
-| [svelte/indent](./rules/indent.md)                                                                       | enforce consistent indentation                                                     | :wrench: |
-| [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
-| [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
-| [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
-| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
-| [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
-| [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
-| [svelte/shorthand-attribute](./rules/shorthand-attribute.md)                                             | enforce use of shorthand syntax in attribute                                       | :wrench: |
-| [svelte/shorthand-directive](./rules/shorthand-directive.md)                                             | enforce use of shorthand syntax in directives                                      | :wrench: |
-| [svelte/sort-attributes](./rules/sort-attributes.md)                                                     | enforce order of attributes                                                        | :wrench: |
-| [svelte/spaced-html-comment](./rules/spaced-html-comment.md)                                             | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md) | derived store should use same variable names between values and callback |  |
+| [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md) | enforce the location of first attribute | :wrench: |
+| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md) | require or disallow a space before tag's closing brackets | :wrench: |
+| [svelte/html-quotes](./rules/html-quotes.md) | enforce quotes style of HTML attributes | :wrench: |
+| [svelte/html-self-closing](./rules/html-self-closing.md) | enforce self-closing style | :wrench: |
+| [svelte/indent](./rules/indent.md) | enforce consistent indentation | :wrench: |
+| [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md) | enforce the maximum number of attributes per line | :wrench: |
+| [svelte/mustache-spacing](./rules/mustache-spacing.md) | enforce unified spacing in mustache | :wrench: |
+| [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md) | disallow wrapping single reactive statements in curly braces | :bulb: |
+| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute | :wrench: |
+| [svelte/prefer-class-directive](./rules/prefer-class-directive.md) | require class directives instead of ternary expressions | :wrench: |
+| [svelte/prefer-style-directive](./rules/prefer-style-directive.md) | require style directives instead of style attribute | :wrench: |
+| [svelte/shorthand-attribute](./rules/shorthand-attribute.md) | enforce use of shorthand syntax in attribute | :wrench: |
+| [svelte/shorthand-directive](./rules/shorthand-directive.md) | enforce use of shorthand syntax in directives | :wrench: |
+| [svelte/sort-attributes](./rules/sort-attributes.md) | enforce order of attributes | :wrench: |
+| [svelte/spaced-html-comment](./rules/spaced-html-comment.md) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## Extension Rules
 
 These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
-| Rule ID                                                          | Description                                                   |          |
-| :--------------------------------------------------------------- | :------------------------------------------------------------ | :------- |
-| [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star:   |
-| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)       | disallow trailing whitespace at the end of lines              | :wrench: |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
+| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## System
 
 These rules relate to this plugin works:
 
-| Rule ID                                                  | Description                                 |        |
-| :------------------------------------------------------- | :------------------------------------------ | :----- |
+| Rule ID | Description |    |
+|:--------|:------------|:---|
 | [svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template | :star: |
-| [svelte/system](./rules/system.md)                       | system rule for working this plugin         | :star: |
+| [svelte/system](./rules/system.md) | system rule for working this plugin | :star: |
 
 ## Deprecated
 
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID                                                                                                      | Replaced by                                                             |
-| :----------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
+| Rule ID | Replaced by |
+|:--------|:------------|
 | [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
