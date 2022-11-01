@@ -1,3 +1,4 @@
+import type { AST } from "svelte-eslint-parser"
 import type * as ESTree from "estree"
 import { createRule } from "../utils"
 import { isKitPageComponent } from "../utils/svelte-kit"
@@ -21,29 +22,32 @@ export default createRule("no-not-data-props-in-kit-pages", {
   },
   create(context) {
     if (!isKitPageComponent(context)) return {}
-    let isModule = false
+    let isScript = false
     return {
-      // <script context="module">
-      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value="module"]`]:
-        () => {
-          isModule = true
-        },
-
       // <script>
-      [`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value!="module"]`]:
-        () => {
-          isModule = false
-        },
+      [`Program > SvelteScriptElement > SvelteStartTag`]: (
+        node: AST.SvelteStartTag,
+      ) => {
+        // except for <script context="module">
+        isScript = !node.attributes.some(
+          (a) =>
+            a.type === "SvelteAttribute" &&
+            a.key.name === "context" &&
+            a.value.some(
+              (v) => v.type === "SvelteLiteral" && v.value === "module",
+            ),
+        )
+      },
 
       // </script>
-      ["SvelteEndTag"]: () => {
-        isModule = false
+      "Program > SvelteScriptElement:exit": () => {
+        isScript = false
       },
 
       // export let xxx
       [`ExportNamedDeclaration > VariableDeclaration > VariableDeclarator > Identifier`]:
         (node: ESTree.Identifier) => {
-          if (isModule) return {}
+          if (!isScript) return {}
           const { name } = node
           if (EXPECTED_PROP_NAMES.includes(name)) return {}
           return context.report({
