@@ -28,14 +28,14 @@ function normalize(path) {
   let result = []
   for (const part of path.replace(/\/+/gu, "/").split("/")) {
     if (part === "..") {
-      if (result.length) result.pop()
-    } else if (part === ".") {
+      if (result[0] && result[0] !== ".." && result[0] !== ".") result.shift()
+    } else if (part === "." && result.length) {
       // noop
     } else {
-      result.push(part)
+      result.unshift(part)
     }
   }
-  return result.join("/")
+  return result.reverse().join("/")
 }
 
 const sep = "/"
