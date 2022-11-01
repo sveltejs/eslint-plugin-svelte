@@ -25,6 +25,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
 | [svelte/no-store-async](./rules/no-store-async.md) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |
+| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | (no description) |  |
 | [svelte/valid-compile](./rules/valid-compile.md) | disallow warnings when compiling. | :star: |
 
 ## Security Vulnerability
