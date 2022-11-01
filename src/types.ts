@@ -121,16 +121,16 @@ export type RuleContext = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   options: any[]
   settings?: {
-    ["svelte"]?: {
+    svelte?: {
       ignoreWarnings?: unknown
       compileOptions?: {
         babel?: boolean
         postcss?: false | { configFilePath?: unknown }
       }
-    }
-    ["kit"]?: {
-      files?: {
-        routes?: string
+      kit?: {
+        files?: {
+          routes?: string
+        }
       }
     }
   }

@@ -7,7 +7,9 @@ description: "store callbacks must use `set` param"
 
 # svelte/require-store-callbacks-use-set-param
 
-> Store callbacks must use `set` param.
+> store callbacks must use `set` param
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
