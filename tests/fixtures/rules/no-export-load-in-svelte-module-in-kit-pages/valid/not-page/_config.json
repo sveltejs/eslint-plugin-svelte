@@ -1,0 +1,9 @@
+{
+  "settings": {
+    "kit": {
+      "files": {
+        "routes": "some-path"
+      }
+    }
+  }
+}

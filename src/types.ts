@@ -128,6 +128,11 @@ export type RuleContext = {
         postcss?: false | { configFilePath?: unknown }
       }
     }
+    ["kit"]?: {
+      files?: {
+        routes?: string
+      }
+    }
   }
   parserPath: string
   parserOptions: Linter.ParserOptions

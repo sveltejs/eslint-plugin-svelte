@@ -19,11 +19,13 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md) | disallow duplicate style properties | :star: |
 | [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md) | disallow dynamic slot name | :star::wrench: |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
 | [svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
 | [svelte/no-store-async](./rules/no-store-async.md) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |
+| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param |  |
 | [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md) | disallow to render store itself. Need to use $ prefix or get function. | :wrench: |
 | [svelte/valid-compile](./rules/valid-compile.md) | disallow warnings when compiling. | :star: |
 

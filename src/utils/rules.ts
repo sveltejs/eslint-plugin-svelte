@@ -15,6 +15,7 @@ import noAtHtmlTags from "../rules/no-at-html-tags"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
+import noExportLoadInSvelteModuleInKitPages from "../rules/no-export-load-in-svelte-module-in-kit-pages"
 import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
@@ -33,6 +34,7 @@ import preferClassDirective from "../rules/prefer-class-directive"
 import preferDestructuredStoreProps from "../rules/prefer-destructured-store-props"
 import preferStyleDirective from "../rules/prefer-style-directive"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
+import requireStoreCallbacksUseSetParam from "../rules/require-store-callbacks-use-set-param"
 import requireStoreReactiveAccess from "../rules/require-store-reactive-access"
 import requireStoresInit from "../rules/require-stores-init"
 import shorthandAttribute from "../rules/shorthand-attribute"
@@ -59,6 +61,7 @@ export const rules = [
   noDupeElseIfBlocks,
   noDupeStyleProperties,
   noDynamicSlotName,
+  noExportLoadInSvelteModuleInKitPages,
   noExtraReactiveCurlies,
   noInnerDeclarations,
   noNotFunctionHandler,
@@ -77,6 +80,7 @@ export const rules = [
   preferDestructuredStoreProps,
   preferStyleDirective,
   requireOptimizedStyleAttribute,
+  requireStoreCallbacksUseSetParam,
   requireStoreReactiveAccess,
   requireStoresInit,
   shorthandAttribute,

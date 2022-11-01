@@ -15,6 +15,7 @@
   let tsParser = null
 
   let code = ""
+  export let config = {}
   export let rules = {}
   export let fix = false
   export let language = "svelte"
@@ -75,6 +76,7 @@
         browser: true,
         es2021: true,
       },
+      ...config,
     }}
     {language}
     {options}
