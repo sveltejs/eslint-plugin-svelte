@@ -1,11 +1,11 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "svelte/no-not-data-props-in-kit-pages"
+title: "svelte/valid-prop-names-in-kit-pages"
 description: "disallow props other than data or errors in Svelte Kit page components."
 ---
 
-# svelte/no-not-data-props-in-kit-pages
+# svelte/valid-prop-names-in-kit-pages
 
 > disallow props other than data or errors in Svelte Kit page components.
 
@@ -33,7 +33,7 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
 
 ```svelte
 <script>
-  /* eslint svelte/no-not-data-props-in-kit-pages: "error" */
+  /* eslint svelte/valid-prop-names-in-kit-pages: "error" */
   /** ✓ GOOD */
   export let data
   export let errors
@@ -57,5 +57,5 @@ Nothing. But if use are using not default routes folder, please set configuratio
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-not-data-props-in-kit-pages.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/no-not-data-props-in-kit-pages.ts)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/valid-prop-names-in-kit-pages.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/valid-prop-names-in-kit-pages.ts)

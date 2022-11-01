@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": minor
 ---
 
-feat: add `svelte/no-not-data-props-in-kit-pages` rule
+feat: add `svelte/valid-prop-names-in-kit-pages` rule
