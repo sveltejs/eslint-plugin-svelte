@@ -39,7 +39,11 @@ export default (md: Md, options: { baseUrl: string; root: string }): void => {
       if (/^https?:/.test(href)) {
         const proxyToken = {
           ...token,
-          attrs: [...token.attrs!, ["target", "_blank"]],
+          attrs: [
+            ...token.attrs!,
+            ["target", "_blank"],
+            ["rel", "noopener noreferrer"],
+          ],
         } as Token
         return self.renderToken([proxyToken], 0, options)
       } else if (/\.md(?:#.*)?$/.test(href) || /^#.*$/.test(href)) {
