@@ -23,7 +23,12 @@ export function isKitPageComponent(context: RuleContext): boolean {
     "src/routes"
   const filePath = context.getFilename()
   const projectRootDir = getProjectRootDir(context.getFilename()) ?? ""
-  return filePath.startsWith(path.join(projectRootDir, routes))
+  const fileName = filePath.split("/").pop() || filePath
+  return (
+    filePath.startsWith(path.join(projectRootDir, routes)) &&
+    // MEMO: check only `+` and file extension for maintainability
+    Boolean(/^\+.+\.svelte$/.test(fileName))
+  )
 }
 
 /**
