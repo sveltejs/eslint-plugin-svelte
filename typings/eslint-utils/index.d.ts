@@ -1,6 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
 import type { Scope } from "eslint"
-import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
 export {
   ReferenceTracker,
@@ -34,7 +33,7 @@ export function isNotCommentToken(token: Token): boolean
 
 export function findVariable(
   initialScope: Scope.Scope,
-  nameOrNode: ESTree.Identifier | TSESTree.Identifier | string,
+  nameOrNode: TSESTree.Identifier | string,
 ): Scope.Variable
 
 /**
@@ -42,10 +41,6 @@ export function findVariable(
  */
 export function getPropertyName(
   node:
-    | ESTree.MemberExpression
-    | ESTree.MethodDefinition
-    | ESTree.Property
-    | ESTree.PropertyDefinition
     | TSESTree.MemberExpression
     | TSESTree.MethodDefinition
     | TSESTree.Property

@@ -14,9 +14,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    // "paths": {
-    //     "*": ["typings/*"]
-    // },
     "esModuleInterop": true,
     "outDir": "lib",
     "paths": {

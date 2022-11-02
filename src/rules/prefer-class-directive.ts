@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import {
   getStringIfConstant,
@@ -28,7 +28,7 @@ export default createRule("prefer-class-directive", {
 
     type Expr = {
       not?: true
-      node: ESTree.Expression
+      node: TSESTree.Expression
       chains?: Expr
     }
 
@@ -37,7 +37,7 @@ export default createRule("prefer-class-directive", {
      * Returns null if it has an unknown string.
      */
     function parseConditionalExpression(
-      node: ESTree.ConditionalExpression,
+      node: TSESTree.ConditionalExpression,
     ): Map<Expr, string> | null {
       const result = new Map<Expr, string>()
 
@@ -66,7 +66,7 @@ export default createRule("prefer-class-directive", {
       return result
 
       /** Process items */
-      function processItems(key: Expr, e: ESTree.Expression) {
+      function processItems(key: Expr, e: TSESTree.Expression) {
         if (e.type === "ConditionalExpression") {
           const sub = parseConditionalExpression(e)
           if (sub == null) {
@@ -96,7 +96,7 @@ export default createRule("prefer-class-directive", {
      * Expr to string
      */
     function exprToString({ node, not }: Expr): string {
-      let text = sourceCode.text.slice(...node.range!)
+      let text = sourceCode.text.slice(...node.range)
 
       // *Currently not supported.
       // if (chains) {
@@ -123,12 +123,12 @@ export default createRule("prefer-class-directive", {
             node.operator === "!==" ||
             node.operator === "!="
           ) {
-            const left = sourceCode.text.slice(...node.left.range!)
+            const left = sourceCode.text.slice(...node.left.range)
             const op = sourceCode.text.slice(
-              node.left.range![1],
-              node.right.range![0],
+              node.left.range[1],
+              node.right.range[0],
             )
-            const right = sourceCode.text.slice(...node.right.range!)
+            const right = sourceCode.text.slice(...node.right.range)
 
             return `${left}${
               node.operator === "===" || node.operator === "=="
@@ -138,7 +138,7 @@ export default createRule("prefer-class-directive", {
           }
         } else if (node.type === "UnaryExpression") {
           if (node.operator === "!" && node.prefix) {
-            return sourceCode.text.slice(...node.argument.range!)
+            return sourceCode.text.slice(...node.argument.range)
           }
         }
 

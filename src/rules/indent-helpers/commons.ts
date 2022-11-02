@@ -74,7 +74,7 @@ export function isBeginningOfLine(
     filter: isNotWhitespace,
   })
 
-  return !prevToken || prevToken.loc.end.line < node.loc!.start.line
+  return !prevToken || prevToken.loc.end.line < node.loc.start.line
 }
 
 /**

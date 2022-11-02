@@ -68,13 +68,11 @@ export default createRule("first-attribute-linebreak", {
             : multiline
 
         if (location === "beside") {
-          if (
-            node.parent.name.loc!.end.line === firstAttribute.loc.start.line
-          ) {
+          if (node.parent.name.loc.end.line === firstAttribute.loc.start.line) {
             return
           }
         } else {
-          if (node.parent.name.loc!.end.line < firstAttribute.loc.start.line) {
+          if (node.parent.name.loc.end.line < firstAttribute.loc.start.line) {
             return
           }
         }

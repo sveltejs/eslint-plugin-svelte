@@ -1,4 +1,4 @@
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import type { RuleContext } from "../types"
 import { extractStoreReferences } from "./reference-helpers/svelte-store"
@@ -21,18 +21,18 @@ export default createRule("derived-has-same-inputs-outputs", {
   create(context) {
     /** check node type */
     function isIdentifierOrArrayExpression(
-      node: ESTree.SpreadElement | ESTree.Expression,
-    ): node is ESTree.Identifier | ESTree.ArrayExpression {
+      node: TSESTree.SpreadElement | TSESTree.Expression,
+    ): node is TSESTree.Identifier | TSESTree.ArrayExpression {
       return ["Identifier", "ArrayExpression"].includes(node.type)
     }
 
     type ArrowFunctionExpressionOrFunctionExpression =
-      | ESTree.ArrowFunctionExpression
-      | ESTree.FunctionExpression
+      | TSESTree.ArrowFunctionExpression
+      | TSESTree.FunctionExpression
 
     /** check node type */
     function isFunctionExpression(
-      node: ESTree.SpreadElement | ESTree.Expression,
+      node: TSESTree.SpreadElement | TSESTree.Expression,
     ): node is ArrowFunctionExpressionOrFunctionExpression {
       return ["ArrowFunctionExpression", "FunctionExpression"].includes(
         node.type,
@@ -45,7 +45,7 @@ export default createRule("derived-has-same-inputs-outputs", {
      */
     function checkIdentifier(
       context: RuleContext,
-      args: ESTree.Identifier,
+      args: TSESTree.Identifier,
       fn: ArrowFunctionExpressionOrFunctionExpression,
     ) {
       const fnParam = fn.params[0]
@@ -54,7 +54,7 @@ export default createRule("derived-has-same-inputs-outputs", {
       if (expectedName !== fnParam.name) {
         context.report({
           node: fn,
-          loc: fnParam.loc!,
+          loc: fnParam.loc,
           messageId: "unexpected",
           data: { name: expectedName },
         })
@@ -67,7 +67,7 @@ export default createRule("derived-has-same-inputs-outputs", {
      */
     function checkArrayExpression(
       context: RuleContext,
-      args: ESTree.ArrayExpression,
+      args: TSESTree.ArrayExpression,
       fn: ArrowFunctionExpressionOrFunctionExpression,
     ) {
       const fnParam = fn.params[0]
@@ -82,7 +82,7 @@ export default createRule("derived-has-same-inputs-outputs", {
           if (expectedName !== element.name) {
             context.report({
               node: fn,
-              loc: element.loc!,
+              loc: element.loc,
               messageId: "unexpected",
               data: { name: expectedName },
             })

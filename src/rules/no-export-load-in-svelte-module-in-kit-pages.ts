@@ -1,4 +1,4 @@
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import { isKitPageComponent } from "../utils/svelte-kit"
 
@@ -38,11 +38,11 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
       // export function load() {}
       // export const load = () => {}
       [`:matches(ExportNamedDeclaration > FunctionDeclaration, ExportNamedDeclaration > VariableDeclaration > VariableDeclarator) > Identifier.id[name="load"]`]:
-        (node: ESTree.Identifier) => {
+        (node: TSESTree.Identifier) => {
           if (!isModule) return {}
           return context.report({
             node,
-            loc: node.loc!,
+            loc: node.loc,
             messageId: "unexpected",
           })
         },

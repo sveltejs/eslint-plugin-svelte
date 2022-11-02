@@ -1,5 +1,6 @@
 import path from "path"
 import fs from "fs"
+import type { RuleModule } from "../../src/types"
 
 /**
  * Get the all rules
@@ -7,19 +8,14 @@ import fs from "fs"
  */
 function readRules() {
   const rulesLibRoot = path.resolve(__dirname, "../../src/rules")
-  const rules = []
+  const rules: RuleModule[] = []
   for (const name of iterateTsFiles()) {
-    const ruleName = name.replace(/\.ts$/u, "")
-    const ruleId = `svelte/${ruleName}`
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore
     const module = require(path.join(rulesLibRoot, name))
-    const rule = module && module.default
+    const rule: RuleModule = module && module.default
     if (!rule || typeof rule.create !== "function") {
       continue
     }
-
-    rule.meta.docs.ruleName = ruleName
-    rule.meta.docs.ruleId = ruleId
 
     rules.push(rule)
   }

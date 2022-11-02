@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { ASTNode, RuleContext, RuleListener } from "../../types"
 import * as SV from "./svelte"
 import * as ES from "./es"
@@ -249,7 +249,7 @@ export function defineVisitor(
         offsets.ignore(node)
       }
     },
-    "Program:exit"(node: ESTree.Program) {
+    "Program:exit"(node: TSESTree.Program) {
       const calculator = offsets.getOffsetCalculator()
 
       let prevToken: AnyToken | null = null

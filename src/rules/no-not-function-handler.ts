@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import { findVariable } from "../utils/ast-utils"
 
@@ -7,7 +7,7 @@ const PHRASES = {
   ObjectExpression: "object",
   ArrayExpression: "array",
   ClassExpression: "class",
-  Literal(node: ESTree.Literal): string | null {
+  Literal(node: TSESTree.Literal): string | null {
     if ("regex" in node) {
       return "regex value"
     }
@@ -37,9 +37,9 @@ export default createRule("no-not-function-handler", {
   create(context) {
     /** Find data expression */
     function findRootExpression(
-      node: ESTree.Expression,
-      already = new Set<ESTree.Identifier>(),
-    ): ESTree.Expression {
+      node: TSESTree.Expression,
+      already = new Set<TSESTree.Identifier>(),
+    ): TSESTree.Expression {
       if (node.type !== "Identifier" || already.has(node)) {
         return node
       }

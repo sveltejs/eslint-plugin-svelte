@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import { isKitPageComponent } from "../utils/svelte-kit"
 
@@ -46,7 +46,7 @@ export default createRule("valid-prop-names-in-kit-pages", {
       },
 
       "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator": (
-        node: ESTree.VariableDeclarator,
+        node: TSESTree.VariableDeclarator,
       ) => {
         if (!isScript) return
 
@@ -55,7 +55,7 @@ export default createRule("valid-prop-names-in-kit-pages", {
           if (!EXPECTED_PROP_NAMES.includes(node.id.name)) {
             context.report({
               node,
-              loc: node.loc!,
+              loc: node.loc,
               messageId: "unexpected",
             })
           }
@@ -72,7 +72,7 @@ export default createRule("valid-prop-names-in-kit-pages", {
           ) {
             context.report({
               node: p.value,
-              loc: p.value.loc!,
+              loc: p.value.loc,
               messageId: "unexpected",
             })
           }

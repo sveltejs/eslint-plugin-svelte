@@ -89,7 +89,10 @@ export default createRule("no-target-blank", {
     type: "problem",
   },
   create(context) {
-    const configuration = context.options[0] || {}
+    const configuration: {
+      allowReferrer?: boolean
+      enforceDynamicLinks?: "always" | "never"
+    } = context.options[0] || {}
     const allowReferrer = Boolean(configuration.allowReferrer) || false
     const enforceDynamicLinks: "always" | "never" =
       configuration.enforceDynamicLinks || "always"

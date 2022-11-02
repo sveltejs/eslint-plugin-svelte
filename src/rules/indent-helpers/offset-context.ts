@@ -154,7 +154,7 @@ export class OffsetContext {
       for (const n of nodes) {
         if (n) {
           if (!isBeginningOfLine(this.sourceCode, n)) {
-            const startLoc = n.loc!.start
+            const startLoc = n.loc.start
             const alignIndent =
               startLoc.column -
               /^\s*/u.exec(this.sourceCode.lines[startLoc.line - 1])![0].length
@@ -231,7 +231,7 @@ export class OffsetContext {
    * Ignore range of the given node.
    */
   public ignore(node: ASTNode): void {
-    const range = node.range!
+    const range = node.range
     const n = this.ignoreRanges.get(range[0]) ?? 0
     this.ignoreRanges.set(range[0], Math.max(n, range[1]))
   }

@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import type {
   SvelteStyleDeclaration,
@@ -12,8 +12,8 @@ import { isHTMLElementLike } from "../utils/ast-utils"
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(
-  node: ESTree.Expression,
-): node is ESTree.Literal & { value: string } {
+  node: TSESTree.Expression,
+): node is TSESTree.StringLiteral {
   return node.type === "Literal" && typeof node.value === "string"
 }
 
@@ -154,28 +154,28 @@ export default createRule("prefer-style-directive", {
         messageId: "unexpected",
         *fix(fixer) {
           let valueText = sourceCode.text.slice(
-            node.test.range![0],
-            node.consequent.range![0],
+            node.test.range[0],
+            node.consequent.range[0],
           )
           if (positive) {
             valueText +=
-              sourceCode.text[node.consequent.range![0]] +
+              sourceCode.text[node.consequent.range[0]] +
               decl.value.value +
-              sourceCode.text[node.consequent.range![1] - 1]
+              sourceCode.text[node.consequent.range[1] - 1]
           } else {
             valueText += "null"
           }
           valueText += sourceCode.text.slice(
-            node.consequent.range![1],
-            node.alternate.range![0],
+            node.consequent.range[1],
+            node.alternate.range[0],
           )
           if (positive) {
             valueText += "null"
           } else {
             valueText +=
-              sourceCode.text[node.alternate.range![0]] +
+              sourceCode.text[node.alternate.range[0]] +
               decl.value.value +
-              sourceCode.text[node.alternate.range![1] - 1]
+              sourceCode.text[node.alternate.range[1] - 1]
           }
           const styleDirective = `style:${decl.prop.name}={${valueText}}`
           if (root.nodes.length === 1 && root.nodes[0] === inline) {

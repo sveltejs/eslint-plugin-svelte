@@ -1,5 +1,5 @@
+import type { AST } from "svelte-eslint-parser"
 import type { TSESTree } from "@typescript-eslint/types"
-import type * as ESTree from "estree"
 import {
   isClosingBracketToken,
   isClosingParenToken,
@@ -45,7 +45,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // foo as T
       const expressionTokens = getFirstAndLastTokens(
         sourceCode,
-        node.expression as ESTree.Expression,
+        node.expression,
       )
       const asToken = sourceCode.getTokenAfter(expressionTokens.lastToken)!
       offsets.setOffsetToken(
@@ -91,7 +91,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const idToken = sourceCode.getFirstToken(node.id)
       offsets.setOffsetToken(idToken, 1, typeToken)
 
-      let eqToken
+      let eqToken: AST.Token | null
       if (node.typeParameters) {
         offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
@@ -510,7 +510,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // fn(arg: A): R | null;
       const firstToken = sourceCode.getFirstToken(node)
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
-      let keyLast
+      let keyLast: AST.Token
       if (node.computed) {
         const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
         offsets.setOffsetElementList([node.key], firstToken, closeBracket, 1)
@@ -612,7 +612,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node: TSESTree.TSEmptyBodyFunctionExpression | TSESTree.TSDeclareFunction,
     ) {
       const firstToken = sourceCode.getFirstToken(node)
-      let leftParenToken, bodyBaseToken
+      let leftParenToken: AST.Token, bodyBaseToken: AST.Token
       if (firstToken.type === "Punctuator") {
         // method
         leftParenToken = firstToken
@@ -719,7 +719,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       offsets.setOffsetToken(prefixTokens, 0, firstToken)
 
-      let lastKeyToken
+      let lastKeyToken: AST.Token
       if (node.computed) {
         const leftBracketToken = sourceCode.getTokenBefore(
           keyTokens.firstToken,
@@ -1086,7 +1086,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
     ["TSTypeAliasDeclaration, TSCallSignatureDeclaration, TSConstructSignatureDeclaration, TSImportEqualsDeclaration," +
       "TSAbstractMethodDefinition, TSAbstractPropertyDefinition, TSEnumMember," +
       "TSPropertySignature, TSIndexSignature, TSMethodSignature," +
-      "TSAbstractClassProperty, ClassProperty"](node: ESTree.Node) {
+      "TSAbstractClassProperty, ClassProperty"](node: TSESTree.Node) {
       const firstToken = sourceCode.getFirstToken(node)
       const lastToken = sourceCode.getLastToken(node)
       if (isSemicolonToken(lastToken) && firstToken !== lastToken) {

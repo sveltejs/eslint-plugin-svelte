@@ -6,7 +6,8 @@ import fs from "fs"
 // import { fileURLToPath } from "url"
 // const filename = fileURLToPath(import.meta.url)
 const dirname = __dirname // path.dirname(filename)
-const codeFilename = path.join(dirname, "../src/types-for-node.ts")
+const typesForNodeFilename = path.join(dirname, "../src/types-for-node.ts")
+const estreeFilename = path.join(dirname, "../typings/estree/index.d.ts")
 const { visitorKeys } = parseForESLint("")
 
 const esNextNodeNames = ["Decorator", "ImportAttribute", "StaticBlock"]
@@ -23,86 +24,97 @@ const svelteNodeNames = Object.keys(visitorKeys).filter(
   (k) => !tsEsNodeNames.includes(k) && !k.startsWith("Experimental"),
 )
 
-let code = `import type { TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
+const estreeCode = [
+  `//
+// Replace type information to use "@typescript-eslint/types" instead of "estree".
+//
+
+import type { TSESTree } from "@typescript-eslint/types"
+
+export type Node = TSESTree.Node
+export type Expression = TSESTree.Expression
+export type Statement = TSESTree.Statement
+export type Pattern = TSESTree.Pattern`,
+]
+const typesForNodeCode = [
+  `//
+// The information here can be calculated by calculating the type,
+// but is pre-defined to avoid the computational cost.
+//
+
+import type { TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
 
 export type ASTNode =
   | AST.SvelteNode
-  // This is correct, but is not done now to avoid type errors.
-  // | Exclude<ESTree.Node, ESTree.Program>
-  // | Exclude<Omit<TSESTree.Node, "parent">, { type: ESTree.Node["type"] }>
-  | ESTree.Node
-  | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
+  | Exclude<Omit<TSESTree.Node, "parent">, { type: AST.SvelteNode["type"] }>
 export type ASTNodeWithParent =
-  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNodeWithParent })
+  | (Exclude<ASTNode, AST.SvelteProgram> & { parent: ASTNodeWithParent })
   | AST.SvelteProgram
 
-export type ASTNodeListener = {
-`
+export type ASTNodeListener = {`,
+]
 for (const nodeType of tsEsNodeNames) {
   let argType = `TSESTree.${nodeType}`
   if (nodeType === "TSIntrinsicKeyword") {
     argType = `TSESTree.Node & { type: AST_NODE_TYPES.${nodeType}}`
   }
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
 }
 for (const nodeType of svelteNodeNames) {
   let argType = `AST.${nodeType}`
   if (nodeType === "Program") {
     argType = `AST.SvelteProgram`
   }
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
 }
-code += `
-}`
-
-code += `
-export type ESNodeListener = {
-`
+typesForNodeCode.push(`}`)
+typesForNodeCode.push(``)
+typesForNodeCode.push(`export type ESNodeListener = {`)
 for (const nodeType of esNodeNames) {
-  const argType = `ESTree.${nodeType}`
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  const argType = `TSESTree.${nodeType}`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
+  estreeCode.push(`export type ${nodeType} = TSESTree.${nodeType}`)
 }
 for (const nodeType of esSvelteNodeNames) {
   let argType = `AST.${nodeType}`
   if (nodeType === "Program") {
     argType = `AST.SvelteProgram`
   }
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
 }
-code += `
-}`
-
-code += `
-export type TSNodeListener = {
-`
+typesForNodeCode.push(`}`)
+typesForNodeCode.push(``)
+typesForNodeCode.push(`export type TSNodeListener = {`)
 for (const nodeType of tsNodeNames) {
   let argType = `TSESTree.${nodeType}`
   if (nodeType === "TSIntrinsicKeyword") {
     argType = `TSESTree.Node & { type: AST_NODE_TYPES.${nodeType}}`
   }
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
 }
-code += `
-}`
-
-code += `
-export type SvelteNodeListener = {
-`
+typesForNodeCode.push(`}`)
+typesForNodeCode.push(``)
+typesForNodeCode.push(`export type SvelteNodeListener = {`)
 for (const nodeType of svelteNodeNames.filter(
   (k) => !esSvelteNodeNames.includes(k),
 )) {
   const argType = `AST.${nodeType}`
-  code += `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void
-`
+  typesForNodeCode.push(
+    `  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`,
+  )
 }
-code += `
-}`
+typesForNodeCode.push(`}`)
 
-fs.writeFileSync(codeFilename, code)
+fs.writeFileSync(typesForNodeFilename, typesForNodeCode.join("\n"))
+fs.writeFileSync(estreeFilename, estreeCode.join("\n"))

@@ -1,5 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import {
   findVariable,
@@ -65,16 +65,16 @@ export default createRule("no-dynamic-slot-name", {
     /**
      * Get static text from given expression
      */
-    function getStaticText(node: ESTree.Expression) {
+    function getStaticText(node: TSESTree.Expression) {
       const expr = findRootExpression(node)
       return getStringIfConstant(expr)
     }
 
     /** Find data expression */
     function findRootExpression(
-      node: ESTree.Expression,
-      already = new Set<ESTree.Identifier>(),
-    ): ESTree.Expression {
+      node: TSESTree.Expression,
+      already = new Set<TSESTree.Identifier>(),
+    ): TSESTree.Expression {
       if (node.type !== "Identifier" || already.has(node)) {
         return node
       }
