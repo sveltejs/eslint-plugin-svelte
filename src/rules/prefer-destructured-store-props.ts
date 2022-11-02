@@ -55,7 +55,7 @@ export default createRule("prefer-destructured-store-props", {
       }
 
       for (const reference of storeVar.references) {
-        const id = reference.identifier as TSESTree.Identifier
+        const id = reference.identifier
         if (id.name !== object.name) continue
         if (isReactiveVariableDefinitionWithMemberExpression(id)) {
           // $: target = $store.prop

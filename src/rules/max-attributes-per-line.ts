@@ -76,7 +76,7 @@ export default createRule("max-attributes-per-line", {
         attribute.type === "SvelteStyleDirective" ||
         attribute.type === "SvelteSpecialDirective"
       ) {
-        name = sourceCode.text.slice(...attribute.key.range!)
+        name = sourceCode.text.slice(...attribute.key.range)
       } else {
         // if (attribute.type === "SvelteSpreadAttribute")
         name = sourceCode.text.slice(...attribute.range)

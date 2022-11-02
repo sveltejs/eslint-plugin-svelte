@@ -3,7 +3,6 @@
 // https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/rules/no-unnecessary-condition.ts
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
 import { createRule } from "../../utils"
 import {
   isFalsyType,
@@ -183,7 +182,7 @@ export default createRule("@typescript-eslint/no-unnecessary-condition", {
       })
     }
 
-    const mutableVarReferenceIds: ESTree.Identifier[] = []
+    const mutableVarReferenceIds: TSESTree.Identifier[] = []
     const scriptElements: AST.SvelteScriptElement[] = []
     let inSvelteReactiveStatement = false
 
@@ -238,7 +237,7 @@ export default createRule("@typescript-eslint/no-unnecessary-condition", {
       }
 
       return mutableVarReferenceIds.some(
-        (id) => node.range[0] <= id.range![0] && id.range![1] <= node.range[1],
+        (id) => node.range[0] <= id.range[0] && id.range[1] <= node.range[1],
       )
     }
 

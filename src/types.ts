@@ -6,7 +6,7 @@ import type {
   SourceCode as ESLintSourceCode,
 } from "eslint"
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type {
   ASTNode,
   ASTNodeWithParent,
@@ -140,7 +140,7 @@ export type RuleContext = {
 
   getAncestors(): ASTNode[]
 
-  getDeclaredVariables(node: ESTree.Node): Scope.Variable[]
+  getDeclaredVariables(node: TSESTree.Node): Scope.Variable[]
 
   getFilename(): string
 

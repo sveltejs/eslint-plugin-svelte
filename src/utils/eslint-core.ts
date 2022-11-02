@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: off -- util */
 import type { RuleListener, RuleContext, RuleModule } from "../types"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { AST as SvAST } from "svelte-eslint-parser"
 import { Linter } from "eslint"
 
@@ -48,7 +48,7 @@ export function buildProxyListener(
   convertNode: (
     node:
       | SvAST.SvelteNode
-      | (ESTree.Node & { parent: SvAST.SvelteNode | ESTree.Node | null }),
+      | (TSESTree.Node & { parent: SvAST.SvelteNode | TSESTree.Node | null }),
   ) => any,
 ): RuleListener {
   const listeners: RuleListener = {}

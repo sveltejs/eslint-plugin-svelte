@@ -1,11 +1,11 @@
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 type AnyToken = AST.Token | AST.Comment
 /**
  * Check whether the given token is a whitespace.
  */
 export function isWhitespace(
-  token: AnyToken | ESTree.Comment | null | undefined,
+  token: AnyToken | TSESTree.Comment | null | undefined,
 ): boolean {
   return (
     token != null &&
@@ -18,7 +18,7 @@ export function isWhitespace(
  * Check whether the given token is a not whitespace.
  */
 export function isNotWhitespace(
-  token: AnyToken | ESTree.Comment | null | undefined,
+  token: AnyToken | TSESTree.Comment | null | undefined,
 ): boolean {
   return (
     token != null &&

@@ -1,4 +1,3 @@
-import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
 import { ReferenceTracker } from "eslint-utils"
 import type { Variable } from "eslint-scope"
@@ -13,7 +12,7 @@ type StoreName = "writable" | "readable" | "derived"
 export function* extractStoreReferences(
   context: RuleContext,
   storeNames: StoreName[] = ["writable", "readable", "derived"],
-): Generator<{ node: ESTree.CallExpression; name: string }, void> {
+): Generator<{ node: TSESTree.CallExpression; name: string }, void> {
   const referenceTracker = new ReferenceTracker(context.getScope())
   for (const { node, path } of referenceTracker.iterateEsmReferences({
     "svelte/store": {
@@ -30,18 +29,18 @@ export function* extractStoreReferences(
     },
   })) {
     yield {
-      node: node as ESTree.CallExpression,
+      node: node as TSESTree.CallExpression,
       name: path[path.length - 1],
     }
   }
 }
 
 export type StoreChecker = (
-  node: ESTree.Expression | TSESTree.Expression,
+  node: TSESTree.Expression,
   options?: { consistent?: boolean },
 ) => boolean
 type StoreCheckerWithOptions = (
-  node: ESTree.Expression,
+  node: TSESTree.Expression,
   options: { consistent: boolean },
 ) => boolean
 
@@ -55,7 +54,7 @@ export function createStoreChecker(context: RuleContext): StoreChecker {
     : createStoreCheckerForES(context)
 
   return (node, options) =>
-    checker(node as ESTree.Expression, {
+    checker(node, {
       consistent: options?.consistent ?? false,
     })
 }

@@ -78,7 +78,7 @@ export default createRule("no-shorthand-style-property-overrides", {
       for (const attr of attrs) {
         if (attr.type === "SvelteStyleDirective") {
           yield {
-            decls: [{ prop: attr.key.name.name, loc: attr.key.name.loc! }],
+            decls: [{ prop: attr.key.name.name, loc: attr.key.name.loc }],
           }
         } else if (attr.type === "SvelteAttribute") {
           if (attr.key.name !== "style") {

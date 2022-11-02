@@ -32,7 +32,7 @@ export default createRule("no-store-async", {
             continue
           }
 
-          const start = fn.loc!.start
+          const start = fn.loc.start
           context.report({
             node: fn,
             loc: {

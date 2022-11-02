@@ -1,5 +1,4 @@
 import type { ASTNode, RuleContext, SourceCode } from "../types"
-import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST as SvAST } from "svelte-eslint-parser"
 import * as eslintUtils from "eslint-utils"
@@ -40,7 +39,7 @@ export function equalTokens(
  * Get the value of a given node if it's a literal or a template literal.
  */
 export function getStringIfConstant(
-  node: ESTree.Expression | TSESTree.Expression,
+  node: TSESTree.Expression | TSESTree.PrivateIdentifier,
 ): string | null {
   if (node.type === "Literal") {
     if (typeof node.value === "string") return node.value
@@ -48,10 +47,10 @@ export function getStringIfConstant(
     let str = ""
     const quasis = [...node.quasis]
     const expressions = [...node.expressions]
-    let quasi: ESTree.TemplateElement | undefined,
-      expr: ESTree.Expression | undefined
+    let quasi: TSESTree.TemplateElement | undefined,
+      expr: TSESTree.Expression | undefined
     while ((quasi = quasis.shift())) {
-      str += quasi.value.cooked!
+      str += quasi.value.cooked
       expr = expressions.shift()
       if (expr) {
         const exprStr = getStringIfConstant(expr)
@@ -82,7 +81,7 @@ export function getStringIfConstant(
  * Check if it need parentheses.
  */
 export function needParentheses(
-  node: ESTree.Expression,
+  node: TSESTree.Expression,
   kind: "not" | "logical",
 ): boolean {
   if (
@@ -237,7 +236,7 @@ export function getLangValue(
  */
 export function findVariable(
   context: RuleContext,
-  node: ESTree.Identifier | TSESTree.Identifier,
+  node: TSESTree.Identifier,
 ): Scope.Variable | null {
   const initialScope = eslintUtils.getInnermostScope(
     getScope(context, node),
@@ -259,7 +258,7 @@ export function findVariable(
  */
 export function getScope(
   context: RuleContext,
-  currentNode: ESTree.Node,
+  currentNode: TSESTree.Node,
 ): Scope.Scope {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   const scopeManager = (context.getSourceCode() as any).scopeManager
@@ -281,7 +280,7 @@ export function getScope(
 }
 
 /** Get the parent node from the given node */
-export function getParent(node: ESTree.Node): ESTree.Node | null {
+export function getParent(node: TSESTree.Node): TSESTree.Node | null {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
   return (node as any).parent || null
 }

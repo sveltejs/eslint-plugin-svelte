@@ -1,4 +1,3 @@
-import type * as ESTree from "estree"
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
@@ -30,7 +29,7 @@ export default createRule("require-store-reactive-access", {
 
     /** Verify for expression node */
     function verifyExpression(
-      node: ESTree.Expression | null | undefined | TSESTree.Expression,
+      node: TSESTree.Expression | null | undefined,
       options?: { disableFix?: boolean; consistent?: boolean },
     ) {
       if (!node) return
@@ -128,11 +127,11 @@ export default createRule("require-store-reactive-access", {
       ["IfStatement, WhileStatement, DoWhileStatement, " +
         "ConditionalExpression, ForStatement"](
         node:
-          | ESTree.IfStatement
-          | ESTree.WhileStatement
-          | ESTree.DoWhileStatement
-          | ESTree.ConditionalExpression
-          | ESTree.ForStatement,
+          | TSESTree.IfStatement
+          | TSESTree.WhileStatement
+          | TSESTree.DoWhileStatement
+          | TSESTree.ConditionalExpression
+          | TSESTree.ForStatement,
       ) {
         // Check for `if (store)`, `while (store)`, `do {} while (store)`,
         //   `store ? a : b`, `for (;store;)`
@@ -141,41 +140,39 @@ export default createRule("require-store-reactive-access", {
         })
       },
       "ForInStatement, ForOfStatement"(
-        node: ESTree.ForInStatement | ESTree.ForOfStatement,
+        node: TSESTree.ForInStatement | TSESTree.ForOfStatement,
       ) {
         // Check for `for (let foo of store)`, `for (let foo in store)`
         verifyExpression(node.right)
       },
-      SwitchStatement(node: ESTree.SwitchStatement) {
+      SwitchStatement(node: TSESTree.SwitchStatement) {
         // Check for `switch (store)`
         verifyExpression(node.discriminant)
       },
-      "CallExpression, NewExpression"(node: ESTree.CallExpression) {
+      "CallExpression, NewExpression"(node: TSESTree.CallExpression) {
         if (node.callee.type === "Super") {
           return
         }
         // Check for `store()`
         verifyExpression(node.callee)
       },
-      UnaryExpression(node: ESTree.UnaryExpression) {
+      UnaryExpression(node: TSESTree.UnaryExpression) {
         // Check for `-store`, `+store`, `!store`, `~store`, `typeof store`
         verifyExpression(node.argument, {
           consistent: node.operator === "!" || node.operator === "typeof",
         })
       },
       "UpdateExpression, SpreadElement"(
-        node: ESTree.UpdateExpression | ESTree.SpreadElement,
+        node: TSESTree.UpdateExpression | TSESTree.SpreadElement,
       ) {
         // Check for `store++`, `store--`, `...store`
         verifyExpression(node.argument)
       },
-      AssignmentExpression(node: ESTree.AssignmentExpression) {
+      AssignmentExpression(node: TSESTree.AssignmentExpression) {
         if (node.operator !== "=") {
           if (
             node.left.type !== "ObjectPattern" &&
-            node.left.type !== "ArrayPattern" &&
-            node.left.type !== "RestElement" &&
-            node.left.type !== "AssignmentPattern"
+            node.left.type !== "ArrayPattern"
           ) {
             // Check for `store += 1`
             verifyExpression(node.left)
@@ -184,15 +181,17 @@ export default createRule("require-store-reactive-access", {
           verifyExpression(node.right)
         }
       },
-      BinaryExpression(node: ESTree.BinaryExpression) {
-        // Check for `store+1`
-        verifyExpression(node.left, {
-          consistent:
-            node.operator === "==" ||
-            node.operator === "!=" ||
-            node.operator === "===" ||
-            node.operator === "!==",
-        })
+      BinaryExpression(node: TSESTree.BinaryExpression) {
+        if (node.left.type !== "PrivateIdentifier") {
+          // Check for `store+1`
+          verifyExpression(node.left, {
+            consistent:
+              node.operator === "==" ||
+              node.operator === "!=" ||
+              node.operator === "===" ||
+              node.operator === "!==",
+          })
+        }
         // Check for `1+store`
         verifyExpression(node.right, {
           consistent:
@@ -202,27 +201,27 @@ export default createRule("require-store-reactive-access", {
             node.operator === "!==",
         })
       },
-      LogicalExpression(node: ESTree.LogicalExpression) {
+      LogicalExpression(node: TSESTree.LogicalExpression) {
         // Check for `store && foo`
         verifyExpression(node.left, {
           consistent: true,
         })
       },
-      TemplateLiteral(node: ESTree.TemplateLiteral) {
+      TemplateLiteral(node: TSESTree.TemplateLiteral) {
         for (const expr of node.expressions) {
           // Check for `${store}`
           verifyExpression(expr)
         }
       },
-      TaggedTemplateExpression(node: ESTree.TaggedTemplateExpression) {
+      TaggedTemplateExpression(node: TSESTree.TaggedTemplateExpression) {
         // Check for ` store`${foo}` `
         verifyExpression(node.tag)
       },
       "Property, PropertyDefinition, MethodDefinition"(
         node:
-          | ESTree.Property
-          | ESTree.PropertyDefinition
-          | ESTree.MethodDefinition,
+          | TSESTree.Property
+          | TSESTree.PropertyDefinition
+          | TSESTree.MethodDefinition,
       ) {
         if (node.key.type === "PrivateIdentifier" || !node.computed) {
           return
@@ -230,11 +229,11 @@ export default createRule("require-store-reactive-access", {
         // Check for `{ [store]: foo}`
         verifyExpression(node.key)
       },
-      ImportExpression(node: ESTree.ImportExpression) {
+      ImportExpression(node: TSESTree.ImportExpression) {
         // Check for `import(store)`
         verifyExpression(node.source)
       },
-      AwaitExpression(node: ESTree.AwaitExpression) {
+      AwaitExpression(node: TSESTree.AwaitExpression) {
         // Check for `await store`
         verifyExpression(node.argument, {
           consistent: true,

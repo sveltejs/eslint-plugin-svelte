@@ -1,16 +1,16 @@
+//
+// The information here can be calculated by calculating the type,
+// but is pre-defined to avoid the computational cost.
+//
+
 import type { TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
-import type * as ESTree from "estree"
 
 export type ASTNode =
   | AST.SvelteNode
-  // This is correct, but is not done now to avoid type errors.
-  // | Exclude<ESTree.Node, ESTree.Program>
-  // | Exclude<Omit<TSESTree.Node, "parent">, { type: ESTree.Node["type"] }>
-  | ESTree.Node
-  | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
+  | Exclude<Omit<TSESTree.Node, "parent">, { type: AST.SvelteNode["type"] }>
 export type ASTNodeWithParent =
-  | (Exclude<ASTNode, ESTree.Program> & { parent: ASTNodeWithParent })
+  | (Exclude<ASTNode, AST.SvelteProgram> & { parent: ASTNodeWithParent })
   | AST.SvelteProgram
 
 export type ASTNodeListener = {
@@ -397,125 +397,145 @@ export type ASTNodeListener = {
     node: AST.SvelteReactiveStatement & ASTNodeWithParent,
   ) => void
 }
+
 export type ESNodeListener = {
-  ArrayExpression?: (node: ESTree.ArrayExpression & ASTNodeWithParent) => void
-  ArrayPattern?: (node: ESTree.ArrayPattern & ASTNodeWithParent) => void
+  ArrayExpression?: (node: TSESTree.ArrayExpression & ASTNodeWithParent) => void
+  ArrayPattern?: (node: TSESTree.ArrayPattern & ASTNodeWithParent) => void
   ArrowFunctionExpression?: (
-    node: ESTree.ArrowFunctionExpression & ASTNodeWithParent,
+    node: TSESTree.ArrowFunctionExpression & ASTNodeWithParent,
   ) => void
   AssignmentExpression?: (
-    node: ESTree.AssignmentExpression & ASTNodeWithParent,
+    node: TSESTree.AssignmentExpression & ASTNodeWithParent,
   ) => void
   AssignmentPattern?: (
-    node: ESTree.AssignmentPattern & ASTNodeWithParent,
+    node: TSESTree.AssignmentPattern & ASTNodeWithParent,
   ) => void
-  AwaitExpression?: (node: ESTree.AwaitExpression & ASTNodeWithParent) => void
-  BinaryExpression?: (node: ESTree.BinaryExpression & ASTNodeWithParent) => void
-  BlockStatement?: (node: ESTree.BlockStatement & ASTNodeWithParent) => void
-  BreakStatement?: (node: ESTree.BreakStatement & ASTNodeWithParent) => void
-  CallExpression?: (node: ESTree.CallExpression & ASTNodeWithParent) => void
-  CatchClause?: (node: ESTree.CatchClause & ASTNodeWithParent) => void
-  ChainExpression?: (node: ESTree.ChainExpression & ASTNodeWithParent) => void
-  ClassBody?: (node: ESTree.ClassBody & ASTNodeWithParent) => void
-  ClassDeclaration?: (node: ESTree.ClassDeclaration & ASTNodeWithParent) => void
-  ClassExpression?: (node: ESTree.ClassExpression & ASTNodeWithParent) => void
+  AwaitExpression?: (node: TSESTree.AwaitExpression & ASTNodeWithParent) => void
+  BinaryExpression?: (
+    node: TSESTree.BinaryExpression & ASTNodeWithParent,
+  ) => void
+  BlockStatement?: (node: TSESTree.BlockStatement & ASTNodeWithParent) => void
+  BreakStatement?: (node: TSESTree.BreakStatement & ASTNodeWithParent) => void
+  CallExpression?: (node: TSESTree.CallExpression & ASTNodeWithParent) => void
+  CatchClause?: (node: TSESTree.CatchClause & ASTNodeWithParent) => void
+  ChainExpression?: (node: TSESTree.ChainExpression & ASTNodeWithParent) => void
+  ClassBody?: (node: TSESTree.ClassBody & ASTNodeWithParent) => void
+  ClassDeclaration?: (
+    node: TSESTree.ClassDeclaration & ASTNodeWithParent,
+  ) => void
+  ClassExpression?: (node: TSESTree.ClassExpression & ASTNodeWithParent) => void
   ConditionalExpression?: (
-    node: ESTree.ConditionalExpression & ASTNodeWithParent,
+    node: TSESTree.ConditionalExpression & ASTNodeWithParent,
   ) => void
   ContinueStatement?: (
-    node: ESTree.ContinueStatement & ASTNodeWithParent,
+    node: TSESTree.ContinueStatement & ASTNodeWithParent,
   ) => void
   DebuggerStatement?: (
-    node: ESTree.DebuggerStatement & ASTNodeWithParent,
+    node: TSESTree.DebuggerStatement & ASTNodeWithParent,
   ) => void
-  DoWhileStatement?: (node: ESTree.DoWhileStatement & ASTNodeWithParent) => void
-  EmptyStatement?: (node: ESTree.EmptyStatement & ASTNodeWithParent) => void
+  DoWhileStatement?: (
+    node: TSESTree.DoWhileStatement & ASTNodeWithParent,
+  ) => void
+  EmptyStatement?: (node: TSESTree.EmptyStatement & ASTNodeWithParent) => void
   ExportAllDeclaration?: (
-    node: ESTree.ExportAllDeclaration & ASTNodeWithParent,
+    node: TSESTree.ExportAllDeclaration & ASTNodeWithParent,
   ) => void
   ExportDefaultDeclaration?: (
-    node: ESTree.ExportDefaultDeclaration & ASTNodeWithParent,
+    node: TSESTree.ExportDefaultDeclaration & ASTNodeWithParent,
   ) => void
   ExportNamedDeclaration?: (
-    node: ESTree.ExportNamedDeclaration & ASTNodeWithParent,
+    node: TSESTree.ExportNamedDeclaration & ASTNodeWithParent,
   ) => void
-  ExportSpecifier?: (node: ESTree.ExportSpecifier & ASTNodeWithParent) => void
+  ExportSpecifier?: (node: TSESTree.ExportSpecifier & ASTNodeWithParent) => void
   ExpressionStatement?: (
-    node: ESTree.ExpressionStatement & ASTNodeWithParent,
+    node: TSESTree.ExpressionStatement & ASTNodeWithParent,
   ) => void
-  ForInStatement?: (node: ESTree.ForInStatement & ASTNodeWithParent) => void
-  ForOfStatement?: (node: ESTree.ForOfStatement & ASTNodeWithParent) => void
-  ForStatement?: (node: ESTree.ForStatement & ASTNodeWithParent) => void
+  ForInStatement?: (node: TSESTree.ForInStatement & ASTNodeWithParent) => void
+  ForOfStatement?: (node: TSESTree.ForOfStatement & ASTNodeWithParent) => void
+  ForStatement?: (node: TSESTree.ForStatement & ASTNodeWithParent) => void
   FunctionDeclaration?: (
-    node: ESTree.FunctionDeclaration & ASTNodeWithParent,
+    node: TSESTree.FunctionDeclaration & ASTNodeWithParent,
   ) => void
   FunctionExpression?: (
-    node: ESTree.FunctionExpression & ASTNodeWithParent,
+    node: TSESTree.FunctionExpression & ASTNodeWithParent,
   ) => void
-  Identifier?: (node: ESTree.Identifier & ASTNodeWithParent) => void
-  IfStatement?: (node: ESTree.IfStatement & ASTNodeWithParent) => void
+  Identifier?: (node: TSESTree.Identifier & ASTNodeWithParent) => void
+  IfStatement?: (node: TSESTree.IfStatement & ASTNodeWithParent) => void
   ImportDeclaration?: (
-    node: ESTree.ImportDeclaration & ASTNodeWithParent,
+    node: TSESTree.ImportDeclaration & ASTNodeWithParent,
   ) => void
   ImportDefaultSpecifier?: (
-    node: ESTree.ImportDefaultSpecifier & ASTNodeWithParent,
+    node: TSESTree.ImportDefaultSpecifier & ASTNodeWithParent,
   ) => void
-  ImportExpression?: (node: ESTree.ImportExpression & ASTNodeWithParent) => void
+  ImportExpression?: (
+    node: TSESTree.ImportExpression & ASTNodeWithParent,
+  ) => void
   ImportNamespaceSpecifier?: (
-    node: ESTree.ImportNamespaceSpecifier & ASTNodeWithParent,
+    node: TSESTree.ImportNamespaceSpecifier & ASTNodeWithParent,
   ) => void
-  ImportSpecifier?: (node: ESTree.ImportSpecifier & ASTNodeWithParent) => void
-  LabeledStatement?: (node: ESTree.LabeledStatement & ASTNodeWithParent) => void
-  Literal?: (node: ESTree.Literal & ASTNodeWithParent) => void
+  ImportSpecifier?: (node: TSESTree.ImportSpecifier & ASTNodeWithParent) => void
+  LabeledStatement?: (
+    node: TSESTree.LabeledStatement & ASTNodeWithParent,
+  ) => void
+  Literal?: (node: TSESTree.Literal & ASTNodeWithParent) => void
   LogicalExpression?: (
-    node: ESTree.LogicalExpression & ASTNodeWithParent,
+    node: TSESTree.LogicalExpression & ASTNodeWithParent,
   ) => void
-  MemberExpression?: (node: ESTree.MemberExpression & ASTNodeWithParent) => void
-  MetaProperty?: (node: ESTree.MetaProperty & ASTNodeWithParent) => void
-  MethodDefinition?: (node: ESTree.MethodDefinition & ASTNodeWithParent) => void
-  NewExpression?: (node: ESTree.NewExpression & ASTNodeWithParent) => void
-  ObjectExpression?: (node: ESTree.ObjectExpression & ASTNodeWithParent) => void
-  ObjectPattern?: (node: ESTree.ObjectPattern & ASTNodeWithParent) => void
+  MemberExpression?: (
+    node: TSESTree.MemberExpression & ASTNodeWithParent,
+  ) => void
+  MetaProperty?: (node: TSESTree.MetaProperty & ASTNodeWithParent) => void
+  MethodDefinition?: (
+    node: TSESTree.MethodDefinition & ASTNodeWithParent,
+  ) => void
+  NewExpression?: (node: TSESTree.NewExpression & ASTNodeWithParent) => void
+  ObjectExpression?: (
+    node: TSESTree.ObjectExpression & ASTNodeWithParent,
+  ) => void
+  ObjectPattern?: (node: TSESTree.ObjectPattern & ASTNodeWithParent) => void
   PrivateIdentifier?: (
-    node: ESTree.PrivateIdentifier & ASTNodeWithParent,
+    node: TSESTree.PrivateIdentifier & ASTNodeWithParent,
   ) => void
-  Property?: (node: ESTree.Property & ASTNodeWithParent) => void
+  Property?: (node: TSESTree.Property & ASTNodeWithParent) => void
   PropertyDefinition?: (
-    node: ESTree.PropertyDefinition & ASTNodeWithParent,
+    node: TSESTree.PropertyDefinition & ASTNodeWithParent,
   ) => void
-  RestElement?: (node: ESTree.RestElement & ASTNodeWithParent) => void
-  ReturnStatement?: (node: ESTree.ReturnStatement & ASTNodeWithParent) => void
+  RestElement?: (node: TSESTree.RestElement & ASTNodeWithParent) => void
+  ReturnStatement?: (node: TSESTree.ReturnStatement & ASTNodeWithParent) => void
   SequenceExpression?: (
-    node: ESTree.SequenceExpression & ASTNodeWithParent,
+    node: TSESTree.SequenceExpression & ASTNodeWithParent,
   ) => void
-  SpreadElement?: (node: ESTree.SpreadElement & ASTNodeWithParent) => void
-  Super?: (node: ESTree.Super & ASTNodeWithParent) => void
-  SwitchCase?: (node: ESTree.SwitchCase & ASTNodeWithParent) => void
-  SwitchStatement?: (node: ESTree.SwitchStatement & ASTNodeWithParent) => void
+  SpreadElement?: (node: TSESTree.SpreadElement & ASTNodeWithParent) => void
+  Super?: (node: TSESTree.Super & ASTNodeWithParent) => void
+  SwitchCase?: (node: TSESTree.SwitchCase & ASTNodeWithParent) => void
+  SwitchStatement?: (node: TSESTree.SwitchStatement & ASTNodeWithParent) => void
   TaggedTemplateExpression?: (
-    node: ESTree.TaggedTemplateExpression & ASTNodeWithParent,
+    node: TSESTree.TaggedTemplateExpression & ASTNodeWithParent,
   ) => void
-  TemplateElement?: (node: ESTree.TemplateElement & ASTNodeWithParent) => void
-  TemplateLiteral?: (node: ESTree.TemplateLiteral & ASTNodeWithParent) => void
-  ThisExpression?: (node: ESTree.ThisExpression & ASTNodeWithParent) => void
-  ThrowStatement?: (node: ESTree.ThrowStatement & ASTNodeWithParent) => void
-  TryStatement?: (node: ESTree.TryStatement & ASTNodeWithParent) => void
-  UnaryExpression?: (node: ESTree.UnaryExpression & ASTNodeWithParent) => void
-  UpdateExpression?: (node: ESTree.UpdateExpression & ASTNodeWithParent) => void
+  TemplateElement?: (node: TSESTree.TemplateElement & ASTNodeWithParent) => void
+  TemplateLiteral?: (node: TSESTree.TemplateLiteral & ASTNodeWithParent) => void
+  ThisExpression?: (node: TSESTree.ThisExpression & ASTNodeWithParent) => void
+  ThrowStatement?: (node: TSESTree.ThrowStatement & ASTNodeWithParent) => void
+  TryStatement?: (node: TSESTree.TryStatement & ASTNodeWithParent) => void
+  UnaryExpression?: (node: TSESTree.UnaryExpression & ASTNodeWithParent) => void
+  UpdateExpression?: (
+    node: TSESTree.UpdateExpression & ASTNodeWithParent,
+  ) => void
   VariableDeclaration?: (
-    node: ESTree.VariableDeclaration & ASTNodeWithParent,
+    node: TSESTree.VariableDeclaration & ASTNodeWithParent,
   ) => void
   VariableDeclarator?: (
-    node: ESTree.VariableDeclarator & ASTNodeWithParent,
+    node: TSESTree.VariableDeclarator & ASTNodeWithParent,
   ) => void
-  WhileStatement?: (node: ESTree.WhileStatement & ASTNodeWithParent) => void
-  WithStatement?: (node: ESTree.WithStatement & ASTNodeWithParent) => void
-  YieldExpression?: (node: ESTree.YieldExpression & ASTNodeWithParent) => void
+  WhileStatement?: (node: TSESTree.WhileStatement & ASTNodeWithParent) => void
+  WithStatement?: (node: TSESTree.WithStatement & ASTNodeWithParent) => void
+  YieldExpression?: (node: TSESTree.YieldExpression & ASTNodeWithParent) => void
   Program?: (node: AST.SvelteProgram & ASTNodeWithParent) => void
   SvelteReactiveStatement?: (
     node: AST.SvelteReactiveStatement & ASTNodeWithParent,
   ) => void
 }
+
 export type TSNodeListener = {
   Decorator?: (node: TSESTree.Decorator & ASTNodeWithParent) => void
   ImportAttribute?: (node: TSESTree.ImportAttribute & ASTNodeWithParent) => void
@@ -679,6 +699,7 @@ export type TSNodeListener = {
   ) => void
   TSVoidKeyword?: (node: TSESTree.TSVoidKeyword & ASTNodeWithParent) => void
 }
+
 export type SvelteNodeListener = {
   SvelteScriptElement?: (
     node: AST.SvelteScriptElement & ASTNodeWithParent,

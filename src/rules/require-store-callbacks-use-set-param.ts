@@ -33,7 +33,7 @@ export default createRule("require-store-callbacks-use-set-param", {
           if (!param || (param.type === "Identifier" && param.name !== "set")) {
             context.report({
               node: fn,
-              loc: fn.loc!,
+              loc: fn.loc,
               messageId: "unexpected",
             })
           }
