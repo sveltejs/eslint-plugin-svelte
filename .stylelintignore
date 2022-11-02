@@ -13,3 +13,4 @@ LICENSE
 # should we ignore markdown files?
 *.md
 /docs-svelte-kit/
+/coverage

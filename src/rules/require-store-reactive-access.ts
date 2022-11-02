@@ -1,4 +1,5 @@
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import { createStoreChecker } from "./reference-helpers/svelte-store"
@@ -29,11 +30,11 @@ export default createRule("require-store-reactive-access", {
 
     /** Verify for expression node */
     function verifyExpression(
-      node: ESTree.Expression | null,
-      options?: { disableFix?: boolean },
+      node: ESTree.Expression | null | undefined | TSESTree.Expression,
+      options?: { disableFix?: boolean; consistent?: boolean },
     ) {
       if (!node) return
-      if (isStore(node)) {
+      if (isStore(node, { consistent: options?.consistent })) {
         context.report({
           node,
           messageId: "usingRawStoreInText",
@@ -82,17 +83,20 @@ export default createRule("require-store-reactive-access", {
           ) {
             return
           }
-          // Check for <button bind:value={store} />
+          // Check for <input bind:value={store} />
           verifyExpression(node.expression, {
             disableFix: node.shorthand,
+          })
+        } else if (node.kind === "Class") {
+          // Check for <div class:foo={store} />
+          verifyExpression(node.expression, {
+            disableFix: node.shorthand,
+            consistent: true,
           })
         } else if (node.kind === "EventHandler") {
           // Check for <button on:click={store} />
           verifyExpression(node.expression)
         }
-        // What about class:nm={store}?
-        // It determines truthy values. We don't check for it
-        // because it's a false positive if store is nullable.
       },
       SvelteStyleDirective(node) {
         if (node.shorthand && node.key.name.type === "Identifier") {
@@ -108,6 +112,133 @@ export default createRule("require-store-reactive-access", {
           // Check for <button this={store} />
           verifyExpression(node.expression)
         }
+      },
+      "SvelteIfBlock, SvelteAwaitBlock"(
+        node: AST.SvelteIfBlock | AST.SvelteAwaitBlock,
+      ) {
+        // Check for {#if store}, {#await store}
+        verifyExpression(node.expression, {
+          consistent: true,
+        })
+      },
+      SvelteEachBlock(node) {
+        // Check for {#each store}
+        verifyExpression(node.expression)
+      },
+      ["IfStatement, WhileStatement, DoWhileStatement, " +
+        "ConditionalExpression, ForStatement"](
+        node:
+          | ESTree.IfStatement
+          | ESTree.WhileStatement
+          | ESTree.DoWhileStatement
+          | ESTree.ConditionalExpression
+          | ESTree.ForStatement,
+      ) {
+        // Check for `if (store)`, `while (store)`, `do {} while (store)`,
+        //   `store ? a : b`, `for (;store;)`
+        verifyExpression(node.test, {
+          consistent: true,
+        })
+      },
+      "ForInStatement, ForOfStatement"(
+        node: ESTree.ForInStatement | ESTree.ForOfStatement,
+      ) {
+        // Check for `for (let foo of store)`, `for (let foo in store)`
+        verifyExpression(node.right)
+      },
+      SwitchStatement(node: ESTree.SwitchStatement) {
+        // Check for `switch (store)`
+        verifyExpression(node.discriminant)
+      },
+      "CallExpression, NewExpression"(node: ESTree.CallExpression) {
+        if (node.callee.type === "Super") {
+          return
+        }
+        // Check for `store()`
+        verifyExpression(node.callee)
+      },
+      UnaryExpression(node: ESTree.UnaryExpression) {
+        // Check for `-store`, `+store`, `!store`, `~store`, `typeof store`
+        verifyExpression(node.argument, {
+          consistent: node.operator === "!" || node.operator === "typeof",
+        })
+      },
+      "UpdateExpression, SpreadElement"(
+        node: ESTree.UpdateExpression | ESTree.SpreadElement,
+      ) {
+        // Check for `store++`, `store--`, `...store`
+        verifyExpression(node.argument)
+      },
+      AssignmentExpression(node: ESTree.AssignmentExpression) {
+        if (node.operator !== "=") {
+          if (
+            node.left.type !== "ObjectPattern" &&
+            node.left.type !== "ArrayPattern" &&
+            node.left.type !== "RestElement" &&
+            node.left.type !== "AssignmentPattern"
+          ) {
+            // Check for `store += 1`
+            verifyExpression(node.left)
+          }
+          // Check for `foo += store`
+          verifyExpression(node.right)
+        }
+      },
+      BinaryExpression(node: ESTree.BinaryExpression) {
+        // Check for `store+1`
+        verifyExpression(node.left, {
+          consistent:
+            node.operator === "==" ||
+            node.operator === "!=" ||
+            node.operator === "===" ||
+            node.operator === "!==",
+        })
+        // Check for `1+store`
+        verifyExpression(node.right, {
+          consistent:
+            node.operator === "==" ||
+            node.operator === "!=" ||
+            node.operator === "===" ||
+            node.operator === "!==",
+        })
+      },
+      LogicalExpression(node: ESTree.LogicalExpression) {
+        // Check for `store && foo`
+        verifyExpression(node.left, {
+          consistent: true,
+        })
+      },
+      TemplateLiteral(node: ESTree.TemplateLiteral) {
+        for (const expr of node.expressions) {
+          // Check for `${store}`
+          verifyExpression(expr)
+        }
+      },
+      TaggedTemplateExpression(node: ESTree.TaggedTemplateExpression) {
+        // Check for ` store`${foo}` `
+        verifyExpression(node.tag)
+      },
+      "Property, PropertyDefinition, MethodDefinition"(
+        node:
+          | ESTree.Property
+          | ESTree.PropertyDefinition
+          | ESTree.MethodDefinition,
+      ) {
+        if (node.key.type === "PrivateIdentifier" || !node.computed) {
+          return
+        }
+        // Check for `{ [store]: foo}`
+        verifyExpression(node.key)
+      },
+      ImportExpression(node: ESTree.ImportExpression) {
+        // Check for `import(store)`
+        verifyExpression(node.source)
+      },
+      AwaitExpression(node: ESTree.AwaitExpression) {
+        // Check for `await store`
+        verifyExpression(node.argument, {
+          consistent: true,
+        })
       },
     }
 

@@ -19,6 +19,7 @@ module.exports = {
     "no-empty-function": "off",
     "one-var": "off",
     "func-style": "off",
+    "no-console": "off",
     "node/no-unsupported-features/es-syntax": "off",
 
     "@typescript-eslint/await-thenable": "off",

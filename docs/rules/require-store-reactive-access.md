@@ -25,8 +25,14 @@ You should access the store value using the `$` prefix or the `get` function.
 <script>
   /* eslint svelte/require-store-reactive-access: "error" */
   import { writable, get } from "svelte/store"
-  const storeValue = writable("hello")
+  const storeValue = writable("world")
   const color = writable("red")
+
+  /* ✓ GOOD */
+  $: message = `Hello ${$storeValue}`
+
+  /* ✗ BAD */
+  $: message = `Hello ${storeValue}`
 </script>
 
 <!-- ✓ GOOD -->

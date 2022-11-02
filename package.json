@@ -163,6 +163,7 @@
     "stylus": "^0.59.0",
     "svelte": "^3.46.1",
     "svelte-adapter-ghpages": "0.0.2",
+    "svelte-i18n": "^3.4.0",
     "type-coverage": "^2.22.0",
     "typescript": "^4.5.2",
     "vite": "^3.1.0-0",
@@ -174,7 +175,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 98.7,
+    "atLeast": 98.71,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,

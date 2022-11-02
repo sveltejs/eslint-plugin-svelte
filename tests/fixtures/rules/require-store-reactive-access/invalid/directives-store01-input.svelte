@@ -1,6 +1,7 @@
 <script>
   import { writable } from "svelte/store"
   let store = writable("hello")
+  const constStore = writable("hello")
   let color = writable("red")
   let value = writable("hello")
   let handleClick = writable(() => {})
@@ -17,6 +18,8 @@
 {#each list as e (e)}
   <div animate:store />
 {/each}
+<div class:name={constStore} />
+<div class:constStore />
 
 <!-- ignore -->
 <div class:name={store} />

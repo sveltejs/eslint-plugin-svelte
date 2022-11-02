@@ -1,4 +1,5 @@
 import type * as ESTree from "estree"
+import type { TSESTree } from "@typescript-eslint/types"
 import { ReferenceTracker } from "eslint-utils"
 import type { Variable } from "eslint-scope"
 import type { RuleContext } from "../../types"
@@ -35,18 +36,28 @@ export function* extractStoreReferences(
   }
 }
 
+export type StoreChecker = (
+  node: ESTree.Expression | TSESTree.Expression,
+  options?: { consistent?: boolean },
+) => boolean
+type StoreCheckerWithOptions = (
+  node: ESTree.Expression,
+  options: { consistent: boolean },
+) => boolean
+
 /**
  * Creates a function that checks whether the given expression node is a store instance or not.
  */
-export function createStoreChecker(
-  context: RuleContext,
-): (node: ESTree.Expression) => boolean {
+export function createStoreChecker(context: RuleContext): StoreChecker {
   const tools = getTypeScriptTools(context)
-  if (tools) {
-    return createStoreCheckerForTS(tools)
-  }
+  const checker = tools
+    ? createStoreCheckerForTS(tools)
+    : createStoreCheckerForES(context)
 
-  return createStoreCheckerForES(context)
+  return (node, options) =>
+    checker(node as ESTree.Expression, {
+      consistent: options?.consistent ?? false,
+    })
 }
 
 /**
@@ -54,8 +65,8 @@ export function createStoreChecker(
  */
 function createStoreCheckerForES(
   context: RuleContext,
-): (node: ESTree.Expression) => boolean {
-  const variables = new Set<Variable>()
+): StoreCheckerWithOptions {
+  const storeVariables = new Map<Variable, { const: boolean }>()
   for (const { node } of extractStoreReferences(context)) {
     const parent = getParent(node)
     if (
@@ -65,14 +76,18 @@ function createStoreCheckerForES(
     ) {
       continue
     }
+    const decl = getParent(parent)
+    if (!decl || decl.type !== "VariableDeclaration") {
+      continue
+    }
 
     const variable = findVariable(context, parent.id)
     if (variable) {
-      variables.add(variable)
+      storeVariables.set(variable, { const: decl.kind === "const" })
     }
   }
 
-  return (node) => {
+  return (node, options) => {
     if (node.type !== "Identifier" || node.name.startsWith("$")) {
       return false
     }
@@ -80,21 +95,23 @@ function createStoreCheckerForES(
     if (!variable) {
       return false
     }
-    return variables.has(variable)
+    const info = storeVariables.get(variable)
+    if (!info) {
+      return false
+    }
+    return options.consistent ? info.const : true
   }
 }
 
 /**
  * Creates a function that checks whether the given expression node is a store instance or not, for TypeScript.
  */
-function createStoreCheckerForTS(
-  tools: TSTools,
-): (node: ESTree.Expression) => boolean {
+function createStoreCheckerForTS(tools: TSTools): StoreCheckerWithOptions {
   const { service } = tools
   const checker = service.program.getTypeChecker()
   const tsNodeMap = service.esTreeNodeToTSNodeMap
 
-  return (node) => {
+  return (node, options) => {
     const tsNode = tsNodeMap.get(node)
     if (!tsNode) {
       return false
@@ -107,57 +124,73 @@ function createStoreCheckerForTS(
      * Checks whether the given type is a store or not
      */
     function isStoreType(type: TS.Type): boolean {
-      if (type.isUnion()) {
-        return type.types.some(isStoreType)
-      }
-      const subscribe = type.getProperty("subscribe")
-      if (subscribe === undefined) {
-        return false
-      }
-      const subscribeType = checker.getTypeOfSymbolAtLocation(
-        subscribe,
-        tsNode!,
-      )
-      return isStoreSubscribeSignatureType(subscribeType)
+      return eachTypeCheck(type, options, (type) => {
+        const subscribe = type.getProperty("subscribe")
+        if (!subscribe) {
+          return false
+        }
+        const subscribeType = checker.getTypeOfSymbolAtLocation(
+          subscribe,
+          tsNode!,
+        )
+        return isStoreSubscribeSignatureType(subscribeType)
+      })
     }
 
     /**
      * Checks whether the given type is a store's subscribe or not
      */
     function isStoreSubscribeSignatureType(type: TS.Type): boolean {
-      if (type.isUnion()) {
-        return type.types.some(isStoreSubscribeSignatureType)
-      }
-      for (const signature of type.getCallSignatures()) {
-        if (
-          signature.parameters.length >= 2 &&
-          isFunctionSymbol(signature.parameters[0]) &&
-          isFunctionSymbol(signature.parameters[1])
-        ) {
-          return true
+      return eachTypeCheck(type, options, (type) => {
+        for (const signature of type.getCallSignatures()) {
+          if (
+            signature.parameters.length >= 2 &&
+            maybeFunctionSymbol(signature.parameters[0]) &&
+            maybeFunctionSymbol(signature.parameters[1])
+          ) {
+            return true
+          }
         }
-      }
-      return false
+        return false
+      })
     }
 
     /**
-     * Checks whether the given symbol is a function param or not
+     * Checks whether the given symbol maybe function param or not
      */
-    function isFunctionSymbol(param: TS.Symbol): boolean {
+    function maybeFunctionSymbol(param: TS.Symbol): boolean {
       const type: TS.Type | undefined = checker.getApparentType(
         checker.getTypeOfSymbolAtLocation(param, tsNode!),
       )
-      return isFunctionType(type)
+      return maybeFunctionType(type)
     }
-  }
 
-  /**
-   * Checks whether the given symbol is a function param or not
-   */
-  function isFunctionType(type: TS.Type): boolean {
-    if (type.isUnion()) {
-      return type.types.some(isFunctionType)
+    /**
+     * Checks whether the given type is maybe function param or not
+     */
+    function maybeFunctionType(type: TS.Type): boolean {
+      return eachTypeCheck(type, { consistent: false }, (type) => {
+        return type.getCallSignatures().length > 0
+      })
     }
-    return type.getCallSignatures().length > 0
   }
+}
+
+/**
+ * Check the given type with the given check function.
+ * For union types, `options.consistent: true` requires all types to pass the check function.
+ * `options.consistent: false` considers a match if any type passes the check function.
+ */
+function eachTypeCheck(
+  type: TS.Type,
+  options: { consistent: boolean },
+  check: (t: TS.Type) => boolean,
+): boolean {
+  if (type.isUnion()) {
+    if (options.consistent) {
+      return type.types.every((t) => eachTypeCheck(t, options, check))
+    }
+    return type.types.some((t) => eachTypeCheck(t, options, check))
+  }
+  return check(type)
 }

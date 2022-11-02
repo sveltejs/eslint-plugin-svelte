@@ -1,60 +1,36 @@
 - message:
     Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
-  line: 11
-  column: 19
+  line: 7
+  column: 6
   suggestions: null
 - message:
     Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
-  line: 12
-  column: 19
+  line: 8
+  column: 6
+  suggestions: null
+- message:
+    Use the $ prefix or the get function to access reactive values instead
+    of accessing the raw store.
+  line: 11
+  column: 6
   suggestions: null
 - message:
     Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
   line: 13
-  column: 12
-  suggestions: null
-- message:
-    Use the $ prefix or the get function to access reactive values instead
-    of accessing the raw store.
-  line: 14
-  column: 10
+  column: 6
   suggestions: null
 - message:
     Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
   line: 15
-  column: 17
-  suggestions: null
-- message:
-    Use the $ prefix or the get function to access reactive values instead
-    of accessing the raw store.
-  line: 16
-  column: 9
-  suggestions: null
-- message:
-    Use the $ prefix or the get function to access reactive values instead
-    of accessing the raw store.
-  line: 17
-  column: 10
+  column: 6
   suggestions: null
 - message:
     Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
   line: 19
-  column: 16
-  suggestions: null
-- message:
-    Use the $ prefix or the get function to access reactive values instead
-    of accessing the raw store.
-  line: 21
-  column: 18
-  suggestions: null
-- message:
-    Use the $ prefix or the get function to access reactive values instead
-    of accessing the raw store.
-  line: 22
-  column: 12
+  column: 6
   suggestions: null
