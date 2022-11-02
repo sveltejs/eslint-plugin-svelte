@@ -1,5 +1,23 @@
 # eslint-plugin-svelte
 
+## 2.12.0
+
+### Minor Changes
+
+- [#291](https://github.com/ota-meshi/eslint-plugin-svelte/pull/291) [`049ac2d`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/049ac2db68a9a3c753cc4e5fdf178795b01d715c) Thanks [@renovate](https://github.com/apps/renovate)! - feat: update dependency svelte-eslint-parser to ^0.20.0
+
+- [#284](https://github.com/ota-meshi/eslint-plugin-svelte/pull/284) [`1240968`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/1240968523fb7721c6ca3ea5bdf943247be4a099) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `require-store-callbacks-use-set-param` rule
+
+- [#281](https://github.com/ota-meshi/eslint-plugin-svelte/pull/281) [`8da870f`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/8da870fc6c7d2b00a067d8befe124576c623a907) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `no-export-load-in-svelte-module-in-kit-pages` rule
+
+- [#283](https://github.com/ota-meshi/eslint-plugin-svelte/pull/283) [`909979e`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/909979e004f5b069dbd4adb1a53a125ecda110a7) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/valid-prop-names-in-kit-pages` rule
+
+- [#289](https://github.com/ota-meshi/eslint-plugin-svelte/pull/289) [`2895f16`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/2895f16c0e62cd0e946e549f8fc147aef42c143b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/require-store-reactive-access` rule
+
+### Patch Changes
+
+- [#286](https://github.com/ota-meshi/eslint-plugin-svelte/pull/286) [`8802e14`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/8802e1456b3d0c2bf021a3086b5160c51f56b049) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency known-css-properties to ^0.26.0
+
 ## 2.11.0
 
 ### Minor Changes
