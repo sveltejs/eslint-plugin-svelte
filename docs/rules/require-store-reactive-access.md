@@ -2,19 +2,19 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-store-reactive-access"
-description: "disallow to render store itself. Need to use $ prefix or get function."
+description: "disallow to use of the store itself as an operand. Need to use $ prefix or get function."
 ---
 
 # svelte/require-store-reactive-access
 
-> disallow to render store itself. Need to use $ prefix or get function.
+> disallow to use of the store itself as an operand. Need to use $ prefix or get function.
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
-This rule disallow to render store itself.  
+This rule disallow to use of the store itself as an operand.  
 You should access the store value using the `$` prefix or the `get` function.
 
 <ESLintCodeBlock fix>

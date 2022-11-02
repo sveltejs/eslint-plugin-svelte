@@ -7,7 +7,7 @@ export default createRule("require-store-reactive-access", {
   meta: {
     docs: {
       description:
-        "disallow to render store itself. Need to use $ prefix or get function.",
+        "disallow to use of the store itself as an operand. Need to use $ prefix or get function.",
       category: "Possible Errors",
       // TODO Switch to recommended in the major version.
       // recommended: true,
@@ -17,7 +17,7 @@ export default createRule("require-store-reactive-access", {
     schema: [],
     messages: {
       usingRawStoreInText:
-        "Use $ prefix or get function, instead of using raw stores in template.",
+        "Use the $ prefix or the get function to access reactive values instead of accessing the raw store.",
     },
     type: "problem",
   },

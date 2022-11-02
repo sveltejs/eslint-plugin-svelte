@@ -1,12 +1,12 @@
-- message: Use $ prefix or get function, instead of using raw stores in template.
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
   line: 17
   column: 5
   suggestions: null
-- message: Use $ prefix or get function, instead of using raw stores in template.
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
   line: 18
   column: 5
   suggestions: null
-- message: Use $ prefix or get function, instead of using raw stores in template.
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
   line: 19
   column: 5
   suggestions: null
