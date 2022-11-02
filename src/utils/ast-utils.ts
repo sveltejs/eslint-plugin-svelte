@@ -280,6 +280,12 @@ export function getScope(
   return scopeManager.scopes[0]
 }
 
+/** Get the parent node from the given node */
+export function getParent(node: ESTree.Node): ESTree.Node | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+  return (node as any).parent || null
+}
+
 export type QuoteAndRange = {
   quote: "unquoted" | "double" | "single"
   range: [number, number]

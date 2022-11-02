@@ -1,5 +1,6 @@
 import type typescript from "typescript"
 import type tsvfs from "@typescript/vfs"
+import path from "path"
 type TS = typeof typescript
 type TSVFS = typeof tsvfs
 
@@ -68,10 +69,53 @@ export async function createVirtualCompilerHost(
     true,
     ts,
   )
+
+  // Setup svelte type definition modules
+  for (const [key, get] of Object.entries(
+    // @ts-expect-error -- ignore
+    import.meta.glob("../../../../../node_modules/svelte/**/*.d.ts", {
+      as: "raw",
+    }),
+  )) {
+    const modulePath = key.slice("../../../../..".length)
+
+    fsMap.set(
+      modulePath,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+      await (get as any)(),
+    )
+  }
+
   const system = tsvfs.createSystem(fsMap)
   const host = tsvfs.createVirtualCompilerHost(system, compilerOptions, ts)
-  // eslint-disable-next-line @typescript-eslint/unbound-method -- backup original
-  const original = { getSourceFile: host.compilerHost.getSourceFile }
+  const original = {
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- backup original
+    getSourceFile: host.compilerHost.getSourceFile,
+  }
+  host.compilerHost.resolveModuleNames = function (
+    moduleNames,
+    containingFile,
+  ) {
+    return moduleNames.map((m) => {
+      const targetPaths: string[] = []
+      if (m.startsWith(".")) {
+        targetPaths.push(path.join(path.dirname(containingFile), m))
+      } else {
+        targetPaths.push(`/node_modules/${m}`)
+      }
+      for (const modulePath of targetPaths.flatMap((m) => [
+        `${m}.d.ts`,
+        `${m}.ts`,
+        `${m}/index.d.ts`,
+        `${m}/index.ts`,
+      ])) {
+        if (fsMap.has(modulePath)) {
+          return { resolvedFileName: modulePath }
+        }
+      }
+      return undefined
+    })
+  }
   host.compilerHost.getSourceFile = function (
     fileName,
     languageVersionOrOptions,

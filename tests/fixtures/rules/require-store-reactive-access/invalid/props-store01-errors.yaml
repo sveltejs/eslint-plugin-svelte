@@ -1,0 +1,16 @@
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
+  line: 7
+  column: 27
+  suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
+  line: 8
+  column: 25
+  suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
+  line: 9
+  column: 30
+  suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead of accessing the raw store.
+  line: 10
+  column: 18
+  suggestions: null

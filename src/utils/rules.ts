@@ -35,6 +35,7 @@ import preferDestructuredStoreProps from "../rules/prefer-destructured-store-pro
 import preferStyleDirective from "../rules/prefer-style-directive"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import requireStoreCallbacksUseSetParam from "../rules/require-store-callbacks-use-set-param"
+import requireStoreReactiveAccess from "../rules/require-store-reactive-access"
 import requireStoresInit from "../rules/require-stores-init"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import shorthandDirective from "../rules/shorthand-directive"
@@ -81,6 +82,7 @@ export const rules = [
   preferStyleDirective,
   requireOptimizedStyleAttribute,
   requireStoreCallbacksUseSetParam,
+  requireStoreReactiveAccess,
   requireStoresInit,
   shorthandAttribute,
   shorthandDirective,

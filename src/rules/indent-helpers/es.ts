@@ -17,6 +17,7 @@ import {
   isSemicolonToken,
 } from "eslint-utils"
 import type { ESNodeListener } from "../../types-for-node"
+import { getParent } from "../../utils/ast-utils"
 
 type NodeListener = ESNodeListener
 
@@ -1095,12 +1096,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
     ...v,
     ...commonVisitor,
   }
-}
-
-/** Get the parent node from the given node */
-function getParent(node: ESTree.Node): ESTree.Node | null {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  return (node as any).parent || null
 }
 
 /**

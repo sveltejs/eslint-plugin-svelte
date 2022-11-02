@@ -4,6 +4,9 @@ import type * as ESTree from "estree"
 
 export type ASTNode =
   | AST.SvelteNode
+  // This is correct, but is not done now to avoid type errors.
+  // | Exclude<ESTree.Node, ESTree.Program>
+  // | Exclude<Omit<TSESTree.Node, "parent">, { type: ESTree.Node["type"] }>
   | ESTree.Node
   | Exclude<TSESTree.Node, { type: ESTree.Node["type"] }>
 export type ASTNodeWithParent =
