@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/valid-prop-names-in-kit-pages"
 description: "disallow props other than data or errors in Svelte Kit page components."
+since: "v2.12.0"
 ---
 
 # svelte/valid-prop-names-in-kit-pages
 
 > disallow props other than data or errors in Svelte Kit page components.
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -58,6 +57,10 @@ Nothing. But if use are using not default routes folder, please set configuratio
 ## :books: Further Reading
 
 - [SvelteKit Migration Guide (v1.0.0-next.405)](https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.12.0
 
 ## :mag: Implementation
 

@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-store-callbacks-use-set-param"
 description: "store callbacks must use `set` param"
+since: "v2.12.0"
 ---
 
 # svelte/require-store-callbacks-use-set-param
 
 > store callbacks must use `set` param
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -71,6 +70,10 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte - Docs > RUN TIME > svelte/store](https://svelte.dev/docs#run-time-svelte-store)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.12.0
 
 ## :mag: Implementation
 
