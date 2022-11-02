@@ -42,6 +42,7 @@ import sortAttributes from "../rules/sort-attributes"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
+import validPropNamesInKitPages from "../rules/valid-prop-names-in-kit-pages"
 
 export const rules = [
   typescriptEslintNoUnnecessaryCondition,
@@ -87,4 +88,5 @@ export const rules = [
   spacedHtmlComment,
   system,
   validCompile,
+  validPropNamesInKitPages,
 ] as RuleModule[]
