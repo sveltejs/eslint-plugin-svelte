@@ -260,11 +260,9 @@ export function getScope(
   context: RuleContext,
   currentNode: TSESTree.Node,
 ): Scope.Scope {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  const scopeManager = (context.getSourceCode() as any).scopeManager
+  const scopeManager = context.getSourceCode().scopeManager
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  let node: any = currentNode
+  let node: TSESTree.Node | null = currentNode
   for (; node; node = node.parent || null) {
     const scope = scopeManager.acquire(node, false)
 
