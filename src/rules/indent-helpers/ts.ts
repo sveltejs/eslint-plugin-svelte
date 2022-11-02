@@ -510,7 +510,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // fn(arg: A): R | null;
       const firstToken = sourceCode.getFirstToken(node)
       const keyTokens = getFirstAndLastTokens(sourceCode, node.key)
-      let keyLast
+      let keyLast: AST.Token
       if (node.computed) {
         const closeBracket = sourceCode.getTokenAfter(keyTokens.lastToken)!
         offsets.setOffsetElementList([node.key], firstToken, closeBracket, 1)
@@ -612,7 +612,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node: TSESTree.TSEmptyBodyFunctionExpression | TSESTree.TSDeclareFunction,
     ) {
       const firstToken = sourceCode.getFirstToken(node)
-      let leftParenToken, bodyBaseToken
+      let leftParenToken: AST.Token, bodyBaseToken: AST.Token
       if (firstToken.type === "Punctuator") {
         // method
         leftParenToken = firstToken
@@ -719,7 +719,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       }
       offsets.setOffsetToken(prefixTokens, 0, firstToken)
 
-      let lastKeyToken
+      let lastKeyToken: AST.Token
       if (node.computed) {
         const leftBracketToken = sourceCode.getTokenBefore(
           keyTokens.firstToken,
