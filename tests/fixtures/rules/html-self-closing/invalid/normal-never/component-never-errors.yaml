@@ -1,4 +1,4 @@
 - message: Disallow self-closing on HTML elements.
   line: 3
-  column: 3
+  column: 8
   suggestions: null

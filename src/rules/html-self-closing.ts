@@ -52,7 +52,7 @@ export default createRule("html-self-closing", {
       },
     ],
   },
-  create(ctx) {
+  create(context) {
     let options = {
       void: "always",
       normal: "always",
@@ -60,7 +60,7 @@ export default createRule("html-self-closing", {
       svelte: "always",
     }
 
-    const option = ctx.options?.[0]
+    const option = context.options?.[0]
     switch (option) {
       case "none":
         options = {
@@ -120,17 +120,25 @@ export default createRule("html-self-closing", {
     /**
      * Report
      */
-    function report(node: AST.SvelteElement, close: boolean) {
+    function report(node: AST.SvelteElement, shouldBeClosed: boolean) {
       const elementType = getElementType(node)
 
-      ctx.report({
+      context.report({
         node,
-        messageId: close ? "requireClosing" : "disallowClosing",
+        loc: {
+          start: context
+            .getSourceCode()
+            .getLocFromIndex(
+              node.startTag.range[1] - (node.startTag.selfClosing ? 2 : 1),
+            ),
+          end: node.loc.end,
+        },
+        messageId: shouldBeClosed ? "requireClosing" : "disallowClosing",
         data: {
           type: TYPE_MESSAGES[elementType],
         },
         *fix(fixer) {
-          if (close) {
+          if (shouldBeClosed) {
             for (const child of node.children) {
               yield fixer.removeRange(child.range)
             }
