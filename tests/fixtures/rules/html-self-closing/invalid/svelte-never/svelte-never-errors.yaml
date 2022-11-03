@@ -1,4 +1,4 @@
 - message: Disallow self-closing on Svelte special elements.
   line: 2
-  column: 1
+  column: 14
   suggestions: null
