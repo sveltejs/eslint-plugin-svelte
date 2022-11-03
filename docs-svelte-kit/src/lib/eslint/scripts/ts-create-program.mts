@@ -71,19 +71,28 @@ export async function createVirtualCompilerHost(
   )
 
   // Setup svelte type definition modules
-  for (const [key, get] of Object.entries(
-    // @ts-expect-error -- ignore
-    import.meta.glob("../../../../../node_modules/svelte/**/*.d.ts", {
-      as: "raw",
-    }),
+  for (const [key, module] of await Promise.all(
+    Object.entries({
+      // @ts-expect-error -- ignore
+      ...import.meta.glob("../../../../../node_modules/svelte/*/*.d.ts", {
+        as: "raw",
+      }),
+      // @ts-expect-error -- ignore
+      ...import.meta.glob(
+        "../../../../../node_modules/svelte/types/{runtime,shared}/**/*.d.ts",
+        {
+          as: "raw",
+        },
+      ),
+    }).map(async ([key, get]) => [
+      key,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+      await (get as any)(),
+    ]),
   )) {
     const modulePath = key.slice("../../../../..".length)
 
-    fsMap.set(
-      modulePath,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-      await (get as any)(),
-    )
+    fsMap.set(modulePath, module)
   }
 
   const system = tsvfs.createSystem(fsMap)
