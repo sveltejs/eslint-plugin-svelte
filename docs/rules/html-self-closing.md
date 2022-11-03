@@ -41,7 +41,7 @@ You can choose either two styles for elements without content
 <p> </p>
 <div><div></div></div>
 <img>
-<svelte:head></svelte:head>
+<svelte:body></svelte:body>
 ```
 
 <!-- prettier-ignore-end -->
