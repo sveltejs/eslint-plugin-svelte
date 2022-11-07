@@ -1,8 +1,8 @@
 import type { ASTNode, RuleContext, SourceCode } from "../types"
 import type { TSESTree } from "@typescript-eslint/types"
+import type { Scope, Variable } from "@typescript-eslint/scope-manager"
 import type { AST as SvAST } from "svelte-eslint-parser"
 import * as eslintUtils from "eslint-utils"
-import type { Scope } from "eslint"
 import voidElements from "./void-elements"
 
 /**
@@ -237,7 +237,7 @@ export function getLangValue(
 export function findVariable(
   context: RuleContext,
   node: TSESTree.Identifier,
-): Scope.Variable | null {
+): Variable | null {
   const initialScope = eslintUtils.getInnermostScope(
     getScope(context, node),
     node,
@@ -259,7 +259,7 @@ export function findVariable(
 export function getScope(
   context: RuleContext,
   currentNode: TSESTree.Node,
-): Scope.Scope {
+): Scope {
   const scopeManager = context.getSourceCode().scopeManager
 
   let node: TSESTree.Node | null = currentNode

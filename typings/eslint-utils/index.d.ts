@@ -1,6 +1,7 @@
 import type { AST } from "svelte-eslint-parser"
-import type { Scope } from "eslint"
 import type { TSESTree } from "@typescript-eslint/types"
+import type { Scope } from "@typescript-eslint/scope-manager"
+import type { CALL, CONSTRUCT, ESM, READ } from "eslint-utils/referenceTracker"
 export {
   ReferenceTracker,
   TrackedReferences,
@@ -32,7 +33,7 @@ export function isNotClosingBraceToken(token: Token): boolean
 export function isNotCommentToken(token: Token): boolean
 
 export function findVariable(
-  initialScope: Scope.Scope,
+  initialScope: Scope,
   nameOrNode: TSESTree.Identifier | string,
 ): Scope.Variable
 
@@ -45,5 +46,46 @@ export function getPropertyName(
     | TSESTree.MethodDefinition
     | TSESTree.Property
     | TSESTree.PropertyDefinition,
-  initialScope?: Scope.Scope,
+  initialScope?: Scope,
 ): string | null
+
+/**
+ * Get the innermost scope which contains a given location.
+ */
+export function getInnermostScope(
+  initialScope: Scope,
+  node: TSESTree.Node,
+): Scope
+
+export class ReferenceTracker {
+  public static readonly CALL: typeof CALL
+
+  public static readonly CONSTRUCT: typeof CONSTRUCT
+
+  public static readonly ESM: typeof ESM
+
+  public static readonly READ: typeof READ
+
+  public constructor(globalScope: Scope, options?: ReferenceTrackerOptions)
+
+  /**
+   * Iterate the references of CommonJS modules.
+   */
+  public iterateCjsReferences<T = unknown>(
+    traceMap: TraceMap<T>,
+  ): IterableIterator<TrackedReferences<T>>
+
+  /**
+   * Iterate the references of ES modules.
+   */
+  public iterateEsmReferences<T = unknown>(
+    traceMap: TraceMap<T>,
+  ): IterableIterator<TrackedReferences<T>>
+
+  /**
+   * Iterate the references of global variables.
+   */
+  public iterateGlobalReferences<T = unknown>(
+    traceMap: TraceMap<T>,
+  ): IterableIterator<TrackedReferences<T>>
+}

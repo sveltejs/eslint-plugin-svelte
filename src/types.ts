@@ -1,12 +1,12 @@
 import type { JSONSchema4 } from "json-schema"
-import type {
-  Linter,
-  Rule,
-  Scope,
-  SourceCode as ESLintSourceCode,
-} from "eslint"
+import type { Linter, Rule, SourceCode as ESLintSourceCode } from "eslint"
 import type { AST } from "svelte-eslint-parser"
 import type { TSESTree } from "@typescript-eslint/types"
+import type {
+  ScopeManager,
+  Scope,
+  Variable,
+} from "@typescript-eslint/scope-manager"
 import type {
   ASTNode,
   ASTNodeWithParent,
@@ -140,11 +140,11 @@ export type RuleContext = {
 
   getAncestors(): ASTNode[]
 
-  getDeclaredVariables(node: TSESTree.Node): Scope.Variable[]
+  getDeclaredVariables(node: TSESTree.Node): Variable[]
 
   getFilename(): string
 
-  getScope(): Scope.Scope
+  getScope(): Scope
 
   getSourceCode(): SourceCode
 
@@ -215,7 +215,7 @@ export interface SourceCode {
   lines: string[]
   hasBOM: boolean
   parserServices: ESLintSourceCode.ParserServices
-  scopeManager: Scope.ScopeManager
+  scopeManager: ScopeManager
   visitorKeys: ESLintSourceCode.VisitorKeys
 
   getText(node?: NodeOrToken, beforeCount?: number, afterCount?: number): string

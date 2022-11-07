@@ -78,13 +78,14 @@ export default createRule("prefer-destructured-store-props", {
 
       /** Checks whether the given node is reactive variable definition with member expression. */
       function isReactiveVariableDefinitionWithMemberExpression(
-        node: TSESTree.Identifier,
+        node: TSESTree.Identifier | TSESTree.JSXIdentifier,
       ): node is TSESTree.Identifier & {
         parent: TSESTree.MemberExpression & {
           parent: TSESTree.AssignmentExpression & { left: TSESTree.Identifier }
         }
       } {
         return (
+          node.type === "Identifier" &&
           node.parent?.type === "MemberExpression" &&
           node.parent.object === node &&
           getPropertyName(node.parent) === propName &&
@@ -101,13 +102,14 @@ export default createRule("prefer-destructured-store-props", {
 
       /** Checks whether the given node is reactive variable definition with destructuring. */
       function isReactiveVariableDefinitionWithDestructuring(
-        node: TSESTree.Identifier,
+        node: TSESTree.Identifier | TSESTree.JSXIdentifier,
       ): node is TSESTree.Identifier & {
         parent: TSESTree.AssignmentExpression & {
           left: TSESTree.ObjectPattern
         }
       } {
         return (
+          node.type === "Identifier" &&
           node.parent?.type === "AssignmentExpression" &&
           node.parent.right === node &&
           node.parent.left.type === "ObjectPattern" &&

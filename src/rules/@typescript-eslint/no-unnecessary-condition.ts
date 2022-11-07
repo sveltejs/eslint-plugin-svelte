@@ -182,7 +182,10 @@ export default createRule("@typescript-eslint/no-unnecessary-condition", {
       })
     }
 
-    const mutableVarReferenceIds: TSESTree.Identifier[] = []
+    const mutableVarReferenceIds: (
+      | TSESTree.Identifier
+      | TSESTree.JSXIdentifier
+    )[] = []
     const scriptElements: AST.SvelteScriptElement[] = []
     let inSvelteReactiveStatement = false
 
