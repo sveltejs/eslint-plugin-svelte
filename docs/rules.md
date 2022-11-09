@@ -16,6 +16,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md) | disallow duplicate style properties | :star: |
 | [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md) | disallow dynamic slot name | :star::wrench: |

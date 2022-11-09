@@ -12,6 +12,7 @@ import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import mustacheSpacing from "../rules/mustache-spacing"
 import noAtDebugTags from "../rules/no-at-debug-tags"
 import noAtHtmlTags from "../rules/no-at-html-tags"
+import noDomManipulating from "../rules/no-dom-manipulating"
 import noDupeElseIfBlocks from "../rules/no-dupe-else-if-blocks"
 import noDupeStyleProperties from "../rules/no-dupe-style-properties"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
@@ -59,6 +60,7 @@ export const rules = [
   mustacheSpacing,
   noAtDebugTags,
   noAtHtmlTags,
+  noDomManipulating,
   noDupeElseIfBlocks,
   noDupeStyleProperties,
   noDynamicSlotName,
