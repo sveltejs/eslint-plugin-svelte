@@ -24,25 +24,80 @@ We don't recommend but If you intentionally manipulate the DOM, simply you can i
 ```svelte
 <script>
   /* eslint svelte/no-dom-manipulating: "error" */
-  let div
-  let show
+  let foo, bar, show
 
   /* ✓ GOOD */
   const toggle = () => (show = !show)
 
   /* ✗ BAD */
-  const remove = () => div.remove()
+  const remove = () => foo.remove()
+  const update = () => (bar.textContent = "Update!")
 </script>
 
 {#if show}
-  <div bind:this={div}>div</div>
+  <div bind:this={foo}>Foo</div>
 {/if}
+<div bind:this={bar}>
+  {#if show}
+    Bar
+  {/if}
+</div>
 
 <button on:click={() => toggle()}>Click Me (Good)</button>
 <button on:click={() => remove()}>Click Me (Bad)</button>
+<button on:click={() => update()}>Click Me (Bad)</button>
 ```
 
 </ESLintCodeBlock>
+
+This rule only tracks and checks variables given with `bind:this={}`. In other words, it doesn't track things like function arguments given to `transition:` directives. These functions have been well tested and are often used more carefully.
+
+<ESLintCodeBlock>
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/no-dom-manipulating: "error" */
+  let visible = false
+
+  function typewriter(node, { speed = 1 }) {
+    const valid =
+      node.childNodes.length === 1 &&
+      node.childNodes[0].nodeType === Node.TEXT_NODE
+
+    if (!valid) {
+      throw new Error(
+        `This transition only works on elements with a single text node child`,
+      )
+    }
+
+    const text = node.textContent
+    const duration = text.length / (speed * 0.01)
+
+    return {
+      duration,
+      tick: (t) => {
+        const i = Math.trunc(text.length * t)
+        node.textContent = text.slice(0, i) // It does not report.
+      },
+    }
+  }
+</script>
+
+<label>
+  <input type="checkbox" bind:checked={visible} />
+  visible
+</label>
+
+{#if visible}
+  <p transition:typewriter>The quick brown fox jumps over the lazy dog</p>
+{/if}
+```
+
+</ESLintCodeBlock>
+
+See also <https://svelte.jp/examples/custom-js-transitions>.
 
 ## :wrench: Options
 
