@@ -1,6 +1,6 @@
 import type { TSESTree } from "@typescript-eslint/types"
+import type { Variable } from "@typescript-eslint/scope-manager"
 import { ReferenceTracker } from "eslint-utils"
-import type { Variable } from "eslint-scope"
 import type { RuleContext } from "../../types"
 import type { TS, TSTools } from "../../utils/ts-utils"
 import { getTypeScriptTools } from "../../utils/ts-utils"
