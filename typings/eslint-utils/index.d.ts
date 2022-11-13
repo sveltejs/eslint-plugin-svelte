@@ -1,12 +1,16 @@
 import type { AST } from "svelte-eslint-parser"
 import type { TSESTree } from "@typescript-eslint/types"
 import type { Scope } from "@typescript-eslint/scope-manager"
-import type { CALL, CONSTRUCT, ESM, READ } from "eslint-utils/referenceTracker"
+import type {
+  CALL,
+  CONSTRUCT,
+  ESM,
+  READ,
+  TraceMap,
+} from "eslint-utils/referenceTracker"
 export {
   ReferenceTracker,
   TrackedReferences,
-  getPropertyName,
-  getInnermostScope,
 } from "../../node_modules/@types/eslint-utils"
 type Token = { type: string; value: string }
 export function isArrowToken(token: Token): boolean

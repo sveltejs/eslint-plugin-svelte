@@ -518,19 +518,17 @@ function getAttributeValueRangeTokens(
  * Returns name of SvelteElement
  */
 export function getNodeName(node: SvAST.SvelteElement): string {
-  if ("name" in node.name) {
+  if (node.name.type === "Identifier" || node.name.type === "SvelteName") {
     return node.name.name
   }
-  let object = ""
+  const memberPath = [node.name.property.name]
   let currentObject = node.name.object
-  while ("object" in currentObject) {
-    object = `${currentObject.property.name}.${object}`
+  while (currentObject.type === "SvelteMemberExpressionName") {
+    memberPath.unshift(currentObject.property.name)
     currentObject = currentObject.object
   }
-  if ("name" in currentObject) {
-    object = `${currentObject.name}.${object}`
-  }
-  return object + node.name.property.name
+  memberPath.unshift(currentObject.name)
+  return memberPath.join(".")
 }
 
 /**
