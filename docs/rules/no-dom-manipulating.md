@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-dom-manipulating"
 description: "disallow DOM manipulating"
+since: "v2.13.0"
 ---
 
 # svelte/no-dom-manipulating
 
 > disallow DOM manipulating
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -102,6 +101,10 @@ See also <https://svelte.jp/examples/custom-js-transitions>.
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.13.0
 
 ## :mag: Implementation
 

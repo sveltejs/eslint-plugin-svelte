@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.13.0
+
+### Minor Changes
+
+- [#303](https://github.com/ota-meshi/eslint-plugin-svelte/pull/303) [`747eae5`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/747eae528d8aadc0d31a64f04baa8f2e557e80c6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte-eslint-parser to v0.21
+
+- [#296](https://github.com/ota-meshi/eslint-plugin-svelte/pull/296) [`695e2e5`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/695e2e50762bf004af9200d7d05958e5cea08f70) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve reporting range for `svelte/html-self-closing` rule.
+
+- [#302](https://github.com/ota-meshi/eslint-plugin-svelte/pull/302) [`f0d3e68`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/f0d3e68f75f6a90d5f245313e96b3987fec6761f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-dom-manipulating` rule
+
 ## 2.12.0
 
 ### Minor Changes
