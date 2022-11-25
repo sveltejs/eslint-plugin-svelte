@@ -304,9 +304,6 @@ export type ASTNodeListener = {
     node: TSESTree.TSReadonlyKeyword & ASTNodeWithParent,
   ) => void
   TSRestType?: (node: TSESTree.TSRestType & ASTNodeWithParent) => void
-  TSSatisfiesExpression?: (
-    node: TSESTree.TSSatisfiesExpression & ASTNodeWithParent,
-  ) => void
   TSStaticKeyword?: (node: TSESTree.TSStaticKeyword & ASTNodeWithParent) => void
   TSStringKeyword?: (node: TSESTree.TSStringKeyword & ASTNodeWithParent) => void
   TSSymbolKeyword?: (node: TSESTree.TSSymbolKeyword & ASTNodeWithParent) => void
@@ -666,9 +663,6 @@ export type TSNodeListener = {
     node: TSESTree.TSReadonlyKeyword & ASTNodeWithParent,
   ) => void
   TSRestType?: (node: TSESTree.TSRestType & ASTNodeWithParent) => void
-  TSSatisfiesExpression?: (
-    node: TSESTree.TSSatisfiesExpression & ASTNodeWithParent,
-  ) => void
   TSStaticKeyword?: (node: TSESTree.TSStaticKeyword & ASTNodeWithParent) => void
   TSStringKeyword?: (node: TSESTree.TSStringKeyword & ASTNodeWithParent) => void
   TSSymbolKeyword?: (node: TSESTree.TSSymbolKeyword & ASTNodeWithParent) => void
