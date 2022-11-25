@@ -73,7 +73,7 @@
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
     "sourcemap-codec": "^1.4.8",
-    "svelte-eslint-parser": "^0.21.0"
+    "svelte-eslint-parser": "^0.22.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
@@ -174,7 +174,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 98.72,
+    "atLeast": 99.04,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,

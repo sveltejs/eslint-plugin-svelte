@@ -47,8 +47,6 @@ const config = {
       lib: path.join(dirname, "./docs-svelte-kit/src/lib"),
       assets: path.join(dirname, "./docs-svelte-kit/statics"),
     },
-
-    trailingSlash: "always",
   },
 }
 export default config
