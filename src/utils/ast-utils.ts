@@ -435,6 +435,7 @@ export function getAttributeKeyText(
     | SvAST.SvelteStyleDirective
     | SvAST.SvelteDirective
     | SvAST.SvelteSpecialDirective,
+  context: RuleContext,
 ): string {
   switch (node.type) {
     case "SvelteAttribute":
@@ -446,7 +447,7 @@ export function getAttributeKeyText(
       return node.kind
     case "SvelteDirective": {
       const dir = getDirectiveName(node)
-      return `${dir}:${node.key.name.name}${
+      return `${dir}:${getSimpleNameFromNode(node.key.name, context)}${
         node.key.modifiers.length ? `|${node.key.modifiers.join("|")}` : ""
       }`
     }
@@ -518,17 +519,7 @@ function getAttributeValueRangeTokens(
  * Returns name of SvelteElement
  */
 export function getNodeName(node: SvAST.SvelteElement): string {
-  if (node.name.type === "Identifier" || node.name.type === "SvelteName") {
-    return node.name.name
-  }
-  const memberPath = [node.name.property.name]
-  let currentObject = node.name.object
-  while (currentObject.type === "SvelteMemberExpressionName") {
-    memberPath.unshift(currentObject.property.name)
-    currentObject = currentObject.object
-  }
-  memberPath.unshift(currentObject.name)
-  return memberPath.join(".")
+  return getSimpleNameFromNode(node.name)
 }
 
 /**
@@ -585,4 +576,50 @@ export function isExpressionIdentifier(
   }
 
   return true
+}
+
+function getSimpleNameFromNode(
+  node:
+    | SvAST.SvelteName
+    | SvAST.SvelteMemberExpressionName
+    | TSESTree.Identifier,
+  context?: RuleContext,
+): string
+function getSimpleNameFromNode(
+  node:
+    | SvAST.SvelteName
+    | SvAST.SvelteMemberExpressionName
+    | TSESTree.PrivateIdentifier
+    | TSESTree.Expression,
+  context: RuleContext,
+): string
+/** Get simple name from give node */
+function getSimpleNameFromNode(
+  node:
+    | SvAST.SvelteName
+    | SvAST.SvelteMemberExpressionName
+    | TSESTree.PrivateIdentifier
+    | TSESTree.Expression,
+  context: RuleContext | undefined,
+): string {
+  if (node.type === "Identifier" || node.type === "SvelteName") {
+    return node.name
+  }
+  if (
+    node.type === "SvelteMemberExpressionName" ||
+    (node.type === "MemberExpression" && !node.computed)
+  ) {
+    return `${getSimpleNameFromNode(
+      node.object,
+      context!,
+    )}.${getSimpleNameFromNode(node.property, context!)}`
+  }
+
+  // No nodes other than those listed above are currently expected to be used in names.
+
+  if (!context) {
+    throw new Error("Rule context is required")
+  }
+
+  return context.getSourceCode().getText(node)
 }

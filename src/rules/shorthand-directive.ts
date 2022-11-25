@@ -32,7 +32,10 @@ export default createRule("shorthand-directive", {
 
     /** Report for always */
     function reportForAlways(
-      node: AST.SvelteDirective | AST.SvelteStyleDirective,
+      node:
+        | AST.SvelteBindingDirective
+        | AST.SvelteClassDirective
+        | AST.SvelteStyleDirective,
     ) {
       context.report({
         node,
@@ -51,7 +54,10 @@ export default createRule("shorthand-directive", {
 
     /** Report for never */
     function reportForNever(
-      node: AST.SvelteDirective | AST.SvelteStyleDirective,
+      node:
+        | AST.SvelteBindingDirective
+        | AST.SvelteClassDirective
+        | AST.SvelteStyleDirective,
     ) {
       context.report({
         node,

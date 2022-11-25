@@ -229,7 +229,7 @@ export default createRule("sort-attributes", {
       const k = cacheKeyText.get(node)
       if (k != null) return k
 
-      const result = getAttributeKeyText(node)
+      const result = getAttributeKeyText(node, context)
       cacheKeyText.set(node, result)
       return result
     }
