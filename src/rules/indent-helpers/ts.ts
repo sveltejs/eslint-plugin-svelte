@@ -45,6 +45,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node: TSESTree.TSAsExpression | TSESTree.TSSatisfiesExpression,
     ) {
       // foo as T
+      // or
       // foo satisfies T
       const expressionTokens = getFirstAndLastTokens(
         sourceCode,
@@ -66,26 +67,26 @@ export function defineVisitor(context: IndentContext): NodeListener {
       // foo satisfies T
       visitor.TSAsExpression(node)
     },
-    TSTypeReference(node: TSESTree.TSTypeReference) {
+    TSTypeReference(
+      node: TSESTree.TSTypeReference | TSESTree.TSInstantiationExpression,
+    ) {
       // T<U>
+      // or
+      // const ErrorMap = Map<string, Error>
+      //                  ^^^^^^^^^^^^^^^^^^
       if (node.typeParameters) {
-        const typeNameTokens = getFirstAndLastTokens(sourceCode, node.typeName)
+        const firstToken = sourceCode.getFirstToken(node)
         offsets.setOffsetToken(
           sourceCode.getFirstToken(node.typeParameters),
           1,
-          typeNameTokens.firstToken,
+          firstToken,
         )
       }
     },
     TSInstantiationExpression(node: TSESTree.TSInstantiationExpression) {
       // const ErrorMap = Map<string, Error>
       //                  ^^^^^^^^^^^^^^^^^^
-      const firstToken = sourceCode.getFirstToken(node)
-      offsets.setOffsetToken(
-        sourceCode.getFirstToken(node.typeParameters),
-        1,
-        firstToken,
-      )
+      visitor.TSTypeReference(node)
     },
     TSTypeParameterInstantiation(
       node:
