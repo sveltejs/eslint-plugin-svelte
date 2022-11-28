@@ -111,7 +111,7 @@
     "@types/prismjs": "^1.26.0",
     "@types/stylus": "^0.48.38",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.44.1-alpha.15",
+    "@typescript-eslint/parser": "^5.45.0",
     "@typescript-eslint/parser-v4": "npm:@typescript-eslint/parser@4",
     "@typescript/vfs": "^1.4.0",
     "assert": "^2.0.0",
