@@ -96,7 +96,7 @@ This rule only tracks and checks variables given with `bind:this={}`. In other w
 
 </ESLintCodeBlock>
 
-See also <https://svelte.jp/examples/custom-js-transitions>.
+See also <https://svelte.dev/examples/custom-js-transitions>.
 
 ## :wrench: Options
 
