@@ -99,3 +99,7 @@ button:focus:not(:focus-visible) {
     font-size: 2.4rem;
   }
 }
+
+:target {
+  scroll-margin-top: 80px;
+}
