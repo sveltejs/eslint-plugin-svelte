@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.13.1",
+  "version": "2.14.0",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
   "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
@@ -174,7 +174,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 99.04,
+    "atLeast": 99.05,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,

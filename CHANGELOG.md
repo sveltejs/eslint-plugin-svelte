@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.14.0
+
+### Minor Changes
+
+- [#310](https://github.com/ota-meshi/eslint-plugin-svelte/pull/310) [`6d392c4`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/6d392c4ac1d94e6f296858da99454198774c6bec) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve `svelte/indent` rule to support more ts syntax
+
+- [#308](https://github.com/ota-meshi/eslint-plugin-svelte/pull/308) [`a9c4912`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/a9c4912b9d23fe7557786445fa8180a7b35bda21) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-dupe-use-directives` rule
+
+- [#308](https://github.com/ota-meshi/eslint-plugin-svelte/pull/308) [`a9c4912`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/a9c4912b9d23fe7557786445fa8180a7b35bda21) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-dupe-on-directives` rule
+
 ## 2.13.1
 
 ### Patch Changes
