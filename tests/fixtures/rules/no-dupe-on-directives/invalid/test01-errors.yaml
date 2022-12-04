@@ -1,0 +1,16 @@
+- message: This `on:click` directive is the same and duplicate directives in L12.
+  line: 12
+  column: 9
+  suggestions: null
+- message: This `on:click` directive is the same and duplicate directives in L12.
+  line: 12
+  column: 18
+  suggestions: null
+- message: This `on:click` directive is the same and duplicate directives in L13.
+  line: 13
+  column: 9
+  suggestions: null
+- message: This `on:click` directive is the same and duplicate directives in L13.
+  line: 13
+  column: 30
+  suggestions: null

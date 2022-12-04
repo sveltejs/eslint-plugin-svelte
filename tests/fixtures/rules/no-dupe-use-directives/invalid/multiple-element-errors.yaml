@@ -1,0 +1,56 @@
+- message: This `use:foo` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 6
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 14
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L6.
+  line: 6
+  column: 8
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L6.
+  line: 6
+  column: 16
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L8.
+  line: 8
+  column: 10
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L8.
+  line: 8
+  column: 18
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L10.
+  line: 10
+  column: 10
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L10.
+  line: 10
+  column: 18
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L14.
+  line: 14
+  column: 10
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L14.
+  line: 14
+  column: 18
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L16.
+  line: 16
+  column: 10
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L16.
+  line: 16
+  column: 18
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L18.
+  line: 18
+  column: 10
+  suggestions: null
+- message: This `use:foo` directive is the same and duplicate directives in L18.
+  line: 18
+  column: 18
+  suggestions: null

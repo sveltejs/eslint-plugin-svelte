@@ -18,7 +18,9 @@ These rules relate to possible syntax or logic errors in Svelte code:
 |:--------|:------------|:---|
 | [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
+| [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md) | disallow duplicate `on:` directives |  |
 | [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md) | disallow duplicate style properties | :star: |
+| [svelte/no-dupe-use-directives](./rules/no-dupe-use-directives.md) | disallow duplicate `use:` directives |  |
 | [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md) | disallow dynamic slot name | :star::wrench: |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
 | [svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
