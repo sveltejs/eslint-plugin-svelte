@@ -8,6 +8,7 @@ export type Node = TSESTree.Node
 export type Expression = TSESTree.Expression
 export type Statement = TSESTree.Statement
 export type Pattern = TSESTree.Pattern
+export type AccessorProperty = TSESTree.AccessorProperty
 export type ArrayExpression = TSESTree.ArrayExpression
 export type ArrayPattern = TSESTree.ArrayPattern
 export type ArrowFunctionExpression = TSESTree.ArrowFunctionExpression

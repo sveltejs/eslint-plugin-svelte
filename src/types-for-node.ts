@@ -14,6 +14,9 @@ export type ASTNodeWithParent =
   | AST.SvelteProgram
 
 export type ASTNodeListener = {
+  AccessorProperty?: (
+    node: TSESTree.AccessorProperty & ASTNodeWithParent,
+  ) => void
   ArrayExpression?: (node: TSESTree.ArrayExpression & ASTNodeWithParent) => void
   ArrayPattern?: (node: TSESTree.ArrayPattern & ASTNodeWithParent) => void
   ArrowFunctionExpression?: (
@@ -181,6 +184,9 @@ export type ASTNodeListener = {
   WhileStatement?: (node: TSESTree.WhileStatement & ASTNodeWithParent) => void
   WithStatement?: (node: TSESTree.WithStatement & ASTNodeWithParent) => void
   YieldExpression?: (node: TSESTree.YieldExpression & ASTNodeWithParent) => void
+  TSAbstractAccessorProperty?: (
+    node: TSESTree.TSAbstractAccessorProperty & ASTNodeWithParent,
+  ) => void
   TSAbstractKeyword?: (
     node: TSESTree.TSAbstractKeyword & ASTNodeWithParent,
   ) => void
@@ -304,6 +310,9 @@ export type ASTNodeListener = {
     node: TSESTree.TSReadonlyKeyword & ASTNodeWithParent,
   ) => void
   TSRestType?: (node: TSESTree.TSRestType & ASTNodeWithParent) => void
+  TSSatisfiesExpression?: (
+    node: TSESTree.TSSatisfiesExpression & ASTNodeWithParent,
+  ) => void
   TSStaticKeyword?: (node: TSESTree.TSStaticKeyword & ASTNodeWithParent) => void
   TSStringKeyword?: (node: TSESTree.TSStringKeyword & ASTNodeWithParent) => void
   TSSymbolKeyword?: (node: TSESTree.TSSymbolKeyword & ASTNodeWithParent) => void
@@ -399,6 +408,9 @@ export type ASTNodeListener = {
 }
 
 export type ESNodeListener = {
+  AccessorProperty?: (
+    node: TSESTree.AccessorProperty & ASTNodeWithParent,
+  ) => void
   ArrayExpression?: (node: TSESTree.ArrayExpression & ASTNodeWithParent) => void
   ArrayPattern?: (node: TSESTree.ArrayPattern & ASTNodeWithParent) => void
   ArrowFunctionExpression?: (
@@ -540,6 +552,9 @@ export type TSNodeListener = {
   Decorator?: (node: TSESTree.Decorator & ASTNodeWithParent) => void
   ImportAttribute?: (node: TSESTree.ImportAttribute & ASTNodeWithParent) => void
   StaticBlock?: (node: TSESTree.StaticBlock & ASTNodeWithParent) => void
+  TSAbstractAccessorProperty?: (
+    node: TSESTree.TSAbstractAccessorProperty & ASTNodeWithParent,
+  ) => void
   TSAbstractKeyword?: (
     node: TSESTree.TSAbstractKeyword & ASTNodeWithParent,
   ) => void
@@ -663,6 +678,9 @@ export type TSNodeListener = {
     node: TSESTree.TSReadonlyKeyword & ASTNodeWithParent,
   ) => void
   TSRestType?: (node: TSESTree.TSRestType & ASTNodeWithParent) => void
+  TSSatisfiesExpression?: (
+    node: TSESTree.TSSatisfiesExpression & ASTNodeWithParent,
+  ) => void
   TSStaticKeyword?: (node: TSESTree.TSStaticKeyword & ASTNodeWithParent) => void
   TSStringKeyword?: (node: TSESTree.TSStringKeyword & ASTNodeWithParent) => void
   TSSymbolKeyword?: (node: TSESTree.TSSymbolKeyword & ASTNodeWithParent) => void

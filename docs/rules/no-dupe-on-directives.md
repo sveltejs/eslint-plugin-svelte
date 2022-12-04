@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-dupe-on-directives"
 description: "disallow duplicate `on:` directives"
+since: "v2.14.0"
 ---
 
 # svelte/no-dupe-on-directives
 
 > disallow duplicate `on:` directives
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -46,6 +45,10 @@ This rule reports reports `on:` directives with exactly the same event name and 
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.14.0
 
 ## :mag: Implementation
 

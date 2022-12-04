@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-dupe-use-directives"
 description: "disallow duplicate `use:` directives"
+since: "v2.14.0"
 ---
 
 # svelte/no-dupe-use-directives
 
 > disallow duplicate `use:` directives
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -39,6 +38,10 @@ This rule reports reports `use:` directives with exactly the same action and exp
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.14.0
 
 ## :mag: Implementation
 
