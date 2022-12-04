@@ -187,14 +187,25 @@ export function defineVisitor(context: IndentContext): NodeListener {
     },
     CallExpression(node: TSESTree.CallExpression) {
       const firstToken = sourceCode.getFirstToken(node)
-      const leftParenToken = sourceCode.getTokenAfter(node.callee, {
-        filter: isOpeningParenToken,
-        includeComments: false,
-      })!
+      const leftParenToken = sourceCode.getTokenAfter(
+        node.typeParameters || node.callee,
+        {
+          filter: isOpeningParenToken,
+          includeComments: false,
+        },
+      )!
       const rightParenToken = sourceCode.getLastToken(node)
 
+      if (node.typeParameters) {
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          firstToken,
+        )
+      }
+
       for (const optionalToken of sourceCode.getTokensBetween(
-        sourceCode.getLastToken(node.callee),
+        sourceCode.getLastToken(node.typeParameters || node.callee),
         leftParenToken,
         { filter: isOptionalToken, includeComments: false },
       )) {
@@ -817,12 +828,17 @@ export function defineVisitor(context: IndentContext): NodeListener {
       const calleeTokens = getFirstAndLastTokens(sourceCode, node.callee)
       offsets.setOffsetToken(calleeTokens.firstToken, 1, newToken)
 
-      if (
-        node.arguments.length ||
-        calleeTokens.lastToken.range[1] < node.range[1]
-      ) {
+      if (node.typeParameters) {
+        offsets.setOffsetToken(
+          sourceCode.getFirstToken(node.typeParameters),
+          1,
+          calleeTokens.firstToken,
+        )
+      }
+      const leftParenBefore = node.typeParameters || calleeTokens.lastToken
+      if (node.arguments.length || leftParenBefore.range[1] < node.range[1]) {
         const rightParenToken = sourceCode.getLastToken(node)
-        const leftParenToken = sourceCode.getTokenAfter(calleeTokens.lastToken)!
+        const leftParenToken = sourceCode.getTokenAfter(leftParenBefore)!
 
         offsets.setOffsetToken(leftParenToken, 1, calleeTokens.firstToken)
         offsets.setOffsetElementList(
