@@ -117,7 +117,7 @@
     "assert": "^2.0.0",
     "commitlint": "^17.0.3",
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.15.0",
+    "esbuild": "^0.16.0",
     "esbuild-register": "^3.2.0",
     "escape-html": "^1.0.3",
     "eslint": "^8.0.0",
