@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.14.1
+
+### Patch Changes
+
+- [#318](https://github.com/ota-meshi/eslint-plugin-svelte/pull/318) [`53d4fda`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/53d4fdaf0fe60f78677b6f9b85ed81da553301e5) Thanks [@DetachHead](https://github.com/DetachHead)! - fix `isKitPageComponent` on windows
+
 ## 2.14.0
 
 ### Minor Changes
