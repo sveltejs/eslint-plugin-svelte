@@ -252,7 +252,16 @@ function getFunctionDeclarationNode(
   return declaration
 }
 
-/**  */
+/**
+ * If the node is inside of a function, return true.
+ *
+ * e.g. `$: await foo()`
+ * if `node` is `foo`, return false because reactive statement is not function.
+ *
+ * e.g. `const bar = () => foo()`
+ * if `node` is `foo`, return true.
+ *
+ */
 function isInsideOfFunction(node: TSESTree.Node) {
   let parent: TSESTree.Node | AST.SvelteReactiveStatement | null = node
   while (parent) {
@@ -271,7 +280,7 @@ function isInsideOfFunction(node: TSESTree.Node) {
   return false
 }
 
-/**  */
+/** Let's lint! */
 function doLint(
   context: RuleContext,
   ast: TSESTree.Node,
@@ -355,6 +364,8 @@ function doLint(
     leaveNode(node) {
       if (node.type === "AwaitExpression") {
         if ((ast.parent?.type as string) === "SvelteReactiveStatement") {
+          // MEMO: It checks that `await` is used in reactive statement directly or not.
+          // If `await` is used in inner function of a reactive statement, result of `isInsideOfFunction` will be `true`.
           if (!isInsideOfFunction(node)) {
             isSameMicroTask = false
           }
@@ -396,6 +407,7 @@ export default createRule("infinite-reactive-loop", {
       description:
         "Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.",
       category: "Possible Errors",
+      // TODO Switch to recommended in the major version.
       recommended: false,
     },
     schema: [],
