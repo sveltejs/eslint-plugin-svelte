@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
   env: {
     browser: true,
-    es2022: true,
+    es2017: true,
   },
 })
 
