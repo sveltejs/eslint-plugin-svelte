@@ -41,55 +41,45 @@ This rule reports those possible infinite loop.
     await new Promise((resolve) => setTimeout(resolve, 100))
   })()
 
-  const doSomething = async () => {
-    await fetchFromServer()
-  }
-
   $: (async () => {
-    await doSomething()
+    await doSomething_ok()
   })()
+
+  const doSomething_ok = async () => {
+    await fetchFromServer()
+    // You can update a state even in different microtask
+    // if you don't refer the state in reactive statement.
+    a += 1
+  }
 
   // ✗ BAD
   $: (async () => {
     await doSomething()
+    // Do not update a state in different micro task.
     a += 1
     $count += 1
   })()
 
-  $: Promise.resolve().then(() => {
-    a += 1
+  $: tick(() => {
+    a = a + 1
     $count += 1
   })
 
-  $: setTimeout(() => {
-    a = a + 1
-    $count += 1
-  }, 100)
-
-  const doSomething2_1 = () => {
-    a += 1
-  }
-
-  const doSomething2 = async () => {
-    a += 1
-    await fetchFromServer()
-    doSomething2_1()
-  }
-
   $: (async () => {
     console.log(a)
-    await doSomething2()
+    // This rule checks caller function recursively.
+    await doSomething_ng_1()
   })()
 
-  const doSomething3 = () => {
+  const doSomething_ng_1 = async () => {
     a += 1
-    $count += 1
+    await fetchFromServer()
+    doSomething_ng_2()
   }
 
-  $: (async () => {
-    console.log(a, $count)
-    tick(() => doSomething3())
-  })()
+  const doSomething_ng_2 = () => {
+    a += 1
+  }
 </script>
 ```
 
