@@ -17,4 +17,10 @@
     await doSomething()
     doSomething2()
   })()
+
+  $: (async () => {
+    // should not report here
+    await doSomething()
+    doSomething2()
+  })()
 </script>

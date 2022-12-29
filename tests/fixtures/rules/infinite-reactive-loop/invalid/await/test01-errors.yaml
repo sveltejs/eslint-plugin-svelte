@@ -1,4 +1,4 @@
 - message: Possibly it may occur an infinite reactive loop.
-  line: 12
+  line: 7
   column: 5
   suggestions: null

@@ -1,0 +1,16 @@
+- message: Possibly it may occur an infinite reactive loop.
+  line: 8
+  column: 7
+  suggestions: null
+- message: Possibly it may occur an infinite reactive loop.
+  line: 14
+  column: 7
+  suggestions: null
+- message: Possibly it may occur an infinite reactive loop.
+  line: 20
+  column: 5
+  suggestions: null
+- message: Possibly it may occur an infinite reactive loop.
+  line: 25
+  column: 5
+  suggestions: null

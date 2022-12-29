@@ -10,4 +10,10 @@
     await fetch()
     doSomething()
   })()
+
+  $: (async () => {
+    // should not report here
+    await fetch()
+    doSomething()
+  })()
 </script>

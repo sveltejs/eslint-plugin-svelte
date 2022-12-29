@@ -118,7 +118,7 @@ function isReactiveVariableNode(
 
     return resolved.defs.some((def) => {
       return (
-        (def as any).parent?.parent!.type === "SvelteScriptElement" &&
+        (def as any).parent?.parent?.type === "SvelteScriptElement" &&
         def.name.type === "Identifier" &&
         def.name.name === node.name
       )
