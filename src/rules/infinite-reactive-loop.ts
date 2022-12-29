@@ -6,7 +6,9 @@ import type { RuleContext } from "../types"
 import { getScope } from "../utils/ast-utils"
 import { traverseNodes } from "svelte-eslint-parser"
 
-/**  */
+/**
+ * Get usage of `tick`
+ */
 function extractTickReferences(
   context: RuleContext,
 ): { node: TSESTree.CallExpression; name: string }[] {
@@ -27,7 +29,9 @@ function extractTickReferences(
   })
 }
 
-/** */
+/**
+ * Get usage of `setTimeout`, `setInterval`, `queueMicrotask`
+ */
 function extractTaskReferences(
   context: RuleContext,
 ): { node: TSESTree.CallExpression; name: string }[] {
@@ -45,11 +49,13 @@ function extractTaskReferences(
   })
 }
 
-/** */
+/**
+ * If `node` is inside of `maybeAncestorNode`, return true.
+ */
 function isChildNode(
   maybeAncestorNode: TSESTree.Node | AST.SvelteNode,
   node: TSESTree.Node,
-) {
+): boolean {
   let parent = node.parent
   while (parent) {
     if (parent === maybeAncestorNode) return true
@@ -58,7 +64,9 @@ function isChildNode(
   return false
 }
 
-/**  */
+/**
+ * Return true if `node` is a function call.
+ */
 function isFunctionCall(node: TSESTree.Node): boolean {
   if (node.type !== "Identifier") return false
   const { parent } = node
@@ -66,8 +74,17 @@ function isFunctionCall(node: TSESTree.Node): boolean {
   return parent.callee.type === "Identifier" && parent.callee.name === node.name
 }
 
-/**  */
-function isObjectNode(node: TSESTree.Identifier): boolean {
+/**
+ * Return true if `node` is a variable.
+ *
+ * e.g. foo.bar
+ * If node is `foo`, return true.
+ * If node is `bar`, return false.
+ *
+ * e.g. let baz = 1
+ * If node is `baz`, return true.
+ */
+function isVariableNode(node: TSESTree.Identifier): boolean {
   const { parent } = node
   if (parent?.type !== "MemberExpression") return true
   if (
@@ -82,13 +99,15 @@ function isObjectNode(node: TSESTree.Identifier): boolean {
     : parent.object.name === node.name
 }
 
-/**  */
+/**
+ * Return true if `node` is a reactive variable.
+ */
 function isReactiveVariableNode(
   context: RuleContext,
   node: TSESTree.Node,
 ): node is TSESTree.Identifier {
   if (node.type !== "Identifier") return false
-  if (!isObjectNode(node) || isFunctionCall(node)) return false
+  if (!isVariableNode(node) || isFunctionCall(node)) return false
 
   // Variable name starts with `$` means Svelte store.
   if (node.name.startsWith("$")) return true
@@ -107,8 +126,12 @@ function isReactiveVariableNode(
   })
 }
 
-/**  */
-function isNodeUseForAssign(node: TSESTree.Identifier): boolean {
+/**
+ * e.g. foo.bar = baz + 1
+ * If node is `foo`, return true.
+ * Otherwise, return false.
+ */
+function isNodeForAssign(node: TSESTree.Identifier): boolean {
   const { parent } = node
   if (parent?.type === "AssignmentExpression") {
     return parent.left.type === "Identifier" && parent.left.name === node.name
@@ -122,8 +145,10 @@ function isNodeUseForAssign(node: TSESTree.Identifier): boolean {
   )
 }
 
-/** */
-function isPromiseThenOrCatch(node: TSESTree.Node): boolean {
+/**
+ * Return true if `node` is inside of `then` or `catch`.
+ */
+function isPromiseThenOrCatchBody(node: TSESTree.Node): boolean {
   if (!getDeclarationBody(node)) return false
   const { parent } = node
   if (
@@ -137,7 +162,9 @@ function isPromiseThenOrCatch(node: TSESTree.Node): boolean {
   return ["then", "catch"].includes(property.name)
 }
 
-/**  */
+/**
+ * Get all tracked reactive variables.
+ */
 function getTrackedVariableNodes(
   context: RuleContext,
   ast: AST.SvelteReactiveStatement,
@@ -201,7 +228,9 @@ function getFunctionDeclarationNode(
       traverseNodes(parent, {
         // eslint-disable-next-line no-loop-func -- ignore
         enterNode(node) {
-          declaration = getDeclarationBody(node, functionCall.name)
+          if (!declaration) {
+            declaration = getDeclarationBody(node, functionCall.name)
+          }
         },
         leaveNode() {
           /* noop */
@@ -224,9 +253,28 @@ function getFunctionDeclarationNode(
 }
 
 /**  */
+function isInsideOfFunction(node: TSESTree.Node) {
+  let parent: TSESTree.Node | AST.SvelteReactiveStatement | null = node
+  while (parent) {
+    parent = parent.parent as TSESTree.Node | AST.SvelteReactiveStatement | null
+    if (!parent) break
+    if (parent.type === "FunctionDeclaration" && parent.async) return true
+    if (
+      parent.type === "VariableDeclarator" &&
+      (parent.init?.type === "FunctionExpression" ||
+        parent.init?.type === "ArrowFunctionExpression") &&
+      parent.init?.async
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
+/**  */
 function doLint(
   context: RuleContext,
-  node: TSESTree.Node,
+  ast: TSESTree.Node,
   callFuncIdentifiers: TSESTree.Identifier[],
   tickCallExpressions: { node: TSESTree.CallExpression; name: string }[],
   taskReferences: {
@@ -238,10 +286,10 @@ function doLint(
 ) {
   let isSameMicroTask = pIsSameTask
 
-  traverseNodes(node, {
+  traverseNodes(ast, {
     enterNode(node) {
       // Promise.then() or Promise.catch() is called.
-      if (isPromiseThenOrCatch(node)) {
+      if (isPromiseThenOrCatchBody(node)) {
         isSameMicroTask = false
       }
 
@@ -284,7 +332,7 @@ function doLint(
         if (
           isReactiveVariableNode(context, node) &&
           reactiveVariableNames.includes(node.name) &&
-          isNodeUseForAssign(node)
+          isNodeForAssign(node)
         ) {
           context.report({
             node,
@@ -305,13 +353,18 @@ function doLint(
       }
     },
     leaveNode(node) {
-      // After `await` statement runs on a different microtask.
       if (node.type === "AwaitExpression") {
-        isSameMicroTask = false
+        if ((ast.parent?.type as string) === "SvelteReactiveStatement") {
+          if (!isInsideOfFunction(node)) {
+            isSameMicroTask = false
+          }
+        } else {
+          isSameMicroTask = false
+        }
       }
 
       // Promise.then() or Promise.catch() is called.
-      if (isPromiseThenOrCatch(node)) {
+      if (isPromiseThenOrCatchBody(node)) {
         isSameMicroTask = true
       }
 
