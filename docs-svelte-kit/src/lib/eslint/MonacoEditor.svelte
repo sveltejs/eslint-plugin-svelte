@@ -98,6 +98,7 @@
       renderValidationDecorations: "on",
       renderWhitespace: "boundary",
       scrollBeyondLastLine: false,
+      scrollbar: { alwaysConsumeMouseWheel: false },
     }
 
     if (diffEditor) {
