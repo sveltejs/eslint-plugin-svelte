@@ -700,9 +700,7 @@ export default createRule("@typescript-eslint/no-unnecessary-condition", {
     /**
      * Checks whether a lhs expression is optionable or not.
      */
-    function isOptionableExpression(
-      node: TSESTree.LeftHandSideExpression,
-    ): boolean {
+    function isOptionableExpression(node: TSESTree.Expression): boolean {
       const type = getNodeType(node)
       if (!type) {
         return false
