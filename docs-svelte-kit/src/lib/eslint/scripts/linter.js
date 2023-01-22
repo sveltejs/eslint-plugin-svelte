@@ -73,9 +73,13 @@ for (const rule of pluginRules) {
   const category = rule.meta.docs.category
   categories.find((c) => c.title === category).rules.push(data)
 
-  // if (rule.meta.docs.recommended) {
-  DEFAULT_RULES_CONFIG[rule.meta.docs.ruleId] = "error"
-  // }
+  if (
+    rule.meta.docs.ruleId !==
+      "svelte/no-export-load-in-svelte-module-in-kit-pages" &&
+    rule.meta.docs.ruleId !== "svelte/valid-prop-names-in-kit-pages"
+  ) {
+    DEFAULT_RULES_CONFIG[rule.meta.docs.ruleId] = "error"
+  }
 }
 
 for (const [ruleId, rule] of linter.getRules()) {
