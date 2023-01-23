@@ -154,6 +154,8 @@ export type RuleContext = {
 
   // eslint@6 does not have this method.
   getCwd?: () => string
+  // eslint@<7.11.0 does not have this method.
+  getPhysicalFilename?: () => string
 }
 
 export type NodeOrToken = {

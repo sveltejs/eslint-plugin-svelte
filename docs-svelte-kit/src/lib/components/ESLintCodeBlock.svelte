@@ -7,7 +7,7 @@
     postprocess,
   } from "../eslint/scripts/linter.js"
   import { loadTsParser } from "../eslint/scripts/ts-parser.js"
-  import { loadModulesForBrowser } from "../../../../src/shared/svelte-compile-warns/transform/load-module"
+  import { loadModulesForBrowser } from "../../../../src/utils/load-module"
 
   const modulesForBrowser = loadModulesForBrowser()
   const loadLinter = createLinter()
