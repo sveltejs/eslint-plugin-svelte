@@ -1,7 +1,6 @@
 import type { RuleContext, ASTNode } from "../../types"
 import type * as TS from "typescript"
-import Module from "module"
-import path from "path"
+import { loadModule } from "../load-module"
 export type TypeScript = typeof TS
 export type { TS }
 
@@ -47,21 +46,15 @@ export function getTypeScriptTools(context: RuleContext): TSTools | null {
   }
 }
 
-let cacheTypeScript: TypeScript | undefined
+let cacheTypeScript: TypeScript | null = null
 /**
  * Get TypeScript tools
  */
-export function getTypeScript(context: RuleContext): TypeScript | undefined {
+export function getTypeScript(context: RuleContext): TypeScript | null {
   if (cacheTypeScript) {
     return cacheTypeScript
   }
-  try {
-    const cwd = context.getCwd?.() ?? process.cwd()
-    const relativeTo = path.join(cwd, "__placeholder__.js")
-    cacheTypeScript = Module.createRequire(relativeTo)("typescript")
-  } catch {
-    // ignore
-  }
+  cacheTypeScript = loadModule(context, "typescript")
   if (cacheTypeScript) {
     return cacheTypeScript
   }

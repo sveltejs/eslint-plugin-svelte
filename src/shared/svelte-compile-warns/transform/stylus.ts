@@ -3,7 +3,7 @@ import type stylus from "stylus"
 import type { RawSourceMap } from "source-map-js"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
-import { loadModule } from "./load-module"
+import { loadModule } from "../../../utils/load-module"
 
 type Stylus = typeof stylus
 /**
