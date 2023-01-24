@@ -65,6 +65,7 @@
     }
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.4.14",
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
     "esutils": "^2.0.3",
@@ -72,7 +73,6 @@
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
-    "@jridgewell/sourcemap-codec": "^1.4.14",
     "svelte-eslint-parser": "^0.22.0"
   },
   "devDependencies": {
