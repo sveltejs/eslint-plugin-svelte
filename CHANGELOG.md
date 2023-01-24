@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 2.15.0
+
+### Minor Changes
+
+- [#349](https://github.com/ota-meshi/eslint-plugin-svelte/pull/349) [`b3f6fd5`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/b3f6fd50169a45e2efc229f9f132635a1c8a3136) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: improved loading of external modules
+
+### Patch Changes
+
+- [#351](https://github.com/ota-meshi/eslint-plugin-svelte/pull/351) [`aa7ab6c`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/aa7ab6cacb502eac046d89ecc5ff63b07f7118f8) Thanks [@SiNONiMiTY](https://github.com/SiNONiMiTY)! - fix(deps): update sourcemap-codec dependency
+
+- [#353](https://github.com/ota-meshi/eslint-plugin-svelte/pull/353) [`5933794`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/593379470019210bf9104bc260dffacb8976f8f5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for `form` in `svelte/valid-prop-names-in-kit-pages`
+
 ## 2.14.1
 
 ### Patch Changes
