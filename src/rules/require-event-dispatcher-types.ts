@@ -1,4 +1,5 @@
 import { createRule } from "../utils"
+import { extractCreateEventDispatcherReferences } from "./reference-helpers/svelte-createEventDispatcher"
 
 export default createRule("require-event-dispatcher-types", {
   meta: {
@@ -9,13 +10,18 @@ export default createRule("require-event-dispatcher-types", {
     },
     schema: [],
     messages: {
-      storeDefaultValue: `Always add type arguments when calling the createEventDispatcher function.`,
+      missingTypeParameter: `Always specify type parameters when calling the createEventDispatcher function.`,
     },
     type: "suggestion",
   },
-  create() {
+  create(context) {
     return {
       Program() {
+        for (const node of extractCreateEventDispatcherReferences(context)) {
+          if (node.typeParameters === undefined) {
+            context.report({ node, messageId: "missingTypeParameter" })
+          }
+        }
       },
     }
   },

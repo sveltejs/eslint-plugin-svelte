@@ -1,0 +1,5 @@
+- message: Always specify type parameters when calling the createEventDispatcher
+    function.
+  line: 4
+  column: 20
+  suggestions: null
