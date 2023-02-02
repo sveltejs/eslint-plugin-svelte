@@ -1,5 +1,4 @@
-- message: Always specify type parameters when calling the createEventDispatcher
-    function.
+- message: Type parameters missing for the createEventDispatcher function call.
   line: 4
   column: 20
   suggestions: null
