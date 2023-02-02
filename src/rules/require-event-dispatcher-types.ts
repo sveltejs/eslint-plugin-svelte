@@ -4,13 +4,13 @@ import { extractCreateEventDispatcherReferences } from "./reference-helpers/svel
 export default createRule("require-event-dispatcher-types", {
   meta: {
     docs: {
-      description: "require typed event dispatcher",
+      description: "require type parameters for createEventDispatcher",
       category: "Best Practices",
       recommended: false,
     },
     schema: [],
     messages: {
-      missingTypeParameter: `Always specify type parameters when calling the createEventDispatcher function.`,
+      missingTypeParameter: `Type parameters missing for the createEventDispatcher function call.`,
     },
     type: "suggestion",
   },
