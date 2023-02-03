@@ -1,4 +1,5 @@
 import { createRule } from "../utils"
+import { getLangValue } from "../utils/ast-utils"
 import { extractCreateEventDispatcherReferences } from "./reference-helpers/svelte-createEventDispatcher"
 
 export default createRule("require-event-dispatcher-types", {
@@ -15,8 +16,18 @@ export default createRule("require-event-dispatcher-types", {
     type: "suggestion",
   },
   create(context) {
+    let isTs = false
     return {
-      Program() {
+      SvelteScriptElement(node) {
+        const lang = getLangValue(node)?.toLowerCase()
+        if (lang === "ts" || lang === "typescript") {
+          isTs = true
+        }
+      },
+      "Program:exit"() {
+        if (!isTs) {
+          return
+        }
         for (const node of extractCreateEventDispatcherReferences(context)) {
           if (node.typeParameters === undefined) {
             context.report({ node, messageId: "missingTypeParameter" })
