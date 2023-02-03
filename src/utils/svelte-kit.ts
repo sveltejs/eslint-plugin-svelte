@@ -50,8 +50,8 @@ function hasSvelteKit(filePath: string): boolean {
       // So always it returns true if it runs on the package.
       return true
     return Boolean(
-      packageJson.dependencies["@sveltejs/kit"] ??
-        packageJson.devDependencies["@sveltejs/kit"],
+      packageJson.dependencies?.["@sveltejs/kit"] ??
+        packageJson.devDependencies?.["@sveltejs/kit"],
     )
   } catch (_e) {
     return false

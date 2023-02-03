@@ -6,7 +6,12 @@ import fs from "fs"
 import path from "path"
 import { createCache } from "./cache"
 
-type PackageJson = Record<string, any> & { filePath: string }
+type PackageJson = {
+  name?: unknown
+  dependencies?: { [key in string]?: unknown }
+  devDependencies?: { [key in string]?: unknown }
+  filePath: string
+}
 
 const isRunOnBrowser = !fs.readFileSync
 const cache = createCache<PackageJson | null>()
