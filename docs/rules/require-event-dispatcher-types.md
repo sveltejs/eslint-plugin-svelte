@@ -3,7 +3,6 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-event-dispatcher-types"
 description: "require type parameters for createEventDispatcher"
-since: "v2.16.0"
 ---
 
 # svelte/require-event-dispatcher-types
