@@ -10,6 +10,7 @@ type Less = typeof less
  */
 export function transform(
   node: AST.SvelteStyleElement,
+  text: string,
   context: RuleContext,
 ): TransformResult | null {
   const less = loadLess(context)
@@ -22,7 +23,7 @@ export function transform(
   } else {
     inputRange = [node.startTag.range[1], node.range[1]]
   }
-  const code = context.getSourceCode().text.slice(...inputRange)
+  const code = text.slice(...inputRange)
 
   const filename = `${context.getFilename()}.less`
   try {

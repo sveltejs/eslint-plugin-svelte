@@ -9,6 +9,7 @@ import type { TransformResult } from "./types"
  */
 export function transform(
   node: AST.SvelteStyleElement,
+  text: string,
   context: RuleContext,
 ): TransformResult | null {
   const postcssConfig = context.settings?.svelte?.compileOptions?.postcss
@@ -21,7 +22,7 @@ export function transform(
   } else {
     inputRange = [node.startTag.range[1], node.range[1]]
   }
-  const code = context.getSourceCode().text.slice(...inputRange)
+  const code = text.slice(...inputRange)
 
   const filename = `${context.getFilename()}.css`
   try {

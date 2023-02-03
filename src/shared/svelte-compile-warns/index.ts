@@ -27,8 +27,8 @@ const STYLE_TRANSFORMS: Record<
 > = {
   postcss: transformWithPostCSS,
   pcss: transformWithPostCSS,
-  scss: (node, context) => transformWithSass(node, context, "scss"),
-  sass: (node, context) => transformWithSass(node, context, "sass"),
+  scss: (node, text, context) => transformWithSass(node, text, context, "scss"),
+  sass: (node, text, context) => transformWithSass(node, text, context, "sass"),
   less: transformWithLess,
   stylus: transformWithStylus,
   styl: transformWithStylus,
@@ -94,7 +94,11 @@ function getSvelteCompileWarningsWithoutCache(
   for (const style of styleElementsWithNotCSS) {
     const transform = STYLE_TRANSFORMS[style.lang]
     if (transform) {
-      const result = transform(style.node, context)
+      const result = transform(
+        style.node,
+        context.getSourceCode().text,
+        context,
+      )
       if (result) {
         transformResults.push(result)
         continue
@@ -110,7 +114,7 @@ function getSvelteCompileWarningsWithoutCache(
 
   const text = buildStrippedText(context, ignoreComments, stripStyleTokens)
 
-  transformResults.push(...transformScripts(context))
+  transformResults.push(...transformScripts(context, text))
 
   if (!transformResults.length) {
     const warnings = getWarningsFromCode(text)
@@ -396,7 +400,7 @@ function buildStrippedText(
 }
 
 /** Returns the result of transforming the required script for the transform. */
-function* transformScripts(context: RuleContext) {
+function* transformScripts(context: RuleContext, text: string) {
   const transform = isUseTypeScript(context)
     ? hasTypeScript(context)
       ? transformWithTypescript
@@ -410,7 +414,7 @@ function* transformScripts(context: RuleContext) {
     const root = sourceCode.ast
     for (const node of root.body) {
       if (node.type === "SvelteScriptElement") {
-        const result = transform(node, context)
+        const result = transform(node, text, context)
         if (result) {
           yield result
         }
