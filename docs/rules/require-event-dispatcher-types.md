@@ -2,18 +2,20 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/require-event-dispatcher-types"
-description: "require type parameters for createEventDispatcher"
+description: "require type parameters for `createEventDispatcher`"
 ---
 
 # svelte/require-event-dispatcher-types
 
-> require type parameters for createEventDispatcher
+> require type parameters for `createEventDispatcher`
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
-This rule is aimed to enforce type parameters when calling `createEventDispatcher`. Adding types makes all `dispatch` calls as well as all event listeners typechecked. For more information, see the [svelte docs](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-component-events). 
+This rule is aimed to enforce type parameters when calling `createEventDispatcher`. Adding types makes all `dispatch` calls as well as all event listeners typechecked. For more information, see the [svelte docs](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-component-events).
 
-<ESLintCodeBlock language="javascript">
+<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -39,10 +41,6 @@ This rule is aimed to enforce type parameters when calling `createEventDispatche
 ## :wrench: Options
 
 Nothing.
-
-## :rocket: Version
-
-This rule was introduced in eslint-plugin-svelte v2.16.0
 
 ## :mag: Implementation
 

@@ -1,4 +1,4 @@
-- message: Type parameters missing for the createEventDispatcher function call.
+- message: Type parameters missing for the `createEventDispatcher` function call.
   line: 4
   column: 20
   suggestions: null

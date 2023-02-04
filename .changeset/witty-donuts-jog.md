@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": minor
 ---
 
-Added the require-event-dispatcher-types rule
+feat: added the `svelte/require-event-dispatcher-types` rule

@@ -1,17 +1,18 @@
+import { ReferenceTracker } from "eslint-utils"
 import { createRule } from "../utils"
 import { getLangValue } from "../utils/ast-utils"
-import { extractCreateEventDispatcherReferences } from "./reference-helpers/svelte-createEventDispatcher"
+import type { TSESTree } from "@typescript-eslint/types"
 
 export default createRule("require-event-dispatcher-types", {
   meta: {
     docs: {
-      description: "require type parameters for createEventDispatcher",
+      description: "require type parameters for `createEventDispatcher`",
       category: "Best Practices",
       recommended: false,
     },
     schema: [],
     messages: {
-      missingTypeParameter: `Type parameters missing for the createEventDispatcher function call.`,
+      missingTypeParameter: `Type parameters missing for the \`createEventDispatcher\` function call.`,
     },
     type: "suggestion",
   },
@@ -28,7 +29,16 @@ export default createRule("require-event-dispatcher-types", {
         if (!isTs) {
           return
         }
-        for (const node of extractCreateEventDispatcherReferences(context)) {
+        const referenceTracker = new ReferenceTracker(context.getScope())
+        for (const { node: n } of referenceTracker.iterateEsmReferences({
+          svelte: {
+            [ReferenceTracker.ESM]: true,
+            createEventDispatcher: {
+              [ReferenceTracker.CALL]: true,
+            },
+          },
+        })) {
+          const node = n as TSESTree.CallExpression
           if (node.typeParameters === undefined) {
             context.report({ node, messageId: "missingTypeParameter" })
           }
