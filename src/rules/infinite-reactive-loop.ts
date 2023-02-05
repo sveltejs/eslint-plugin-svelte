@@ -107,23 +107,7 @@ function isReactiveVariableNode(
   node: TSESTree.Node,
 ): node is TSESTree.Identifier {
   if (node.type !== "Identifier") return false
-  if (!isVariableNode(node) || isFunctionCall(node)) return false
-
-  // Variable name starts with `$` means Svelte store.
-  if (node.name.startsWith("$")) return true
-  const scope = getScope(context, node)
-  return scope.references.some((reference) => {
-    const { resolved } = reference
-    if (!resolved || resolved.name !== node.name) return false
-
-    return resolved.defs.some((def) => {
-      return (
-        (def as any).parent?.parent?.type === "SvelteScriptElement" &&
-        def.name.type === "Identifier" &&
-        def.name.name === node.name
-      )
-    })
-  })
+  return getAllReactiveVariableReferences(context).includes(node)
 }
 
 /**
