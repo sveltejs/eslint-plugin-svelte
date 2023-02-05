@@ -3,7 +3,7 @@ import type { AST } from "svelte-eslint-parser"
 import { ReferenceTracker } from "eslint-utils"
 import { createRule } from "../utils"
 import type { RuleContext } from "../types"
-import { getScope } from "../utils/ast-utils"
+import { findVariable } from "../utils/ast-utils"
 import { traverseNodes } from "svelte-eslint-parser"
 
 /**
@@ -75,39 +75,14 @@ function isFunctionCall(node: TSESTree.Node): boolean {
 }
 
 /**
- * Return true if `node` is a variable.
- *
- * e.g. foo.bar
- * If node is `foo`, return true.
- * If node is `bar`, return false.
- *
- * e.g. let baz = 1
- * If node is `baz`, return true.
- */
-function isVariableNode(node: TSESTree.Identifier): boolean {
-  const { parent } = node
-  if (parent?.type !== "MemberExpression") return true
-  if (
-    parent.type === "MemberExpression" &&
-    parent.object.type !== "Identifier"
-  ) {
-    return false
-  }
-
-  return parent.object.type !== "Identifier"
-    ? false
-    : parent.object.name === node.name
-}
-
-/**
  * Return true if `node` is a reactive variable.
  */
 function isReactiveVariableNode(
-  context: RuleContext,
+  reactiveVariableReferences: TSESTree.Identifier[],
   node: TSESTree.Node,
 ): node is TSESTree.Identifier {
   if (node.type !== "Identifier") return false
-  return getAllReactiveVariableReferences(context).includes(node)
+  return reactiveVariableReferences.includes(node)
 }
 
 /**
@@ -146,11 +121,10 @@ function isPromiseThenOrCatchBody(node: TSESTree.Node): boolean {
   return ["then", "catch"].includes(property.name)
 }
 
-
 /**
  * Get all reactive variable reference.
  */
-function getAllReactiveVariableReferences(context: RuleContext) {
+function getReactiveVariableReferences(context: RuleContext) {
   const scopeManager = context.getSourceCode().scopeManager
   // Find the top-level (module or global) scope.
   // Any variable defined at the top-level (module scope or global scope) can be made reactive.
@@ -181,18 +155,18 @@ function getAllReactiveVariableReferences(context: RuleContext) {
  * Get all tracked reactive variables.
  */
 function getTrackedVariableNodes(
-  context: RuleContext,
+  reactiveVariableReferences: TSESTree.Identifier[],
   ast: AST.SvelteReactiveStatement,
 ) {
-  const reactiveVariableNodes: TSESTree.Identifier[] = []
-  for (const identifier of getAllReactiveVariableReferences(context)) {
+  const reactiveVariableNodes: Set<TSESTree.Identifier> = new Set()
+  for (const identifier of reactiveVariableReferences) {
     if (
       // If the identifier is within the reactive statement range,
       // it is used within the reactive statement.
       ast.range[0] <= identifier.range[0] &&
       identifier.range[1] <= ast.range[1]
     ) {
-      reactiveVariableNodes.push(identifier)
+      reactiveVariableNodes.add(identifier)
     }
   }
   return reactiveVariableNodes
@@ -293,6 +267,7 @@ function doLint(
     name: string
   }[],
   reactiveVariableNames: string[],
+  reactiveVariableReferences: TSESTree.Identifier[],
   pIsSameTask: boolean,
 ) {
   let isSameMicroTask = pIsSameTask
@@ -325,7 +300,10 @@ function doLint(
 
       if (node.type === "Identifier" && isFunctionCall(node)) {
         // traverse used functions body
-        const functionDeclarationNode = getFunctionDeclarationNode(node)
+        const functionDeclarationNode = getFunctionDeclarationNode(
+          context,
+          node,
+        )
         if (functionDeclarationNode) {
           doLint(
             context,
@@ -334,6 +312,7 @@ function doLint(
             tickCallExpressions,
             taskReferences,
             reactiveVariableNames,
+            reactiveVariableReferences,
             isSameMicroTask,
           )
         }
@@ -341,7 +320,7 @@ function doLint(
 
       if (!isSameMicroTask) {
         if (
-          isReactiveVariableNode(context, node) &&
+          isReactiveVariableNode(reactiveVariableReferences, node) &&
           reactiveVariableNames.includes(node.name) &&
           isNodeForAssign(node)
         ) {
@@ -425,14 +404,21 @@ export default createRule("infinite-reactive-loop", {
       ["SvelteReactiveStatement"]: (ast: AST.SvelteReactiveStatement) => {
         const tickCallExpressions = extractTickReferences(context)
         const taskReferences = extractTaskReferences(context)
-        const trackedVariableNodes = getTrackedVariableNodes(context, ast)
+        const reactiveVariableReferences =
+          getReactiveVariableReferences(context)
+        const trackedVariableNodes = getTrackedVariableNodes(
+          reactiveVariableReferences,
+          ast,
+        )
+
         doLint(
           context,
           ast.body,
           [],
           tickCallExpressions,
           taskReferences,
-          trackedVariableNodes.map((node) => node.name),
+          Array.from(trackedVariableNodes).map((node) => node.name),
+          reactiveVariableReferences,
           true,
         )
       },
