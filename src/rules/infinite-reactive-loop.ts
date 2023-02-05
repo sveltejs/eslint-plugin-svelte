@@ -272,10 +272,13 @@ function doLint(
 ) {
   let isSameMicroTask = pIsSameTask
 
+  const differentMicroTaskEnterNodes: TSESTree.Node[] = []
+
   traverseNodes(ast, {
     enterNode(node) {
       // Promise.then() or Promise.catch() is called.
       if (isPromiseThenOrCatchBody(node)) {
+        differentMicroTaskEnterNodes.push(node)
         isSameMicroTask = false
       }
 
@@ -285,6 +288,7 @@ function doLint(
         ...taskReferences,
       ]) {
         if (isChildNode(callExpression, node)) {
+          differentMicroTaskEnterNodes.push(node)
           isSameMicroTask = false
         }
       }
@@ -295,6 +299,7 @@ function doLint(
         node.parent?.right.type === "AwaitExpression" &&
         node.parent?.left === node
       ) {
+        differentMicroTaskEnterNodes.push(node)
         isSameMicroTask = false
       }
 
@@ -355,27 +360,7 @@ function doLint(
         }
       }
 
-      // Promise.then() or Promise.catch() is called.
-      if (isPromiseThenOrCatchBody(node)) {
-        isSameMicroTask = true
-      }
-
-      // `tick`, `setTimeout`, `setInterval` , `queueMicrotask` is called
-      for (const { node: callExpression } of [
-        ...tickCallExpressions,
-        ...taskReferences,
-      ]) {
-        if (isChildNode(callExpression, node)) {
-          isSameMicroTask = true
-        }
-      }
-
-      // left side of await block
-      if (
-        node.parent?.type === "AssignmentExpression" &&
-        node.parent?.right.type === "AwaitExpression" &&
-        node.parent?.left === node
-      ) {
+      if (differentMicroTaskEnterNodes.includes(node)) {
         isSameMicroTask = true
       }
     },
