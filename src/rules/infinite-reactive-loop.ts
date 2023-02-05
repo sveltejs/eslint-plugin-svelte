@@ -228,43 +228,30 @@ function getDeclarationBody(
 
 /**  */
 function getFunctionDeclarationNode(
+  context: RuleContext,
   functionCall: TSESTree.Identifier,
 ): TSESTree.BlockStatement | TSESTree.Expression | null {
-  let parent: AST.SvelteScriptElement | TSESTree.Node | undefined = functionCall
-  let declaration: TSESTree.BlockStatement | TSESTree.Expression | null = null
-
-  while (parent) {
-    if (declaration) return declaration
-    parent = parent.parent as
-      | AST.SvelteScriptElement
-      | TSESTree.Node
-      | undefined
-    if (parent && parent.type === "BlockStatement") {
-      traverseNodes(parent, {
-        // eslint-disable-next-line no-loop-func -- ignore
-        enterNode(node) {
-          if (!declaration) {
-            declaration = getDeclarationBody(node, functionCall.name)
-          }
-        },
-        leaveNode() {
-          /* noop */
-        },
-      })
-    } else if (parent && parent.type === "SvelteScriptElement") {
-      for (const node of parent.body) {
-        if (declaration) break
-        if (node.type === "VariableDeclaration") {
-          for (const child of node.declarations) {
-            declaration = getDeclarationBody(child, functionCall.name)
-            if (declaration) break
-          }
-        }
+  const variable = findVariable(context, functionCall)
+  if (!variable) {
+    return null
+  }
+  for (const def of variable.defs) {
+    if (def.type === "FunctionName") {
+      if (def.node.type === "FunctionDeclaration") {
+        return def.node.body
+      }
+    }
+    if (def.type === "Variable") {
+      if (
+        def.node.init &&
+        (def.node.init.type === "FunctionExpression" ||
+          def.node.init.type === "ArrowFunctionExpression")
+      ) {
+        return def.node.init.body
       }
     }
   }
-
-  return declaration
+  return null
 }
 
 /**
