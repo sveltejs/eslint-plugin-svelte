@@ -162,6 +162,37 @@ function isPromiseThenOrCatchBody(node: TSESTree.Node): boolean {
   return ["then", "catch"].includes(property.name)
 }
 
+
+/**
+ * Get all reactive variable reference.
+ */
+function getAllReactiveVariableReferences(context: RuleContext) {
+  const scopeManager = context.getSourceCode().scopeManager
+  // Find the top-level (module or global) scope.
+  // Any variable defined at the top-level (module scope or global scope) can be made reactive.
+  const toplevelScope =
+    scopeManager.globalScope?.childScopes.find(
+      (scope) => scope.type === "module",
+    ) || scopeManager.globalScope
+  if (!toplevelScope) {
+    return []
+  }
+
+  // Extracts all reactive references to variables defined in the top-level scope.
+  const reactiveVariableNodes: TSESTree.Identifier[] = []
+  for (const variable of toplevelScope.variables) {
+    for (const reference of variable.references) {
+      if (
+        reference.identifier.type === "Identifier" &&
+        !isFunctionCall(reference.identifier)
+      ) {
+        reactiveVariableNodes.push(reference.identifier)
+      }
+    }
+  }
+  return reactiveVariableNodes
+}
+
 /**
  * Get all tracked reactive variables.
  */
@@ -170,16 +201,16 @@ function getTrackedVariableNodes(
   ast: AST.SvelteReactiveStatement,
 ) {
   const reactiveVariableNodes: TSESTree.Identifier[] = []
-  traverseNodes(ast.body, {
-    enterNode(node) {
-      if (isReactiveVariableNode(context, node)) {
-        reactiveVariableNodes.push(node)
-      }
-    },
-    leaveNode() {
-      /* noop */
-    },
-  })
+  for (const identifier of getAllReactiveVariableReferences(context)) {
+    if (
+      // If the identifier is within the reactive statement range,
+      // it is used within the reactive statement.
+      ast.range[0] <= identifier.range[0] &&
+      identifier.range[1] <= ast.range[1]
+    ) {
+      reactiveVariableNodes.push(identifier)
+    }
+  }
   return reactiveVariableNodes
 }
 
