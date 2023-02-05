@@ -10,7 +10,7 @@ const categories = [
   "System",
 ] as const
 
-const descriptions: Record<typeof categories[number], string> = {
+const descriptions: Record<(typeof categories)[number], string> = {
   "Possible Errors":
     "These rules relate to possible syntax or logic errors in Svelte code:",
   "Security Vulnerability":

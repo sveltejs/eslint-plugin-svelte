@@ -2,7 +2,7 @@ import type { AST } from "svelte-eslint-parser"
 import type sass from "sass"
 import type { RuleContext } from "../../../types"
 import type { TransformResult } from "./types"
-import { loadModule } from "./load-module"
+import { loadModule } from "../../../utils/load-module"
 
 type Sass = typeof sass
 /**

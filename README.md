@@ -13,7 +13,6 @@ You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-sve
 [![NPM downloads](https://img.shields.io/npm/dt/eslint-plugin-svelte.svg)](http://www.npmtrends.com/eslint-plugin-svelte)
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-svelte/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/eslint-plugin-svelte/actions?query=workflow%3ACI)
 
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/ota-meshi/eslint-plugin-svelte.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ota-meshi/eslint-plugin-svelte/context:javascript)
 [![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fota-meshi%2Feslint-plugin-svelte%2Fmain%2Fpackage.json)](https://github.com/plantain-00/type-coverage)
 [![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
@@ -338,6 +337,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-unused-svelte-ignore](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://ota-meshi.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-destructured-store-props](https://ota-meshi.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
+| [svelte/require-event-dispatcher-types](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` |  |
 | [svelte/require-optimized-style-attribute](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
 | [svelte/require-stores-init](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 

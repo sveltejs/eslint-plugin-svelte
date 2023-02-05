@@ -37,6 +37,7 @@ import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import preferDestructuredStoreProps from "../rules/prefer-destructured-store-props"
 import preferStyleDirective from "../rules/prefer-style-directive"
+import requireEventDispatcherTypes from "../rules/require-event-dispatcher-types"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import requireStoreCallbacksUseSetParam from "../rules/require-store-callbacks-use-set-param"
 import requireStoreReactiveAccess from "../rules/require-store-reactive-access"
@@ -88,6 +89,7 @@ export const rules = [
   preferClassDirective,
   preferDestructuredStoreProps,
   preferStyleDirective,
+  requireEventDispatcherTypes,
   requireOptimizedStyleAttribute,
   requireStoreCallbacksUseSetParam,
   requireStoreReactiveAccess,

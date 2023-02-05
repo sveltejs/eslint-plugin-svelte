@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.14.1",
+  "version": "2.15.0",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
   "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
@@ -65,6 +65,7 @@
     }
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.4.14",
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
     "esutils": "^2.0.3",
@@ -72,8 +73,7 @@
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
-    "sourcemap-codec": "^1.4.8",
-    "svelte-eslint-parser": "^0.22.0"
+    "svelte-eslint-parser": "^0.23.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
@@ -117,7 +117,7 @@
     "assert": "^2.0.0",
     "commitlint": "^17.0.3",
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.16.0",
+    "esbuild": "^0.17.0",
     "esbuild-register": "^3.2.0",
     "escape-html": "^1.0.3",
     "eslint": "^8.0.0",
