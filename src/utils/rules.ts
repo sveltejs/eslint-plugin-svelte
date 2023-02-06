@@ -8,6 +8,7 @@ import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
 import htmlQuotes from "../rules/html-quotes"
 import htmlSelfClosing from "../rules/html-self-closing"
 import indent from "../rules/indent"
+import infiniteReactiveLoop from "../rules/infinite-reactive-loop"
 import maxAttributesPerLine from "../rules/max-attributes-per-line"
 import mustacheSpacing from "../rules/mustache-spacing"
 import noAtDebugTags from "../rules/no-at-debug-tags"
@@ -59,6 +60,7 @@ export const rules = [
   htmlQuotes,
   htmlSelfClosing,
   indent,
+  infiniteReactiveLoop,
   maxAttributesPerLine,
   mustacheSpacing,
   noAtDebugTags,

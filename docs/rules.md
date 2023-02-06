@@ -16,6 +16,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/infinite-reactive-loop](./rules/infinite-reactive-loop.md) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |  |
 | [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md) | disallow duplicate `on:` directives |  |

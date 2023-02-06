@@ -1,0 +1,8 @@
+- message: Possibly it may occur an infinite reactive loop.
+  line: 8
+  column: 7
+  suggestions: null
+- message: Possibly it may occur an infinite reactive loop because this function may update `a`.
+  line: 14
+  column: 11
+  suggestions: null
