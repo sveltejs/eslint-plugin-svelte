@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/infinite-reactive-loop"
 description: "Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent."
+since: "v2.16.0"
 ---
 
 # svelte/infinite-reactive-loop
 
 > Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -93,6 +92,10 @@ Nothing.
 
 - [Svelte - Docs > COMPONENT FORMAT > 3. $: marks a statement as reactive](https://svelte.dev/docs#component-format-script-3-$-marks-a-statement-as-reactive)
 - [Svelte - Docs > COMPONENT FORMAT > 4. Prefix stores with $ to access their values](https://svelte.dev/docs#component-format-script-4-prefix-stores-with-$-to-access-their-values)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.16.0
 
 ## :mag: Implementation
 
