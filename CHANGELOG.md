@@ -1,5 +1,19 @@
 # eslint-plugin-svelte
 
+## 2.16.0
+
+### Minor Changes
+
+- [#358](https://github.com/ota-meshi/eslint-plugin-svelte/pull/358) [`3464f23`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/3464f2340ee1a45a4f50900eafe6435af9ba2931) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to v0.23
+
+- [#332](https://github.com/ota-meshi/eslint-plugin-svelte/pull/332) [`26870cf`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/26870cf4eae7c682ae9d2741194fc23fdca9112e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/nfinite-reactive-loop` rule
+
+- [#354](https://github.com/ota-meshi/eslint-plugin-svelte/pull/354) [`2f1d89a`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/2f1d89a4cbb5845aa328f5889dd449c386f04bda) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/require-event-dispatcher-types` rule
+
+### Patch Changes
+
+- [#357](https://github.com/ota-meshi/eslint-plugin-svelte/pull/357) [`a561f99`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/a561f995a426ccb2d9a4066fc8cc264efbb74d7e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for ts in `svelte/no-unused-svelte-ignore`
+
 ## 2.15.0
 
 ### Minor Changes
