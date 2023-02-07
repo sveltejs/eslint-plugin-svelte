@@ -92,6 +92,14 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star: |
 | [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md) | disallow trailing whitespace at the end of lines | :wrench: |
 
+## Experimental
+
+:warning: These rules are considered experimental and may change or be removed in the future.
+
+| Rule ID | Description |    |
+|:--------|:------------|:---|
+| [svelte/experimental-require-strict-events](./rules/require-strict-events.md) | require the strictEvents attribute on <script> tags |  |
+
 ## System
 
 These rules relate to this plugin works:
