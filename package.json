@@ -161,7 +161,7 @@
     "stylelint-config-standard": "^29.0.0",
     "stylus": "^0.59.0",
     "svelte": "^3.46.1",
-    "svelte-adapter-ghpages": "0.0.2",
+    "svelte-adapter-ghpages": "0.1.0",
     "svelte-i18n": "^3.4.0",
     "type-coverage": "^2.22.0",
     "typescript": "^4.9.3",
