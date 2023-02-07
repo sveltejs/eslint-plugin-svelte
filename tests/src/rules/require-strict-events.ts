@@ -12,5 +12,5 @@ const tester = new RuleTester({
 tester.run(
   "require-strict-events",
   rule as any,
-  loadTestCases("require-strict-events"),
+  loadTestCases("experimental-require-strict-events"),
 )
