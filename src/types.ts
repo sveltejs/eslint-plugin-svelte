@@ -53,6 +53,7 @@ export type RuleCategory =
   | "Best Practices"
   | "Stylistic Issues"
   | "Extension Rules"
+  | "Experimental"
   | "System"
 
 export interface RuleMetaData {
