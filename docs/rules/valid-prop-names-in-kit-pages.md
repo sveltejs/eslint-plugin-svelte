@@ -36,6 +36,8 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
   /** ✓ GOOD */
   export let data
   export let errors
+  export let form
+  export let snapshot
   // export let { data, errors } = { data: {}, errors: {} }
 
   /** ✗ BAD */
