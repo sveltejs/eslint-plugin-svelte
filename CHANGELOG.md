@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.17.0
+
+### Minor Changes
+
+- [#366](https://github.com/ota-meshi/eslint-plugin-svelte/pull/366) [`a1fe4ac`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/a1fe4aca6fbc5620d831ae93195faa4863936855) Thanks [@baseballyama](https://github.com/baseballyama)! - Support `snapshot` to `valid-prop-names-in-kit-pages` rule
+
 ## 2.16.0
 
 ### Minor Changes
