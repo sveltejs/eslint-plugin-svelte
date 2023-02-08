@@ -3,7 +3,7 @@ import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import { isKitPageComponent } from "../utils/svelte-kit"
 
-const EXPECTED_PROP_NAMES = ["data", "errors", "form"]
+const EXPECTED_PROP_NAMES = ["data", "errors", "form", "snapshot"]
 
 export default createRule("valid-prop-names-in-kit-pages", {
   meta: {
