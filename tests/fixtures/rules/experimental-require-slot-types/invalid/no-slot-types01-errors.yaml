@@ -1,0 +1,4 @@
+- message: The component must define the $$Slots interface.
+  line: 1
+  column: 2
+  suggestions: null
