@@ -1,4 +1,6 @@
-- message: The <script> tag is missing the strictEvents attribute.
+- message:
+    The component must have the strictEvents attribute on its <script> tag
+    or it must define the $$Events interface.
   line: 1
-  column: 1
+  column: 2
   suggestions: null

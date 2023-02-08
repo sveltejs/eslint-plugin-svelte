@@ -13,7 +13,7 @@ description: "require the strictEvents attribute on <script> tags"
 
 ## :book: Rule Details
 
-This rule enforces the presence of the `strictEvents` attribute on the main `<script>` tag of all components. This attributes enforces typechecking of events dispatched by the component, e.g. making it a typescript error to listen to any non-existent events. The `strictEvents` attribute is experimental and is documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-events).
+This rule enforces the presence of the `strictEvents` attribute on the main `<script>` tag of all components. This attributes enforces typechecking of events dispatched by the component, e.g. making it a typescript error to listen to any non-existent events. Alternatively, the event types may be defined manually by declaring the `$$Events` interface. The `strictEvents` attribute and the `$$Events` interface are experimental and are documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-events).
 
 <ESLintCodeBlock>
 
@@ -21,8 +21,13 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 
 ```svelte
 /* eslint svelte/experimental-strict-events: "error" */
+
 /* ✓ GOOD */
 <script lang="ts" strictEvents>
+</script>
+
+<script lang="ts">
+  interface $$Events {}
 </script>
 
 /* ✗ BAD */

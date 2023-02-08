@@ -10,20 +10,34 @@ export default createRule("experimental-require-strict-events", {
     },
     schema: [],
     messages: {
-      missingStrictEvents: `The <script> tag is missing the strictEvents attribute.`,
+      missingStrictEvents: `The component must have the strictEvents attribute on its <script> tag or it must define the $$Events interface.`,
     },
     type: "suggestion",
   },
   create(context) {
+    let isTs = false
+    let hasAttribute = false
+    let hasInterface = false
     return {
       SvelteScriptElement(node) {
         const lang = getLangValue(node)?.toLowerCase()
-        if (
-          (lang === "ts" || lang === "typescript") &&
-          findAttribute(node, "context") === null &&
-          findAttribute(node, "strictEvents") === null
-        ) {
-          context.report({ node, messageId: "missingStrictEvents" })
+        isTs = lang === "ts" || lang === "typescript"
+        hasAttribute = findAttribute(node, "strictEvents") !== null
+      },
+      TSInterfaceDeclaration(node) {
+        if (node.id.name === "$$Events") {
+          hasInterface = true
+        }
+      },
+      "Program:exit"() {
+        if (isTs && !hasAttribute && !hasInterface) {
+          context.report({
+            loc: {
+              line: 1,
+              column: 1,
+            },
+            messageId: "missingStrictEvents",
+          })
         }
       },
     }
