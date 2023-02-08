@@ -5,7 +5,7 @@ export default createRule("experimental-require-strict-events", {
   meta: {
     docs: {
       description: "require the strictEvents attribute on <script> tags",
-      category: "Best Practices",
+      category: "Experimental",
       recommended: false,
     },
     schema: [],

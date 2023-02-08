@@ -375,11 +375,11 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 ## Experimental
 
-:warning: These rules are considered experimental and may change or be removed in the future.
+:warning: These rules are considered experimental and may change or be removed in the future:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/experimental-require-strict-events](https://ota-meshi.github.io/eslint-plugin-svelte/rules/require-strict-events/) | require the strictEvents attribute on <script> tags |  |
+| [svelte/experimental-require-strict-events](https://ota-meshi.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/) | require the strictEvents attribute on <script> tags |  |
 
 ## System
 

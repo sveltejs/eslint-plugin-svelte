@@ -3,6 +3,7 @@ import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import derivedHasSameInputsOutputs from "../rules/derived-has-same-inputs-outputs"
+import experimentalRequireStrictEvents from "../rules/experimental-require-strict-events"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
 import htmlQuotes from "../rules/html-quotes"
@@ -42,7 +43,6 @@ import requireOptimizedStyleAttribute from "../rules/require-optimized-style-att
 import requireStoreCallbacksUseSetParam from "../rules/require-store-callbacks-use-set-param"
 import requireStoreReactiveAccess from "../rules/require-store-reactive-access"
 import requireStoresInit from "../rules/require-stores-init"
-import requireStrictEvents from "../rules/require-strict-events"
 import shorthandAttribute from "../rules/shorthand-attribute"
 import shorthandDirective from "../rules/shorthand-directive"
 import sortAttributes from "../rules/sort-attributes"
@@ -56,6 +56,7 @@ export const rules = [
   buttonHasType,
   commentDirective,
   derivedHasSameInputsOutputs,
+  experimentalRequireStrictEvents,
   firstAttributeLinebreak,
   htmlClosingBracketSpacing,
   htmlQuotes,
@@ -95,7 +96,6 @@ export const rules = [
   requireStoreCallbacksUseSetParam,
   requireStoreReactiveAccess,
   requireStoresInit,
-  requireStrictEvents,
   shorthandAttribute,
   shorthandDirective,
   sortAttributes,
