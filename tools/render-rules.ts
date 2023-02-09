@@ -7,6 +7,7 @@ const categories = [
   "Best Practices",
   "Stylistic Issues",
   "Extension Rules",
+  "Experimental",
   "System",
 ] as const
 
@@ -21,6 +22,8 @@ const descriptions: Record<(typeof categories)[number], string> = {
     "These rules relate to style guidelines, and are therefore quite subjective:",
   "Extension Rules":
     "These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:",
+  Experimental:
+    ":warning: These rules are considered experimental and may change or be removed in the future:",
   System: "These rules relate to this plugin works:",
 }
 

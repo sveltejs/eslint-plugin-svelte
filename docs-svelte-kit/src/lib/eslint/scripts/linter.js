@@ -33,6 +33,11 @@ export const categories = [
     rules: [],
   },
   {
+    title: "Experimental",
+    classes: "svelte-category",
+    rules: [],
+  },
+  {
     title: "System",
     classes: "svelte-category",
     rules: [],
