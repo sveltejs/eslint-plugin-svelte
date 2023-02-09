@@ -6,7 +6,7 @@ import { findAttribute, getLangValue } from "../utils/ast-utils"
 export default createRule("experimental-require-strict-events", {
   meta: {
     docs: {
-      description: "require the strictEvents attribute on <script> tags",
+      description: "require the strictEvents attribute on `<script>` tags",
       category: "Experimental",
       recommended: false,
     },

@@ -379,7 +379,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/experimental-require-strict-events](https://ota-meshi.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/) | require the strictEvents attribute on <script> tags |  |
+| [svelte/experimental-require-strict-events](https://ota-meshi.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/) | require the strictEvents attribute on `<script>` tags |  |
 
 ## System
 

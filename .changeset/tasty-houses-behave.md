@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": minor
 ---
 
-Added the experimental-require-strict-events rule
+feat: added the `svelte/experimental-require-strict-events` rule
