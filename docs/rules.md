@@ -98,6 +98,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/experimental-require-slot-types](./rules/experimental-require-slot-types.md) | require slot type declaration using the $$Slots interface |  |
 | [svelte/experimental-require-strict-events](./rules/experimental-require-strict-events.md) | require the strictEvents attribute on `<script>` tags |  |
 
 ## System
