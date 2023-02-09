@@ -25,10 +25,31 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 <!-- ✓ GOOD -->
 <script lang="ts" strictEvents>
 </script>
+```
 
+</ESLintCodeBlock>
+
+<ESLintCodeBlock>
+
+<!--eslint-skip-->
+
+```svelte
+<!-- eslint svelte/experimental-require-strict-events: "error" -->
+
+<!-- ✓ GOOD -->
 <script lang="ts">
   interface $$Events {}
 </script>
+```
+
+</ESLintCodeBlock>
+
+<ESLintCodeBlock>
+
+<!--eslint-skip-->
+
+```svelte
+<!-- eslint svelte/experimental-require-strict-events: "error" -->
 
 <!-- ✗ BAD -->
 <script lang="ts">
