@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": minor
 ---
 
-Added the experimental-require-slot-types rule
+feat: added the `svelte/experimental-require-slot-types` rule

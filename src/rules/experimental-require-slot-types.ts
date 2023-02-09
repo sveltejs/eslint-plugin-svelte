@@ -4,7 +4,8 @@ import { getLangValue } from "../utils/ast-utils"
 export default createRule("experimental-require-slot-types", {
   meta: {
     docs: {
-      description: "require slot type declaration using the $$Slots interface",
+      description:
+        "require slot type declaration using the `$$Slots` interface",
       category: "Experimental",
       recommended: false,
     },
