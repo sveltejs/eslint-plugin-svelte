@@ -18,6 +18,7 @@ const categories = [
   "Best Practices",
   "Stylistic Issues",
   "Extension Rules",
+  "Experimental",
   "System",
 ]
 svelteRules.forEach((rule) => {

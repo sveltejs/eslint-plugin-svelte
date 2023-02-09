@@ -2,12 +2,12 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/experimental-require-strict-events"
-description: "require the strictEvents attribute on <script> tags"
+description: "require the strictEvents attribute on `<script>` tags"
 ---
 
 # svelte/experimental-require-strict-events
 
-> require the strictEvents attribute on <script> tags
+> require the strictEvents attribute on `<script>` tags
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
