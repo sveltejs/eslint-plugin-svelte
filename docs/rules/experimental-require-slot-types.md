@@ -23,7 +23,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ```svelte
 <!-- ✓ GOOD -->
 <script>
-  // eslint svelte/experimental-require-slot-types: "error"
+  /* eslint svelte/experimental-require-slot-types: "error" */
 </script>
 
 <b>No slots here!</b>
@@ -38,7 +38,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ```svelte
 <!-- ✓ GOOD -->
 <script>
-  // eslint svelte/experimental-require-slot-types: "error"
+  /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
     default: Record<string, never>;
@@ -57,7 +57,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ```svelte
 <!-- ✓ GOOD -->
 <script lang="ts">
-  // eslint svelte/experimental-require-slot-types: "error"
+  /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
     default: { prop: boolean; };
@@ -76,7 +76,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ```svelte
 <!-- ✓ GOOD -->
 <script lang="ts">
-  // eslint svelte/experimental-require-slot-types: "error"
+  /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
     named: Record<string, never>;
@@ -95,7 +95,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ```svelte
 <!-- ✗ BAD -->
 <script>
-  // eslint svelte/experimental-require-slot-types: "error"
+  /* eslint svelte/experimental-require-slot-types: "error" */
 </script>
 
 <slot />
