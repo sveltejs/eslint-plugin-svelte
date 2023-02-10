@@ -3,6 +3,7 @@ import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import derivedHasSameInputsOutputs from "../rules/derived-has-same-inputs-outputs"
+import experimentalRequireSlotTypes from "../rules/experimental-require-slot-types"
 import experimentalRequireStrictEvents from "../rules/experimental-require-strict-events"
 import firstAttributeLinebreak from "../rules/first-attribute-linebreak"
 import htmlClosingBracketSpacing from "../rules/html-closing-bracket-spacing"
@@ -56,6 +57,7 @@ export const rules = [
   buttonHasType,
   commentDirective,
   derivedHasSameInputsOutputs,
+  experimentalRequireSlotTypes,
   experimentalRequireStrictEvents,
   firstAttributeLinebreak,
   htmlClosingBracketSpacing,

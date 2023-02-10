@@ -20,10 +20,9 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 <!--eslint-skip-->
 
 ```svelte
-<!-- eslint svelte/experimental-require-strict-events: "error" -->
-
 <!-- ✓ GOOD -->
 <script lang="ts" strictEvents>
+/* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
 
@@ -34,10 +33,9 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 <!--eslint-skip-->
 
 ```svelte
-<!-- eslint svelte/experimental-require-strict-events: "error" -->
-
 <!-- ✓ GOOD -->
 <script lang="ts">
+  /* eslint svelte/experimental-require-strict-events: "error" */
   interface $$Events {}
 </script>
 ```
@@ -49,10 +47,9 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 <!--eslint-skip-->
 
 ```svelte
-<!-- eslint svelte/experimental-require-strict-events: "error" -->
-
 <!-- ✗ BAD -->
 <script lang="ts">
+/* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
 
