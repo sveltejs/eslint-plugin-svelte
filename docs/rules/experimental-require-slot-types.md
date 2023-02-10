@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/experimental-require-slot-types"
 description: "require slot type declaration using the `$$Slots` interface"
+since: "v2.18.0"
 ---
 
 # svelte/experimental-require-slot-types
 
 > require slot type declaration using the `$$Slots` interface
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -106,6 +105,10 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.18.0
 
 ## :mag: Implementation
 
