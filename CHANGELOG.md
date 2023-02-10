@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.18.0
+
+### Minor Changes
+
+- [#368](https://github.com/ota-meshi/eslint-plugin-svelte/pull/368) [`fcb5e31`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/fcb5e319620b1cc71ffe579760033813bd719410) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/experimental-require-slot-types` rule
+
+- [#365](https://github.com/ota-meshi/eslint-plugin-svelte/pull/365) [`e61bbc3`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/e61bbc347f416f19e9e1e026c4d692e404776023) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/experimental-require-strict-events` rule
+
 ## 2.17.0
 
 ### Minor Changes
