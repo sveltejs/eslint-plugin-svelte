@@ -30,6 +30,7 @@ export function transform(
       reportDiagnostics: false,
       compilerOptions: {
         target: context.parserServices.program?.getCompilerOptions()?.target || ts.ScriptTarget.ESNext,
+        module: ts.ModuleKind.ESNext,
         importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
         sourceMap: true,
       },
