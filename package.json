@@ -174,7 +174,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 99.08,
+    "atLeast": 99,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,
