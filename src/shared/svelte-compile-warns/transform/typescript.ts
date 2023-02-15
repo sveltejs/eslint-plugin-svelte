@@ -29,7 +29,10 @@ export function transform(
     const output = ts.transpileModule(code, {
       reportDiagnostics: false,
       compilerOptions: {
-        target: ts.ScriptTarget.ESNext,
+        target:
+          context.parserServices.program?.getCompilerOptions()?.target ||
+          ts.ScriptTarget.ESNext,
+        module: ts.ModuleKind.ESNext,
         importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
         sourceMap: true,
       },
