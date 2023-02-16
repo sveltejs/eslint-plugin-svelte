@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.19.0
+
+### Minor Changes
+
+- [#375](https://github.com/ota-meshi/eslint-plugin-svelte/pull/375) [`d692baf`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/d692baf88637c8aca066d4abe62450b2b9f9940f) Thanks [@ptrxyz](https://github.com/ptrxyz)! - Change to use `parserServices.program.getCompilerOptions().target` for TS transpile in `svelte/valid-compile` rule.
+
 ## 2.18.0
 
 ### Minor Changes
