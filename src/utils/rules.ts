@@ -1,5 +1,6 @@
 import type { RuleModule } from "../types"
 import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/no-unnecessary-condition"
+import blockLang from "../rules/block-lang"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
 import derivedHasSameInputsOutputs from "../rules/derived-has-same-inputs-outputs"
@@ -54,6 +55,7 @@ import validPropNamesInKitPages from "../rules/valid-prop-names-in-kit-pages"
 
 export const rules = [
   typescriptEslintNoUnnecessaryCondition,
+  blockLang,
   buttonHasType,
   commentDirective,
   derivedHasSameInputsOutputs,
