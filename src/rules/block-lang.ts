@@ -8,8 +8,9 @@ import type {
 export default createRule("block-lang", {
   meta: {
     docs: {
-      description: "require type parameters for `createEventDispatcher`", // TODO
-      category: "Best Practices", // TODO
+      description:
+        "disallows the use of languages other than those specified in the configuration for the lang attribute of svelte elements `<script>` and `<style>`.",
+      category: "Best Practices",
       recommended: false,
     },
     schema: [
