@@ -49,6 +49,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
+| [svelte/block-lang](./rules/block-lang.md) | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. |  |
 | [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
 | [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | it's not necessary to define functions in reactive statements | :bulb: |

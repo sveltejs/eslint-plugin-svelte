@@ -9,7 +9,7 @@ export default createRule("block-lang", {
   meta: {
     docs: {
       description:
-        "disallows the use of languages other than those specified in the configuration for the lang attribute of svelte elements `<script>` and `<style>`.",
+        "disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks.",
       category: "Best Practices",
       recommended: false,
     },
