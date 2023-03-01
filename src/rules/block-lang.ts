@@ -48,9 +48,7 @@ export default createRule("block-lang", {
         additionalProperties: false,
       },
     ],
-    messages: {
-      missingTypeParameter: `Type parameters missing for the \`createEventDispatcher\` function call.`, // TODO
-    },
+    messages: {},
     type: "suggestion",
   },
   create(context) {
@@ -82,19 +80,57 @@ export default createRule("block-lang", {
       "Program:exit"() {
         if (!allowedScriptLangs.includes(scriptLang)) {
           if (scriptNode !== undefined) {
-            context.report({ node: scriptNode, message: "TODO" })
+            context.report({
+              node: scriptNode,
+              message: `The lang attribute should be ${prettyPrintLangs(
+                allowedScriptLangs,
+              )}.`,
+            })
           } else {
-            context.report({ loc: { line: 1, column: 1 }, message: "TODO" })
+            context.report({
+              loc: { line: 1, column: 1 },
+              message: `The <script> element should be present and its lang attribute should be ${prettyPrintLangs(
+                allowedScriptLangs,
+              )}.`,
+            })
           }
         }
         if (!allowedStyleLangs.includes(styleLang)) {
           if (styleNode !== undefined) {
-            context.report({ node: styleNode, message: "TODO" })
+            context.report({
+              node: styleNode,
+              message: `The lang attribute should be ${prettyPrintLangs(
+                allowedStyleLangs,
+              )}.`,
+            })
           } else {
-            context.report({ loc: { line: 1, column: 1 }, message: "TODO" })
+            context.report({
+              loc: { line: 1, column: 1 },
+              message: `The <style> element should be present and its lang attribute should be ${prettyPrintLangs(
+                allowedStyleLangs,
+              )}.`,
+            })
           }
         }
       },
     }
   },
 })
+
+/**
+ * Prints the list of allowed languages, with special handling of the `null` option.
+ */
+function prettyPrintLangs(langs: (string | null)[]): string {
+  const hasNull = langs.includes(null)
+  const nonNullLangs = langs.filter((lang) => lang !== null)
+  if (nonNullLangs.length === 0) {
+    // No special behaviour for `hasNull`, because that can never happen.
+    return "omitted"
+  }
+  const hasNullText = hasNull ? "either omitted or " : ""
+  const nonNullText =
+    nonNullLangs.length === 1
+      ? `"${nonNullLangs[0]}"`
+      : `one of ${nonNullLangs.map((lang) => `"${lang}"`).join(", ")}`
+  return hasNullText + nonNullText
+}
