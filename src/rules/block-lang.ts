@@ -83,14 +83,14 @@ export default createRule("block-lang", {
           if (scriptNode !== undefined) {
             context.report({
               node: scriptNode,
-              message: `The lang attribute should be ${prettyPrintLangs(
+              message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
                 allowedScriptLangs,
               )}.`,
             })
           } else {
             context.report({
               loc: { line: 1, column: 1 },
-              message: `The <script> element should be present and its lang attribute should be ${prettyPrintLangs(
+              message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
                 allowedScriptLangs,
               )}.`,
             })
@@ -100,14 +100,14 @@ export default createRule("block-lang", {
           if (styleNode !== undefined) {
             context.report({
               node: styleNode,
-              message: `The lang attribute should be ${prettyPrintLangs(
+              message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
                 allowedStyleLangs,
               )}.`,
             })
           } else {
             context.report({
               loc: { line: 1, column: 1 },
-              message: `The <style> element should be present and its lang attribute should be ${prettyPrintLangs(
+              message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
                 allowedStyleLangs,
               )}.`,
             })
