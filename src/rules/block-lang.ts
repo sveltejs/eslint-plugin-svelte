@@ -17,6 +17,12 @@ export default createRule("block-lang", {
       {
         type: "object",
         properties: {
+          enforceScriptPresent: {
+            type: "boolean",
+          },
+          enforceStylePresent: {
+            type: "boolean",
+          },
           script: {
             oneOf: [
               {
@@ -53,6 +59,11 @@ export default createRule("block-lang", {
     type: "suggestion",
   },
   create(context) {
+    const enforceScriptPresent: boolean =
+      context.options[0]?.enforceScriptPresent ?? false
+    const enforceStylePresent: boolean =
+      context.options[0]?.enforceStylePresent ?? false
+
     const scriptOption: string | null | (string | null)[] =
       context.options[0]?.script ?? null
     const allowedScriptLangs: (string | null)[] = Array.isArray(scriptOption)
@@ -87,14 +98,15 @@ export default createRule("block-lang", {
                 allowedScriptLangs,
               )}.`,
             })
-          } else {
-            context.report({
-              loc: { line: 1, column: 1 },
-              message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
-                allowedScriptLangs,
-              )}.`,
-            })
           }
+        }
+        if (scriptNode === undefined && enforceScriptPresent) {
+          context.report({
+            loc: { line: 1, column: 1 },
+            message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
+              allowedScriptLangs,
+            )}.`,
+          })
         }
         if (!allowedStyleLangs.includes(styleLang)) {
           if (styleNode !== undefined) {
@@ -104,14 +116,15 @@ export default createRule("block-lang", {
                 allowedStyleLangs,
               )}.`,
             })
-          } else {
-            context.report({
-              loc: { line: 1, column: 1 },
-              message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
-                allowedStyleLangs,
-              )}.`,
-            })
           }
+        }
+        if (styleNode === undefined && enforceStylePresent) {
+          context.report({
+            loc: { line: 1, column: 1 },
+            message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
+              allowedStyleLangs,
+            )}.`,
+          })
         }
       },
     }
