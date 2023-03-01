@@ -78,6 +78,8 @@ export default createRule("no-dom-manipulating", {
         if (parent.left !== target || !DOM_MANIPULATING_PROPERTIES.has(name)) {
           return
         }
+      } else {
+        return
       }
       context.report({
         node: member,

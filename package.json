@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.17.0",
+  "version": "2.19.1",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
   "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
@@ -69,7 +69,7 @@
     "debug": "^4.3.1",
     "eslint-utils": "^3.0.0",
     "esutils": "^2.0.3",
-    "known-css-properties": "^0.26.0",
+    "known-css-properties": "^0.27.0",
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
@@ -140,7 +140,7 @@
     "less": "^4.1.2",
     "lint-staged": "^13.0.3",
     "locate-character": "^2.0.5",
-    "magic-string": "^0.27.0",
+    "magic-string": "^0.30.0",
     "markdown-it-anchor": "^8.4.1",
     "markdown-it-container": "^3.0.0",
     "markdown-it-emoji": "^2.0.0",
@@ -174,7 +174,7 @@
     "access": "public"
   },
   "typeCoverage": {
-    "atLeast": 99.08,
+    "atLeast": 99,
     "cache": true,
     "detail": true,
     "ignoreAsAssertion": true,

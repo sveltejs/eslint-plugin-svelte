@@ -1,5 +1,25 @@
 # eslint-plugin-svelte
 
+## 2.19.1
+
+### Patch Changes
+
+- [#383](https://github.com/ota-meshi/eslint-plugin-svelte/pull/383) [`08aace5`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/08aace561ab4f013b4eda47f829bc7fa545d5c9f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for read property in `svelte/no-dom-manipulating`
+
+## 2.19.0
+
+### Minor Changes
+
+- [#375](https://github.com/ota-meshi/eslint-plugin-svelte/pull/375) [`d692baf`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/d692baf88637c8aca066d4abe62450b2b9f9940f) Thanks [@ptrxyz](https://github.com/ptrxyz)! - Change to use `parserServices.program.getCompilerOptions().target` for TS transpile in `svelte/valid-compile` rule.
+
+## 2.18.0
+
+### Minor Changes
+
+- [#368](https://github.com/ota-meshi/eslint-plugin-svelte/pull/368) [`fcb5e31`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/fcb5e319620b1cc71ffe579760033813bd719410) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/experimental-require-slot-types` rule
+
+- [#365](https://github.com/ota-meshi/eslint-plugin-svelte/pull/365) [`e61bbc3`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/e61bbc347f416f19e9e1e026c4d692e404776023) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/experimental-require-strict-events` rule
+
 ## 2.17.0
 
 ### Minor Changes
