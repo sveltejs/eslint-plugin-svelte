@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.19.2
+
+### Patch Changes
+
+- [#387](https://github.com/ota-meshi/eslint-plugin-svelte/pull/387) [`6422ee8`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/6422ee89fcb5c8cefceda7dfa5b78e411c27f557) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positive for element in `svelte/no-unused-svelte-ignore`
+
 ## 2.19.1
 
 ### Patch Changes
