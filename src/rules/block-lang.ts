@@ -26,6 +26,7 @@ export default createRule("block-lang", {
                 items: {
                   type: ["string", "null"],
                 },
+                minItems: 1,
               },
             ],
           },
@@ -39,6 +40,7 @@ export default createRule("block-lang", {
                 items: {
                   type: ["string", "null"],
                 },
+                minItems: 1,
               },
             ],
           },
