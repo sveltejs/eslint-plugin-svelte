@@ -511,10 +511,30 @@ function processIgnore(
 
   /** Get warning node */
   function getWarningNode(warning: Warning) {
-    const index = getWarningIndex(warning)
-    if (index == null) {
-      return null
+    const indexes = getWarningIndexes(warning)
+    if (indexes.start != null) {
+      const node = getWarningTargetNodeFromIndex(indexes.start)
+      if (node) {
+        return node
+      }
+      if (indexes.end != null) {
+        const center = Math.floor(
+          indexes.start + (indexes.end - indexes.start) / 2,
+        )
+        return getWarningTargetNodeFromIndex(center)
+      }
     }
+    if (indexes.end != null) {
+      return getWarningTargetNodeFromIndex(indexes.end)
+    }
+
+    return null
+  }
+
+  /**
+   * Get warning target node from the given index
+   */
+  function getWarningTargetNodeFromIndex(index: number) {
     let targetNode = sourceCode.getNodeByRangeIndex(index)
     while (targetNode) {
       if (
@@ -535,18 +555,14 @@ function processIgnore(
       }
       targetNode = targetNode.parent || null
     }
-
     return null
   }
 
   /** Get warning index */
-  function getWarningIndex(warning: Warning) {
+  function getWarningIndexes(warning: Warning) {
     const start = warning.start && sourceCode.getIndexFromLoc(warning.start)
     const end = warning.end && sourceCode.getIndexFromLoc(warning.end)
-    if (start != null && end != null) {
-      return Math.floor(start + (end - start) / 2)
-    }
-    return start ?? end
+    return { start, end }
   }
 }
 
