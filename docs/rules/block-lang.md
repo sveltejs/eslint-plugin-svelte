@@ -64,6 +64,8 @@ This rule enforces all svelte components to use the same set of languages for th
   "svelte/block-lang": [
     "error",
     {
+      "enforceScriptPresent": true,
+      "enforceStylePresent": false,
       "script": ["ts", null], // a list of languages or null to signify no language specified
       "style": "scss" // same as for script, a single value can be used instead of an array.
     }
@@ -71,6 +73,8 @@ This rule enforces all svelte components to use the same set of languages for th
 }
 ```
 
+- `enforceScriptPresent` ... Whether to enforce the presence of a `<script>` block with one of the given languages. This may be useful as for example TypeScript checks some uses of a component if it is defined as being TypeScript. Default `false`.
+- `enforceStylePresent` ... Whether to enforce the presence of a `<style>` block with one of the given languages. Default `false`.
 - `script` ... A list of languages allowed for the `<script>` block. If `null` is included, no `lang` attribute is also allowed. A plain string or `null` can be used instead of one-item array. Default `null`.
 - `style` ... A list of languages allowed for the `<style>` block. If `null` is included, no `lang` attribute is also allowed. A plain string or `null` can be used instead of one-item array. Default `null`.
 
