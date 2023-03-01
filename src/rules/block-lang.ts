@@ -123,7 +123,9 @@ export default createRule("block-lang", {
  */
 function prettyPrintLangs(langs: (string | null)[]): string {
   const hasNull = langs.includes(null)
-  const nonNullLangs = langs.filter((lang) => lang !== null)
+  const nonNullLangs = langs
+    .filter((lang) => lang !== null)
+    .map((lang) => `"${lang}"`)
   if (nonNullLangs.length === 0) {
     // No special behaviour for `hasNull`, because that can never happen.
     return "omitted"
@@ -131,7 +133,7 @@ function prettyPrintLangs(langs: (string | null)[]): string {
   const hasNullText = hasNull ? "either omitted or " : ""
   const nonNullText =
     nonNullLangs.length === 1
-      ? `"${nonNullLangs[0]}"`
-      : `one of ${nonNullLangs.map((lang) => `"${lang}"`).join(", ")}`
+      ? nonNullLangs[0]
+      : `one of ${nonNullLangs.join(", ")}`
   return hasNullText + nonNullText
 }
