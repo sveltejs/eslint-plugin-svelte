@@ -1,4 +1,4 @@
-- message: The <style> block should be present and its lang attribute should be "scss".
-  line: 1
-  column: 2
+- message: The lang attribute of the <style> block should be "scss".
+  line: 3
+  column: 1
   suggestions: null

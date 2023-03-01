@@ -1,5 +1,4 @@
-- message: The <script> block should be present and its lang attribute should be
-    "typescript".
+- message: The lang attribute of the <script> block should be "typescript".
   line: 1
-  column: 2
+  column: 1
   suggestions: null
