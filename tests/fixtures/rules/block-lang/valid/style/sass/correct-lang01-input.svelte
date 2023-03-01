@@ -1,3 +1,5 @@
 <script></script>
 
-<style lang="sass"></style>
+<style lang="sass">
+
+</style>

@@ -9,8 +9,4 @@ const tester = new RuleTester({
   },
 })
 
-tester.run(
-  "block-lang",
-  rule as any,
-  loadTestCases("block-lang"),
-)
+tester.run("block-lang", rule as any, loadTestCases("block-lang"))
