@@ -1,0 +1,4 @@
+- message: The <style> block should be present and its lang attribute should be omitted.
+  line: 1
+  column: 2
+  suggestions: null
