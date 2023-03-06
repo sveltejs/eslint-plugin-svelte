@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.20.0
+
+### Minor Changes
+
+- [#389](https://github.com/ota-meshi/eslint-plugin-svelte/pull/389) [`6039793`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/6039793f6e1243f2180564ea992f762ecf1c5ab2) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `svelte/block-lang` rule
+
 ## 2.19.2
 
 ### Patch Changes
