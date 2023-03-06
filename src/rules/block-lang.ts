@@ -59,6 +59,9 @@ export default createRule("block-lang", {
     type: "suggestion",
   },
   create(context) {
+    if (!context.parserServices.isSvelte) {
+      return {}
+    }
     const enforceScriptPresent: boolean =
       context.options[0]?.enforceScriptPresent ?? false
     const enforceStylePresent: boolean =
