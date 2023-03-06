@@ -1,0 +1,3 @@
+{
+  "options": [{ "script": ["typescript"], "style": ["typescript", null] }]
+}

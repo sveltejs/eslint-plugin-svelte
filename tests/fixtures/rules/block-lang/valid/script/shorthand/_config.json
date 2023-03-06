@@ -1,0 +1,3 @@
+{
+  "options": [{ "script": "ts", "style": ["scss", null] }]
+}
