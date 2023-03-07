@@ -1,1 +1,1 @@
-const _value: boolean | number = false
+export const value: boolean | number = false

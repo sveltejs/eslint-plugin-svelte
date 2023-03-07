@@ -1,1 +1,1 @@
-const value = false
+export const value = false
