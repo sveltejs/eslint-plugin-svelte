@@ -3,6 +3,7 @@ import path from "path"
 import type { RuleTester } from "eslint"
 import { Linter } from "eslint"
 import * as svelteESLintParser from "svelte-eslint-parser"
+import * as typescriptESLintParser from "@typescript-eslint/parser"
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require("../../src/index")
 import { applyFixes } from "./source-code-fixer"
@@ -185,7 +186,11 @@ function writeFixtures(
   const config = getConfig(ruleName, inputFile)
 
   const parser =
-    path.extname(inputFile) === ".svelte" ? "svelte-eslint-parser" : undefined
+    path.extname(inputFile) === ".svelte"
+      ? "svelte-eslint-parser"
+      : path.extname(inputFile) === ".ts"
+      ? "@typescript-eslint/parser"
+      : undefined
   const result = linter.verify(
     config.code,
     {
@@ -241,6 +246,8 @@ function getLinter(ruleName: string) {
   const linter = new Linter()
   // @ts-expect-error for test
   linter.defineParser("svelte-eslint-parser", svelteESLintParser)
+  // @ts-expect-error for test
+  linter.defineParser("@typescript-eslint/parser", typescriptESLintParser)
   linter.defineRule(ruleName, plugin.rules[ruleName] as any)
 
   return linter
@@ -260,6 +267,8 @@ function getConfig(ruleName: string, inputFile: string) {
   const parser =
     path.extname(filename) === ".svelte"
       ? require.resolve("svelte-eslint-parser")
+      : path.extname(inputFile) === ".ts"
+      ? require.resolve("@typescript-eslint/parser")
       : undefined
 
   return Object.assign(
