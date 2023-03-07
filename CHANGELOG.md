@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.20.1
+
+### Patch Changes
+
+- [#394](https://github.com/ota-meshi/eslint-plugin-svelte/pull/394) [`4c5be6f`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/4c5be6f0c96c1c08e8c5878ece6af55bb2f35266) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(block-lang): fixed false positives for non-svelte files
+
 ## 2.20.0
 
 ### Minor Changes
