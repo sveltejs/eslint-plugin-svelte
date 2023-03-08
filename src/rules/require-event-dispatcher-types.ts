@@ -29,7 +29,9 @@ export default createRule("require-event-dispatcher-types", {
         if (!isTs) {
           return
         }
-        const referenceTracker = new ReferenceTracker(context.getScope())
+        const referenceTracker = new ReferenceTracker(
+          context.getSourceCode().scopeManager.globalScope!,
+        )
         for (const { node: n } of referenceTracker.iterateEsmReferences({
           svelte: {
             [ReferenceTracker.ESM]: true,

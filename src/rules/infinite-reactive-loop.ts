@@ -12,7 +12,9 @@ import { traverseNodes } from "svelte-eslint-parser"
 function extractTickReferences(
   context: RuleContext,
 ): { node: TSESTree.CallExpression; name: string }[] {
-  const referenceTracker = new ReferenceTracker(context.getScope())
+  const referenceTracker = new ReferenceTracker(
+    context.getSourceCode().scopeManager.globalScope!,
+  )
   const a = referenceTracker.iterateEsmReferences({
     svelte: {
       [ReferenceTracker.ESM]: true,
@@ -35,7 +37,9 @@ function extractTickReferences(
 function extractTaskReferences(
   context: RuleContext,
 ): { node: TSESTree.CallExpression; name: string }[] {
-  const referenceTracker = new ReferenceTracker(context.getScope())
+  const referenceTracker = new ReferenceTracker(
+    context.getSourceCode().scopeManager.globalScope!,
+  )
   const a = referenceTracker.iterateGlobalReferences({
     setTimeout: { [ReferenceTracker.CALL]: true },
     setInterval: { [ReferenceTracker.CALL]: true },
