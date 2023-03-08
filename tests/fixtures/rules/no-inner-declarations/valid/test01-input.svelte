@@ -11,7 +11,7 @@
     var fn = function () {}
   }
   if (test) {
-    // eslint-disable-next-line no-var, no-redeclare -- test
+    // eslint-disable-next-line no-var -- test
     var fn = function expr() {}
   }
   function decl() {

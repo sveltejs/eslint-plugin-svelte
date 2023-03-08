@@ -4,7 +4,7 @@
   }
   // eslint-disable-next-line no-var -- test
   if (foo) var a
-  // eslint-disable-next-line no-var, no-redeclare -- test
+  // eslint-disable-next-line no-var -- test
   if (foo) /* some comments */ var a
   if (foo) {
     function f() {
