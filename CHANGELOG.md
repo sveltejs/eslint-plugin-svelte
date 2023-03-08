@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.20.2
+
+### Patch Changes
+
+- [#397](https://github.com/ota-meshi/eslint-plugin-svelte/pull/397) [`7b0d70b`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/7b0d70b4d85c6090b84c5de51d1215e2d3ebddeb) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: `ReferenceTracker` usage
+
 ## 2.20.1
 
 ### Patch Changes
