@@ -13,7 +13,9 @@ export function* extractStoreReferences(
   context: RuleContext,
   storeNames: StoreName[] = ["writable", "readable", "derived"],
 ): Generator<{ node: TSESTree.CallExpression; name: string }, void> {
-  const referenceTracker = new ReferenceTracker(context.getScope())
+  const referenceTracker = new ReferenceTracker(
+    context.getSourceCode().scopeManager.globalScope!,
+  )
   for (const { node, path } of referenceTracker.iterateEsmReferences({
     "svelte/store": {
       [ReferenceTracker.ESM]: true,
