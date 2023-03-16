@@ -1,5 +1,8 @@
 import type { AST } from "svelte-eslint-parser"
-import { isClosingBraceToken, isOpeningBraceToken } from "eslint-utils"
+import {
+  isClosingBraceToken,
+  isOpeningBraceToken,
+} from "@eslint-community/eslint-utils"
 import { createRule } from "../utils"
 import { getMustacheTokens } from "../utils/ast-utils"
 type DeepPartial<T> = {

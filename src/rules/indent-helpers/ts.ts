@@ -9,7 +9,7 @@ import {
   isOpeningBracketToken,
   isOpeningParenToken,
   isSemicolonToken,
-} from "eslint-utils"
+} from "@eslint-community/eslint-utils"
 import type { AnyToken, IndentContext } from "./commons"
 import { isBeginningOfLine } from "./commons"
 import { getFirstAndLastTokens } from "./commons"

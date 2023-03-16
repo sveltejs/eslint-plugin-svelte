@@ -1,4 +1,4 @@
-import { ReferenceTracker } from "eslint-utils"
+import { ReferenceTracker } from "@eslint-community/eslint-utils"
 import { createRule } from "../utils"
 import { getLangValue } from "../utils/ast-utils"
 import type { TSESTree } from "@typescript-eslint/types"

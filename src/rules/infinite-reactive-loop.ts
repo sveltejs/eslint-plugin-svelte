@@ -1,6 +1,6 @@
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
-import { ReferenceTracker } from "eslint-utils"
+import { ReferenceTracker } from "@eslint-community/eslint-utils"
 import { createRule } from "../utils"
 import type { RuleContext } from "../types"
 import { findVariable } from "../utils/ast-utils"
