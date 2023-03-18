@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.22.0
+
+### Minor Changes
+
+- [#407](https://github.com/ota-meshi/eslint-plugin-svelte/pull/407) [`c394a80`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/c394a80fd5aaa68236563f44d4ef0afb7424bc33) Thanks [@DetachHead](https://github.com/DetachHead)! - add `all` config which enables every rule
+
 ## 2.21.0
 
 ### Minor Changes
