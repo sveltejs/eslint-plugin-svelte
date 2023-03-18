@@ -5,6 +5,6 @@
   $: b = foo?.length
   $: {
     let bar: null | string = "abc"
-    c = bar?.length
+    c = bar.length
   }
 </script>
