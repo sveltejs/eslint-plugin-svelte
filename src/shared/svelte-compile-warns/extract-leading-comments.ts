@@ -1,4 +1,4 @@
-import { isOpeningParenToken } from "eslint-utils"
+import { isOpeningParenToken } from "@eslint-community/eslint-utils"
 import type { AST } from "svelte-eslint-parser"
 import type { RuleContext } from "../../types"
 import type { ASTNodeWithParent } from "../../types-for-node"

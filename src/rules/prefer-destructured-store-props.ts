@@ -1,5 +1,5 @@
 import type { TSESTree } from "@typescript-eslint/types"
-import { getPropertyName } from "eslint-utils"
+import { getPropertyName } from "@eslint-community/eslint-utils"
 import type { AST } from "svelte-eslint-parser"
 import { keyword } from "esutils"
 import type { SuggestionReportDescriptor } from "../types"

@@ -21,3 +21,6 @@
 !/.*.js
 /docs-svelte-kit/src/routes/*.md
 /docs-svelte-kit/src/routes/**/*.md
+
+# JSONSchema bug?
+/.devcontainer/devcontainer.json

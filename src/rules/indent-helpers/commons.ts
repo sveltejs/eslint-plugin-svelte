@@ -1,6 +1,9 @@
 import type { ASTNode, SourceCode } from "../../types"
 import type { AST } from "svelte-eslint-parser"
-import { isOpeningParenToken, isClosingParenToken } from "eslint-utils"
+import {
+  isOpeningParenToken,
+  isClosingParenToken,
+} from "@eslint-community/eslint-utils"
 import { isNotWhitespace, isWhitespace } from "./ast"
 import type { OffsetContext } from "./offset-context"
 
@@ -97,8 +100,7 @@ export function isBeginningOfElement(node: AST.SvelteText): boolean {
   if (node.parent.type === "Program") {
     return node.parent.body[0] === node
   }
-  assertNever(node.parent)
-  return false
+  return assertNever(node.parent)
 }
 
 /**

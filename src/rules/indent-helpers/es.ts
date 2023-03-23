@@ -14,7 +14,7 @@ import {
   isOpeningBracketToken,
   isOpeningParenToken,
   isSemicolonToken,
-} from "eslint-utils"
+} from "@eslint-community/eslint-utils"
 import type { ESNodeListener } from "../../types-for-node"
 import { getParent } from "../../utils/ast-utils"
 

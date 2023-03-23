@@ -2,7 +2,7 @@ import type { ASTNode, RuleContext, SourceCode } from "../types"
 import type { TSESTree } from "@typescript-eslint/types"
 import type { Scope, Variable } from "@typescript-eslint/scope-manager"
 import type { AST as SvAST } from "svelte-eslint-parser"
-import * as eslintUtils from "eslint-utils"
+import * as eslintUtils from "@eslint-community/eslint-utils"
 import voidElements from "./void-elements"
 
 /**
