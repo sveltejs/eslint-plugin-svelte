@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 2.23.0
+
+### Minor Changes
+
+- [#403](https://github.com/ota-meshi/eslint-plugin-svelte/pull/403) [`c171d9c`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/c171d9c1a3ea80359db46d925cdce06c8dff4d5b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: use `@eslint-community` packages
+
+### Patch Changes
+
+- [#415](https://github.com/ota-meshi/eslint-plugin-svelte/pull/415) [`9714749`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/97147490f72b09602bd8667c9fe00131b2fb8bbc) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: ignore indent for inline style tags in `svelte/indent` rule
+
+- [#418](https://github.com/ota-meshi/eslint-plugin-svelte/pull/418) [`fe306ed`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/fe306ed81223a0379147421bab1dd0176941fb6f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: maximum call stack error in `svelte/infinite-reactive-loop` rule
+
 ## 2.22.0
 
 ### Minor Changes
