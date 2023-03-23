@@ -274,101 +274,112 @@ function doLint(
   reactiveVariableReferences: TSESTree.Identifier[],
   pIsSameTask: boolean,
 ) {
-  let isSameMicroTask = pIsSameTask
+  const processed = new Set<TSESTree.Node>()
+  verifyInternal(ast, callFuncIdentifiers, pIsSameTask)
 
-  const differentMicroTaskEnterNodes: TSESTree.Node[] = []
+  /** verify for node */
+  function verifyInternal(
+    ast: TSESTree.Node,
+    callFuncIdentifiers: TSESTree.Identifier[],
+    pIsSameTask: boolean,
+  ) {
+    if (processed.has(ast)) {
+      // Avoid infinite recursion with recursive references.
+      return
+    }
+    processed.add(ast)
 
-  traverseNodes(ast, {
-    enterNode(node) {
-      // Promise.then() or Promise.catch() is called.
-      if (isPromiseThenOrCatchBody(node)) {
-        differentMicroTaskEnterNodes.push(node)
-        isSameMicroTask = false
-      }
+    let isSameMicroTask = pIsSameTask
 
-      // `tick`, `setTimeout`, `setInterval` , `queueMicrotask` is called
-      for (const { node: callExpression } of [
-        ...tickCallExpressions,
-        ...taskReferences,
-      ]) {
-        if (isChildNode(callExpression, node)) {
+    const differentMicroTaskEnterNodes: TSESTree.Node[] = []
+
+    traverseNodes(ast, {
+      enterNode(node) {
+        // Promise.then() or Promise.catch() is called.
+        if (isPromiseThenOrCatchBody(node)) {
           differentMicroTaskEnterNodes.push(node)
           isSameMicroTask = false
         }
-      }
 
-      // left side of await block
-      if (
-        node.parent?.type === "AssignmentExpression" &&
-        node.parent?.right.type === "AwaitExpression" &&
-        node.parent?.left === node
-      ) {
-        differentMicroTaskEnterNodes.push(node)
-        isSameMicroTask = false
-      }
-
-      if (node.type === "Identifier" && isFunctionCall(node)) {
-        // traverse used functions body
-        const functionDeclarationNode = getFunctionDeclarationNode(
-          context,
-          node,
-        )
-        if (functionDeclarationNode) {
-          doLint(
-            context,
-            functionDeclarationNode,
-            [...callFuncIdentifiers, node],
-            tickCallExpressions,
-            taskReferences,
-            reactiveVariableNames,
-            reactiveVariableReferences,
-            isSameMicroTask,
-          )
-        }
-      }
-
-      if (!isSameMicroTask) {
-        if (
-          isReactiveVariableNode(reactiveVariableReferences, node) &&
-          reactiveVariableNames.includes(node.name) &&
-          isNodeForAssign(node)
-        ) {
-          context.report({
-            node,
-            loc: node.loc,
-            messageId: "unexpected",
-          })
-          callFuncIdentifiers.forEach((callFuncIdentifier) => {
-            context.report({
-              node: callFuncIdentifier,
-              loc: callFuncIdentifier.loc,
-              messageId: "unexpectedCall",
-              data: {
-                variableName: node.name,
-              },
-            })
-          })
-        }
-      }
-    },
-    leaveNode(node) {
-      if (node.type === "AwaitExpression") {
-        if ((ast.parent?.type as string) === "SvelteReactiveStatement") {
-          // MEMO: It checks that `await` is used in reactive statement directly or not.
-          // If `await` is used in inner function of a reactive statement, result of `isInsideOfFunction` will be `true`.
-          if (!isInsideOfFunction(node)) {
+        // `tick`, `setTimeout`, `setInterval` , `queueMicrotask` is called
+        for (const { node: callExpression } of [
+          ...tickCallExpressions,
+          ...taskReferences,
+        ]) {
+          if (isChildNode(callExpression, node)) {
+            differentMicroTaskEnterNodes.push(node)
             isSameMicroTask = false
           }
-        } else {
+        }
+
+        // left side of await block
+        if (
+          node.parent?.type === "AssignmentExpression" &&
+          node.parent?.right.type === "AwaitExpression" &&
+          node.parent?.left === node
+        ) {
+          differentMicroTaskEnterNodes.push(node)
           isSameMicroTask = false
         }
-      }
 
-      if (differentMicroTaskEnterNodes.includes(node)) {
-        isSameMicroTask = true
-      }
-    },
-  })
+        if (node.type === "Identifier" && isFunctionCall(node)) {
+          // traverse used functions body
+          const functionDeclarationNode = getFunctionDeclarationNode(
+            context,
+            node,
+          )
+          if (functionDeclarationNode) {
+            verifyInternal(
+              functionDeclarationNode,
+              [...callFuncIdentifiers, node],
+              isSameMicroTask,
+            )
+          }
+        }
+
+        if (!isSameMicroTask) {
+          if (
+            isReactiveVariableNode(reactiveVariableReferences, node) &&
+            reactiveVariableNames.includes(node.name) &&
+            isNodeForAssign(node)
+          ) {
+            context.report({
+              node,
+              loc: node.loc,
+              messageId: "unexpected",
+            })
+            callFuncIdentifiers.forEach((callFuncIdentifier) => {
+              context.report({
+                node: callFuncIdentifier,
+                loc: callFuncIdentifier.loc,
+                messageId: "unexpectedCall",
+                data: {
+                  variableName: node.name,
+                },
+              })
+            })
+          }
+        }
+      },
+      leaveNode(node) {
+        if (node.type === "AwaitExpression") {
+          if ((ast.parent?.type as string) === "SvelteReactiveStatement") {
+            // MEMO: It checks that `await` is used in reactive statement directly or not.
+            // If `await` is used in inner function of a reactive statement, result of `isInsideOfFunction` will be `true`.
+            if (!isInsideOfFunction(node)) {
+              isSameMicroTask = false
+            }
+          } else {
+            isSameMicroTask = false
+          }
+        }
+
+        if (differentMicroTaskEnterNodes.includes(node)) {
+          isSameMicroTask = true
+        }
+      },
+    })
+  }
 }
 
 export default createRule("infinite-reactive-loop", {
