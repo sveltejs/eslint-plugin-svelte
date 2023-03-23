@@ -1,7 +1,7 @@
 <svg>
-  <!-- prettier-ignore -->
   <style>
-      .test {
+    /* prettier-ignore */
+    .test {
         fill: red;
       }
   </style>
