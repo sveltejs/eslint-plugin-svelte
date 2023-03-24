@@ -5,6 +5,7 @@
 import type { TSESTree } from "@typescript-eslint/types"
 
 export type Node = TSESTree.Node
+export type Program = TSESTree.Program
 export type Expression = TSESTree.Expression
 export type Statement = TSESTree.Statement
 export type Pattern = TSESTree.Pattern
