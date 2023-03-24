@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": patch
 ---
 
-fix: false positive for element in `svelte/no-unused-svelte-ignore`
+fix: false positive for containing element in `svelte/no-unused-svelte-ignore`
