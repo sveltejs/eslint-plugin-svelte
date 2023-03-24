@@ -17,7 +17,7 @@ export function extractLeadingComments(
       }
       const astToken = token as AST.Token
       if (astToken.type === "HTMLText") {
-        return Boolean(astToken.value.trim())
+        return false
       }
       return astToken.type !== "HTMLComment"
     },
