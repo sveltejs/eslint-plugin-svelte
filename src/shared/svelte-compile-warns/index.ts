@@ -2,7 +2,7 @@ import type { AST } from "svelte-eslint-parser"
 import * as compiler from "svelte/compiler"
 import type { SourceMapMappings } from "@jridgewell/sourcemap-codec"
 import { decode } from "@jridgewell/sourcemap-codec"
-import type { RuleContext } from "../../types"
+import type { ASTNodeWithParent, RuleContext } from "../../types"
 import { LinesAndColumns } from "../../utils/lines-and-columns"
 import type { TransformResult } from "./transform/types"
 import {
@@ -20,6 +20,18 @@ import { extractLeadingComments } from "./extract-leading-comments"
 import { getLangValue } from "../../utils/ast-utils"
 import path from "path"
 import fs from "fs"
+
+type WarningTargetNode =
+  | (AST.SvelteProgram & ASTNodeWithParent)
+  | (AST.SvelteElement & ASTNodeWithParent)
+  | (AST.SvelteStyleElement & ASTNodeWithParent)
+  | (AST.SvelteScriptElement["body"][number] & ASTNodeWithParent)
+type IgnoreTargetNode =
+  | WarningTargetNode
+  | (AST.SvelteIfBlock & ASTNodeWithParent)
+  | (AST.SvelteKeyBlock & ASTNodeWithParent)
+  | (AST.SvelteEachBlock & ASTNodeWithParent)
+  | (AST.SvelteAwaitBlock & ASTNodeWithParent)
 
 const STYLE_TRANSFORMS: Record<
   string,
@@ -477,21 +489,22 @@ function processIgnore(
     if (!warning.code) {
       continue
     }
-    const node = getWarningNode(warning)
-    if (!node) {
-      continue
-    }
-    for (const comment of extractLeadingComments(context, node).reverse()) {
-      const ignoreItem = ignoreComments.find(
-        (item) => item.token === comment && item.code === warning.code,
-      )
-      if (ignoreItem) {
-        unusedIgnores.delete(ignoreItem)
-        remainingWarning.delete(warning)
-        break
+    let node: IgnoreTargetNode | null = getWarningNode(warning)
+    while (node) {
+      for (const comment of extractLeadingComments(context, node).reverse()) {
+        const ignoreItem = ignoreComments.find(
+          (item) => item.token === comment && item.code === warning.code,
+        )
+        if (ignoreItem) {
+          unusedIgnores.delete(ignoreItem)
+          remainingWarning.delete(warning)
+          break
+        }
       }
+      node = getIgnoreParent(node)
     }
   }
+
   // Stripped styles are ignored from compilation and cannot determine css errors.
   for (const node of stripStyleElements) {
     for (const comment of extractLeadingComments(context, node).reverse()) {
@@ -509,8 +522,42 @@ function processIgnore(
     unusedIgnores: [...unusedIgnores],
   }
 
+  /** Get ignore target parent node */
+  function getIgnoreParent(node: IgnoreTargetNode): IgnoreTargetNode | null {
+    if (
+      node.type !== "SvelteElement" &&
+      node.type !== "SvelteIfBlock" &&
+      node.type !== "SvelteKeyBlock" &&
+      node.type !== "SvelteEachBlock" &&
+      node.type !== "SvelteAwaitBlock"
+    ) {
+      return null
+    }
+    const parent = node.parent
+    if (parent.type === "SvelteElseBlock") {
+      return parent.parent // SvelteIfBlock or SvelteEachBlock
+    }
+    if (
+      parent.type === "SvelteAwaitPendingBlock" ||
+      parent.type === "SvelteAwaitThenBlock" ||
+      parent.type === "SvelteAwaitCatchBlock"
+    ) {
+      return parent.parent // SvelteAwaitBlock
+    }
+    if (
+      parent.type !== "SvelteElement" &&
+      parent.type !== "SvelteIfBlock" &&
+      parent.type !== "SvelteKeyBlock" &&
+      parent.type !== "SvelteEachBlock"
+      // && parent.type !== "SvelteAwaitBlock"
+    ) {
+      return null
+    }
+    return parent
+  }
+
   /** Get warning node */
-  function getWarningNode(warning: Warning) {
+  function getWarningNode(warning: Warning): WarningTargetNode | null {
     const indexes = getWarningIndexes(warning)
     if (indexes.start != null) {
       const node = getWarningTargetNodeFromIndex(indexes.start)
@@ -534,7 +581,9 @@ function processIgnore(
   /**
    * Get warning target node from the given index
    */
-  function getWarningTargetNodeFromIndex(index: number) {
+  function getWarningTargetNodeFromIndex(
+    index: number,
+  ): WarningTargetNode | null {
     let targetNode = sourceCode.getNodeByRangeIndex(index)
     while (targetNode) {
       if (
@@ -548,7 +597,7 @@ function processIgnore(
           targetNode.parent.type === "Program" ||
           targetNode.parent.type === "SvelteScriptElement"
         ) {
-          return targetNode
+          return targetNode as WarningTargetNode
         }
       } else {
         return null
