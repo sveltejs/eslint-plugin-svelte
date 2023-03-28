@@ -184,6 +184,17 @@ module.exports = {
 
 See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
 
+::: warning ❗ Attention
+
+The TypeScript parser uses a singleton internally and it will only use the
+options given to it when it was first initialized. If trying to change the
+options for a different file or override, the parser will simply ignore the new
+options (which may result in an error). See
+[typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778)
+for some context.
+
+:::
+
 #### settings.svelte
 
 You can change the behavior of this plugin with some settings.
