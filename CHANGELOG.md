@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.24.0
+
+### Minor Changes
+
+- [#425](https://github.com/ota-meshi/eslint-plugin-svelte/pull/425) [`2f08a42`](https://github.com/ota-meshi/eslint-plugin-svelte/commit/2f08a421cc6317d4b2c06325ae1c9105df6a110e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte-eslint-parser to v0.25
+
 ## 2.23.1
 
 ### Patch Changes
