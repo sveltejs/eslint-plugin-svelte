@@ -5,7 +5,7 @@ Thanks for contributing!
 ## Installation
 
 ```sh
-git clone https://github.com/ota-meshi/eslint-plugin-svelte.git
+git clone https://github.com/sveltejs/eslint-plugin-svelte.git
 cd eslint-plugin-svelte
 yarn
 ```

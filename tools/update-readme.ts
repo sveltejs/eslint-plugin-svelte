@@ -3,7 +3,7 @@ import fs from "fs"
 import renderRulesTableContent from "./render-rules"
 
 const insertText = `\n${renderRulesTableContent(
-  (name) => `https://ota-meshi.github.io/eslint-plugin-svelte/rules/${name}/`,
+  (name) => `https://sveltejs.github.io/eslint-plugin-svelte/rules/${name}/`,
 )}\n`
 
 const readmeFilePath = path.resolve(__dirname, "../README.md")
@@ -38,7 +38,7 @@ ${newReadme
   )
   .replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, "")
   .replace(
-    /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)\)/gu,
+    /\(https:\/\/sveltejs.github.io\/eslint-plugin-svelte(.*?)\)/gu,
     (_ptn, path: string) => {
       const [hash] = /(?:#.*)?$/u.exec(path)!
       const pathWithoutHash = hash ? path.slice(0, -hash.length) : path
@@ -61,7 +61,7 @@ ${newReadme
   )
   .replace(
     "[LICENSE](LICENSE)",
-    "[LICENSE](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/LICENSE)",
+    "[LICENSE](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/LICENSE)",
   )
   .replace(/\n{3,}/gu, "\n\n")}`,
 )
@@ -80,7 +80,7 @@ fs.writeFileSync(
       )![0],
     )
     .replace(
-      /\(https:\/\/ota-meshi.github.io\/eslint-plugin-svelte(.*?)\)/gu,
+      /\(https:\/\/sveltejs.github.io\/eslint-plugin-svelte(.*?)\)/gu,
       (_s: string, c: string) =>
         `(.${c.endsWith("/") ? c.slice(0, -1) : c}.md)`,
     ),

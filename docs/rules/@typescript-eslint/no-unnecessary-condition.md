@@ -69,7 +69,7 @@ This rule was introduced in eslint-plugin-svelte v2.9.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
 
 <sup>Taken with ❤️ [from @typescript-eslint/eslint-plugin](https://typescript-eslint.io/rules/no-unnecessary-condition/)</sup>

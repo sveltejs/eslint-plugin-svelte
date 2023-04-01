@@ -68,7 +68,7 @@
 
   <div class="corner">
     <a
-      href="https://github.com/ota-meshi/eslint-plugin-svelte"
+      href="https://github.com/sveltejs/eslint-plugin-svelte"
       target="_blank"
       class="github-link"
       rel="noopener noreferrer"
