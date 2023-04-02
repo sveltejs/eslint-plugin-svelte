@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.25.0
+
+### Minor Changes
+
+- [#428](https://github.com/sveltejs/eslint-plugin-svelte/pull/428) [`89925ea`](https://github.com/sveltejs/eslint-plugin-svelte/commit/89925eaf45b94b91e0c0c37fa754652f807e225d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - chore: move repo and move url of rule docs
+
 ## 2.24.0
 
 ### Minor Changes
