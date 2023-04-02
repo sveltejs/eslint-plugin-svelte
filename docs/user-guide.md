@@ -135,7 +135,7 @@ module.exports = {
 }
 ```
 
-See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
+See also <https://github.com/sveltejs/svelte-eslint-parser#readme>.
 
 ::: warning ❗ Attention
 

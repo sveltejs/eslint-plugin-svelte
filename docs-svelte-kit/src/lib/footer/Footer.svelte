@@ -41,7 +41,7 @@
   <div class="footer-tools">
     <div class="edit-link">
       <a
-        href="https://github.com/ota-meshi/eslint-plugin-svelte/edit/main/docs/{markdownPath(
+        href="https://github.com/sveltejs/eslint-plugin-svelte/edit/main/docs/{markdownPath(
           $page.url.pathname,
         )}"
         target="_blank"

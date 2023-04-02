@@ -53,5 +53,5 @@ This rule was introduced in eslint-plugin-svelte v2.3.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/no-spaces-around-equal-signs-in-attribute.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/no-spaces-around-equal-signs-in-attribute.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/no-spaces-around-equal-signs-in-attribute.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/no-spaces-around-equal-signs-in-attribute.ts)

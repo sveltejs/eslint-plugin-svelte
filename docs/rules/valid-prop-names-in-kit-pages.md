@@ -66,5 +66,5 @@ This rule was introduced in eslint-plugin-svelte v2.12.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/valid-prop-names-in-kit-pages.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/valid-prop-names-in-kit-pages.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/valid-prop-names-in-kit-pages.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/valid-prop-names-in-kit-pages.ts)

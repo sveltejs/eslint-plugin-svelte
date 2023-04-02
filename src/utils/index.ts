@@ -14,7 +14,7 @@ export function createRule(
       ...rule.meta,
       docs: {
         ...rule.meta.docs,
-        url: `https://ota-meshi.github.io/eslint-plugin-svelte/rules/${ruleName}/`,
+        url: `https://sveltejs.github.io/eslint-plugin-svelte/rules/${ruleName}/`,
         ruleId: `svelte/${ruleName}`,
         ruleName,
       },

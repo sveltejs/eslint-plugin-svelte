@@ -52,5 +52,5 @@ This rule was introduced in eslint-plugin-svelte v2.8.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/derived-has-same-inputs-outputs.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/derived-has-same-inputs-outputs.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/derived-has-same-inputs-outputs.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/derived-has-same-inputs-outputs.ts)
