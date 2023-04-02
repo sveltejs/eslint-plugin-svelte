@@ -17,16 +17,16 @@ If you want the previous behavior, replace it with [eslint-plugin-svelte3].
 
 [eslint-plugin-svelte3]: https://github.com/sveltejs/eslint-plugin-svelte3
 
-## From `@ota-meshi/eslint-plugin-svelte`
+## From `@sveltejs/eslint-plugin-svelte`
 
-`@ota-meshi/eslint-plugin-svelte` has been renamed to `eslint-plugin-svelte`.\
+`@sveltejs/eslint-plugin-svelte` has been renamed to `eslint-plugin-svelte`.\
 Therefore, you need to replace the package name, and the presets, rules, and settings specified in the configuration.
 
 - `package.json`\
   Replace the package name.
 
   ```diff
-  -  "@ota-meshi/eslint-plugin-svelte": "^0.X.X"
+  -  "@sveltejs/eslint-plugin-svelte": "^0.X.X"
   +  "eslint-plugin-svelte": "^X.X.X"
   ```
 

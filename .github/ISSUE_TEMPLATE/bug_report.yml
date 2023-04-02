@@ -79,7 +79,7 @@ body:
       placeholder: |
         https://github.com/[your]/[repo]
         or
-        https://ota-meshi.github.io/eslint-plugin-svelte/playground/#[hash]
+        https://sveltejs.github.io/eslint-plugin-svelte/playground/#[hash]
     validations:
       required: true
   - type: textarea

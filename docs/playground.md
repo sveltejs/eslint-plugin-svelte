@@ -7,6 +7,6 @@ hiddenMenu: true
 
 <ESLintPlayground>
 
-The playground is [here](https://ota-meshi.github.io/eslint-plugin-svelte/playground/)!!
+The playground is [here](https://sveltejs.github.io/eslint-plugin-svelte/playground/)!!
 
 </ESLintPlayground>

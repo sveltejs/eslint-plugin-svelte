@@ -94,5 +94,5 @@ This rule was introduced in eslint-plugin-svelte v0.15.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/mustache-spacing.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/mustache-spacing.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/mustache-spacing.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/mustache-spacing.ts)

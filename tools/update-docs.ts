@@ -9,9 +9,8 @@ function formatItems(items: string[]) {
   if (items.length <= 2) {
     return items.join(" and ")
   }
-  return `all of ${items.slice(0, -1).join(", ")} and ${
-    items[items.length - 1]
-  }`
+  return `all of ${items.slice(0, -1).join(", ")} and ${items[items.length - 1]
+    }`
 }
 
 //eslint-disable-next-line require-jsdoc -- tools
@@ -150,29 +149,27 @@ class DocFile {
     const { ruleName, extensionRule } = this.rule.meta.docs
     const footerPattern =
       /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s
-    const footer = `${
-      this.since
+    const footer = `${this.since
         ? `## :rocket: Version
 
 This rule was introduced in eslint-plugin-svelte ${await this.since}
 
 `
         : ""
-    }## :mag: Implementation
+      }## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/src/rules/${ruleName}.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-svelte/blob/main/tests/src/rules/${ruleName}.ts)
-${
-  extensionRule
-    ? typeof extensionRule === "string"
-      ? `
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/${ruleName}.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/${ruleName}.ts)
+${extensionRule
+        ? typeof extensionRule === "string"
+          ? `
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/${extensionRule})</sup>
 `
-      : `
+          : `
 <sup>Taken with ❤️ [from ${extensionRule.plugin}](${extensionRule.url})</sup>
 `
-    : ""
-}`
+        : ""
+      }`
     if (footerPattern.test(this.content)) {
       this.content = this.content.replace(
         footerPattern,
