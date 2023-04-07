@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.26.0
+
+### Minor Changes
+
+- [#433](https://github.com/sveltejs/eslint-plugin-svelte/pull/433) [`890cfa2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/890cfa268b2473fb770de9d79682078f97c9e295) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte-eslint-parser to add support for `<svelte:document>`
+
 ## 2.25.0
 
 ### Minor Changes
