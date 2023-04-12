@@ -34,23 +34,28 @@ export function defineVisitor(context: IndentContext): NodeListener {
       node.children.forEach((n) => offsets.ignore(n))
     },
     SvelteElement(node: AST.SvelteElement) {
-      if (
-        (node.name.type !== "Identifier" && node.name.type !== "SvelteName") ||
-        !PREFORMATTED_ELEMENT_NAMES.includes(node.name.name)
-      ) {
-        if (node.endTag) {
-          offsets.setOffsetElementList(
-            node.children.filter(isNotEmptyTextNode),
-            node.startTag,
-            node.endTag,
-            1,
-          )
+      if (node.name.type === "Identifier" || node.name.type === "SvelteName") {
+        if (PREFORMATTED_ELEMENT_NAMES.includes(node.name.name)) {
+          const startTagToken = sourceCode.getFirstToken(node)
+          const endTagToken =
+            node.endTag && sourceCode.getFirstToken(node.endTag)
+          offsets.setOffsetToken(endTagToken, 0, startTagToken)
+          node.children.forEach((n) => offsets.ignore(n))
+          return
         }
-      } else {
-        const startTagToken = sourceCode.getFirstToken(node)
-        const endTagToken = node.endTag && sourceCode.getFirstToken(node.endTag)
-        offsets.setOffsetToken(endTagToken, 0, startTagToken)
-        node.children.forEach((n) => offsets.ignore(n))
+        if (node.name.name === "style") {
+          // Inline style tag
+          node.children.forEach((n) => offsets.ignore(n))
+          return
+        }
+      }
+      if (node.endTag) {
+        offsets.setOffsetElementList(
+          node.children.filter(isNotEmptyTextNode),
+          node.startTag,
+          node.endTag,
+          1,
+        )
       }
     },
     // ----------------------------------------------------------------------

@@ -1,9 +1,9 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.21.0",
+  "version": "2.26.0",
   "description": "ESLint plugin for Svelte using AST",
-  "repository": "git+https://github.com/ota-meshi/eslint-plugin-svelte.git",
-  "homepage": "https://ota-meshi.github.io/eslint-plugin-svelte",
+  "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
+  "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
   "author": "Yosuke Ota (https://github.com/ota-meshi)",
   "contributors": [
     "JounQin (https://github.com/JounQin)"
@@ -65,15 +65,15 @@
     }
   },
   "dependencies": {
+    "@eslint-community/eslint-utils": "^4.2.0",
     "@jridgewell/sourcemap-codec": "^1.4.14",
     "debug": "^4.3.1",
-    "eslint-utils": "^3.0.0",
     "esutils": "^2.0.3",
     "known-css-properties": "^0.27.0",
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
-    "svelte-eslint-parser": "^0.24.0"
+    "svelte-eslint-parser": "^0.26.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
@@ -158,13 +158,13 @@
     "semver": "^7.3.5",
     "simple-git-hooks": "^2.8.0",
     "stylelint": "^15.0.0",
-    "stylelint-config-standard": "^30.0.0",
+    "stylelint-config-standard": "^32.0.0",
     "stylus": "^0.59.0",
     "svelte": "^3.46.1",
     "svelte-adapter-ghpages": "0.1.0",
     "svelte-i18n": "^3.4.0",
     "type-coverage": "^2.22.0",
-    "typescript": "^4.9.3",
+    "typescript": "^5.0.0",
     "vite": "^4.0.0",
     "vite-plugin-svelte-md": "^0.1.5",
     "yaml": "^2.1.1",

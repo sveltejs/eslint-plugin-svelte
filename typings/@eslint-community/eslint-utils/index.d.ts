@@ -7,11 +7,11 @@ import type {
   ESM,
   READ,
   TraceMap,
-} from "eslint-utils/referenceTracker"
+} from "@eslint-community/eslint-utils/referenceTracker"
 export {
   ReferenceTracker,
   TrackedReferences,
-} from "../../node_modules/@types/eslint-utils"
+} from "../../../node_modules/@types/eslint-utils"
 type Token = { type: string; value: string }
 export function isArrowToken(token: Token): boolean
 export function isCommaToken(token: Token): boolean

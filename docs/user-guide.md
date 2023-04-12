@@ -42,6 +42,7 @@ This plugin provides configs:
 - `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
 - `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
 - `plugin:svelte/prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
+- `plugin:svelte/all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
 
 See [the rule list](./rules.md) to get the `rules` that this plugin provides.
 
@@ -134,7 +135,18 @@ module.exports = {
 }
 ```
 
-See also <https://github.com/ota-meshi/svelte-eslint-parser#readme>.
+See also <https://github.com/sveltejs/svelte-eslint-parser#readme>.
+
+::: warning ❗ Attention
+
+The TypeScript parser uses a singleton internally and it will only use the
+options given to it when it was first initialized. If trying to change the
+options for a different file or override, the parser will simply ignore the new
+options (which may result in an error). See
+[typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778)
+for some context.
+
+:::
 
 #### settings.svelte
 

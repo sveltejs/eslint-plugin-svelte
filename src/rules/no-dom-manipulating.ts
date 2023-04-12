@@ -3,7 +3,7 @@ import type { TSESTree } from "@typescript-eslint/types"
 import { createRule } from "../utils"
 import { findVariable, getNodeName } from "../utils/ast-utils"
 import type { Variable } from "@typescript-eslint/scope-manager"
-import { getPropertyName } from "eslint-utils"
+import { getPropertyName } from "@eslint-community/eslint-utils"
 
 const DOM_MANIPULATING_METHODS = new Set([
   "appendChild", // https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
