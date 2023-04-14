@@ -72,8 +72,12 @@ export default createRule("no-unused-class-name", {
  */
 function findClassesInNode(node: AnyNode): string[] {
   if (node.type === "rule") {
+    let classes = node.nodes.map(findClassesInNode).flat()
     const processor = selectorParser()
-    return findClassesInSelector(processor.astSync(node.selector))
+    classes = classes.concat(
+      findClassesInSelector(processor.astSync(node.selector)),
+    )
+    return classes
   }
   if (["root", "atrule"].includes(node.type)) {
     return (node as Root | AtRule).nodes.map(findClassesInNode).flat()
