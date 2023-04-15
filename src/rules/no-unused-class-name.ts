@@ -58,7 +58,7 @@ export default createRule("no-unused-class-name", {
           if (!classesUsedInStyle.includes(className)) {
             context.report({
               loc: classesUsedInTemplate[className],
-              message: "TODO", // TODO
+              message: `Unused class "${className}".`,
             })
           }
         }

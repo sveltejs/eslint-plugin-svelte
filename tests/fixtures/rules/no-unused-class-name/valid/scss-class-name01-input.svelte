@@ -1,11 +1,7 @@
 <div class="container">
-  <div class="div-class">
-    Hello
-  </div>
+  <div class="div-class">Hello</div>
 
-  <span class="span-class">
-    World!
-  </span>
+  <span class="span-class">World!</span>
 </div>
 
 <style lang="scss">

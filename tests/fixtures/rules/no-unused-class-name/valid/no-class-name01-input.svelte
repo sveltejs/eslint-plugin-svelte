@@ -1,7 +1,3 @@
-<div>
-  Hello
-</div>
+<div>Hello</div>
 
-<span>
-  World!
-</span>
+<span>World!</span>
