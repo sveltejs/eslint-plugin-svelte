@@ -42,12 +42,13 @@ export default createRule("no-unused-class-name", {
           ) {
             continue
           }
-          // TODO: Support multiple classes
           // TODO: Why multiple values?
           // TODO: Remove assertions
-          classesUsedInTemplate[
-            ((attribute as SvelteAttribute).value[0] as SvelteLiteral).value
-          ] = node.startTag.loc
+          for (const className of (
+            (attribute as SvelteAttribute).value[0] as SvelteLiteral
+          ).value.split(" ")) {
+            classesUsedInTemplate[className] = node.startTag.loc
+          }
         }
       },
       SvelteStyleElement(node) {
