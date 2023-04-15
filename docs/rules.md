@@ -52,6 +52,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/block-lang](./rules/block-lang.md) | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. |  |
 | [svelte/button-has-type](./rules/button-has-type.md) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md) | disallow the use of `{@debug}` | :star: |
+| [svelte/no-immutable-reactive-statements](./rules/no-immutable-reactive-statements.md) | disallow reactive statements that don't reference reactive values. |  |
 | [svelte/no-reactive-functions](./rules/no-reactive-functions.md) | it's not necessary to define functions in reactive statements | :bulb: |
 | [svelte/no-reactive-literals](./rules/no-reactive-literals.md) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md) | disallow unused svelte-ignore comments | :star: |

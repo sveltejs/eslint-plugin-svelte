@@ -207,6 +207,9 @@ function writeFixtures(
         },
         ...config.parserOptions,
       },
+      globals: {
+        console: "readonly",
+      },
     },
     config.filename,
   )
@@ -281,6 +284,9 @@ function getConfig(ruleName: string, inputFile: string) {
           js: "espree",
         },
         extraFileExtensions: [".svelte"],
+      },
+      globals: {
+        console: "readonly",
       },
     },
     config,
