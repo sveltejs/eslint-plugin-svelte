@@ -9,12 +9,8 @@ import type {
   SvelteSpreadAttribute,
   SvelteStyleDirective,
 } from "svelte-eslint-parser/lib/ast"
-import {
-  default as selectorParser,
-  type Node,
-  type Root as SelectorRoot,
-} from "postcss-selector-parser"
-import type { AnyNode, AtRule, Root } from "postcss"
+import { default as selectorParser, type Node } from "postcss-selector-parser"
+import type { AnyNode } from "postcss"
 
 export default createRule("no-unused-class-name", {
   meta: {
@@ -106,8 +102,8 @@ function findClassesInPostCSSNode(node: AnyNode): string[] {
     )
     return classes
   }
-  if (["root", "atrule"].includes(node.type)) {
-    return (node as Root | AtRule).nodes.flatMap(findClassesInPostCSSNode)
+  if (node.type === "root" || node.type === "atrule") {
+    return node.nodes.flatMap(findClassesInPostCSSNode)
   }
   return []
 }
@@ -119,8 +115,8 @@ function findClassesInSelector(node: Node): string[] {
   if (node.type === "class") {
     return [node.value]
   }
-  if (["root", "selector"].includes(node.type)) {
-    return (node as SelectorRoot).nodes.flatMap(findClassesInSelector)
+  if (node.type === "root" || node.type === "selector") {
+    return node.nodes.flatMap(findClassesInSelector)
   }
   return []
 }
