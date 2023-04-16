@@ -26,6 +26,7 @@ export default createRule("no-unused-class-name", {
   create(context) {
     const classesUsedInTemplate: Record<string, SourceLocation> = {}
     let classesUsedInStyle: string[] = []
+    let styleASTavailable = true // Starts out true so that the rule triggers in case of no <style> block.
 
     return {
       SvelteElement(node) {
@@ -52,9 +53,15 @@ export default createRule("no-unused-class-name", {
         }
       },
       SvelteStyleElement(node) {
-        classesUsedInStyle = findClassesInNode(node.body)
+        styleASTavailable = node.body !== undefined
+        if (node.body !== undefined) {
+          classesUsedInStyle = findClassesInPostCSSNode(node.body)
+        }
       },
       "Program:exit"() {
+        if (!styleASTavailable) {
+          return
+        }
         for (const className in classesUsedInTemplate) {
           if (!classesUsedInStyle.includes(className)) {
             context.report({
@@ -71,9 +78,9 @@ export default createRule("no-unused-class-name", {
 /**
  * Extract all class names used in a PostCSS node.
  */
-function findClassesInNode(node: AnyNode): string[] {
+function findClassesInPostCSSNode(node: AnyNode): string[] {
   if (node.type === "rule") {
-    let classes = node.nodes.map(findClassesInNode).flat()
+    let classes = node.nodes.map(findClassesInPostCSSNode).flat()
     const processor = selectorParser()
     classes = classes.concat(
       findClassesInSelector(processor.astSync(node.selector)),
@@ -81,7 +88,7 @@ function findClassesInNode(node: AnyNode): string[] {
     return classes
   }
   if (["root", "atrule"].includes(node.type)) {
-    return (node as Root | AtRule).nodes.map(findClassesInNode).flat()
+    return (node as Root | AtRule).nodes.map(findClassesInPostCSSNode).flat()
   }
   return []
 }
