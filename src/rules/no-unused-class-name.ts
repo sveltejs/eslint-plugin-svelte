@@ -2,7 +2,12 @@ import { createRule } from "../utils"
 import type {
   SourceLocation,
   SvelteAttribute,
+  SvelteDirective,
   SvelteLiteral,
+  SvelteShorthandAttribute,
+  SvelteSpecialDirective,
+  SvelteSpreadAttribute,
+  SvelteStyleDirective,
 } from "svelte-eslint-parser/lib/ast"
 import {
   default as selectorParser,
@@ -34,20 +39,8 @@ export default createRule("no-unused-class-name", {
           return
         }
         for (const attribute of node.startTag.attributes) {
-          // TODO: This only supports direct class attribute - what about shorthands, spread directives etc.
-          if (
-            !("key" in attribute) ||
-            !("name" in attribute.key) ||
-            !("value" in attribute) ||
-            attribute.key.name !== "class"
-          ) {
-            continue
-          }
-          // TODO: Why multiple values?
-          // TODO: Remove assertions
-          for (const className of (
-            (attribute as SvelteAttribute).value[0] as SvelteLiteral
-          ).value.split(" ")) {
+          const classes = findClassesInAttribute(attribute)
+          for (const className of classes) {
             classesUsedInTemplate[className] = node.startTag.loc
           }
         }
@@ -74,6 +67,34 @@ export default createRule("no-unused-class-name", {
     }
   },
 })
+
+/**
+ * Extract all class names used in a HTML element attribute.
+ */
+function findClassesInAttribute(
+  attribute:
+    | SvelteAttribute
+    | SvelteShorthandAttribute
+    | SvelteSpreadAttribute
+    | SvelteDirective
+    | SvelteStyleDirective
+    | SvelteSpecialDirective,
+): string[] {
+  // TODO: This only supports direct class attribute - what about shorthands, spread directives etc.
+  if (
+    !("key" in attribute) ||
+    !("name" in attribute.key) ||
+    !("value" in attribute) ||
+    attribute.key.name !== "class"
+  ) {
+    return []
+  }
+  // TODO: Why multiple values?
+  // TODO: Remove assertions
+  return ((attribute as SvelteAttribute).value[0] as SvelteLiteral).value.split(
+    " ",
+  )
+}
 
 /**
  * Extract all class names used in a PostCSS node.
