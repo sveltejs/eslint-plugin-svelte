@@ -38,11 +38,9 @@ export default createRule("no-unused-class-name", {
         if (node.kind !== "html") {
           return
         }
-        for (const attribute of node.startTag.attributes) {
-          const classes = findClassesInAttribute(attribute)
-          for (const className of classes) {
-            classesUsedInTemplate[className] = node.startTag.loc
-          }
+        const classes = node.startTag.attributes.flatMap(findClassesInAttribute)
+        for (const className of classes) {
+          classesUsedInTemplate[className] = node.startTag.loc
         }
       },
       SvelteStyleElement(node) {
@@ -101,7 +99,7 @@ function findClassesInAttribute(
  */
 function findClassesInPostCSSNode(node: AnyNode): string[] {
   if (node.type === "rule") {
-    let classes = node.nodes.map(findClassesInPostCSSNode).flat()
+    let classes = node.nodes.flatMap(findClassesInPostCSSNode)
     const processor = selectorParser()
     classes = classes.concat(
       findClassesInSelector(processor.astSync(node.selector)),
@@ -109,7 +107,7 @@ function findClassesInPostCSSNode(node: AnyNode): string[] {
     return classes
   }
   if (["root", "atrule"].includes(node.type)) {
-    return (node as Root | AtRule).nodes.map(findClassesInPostCSSNode).flat()
+    return (node as Root | AtRule).nodes.flatMap(findClassesInPostCSSNode)
   }
   return []
 }
@@ -122,7 +120,7 @@ function findClassesInSelector(node: Node): string[] {
     return [node.value]
   }
   if (["root", "selector"].includes(node.type)) {
-    return (node as SelectorRoot).nodes.map(findClassesInSelector).flat()
+    return (node as SelectorRoot).nodes.flatMap(findClassesInSelector)
   }
   return []
 }
