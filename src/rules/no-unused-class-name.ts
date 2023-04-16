@@ -3,7 +3,6 @@ import type {
   SourceLocation,
   SvelteAttribute,
   SvelteDirective,
-  SvelteLiteral,
   SvelteShorthandAttribute,
   SvelteSpecialDirective,
   SvelteSpreadAttribute,
@@ -74,20 +73,15 @@ function findClassesInAttribute(
     | SvelteStyleDirective
     | SvelteSpecialDirective,
 ): string[] {
-  // TODO: This only supports direct class attribute - what about shorthands, spread directives etc.
-  if (
-    !("key" in attribute) ||
-    !("name" in attribute.key) ||
-    !("value" in attribute) ||
-    attribute.key.name !== "class"
-  ) {
-    return []
+  if (attribute.type === "SvelteAttribute" && attribute.key.name === "class") {
+    return attribute.value.flatMap((value) =>
+      value.type === "SvelteLiteral" ? value.value.split(" ") : [],
+    )
   }
-  // TODO: Why multiple values?
-  // TODO: Remove assertions
-  return ((attribute as SvelteAttribute).value[0] as SvelteLiteral).value.split(
-    " ",
-  )
+  if (attribute.type === "SvelteDirective" && attribute.kind === "Class") {
+    return [attribute.key.name.name]
+  }
+  return []
 }
 
 /**
