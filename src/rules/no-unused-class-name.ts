@@ -9,8 +9,11 @@ import type {
   SvelteSpreadAttribute,
   SvelteStyleDirective,
 } from "svelte-eslint-parser/lib/ast"
-import type { AnyNode, AtRule, Root, Rule } from "postcss"
-import { default as selectorParser, type Node } from "postcss-selector-parser"
+import type { AnyNode } from "postcss"
+import {
+  default as selectorParser,
+  type Node as SelectorNode,
+} from "postcss-selector-parser"
 
 export default createRule("no-unused-class-name", {
   meta: {
@@ -88,24 +91,19 @@ function findClassesInAttribute(
 /**
  * Extract all class names used in a PostCSS node.
  */
-function findClassesInPostCSSNode<T extends AnyNode>(
-  node: ESLintCompatiblePostCSSNode<T>,
+function findClassesInPostCSSNode(
+  node: ESLintCompatiblePostCSSNode<AnyNode>,
 ): string[] {
   if (node.type === "SvelteStyle-rule") {
-    const typedNode = node as ESLintCompatiblePostCSSNode<Rule>
-    let classes = typedNode.nodes.flatMap(findClassesInPostCSSNode)
+    let classes = node.nodes.flatMap(findClassesInPostCSSNode)
     const processor = selectorParser()
     classes = classes.concat(
-      findClassesInSelector(processor.astSync(typedNode.selector)),
+      findClassesInSelector(processor.astSync(node.selector)),
     )
     return classes
   }
   if (node.type === "SvelteStyle-root" || node.type === "SvelteStyle-atrule") {
-    return (
-      node as
-        | ESLintCompatiblePostCSSNode<Root>
-        | ESLintCompatiblePostCSSNode<AtRule>
-    ).nodes.flatMap(findClassesInPostCSSNode)
+    return node.nodes.flatMap(findClassesInPostCSSNode)
   }
   return []
 }
@@ -113,7 +111,7 @@ function findClassesInPostCSSNode<T extends AnyNode>(
 /**
  * Extract all class names used in a PostCSS selector.
  */
-function findClassesInSelector(node: Node): string[] {
+function findClassesInSelector(node: SelectorNode): string[] {
   if (node.type === "class") {
     return [node.value]
   }
