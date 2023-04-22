@@ -82,8 +82,9 @@ export default createRule("no-immutable-reactive-statements", {
         if (def.type === "ImportBinding") {
           return false
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-        if ((def.type as any) === "ComputedVariable") {
+
+        if (def.node.type === "AssignmentExpression") {
+          // Reactive values
           return true
         }
         return false
