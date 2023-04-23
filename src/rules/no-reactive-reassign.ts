@@ -187,6 +187,21 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
+      [TSESTree.AST_NODE_TYPES.RestElement]: ({
+        node,
+        parent,
+      }: CheckContext<TSESTree.RestElement>) => {
+        if (parent.argument === node && parent.parent) {
+          // The context to check next for `({...foo} = obj)`.
+          return {
+            type: "check",
+            node: parent.parent as
+              | TSESTree.ArrayPattern
+              | TSESTree.ObjectPattern,
+          }
+        }
+        return null
+      },
       SvelteDirective: ({
         node,
         parent,

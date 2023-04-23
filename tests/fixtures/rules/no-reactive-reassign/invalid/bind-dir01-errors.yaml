@@ -1,0 +1,4 @@
+- message: Assignment to reactive value 'reactiveValue'.
+  line: 6
+  column: 22
+  suggestions: null

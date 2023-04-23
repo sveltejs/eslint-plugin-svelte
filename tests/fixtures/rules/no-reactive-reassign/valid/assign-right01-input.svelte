@@ -1,10 +1,13 @@
 <script>
   let object = 0
   $: reactiveValue = value * 2
+  let foo
 
   function handleClick() {
-    let foo = reactiveValue
+    foo = reactiveValue
     console.log(foo)
+    let bar = reactiveValue
+    console.log(bar)
   }
 </script>
 
