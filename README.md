@@ -1,6 +1,6 @@
 # Introduction
 
-`eslint-plugin-svelte` is official [ESLint] plugin for [Svelte].  
+`eslint-plugin-svelte` is the official [ESLint] plugin for [Svelte].  
 It provides many unique check rules by using the template AST.  
 You can check on the [Online DEMO](https://sveltejs.github.io/eslint-plugin-svelte/playground/).
 
