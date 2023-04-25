@@ -5,7 +5,7 @@
 You can not use both `eslint-plugin-svelte3` and `eslint-plugin-svelte` at same time.
 So before start to use this plugin, you need to remove `eslint-plugin-svelte3`'s stuff from both `package.json` and `.eslintrc.*`.
 
-> Note: If you want to know difference between `eslint-plugin-svelte` and `eslint-plugin-svelte3`, Please read the [reason](../#why).
+> Note: If you want to know difference between `eslint-plugin-svelte` and `eslint-plugin-svelte3`, Please read the reason for deprecating `eslint-plugin-svelte3` in [eslint-plugin-svelte3 README](https://github.com/sveltejs/eslint-plugin-svelte3/blob/master/README.md).
 
 > Note: If you're using TypeScript, maybe you get `Parsing error: "parserOptions.project" has been set for @typescript-eslint/parser.` error at some configuration files.<br>In this case, please refer [this GitHub comment](https://github.com/typescript-eslint/typescript-eslint/issues/1723#issuecomment-626766041) to solve it.
 
