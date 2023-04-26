@@ -26,6 +26,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in Svelte Kit page components. |  |
 | [svelte/no-not-function-handler](./rules/no-not-function-handler.md) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md) | disallow objects in text mustache interpolation | :star: |
+| [svelte/no-reactive-reassign](./rules/no-reactive-reassign.md) | disallow reassigning reactive values |  |
 | [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md) | disallow shorthand style properties that override related longhand properties | :star: |
 | [svelte/no-store-async](./rules/no-store-async.md) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md) | disallow unknown `style:property` | :star: |

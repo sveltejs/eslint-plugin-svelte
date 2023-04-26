@@ -1,0 +1,36 @@
+- message: Assignment to reactive value 'array1'.
+  line: 15
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array2'.
+  line: 16
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array3'.
+  line: 17
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array4'.
+  line: 18
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array5'.
+  line: 19
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array6'.
+  line: 20
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array7'.
+  line: 21
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array8'.
+  line: 22
+  column: 5
+  suggestions: null
+- message: Assignment to reactive value 'array9'.
+  line: 23
+  column: 5
+  suggestions: null
