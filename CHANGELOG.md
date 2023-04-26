@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.27.0
+
+### Minor Changes
+
+- [#439](https://github.com/sveltejs/eslint-plugin-svelte/pull/439) [`f810b69`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f810b694e2b3bc1bad0daba8227bcd672a8cb454) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-immutable-reactive-statements` rule
+
+- [#447](https://github.com/sveltejs/eslint-plugin-svelte/pull/447) [`9b5198c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9b5198c8c9606e50867c95a6bc2b5ae4fe948c8d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.27.0
+
+- [#440](https://github.com/sveltejs/eslint-plugin-svelte/pull/440) [`ed68b20`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ed68b205c2ff9c80237c06b453e9de3957a4f090) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-reactive-reassign` rule
+
 ## 2.26.0
 
 ### Minor Changes

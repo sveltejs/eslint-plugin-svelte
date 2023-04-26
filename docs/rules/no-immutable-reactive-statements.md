@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-immutable-reactive-statements"
 description: "disallow reactive statements that don't reference reactive values."
+since: "v2.27.0"
 ---
 
 # svelte/no-immutable-reactive-statements
 
 > disallow reactive statements that don't reference reactive values.
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -60,6 +59,10 @@ This rule reports if all variables referenced in reactive statements are immutab
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.27.0
 
 ## :mag: Implementation
 
