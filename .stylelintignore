@@ -4,7 +4,10 @@ LICENSE
 *.png
 *.json
 *.js
+*.mjs
 *.ts
+*.mts
+*.tsx
 *.lock
 *.log
 *.svg
