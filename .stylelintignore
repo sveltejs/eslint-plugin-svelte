@@ -3,6 +3,8 @@
 LICENSE
 *.png
 *.json
+*.js
+*.ts
 *.lock
 *.log
 *.svg
