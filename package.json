@@ -81,7 +81,7 @@
     "@1stg/lint-staged": "^3.3.0",
     "@1stg/remark-config": "^4.0.3",
     "@1stg/simple-git-hooks": "^0.2.1",
-    "@1stg/stylelint-config": "^4.6.1",
+    "@1stg/stylelint-config": "^5.0.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-proposal-function-bind": "^7.16.7",
