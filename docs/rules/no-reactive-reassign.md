@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-reactive-reassign"
 description: "disallow reassigning reactive values"
+since: "v2.27.0"
 ---
 
 # svelte/no-reactive-reassign
 
 > disallow reassigning reactive values
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -115,6 +114,10 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 ```
 
 </ESLintCodeBlock>
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.27.0
 
 ## :mag: Implementation
 
