@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.27.1
+
+### Patch Changes
+
+- [#451](https://github.com/sveltejs/eslint-plugin-svelte/pull/451) [`df9ed9e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/df9ed9e98011a42275b143920b1dbdc500cb3fec) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: broken import when not using typescript-eslint
+
 ## 2.27.0
 
 ### Minor Changes
