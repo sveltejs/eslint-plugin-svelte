@@ -1,4 +1,4 @@
-import { TSESTree } from "@typescript-eslint/types"
+import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import { getPropertyName } from "@eslint-community/eslint-utils"
@@ -65,19 +65,17 @@ export default createRule("no-reactive-reassign", {
             pathNodes?: TSESTree.MemberExpression[]
           }
     } = {
-      [TSESTree.AST_NODE_TYPES.UpdateExpression]:
+      UpdateExpression:
         // e.g. foo ++, foo --
         ({ parent }) => ({ type: "reassign", node: parent }),
-      [TSESTree.AST_NODE_TYPES.UnaryExpression]: ({
-        parent,
-      }: CheckContext<TSESTree.UnaryExpression>) => {
+      UnaryExpression: ({ parent }: CheckContext<TSESTree.UnaryExpression>) => {
         if (parent.operator === "delete") {
           // e.g. delete foo.prop
           return { type: "reassign", node: parent }
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.AssignmentExpression]: ({
+      AssignmentExpression: ({
         node,
         parent,
       }: CheckContext<TSESTree.AssignmentExpression>) => {
@@ -87,7 +85,7 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.ForInStatement]: ({
+      ForInStatement: ({
         node,
         parent,
       }: CheckContext<TSESTree.ForInStatement>) => {
@@ -97,7 +95,7 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.ForOfStatement]: ({
+      ForOfStatement: ({
         node,
         parent,
       }: CheckContext<TSESTree.ForOfStatement>) => {
@@ -107,7 +105,7 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.CallExpression]: ({
+      CallExpression: ({
         node,
         parent,
         pathNodes,
@@ -131,7 +129,7 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.MemberExpression]: ({
+      MemberExpression: ({
         node,
         parent,
         pathNodes,
@@ -146,14 +144,12 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.ChainExpression]: ({
-        parent,
-      }: CheckContext<TSESTree.ChainExpression>) => {
+      ChainExpression: ({ parent }: CheckContext<TSESTree.ChainExpression>) => {
         // e.g. `foo?.prop`
         // The context to check next.
         return { type: "check", node: parent }
       },
-      [TSESTree.AST_NODE_TYPES.ConditionalExpression]: ({
+      ConditionalExpression: ({
         node,
         parent,
       }: CheckContext<TSESTree.ConditionalExpression>) => {
@@ -163,10 +159,7 @@ export default createRule("no-reactive-reassign", {
         // The context to check next for `(test ? foo : bar).prop`.
         return { type: "check", node: parent }
       },
-      [TSESTree.AST_NODE_TYPES.Property]: ({
-        node,
-        parent,
-      }: CheckContext<TSESTree.Property>) => {
+      Property: ({ node, parent }: CheckContext<TSESTree.Property>) => {
         if (
           parent.value === node &&
           parent.parent &&
@@ -177,20 +170,14 @@ export default createRule("no-reactive-reassign", {
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.ArrayPattern]: ({
-        node,
-        parent,
-      }: CheckContext<TSESTree.ArrayPattern>) => {
+      ArrayPattern: ({ node, parent }: CheckContext<TSESTree.ArrayPattern>) => {
         if (parent.elements.includes(node as TSESTree.DestructuringPattern)) {
           // The context to check next for `([foo] = obj)`.
           return { type: "check", node: parent }
         }
         return null
       },
-      [TSESTree.AST_NODE_TYPES.RestElement]: ({
-        node,
-        parent,
-      }: CheckContext<TSESTree.RestElement>) => {
+      RestElement: ({ node, parent }: CheckContext<TSESTree.RestElement>) => {
         if (parent.argument === node && parent.parent) {
           // The context to check next for `({...foo} = obj)`.
           return {
