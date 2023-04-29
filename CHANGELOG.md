@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.27.2
+
+### Patch Changes
+
+- [#455](https://github.com/sveltejs/eslint-plugin-svelte/pull/455) [`bfd8a29`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bfd8a296ff852b58ba11a4854e7815f8fc7d7443) Thanks [@baseballyama](https://github.com/baseballyama)! - disable `no-self-assign` rule in Svelte files
+
 ## 2.27.1
 
 ### Patch Changes
