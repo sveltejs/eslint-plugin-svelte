@@ -36,7 +36,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         eslint: [7, 8]
-        node: [14, 16, 17, 18]
+        node: [14, 16, 17, 18, 20]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
