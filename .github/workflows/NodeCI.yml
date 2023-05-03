@@ -53,6 +53,7 @@ jobs:
         run: |+
           yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
           rm -rf node_modules
+          rm -rf yarn.lock
         if: matrix.eslint != 8
       - name: Install Packages
         run: yarn install --ignore-engines
