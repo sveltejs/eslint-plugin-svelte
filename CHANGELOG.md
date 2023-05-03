@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.27.3
+
+### Patch Changes
+
+- [#461](https://github.com/sveltejs/eslint-plugin-svelte/pull/461) [`295091b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/295091ba5808a4d2828d4cb4a6d6aaff36515b66) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: disable no-self-assign rule (take2)
+
 ## 2.27.2
 
 ### Patch Changes
