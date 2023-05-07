@@ -157,7 +157,7 @@ export default createRule("prefer-destructured-store-props", {
       // $: ({ bar } = $foo);
       // {bar}
       // Same with {$foo["bar"]}
-      "MemberExpression[object.type='Identifier'][object.name=/^\\$/]"(
+      "MemberExpression[object.type='Identifier'][object.name=/^\\$[^\\$]/]"(
         node: StoreMemberExpression,
       ) {
         if (inScriptElement) return // Within a script tag
@@ -166,7 +166,7 @@ export default createRule("prefer-destructured-store-props", {
       Identifier(node: TSESTree.Identifier) {
         storeMemberAccessStack[0]?.identifiers.push(node)
       },
-      "MemberExpression[object.type='Identifier'][object.name=/^\\$/]:exit"(
+      "MemberExpression[object.type='Identifier'][object.name=/^\\$[^\\$]/]:exit"(
         node: StoreMemberExpression,
       ) {
         if (storeMemberAccessStack[0]?.node !== node) return
