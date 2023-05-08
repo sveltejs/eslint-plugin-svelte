@@ -136,15 +136,19 @@ export default createRule("no-immutable-reactive-statements", {
             return
           }
         }
-        if (
-          globalScope.through.some(
-            (reference) =>
-              node.range[0] <= reference.identifier.range[0] &&
-              reference.identifier.range[1] <= node.range[1],
-          )
-        ) {
-          // Do not report if there are missing references.
-          return
+        for (const through of toplevelScope.through.filter(
+          (reference) =>
+            node.range[0] <= reference.identifier.range[0] &&
+            reference.identifier.range[1] <= node.range[1],
+        )) {
+          if (through.identifier.name.startsWith("$$")) {
+            // Builtin `$$` vars
+            return
+          }
+          if (through.resolved == null) {
+            // Do not report if there are missing references.
+            return
+          }
         }
 
         context.report({
