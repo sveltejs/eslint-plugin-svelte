@@ -2,7 +2,12 @@ import path from "path"
 import fs from "fs"
 import { rules } from "./lib/load-rules"
 
-const baseContent = `export = {
+const baseContent = `/*
+* IMPORTANT!
+* This file has been automatically generated,
+* in order to update its content execute "yarn update"
+*/
+export = {
   plugins: ["svelte"],
   overrides: [
     {
@@ -37,7 +42,12 @@ const baseFilePath = path.resolve(__dirname, "../src/configs/base.ts")
 // Update file.
 fs.writeFileSync(baseFilePath, baseContent)
 
-const recommendedContent = `import path from "path"
+const recommendedContent = `/*
+* IMPORTANT!
+* This file has been automatically generated,
+* in order to update its content execute "yarn update"
+*/
+import path from "path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
@@ -64,7 +74,12 @@ const recommendedFilePath = path.resolve(
 // Update file.
 fs.writeFileSync(recommendedFilePath, recommendedContent)
 
-const prettierContent = `import path from "path"
+const prettierContent = `/*
+* IMPORTANT!
+* This file has been automatically generated,
+* in order to update its content execute "yarn update"
+*/
+import path from "path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
