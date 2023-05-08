@@ -22,10 +22,10 @@ function toIdentifier(str: string) {
 }
 
 const content = `/*
-* IMPORTANT!
-* This file has been automatically generated,
-* in order to update its content execute "yarn update"
-*/
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "yarn update"
+ */
 import type { RuleModule } from "../types"
 ${rules
   .map(

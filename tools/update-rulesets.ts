@@ -3,10 +3,10 @@ import fs from "fs"
 import { rules } from "./lib/load-rules"
 
 const baseContent = `/*
-* IMPORTANT!
-* This file has been automatically generated,
-* in order to update its content execute "yarn update"
-*/
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "yarn update"
+ */
 export = {
   plugins: ["svelte"],
   overrides: [
@@ -43,10 +43,10 @@ const baseFilePath = path.resolve(__dirname, "../src/configs/base.ts")
 fs.writeFileSync(baseFilePath, baseContent)
 
 const recommendedContent = `/*
-* IMPORTANT!
-* This file has been automatically generated,
-* in order to update its content execute "yarn update"
-*/
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "yarn update"
+ */
 import path from "path"
 const base = require.resolve("./base")
 const baseExtend =
@@ -75,10 +75,10 @@ const recommendedFilePath = path.resolve(
 fs.writeFileSync(recommendedFilePath, recommendedContent)
 
 const prettierContent = `/*
-* IMPORTANT!
-* This file has been automatically generated,
-* in order to update its content execute "yarn update"
-*/
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "yarn update"
+ */
 import path from "path"
 const base = require.resolve("./base")
 const baseExtend =

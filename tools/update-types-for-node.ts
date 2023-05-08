@@ -43,7 +43,12 @@ export type Statement = TSESTree.Statement
 export type Pattern = TSESTree.Pattern`,
 ]
 const typesForNodeCode = [
-  `//
+  `/*
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "yarn update"
+ */
+//
 // The information here can be calculated by calculating the type,
 // but is pre-defined to avoid the computational cost.
 //
