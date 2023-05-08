@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.27.4
+
+### Patch Changes
+
+- [#465](https://github.com/sveltejs/eslint-plugin-svelte/pull/465) [`c8c98d4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c8c98d4dceca3a7bff56f6ea9558579bbc26be27) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for builtin `$` vars in `svelte/no-immutable-reactive-statements`
+
+- [#464](https://github.com/sveltejs/eslint-plugin-svelte/pull/464) [`fcb7226`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fcb722663535a7d8b6b39ff438e48a5e850a6bc9) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for builtin `$` vars in `svelte/prefer-destructured-store-props`
+
 ## 2.27.3
 
 ### Patch Changes
