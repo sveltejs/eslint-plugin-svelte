@@ -1,0 +1,4 @@
+- message: Expected key to use the variables which are defined by the `{#each}` block.
+  line: 11
+  column: 25
+  suggestions: null

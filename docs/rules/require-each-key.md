@@ -41,6 +41,10 @@ This rule reports `{#each}` block without key
 
 Nothing.
 
+## :couple: Related Rules
+
+- [svelte/valid-each-key](./valid-each-key.md)
+
 ## :books: Further Reading
 
 - [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/keyed-each-blocks)
