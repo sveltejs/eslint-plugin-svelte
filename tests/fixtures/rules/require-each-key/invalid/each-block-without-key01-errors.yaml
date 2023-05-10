@@ -1,0 +1,4 @@
+- message: Each block should have a key
+  line: 19
+  column: 1
+  suggestions: null
