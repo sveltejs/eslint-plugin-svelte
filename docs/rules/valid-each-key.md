@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/valid-each-key"
 description: "enforce keys to use variables defined in the `{#each}` block"
+since: "v2.28.0"
 ---
 
 # svelte/valid-each-key
 
 > enforce keys to use variables defined in the `{#each}` block
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -57,6 +56,10 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/keyed-each-blocks)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.28.0
 
 ## :mag: Implementation
 

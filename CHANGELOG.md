@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 2.28.0
+
+### Minor Changes
+
+- [#470](https://github.com/sveltejs/eslint-plugin-svelte/pull/470) [`6290345`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6290345134d6cc5ef7a0bbe4b437918e61794150) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.28.0
+
+- [#473](https://github.com/sveltejs/eslint-plugin-svelte/pull/473) [`6b71add`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6b71addc4a6963afcb6c861fc9190562a8ccbaf7) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/require-each-key` rule
+
+- [#475](https://github.com/sveltejs/eslint-plugin-svelte/pull/475) [`abac19f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/abac19f16c1a5c245034cad1d1e616905962f91f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/valid-each-key` rule
+
+- [#467](https://github.com/sveltejs/eslint-plugin-svelte/pull/467) [`170f816`](https://github.com/sveltejs/eslint-plugin-svelte/commit/170f816bd733a45103bdc8e82cc8e4768498dd4b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: export meta object
+
 ## 2.27.4
 
 ### Patch Changes
