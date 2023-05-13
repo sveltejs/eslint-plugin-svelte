@@ -49,7 +49,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Remove @sveltejs/kit # Remove @sveltejs/kit because postinstall fails on old node.
         run: |+
-          pnpm rm @sveltejs/kit --legacy-peer-deps
+          pnpm rm @sveltejs/kit
           rm -rf node_modules
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
