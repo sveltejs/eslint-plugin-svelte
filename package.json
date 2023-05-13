@@ -10,7 +10,7 @@
   ],
   "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "pnpm@8.4.0",
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
   },
@@ -26,35 +26,35 @@
     "sveltejs"
   ],
   "scripts": {
-    "build": "yarn build:meta && yarn build:ts",
-    "build:meta": "yarn ts ./tools/update-meta.ts",
+    "build": "pnpm run build:meta && pnpm run build:ts",
+    "build:meta": "pnpm run ts ./tools/update-meta.ts",
     "build:ts": "tsc --project ./tsconfig.build.json",
     "clean": "rimraf .nyc_output lib coverage build .svelte-kit svelte.config-dist.js",
-    "cover": "nyc --reporter=lcov yarn test",
-    "debug": "yarn mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
-    "docs:build": "yarn svelte-kit build",
-    "docs:preview": "yarn svelte-kit preview",
-    "docs:watch": "yarn svelte-kit dev",
+    "cover": "nyc --reporter=lcov pnpm run test",
+    "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "docs:build": "pnpm run svelte-kit build",
+    "docs:preview": "pnpm run svelte-kit preview",
+    "docs:watch": "pnpm run svelte-kit dev",
     "format-for-gen-file": "eslint src/types-for-node.ts src/utils/rules.ts src/configs typings/estree/index.d.ts --fix",
-    "install-with-ignore-engines": "yarn --ignore-engines",
+    "install-with-ignore-engines": "pnpm run --ignore-engines",
     "lint": "run-p lint:*",
-    "lint-fix": "yarn lint:es --fix && yarn lint:style --fix",
+    "lint-fix": "pnpm run lint:es --fix && pnpm run lint:style --fix",
     "lint:es": "eslint --cache -f friendly .",
     "lint:style": "stylelint --cache .",
-    "mocha": "yarn ts ./node_modules/mocha/bin/mocha.js",
-    "new": "yarn ts ./tools/new-rule.ts",
-    "prebuild": "yarn clean",
-    "prepare": "simple-git-hooks && yarn-deduplicate --strategy fewer || exit 0",
-    "prerelease": "yarn clean && yarn build",
+    "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
+    "new": "pnpm run ts ./tools/new-rule.ts",
+    "prebuild": "pnpm run clean",
+    "prepare": "simple-git-hooks",
+    "prerelease": "pnpm run clean && pnpm run build",
     "release": "changeset publish",
     "svelte-kit": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/vite/bin/vite.js",
-    "test": "yarn mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
-    "test:debug": "env-cmd -e debug yarn test",
+    "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "test:debug": "env-cmd -e debug pnpm run test",
     "ts": "node -r esbuild-register",
     "typecov": "type-coverage",
-    "update": "yarn ts ./tools/update.ts && yarn format-for-gen-file",
-    "version": "env-cmd -e version yarn update",
-    "version:ci": "env-cmd -e version-ci yarn update && changeset version"
+    "update": "pnpm run ts ./tools/update.ts && pnpm run format-for-gen-file",
+    "version": "env-cmd -e version pnpm run update",
+    "version:ci": "env-cmd -e version-ci pnpm run update && changeset version"
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
@@ -168,8 +168,7 @@
     "typescript": "^5.0.0",
     "vite": "^4.0.0",
     "vite-plugin-svelte-md": "^0.1.5",
-    "yaml": "^2.1.1",
-    "yarn-deduplicate": "^6.0.0"
+    "yaml": "^2.1.1"
   },
   "publishConfig": {
     "access": "public"

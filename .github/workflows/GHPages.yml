@@ -28,11 +28,11 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Install And Build
         run: |+
-          yarn install
-          yarn update
-          yarn build
+          pnpm install
+          pnpm run update
+          pnpm run build
           export NODE_OPTIONS="--max-old-space-size=8192"
-          yarn docs:build
+          pnpm run docs:build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact

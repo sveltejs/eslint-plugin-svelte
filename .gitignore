@@ -102,6 +102,7 @@ dist
 
 ## repo
 /yarn.lock
+/pnpm-lock.yaml
 /lib
 /.svelte-kit
 /.type-coverage

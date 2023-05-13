@@ -24,7 +24,7 @@ function toIdentifier(str: string) {
 const content = `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 import type { RuleModule } from "../types"
 ${rules

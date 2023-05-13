@@ -28,7 +28,7 @@ const estreeCode = [
   `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 //
 // Replace type information to use "@typescript-eslint/types" instead of "estree".
@@ -46,7 +46,7 @@ const typesForNodeCode = [
   `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 //
 // The information here can be calculated by calculating the type,

@@ -13,22 +13,22 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Install Packages
-        run: yarn install
+        run: pnpm install
       - name: Lint
         run: |+
-          yarn build
-          yarn lint
+          pnpm run build
+          pnpm run lint
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Install Packages
-        run: yarn install
+        run: pnpm install
       - name: Build
         run: |+
-          yarn update
-          yarn build
+          pnpm run update
+          pnpm run build
   test:
     name: "Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}"
     runs-on: ${{ matrix.os }}
@@ -45,22 +45,21 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Remove @sveltejs/kit # Remove @sveltejs/kit because postinstall fails on old node.
-        # Use npm because yarn remove needs the lock file.
         run: |+
-          npm uninstall @sveltejs/kit --legacy-peer-deps
+          pnpm rm @sveltejs/kit --legacy-peer-deps
           rm -rf node_modules
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          yarn add -D eslint@${{ matrix.eslint }} --ignore-engines
+          pnpm run add -D eslint@${{ matrix.eslint }} --ignore-engines
           rm -rf node_modules
-          rm -rf yarn.lock
+          rm -rf pnpm-lock.yaml
         if: matrix.eslint != 8
       - name: Install Packages
-        run: yarn install --ignore-engines
+        run: pnpm install --ignore-engines
       - name: Test
-        run: yarn test
+        run: pnpm run test
       - name: Type Coverage
-        run: yarn typecov
+        run: pnpm run typecov
   update-resources:
     runs-on: ubuntu-latest
     steps:
@@ -69,9 +68,9 @@ jobs:
         with:
           node-version: 18
       - name: Install Packages
-        run: yarn install --ignore-engines
+        run: pnpm install --ignore-engines
       - name: Update resources
-        run: yarn update
+        run: pnpm run update
       - name: Check changes
         run: |
           git add --all && \
