@@ -36,7 +36,6 @@
     "docs:preview": "pnpm run svelte-kit preview",
     "docs:watch": "pnpm run svelte-kit dev",
     "format-for-gen-file": "eslint src/types-for-node.ts src/utils/rules.ts src/configs typings/estree/index.d.ts --fix",
-    "install-with-ignore-engines": "pnpm run --ignore-engines",
     "lint": "run-p lint:*",
     "lint-fix": "pnpm run lint:es --fix && pnpm run lint:style --fix",
     "lint:es": "eslint --cache -f friendly .",
