@@ -53,12 +53,12 @@ jobs:
           rm -rf node_modules
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          pnpm run add -D eslint@${{ matrix.eslint }} --ignore-engines
+          pnpm install -D eslint@${{ matrix.eslint }}
           rm -rf node_modules
           rm -rf pnpm-lock.yaml
         if: matrix.eslint != 8
       - name: Install Packages
-        run: pnpm install --ignore-engines
+        run: pnpm install
       - name: Test
         run: pnpm run test
       - name: Type Coverage
@@ -72,7 +72,7 @@ jobs:
         with:
           node-version: 18
       - name: Install Packages
-        run: pnpm install --ignore-engines
+        run: pnpm install
       - name: Update resources
         run: pnpm run update
       - name: Check changes
