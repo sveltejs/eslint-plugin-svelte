@@ -39,7 +39,7 @@ Nothing.
 
 ## :heart: Compatibility
 
-This rule was taken from [@tivac/eslint-plugin-svelte].  
+This rule was taken from [@tivac/eslint-plugin-svelte].\
 This rule is compatible with `@tivac/svelte/reactive-literals` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/

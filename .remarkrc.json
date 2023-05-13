@@ -1,6 +1,6 @@
 {
   "plugins": [
-    "@1stg/remark-config",
+    "@1stg/remark-preset",
     ["lint-final-definition", false],
     ["lint-no-shortcut-reference-link", false]
   ]
