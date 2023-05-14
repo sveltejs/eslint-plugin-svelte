@@ -5,7 +5,7 @@ import { rules } from "./lib/load-rules"
 const baseContent = `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 export = {
   plugins: ["svelte"],
@@ -45,7 +45,7 @@ fs.writeFileSync(baseFilePath, baseContent)
 const recommendedContent = `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 import path from "path"
 const base = require.resolve("./base")
@@ -77,7 +77,7 @@ fs.writeFileSync(recommendedFilePath, recommendedContent)
 const prettierContent = `/*
  * IMPORTANT!
  * This file has been automatically generated,
- * in order to update its content execute "yarn update"
+ * in order to update its content execute "pnpm run update"
  */
 import path from "path"
 const base = require.resolve("./base")

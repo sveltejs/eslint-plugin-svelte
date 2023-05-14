@@ -21,7 +21,7 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 ```svelte
 <!-- ✓ GOOD -->
 <script lang="ts" strictEvents>
-/* eslint svelte/experimental-require-strict-events: "error" */
+  /* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
 
@@ -48,7 +48,7 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 ```svelte
 <!-- ✗ BAD -->
 <script lang="ts">
-/* eslint svelte/experimental-require-strict-events: "error" */
+  /* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
 

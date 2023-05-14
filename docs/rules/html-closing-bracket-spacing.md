@@ -67,6 +67,7 @@ You can choose either two styles for spacing before closing bracket
 - `selfClosingTag` (`"always"` by default)... Spacing in self closing tags
 
 Every option can be set to
+
 - "always" (`<div />`)
 - "never" (`<div/>`)
 - "ignore" (either `<div />` or `<div/>`)

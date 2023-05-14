@@ -45,9 +45,12 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 
 ```json
 {
-  "svelte/no-reactive-reassign": ["error", {
-    "props": true
-  }]
+  "svelte/no-reactive-reassign": [
+    "error",
+    {
+      "props": true
+    }
+  ]
 }
 ```
 
@@ -63,7 +66,7 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 <script>
   /* eslint svelte/no-reactive-reassign: ["error", { "props": true }] */
   let value = 0
-  $: reactiveValue = { value: value * 2}
+  $: reactiveValue = { value: value * 2 }
 
   function handleClick() {
     /* ✓ GOOD */
@@ -93,7 +96,7 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 <script>
   /* eslint svelte/no-reactive-reassign: ["error", { "props": false }] */
   let value = 0
-  $: reactiveValue = { value: value * 2}
+  $: reactiveValue = { value: value * 2 }
 
   function handleClick() {
     /* ✓ GOOD */

@@ -38,7 +38,9 @@ This rule doesn't check `derived` store. Therefore if you set a updated value as
 
   writable(null, (set) => {
     set(1)
-    return () => { /* no more subscribers */ }
+    return () => {
+      /* no more subscribers */
+    }
   })
 
   writable(false, (set) => true)

@@ -1,6 +1,6 @@
 // IMPORTANT!
 // This file has been automatically generated,
-// in order to update its content execute "yarn update"
+// in order to update its content execute "pnpm run update"
 import type { RuleModule } from "../types"
 import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/no-unnecessary-condition"
 import blockLang from "../rules/block-lang"
