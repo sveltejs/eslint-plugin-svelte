@@ -74,9 +74,6 @@ module.exports = {
           js: "espree",
         },
       },
-      rules: {
-        "no-use-before-define": "off",
-      },
     },
     {
       files: ["*.ts", "*.mts"],
