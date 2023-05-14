@@ -25,14 +25,14 @@ This is mainly a recommended rule to avoid implementation confusion.
 import { derived } from "svelte/store"
 
 /* ✓ GOOD */
-derived(a, ($a) => {});
+derived(a, ($a) => {})
 derived(a, ($a, set) => {})
-derived([ a, b ], ([ $a, $b ]) => {})
+derived([a, b], ([$a, $b]) => {})
 
 /* ✗ BAD */
-derived(a, (b) => {});
-derived(a, (b, set) => {});
-derived([ a, b ], ([ one, two ]) => {})
+derived(a, (b) => {})
+derived(a, (b, set) => {})
+derived([a, b], ([one, two]) => {})
 ```
 
 </ESLintCodeBlock>
@@ -40,7 +40,6 @@ derived([ a, b ], ([ one, two ]) => {})
 ## :wrench: Options
 
 Nothing.
-
 
 ## :books: Further Reading
 

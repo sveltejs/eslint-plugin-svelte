@@ -7,28 +7,28 @@ Thanks for contributing!
 ```sh
 git clone https://github.com/sveltejs/eslint-plugin-svelte.git
 cd eslint-plugin-svelte
-pnpm install
+yarn
 ```
 
 ## Running the tests
 
 ```sh
-pnpm run test
+yarn test
 ```
 
-To run the tests with debugging log, you can use `pnpm run test:debug`.
+To run the tests with debugging log, you can use `yarn test:debug`.
 
 This is an [ESLint](http://eslint.org) plugin. Documentation for the APIs that it uses can be found on ESLint's [Working with Plugins](http://eslint.org/docs/developer-guide/working-with-plugins) page.
 
-This plugin is used to lint itself. The style is checked when `pnpm run lint` is run, and the build will fail if there are any linting errors. You can use `pnpm run lint-fix` to fix some linting errors.
+This plugin is used to lint itself. The style is checked when `yarn lint` is run, and the build will fail if there are any linting errors. You can use `yarn lint-fix` to fix some linting errors.
 
 ## Other Development Tools
 
-- `pnpm run test` runs tests.
-- `pnpm run cover` runs tests and measures coverage.
-- `pnpm run new [new-rule-name]` generate the files needed to implement the new rule.
-- `pnpm run update` runs in order to update readme and recommended configuration.
-- `pnpm run docs:watch` launch the document site in development mode.
+- `yarn test` runs tests.
+- `yarn cover` runs tests and measures coverage.
+- `yarn new [new-rule-name]` generate the files needed to implement the new rule.
+- `yarn update` runs in order to update readme and recommended configuration.
+- `yarn docs:watch` launch the document site in development mode.
 
 ## Test the Rule
 
@@ -52,7 +52,7 @@ To verify the output of invalid test cases requires `*-errors.json`, and `*-outp
 If you want to test only one rule, run the following command (for `indent` rule):
 
 ```sh
-pnpm run test -g indent
+yarn test -g indent
 ```
 
 Take <https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha> as reference for details.
