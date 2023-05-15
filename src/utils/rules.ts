@@ -29,6 +29,7 @@ import noExportLoadInSvelteModuleInKitPages from "../rules/no-export-load-in-sve
 import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
 import noImmutableReactiveStatements from "../rules/no-immutable-reactive-statements"
 import noInnerDeclarations from "../rules/no-inner-declarations"
+import noLossOfPropReactivity from "../rules/no-loss-of-prop-reactivity"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noReactiveFunctions from "../rules/no-reactive-functions"
@@ -88,6 +89,7 @@ export const rules = [
   noExtraReactiveCurlies,
   noImmutableReactiveStatements,
   noInnerDeclarations,
+  noLossOfPropReactivity,
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noReactiveFunctions,
