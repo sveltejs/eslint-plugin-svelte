@@ -1,6 +1,5 @@
 import { createRule } from "../utils"
 import type {
-  ESLintCompatiblePostCSSNode,
   SourceLocation,
   SvelteAttribute,
   SvelteDirective,
@@ -29,8 +28,6 @@ export default createRule("no-unused-class-name", {
   },
   create(context) {
     const classesUsedInTemplate: Record<string, SourceLocation> = {}
-    let classesUsedInStyle: string[] = []
-    let styleASTavailable = true // Starts out true so that the rule triggers in case of no <style> block.
 
     return {
       SvelteElement(node) {
@@ -42,16 +39,12 @@ export default createRule("no-unused-class-name", {
           classesUsedInTemplate[className] = node.startTag.loc
         }
       },
-      SvelteStyleElement(node) {
-        styleASTavailable = node.body !== undefined
-        if (node.body !== undefined) {
-          classesUsedInStyle = findClassesInPostCSSNode(node.body)
-        }
-      },
       "Program:exit"() {
-        if (!styleASTavailable) {
+        const styleAst = context.parserServices.getStyleSourceAst()
+        if (styleAst === null) {
           return
         }
+        const classesUsedInStyle = findClassesInPostCSSNode(styleAst)
         for (const className in classesUsedInTemplate) {
           if (!classesUsedInStyle.includes(className)) {
             context.report({
@@ -91,10 +84,8 @@ function findClassesInAttribute(
 /**
  * Extract all class names used in a PostCSS node.
  */
-function findClassesInPostCSSNode(
-  node: ESLintCompatiblePostCSSNode<AnyNode>,
-): string[] {
-  if (node.type === "SvelteStyle-rule") {
+function findClassesInPostCSSNode(node: AnyNode): string[] {
+  if (node.type === "rule") {
     let classes = node.nodes.flatMap(findClassesInPostCSSNode)
     const processor = selectorParser()
     classes = classes.concat(
@@ -102,7 +93,7 @@ function findClassesInPostCSSNode(
     )
     return classes
   }
-  if (node.type === "SvelteStyle-root" || node.type === "SvelteStyle-atrule") {
+  if (node.type === "root" || node.type === "atrule") {
     return node.nodes.flatMap(findClassesInPostCSSNode)
   }
   return []
