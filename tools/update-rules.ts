@@ -21,7 +21,11 @@ function toIdentifier(str: string) {
   return camelCase(clean)
 }
 
-const content = `
+const content = `/*
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "pnpm run update"
+ */
 import type { RuleModule } from "../types"
 ${rules
   .map(

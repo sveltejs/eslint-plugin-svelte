@@ -2,3 +2,4 @@
 .type-coverage
 build
 /lib
+.npmrc

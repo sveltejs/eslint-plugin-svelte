@@ -1,6 +1,7 @@
 import type { Linter } from "eslint"
 import type { Shared } from "../shared"
 import { beginShared, terminateShared } from "../shared"
+export * as meta from "../meta"
 
 /** preprocess */
 export function preprocess(code: string, filename: string): string[] {

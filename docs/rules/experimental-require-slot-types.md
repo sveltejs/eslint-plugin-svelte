@@ -13,7 +13,7 @@ since: "v2.18.0"
 ## :book: Rule Details
 
 This rule enforces the presence of the `$$Slots` interface if any slots are present in the component. This interface declares all of the used slots and their props and enables typechecking both in the component itself as well as all components that include it.
-The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-slots).
+The `$$Slots` interface is experimental and is documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-slots).
 
 <ESLintCodeBlock>
 
@@ -40,7 +40,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    default: Record<string, never>;
+    default: Record<string, never>
   }
 </script>
 
@@ -59,7 +59,7 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    default: { prop: boolean; };
+    default: { prop: boolean }
   }
 </script>
 
@@ -78,11 +78,11 @@ The  `$$Slots` interface is experimental and is documented in [svelte RFC #38](h
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    named: Record<string, never>;
+    named: Record<string, never>
   }
 </script>
 
-<slot name = "named" />
+<slot name="named" />
 ```
 
 </ESLintCodeBlock>

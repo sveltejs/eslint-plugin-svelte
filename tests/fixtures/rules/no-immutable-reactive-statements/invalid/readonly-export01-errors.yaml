@@ -1,0 +1,18 @@
+- message:
+    This statement is not reactive because all variables referenced in the
+    reactive statement are immutable.
+  line: 12
+  column: 17
+  suggestions: null
+- message:
+    This statement is not reactive because all variables referenced in the
+    reactive statement are immutable.
+  line: 13
+  column: 17
+  suggestions: null
+- message:
+    This statement is not reactive because all variables referenced in the
+    reactive statement are immutable.
+  line: 14
+  column: 17
+  suggestions: null

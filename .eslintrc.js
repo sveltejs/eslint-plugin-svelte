@@ -114,6 +114,24 @@ module.exports = {
       },
     },
     {
+      files: ["src/**"],
+      rules: {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            patterns: [
+              {
+                group: ["@typescript-eslint/*"],
+                message:
+                  "@typescript-eslint is not included in dependencies. Only type-import is allowed.",
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
       files: ["src/rules/**"],
       rules: {},
     },

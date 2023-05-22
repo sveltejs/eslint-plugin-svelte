@@ -1,5 +1,59 @@
 # eslint-plugin-svelte
 
+## 2.29.0
+
+### Minor Changes
+
+- [#486](https://github.com/sveltejs/eslint-plugin-svelte/pull/486) [`011de46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/011de46248d13425ed6a1afc45f8102d32505b4c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.29.0
+
+## 2.28.0
+
+### Minor Changes
+
+- [#470](https://github.com/sveltejs/eslint-plugin-svelte/pull/470) [`6290345`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6290345134d6cc5ef7a0bbe4b437918e61794150) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.28.0
+
+- [#473](https://github.com/sveltejs/eslint-plugin-svelte/pull/473) [`6b71add`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6b71addc4a6963afcb6c861fc9190562a8ccbaf7) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/require-each-key` rule
+
+- [#475](https://github.com/sveltejs/eslint-plugin-svelte/pull/475) [`abac19f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/abac19f16c1a5c245034cad1d1e616905962f91f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/valid-each-key` rule
+
+- [#467](https://github.com/sveltejs/eslint-plugin-svelte/pull/467) [`170f816`](https://github.com/sveltejs/eslint-plugin-svelte/commit/170f816bd733a45103bdc8e82cc8e4768498dd4b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: export meta object
+
+## 2.27.4
+
+### Patch Changes
+
+- [#465](https://github.com/sveltejs/eslint-plugin-svelte/pull/465) [`c8c98d4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c8c98d4dceca3a7bff56f6ea9558579bbc26be27) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for builtin `$$` vars in `svelte/no-immutable-reactive-statements`
+
+- [#464](https://github.com/sveltejs/eslint-plugin-svelte/pull/464) [`fcb7226`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fcb722663535a7d8b6b39ff438e48a5e850a6bc9) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for builtin `$$` vars in `svelte/prefer-destructured-store-props`
+
+## 2.27.3
+
+### Patch Changes
+
+- [#461](https://github.com/sveltejs/eslint-plugin-svelte/pull/461) [`295091b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/295091ba5808a4d2828d4cb4a6d6aaff36515b66) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: disable no-self-assign rule (take2)
+
+## 2.27.2
+
+### Patch Changes
+
+- [#455](https://github.com/sveltejs/eslint-plugin-svelte/pull/455) [`bfd8a29`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bfd8a296ff852b58ba11a4854e7815f8fc7d7443) Thanks [@baseballyama](https://github.com/baseballyama)! - disable `no-self-assign` rule in Svelte files
+
+## 2.27.1
+
+### Patch Changes
+
+- [#451](https://github.com/sveltejs/eslint-plugin-svelte/pull/451) [`df9ed9e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/df9ed9e98011a42275b143920b1dbdc500cb3fec) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: broken import when not using typescript-eslint
+
+## 2.27.0
+
+### Minor Changes
+
+- [#439](https://github.com/sveltejs/eslint-plugin-svelte/pull/439) [`f810b69`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f810b694e2b3bc1bad0daba8227bcd672a8cb454) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-immutable-reactive-statements` rule
+
+- [#447](https://github.com/sveltejs/eslint-plugin-svelte/pull/447) [`9b5198c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9b5198c8c9606e50867c95a6bc2b5ae4fe948c8d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.27.0
+
+- [#440](https://github.com/sveltejs/eslint-plugin-svelte/pull/440) [`ed68b20`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ed68b205c2ff9c80237c06b453e9de3957a4f090) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-reactive-reassign` rule
+
 ## 2.26.0
 
 ### Minor Changes

@@ -1,3 +1,6 @@
+// IMPORTANT!
+// This file has been automatically generated,
+// in order to update its content execute "pnpm run update"
 import path from "path"
 const base = require.resolve("./base")
 const baseExtend =

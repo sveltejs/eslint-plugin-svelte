@@ -51,16 +51,18 @@ You can choose either two styles for elements without content
 ## :wrench: Options
 
 presets:
+
 ```jsonc
 {
   "svelte/html-self-closing": [
     "error",
-    "all", // or "html" or "none"
+    "all" // or "html" or "none"
   ]
 }
 ```
 
 config object:
+
 ```jsonc
 {
   "svelte/html-self-closing": [
@@ -76,17 +78,20 @@ config object:
 ```
 
 presets:
+
 - `all` - all elements should be self closing (unless they have children)
 - `html` - html-compliant - only void elements and svelte special elements should be self closing
 - `none` - no elements should be self closing
 
 config object:
+
 - `void` (`"always"` in default preset)... Style of HTML void elements
 - `component` (`"always"` in default preset)... Style of svelte components
-- `svelte` (`"always"` in  default preset)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
+- `svelte` (`"always"` in default preset)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
 - `normal` (`"always"` in default preset)... Style of other elements
 
 Every config oject option can be set to
+
 - "always" (`<div />`)
 - "never" (`<div></div>`)
 - "ignore" (either `<div />` or `<div></div>`)

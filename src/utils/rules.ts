@@ -1,3 +1,6 @@
+// IMPORTANT!
+// This file has been automatically generated,
+// in order to update its content execute "pnpm run update"
 import type { RuleModule } from "../types"
 import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/no-unnecessary-condition"
 import blockLang from "../rules/block-lang"
@@ -24,11 +27,13 @@ import noDupeUseDirectives from "../rules/no-dupe-use-directives"
 import noDynamicSlotName from "../rules/no-dynamic-slot-name"
 import noExportLoadInSvelteModuleInKitPages from "../rules/no-export-load-in-svelte-module-in-kit-pages"
 import noExtraReactiveCurlies from "../rules/no-extra-reactive-curlies"
+import noImmutableReactiveStatements from "../rules/no-immutable-reactive-statements"
 import noInnerDeclarations from "../rules/no-inner-declarations"
 import noNotFunctionHandler from "../rules/no-not-function-handler"
 import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noReactiveFunctions from "../rules/no-reactive-functions"
 import noReactiveLiterals from "../rules/no-reactive-literals"
+import noReactiveReassign from "../rules/no-reactive-reassign"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noStoreAsync from "../rules/no-store-async"
@@ -41,6 +46,7 @@ import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
 import preferDestructuredStoreProps from "../rules/prefer-destructured-store-props"
 import preferStyleDirective from "../rules/prefer-style-directive"
+import requireEachKey from "../rules/require-each-key"
 import requireEventDispatcherTypes from "../rules/require-event-dispatcher-types"
 import requireOptimizedStyleAttribute from "../rules/require-optimized-style-attribute"
 import requireStoreCallbacksUseSetParam from "../rules/require-store-callbacks-use-set-param"
@@ -52,6 +58,7 @@ import sortAttributes from "../rules/sort-attributes"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
+import validEachKey from "../rules/valid-each-key"
 import validPropNamesInKitPages from "../rules/valid-prop-names-in-kit-pages"
 
 export const rules = [
@@ -80,11 +87,13 @@ export const rules = [
   noDynamicSlotName,
   noExportLoadInSvelteModuleInKitPages,
   noExtraReactiveCurlies,
+  noImmutableReactiveStatements,
   noInnerDeclarations,
   noNotFunctionHandler,
   noObjectInTextMustaches,
   noReactiveFunctions,
   noReactiveLiterals,
+  noReactiveReassign,
   noShorthandStylePropertyOverrides,
   noSpacesAroundEqualSignsInAttribute,
   noStoreAsync,
@@ -97,6 +106,7 @@ export const rules = [
   preferClassDirective,
   preferDestructuredStoreProps,
   preferStyleDirective,
+  requireEachKey,
   requireEventDispatcherTypes,
   requireOptimizedStyleAttribute,
   requireStoreCallbacksUseSetParam,
@@ -108,5 +118,6 @@ export const rules = [
   spacedHtmlComment,
   system,
   validCompile,
+  validEachKey,
   validPropNamesInKitPages,
 ] as RuleModule[]
