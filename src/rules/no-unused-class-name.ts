@@ -28,7 +28,6 @@ export default createRule("no-unused-class-name", {
   },
   create(context) {
     const classesUsedInTemplate: Record<string, SourceLocation> = {}
-    let hasStyleNode = false
 
     return {
       SvelteElement(node) {
@@ -40,16 +39,19 @@ export default createRule("no-unused-class-name", {
           classesUsedInTemplate[className] = node.startTag.loc
         }
       },
-      SvelteStyleElement() {
-        hasStyleNode = true
-      },
       "Program:exit"() {
-        const styleAst = context.parserServices.getStyleSourceAst()
-        if (hasStyleNode && styleAst === null) {
+        const styleContext = context.parserServices.getStyleContext()
+        if (
+          // There is a style element, but it couldn't be parsed
+          styleContext.sourceLang !== null &&
+          styleContext.sourceAst === null
+        ) {
           return
         }
         const classesUsedInStyle =
-          styleAst != null ? findClassesInPostCSSNode(styleAst) : []
+          styleContext.sourceAst != null
+            ? findClassesInPostCSSNode(styleContext.sourceAst)
+            : []
         for (const className in classesUsedInTemplate) {
           if (!classesUsedInStyle.includes(className)) {
             context.report({
