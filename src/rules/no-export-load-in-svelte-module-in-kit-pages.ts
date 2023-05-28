@@ -6,7 +6,7 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
   meta: {
     docs: {
       description:
-        "disallow exporting load functions in `*.svelte` module in Svelte Kit page components.",
+        "disallow exporting load functions in `*.svelte` module in SvelteKit page components.",
       category: "Possible Errors",
       // TODO Switch to recommended in the major version.
       recommended: false,
@@ -14,7 +14,7 @@ export default createRule("no-export-load-in-svelte-module-in-kit-pages", {
     schema: [],
     messages: {
       unexpected:
-        "disallow exporting load functions in `*.svelte` module in Svelte Kit page components.",
+        "disallow exporting load functions in `*.svelte` module in SvelteKit page components.",
     },
     type: "problem",
   },

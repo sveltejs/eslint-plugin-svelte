@@ -10,12 +10,12 @@ import { getPackageJson } from "./get-package-json"
 const isRunOnBrowser = !fs.readFileSync
 
 /**
- * return true if it's a Svelte Kit page component.
+ * return true if it's a SvelteKit page component.
  * @param context
  * @returns
  */
 export function isKitPageComponent(context: RuleContext): boolean {
-  // Hack: if it runs on browser, it regards as Svelte Kit project.
+  // Hack: if it runs on browser, it regards as SvelteKit project.
   if (isRunOnBrowser) return true
   if (!hasSvelteKit(context.getFilename())) return false
   const routes =
@@ -40,7 +40,7 @@ export function isKitPageComponent(context: RuleContext): boolean {
  * @returns
  */
 function hasSvelteKit(filePath: string): boolean {
-  // Hack: if it runs on browser, it regards as Svelte Kit project.
+  // Hack: if it runs on browser, it regards as SvelteKit project.
   if (isRunOnBrowser) return true
   try {
     const packageJson = getPackageJson(filePath)
