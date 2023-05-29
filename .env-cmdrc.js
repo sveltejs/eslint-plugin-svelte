@@ -1,3 +1,5 @@
+"use strict"
+
 module.exports = {
   version: {
     IN_VERSION_SCRIPT: "true",
@@ -10,6 +12,7 @@ module.exports = {
   },
   sveltekit: {
     NODE_OPTIONS: `--experimental-loader ./svelte-kit-import-hook.mjs ${
+      // eslint-disable-next-line no-process-env -- ignore
       process.env.NODE_OPTIONS || ""
     }`,
   },
