@@ -8,7 +8,7 @@ const dirname = path.dirname(
   ),
 )
 
-/** Generate svelte kit routes files */
+/** Generate SvelteKit routes files */
 export default function generateRoutes(): void {
   const srcRoot = path.join(dirname, "../../docs")
   const distRoot = path.join(dirname, "../src/routes")
