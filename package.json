@@ -48,7 +48,7 @@
     "prepare": "simple-git-hooks",
     "prerelease": "pnpm run clean && pnpm run build",
     "release": "changeset publish",
-    "svelte-kit": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/vite/bin/vite.js",
+    "svelte-kit": "env-cmd -e sveltekit node node_modules/vite/bin/vite.js",
     "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "test:debug": "env-cmd -e debug pnpm run test",
     "ts": "node -r esbuild-register",
