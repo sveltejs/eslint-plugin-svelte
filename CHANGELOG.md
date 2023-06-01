@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.30.0
+
+### Minor Changes
+
+- [#494](https://github.com/sveltejs/eslint-plugin-svelte/pull/494) [`e5ea6fe`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e5ea6fe641788e05339f468ce6c3d818df7b2446) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add experimental support for Svelte v4
+
+- [#494](https://github.com/sveltejs/eslint-plugin-svelte/pull/494) [`e5ea6fe`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e5ea6fe641788e05339f468ce6c3d818df7b2446) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(deps): update dependency svelte-eslint-parser to ^0.30.0
+
 ## 2.29.0
 
 ### Minor Changes
