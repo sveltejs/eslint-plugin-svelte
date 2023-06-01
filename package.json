@@ -59,7 +59,7 @@
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
-    "svelte": "^3.37.0"
+    "svelte": "^3.37.0 || ^4.0.0-0"
   },
   "peerDependenciesMeta": {
     "svelte": {
@@ -75,7 +75,7 @@
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
-    "svelte-eslint-parser": "^0.29.0"
+    "svelte-eslint-parser": "^0.30.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
@@ -163,9 +163,9 @@
     "stylelint": "^15.0.0",
     "stylelint-config-standard": "^33.0.0",
     "stylus": "^0.59.0",
-    "svelte": "^3.59.1",
+    "svelte": "^4.0.0-0",
     "svelte-adapter-ghpages": "0.1.0",
-    "svelte-i18n": "^3.4.0",
+    "svelte-i18n": "^3.6.0",
     "tslib": "^2.5.0",
     "type-coverage": "^2.22.0",
     "typescript": "^5.0.0",

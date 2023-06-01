@@ -19,6 +19,8 @@ jobs:
         run: |+
           pnpm run build
           pnpm run lint
+      - name: Type Coverage
+        run: pnpm run typecov
   build:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +40,31 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         eslint: [7, 8]
-        node: [14, 16, 17, 18, 20]
+        node: [16, 17, 18, 20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install ESLint ${{ matrix.eslint }}
+        run: |+
+          pnpm install -D eslint@${{ matrix.eslint }}
+          rm -rf node_modules
+        if: matrix.eslint != 8
+      - name: Install Packages
+        run: pnpm install
+      - name: Test
+        run: pnpm run test
+  test-for-svelte-v3:
+    name: Test for Svelte v3
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -53,16 +79,12 @@ jobs:
           rm -rf node_modules
       - name: Install ESLint ${{ matrix.eslint }}
         run: |+
-          pnpm install -D eslint@${{ matrix.eslint }}
+          pnpm install -D svelte@3
           rm -rf node_modules
-          rm -rf pnpm-lock.yaml
-        if: matrix.eslint != 8
       - name: Install Packages
         run: pnpm install
       - name: Test
         run: pnpm run test
-      - name: Type Coverage
-        run: pnpm run typecov
   update-resources:
     runs-on: ubuntu-latest
     steps:

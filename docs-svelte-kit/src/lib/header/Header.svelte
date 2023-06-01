@@ -16,6 +16,8 @@
   <div class="corner">
     <div
       class="sidebar-button"
+      role="button"
+      tabindex="0"
       on:click={handleToggleSidebar}
       on:keydown={(e) =>
         (e.code === "Enter" || e.code === "Space") && handleToggleSidebar()}
@@ -44,20 +46,20 @@
     </svg>
     <ul>
       <li class:active={isActive("/", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/">Home</a>
+        <a href="{baseUrl}/">Home</a>
       </li>
       <li class:active={isActive("/user-guide/", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/user-guide/">User Guide</a>
+        <a href="{baseUrl}/user-guide/">User Guide</a>
       </li>
       <li class:active={isActive("/rules/", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/rules/">Rules</a>
+        <a href="{baseUrl}/rules/">Rules</a>
       </li>
       <li class:active={isActive("/playground/", $page)}>
-        <a sveltekit:prefetch href="{baseUrl}/playground/">Playground</a>
+        <a href="{baseUrl}/playground/">Playground</a>
       </li>
     </ul>
     <div class="nav-title">
-      <a sveltekit:prefetch href="{baseUrl}/">
+      <a href="{baseUrl}/">
         <img src={logo} alt="Logo" />eslint-plugin-svelte</a
       >
     </div>
