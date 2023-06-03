@@ -357,7 +357,7 @@ export default createRule("infinite-reactive-loop", {
     const tickCallExpressions = Array.from(
       extractSvelteLifeCycleReferences(context, ["tick"]),
     )
-    const taskReferences = extractTaskReferences(context)
+    const taskReferences = Array.from(extractTaskReferences(context))
     const reactiveVariableReferences = getReactiveVariableReferences(context)
 
     return {

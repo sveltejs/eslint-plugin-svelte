@@ -1,4 +1,7 @@
-<script context="module">
+<script>
   import { setContext } from "svelte"
-  setContext("answer", 42)
+
+  setTimeout(() => {
+    setContext("answer", 42)
+  })
 </script>

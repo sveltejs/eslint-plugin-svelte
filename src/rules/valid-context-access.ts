@@ -1,6 +1,7 @@
 import { createRule } from "../utils"
 import { extractContextReferences } from "./reference-helpers/svelte-context"
 import { extractSvelteLifeCycleReferences } from "./reference-helpers/svelte-lifecycle"
+import { extractTaskReferences } from "./reference-helpers/microtask"
 import type { AST } from "svelte-eslint-parser"
 import type { TSESTree } from "@typescript-eslint/types"
 
@@ -29,6 +30,7 @@ export default createRule("valid-context-access", {
     const lifeCycleReferences = Array.from(
       extractSvelteLifeCycleReferences(context),
     ).map((r) => r.node)
+    const taskReferences = Array.from(extractTaskReferences(context))
 
     // Extract <script> blocks that is not module=context.
     const scriptNotModuleElements: AST.SvelteScriptElement[] =
@@ -80,8 +82,8 @@ export default createRule("valid-context-access", {
       return []
     }
 
-    /** Return true if tnodeA is inside of nodeB. */
-    function isInsideOfNodeB(
+    /** Return true if tnodeB is inside of nodeA. */
+    function isInsideOf(
       nodeA: TSESTree.Node | AST.SvelteScriptElement,
       nodeB: TSESTree.Node,
     ) {
@@ -93,7 +95,7 @@ export default createRule("valid-context-access", {
     /** Return true if the node is there inside of <script> block that is not module=context. */
     function isInsideOfSvelteScriptElement(node: TSESTree.Node) {
       for (const script of scriptNotModuleElements) {
-        if (isInsideOfNodeB(script, node)) {
+        if (isInsideOf(script, node)) {
           return true
         }
       }
@@ -111,10 +113,20 @@ export default createRule("valid-context-access", {
     function isAfterAwait(node: TSESTree.CallExpression) {
       for (const awaitExpression of awaitExpressions) {
         const { belongingFunction, node: awaitNode } = awaitExpression
-        if (isInsideOfNodeB(node, belongingFunction)) {
+        if (isInsideOf(node, belongingFunction)) {
           continue
         }
         return awaitNode.range[0] <= node.range[0]
+      }
+      return false
+    }
+
+    /** Return true if node is inside of task function */
+    function isInsideTaskReference(node: TSESTree.CallExpression) {
+      for (const taskReference of taskReferences) {
+        if (isInsideOf(taskReference.node, node)) {
+          return true
+        }
       }
       return false
     }
@@ -132,6 +144,11 @@ export default createRule("valid-context-access", {
       }
 
       if (isAfterAwait(currentNode)) {
+        report(contextCallExpression)
+        return
+      }
+
+      if (isInsideTaskReference(currentNode)) {
         report(contextCallExpression)
         return
       }

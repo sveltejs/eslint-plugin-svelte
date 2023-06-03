@@ -7,6 +7,10 @@ const tester = new RuleTester({
     ecmaVersion: 2020,
     sourceType: "module",
   },
+  env: {
+    browser: true,
+    es2017: true,
+  },
 })
 
 tester.run(
