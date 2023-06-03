@@ -1,5 +1,6 @@
 import { createRule } from "../utils"
 import { extractContextReferences } from "./reference-helpers/svelte-context"
+import { extractSvelteLifeCycleReferences } from "./reference-helpers/svelte-lifecycle"
 import type { TSESTree } from "@typescript-eslint/types"
 
 export default createRule("valid-context-access", {
@@ -23,8 +24,12 @@ export default createRule("valid-context-access", {
       return {}
     }
 
-    // Extract <script> blocks that is not module=context.
     const sourceCode = context.getSourceCode()
+    const lifeCycleReferences = Array.from(
+      extractSvelteLifeCycleReferences(context),
+    ).map((r) => r.node)
+
+    // Extract <script> blocks that is not module=context.
     const scriptNotModuleElements = sourceCode.ast.body.filter((b) => {
       if (b.type !== "SvelteScriptElement") return false
       const isModule = b.startTag.attributes.some((a) => {
@@ -86,6 +91,8 @@ export default createRule("valid-context-access", {
       return false
     }
 
+    const awaitExpressions: TSESTree.AwaitExpression[] = []
+
     /** Let's lint! */
     function doLint(
       visitedCallExpressions: TSESTree.CallExpression[],
@@ -129,7 +136,7 @@ export default createRule("valid-context-access", {
         } else if (parent?.type === "ExpressionStatement") {
           if (parent.expression.type !== "CallExpression") {
             report(contextCallExpression)
-          } else if (parent.expression.callee.type === "Identifier") {
+          } else if (lifeCycleReferences.includes(parent.expression)) {
             report(contextCallExpression)
           }
         }
@@ -137,11 +144,14 @@ export default createRule("valid-context-access", {
     }
 
     return {
-      Program() {
+      "Program:exit"() {
         for (const { node } of extractContextReferences(context)) {
           const visitedCallExpressions: TSESTree.CallExpression[] = []
           doLint(visitedCallExpressions, node, node)
         }
+      },
+      AwaitExpression(node) {
+        awaitExpressions.push(node)
       },
     }
   },

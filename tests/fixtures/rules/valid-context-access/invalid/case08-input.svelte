@@ -1,4 +1,9 @@
-<script context="module">
+<script>
   import { setContext } from "svelte"
-  setContext("answer", 42)
+
+  const something = async () => {
+    await Promise.resolve()
+    setContext("answer", 42)
+  }
+  something()
 </script>
