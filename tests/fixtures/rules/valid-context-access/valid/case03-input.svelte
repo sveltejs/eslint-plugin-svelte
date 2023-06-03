@@ -1,5 +1,5 @@
 <script>
-  import { setContext, onMount } from "svelte"
+  import { setContext } from "svelte"
   const something = () => {
     setContext("answer", 42)
   }
