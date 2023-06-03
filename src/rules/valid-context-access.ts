@@ -2,6 +2,7 @@ import { createRule } from "../utils"
 import { extractContextReferences } from "./reference-helpers/svelte-context"
 import { extractSvelteLifeCycleReferences } from "./reference-helpers/svelte-lifecycle"
 import { extractTaskReferences } from "./reference-helpers/microtask"
+import { isInsideOfPromiseThenOrCatch } from "../utils/promise"
 import type { AST } from "svelte-eslint-parser"
 import type { TSESTree } from "@typescript-eslint/types"
 
@@ -149,6 +150,11 @@ export default createRule("valid-context-access", {
       }
 
       if (isInsideTaskReference(currentNode)) {
+        report(contextCallExpression)
+        return
+      }
+
+      if (isInsideOfPromiseThenOrCatch(currentNode)) {
         report(contextCallExpression)
         return
       }
