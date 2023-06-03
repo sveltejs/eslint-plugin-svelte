@@ -354,14 +354,14 @@ export default createRule("infinite-reactive-loop", {
     type: "suggestion",
   },
   create(context) {
+    const tickCallExpressions = Array.from(
+      extractSvelteLifeCycleReferences(context, ["tick"]),
+    )
+    const taskReferences = extractTaskReferences(context)
+    const reactiveVariableReferences = getReactiveVariableReferences(context)
+
     return {
       ["SvelteReactiveStatement"]: (ast: AST.SvelteReactiveStatement) => {
-        const tickCallExpressions = Array.from(
-          extractSvelteLifeCycleReferences(context, ["tick"]),
-        )
-        const taskReferences = extractTaskReferences(context)
-        const reactiveVariableReferences =
-          getReactiveVariableReferences(context)
         const trackedVariableNodes = getTrackedVariableNodes(
           reactiveVariableReferences,
           ast,
