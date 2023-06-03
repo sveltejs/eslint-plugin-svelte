@@ -107,6 +107,7 @@ export default createRule("valid-context-access", {
       belongingFunction:
         | TSESTree.FunctionDeclaration
         | TSESTree.VariableDeclaration
+        | TSESTree.ArrowFunctionExpression
       node: TSESTree.Node
     }[] = []
 
@@ -207,9 +208,11 @@ export default createRule("valid-context-access", {
       AwaitExpression(node) {
         let parent: TSESTree.Node | undefined = node.parent
         while (parent) {
-          if (parent.type === "FunctionDeclaration") {
-            awaitExpressions.push({ belongingFunction: parent, node })
-          } else if (parent.type === "VariableDeclaration") {
+          if (
+            parent.type === "FunctionDeclaration" ||
+            parent.type === "VariableDeclaration" ||
+            parent.type === "ArrowFunctionExpression"
+          ) {
             awaitExpressions.push({ belongingFunction: parent, node })
           }
           parent = parent.parent

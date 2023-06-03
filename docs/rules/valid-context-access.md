@@ -45,10 +45,22 @@ This rule reports where context API is called except during component initializa
     update()
     setContext("answer", 42)
   })
+
+  const update2 = async () => {
+    await Promise.resolve()
+    setContext("answer", 42)
+  }
+
+  ;(async () => {
+    await Promise.resolve()
+    setContext("answer", 42)
+  })()
 </script>
 ```
 
 </ESLintCodeBlock>
+
+- :warning: This rule only inspects Svelte files, not JS / TS files.
 
 ## :wrench: Options
 
