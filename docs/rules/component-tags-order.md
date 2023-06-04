@@ -1,0 +1,129 @@
+---
+pageClass: "rule-details"
+sidebarDepth: 0
+title: "svelte/component-tags-order"
+description: "Enforce order of component top-level elements"
+---
+
+# svelte/component-tags-order
+
+> Enforce order of component top-level elements
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+
+## :book: Rule Details
+
+This rule warns about the order of the top-level tags, such as `<script>`, template and `<style>`.
+
+<ESLintCodeBlock fix>
+
+<!--eslint-skip-->
+
+```svelte
+<svelte:options />
+
+<!-- ✓ GOOD -->
+
+<script context="module">
+  /* eslint svelte/component-tags-order: "error" */
+</script>
+
+<script>
+  export let foo
+</script>
+
+<svelte:window />
+<svelte:document />
+<svelte:head />
+<svelte:body />
+<div />
+
+<style>
+  p {
+    color: blue;
+  }
+</style>
+```
+
+</ESLintCodeBlock>
+
+---
+
+<ESLintCodeBlock fix>
+
+<!-- prettier-ignore-start -->
+<!--eslint-skip-->
+
+```svelte
+<!-- ✗ BAD -->
+
+<script>
+  /* eslint svelte/component-tags-order: "error" */
+  export let foo
+</script>
+
+<script context="module">
+  const bar = 42
+</script>
+```
+
+<!-- prettier-ignore-end -->
+
+</ESLintCodeBlock>
+
+---
+
+<ESLintCodeBlock fix>
+
+<!-- prettier-ignore-start -->
+<!--eslint-skip-->
+
+```svelte
+<!-- ✗ BAD -->
+<script>
+  /* eslint svelte/component-tags-order: "error" */
+</script>
+
+<div>foo</div>
+
+<svelte:window />
+```
+
+<!-- prettier-ignore-end -->
+
+</ESLintCodeBlock>
+
+## :wrench: Options
+
+```json
+{
+  "svelte/component-tags-order": [
+    "error",
+    {
+      "order": [
+        "SvelteScriptElement([context=module])",
+        "SvelteScriptElement",
+        "SvelteElement([svelte:options])",
+        "SvelteElement([svelte:window])",
+        "SvelteElement([svelte:document])",
+        "SvelteElement([svelte:head])",
+        "SvelteElement([svelte:body])",
+        "SvelteElement",
+        "SvelteStyleElement"
+      ]
+    }
+  ]
+}
+```
+
+-
+
+## :books: Further Reading
+
+-
+
+## :mag: Implementation
+
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/component-tags-order.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/component-tags-order.ts)
