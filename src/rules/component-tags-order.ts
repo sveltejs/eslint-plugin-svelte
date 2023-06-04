@@ -63,6 +63,7 @@ function getAttributesAsString(
 type OrderOption = {
   type: string
   attrs: string[]
+  isNot: boolean
 }
 
 /** Get sort order option. */
@@ -70,14 +71,62 @@ function getOptionOrders(context: RuleContext): OrderOption[] {
   const orderOptions: string[] =
     (context.options[0] && context.options[0].order) || DEFAULT_ORDER
   return orderOptions.map((option) => {
-    const type = option.split("(")[0].trim()
+    const [type, isNot] = option.split("(")[0].trim().split(":")
     const attrs =
       /.*\(\[(.*)\]\)/
         .exec(option)?.[1]
         ?.split(",")
         ?.map((a) => a.trim()) ?? []
-    return { type, attrs }
+    return { type, attrs, isNot: isNot === "not" }
   })
+}
+
+/** Get top lavel nodes and its order for <script> and <style> */
+function getNodeAndOrdersForScriptOrStyle(
+  orderOptions: OrderOption[],
+  child: AST.SvelteScriptElement | AST.SvelteStyleElement,
+  nodeAndOrders: {
+    node: AST.SvelteProgram["body"][number]
+    attrs: string[]
+    order: number
+  }[],
+) {
+  const attrs = getAttributesAsString(child)
+  for (const [index, option] of orderOptions.entries()) {
+    if (option.type !== child.type) continue
+    const isMatched =
+      option.attrs.filter((a) => {
+        if (attrs.includes(a)) return true
+        if (a.includes("=")) return false
+        return attrs.some((attr) => attr.startsWith(a))
+      }).length === option.attrs.length
+    if ((!option.isNot && isMatched) || (option.isNot && !isMatched)) {
+      nodeAndOrders.push({ node: child, attrs, order: index })
+      break
+    }
+  }
+}
+
+/** Get top lavel nodes and its order for template */
+function getNodeAndOrdersForTemplate(
+  orderOptions: OrderOption[],
+  child: AST.SvelteElement,
+  nodeAndOrders: {
+    node: AST.SvelteProgram["body"][number]
+    attrs: string[]
+    order: number
+  }[],
+) {
+  const tagName = getTagName(child)
+  for (const [index, option] of orderOptions.entries()) {
+    if (option.type !== child.type) continue
+    const isMatched =
+      option.attrs.length === 0 || option.attrs.includes(tagName)
+    if ((!option.isNot && isMatched) || (option.isNot && !isMatched)) {
+      nodeAndOrders.push({ node: child, attrs: [], order: index })
+      break
+    }
+  }
 }
 
 /** Get top lavel nodes and its order */
@@ -86,7 +135,7 @@ function getNodeAndOrders(
   node: AST.SvelteProgram,
 ) {
   const nodeAndOrders: {
-    node: (typeof node.body)[number]
+    node: AST.SvelteProgram["body"][number]
     attrs: string[]
     order: number
   }[] = []
@@ -95,29 +144,9 @@ function getNodeAndOrders(
       child.type === "SvelteScriptElement" ||
       child.type === "SvelteStyleElement"
     ) {
-      const attrs = getAttributesAsString(child)
-      for (const [index, option] of orderOptions.entries()) {
-        if (option.type !== child.type) continue
-        if (
-          option.attrs.filter((a) => {
-            if (attrs.includes(a)) return true
-            if (a.includes("=")) return false
-            return attrs.some((attr) => attr.startsWith(a))
-          }).length === option.attrs.length
-        ) {
-          nodeAndOrders.push({ node: child, attrs, order: index })
-          break
-        }
-      }
+      getNodeAndOrdersForScriptOrStyle(orderOptions, child, nodeAndOrders)
     } else if (child.type === "SvelteElement") {
-      const tagName = getTagName(child)
-      for (const [index, option] of orderOptions.entries()) {
-        if (option.type !== child.type) continue
-        if (option.attrs.length === 0 || option.attrs.includes(tagName)) {
-          nodeAndOrders.push({ node: child, attrs: [], order: index })
-          break
-        }
-      }
+      getNodeAndOrdersForTemplate(orderOptions, child, nodeAndOrders)
     }
   }
 

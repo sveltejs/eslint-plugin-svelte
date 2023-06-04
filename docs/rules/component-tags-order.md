@@ -131,7 +131,10 @@ For `<script>`, write `SvelteScriptElement` or `SvelteScriptElement([attrKey=att
 And multiple attributes can be specified. (e.g. `SvelteScriptElement([context=module, lang=ts])`) In this case, it will be evaluate as AND match.<br/>
 For `<style>`, almost same as `<script>` but write `SvelteStyleElement` instead of `SvelteScriptElement`.<br/>
 For elements, write `SvelteElement` or `SvelteElement([tagName])`.<br/>
-And multiple tag names can be specified. (e.g. `SvelteElement([div, span])`)
+And multiple tag names can be specified. (e.g. `SvelteElement([div, span])`)<br>
+
+Also negation can be used for attribute values. (e.g. `SvelteElement:not([div, span])`) <br/>
+In this example, it matches template elements other than `<div>` and `<span>`.
 
 ## :mag: Implementation
 
