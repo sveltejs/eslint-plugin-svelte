@@ -34,6 +34,7 @@ import noObjectInTextMustaches from "../rules/no-object-in-text-mustaches"
 import noReactiveFunctions from "../rules/no-reactive-functions"
 import noReactiveLiterals from "../rules/no-reactive-literals"
 import noReactiveReassign from "../rules/no-reactive-reassign"
+import noRestrictedHtmlElements from "../rules/no-restricted-html-elements"
 import noShorthandStylePropertyOverrides from "../rules/no-shorthand-style-property-overrides"
 import noSpacesAroundEqualSignsInAttribute from "../rules/no-spaces-around-equal-signs-in-attribute"
 import noStoreAsync from "../rules/no-store-async"
@@ -93,6 +94,7 @@ export const rules = [
   noReactiveFunctions,
   noReactiveLiterals,
   noReactiveReassign,
+  noRestrictedHtmlElements,
   noShorthandStylePropertyOverrides,
   noSpacesAroundEqualSignsInAttribute,
   noStoreAsync,
