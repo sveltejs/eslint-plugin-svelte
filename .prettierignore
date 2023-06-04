@@ -3,3 +3,4 @@
 build
 /lib
 .npmrc
+tests/fixtures/rules/component-tags-order

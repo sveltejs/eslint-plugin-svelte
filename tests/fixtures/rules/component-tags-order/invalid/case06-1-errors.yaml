@@ -1,0 +1,8 @@
+- message: "'<div>' should be above '<style>' on line 1."
+  line: 7
+  column: 1
+  suggestions: null
+- message: "'<script>' should be above '<div>' on line 7."
+  line: 9
+  column: 1
+  suggestions: null

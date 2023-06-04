@@ -81,13 +81,19 @@ This rule warns about the order of the top-level tags, such as `<script>`, templ
 
 ```svelte
 <!-- ✗ BAD -->
+<div>{foo}</div>
+
+<style>
+  div {
+    color: blue;
+  }
+</style>
+
 <script>
   /* eslint svelte/component-tags-order: "error" */
+  export let foo
 </script>
 
-<div>foo</div>
-
-<svelte:window />
 ```
 
 <!-- prettier-ignore-end -->
@@ -117,7 +123,15 @@ This rule warns about the order of the top-level tags, such as `<script>`, templ
 }
 ```
 
--
+- Regarding the order notation
+
+There are some differences between `<script>`, `<style>` and elements.
+
+For `<script>`, write `SvelteScriptElement` or `SvelteScriptElement([_attrKey_=_attrValue_])`. (e.g. `SvelteScriptElement([context=module])`)<br/>
+And multiple attributes can be specified. (e.g. `SvelteScriptElement([context=module, lang=ts])`)<br/>
+For `<style>`, almost same as `<script>` but write `SvelteStyleElement` instead of `SvelteScriptElement`.<br/>
+For elements, write `SvelteElement` or `SvelteElement([_tagName_])`.<br/>
+And multiple tag names can be specified. (e.g. `SvelteElement([div, span])`)
 
 ## :books: Further Reading
 

@@ -1,0 +1,4 @@
+- message: "'<script context=\"module\">' should be above '<script>' on line 1."
+  line: 5
+  column: 1
+  suggestions: null

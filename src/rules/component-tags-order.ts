@@ -173,13 +173,16 @@ export default createRule("component-tags-order", {
     const orderOptions = getOptionOrders(context)
     return {
       Program(node) {
-        if (node.body.length === 0) return
+        if (node.body.length === 0 || orderOptions.length === 0) return
 
         const nodeAndOrders = getNodeAndOrders(orderOptions, node)
         const sorted = [...nodeAndOrders].sort((a, b) => a.order - b.order)
 
         let currentOrder = nodeAndOrders[0].order
-        for (const nodeAndOrder of nodeAndOrders) {
+        for (const [
+          nodeAndOrderIndex,
+          nodeAndOrder,
+        ] of nodeAndOrders.entries()) {
           const { node, order } = nodeAndOrder
           if (currentOrder <= order) {
             currentOrder = order
@@ -204,12 +207,21 @@ export default createRule("component-tags-order", {
               line: `${expectedPrev?.node?.loc.start.line ?? 1}`,
             },
             *fix(fixer) {
-              for (const [index, nodeAndOrder] of nodeAndOrders.entries()) {
-                const fixed = sorted[index]
-                if (nodeAndOrder.node === fixed.node) continue
+              const expectedPrevIndex = nodeAndOrders.indexOf(expectedPrev)
+
+              yield fixer.replaceTextRange(
+                nodeAndOrders[expectedPrevIndex].node.range,
+                sourceCode.text.slice(...nodeAndOrder.node.range),
+              )
+
+              for (
+                let index = nodeAndOrderIndex;
+                index > expectedPrevIndex;
+                index--
+              ) {
                 yield fixer.replaceTextRange(
-                  fixed.node.range,
-                  sourceCode.text.slice(...nodeAndOrder.node.range),
+                  nodeAndOrders[index].node.range,
+                  sourceCode.text.slice(...nodeAndOrders[index - 1].node.range),
                 )
               }
             },
