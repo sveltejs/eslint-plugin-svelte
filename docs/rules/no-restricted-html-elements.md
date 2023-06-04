@@ -2,12 +2,12 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-restricted-html-elements"
-description: ""
+description: "disallow specific HTML elements"
 ---
 
 # svelte/no-restricted-html-elements
 
-> This rule reports to usage of resticted HTML elements.
+> disallow specific HTML elements
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 

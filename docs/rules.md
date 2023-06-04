@@ -95,7 +95,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 | Rule ID                                                                      | Description                                                   |          |
 | :--------------------------------------------------------------------------- | :------------------------------------------------------------ | :------- |
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md)             | disallow variable or `function` declarations in nested blocks | :star:   |
-| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md) | (no description)                                              |          |
+| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md) | disallow specific HTML elements                               |          |
 | [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)                   | disallow trailing whitespace at the end of lines              | :wrench: |
 
 ## Experimental

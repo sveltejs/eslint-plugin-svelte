@@ -382,7 +382,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/no-inner-declarations](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
-| [svelte/no-restricted-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/) | (no description) |  |
+| [svelte/no-restricted-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/) | disallow specific HTML elements |  |
 | [svelte/no-trailing-spaces](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## Experimental
