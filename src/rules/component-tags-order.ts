@@ -47,6 +47,10 @@ function getAttributesAsString(
   for (const attr of element.startTag.attributes) {
     if (attr.type !== "SvelteAttribute") continue
     const key = attr.key.name
+    if (attr.value.length === 0) {
+      attrs.push(key)
+      continue
+    }
     for (const value of attr.value) {
       if (value.type === "SvelteLiteral") {
         attrs.push(`${key}=${value.value}`)
@@ -95,8 +99,11 @@ function getNodeAndOrders(
       for (const [index, option] of orderOptions.entries()) {
         if (option.type !== child.type) continue
         if (
-          option.attrs.filter((a) => attrs.includes(a)).length ===
-          option.attrs.length
+          option.attrs.filter((a) => {
+            if (attrs.includes(a)) return true
+            if (a.includes("=")) return false
+            return attrs.some((attr) => attr.startsWith(a))
+          }).length === option.attrs.length
         ) {
           nodeAndOrders.push({ node: child, attrs, order: index })
           break

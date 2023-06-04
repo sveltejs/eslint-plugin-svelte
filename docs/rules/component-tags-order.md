@@ -127,15 +127,11 @@ This rule warns about the order of the top-level tags, such as `<script>`, templ
 
 There are some differences between `<script>`, `<style>` and elements.
 
-For `<script>`, write `SvelteScriptElement` or `SvelteScriptElement([_attrKey_=_attrValue_])`. (e.g. `SvelteScriptElement([context=module])`)<br/>
-And multiple attributes can be specified. (e.g. `SvelteScriptElement([context=module, lang=ts])`)<br/>
+For `<script>`, write `SvelteScriptElement` or `SvelteScriptElement([attrKey=attrValue])` or `SvelteScriptElement([attrKey])`. (e.g. `SvelteScriptElement([context=module])`). If only attrKey is specified, matches if that attribute is present. (Matches regardless of the attribute value.)<br/>
+And multiple attributes can be specified. (e.g. `SvelteScriptElement([context=module, lang=ts])`) In this case, it will be evaluate as AND match.<br/>
 For `<style>`, almost same as `<script>` but write `SvelteStyleElement` instead of `SvelteScriptElement`.<br/>
-For elements, write `SvelteElement` or `SvelteElement([_tagName_])`.<br/>
+For elements, write `SvelteElement` or `SvelteElement([tagName])`.<br/>
 And multiple tag names can be specified. (e.g. `SvelteElement([div, span])`)
-
-## :books: Further Reading
-
--
 
 ## :mag: Implementation
 

@@ -1,9 +1,5 @@
-<script context="module">
-  const FOO = "foo"
-</script>
-
 <script>
-  export let foo = FOO
+  export let foo
 </script>
 
 <div>{foo}</div>

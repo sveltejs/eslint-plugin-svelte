@@ -1,0 +1,7 @@
+{
+  "options": [
+    {
+      "order": ["SvelteScriptElement([context=unknown])", "SvelteScriptElement"]
+    }
+  ]
+}

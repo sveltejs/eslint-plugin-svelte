@@ -1,0 +1,5 @@
+- message: "'<script setup=\"undefined\" context=\"module\" lang=\"ts\">' should
+    be above '<script lang=\"ts\">' on line 1."
+  line: 5
+  column: 1
+  suggestions: null

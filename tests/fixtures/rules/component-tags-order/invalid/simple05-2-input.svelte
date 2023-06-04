@@ -1,7 +1,3 @@
-<script>
-  export let foo
-</script>
-
 <div>{foo}</div>
 
 <style>
@@ -9,3 +5,7 @@
     color: blue;
   }
 </style>
+
+<script>
+  export let foo
+</script>
