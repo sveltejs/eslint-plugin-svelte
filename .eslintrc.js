@@ -20,7 +20,7 @@ module.exports = {
     "plugin:@ota-meshi/+prettier",
   ],
   rules: {
-    "require-jsdoc": "error",
+    "require-jsdoc": "off",
     "no-warning-comments": "warn",
     "no-lonely-if": "off",
     "new-cap": "off",
@@ -150,7 +150,6 @@ module.exports = {
         project: require.resolve("./tsconfig.json"),
       },
       rules: {
-        "require-jsdoc": "off",
         "no-console": "off",
       },
     },
