@@ -90,7 +90,7 @@ Alternatively, the rule also accepts objects.
   "svelte/no-restricted-html-elements": [
     "error",
     {
-      "elements": "h1", "h2", "h3", "h4", "h5", "h6",
+      "elements": ["h1", "h2", "h3", "h4", "h5", "h6"],
       "message": "Prefer use of our custom <Heading /> component"
     },
     {
