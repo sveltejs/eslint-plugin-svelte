@@ -4,8 +4,9 @@ export default createRule("no-restricted-html-elements", {
   meta: {
     docs: {
       description: "disallow specific HTML elements",
-      category: "Extension Rules",
+      category: "Stylistic Issues",
       recommended: false,
+      conflictWithPrettier: false,
     },
     schema: {
       type: "array",
