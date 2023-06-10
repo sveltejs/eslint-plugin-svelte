@@ -80,6 +80,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
+| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
 | [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
 | [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
 | [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
@@ -92,11 +93,10 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
-| Rule ID                                                                      | Description                                                   |          |
-| :--------------------------------------------------------------------------- | :------------------------------------------------------------ | :------- |
-| [svelte/no-inner-declarations](./rules/no-inner-declarations.md)             | disallow variable or `function` declarations in nested blocks | :star:   |
-| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md) | disallow specific HTML elements                               |          |
-| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)                   | disallow trailing whitespace at the end of lines              | :wrench: |
+| Rule ID                                                          | Description                                                   |          |
+| :--------------------------------------------------------------- | :------------------------------------------------------------ | :------- |
+| [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star:   |
+| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)       | disallow trailing whitespace at the end of lines              | :wrench: |
 
 ## Experimental
 
