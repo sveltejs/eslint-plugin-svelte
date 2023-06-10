@@ -4,7 +4,6 @@ import { rules } from "../src/utils/rules"
 import type { RuleModule } from "../src/types"
 import { getNewVersion } from "./lib/changesets-util"
 
-//eslint-disable-next-line require-jsdoc -- tools
 function formatItems(items: string[]) {
   if (items.length <= 2) {
     return items.join(" and ")
@@ -14,7 +13,6 @@ function formatItems(items: string[]) {
   }`
 }
 
-//eslint-disable-next-line require-jsdoc -- tools
 function yamlValue(val: unknown) {
   if (typeof val === "string") {
     return `"${val.replace(/\\/gu, "\\\\").replace(/"/gu, '\\"')}"`
@@ -24,7 +22,6 @@ function yamlValue(val: unknown) {
 
 const ROOT = path.resolve(__dirname, "../docs/rules")
 
-//eslint-disable-next-line require-jsdoc -- tools
 function pickSince(content: string): string | null | Promise<string> {
   const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content)
   if (fileIntro) {
