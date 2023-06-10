@@ -21,7 +21,7 @@ This rule reports to usage of resticted HTML elements.
 
 ```svelte
 <script>
-  /* eslint svelte/no-restricted-html-elements: ["error", ["h1", "h2", "h3", "h4", "h5", "h6"]] */
+  /* eslint svelte/no-restricted-html-elements: ["error", "h1", "h2", "h3", "h4", "h5", "h6"] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -73,7 +73,12 @@ This rule takes a list of strings, where each string is an HTML element name to 
 {
   "svelte/no-restricted-html-elements": [
     "error",
-    ["h1", "h2", "h3", "h4", "h5", "h6"]
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6"
   ]
 }
 ```
@@ -85,7 +90,7 @@ Alternatively, the rule also accepts objects.
   "svelte/no-restricted-html-elements": [
     "error",
     {
-      "elements": ["h1", "h2", "h3", "h4", "h5", "h6"],
+      "elements": "h1", "h2", "h3", "h4", "h5", "h6",
       "message": "Prefer use of our custom <Heading /> component"
     },
     {

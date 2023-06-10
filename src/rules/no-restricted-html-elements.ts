@@ -11,14 +11,7 @@ export default createRule("no-restricted-html-elements", {
       type: "array",
       items: {
         oneOf: [
-          {
-            type: "array",
-            items: {
-              type: ["string"],
-            },
-            uniqueItems: true,
-            minItems: 1,
-          },
+          { type: "string" },
           {
             type: "object",
             properties: {
@@ -53,7 +46,7 @@ export default createRule("no-restricted-html-elements", {
           const message =
             option.message ||
             `Unexpected use of forbidden HTML element ${name.name}.`
-          const elements = option.elements || option
+          const elements = option.elements || [option]
           for (const element of elements) {
             if (element === name.name) {
               context.report({
