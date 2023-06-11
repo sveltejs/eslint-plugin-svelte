@@ -41,11 +41,7 @@ export default createRule("no-unused-class-name", {
       },
       "Program:exit"() {
         const styleContext = context.parserServices.getStyleContext()
-        if (
-          // There is a style element, but it couldn't be parsed
-          styleContext.sourceLang !== null &&
-          styleContext.sourceAst === null
-        ) {
+        if (["parse-error", "unknown-lang"].includes(styleContext.status)) {
           return
         }
         const classesUsedInStyle =
