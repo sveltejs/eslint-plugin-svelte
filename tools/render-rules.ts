@@ -44,13 +44,11 @@ const categoryRules = categories.map((cat) => {
   }
 })
 
-//eslint-disable-next-line require-jsdoc -- ignore
 export default function renderRulesTableContent(
   buildRulePath = (ruleName: string) => `./rules/${ruleName}.md`,
 ): string {
   // -----------------------------------------------------------------------------
 
-  //eslint-disable-next-line require-jsdoc -- ignore
   function toRuleRow(rule: RuleModule) {
     const mark = `${rule.meta.docs.recommended ? ":star:" : ""}${
       rule.meta.fixable ? ":wrench:" : ""
@@ -65,7 +63,6 @@ export default function renderRulesTableContent(
     return `| ${link} | ${description} | ${mark} |`
   }
 
-  //eslint-disable-next-line require-jsdoc -- ignore
   function toDeprecatedRuleRow(rule: RuleModule) {
     const link = `[${rule.meta.docs.ruleId}](${buildRulePath(
       rule.meta.docs.ruleName || "",

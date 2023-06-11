@@ -55,7 +55,7 @@ const config: UserConfig = {
       // Alias to CJS
       "svelte/compiler": path.join(
         dirname,
-        "./node_modules/svelte/compiler.js",
+        "./node_modules/svelte/compiler.cjs",
       ),
       "eslint-visitor-keys": path.join(
         dirname,

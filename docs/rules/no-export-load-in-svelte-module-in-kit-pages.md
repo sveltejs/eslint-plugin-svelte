@@ -2,13 +2,13 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-export-load-in-svelte-module-in-kit-pages"
-description: "disallow exporting load functions in `*.svelte` module in Svelte Kit page components."
+description: "disallow exporting load functions in `*.svelte` module in SvelteKit page components."
 since: "v2.12.0"
 ---
 
 # svelte/no-export-load-in-svelte-module-in-kit-pages
 
-> disallow exporting load functions in `*.svelte` module in Svelte Kit page components.
+> disallow exporting load functions in `*.svelte` module in SvelteKit page components.
 
 ## :book: Rule Details
 

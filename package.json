@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.29.0",
+  "version": "2.30.0",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
   "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
@@ -10,7 +10,7 @@
   ],
   "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
-  "packageManager": "pnpm@7.32.4",
+  "packageManager": "pnpm@7.33.0",
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
   },
@@ -48,7 +48,7 @@
     "prepare": "simple-git-hooks",
     "prerelease": "pnpm run clean && pnpm run build",
     "release": "changeset publish",
-    "svelte-kit": "node --experimental-loader ./svelte-kit-import-hook.mjs node_modules/vite/bin/vite.js",
+    "svelte-kit": "env-cmd -e sveltekit node node_modules/vite/bin/vite.js",
     "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "test:debug": "env-cmd -e debug pnpm run test",
     "ts": "node -r esbuild-register",
@@ -59,7 +59,7 @@
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
-    "svelte": "^3.37.0"
+    "svelte": "^3.37.0 || ^4.0.0-0"
   },
   "peerDependenciesMeta": {
     "svelte": {
@@ -76,7 +76,7 @@
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^6.0.0",
     "postcss-selector-parser": "^6.0.11",
-    "svelte-eslint-parser": "^0.29.0"
+    "svelte-eslint-parser": "^0.31.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
@@ -118,7 +118,7 @@
     "assert": "^2.0.0",
     "cross-spawn": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.17.0",
+    "esbuild": "^0.18.0",
     "esbuild-register": "^3.2.0",
     "escape-html": "^1.0.3",
     "eslint": "^8.40.0",
@@ -164,9 +164,9 @@
     "stylelint": "^15.0.0",
     "stylelint-config-standard": "^33.0.0",
     "stylus": "^0.59.0",
-    "svelte": "^3.59.1",
+    "svelte": "^4.0.0-0",
     "svelte-adapter-ghpages": "0.1.0",
-    "svelte-i18n": "^3.4.0",
+    "svelte-i18n": "^3.6.0",
     "tslib": "^2.5.0",
     "type-coverage": "^2.22.0",
     "typescript": "^5.0.0",

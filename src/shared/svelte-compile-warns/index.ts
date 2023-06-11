@@ -1,4 +1,5 @@
 import type { AST } from "svelte-eslint-parser"
+import type {} from "svelte" // FIXME: Workaround to get type information for "svelte/compiler"
 import * as compiler from "svelte/compiler"
 import type { SourceMapMappings } from "@jridgewell/sourcemap-codec"
 import { decode } from "@jridgewell/sourcemap-codec"
