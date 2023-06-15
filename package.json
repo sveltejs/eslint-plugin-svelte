@@ -140,7 +140,7 @@
     "espree": "^9.5.2",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",
-    "locate-character": "^2.0.5",
+    "locate-character": "^3.0.0",
     "magic-string": "^0.30.0",
     "markdown-it-anchor": "^8.4.1",
     "markdown-it-container": "^3.0.0",
