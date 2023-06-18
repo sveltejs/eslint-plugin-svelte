@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <div class="div-class	div-class-two">Hello</div>
 
 <span
