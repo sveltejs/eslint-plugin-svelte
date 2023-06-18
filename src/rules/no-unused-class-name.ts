@@ -109,7 +109,11 @@ function findClassesInSelector(node: SelectorNode): string[] {
   if (node.type === "class") {
     return [node.value]
   }
-  if (node.type === "root" || node.type === "selector") {
+  if (
+    node.type === "pseudo" ||
+    node.type === "root" ||
+    node.type === "selector"
+  ) {
     return node.nodes.flatMap(findClassesInSelector)
   }
   return []
