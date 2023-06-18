@@ -75,7 +75,7 @@ function findClassesInAttribute(
 ): string[] {
   if (attribute.type === "SvelteAttribute" && attribute.key.name === "class") {
     return attribute.value.flatMap((value) =>
-      value.type === "SvelteLiteral" ? value.value.split(" ") : [],
+      value.type === "SvelteLiteral" ? value.value.trim().split(/\s+/u) : [],
     )
   }
   if (attribute.type === "SvelteDirective" && attribute.kind === "Class") {
