@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.31.0
+
+### Minor Changes
+
+- [#489](https://github.com/sveltejs/eslint-plugin-svelte/pull/489) [`cc321f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cc321f4182fe71b0b1f136d6ede37c509a402c25) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-unused-class-name rule
+
+- [#504](https://github.com/sveltejs/eslint-plugin-svelte/pull/504) [`ab9e6e7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ab9e6e7f64537747a31826d9ff3758350f0b0f59) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.31.0
+
+- [#499](https://github.com/sveltejs/eslint-plugin-svelte/pull/499) [`16d6816`](https://github.com/sveltejs/eslint-plugin-svelte/commit/16d6816bbfec66ad89bbbe59429c74c6a21542df) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `no-restricted-html-elements` rule
+
 ## 2.30.0
 
 ### Minor Changes

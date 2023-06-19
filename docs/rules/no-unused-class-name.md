@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-unused-class-name"
 description: "disallow the use of a class in the template without a corresponding style"
+since: "v2.31.0"
 ---
 
 # svelte/no-unused-class-name
 
 > disallow the use of a class in the template without a corresponding style
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -54,6 +53,10 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.31.0
 
 ## :mag: Implementation
 

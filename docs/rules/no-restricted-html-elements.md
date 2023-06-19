@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "svelte/no-restricted-html-elements"
 description: "disallow specific HTML elements"
+since: "v2.31.0"
 ---
 
 # svelte/no-restricted-html-elements
 
 > disallow specific HTML elements
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -100,6 +99,10 @@ Alternatively, the rule also accepts objects.
   ]
 }
 ```
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.31.0
 
 ## :mag: Implementation
 
