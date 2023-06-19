@@ -1,0 +1,12 @@
+- message: Unused class "div-class-two".
+  line: 2
+  column: 1
+  suggestions: null
+- message: Unused class "span-class-two".
+  line: 4
+  column: 1
+  suggestions: null
+- message: Unused class "span-class-three".
+  line: 4
+  column: 1
+  suggestions: null

@@ -41,6 +41,7 @@ import noStoreAsync from "../rules/no-store-async"
 import noTargetBlank from "../rules/no-target-blank"
 import noTrailingSpaces from "../rules/no-trailing-spaces"
 import noUnknownStyleDirectiveProperty from "../rules/no-unknown-style-directive-property"
+import noUnusedClassName from "../rules/no-unused-class-name"
 import noUnusedSvelteIgnore from "../rules/no-unused-svelte-ignore"
 import noUselessMustaches from "../rules/no-useless-mustaches"
 import preferClassDirective from "../rules/prefer-class-directive"
@@ -101,6 +102,7 @@ export const rules = [
   noTargetBlank,
   noTrailingSpaces,
   noUnknownStyleDirectiveProperty,
+  noUnusedClassName,
   noUnusedSvelteIgnore,
   noUselessMustaches,
   preferClassDirective,
