@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.31.1
+
+### Patch Changes
+
+- [#514](https://github.com/sveltejs/eslint-plugin-svelte/pull/514) [`95ed14e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/95ed14ef4a59bfa25f3dd74403d583eb45df75f8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: `plugin:svelte/all` config
+
+- [#517](https://github.com/sveltejs/eslint-plugin-svelte/pull/517) [`c1f27c4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c1f27c4a89e744131aa3ec93d9ad2cceddd84412) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positive for `customElement="..."` in `svelte/valid-compile`
+
+- [#515](https://github.com/sveltejs/eslint-plugin-svelte/pull/515) [`1ecdfee`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1ecdfeedd47cfe81cc8c121c847a05bfbdfdb76e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with non svelte files in `svelte/no-unused-class-name`
+
 ## 2.31.0
 
 ### Minor Changes
