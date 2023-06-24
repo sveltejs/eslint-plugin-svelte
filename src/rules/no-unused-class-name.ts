@@ -27,6 +27,9 @@ export default createRule("no-unused-class-name", {
     type: "suggestion",
   },
   create(context) {
+    if (!context.parserServices.isSvelte) {
+      return {}
+    }
     const classesUsedInTemplate: Record<string, SourceLocation> = {}
 
     return {
