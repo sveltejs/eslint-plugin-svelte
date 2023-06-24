@@ -446,6 +446,7 @@ function getWarningsFromCode(code: string): {
   try {
     const result = compiler.compile(code, {
       generate: false,
+      customElement: true,
     })
 
     return { warnings: result.warnings as Warning[], kind: "warn" }
