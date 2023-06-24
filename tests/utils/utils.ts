@@ -8,6 +8,7 @@ import * as typescriptESLintParser from "@typescript-eslint/parser"
 import plugin = require("../../src/index")
 import { applyFixes } from "./source-code-fixer"
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml"
+import semver from "semver"
 
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
@@ -86,7 +87,27 @@ export function loadTestCases(
   const validFixtureRoot = path.resolve(rootDir, `./valid/`)
   const invalidFixtureRoot = path.resolve(rootDir, `./invalid/`)
 
-  const filter = options?.filter ?? (() => true)
+  const fileNameFilter = options?.filter ?? (() => true)
+
+  function filter(inputFile: string) {
+    if (!fileNameFilter(inputFile)) {
+      return false
+    }
+    const requirements = getRequirements(inputFile)
+    if (
+      Object.entries(requirements).some(([pkgName, pkgVersion]) => {
+        const pkg =
+          pkgName === "node"
+            ? { version: process.version }
+            : // eslint-disable-next-line @typescript-eslint/no-require-imports -- test
+              require(`${pkgName}/package.json`)
+        return !semver.satisfies(pkg.version, pkgVersion)
+      })
+    ) {
+      return false
+    }
+    return true
+  }
 
   const valid = listupInput(validFixtureRoot)
     .filter(filter)
@@ -292,4 +313,18 @@ function getConfig(ruleName: string, inputFile: string) {
     config,
     { code, filename: inputFile },
   )
+}
+
+function getRequirements(inputFile: string): Record<string, string> {
+  let requirementsFile: string = inputFile.replace(
+    /input\.[a-z]+$/u,
+    "requirements.json",
+  )
+  if (!fs.existsSync(requirementsFile)) {
+    requirementsFile = path.join(path.dirname(inputFile), "_requirements.json")
+  }
+  if (fs.existsSync(requirementsFile)) {
+    return JSON.parse(fs.readFileSync(requirementsFile, "utf8"))
+  }
+  return {}
 }
