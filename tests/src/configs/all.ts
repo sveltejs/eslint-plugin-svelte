@@ -12,7 +12,7 @@ describe("`all` config", () => {
       },
       baseConfig: {
         parserOptions: {
-          ecmaVersion: "latest",
+          ecmaVersion: 2020,
         },
         extends: ["plugin:svelte/all"],
       },
