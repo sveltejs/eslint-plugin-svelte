@@ -21,6 +21,7 @@ import { extractLeadingComments } from "./extract-leading-comments"
 import { getLangValue } from "../../utils/ast-utils"
 import path from "path"
 import fs from "fs"
+import semver from "semver"
 
 type WarningTargetNode =
   | (AST.SvelteProgram & ASTNodeWithParent)
@@ -446,7 +447,9 @@ function getWarningsFromCode(code: string): {
   try {
     const result = compiler.compile(code, {
       generate: false,
-      customElement: true,
+      ...(semver.satisfies(compiler.VERSION, ">=4.0.0-0")
+        ? { customElement: true }
+        : {}),
     })
 
     return { warnings: result.warnings as Warning[], kind: "warn" }
