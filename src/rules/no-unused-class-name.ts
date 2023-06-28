@@ -22,7 +22,20 @@ export default createRule("no-unused-class-name", {
       category: "Best Practices",
       recommended: false,
     },
-    schema: [],
+    schema: [
+      {
+        type: "object",
+        properties: {
+          allowedClassNames: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
     messages: {},
     type: "suggestion",
   },
@@ -30,6 +43,7 @@ export default createRule("no-unused-class-name", {
     if (!context.parserServices.isSvelte) {
       return {}
     }
+    const allowedClassNames = context.options[0]?.allowedClassNames ?? []
     const classesUsedInTemplate: Record<string, SourceLocation> = {}
 
     return {
@@ -52,7 +66,10 @@ export default createRule("no-unused-class-name", {
             ? findClassesInPostCSSNode(styleContext.sourceAst)
             : []
         for (const className in classesUsedInTemplate) {
-          if (!classesUsedInStyle.includes(className)) {
+          if (
+            !allowedClassNames.includes(className) &&
+            !classesUsedInStyle.includes(className)
+          ) {
             context.report({
               loc: classesUsedInTemplate[className],
               message: `Unused class "${className}".`,

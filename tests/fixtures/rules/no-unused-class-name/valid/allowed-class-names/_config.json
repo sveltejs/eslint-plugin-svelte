@@ -1,0 +1,3 @@
+{
+  "options": [{ "allowedClassNames": ["div-class", "span-class"] }]
+}

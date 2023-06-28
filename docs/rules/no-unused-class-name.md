@@ -52,7 +52,18 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "svelte/no-unused-class-name": [
+    "error",
+    {
+      "allowedClassNames": ["class-name-one", "class-name-two"]
+    }
+  ]
+}
+```
+
+- `allowedClassNames` ... A list of class names that shouldn't be reported by this rule. Default `[]`.
 
 ## :rocket: Version
 
