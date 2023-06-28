@@ -72,29 +72,37 @@ export default createRule("block-lang", {
     const allowedScriptLangs: (string | null)[] = Array.isArray(scriptOption)
       ? scriptOption
       : [scriptOption]
-    let scriptLang: string | null = null
-    let scriptNode: SvelteScriptElement | undefined = undefined
+    const scriptNodes: SvelteScriptElement[] = []
 
     const styleOption: string | null | (string | null)[] =
       context.options[0]?.style ?? null
     const allowedStyleLangs: (string | null)[] = Array.isArray(styleOption)
       ? styleOption
       : [styleOption]
-    let styleLang: string | null = null
-    let styleNode: SvelteStyleElement | undefined = undefined
+    const styleNodes: SvelteStyleElement[] = []
 
     return {
       SvelteScriptElement(node) {
-        scriptNode = node
-        scriptLang = getLangValue(node)?.toLowerCase() ?? null
+        scriptNodes.push(node)
       },
       SvelteStyleElement(node) {
-        styleNode = node
-        styleLang = getLangValue(node)?.toLowerCase() ?? null
+        styleNodes.push(node)
       },
       "Program:exit"() {
-        if (!allowedScriptLangs.includes(scriptLang)) {
-          if (scriptNode !== undefined) {
+        if (scriptNodes.length === 0 && enforceScriptPresent) {
+          context.report({
+            loc: { line: 1, column: 1 },
+            message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
+              allowedScriptLangs,
+            )}.`,
+          })
+        }
+        for (const scriptNode of scriptNodes) {
+          if (
+            !allowedScriptLangs.includes(
+              getLangValue(scriptNode)?.toLowerCase() ?? null,
+            )
+          ) {
             context.report({
               node: scriptNode,
               message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
@@ -103,16 +111,20 @@ export default createRule("block-lang", {
             })
           }
         }
-        if (scriptNode === undefined && enforceScriptPresent) {
+        if (styleNodes.length === 0 && enforceStylePresent) {
           context.report({
             loc: { line: 1, column: 1 },
-            message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
-              allowedScriptLangs,
+            message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
+              allowedStyleLangs,
             )}.`,
           })
         }
-        if (!allowedStyleLangs.includes(styleLang)) {
-          if (styleNode !== undefined) {
+        for (const styleNode of styleNodes) {
+          if (
+            !allowedStyleLangs.includes(
+              getLangValue(styleNode)?.toLowerCase() ?? null,
+            )
+          ) {
             context.report({
               node: styleNode,
               message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
@@ -120,14 +132,6 @@ export default createRule("block-lang", {
               )}.`,
             })
           }
-        }
-        if (styleNode === undefined && enforceStylePresent) {
-          context.report({
-            loc: { line: 1, column: 1 },
-            message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
-              allowedStyleLangs,
-            )}.`,
-          })
         }
       },
     }
