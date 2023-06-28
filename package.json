@@ -59,7 +59,7 @@
   },
   "peerDependencies": {
     "eslint": "^7.0.0 || ^8.0.0-0",
-    "svelte": "^3.37.0 || ^4.0.0-0"
+    "svelte": "^3.37.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
     "svelte": {
@@ -165,7 +165,7 @@
     "stylelint": "^15.0.0",
     "stylelint-config-standard": "^33.0.0",
     "stylus": "^0.59.0",
-    "svelte": "^4.0.0-0",
+    "svelte": "^4.0.0",
     "svelte-adapter-ghpages": "0.1.0",
     "svelte-i18n": "^3.6.0",
     "tslib": "^2.5.0",
