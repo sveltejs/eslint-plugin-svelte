@@ -21,7 +21,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✓ GOOD -->
 <script lang="ts">
-  /* eslint svelte/block-lang: {"error", { "script": "ts" }} */
+  /* eslint svelte/block-lang: ["error", { "script": "ts" }] */
 </script>
 ```
 
@@ -34,7 +34,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✓ GOOD -->
 <script>
-  /* eslint svelte/block-lang: {"error", { "script": ["ts", null], "style": "scss" }} */
+  /* eslint svelte/block-lang: ["error", { "script": ["ts", null], "style": "scss" }] */
 </script>
 
 <style lang="scss">
@@ -50,7 +50,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✗ BAD -->
 <script>
-  /* eslint svelte/block-lang: {"error", { "script": ["ts"] }} */
+  /* eslint svelte/block-lang: ["error", { "script": ["ts"] }] */
 </script>
 ```
 
