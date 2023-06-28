@@ -1,5 +1,19 @@
 # eslint-plugin-svelte
 
+## 2.32.0
+
+### Minor Changes
+
+- [#520](https://github.com/sveltejs/eslint-plugin-svelte/pull/520) [`8ba5fb1`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8ba5fb102d39310cdd5756245bb1f388e432a7a0) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-unused-class-name): added an option to allow some specific class names
+
+- [#524](https://github.com/sveltejs/eslint-plugin-svelte/pull/524) [`1e0346e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1e0346ef287089cf2b9169abf319d81e52993630) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for Svelte v4
+
+- [#525](https://github.com/sveltejs/eslint-plugin-svelte/pull/525) [`20412ab`](https://github.com/sveltejs/eslint-plugin-svelte/commit/20412ab756154291e36671e31c41a0ca7c3c7f97) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.32.0
+
+### Patch Changes
+
+- [#511](https://github.com/sveltejs/eslint-plugin-svelte/pull/511) [`bb30943`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bb309430f45b49e86b3c4cb6fd53d6e57ea37a86) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(block-lang): added support for multiple modules of the same type
+
 ## 2.31.1
 
 ### Patch Changes
