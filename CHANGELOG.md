@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.32.1
+
+### Patch Changes
+
+- [#527](https://github.com/sveltejs/eslint-plugin-svelte/pull/527) [`0212a78`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0212a78541e2ff51305c3b75f115dabcba73ab78) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-ununsed-class-name): fixed an error with `@use` at-rules
+
 ## 2.32.0
 
 ### Minor Changes
