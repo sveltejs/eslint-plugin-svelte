@@ -116,7 +116,10 @@ function findClassesInPostCSSNode(node: AnyNode): string[] {
     )
     return classes
   }
-  if (node.type === "root" || node.type === "atrule") {
+  if (
+    (node.type === "root" || node.type === "atrule") &&
+    node.nodes !== undefined
+  ) {
     return node.nodes.flatMap(findClassesInPostCSSNode)
   }
   return []
