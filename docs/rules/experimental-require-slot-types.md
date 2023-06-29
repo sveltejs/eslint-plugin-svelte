@@ -21,7 +21,7 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
 
 ```svelte
 <!-- ✓ GOOD -->
-<script>
+<script lang="ts">
   /* eslint svelte/experimental-require-slot-types: "error" */
 </script>
 
@@ -93,7 +93,7 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
 
 ```svelte
 <!-- ✗ BAD -->
-<script>
+<script lang="ts">
   /* eslint svelte/experimental-require-slot-types: "error" */
 </script>
 
