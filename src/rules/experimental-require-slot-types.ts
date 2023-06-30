@@ -1,6 +1,8 @@
 import { createRule } from "../utils"
 import { getLangValue } from "../utils/ast-utils"
 
+const SLOTS_TYPE_NAME = "$$Slots"
+
 export default createRule("experimental-require-slot-types", {
   meta: {
     docs: {
@@ -18,7 +20,7 @@ export default createRule("experimental-require-slot-types", {
   create(context) {
     let isTs = false
     let hasSlot = false
-    let hasInterface = false
+    let hasDeclaredSlots = false
     return {
       SvelteScriptElement(node) {
         const lang = getLangValue(node)?.toLowerCase()
@@ -30,12 +32,17 @@ export default createRule("experimental-require-slot-types", {
         }
       },
       TSInterfaceDeclaration(node) {
-        if (node.id.name === "$$Slots") {
-          hasInterface = true
+        if (node.id.name === SLOTS_TYPE_NAME) {
+          hasDeclaredSlots = true
+        }
+      },
+      TSTypeAliasDeclaration(node) {
+        if (node.id.name === SLOTS_TYPE_NAME) {
+          hasDeclaredSlots = true
         }
       },
       "Program:exit"() {
-        if (isTs && hasSlot && !hasInterface) {
+        if (isTs && hasSlot && !hasDeclaredSlots) {
           context.report({
             loc: {
               line: 1,
