@@ -3,6 +3,8 @@ import type { AST } from "svelte-eslint-parser"
 import { createRule } from "../utils"
 import { findAttribute, getLangValue } from "../utils/ast-utils"
 
+const EVENTS_TYPE_NAME = "$$Events"
+
 export default createRule("experimental-require-strict-events", {
   meta: {
     docs: {
@@ -19,7 +21,7 @@ export default createRule("experimental-require-strict-events", {
   create(context) {
     let isTs = false
     let hasAttribute = false
-    let hasInterface = false
+    let hasDeclaredEvents = false
     let scriptNode: AST.SvelteScriptElement
     return {
       SvelteScriptElement(node) {
@@ -29,12 +31,17 @@ export default createRule("experimental-require-strict-events", {
         scriptNode = node
       },
       TSInterfaceDeclaration(node) {
-        if (node.id.name === "$$Events") {
-          hasInterface = true
+        if (node.id.name === EVENTS_TYPE_NAME) {
+          hasDeclaredEvents = true
+        }
+      },
+      TSTypeAliasDeclaration(node) {
+        if (node.id.name === EVENTS_TYPE_NAME) {
+          hasDeclaredEvents = true
         }
       },
       "Program:exit"() {
-        if (isTs && !hasAttribute && !hasInterface) {
+        if (isTs && !hasAttribute && !hasDeclaredEvents) {
           context.report({
             node: scriptNode,
             messageId: "missingStrictEvents",
