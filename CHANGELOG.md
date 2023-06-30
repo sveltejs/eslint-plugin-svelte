@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.32.2
+
+### Patch Changes
+
+- [#530](https://github.com/sveltejs/eslint-plugin-svelte/pull/530) [`c584404`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c584404bd5a2134d81067abbd3c01525abc8e9f7) Thanks [@pawelblaszczyk5](https://github.com/pawelblaszczyk5)! - fix: handle type aliases for $Events and $Slots declarations
+
 ## 2.32.1
 
 ### Patch Changes
