@@ -33,6 +33,7 @@ module.exports = {
         usePrettierrc: true,
       },
     ],
+    "n/file-extension-in-import": "off", // It's a plugin bug(?).
     // Repo rule
     "no-restricted-imports": [
       "error",
