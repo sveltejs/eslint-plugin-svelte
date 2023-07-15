@@ -33,7 +33,6 @@ module.exports = {
         usePrettierrc: true,
       },
     ],
-    "node/no-missing-import": "off", // It's a plugin bug. Should be replaced with eslint-plugin-n.
     // Repo rule
     "no-restricted-imports": [
       "error",

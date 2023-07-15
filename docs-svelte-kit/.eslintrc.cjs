@@ -10,6 +10,6 @@ module.exports = {
   rules: {
     "svelte/no-target-blank": "error",
     "svelte/button-has-type": "error",
-    "node/file-extension-in-import": "off",
+    "n/file-extension-in-import": "off",
   },
 }
