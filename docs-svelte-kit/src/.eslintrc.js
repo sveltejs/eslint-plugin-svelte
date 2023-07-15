@@ -3,8 +3,8 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "node/no-unsupported-features/es-syntax": "off",
+    "n/no-unsupported-features/es-syntax": "off",
     "require-jsdoc": "off",
-    "node/no-missing-import": "off",
+    "n/no-missing-import": "off",
   },
 }

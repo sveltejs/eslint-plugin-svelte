@@ -21,7 +21,7 @@ module.exports = {
     "func-style": "off",
     "no-console": "off",
     "no-use-before-define": "off",
-    "node/no-unsupported-features/es-syntax": "off",
+    "n/no-unsupported-features/es-syntax": "off",
 
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/no-floating-promises": "off",
