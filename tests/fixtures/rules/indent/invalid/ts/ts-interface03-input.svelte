@@ -4,7 +4,7 @@ interface Foo
 <
 T
 >
-implements // visitor key is not provided
+extends
 Bar
 <
 T

@@ -17,12 +17,12 @@ string
 }
 class
 Impl
+extends
+E
 implements
 I2
 ,
 I
-extends
-E
 {
 public foo
 =

@@ -4,11 +4,11 @@
     <
       T
     >
-implements // visitor key is not provided
-Bar
-<
-T
->
+    extends
+      Bar
+        <
+          T
+        >
   { }
 </script>
 
