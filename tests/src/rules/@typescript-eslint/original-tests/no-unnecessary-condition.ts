@@ -1,30 +1,51 @@
 // Original test cases
 // https://github.com/typescript-eslint/typescript-eslint/blob/78467fc1bde9bd2db1e08b3d19f151f4adaff8a9/packages/eslint-plugin/tests/rules/no-unnecessary-condition.test.ts
 /* eslint func-style: off, eslint-plugin/consistent-output: off -- respect original  */
-import type {
-  InvalidTestCase,
-  TestCaseError,
-} from "@typescript-eslint/utils/dist/ts-eslint"
 import * as path from "path"
+import { RuleTester } from "eslint"
 
 import rule from "../../../../../src/rules/@typescript-eslint/no-unnecessary-condition"
-import { getFixturesRootDir, noFormat, RuleTester } from "./RuleTester"
+
+function getFixturesRootDir(): string {
+  return path.join(__dirname, "fixtures")
+}
 
 const rootPath = getFixturesRootDir()
 
 const ruleTester = new RuleTester({
-  parser: "@typescript-eslint/parser",
+  parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
     tsconfigRootDir: rootPath,
     project: "./tsconfig.json",
   },
 })
 
+function withFileName<
+  TestCase extends RuleTester.ValidTestCase | RuleTester.InvalidTestCase,
+>(list: (string | TestCase)[]): TestCase[] {
+  return list.map((e) => {
+    if (typeof e === "string") {
+      return { code: e, filename: path.join(rootPath, "file.ts") } as TestCase
+    }
+    if (e.filename) return e
+    return {
+      ...e,
+      filename: e.parserOptions?.tsconfigRootDir
+        ? path.join(e.parserOptions.tsconfigRootDir, "file.ts")
+        : path.join(rootPath, "file.ts"),
+    } as TestCase
+  })
+}
+
 const ruleError = (
   line: number,
   column: number,
   messageId: string,
-): TestCaseError<string> => ({
+): {
+  messageId: string
+  line: number
+  column: number
+} => ({
   messageId,
   line,
   column,
@@ -39,13 +60,13 @@ const t1 = b1 && b2;
 const unnecessaryConditionTest = (
   condition: string,
   messageId: string,
-): InvalidTestCase<string, any> => ({
+): RuleTester.InvalidTestCase => ({
   code: necessaryConditionTest(condition),
   errors: [ruleError(4, 12, messageId)],
 })
 
 ruleTester.run("no-unnecessary-conditionals", rule as any, {
-  valid: [
+  valid: withFileName([
     `
 declare const b1: boolean;
 declare const b2: boolean;
@@ -519,8 +540,8 @@ if (x) {
         tsconfigRootDir: path.join(rootPath, "unstrict"),
       },
     },
-  ],
-  invalid: [
+  ]),
+  invalid: withFileName([
     // Ensure that it's checking in all the right places
     {
       code: `
@@ -904,7 +925,7 @@ do {} while (true);
       ],
     },
     {
-      code: noFormat`
+      code: `
 let foo = { bar: true };
 foo?.bar;
 foo ?. bar;
@@ -954,7 +975,7 @@ foo
       ],
     },
     {
-      code: noFormat`
+      code: `
 let foo = () => {};
 foo?.();
 foo ?. ();
@@ -1004,7 +1025,7 @@ foo
       ],
     },
     {
-      code: noFormat`
+      code: `
 let foo = () => {};
 foo?.(bar);
 foo ?. (bar);
@@ -1540,5 +1561,5 @@ if (x) {
         },
       ],
     },
-  ],
+  ]),
 })

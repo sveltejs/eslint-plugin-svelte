@@ -33,7 +33,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
         count: 2,
         includeComments: false,
       })
-      const baseToken = sourceCode.getFirstToken(node.parent!)
+      const baseToken = sourceCode.getFirstToken(node.parent)
       offsets.setOffsetToken([colonOrArrowToken, secondToken], 1, baseToken)
 
       const before = sourceCode.getTokenBefore(colonOrArrowToken)
@@ -636,7 +636,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       if (firstToken.type === "Punctuator") {
         // method
         leftParenToken = firstToken
-        bodyBaseToken = sourceCode.getFirstToken(node.parent!)
+        bodyBaseToken = sourceCode.getFirstToken(node.parent)
       } else {
         let nextToken = sourceCode.getTokenAfter(firstToken)
         let nextTokenOffset = 0
@@ -823,12 +823,16 @@ export function defineVisitor(context: IndentContext): NodeListener {
         includeComments: false,
       })!
       offsets.setOffsetToken(leftParenToken, 1, firstToken)
-      const rightParenToken = sourceCode.getTokenAfter(node.parameter, {
+      const argument =
+        node.argument ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- typescript-eslint<v6 node
+        (node as any).parameter
+      const rightParenToken = sourceCode.getTokenAfter(argument, {
         filter: isClosingParenToken,
         includeComments: false,
       })!
       offsets.setOffsetElementList(
-        [node.parameter],
+        [argument],
         leftParenToken,
         rightParenToken,
         1,
@@ -954,7 +958,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
       })
       offsets.setOffsetToken(secondToken, 0, atToken)
 
-      const parent = node.parent!
+      const parent = node.parent
       const { decorators } = parent as { decorators?: TSESTree.Decorator[] }
       if (!decorators || decorators.length === 0) {
         return
