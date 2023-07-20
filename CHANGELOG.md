@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.32.4
+
+### Patch Changes
+
+- [#551](https://github.com/sveltejs/eslint-plugin-svelte/pull/551) [`a17a6e0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a17a6e003e8321aca0b9b95d1a401bf7f8966451) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency known-css-properties to ^0.28.0
+
 ## 2.32.3
 
 ### Patch Changes
