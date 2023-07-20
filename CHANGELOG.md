@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.32.3
+
+### Patch Changes
+
+- [#548](https://github.com/sveltejs/eslint-plugin-svelte/pull/548) [`68e7724`](https://github.com/sveltejs/eslint-plugin-svelte/commit/68e77240499b93a1fe0d31d0defa8e42d48a6e5d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: typescript-eslint v6 compatibility
+
 ## 2.32.2
 
 ### Patch Changes
