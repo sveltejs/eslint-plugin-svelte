@@ -1,57 +1,11 @@
 import type { TSESTree } from "@typescript-eslint/types"
 import type { AST } from "svelte-eslint-parser"
-import { ReferenceTracker } from "@eslint-community/eslint-utils"
 import { createRule } from "../utils"
 import type { RuleContext } from "../types"
 import { findVariable } from "../utils/ast-utils"
 import { traverseNodes } from "svelte-eslint-parser"
-
-/**
- * Get usage of `tick`
- */
-function extractTickReferences(
-  context: RuleContext,
-): { node: TSESTree.CallExpression; name: string }[] {
-  const referenceTracker = new ReferenceTracker(
-    context.getSourceCode().scopeManager.globalScope!,
-  )
-  const a = referenceTracker.iterateEsmReferences({
-    svelte: {
-      [ReferenceTracker.ESM]: true,
-      tick: {
-        [ReferenceTracker.CALL]: true,
-      },
-    },
-  })
-  return Array.from(a).map(({ node, path }) => {
-    return {
-      node: node as TSESTree.CallExpression,
-      name: path[path.length - 1],
-    }
-  })
-}
-
-/**
- * Get usage of `setTimeout`, `setInterval`, `queueMicrotask`
- */
-function extractTaskReferences(
-  context: RuleContext,
-): { node: TSESTree.CallExpression; name: string }[] {
-  const referenceTracker = new ReferenceTracker(
-    context.getSourceCode().scopeManager.globalScope!,
-  )
-  const a = referenceTracker.iterateGlobalReferences({
-    setTimeout: { [ReferenceTracker.CALL]: true },
-    setInterval: { [ReferenceTracker.CALL]: true },
-    queueMicrotask: { [ReferenceTracker.CALL]: true },
-  })
-  return Array.from(a).map(({ node, path }) => {
-    return {
-      node: node as TSESTree.CallExpression,
-      name: path[path.length - 1],
-    }
-  })
-}
+import { extractSvelteLifeCycleReferences } from "./reference-helpers/svelte-lifecycle"
+import { extractTaskReferences } from "./reference-helpers/microtask"
 
 /**
  * If `node` is inside of `maybeAncestorNode`, return true.
@@ -400,12 +354,14 @@ export default createRule("infinite-reactive-loop", {
     type: "suggestion",
   },
   create(context) {
+    const tickCallExpressions = Array.from(
+      extractSvelteLifeCycleReferences(context, ["tick"]),
+    )
+    const taskReferences = Array.from(extractTaskReferences(context))
+    const reactiveVariableReferences = getReactiveVariableReferences(context)
+
     return {
       ["SvelteReactiveStatement"]: (ast: AST.SvelteReactiveStatement) => {
-        const tickCallExpressions = extractTickReferences(context)
-        const taskReferences = extractTaskReferences(context)
-        const reactiveVariableReferences =
-          getReactiveVariableReferences(context)
         const trackedVariableNodes = getTrackedVariableNodes(
           reactiveVariableReferences,
           ast,

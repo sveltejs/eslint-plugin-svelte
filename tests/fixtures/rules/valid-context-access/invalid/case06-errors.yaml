@@ -1,0 +1,4 @@
+- message: Do not call setContext except during component initialization.
+  line: 5
+  column: 7
+  suggestions: null

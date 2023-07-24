@@ -1,0 +1,3 @@
+- message: Do not call hasContext except during component initialization.
+  line: 5
+  column: 9

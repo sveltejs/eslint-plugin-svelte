@@ -320,6 +320,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/require-store-callbacks-use-set-param](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param |  |
 | [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :wrench: |
 | [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :star: |
+| [svelte/valid-context-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-context-access/) | context functions must be called during component initialization. |  |
 | [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. |  |
 
 ## Security Vulnerability

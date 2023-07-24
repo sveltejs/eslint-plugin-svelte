@@ -59,6 +59,7 @@ import sortAttributes from "../rules/sort-attributes"
 import spacedHtmlComment from "../rules/spaced-html-comment"
 import system from "../rules/system"
 import validCompile from "../rules/valid-compile"
+import validContextAccess from "../rules/valid-context-access"
 import validEachKey from "../rules/valid-each-key"
 import validPropNamesInKitPages from "../rules/valid-prop-names-in-kit-pages"
 
@@ -120,6 +121,7 @@ export const rules = [
   spacedHtmlComment,
   system,
   validCompile,
+  validContextAccess,
   validEachKey,
   validPropNamesInKitPages,
 ] as RuleModule[]
