@@ -250,4 +250,10 @@ Example **.vscode/settings.json**:
 
 You should check the [parser configuration](#parser-configuration).
 
+### You're using TypeScript and the imported `*.svelte` component types cannot be resolved or appear to be
+
+You can try [typescript-eslint-parser-for-extra-files]. Note however that it is still an experimental package.\
+If you know of a better solution than that please let us know.
+
 [eslint-plugin-svelte3]: https://github.com/sveltejs/eslint-plugin-svelte3
+[typescript-eslint-parser-for-extra-files]: https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files
