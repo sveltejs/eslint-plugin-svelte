@@ -6,6 +6,7 @@ import typescriptEslintNoUnnecessaryCondition from "../rules/@typescript-eslint/
 import blockLang from "../rules/block-lang"
 import buttonHasType from "../rules/button-has-type"
 import commentDirective from "../rules/comment-directive"
+import componentTagsOrder from "../rules/component-tags-order"
 import derivedHasSameInputsOutputs from "../rules/derived-has-same-inputs-outputs"
 import experimentalRequireSlotTypes from "../rules/experimental-require-slot-types"
 import experimentalRequireStrictEvents from "../rules/experimental-require-strict-events"
@@ -67,6 +68,7 @@ export const rules = [
   blockLang,
   buttonHasType,
   commentDirective,
+  componentTagsOrder,
   derivedHasSameInputsOutputs,
   experimentalRequireSlotTypes,
   experimentalRequireStrictEvents,

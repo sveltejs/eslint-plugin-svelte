@@ -1,0 +1,7 @@
+{
+  "options": [
+    {
+      "order": ["SvelteElement:not([div, span])", "SvelteElement"]
+    }
+  ]
+}
