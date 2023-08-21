@@ -39,8 +39,8 @@
     "lint": "run-p lint:*",
     "lint-fix": "pnpm run lint-fix:md \"./**/*.md\" && pnpm run lint:es --fix && pnpm run lint:style --fix",
     "lint-fix:md": "prettier --cache --write \"./**/*.md\"",
-    "lint:md": "prettier --cache --check \"./**/*.md\"",
     "lint:es": "eslint --cache .",
+    "lint:md": "prettier --cache --check \"./**/*.md\"",
     "lint:style": "stylelint --cache .",
     "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
     "new": "pnpm run ts ./tools/new-rule.ts",
@@ -76,7 +76,7 @@
     "postcss-safe-parser": "^6.0.0",
     "postcss-selector-parser": "^6.0.11",
     "semver": "^7.5.3",
-    "svelte-eslint-parser": "^0.33.0"
+    "svelte-eslint-parser": ">=0.33.0 <1.0.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^1.2.3",
