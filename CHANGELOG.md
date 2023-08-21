@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.33.0
+
+### Minor Changes
+
+- [#565](https://github.com/sveltejs/eslint-plugin-svelte/pull/565) [`bd11057`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bd110572cafc9c7323e6f2d0407bb237d0f32708) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: change dependency parser version
+
 ## 2.32.4
 
 ### Patch Changes
