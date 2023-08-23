@@ -1,7 +1,7 @@
-import { rules } from "../../../src/utils/rules.ts"
-import { readable, writable } from "svelte/store"
-import { page } from "$app/stores"
-import { base as baseUrl } from "$app/paths"
+import { rules } from '../../../src/utils/rules.ts'
+import { readable, writable } from 'svelte/store'
+import { page } from '$app/stores'
+import { base as baseUrl } from '$app/paths'
 
 export function stripBaseUrl(path) {
   if (path.startsWith(baseUrl)) {
@@ -13,13 +13,13 @@ export function stripBaseUrl(path) {
 const svelteRules = rules.filter((rule) => !rule.meta.deprecated)
 
 const categories = [
-  "Possible Errors",
-  "Security Vulnerability",
-  "Best Practices",
-  "Stylistic Issues",
-  "Extension Rules",
-  "Experimental",
-  "System",
+  'Possible Errors',
+  'Security Vulnerability',
+  'Best Practices',
+  'Stylistic Issues',
+  'Extension Rules',
+  'Experimental',
+  'System',
 ]
 svelteRules.forEach((rule) => {
   if (!categories.includes(rule.meta.docs.category)) {
@@ -41,23 +41,23 @@ const categoryRules = categories.map((cat) => {
   }
 })
 const SIDE_MENU = {
-  "/rules": [
-    { path: "/", title: "Introduction" },
-    { path: "/user-guide/", title: "User Guide" },
+  '/rules': [
+    { path: '/', title: 'Introduction' },
+    { path: '/user-guide/', title: 'User Guide' },
     {
-      path: "/rules/",
-      title: "Available Rules",
+      path: '/rules/',
+      title: 'Available Rules',
       children: categoryRules,
     },
-    { path: "/playground/", title: "Playground" },
-    { path: "/migration/", title: "Migration" },
+    { path: '/playground/', title: 'Playground' },
+    { path: '/migration/', title: 'Migration' },
   ],
-  "/": [
-    { path: "/", title: "Introduction" },
-    { path: "/user-guide/", title: "User Guide" },
-    { path: "/rules/", title: "Available Rules" },
-    { path: "/playground/", title: "Playground" },
-    { path: "/migration/", title: "Migration" },
+  '/': [
+    { path: '/', title: 'Introduction' },
+    { path: '/user-guide/', title: 'User Guide' },
+    { path: '/rules/', title: 'Available Rules' },
+    { path: '/playground/', title: 'Playground' },
+    { path: '/migration/', title: 'Migration' },
   ],
 }
 
@@ -70,7 +70,7 @@ export function markdownPath(path) {
   path = stripBaseUrl(path)
 
   let normalized =
-    !path.trim() || path === "/" ? "README" : path.replace(/^\/|\/$/g, "")
+    !path.trim() || path === '/' ? 'README' : path.replace(/^\/|\/$/g, '')
   return `${normalized}.md`
 }
 
@@ -98,7 +98,7 @@ function generateMenu($page, toc) {
   const result = []
   const [, menus] = Object.entries(SIDE_MENU).find(([k]) =>
     stripBaseUrl($page.url.pathname).startsWith(k),
-  ) || ["/", SIDE_MENU["/"]]
+  ) || ['/', SIDE_MENU['/']]
   for (const { path, title, children } of menus) {
     const active = isActive(path, $page)
     if (active) {

@@ -1,17 +1,17 @@
-import { language } from "./syntax.js"
+import { language } from './syntax.js'
 
 async function setupMonaco() {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     const monacoScript =
-      Array.from(document.head.querySelectorAll("script")).find(
+      Array.from(document.head.querySelectorAll('script')).find(
         (script) =>
           script.src &&
-          script.src.includes("monaco") &&
-          script.src.includes("vs/loader"),
+          script.src.includes('monaco') &&
+          script.src.includes('vs/loader'),
       ) || (await appendMonacoEditorScript())
     window.require.config({
       paths: {
-        vs: monacoScript.src.replace(/\/vs\/.*$/u, "/vs"),
+        vs: monacoScript.src.replace(/\/vs\/.*$/u, '/vs'),
       },
     })
   }
@@ -19,9 +19,9 @@ async function setupMonaco() {
 
 function appendMonacoEditorScript() {
   return new Promise((resolve) => {
-    const script = document.createElement("script")
+    const script = document.createElement('script')
     script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.min.js"
+      'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.min.js'
     script.onload = () => {
       script.onload = null
 
@@ -50,10 +50,10 @@ export function loadMonacoEditor() {
     return editorLoaded
   }
   return (editorLoaded = (async () => {
-    const monaco = await loadModuleFromMonaco("vs/editor/editor.main")
+    const monaco = await loadModuleFromMonaco('vs/editor/editor.main')
 
-    monaco.languages.register({ id: "svelte" })
-    monaco.languages.setMonarchTokensProvider("svelte", language)
+    monaco.languages.register({ id: 'svelte' })
+    monaco.languages.setMonarchTokensProvider('svelte', language)
     return monaco
   })())
 }
@@ -61,7 +61,7 @@ export function loadMonacoEditor() {
 export async function loadModuleFromMonaco(moduleName) {
   await loadMonacoEngine()
   return new Promise((resolve) => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       window.require([moduleName], (r) => {
         resolve(r)
       })

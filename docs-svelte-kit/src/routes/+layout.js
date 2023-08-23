@@ -1,8 +1,8 @@
-import { markdownPath } from "$lib/utils.js"
-const docs = import.meta.glob("../../../docs/**/*.md")
+import { markdownPath } from '$lib/utils.js'
+const docs = import.meta.glob('../../../docs/**/*.md')
 
 export const prerender = true
-export const trailingSlash = "always"
+export const trailingSlash = 'always'
 
 /** @type {import('@sveltejs/kit').Load} */
 export async function load({ url }) {
@@ -16,7 +16,7 @@ export async function load({ url }) {
   // 404
   return {
     moduleData: {
-      frontmatter: { title: "404", hiddenMenu: true },
+      frontmatter: { title: '404', hiddenMenu: true },
     },
   }
 }

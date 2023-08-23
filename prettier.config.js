@@ -1,17 +1,23 @@
-"use strict"
+'use strict'
 
 module.exports = {
   tabWidth: 2,
   semi: false,
-  trailingComma: "all",
+  trailingComma: 'all',
   overrides: [
     {
-      files: [".*rc"],
-      excludeFiles: [".browserslistrc", ".npmrc", ".nvmrc"],
+      files: ['.*rc'],
+      excludeFiles: ['.browserslistrc', '.npmrc', '.nvmrc'],
       options: {
-        parser: "json",
+        parser: 'json',
+      },
+    },
+    {
+      files: ['**/*.js'],
+      options: {
+        singleQuote: true,
       },
     },
   ],
-  plugins: ["prettier-plugin-svelte"],
+  plugins: ['prettier-plugin-svelte'],
 }

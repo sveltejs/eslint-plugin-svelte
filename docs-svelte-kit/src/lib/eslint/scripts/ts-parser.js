@@ -1,9 +1,9 @@
-import { loadMonacoEngine } from "./monaco-loader"
+import { loadMonacoEngine } from './monaco-loader'
 import {
   createProgram,
   createCompilerOptions,
   createVirtualCompilerHost,
-} from "./ts-create-program.mts"
+} from './ts-create-program.mts'
 
 let tsParserCache = null
 export function loadTsParser() {
@@ -13,17 +13,17 @@ export function loadTsParser() {
 async function loadTsParserImpl() {
   await loadMonacoEngine()
   const [ts, tsvfs, tsParser] = await Promise.all([
-    import("typescript"),
-    import("@typescript/vfs"),
-    import("@typescript-eslint/parser"),
+    import('typescript'),
+    import('@typescript/vfs'),
+    import('@typescript-eslint/parser'),
   ])
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return tsParser
   }
-  window.define("typescript", ts)
+  window.define('typescript', ts)
 
   const compilerOptions = createCompilerOptions(ts)
-  const filePath = "/demo.ts"
+  const filePath = '/demo.ts'
   const host = await createVirtualCompilerHost(
     { ts, tsvfs, compilerOptions },
     { filePath },
@@ -40,7 +40,7 @@ async function loadTsParserImpl() {
       try {
         const result = tsParser.parseForESLint(code, {
           ...options,
-          filePath: filePath.replace(/^\//u, ""),
+          filePath: filePath.replace(/^\//u, ''),
           programs: [program],
         })
         return result

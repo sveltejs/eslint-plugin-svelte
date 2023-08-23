@@ -1,4 +1,4 @@
-import pako from "pako"
+import pako from 'pako'
 
 /**
  * Deserialize a given serialized string then update this object.
@@ -11,7 +11,7 @@ export function deserializeState(serializedString) {
     rules: undefined,
   }
 
-  if (serializedString === "") {
+  if (serializedString === '') {
     return state
   }
 
@@ -24,18 +24,18 @@ export function deserializeState(serializedString) {
     const jsonText = new TextDecoder().decode(uint8Arr)
     const json = JSON.parse(jsonText)
 
-    if (typeof json === "object" && json != null) {
-      if (typeof json.code === "string") {
+    if (typeof json === 'object' && json != null) {
+      if (typeof json.code === 'string') {
         state.code = json.code
       }
       if (json.useEslintPluginSvelte3 === true) {
         state.useEslintPluginSvelte3 = true
       }
 
-      if (typeof json.rules === "object" && json.rules != null) {
+      if (typeof json.rules === 'object' && json.rules != null) {
         state.rules = {}
         for (const id of Object.keys(json.rules)) {
-          state.rules[id] = json.rules[id] === 2 ? "error" : "off"
+          state.rules[id] = json.rules[id] === 2 ? 'error' : 'off'
         }
       }
     }

@@ -1,4 +1,4 @@
-import pako from "pako"
+import pako from 'pako'
 
 /**
  * Get only enabled rules to make the serialized data smaller.
@@ -7,7 +7,7 @@ import pako from "pako"
  */
 function getEnabledRules(allRules) {
   return Object.keys(allRules).reduce((map, id) => {
-    if (allRules[id] === "error") {
+    if (allRules[id] === 'error') {
       map[id] = 2
     }
     return map
@@ -30,7 +30,7 @@ export function serializeState(state) {
   const uint8Arr = new TextEncoder().encode(jsonString)
   const compressedString = String.fromCharCode(...pako.deflate(uint8Arr))
   const base64 =
-    (typeof window !== "undefined" && window.btoa(compressedString)) ||
+    (typeof window !== 'undefined' && window.btoa(compressedString)) ||
     compressedString
 
   // eslint-disable-next-line no-console -- Demo
