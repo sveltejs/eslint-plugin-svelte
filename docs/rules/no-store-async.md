@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-store-async"
-description: "disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features"
-since: "v2.7.0"
+title: 'svelte/no-store-async'
+description: 'disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features'
+since: 'v2.7.0'
 ---
 
 # svelte/no-store-async
@@ -22,7 +22,7 @@ Because it causes issues with the auto-unsubscribing features.
 ```js
 /* eslint svelte/no-store-async: "error" */
 
-import { writable, readable, derived } from "svelte/store"
+import { writable, readable, derived } from 'svelte/store'
 
 /* ✓ GOOD */
 const w1 = writable(false, () => {})

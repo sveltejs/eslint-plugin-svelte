@@ -1,5 +1,5 @@
 ---
-pageClass: "playground"
+pageClass: 'playground'
 hiddenMenu: true
 ---
 

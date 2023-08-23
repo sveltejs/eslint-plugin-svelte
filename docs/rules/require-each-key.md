@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-each-key"
-description: "require keyed `{#each}` block"
-since: "v2.28.0"
+title: 'svelte/require-each-key'
+description: 'require keyed `{#each}` block'
+since: 'v2.28.0'
 ---
 
 # svelte/require-each-key

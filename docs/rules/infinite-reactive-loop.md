@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/infinite-reactive-loop"
+title: 'svelte/infinite-reactive-loop'
 description: "Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent."
-since: "v2.16.0"
+since: 'v2.16.0'
 ---
 
 # svelte/infinite-reactive-loop
@@ -23,8 +23,8 @@ This rule reports those possible infinite loop.
 ```svelte
 <script>
   /* eslint svelte/infinite-reactive-loop: "error" */
-  import { count } from "./store.js"
-  import { tick } from "svelte"
+  import { count } from './store.js'
+  import { tick } from 'svelte'
   let a = 0
 
   // ✓ GOOD

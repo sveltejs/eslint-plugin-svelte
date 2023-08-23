@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/experimental-require-slot-types"
-description: "require slot type declaration using the `$$Slots` interface"
-since: "v2.18.0"
+title: 'svelte/experimental-require-slot-types'
+description: 'require slot type declaration using the `$$Slots` interface'
+since: 'v2.18.0'
 ---
 
 # svelte/experimental-require-slot-types

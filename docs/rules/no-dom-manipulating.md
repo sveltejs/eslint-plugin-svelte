@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dom-manipulating"
-description: "disallow DOM manipulating"
-since: "v2.13.0"
+title: 'svelte/no-dom-manipulating'
+description: 'disallow DOM manipulating'
+since: 'v2.13.0'
 ---
 
 # svelte/no-dom-manipulating
@@ -30,7 +30,7 @@ We don't recommend but If you intentionally manipulate the DOM, simply you can i
 
   /* ✗ BAD */
   const remove = () => foo.remove()
-  const update = () => (bar.textContent = "Update!")
+  const update = () => (bar.textContent = 'Update!')
 </script>
 
 {#if show}

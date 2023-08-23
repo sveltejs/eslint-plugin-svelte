@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/indent"
-description: "enforce consistent indentation"
-since: "v0.3.0"
+title: 'svelte/indent'
+description: 'enforce consistent indentation'
+since: 'v0.3.0'
 ---
 
 # svelte/indent

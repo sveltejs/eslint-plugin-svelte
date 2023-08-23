@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-restricted-html-elements"
-description: "disallow specific HTML elements"
-since: "v2.31.0"
+title: 'svelte/no-restricted-html-elements'
+description: 'disallow specific HTML elements'
+since: 'v2.31.0'
 ---
 
 # svelte/no-restricted-html-elements

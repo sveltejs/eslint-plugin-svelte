@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-optimized-style-attribute"
-description: "require style attributes that can be optimized"
-since: "v0.32.0"
+title: 'svelte/require-optimized-style-attribute'
+description: 'require style attributes that can be optimized'
+since: 'v0.32.0'
 ---
 
 # svelte/require-optimized-style-attribute
@@ -34,9 +34,9 @@ template:
 compiled:
 
 ```js
-div.style.setProperty("font-size", "12px") // font-size style is not updated once it is initially set.
-div.style.setProperty("color", color) // color style is updated only when color variable is updated.
-div.style.setProperty("transform", `translate(${x}px, ${y}px)`) // transform style is updated only when x, or y variables are updated.
+div.style.setProperty('font-size', '12px') // font-size style is not updated once it is initially set.
+div.style.setProperty('color', color) // color style is updated only when color variable is updated.
+div.style.setProperty('transform', `translate(${x}px, ${y}px)`) // transform style is updated only when x, or y variables are updated.
 ```
 
 However, if the optimization fails, it will be re-rendered triggered by the update of all variables described in the style attribute.
@@ -64,7 +64,7 @@ compiled:
 ```js
 // If any of variables color, x, or y are updated, all styles will be updated.
 div.setAttribute(
-  "style",
+  'style',
   `font-size: 12px; color: ${color}; ${/* transformStyle */ ctx[0]}`,
 )
 ```
@@ -78,7 +78,7 @@ Examples:
 ```svelte
 <script>
   /* eslint svelte/require-optimized-style-attribute: "error" */
-  let color = "blue"
+  let color = 'blue'
   let x = 12,
     y = 12
 </script>
@@ -87,11 +87,11 @@ Examples:
 <div
   style="font-size: 12px; color: {color}; transform: translate({x}px, {y}px);"
 />
-<div style:pointer-events={pointerEvents ? null : "none"} />
+<div style:pointer-events={pointerEvents ? null : 'none'} />
 
 <!-- ✗ BAD -->
 <div style="font-size: 12px; color: {color}; {transformStyle}" />
-<div style={pointerEvents === false ? "pointer-events:none;" : ""} />
+<div style={pointerEvents === false ? 'pointer-events:none;' : ''} />
 
 <div style="font-size: 12px; /* comment */ color: {color};" />
 <div style="font-size: 12px; {key}: red;" />

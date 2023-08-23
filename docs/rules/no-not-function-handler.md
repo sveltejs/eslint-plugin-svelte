@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-not-function-handler"
-description: "disallow use of not function in event handler"
-since: "v0.5.0"
+title: 'svelte/no-not-function-handler'
+description: 'disallow use of not function in event handler'
+since: 'v0.5.0'
 ---
 
 # svelte/no-not-function-handler

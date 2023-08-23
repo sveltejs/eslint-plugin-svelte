@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/@typescript-eslint/no-unnecessary-condition"
-description: "disallow conditionals where the type is always truthy or always falsy"
-since: "v2.9.0"
+title: 'svelte/@typescript-eslint/no-unnecessary-condition'
+description: 'disallow conditionals where the type is always truthy or always falsy'
+since: 'v2.9.0'
 ---
 
 # svelte/@typescript-eslint/no-unnecessary-condition

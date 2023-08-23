@@ -1,5 +1,5 @@
 ---
-title: "eslint-plugin-svelte"
+title: 'eslint-plugin-svelte'
 ---
 
 # Introduction

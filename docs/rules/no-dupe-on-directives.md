@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dupe-on-directives"
-description: "disallow duplicate `on:` directives"
-since: "v2.14.0"
+title: 'svelte/no-dupe-on-directives'
+description: 'disallow duplicate `on:` directives'
+since: 'v2.14.0'
 ---
 
 # svelte/no-dupe-on-directives
@@ -35,8 +35,8 @@ This rule reports reports `on:` directives with exactly the same event name and 
 <input
   on:focus|once
   on:focus
-  on:keydown={() => console.log("foo")}
-  on:keydown={() => console.log("foo")}
+  on:keydown={() => console.log('foo')}
+  on:keydown={() => console.log('foo')}
 />
 ```
 

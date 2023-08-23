@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-store-callbacks-use-set-param"
-description: "store callbacks must use `set` param"
-since: "v2.12.0"
+title: 'svelte/require-store-callbacks-use-set-param'
+description: 'store callbacks must use `set` param'
+since: 'v2.12.0'
 ---
 
 # svelte/require-store-callbacks-use-set-param
@@ -22,7 +22,7 @@ This rule doesn't check `derived` store. Therefore if you set a updated value as
 ```svelte
 <script>
   /* eslint svelte/require-store-callbacks-use-set-param: "error" */
-  import { readable, writable, derived } from "svelte/store"
+  import { readable, writable, derived } from 'svelte/store'
 
   /** ✓ GOOD  */
   readable(null, (set) => {
@@ -51,7 +51,7 @@ This rule doesn't check `derived` store. Therefore if you set a updated value as
     ($a, set) => {
       setTimeout(() => set($a), 1000)
     },
-    "one moment...",
+    'one moment...',
   )
 
   /** ✗ BAD  */

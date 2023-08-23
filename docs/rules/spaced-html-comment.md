@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/spaced-html-comment"
-description: "enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment"
-since: "v0.0.1"
+title: 'svelte/spaced-html-comment'
+description: 'enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment'
+since: 'v0.0.1'
 ---
 
 # svelte/spaced-html-comment

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/button-has-type"
-description: "disallow usage of button without an explicit type attribute"
-since: "v0.0.4"
+title: 'svelte/button-has-type'
+description: 'disallow usage of button without an explicit type attribute'
+since: 'v0.0.4'
 ---
 
 # svelte/button-has-type

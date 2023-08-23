@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/shorthand-attribute"
-description: "enforce use of shorthand syntax in attribute"
-since: "v0.5.0"
+title: 'svelte/shorthand-attribute'
+description: 'enforce use of shorthand syntax in attribute'
+since: 'v0.5.0'
 ---
 
 # svelte/shorthand-attribute

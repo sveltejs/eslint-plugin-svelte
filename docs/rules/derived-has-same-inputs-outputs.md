@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/derived-has-same-inputs-outputs"
-description: "derived store should use same variable names between values and callback"
-since: "v2.8.0"
+title: 'svelte/derived-has-same-inputs-outputs'
+description: 'derived store should use same variable names between values and callback'
+since: 'v2.8.0'
 ---
 
 # svelte/derived-has-same-inputs-outputs
@@ -22,7 +22,7 @@ This is mainly a recommended rule to avoid implementation confusion.
 ```js
 /* eslint svelte/derived-has-same-inputs-outputs: "error" */
 
-import { derived } from "svelte/store"
+import { derived } from 'svelte/store'
 
 /* ✓ GOOD */
 derived(a, ($a) => {})

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/valid-prop-names-in-kit-pages"
-description: "disallow props other than data or errors in SvelteKit page components."
-since: "v2.12.0"
+title: 'svelte/valid-prop-names-in-kit-pages'
+description: 'disallow props other than data or errors in SvelteKit page components.'
+since: 'v2.12.0'
 ---
 
 # svelte/valid-prop-names-in-kit-pages

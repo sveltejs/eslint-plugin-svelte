@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-reactive-functions"
+title: 'svelte/no-reactive-functions'
 description: "it's not necessary to define functions in reactive statements"
-since: "v2.5.0"
+since: 'v2.5.0'
 ---
 
 # svelte/no-reactive-functions

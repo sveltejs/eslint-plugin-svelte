@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/max-attributes-per-line"
-description: "enforce the maximum number of attributes per line"
-since: "v0.2.0"
+title: 'svelte/max-attributes-per-line'
+description: 'enforce the maximum number of attributes per line'
+since: 'v0.2.0'
 ---
 
 # svelte/max-attributes-per-line

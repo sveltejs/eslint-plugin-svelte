@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-reactive-reassign"
-description: "disallow reassigning reactive values"
-since: "v2.27.0"
+title: 'svelte/no-reactive-reassign'
+description: 'disallow reassigning reactive values'
+since: 'v2.27.0'
 ---
 
 # svelte/no-reactive-reassign

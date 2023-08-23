@@ -3,6 +3,7 @@
 module.exports = {
   tabWidth: 2,
   semi: false,
+  singleQuote: true,
   trailingComma: 'all',
   overrides: [
     {
@@ -10,12 +11,6 @@ module.exports = {
       excludeFiles: ['.browserslistrc', '.npmrc', '.nvmrc'],
       options: {
         parser: 'json',
-      },
-    },
-    {
-      files: ['**/*.js'],
-      options: {
-        singleQuote: true,
       },
     },
   ],

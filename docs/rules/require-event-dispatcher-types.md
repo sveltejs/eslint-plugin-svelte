@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-event-dispatcher-types"
-description: "require type parameters for `createEventDispatcher`"
-since: "v2.16.0"
+title: 'svelte/require-event-dispatcher-types'
+description: 'require type parameters for `createEventDispatcher`'
+since: 'v2.16.0'
 ---
 
 # svelte/require-event-dispatcher-types
@@ -22,7 +22,7 @@ This rule is aimed to enforce type parameters when calling `createEventDispatche
 <script lang="ts">
   /* eslint svelte/require-event-dispatcher-types: "error" */
 
-  import { createEventDispatcher } from "svelte"
+  import { createEventDispatcher } from 'svelte'
 
   /* ✓ GOOD */
   const dispatch1 = createEventDispatcher<{ one: never; two: number }>()

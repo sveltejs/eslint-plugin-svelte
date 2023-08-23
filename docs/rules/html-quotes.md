@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/html-quotes"
-description: "enforce quotes style of HTML attributes"
-since: "v0.5.0"
+title: 'svelte/html-quotes'
+description: 'enforce quotes style of HTML attributes'
+since: 'v0.5.0'
 ---
 
 # svelte/html-quotes
