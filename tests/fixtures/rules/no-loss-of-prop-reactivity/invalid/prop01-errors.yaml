@@ -1,0 +1,4 @@
+- message: Referencing props that potentially lose reactivity should be avoided.
+  line: 4
+  column: 17
+  suggestions: null

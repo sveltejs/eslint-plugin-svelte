@@ -341,6 +341,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/button-has-type](https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. |  |
+| [svelte/no-loss-of-prop-reactivity](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-loss-of-prop-reactivity/) | disallow the use of props that potentially lose reactivity |  |
 | [svelte/no-reactive-functions](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :bulb: |
 | [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-unused-class-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/) | disallow the use of a class in the template without a corresponding style |  |
