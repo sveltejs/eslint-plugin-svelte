@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/shorthand-attribute"
-description: "enforce use of shorthand syntax in attribute"
-since: "v0.5.0"
+title: 'svelte/shorthand-attribute'
+description: 'enforce use of shorthand syntax in attribute'
+since: 'v0.5.0'
 ---
 
 # svelte/shorthand-attribute
@@ -42,12 +42,12 @@ This rule enforces the use of the shorthand syntax in attribute.
 
 ```json
 {
-  "svelte/shorthand-attribute": [
-    "error",
-    {
-      "prefer": "always" // "never"
-    }
-  ]
+	"svelte/shorthand-attribute": [
+		"error",
+		{
+			"prefer": "always" // "never"
+		}
+	]
 }
 ```
 

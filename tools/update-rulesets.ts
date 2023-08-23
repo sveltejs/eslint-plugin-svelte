@@ -1,6 +1,6 @@
-import path from "path"
-import fs from "fs"
-import { rules } from "./lib/load-rules"
+import path from 'path';
+import fs from 'fs';
+import { rules } from './lib/load-rules';
 
 const baseContent = `/*
  * IMPORTANT!
@@ -22,25 +22,22 @@ export = {
 
         // eslint-plugin-svelte rules
         ${rules
-          .filter(
-            (rule) =>
-              rule.meta.docs.recommended === "base" && !rule.meta.deprecated,
-          )
-          .map((rule) => {
-            const conf = rule.meta.docs.default || "error"
-            return `"${rule.meta.docs.ruleId}": "${conf}"`
-          })
-          .join(",\n        ")},
+					.filter((rule) => rule.meta.docs.recommended === 'base' && !rule.meta.deprecated)
+					.map((rule) => {
+						const conf = rule.meta.docs.default || 'error';
+						return `"${rule.meta.docs.ruleId}": "${conf}"`;
+					})
+					.join(',\n        ')},
       },
     },
   ],
 }
-`
+`;
 
-const baseFilePath = path.resolve(__dirname, "../src/configs/base.ts")
+const baseFilePath = path.resolve(__dirname, '../src/configs/base.ts');
 
 // Update file.
-fs.writeFileSync(baseFilePath, baseContent)
+fs.writeFileSync(baseFilePath, baseContent);
 
 const recommendedContent = `/*
  * IMPORTANT!
@@ -56,23 +53,20 @@ export = {
   rules: {
     // eslint-plugin-svelte rules
     ${rules
-      .filter((rule) => rule.meta.docs.recommended && !rule.meta.deprecated)
-      .map((rule) => {
-        const conf = rule.meta.docs.default || "error"
-        return `"${rule.meta.docs.ruleId}": "${conf}"`
-      })
-      .join(",\n    ")},
+			.filter((rule) => rule.meta.docs.recommended && !rule.meta.deprecated)
+			.map((rule) => {
+				const conf = rule.meta.docs.default || 'error';
+				return `"${rule.meta.docs.ruleId}": "${conf}"`;
+			})
+			.join(',\n    ')},
   },
 }
-`
+`;
 
-const recommendedFilePath = path.resolve(
-  __dirname,
-  "../src/configs/recommended.ts",
-)
+const recommendedFilePath = path.resolve(__dirname, '../src/configs/recommended.ts');
 
 // Update file.
-fs.writeFileSync(recommendedFilePath, recommendedContent)
+fs.writeFileSync(recommendedFilePath, recommendedContent);
 
 const prettierContent = `/*
  * IMPORTANT!
@@ -88,14 +82,14 @@ export = {
   rules: {
     // eslint-plugin-svelte rules
     ${rules
-      .filter((rule) => rule.meta.docs.conflictWithPrettier)
-      .map((rule) => `"${rule.meta.docs.ruleId}": "off"`)
-      .join(",\n    ")},
+			.filter((rule) => rule.meta.docs.conflictWithPrettier)
+			.map((rule) => `"${rule.meta.docs.ruleId}": "off"`)
+			.join(',\n    ')},
   },
 }
-`
+`;
 
-const prettierFilePath = path.resolve(__dirname, "../src/configs/prettier.ts")
+const prettierFilePath = path.resolve(__dirname, '../src/configs/prettier.ts');
 
 // Update file.
-fs.writeFileSync(prettierFilePath, prettierContent)
+fs.writeFileSync(prettierFilePath, prettierContent);

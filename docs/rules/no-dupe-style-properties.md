@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dupe-style-properties"
-description: "disallow duplicate style properties"
-since: "v0.31.0"
+title: 'svelte/no-dupe-style-properties'
+description: 'disallow duplicate style properties'
+since: 'v0.31.0'
 ---
 
 # svelte/no-dupe-style-properties
@@ -22,8 +22,8 @@ This rule reports duplicate style properties.
 
 ```svelte
 <script>
-  /* eslint svelte/no-dupe-style-properties: "error" */
-  let red = "red"
+	/* eslint svelte/no-dupe-style-properties: "error" */
+	let red = 'red';
 </script>
 
 <!-- ✓ GOOD -->

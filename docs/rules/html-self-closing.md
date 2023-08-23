@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/html-self-closing"
-description: "enforce self-closing style"
-since: "v2.5.0"
+title: 'svelte/html-self-closing'
+description: 'enforce self-closing style'
+since: 'v2.5.0'
 ---
 
 # svelte/html-self-closing
@@ -54,10 +54,10 @@ presets:
 
 ```jsonc
 {
-  "svelte/html-self-closing": [
-    "error",
-    "all" // or "html" or "none"
-  ]
+	"svelte/html-self-closing": [
+		"error",
+		"all" // or "html" or "none"
+	]
 }
 ```
 
@@ -65,15 +65,15 @@ config object:
 
 ```jsonc
 {
-  "svelte/html-self-closing": [
-    "error",
-    {
-      "void": "always", // or "never" or "ignore"
-      "normal": "always", // or "never" or "ignore"
-      "component": "always", // or "never" or "ignore"
-      "svelte": "always" // or "never" or "igore"
-    }
-  ]
+	"svelte/html-self-closing": [
+		"error",
+		{
+			"void": "always", // or "never" or "ignore"
+			"normal": "always", // or "never" or "ignore"
+			"component": "always", // or "never" or "ignore"
+			"svelte": "always" // or "never" or "igore"
+		}
+	]
 }
 ```
 

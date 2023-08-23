@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/mustache-spacing"
-description: "enforce unified spacing in mustache"
-since: "v0.15.0"
+title: 'svelte/mustache-spacing'
+description: 'enforce unified spacing in mustache'
+since: 'v0.15.0'
 ---
 
 # svelte/mustache-spacing
@@ -65,18 +65,18 @@ This rule aims at enforcing unified spacing in mustaches.
 
 ```json
 {
-  "svelte/mustache-spacing": [
-    "error",
-    {
-      "textExpressions": "never", // or "always"
-      "attributesAndProps": "never", // or "always"
-      "directiveExpressions": "never", // or "always"
-      "tags": {
-        "openingBrace": "never", // or "always"
-        "closingBrace": "never" // or "always" or "always-after-expression"
-      }
-    }
-  ]
+	"svelte/mustache-spacing": [
+		"error",
+		{
+			"textExpressions": "never", // or "always"
+			"attributesAndProps": "never", // or "always"
+			"directiveExpressions": "never", // or "always"
+			"tags": {
+				"openingBrace": "never", // or "always"
+				"closingBrace": "never" // or "always" or "always-after-expression"
+			}
+		}
+	]
 }
 ```
 

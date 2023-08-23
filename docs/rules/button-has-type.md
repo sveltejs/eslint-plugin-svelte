@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/button-has-type"
-description: "disallow usage of button without an explicit type attribute"
-since: "v0.0.4"
+title: 'svelte/button-has-type'
+description: 'disallow usage of button without an explicit type attribute'
+since: 'v0.0.4'
 ---
 
 # svelte/button-has-type
@@ -20,7 +20,7 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 
 ```svelte
 <script>
-  /* eslint svelte/button-has-type: "error" */
+	/* eslint svelte/button-has-type: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -40,14 +40,14 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 
 ```json
 {
-  "svelte/button-has-type": [
-    "error",
-    {
-      "button": true,
-      "submit": true,
-      "reset": true
-    }
-  ]
+	"svelte/button-has-type": [
+		"error",
+		{
+			"button": true,
+			"submit": true,
+			"reset": true
+		}
+	]
 }
 ```
 

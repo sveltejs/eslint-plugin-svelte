@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-inner-declarations"
-description: "disallow variable or `function` declarations in nested blocks"
-since: "v0.0.8"
+title: 'svelte/no-inner-declarations'
+description: 'disallow variable or `function` declarations in nested blocks'
+since: 'v0.0.8'
 ---
 
 # svelte/no-inner-declarations
@@ -27,19 +27,19 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 ```svelte
 <script>
-  /* eslint svelte/no-inner-declarations: "error" */
+	/* eslint svelte/no-inner-declarations: "error" */
 
-  /* ✓ GOOD */
-  function doSomething() {}
+	/* ✓ GOOD */
+	function doSomething() {}
 
-  function doSomethingElse() {
-    function doAnotherThing() {}
-  }
+	function doSomethingElse() {
+		function doAnotherThing() {}
+	}
 
-  /* ✗ BAD */
-  if (test) {
-    function doSomethingBad() {}
-  }
+	/* ✗ BAD */
+	if (test) {
+		function doSomethingBad() {}
+	}
 </script>
 ```
 
@@ -49,10 +49,10 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 ```json
 {
-  "svelte/no-inner-declarations": [
-    "error",
-    "functions" // or "both"
-  ]
+	"svelte/no-inner-declarations": [
+		"error",
+		"functions" // or "both"
+	]
 }
 ```
 

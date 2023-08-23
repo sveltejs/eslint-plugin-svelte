@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/sort-attributes"
-description: "enforce order of attributes"
-since: "v2.4.0"
+title: 'svelte/sort-attributes'
+description: 'enforce order of attributes'
+since: 'v2.4.0'
 ---
 
 # svelte/sort-attributes
@@ -111,7 +111,7 @@ If there is a spread attribute between the attributes, it will not be reported a
 
 ```svelte
 <script>
-  /* eslint svelte/sort-attributes: "error" */
+	/* eslint svelte/sort-attributes: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -127,50 +127,50 @@ If there is a spread attribute between the attributes, it will not be reported a
 
 ```jsonc
 {
-  "svelte/sort-attributes": [
-    "error",
-    {
-      "order": [
-        // `this` property.
-        "this",
-        // `bind:this` directive.
-        "bind:this",
-        // `id` attribute.
-        "id",
-        // `name` attribute.
-        "name",
-        // `slot` attribute.
-        "slot",
-        // `--style-props` (Alphabetical order within the same group.)
-        { "match": "/^--/u", "sort": "alphabetical" },
-        // `style` attribute, and `style:` directives.
-        ["style", "/^style:/u"],
-        // `class` attribute.
-        "class",
-        // `class:` directives. (Alphabetical order within the same group.)
-        { "match": "/^class:/u", "sort": "alphabetical" },
-        // other attributes. (Alphabetical order within the same group.)
-        {
-          "match": ["!/:/u", "!/^(?:this|id|name|style|class)$/u", "!/^--/u"],
-          "sort": "alphabetical"
-        },
-        // `bind:` directives (other then `bind:this`), and `on:` directives.
-        ["/^bind:/u", "!bind:this", "/^on:/u"],
-        // `use:` directives. (Alphabetical order within the same group.)
-        { "match": "/^use:/u", "sort": "alphabetical" },
-        // `transition:` directive.
-        { "match": "/^transition:/u", "sort": "alphabetical" },
-        // `in:` directive.
-        { "match": "/^in:/u", "sort": "alphabetical" },
-        // `out:` directive.
-        { "match": "/^out:/u", "sort": "alphabetical" },
-        // `animate:` directive.
-        { "match": "/^animate:/u", "sort": "alphabetical" },
-        // `let:` directives. (Alphabetical order within the same group.)
-        { "match": "/^let:/u", "sort": "alphabetical" }
-      ]
-    }
-  ]
+	"svelte/sort-attributes": [
+		"error",
+		{
+			"order": [
+				// `this` property.
+				"this",
+				// `bind:this` directive.
+				"bind:this",
+				// `id` attribute.
+				"id",
+				// `name` attribute.
+				"name",
+				// `slot` attribute.
+				"slot",
+				// `--style-props` (Alphabetical order within the same group.)
+				{ "match": "/^--/u", "sort": "alphabetical" },
+				// `style` attribute, and `style:` directives.
+				["style", "/^style:/u"],
+				// `class` attribute.
+				"class",
+				// `class:` directives. (Alphabetical order within the same group.)
+				{ "match": "/^class:/u", "sort": "alphabetical" },
+				// other attributes. (Alphabetical order within the same group.)
+				{
+					"match": ["!/:/u", "!/^(?:this|id|name|style|class)$/u", "!/^--/u"],
+					"sort": "alphabetical"
+				},
+				// `bind:` directives (other then `bind:this`), and `on:` directives.
+				["/^bind:/u", "!bind:this", "/^on:/u"],
+				// `use:` directives. (Alphabetical order within the same group.)
+				{ "match": "/^use:/u", "sort": "alphabetical" },
+				// `transition:` directive.
+				{ "match": "/^transition:/u", "sort": "alphabetical" },
+				// `in:` directive.
+				{ "match": "/^in:/u", "sort": "alphabetical" },
+				// `out:` directive.
+				{ "match": "/^out:/u", "sort": "alphabetical" },
+				// `animate:` directive.
+				{ "match": "/^animate:/u", "sort": "alphabetical" },
+				// `let:` directives. (Alphabetical order within the same group.)
+				{ "match": "/^let:/u", "sort": "alphabetical" }
+			]
+		}
+	]
 }
 ```
 
@@ -204,7 +204,7 @@ You can use the following formats for names or patterns:
 
 ```svelte
 <script>
-  /* eslint svelte/sort-attributes: ["error", {
+	/* eslint svelte/sort-attributes: ["error", {
     "order": [
       "id",
       "class",
@@ -233,36 +233,36 @@ You can use the following formats for names or patterns:
 <!-- ✓ GOOD -->
 <MyComponent data-foo bind:this={comp} bind:data {abc} {def} />
 <input
-  id="foo"
-  class="my-block"
-  class:bar
-  value="abc"
-  data-value="x"
-  style="width: 30px;"
-  style:color
-  animate:name
-  transition:fn
-  in:fn
-  out:fn
-  bind:this={foo}
+	id="foo"
+	class="my-block"
+	class:bar
+	value="abc"
+	data-value="x"
+	style="width: 30px;"
+	style:color
+	animate:name
+	transition:fn
+	in:fn
+	out:fn
+	bind:this={foo}
 />
 <img id="bar" {src} alt="bar" />
 
 <!-- ✗ BAD -->
 <MyComponent bind:data bind:this={comp} {abc} {def} data-foo />
 <input
-  class:bar
-  class="my-block"
-  id="foo"
-  bind:this={foo}
-  value="abc"
-  style:color
-  style="width: 30px;"
-  data-value="x"
-  animate:name
-  in:fn
-  out:fn
-  transition:fn
+	class:bar
+	class="my-block"
+	id="foo"
+	bind:this={foo}
+	value="abc"
+	style:color
+	style="width: 30px;"
+	data-value="x"
+	animate:name
+	in:fn
+	out:fn
+	transition:fn
 />
 <img alt="bar" {src} id="bar" />
 ```

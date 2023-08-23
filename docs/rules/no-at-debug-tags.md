@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-at-debug-tags"
-description: "disallow the use of `{@debug}`"
-since: "v0.0.1"
+title: 'svelte/no-at-debug-tags'
+description: 'disallow the use of `{@debug}`'
+since: 'v0.0.1'
 ---
 
 # svelte/no-at-debug-tags
@@ -24,7 +24,7 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 
 ```svelte
 <script>
-  /* eslint svelte/no-at-debug-tags: "error" */
+	/* eslint svelte/no-at-debug-tags: "error" */
 </script>
 
 <!-- ✗ BAD -->

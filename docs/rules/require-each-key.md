@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-each-key"
-description: "require keyed `{#each}` block"
-since: "v2.28.0"
+title: 'svelte/require-each-key'
+description: 'require keyed `{#each}` block'
+since: 'v2.28.0'
 ---
 
 # svelte/require-each-key
@@ -20,17 +20,17 @@ This rule reports `{#each}` block without key
 
 ```svelte
 <script>
-  /* eslint svelte/require-each-key: "error" */
+	/* eslint svelte/require-each-key: "error" */
 </script>
 
 <!-- ✓ GOOD -->
 {#each things as thing (thing.id)}
-  <Thing name={thing.name} />
+	<Thing name={thing.name} />
 {/each}
 
 <!-- ✗ BAD -->
 {#each things as thing}
-  <Thing name={thing.name} />
+	<Thing name={thing.name} />
 {/each}
 ```
 

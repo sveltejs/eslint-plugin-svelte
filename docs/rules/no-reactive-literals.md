@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-reactive-literals"
+title: 'svelte/no-reactive-literals'
 description: "don't assign literal values in reactive statements"
-since: "v2.4.0"
+since: 'v2.4.0'
 ---
 
 # svelte/no-reactive-literals
@@ -22,12 +22,12 @@ This rule reports on any assignment of a static, unchanging value within a react
 
 ```svelte
 <script>
-  /* eslint svelte/no-reactive-literals: "error" */
-  /* ✓ GOOD */
-  let foo = "bar"
+	/* eslint svelte/no-reactive-literals: "error" */
+	/* ✓ GOOD */
+	let foo = 'bar';
 
-  /* ✗ BAD */
-  $: foo = "bar"
+	/* ✗ BAD */
+	$: foo = 'bar';
 </script>
 ```
 

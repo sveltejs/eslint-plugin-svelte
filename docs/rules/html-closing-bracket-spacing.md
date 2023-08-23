@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/html-closing-bracket-spacing"
+title: 'svelte/html-closing-bracket-spacing'
 description: "require or disallow a space before tag's closing brackets"
-since: "v2.3.0"
+since: 'v2.3.0'
 ---
 
 # svelte/html-closing-bracket-spacing
@@ -51,14 +51,14 @@ You can choose either two styles for spacing before closing bracket
 
 ```json
 {
-  "svelte/html-closing-bracket-spacing": [
-    "error",
-    {
-      "startTag": "never", // or "always" or "ignore"
-      "endTag": "never", // or "always" or "ignore"
-      "selfClosingTag": "always" // or "never" or "ignore"
-    }
-  ]
+	"svelte/html-closing-bracket-spacing": [
+		"error",
+		{
+			"startTag": "never", // or "always" or "ignore"
+			"endTag": "never", // or "always" or "ignore"
+			"selfClosingTag": "always" // or "never" or "ignore"
+		}
+	]
 }
 ```
 

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-unused-svelte-ignore"
-description: "disallow unused svelte-ignore comments"
-since: "v0.19.0"
+title: 'svelte/no-unused-svelte-ignore'
+description: 'disallow unused svelte-ignore comments'
+since: 'v0.19.0'
 ---
 
 # svelte/no-unused-svelte-ignore
@@ -22,7 +22,7 @@ This rule warns unnecessary `svelte-ignore` comments.
 
 ```svelte
 <script>
-  /* eslint svelte/no-unused-svelte-ignore: "error" */
+	/* eslint svelte/no-unused-svelte-ignore: "error" */
 </script>
 
 <!-- ✓ GOOD -->

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-object-in-text-mustaches"
-description: "disallow objects in text mustache interpolation"
-since: "v0.5.0"
+title: 'svelte/no-object-in-text-mustaches'
+description: 'disallow objects in text mustache interpolation'
+since: 'v0.5.0'
 ---
 
 # svelte/no-object-in-text-mustaches
@@ -23,7 +23,7 @@ When you use an object for text interpolation, it is drawn as `[object Object]`.
 
 ```svelte
 <script>
-  /* eslint svelte/no-object-in-text-mustaches: "error" */
+	/* eslint svelte/no-object-in-text-mustaches: "error" */
 </script>
 
 <!-- ✓ GOOD -->

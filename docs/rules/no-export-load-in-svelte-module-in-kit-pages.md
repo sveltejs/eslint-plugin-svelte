@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-export-load-in-svelte-module-in-kit-pages"
-description: "disallow exporting load functions in `*.svelte` module in SvelteKit page components."
-since: "v2.12.0"
+title: 'svelte/no-export-load-in-svelte-module-in-kit-pages'
+description: 'disallow exporting load functions in `*.svelte` module in SvelteKit page components.'
+since: 'v2.12.0'
 ---
 
 # svelte/no-export-load-in-svelte-module-in-kit-pages
@@ -36,13 +36,13 @@ And the API has changed.
 
 ```svelte
 <script context="module">
-  /* eslint svelte/no-export-load-in-svelte-module-in-kit-pages: "error" */
-  /* ✓ GOOD  */
-  export function foo() {}
-  export function bar() {}
-  /* ✗ BAD  */
-  export function load() {}
-  // export const load = () => {}
+	/* eslint svelte/no-export-load-in-svelte-module-in-kit-pages: "error" */
+	/* ✓ GOOD  */
+	export function foo() {}
+	export function bar() {}
+	/* ✗ BAD  */
+	export function load() {}
+	// export const load = () => {}
 </script>
 ```
 

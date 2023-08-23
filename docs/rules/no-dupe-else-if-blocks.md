@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dupe-else-if-blocks"
-description: "disallow duplicate conditions in `{#if}` / `{:else if}` chains"
-since: "v0.0.1"
+title: 'svelte/no-dupe-else-if-blocks'
+description: 'disallow duplicate conditions in `{#if}` / `{:else if}` chains'
+since: 'v0.0.1'
 ---
 
 # svelte/no-dupe-else-if-blocks
@@ -22,36 +22,36 @@ This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chai
 
 ```svelte
 <script>
-  /* eslint svelte/no-dupe-else-if-blocks: "error" */
+	/* eslint svelte/no-dupe-else-if-blocks: "error" */
 </script>
 
 <!-- ✓ GOOD -->
 {#if a}
-  <div>foo</div>
+	<div>foo</div>
 {:else if b}
-  <div>bar</div>
+	<div>bar</div>
 {:else if c}
-  <div>baz</div>
+	<div>baz</div>
 {/if}
 
 <!-- ✗ BAD -->
 {#if a}
-  <div>foo</div>
+	<div>foo</div>
 {:else if b}
-  <div>bar</div>
+	<div>bar</div>
 {:else if b}
-  <div>baz</div>
+	<div>baz</div>
 {/if}
 
 {#if a}
-  <div>foo</div>
+	<div>foo</div>
 {:else if b}
-  <div>bar</div>
+	<div>bar</div>
 {:else}
-  baz
-  {#if b}
-    <div>qux</div>
-  {/if}
+	baz
+	{#if b}
+		<div>qux</div>
+	{/if}
 {/if}
 ```
 
@@ -65,48 +65,48 @@ This rule can also detect some cases where the conditions are not identical, but
 
 ```svelte
 <script>
-  /* eslint svelte/no-dupe-else-if-blocks: "error" */
+	/* eslint svelte/no-dupe-else-if-blocks: "error" */
 </script>
 
 <!-- ✗ BAD -->
 {#if a || b}
-  1
+	1
 {:else if a}
-  2
+	2
 {/if}
 
 {#if a}
-  1
+	1
 {:else if b}
-  2
+	2
 {:else if a || b}
-  3
+	3
 {/if}
 
 {#if a}
-  1
+	1
 {:else if a && b}
-  2
+	2
 {/if}
 
 {#if a && b}
-  1
+	1
 {:else if a && b && c}
-  2
+	2
 {/if}
 
 {#if a || b}
-  1
+	1
 {:else if b && c}
-  2
+	2
 {/if}
 
 {#if a}
-  1
+	1
 {:else if b && c}
-  2
+	2
 {:else if d && ((c && e && b) || a)}
-  3
+	3
 {/if}
 ```
 

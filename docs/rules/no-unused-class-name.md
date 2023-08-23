@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-unused-class-name"
-description: "disallow the use of a class in the template without a corresponding style"
-since: "v2.31.0"
+title: 'svelte/no-unused-class-name'
+description: 'disallow the use of a class in the template without a corresponding style'
+since: 'v2.31.0'
 ---
 
 # svelte/no-unused-class-name
@@ -54,12 +54,12 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 
 ```json
 {
-  "svelte/no-unused-class-name": [
-    "error",
-    {
-      "allowedClassNames": ["class-name-one", "class-name-two"]
-    }
-  ]
+	"svelte/no-unused-class-name": [
+		"error",
+		{
+			"allowedClassNames": ["class-name-one", "class-name-two"]
+		}
+	]
 }
 ```
 

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/spaced-html-comment"
-description: "enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment"
-since: "v0.0.1"
+title: 'svelte/spaced-html-comment'
+description: 'enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment'
+since: 'v0.0.1'
 ---
 
 # svelte/spaced-html-comment
@@ -22,7 +22,7 @@ This rule will enforce consistency of spacing after the start of a comment `<!--
 
 ```svelte
 <script>
-  /* eslint svelte/spaced-html-comment: "error" */
+	/* eslint svelte/spaced-html-comment: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -40,10 +40,10 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 ```json
 {
-  "svelte/spaced-html-comment": [
-    "error",
-    "always" // or "never"
-  ]
+	"svelte/spaced-html-comment": [
+		"error",
+		"always" // or "never"
+	]
 }
 ```
 

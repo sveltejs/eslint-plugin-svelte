@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-extra-reactive-curlies"
-description: "disallow wrapping single reactive statements in curly braces"
-since: "v2.4.0"
+title: 'svelte/no-extra-reactive-curlies'
+description: 'disallow wrapping single reactive statements in curly braces'
+since: 'v2.4.0'
 ---
 
 # svelte/no-extra-reactive-curlies
@@ -22,15 +22,15 @@ This rule reports if curly brackets (`{` and `}`) are used unnecessarily around 
 
 ```svelte
 <script>
-  /* eslint svelte/no-extra-reactive-curlies: "error" */
+	/* eslint svelte/no-extra-reactive-curlies: "error" */
 
-  /* ✓ GOOD */
-  $: foo = "red"
+	/* ✓ GOOD */
+	$: foo = 'red';
 
-  /* ✗ BAD */
-  $: {
-    foo = "red"
-  }
+	/* ✗ BAD */
+	$: {
+		foo = 'red';
+	}
 </script>
 ```
 

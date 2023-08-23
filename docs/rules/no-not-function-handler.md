@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-not-function-handler"
-description: "disallow use of not function in event handler"
-since: "v0.5.0"
+title: 'svelte/no-not-function-handler'
+description: 'disallow use of not function in event handler'
+since: 'v0.5.0'
 ---
 
 # svelte/no-not-function-handler
@@ -23,19 +23,19 @@ If you use a non-function value for the event handler, it event handler will not
 
 ```svelte
 <script>
-  /* eslint svelte/no-not-function-handler: "error" */
-  function foo() {
-    /*  */
-  }
-  const bar = 42
+	/* eslint svelte/no-not-function-handler: "error" */
+	function foo() {
+		/*  */
+	}
+	const bar = 42;
 </script>
 
 <!-- ✓ GOOD -->
 <button on:click={foo} />
 <button
-  on:click={() => {
-    /*  */
-  }}
+	on:click={() => {
+		/*  */
+	}}
 />
 
 <!-- ✗ BAD -->

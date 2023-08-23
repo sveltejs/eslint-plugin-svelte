@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/valid-each-key"
-description: "enforce keys to use variables defined in the `{#each}` block"
-since: "v2.28.0"
+title: 'svelte/valid-each-key'
+description: 'enforce keys to use variables defined in the `{#each}` block'
+since: 'v2.28.0'
 ---
 
 # svelte/valid-each-key
@@ -20,26 +20,26 @@ This rule reports that `{#each}` block keys does not use the variables which are
 
 ```svelte
 <script>
-  /* eslint svelte/valid-each-key: "error" */
+	/* eslint svelte/valid-each-key: "error" */
 
-  let things = [
-    { id: 1, name: "apple" },
-    { id: 2, name: "banana" },
-    { id: 3, name: "carrot" },
-    { id: 4, name: "doughnut" },
-    { id: 5, name: "egg" },
-  ]
-  let foo = 42
+	let things = [
+		{ id: 1, name: 'apple' },
+		{ id: 2, name: 'banana' },
+		{ id: 3, name: 'carrot' },
+		{ id: 4, name: 'doughnut' },
+		{ id: 5, name: 'egg' }
+	];
+	let foo = 42;
 </script>
 
 <!-- ✓ GOOD -->
 {#each things as thing (thing.id)}
-  <Thing name={thing.name} />
+	<Thing name={thing.name} />
 {/each}
 
 <!-- ✗ BAD -->
 {#each things as thing (foo)}
-  <Thing name={thing.name} />
+	<Thing name={thing.name} />
 {/each}
 ```
 

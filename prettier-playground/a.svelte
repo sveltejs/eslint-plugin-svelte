@@ -1,15 +1,15 @@
 <svelte:options immutable={true} />
 
 <script>
-  let a = 1
-  let b = 2
-  let c = 2
-  function handleClick() {
-    alert("clicked")
-  }
-  let value = "abc"
-  let current = ""
-  let big = true
+	let a = 1;
+	let b = 2;
+	let c = 2;
+	function handleClick() {
+		alert('clicked');
+	}
+	let value = 'abc';
+	let current = '';
+	let big = true;
 </script>
 
 <input type="number" bind:value={a} />
@@ -27,12 +27,9 @@
 <button on:click|once|capture={handleClick}>Click me</button>
 <button on:click|capture|once={handleClick}>Click me</button>
 
-<button
-  class={current === "foo" ? "selected" : ""}
-  on:click={() => (current = "foo")}
->
-  foo
+<button class={current === 'foo' ? 'selected' : ''} on:click={() => (current = 'foo')}>
+	foo
 </button>
 <div class:big>
-  <!-- ... -->
+	<!-- ... -->
 </div>

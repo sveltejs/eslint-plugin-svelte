@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/comment-directive"
-description: "support comment-directives in HTML template"
-since: "v0.0.13"
+title: 'svelte/comment-directive'
+description: 'support comment-directives in HTML template'
+since: 'v0.0.13'
 ---
 
 # svelte/comment-directive
@@ -36,7 +36,7 @@ This rule sends all `eslint-disable`-like comments to the post-process of the `.
 
 ```svelte
 <script>
-  /* eslint svelte/comment-directive: "error", no-undef: "error" */
+	/* eslint svelte/comment-directive: "error", no-undef: "error" */
 </script>
 
 <!-- eslint-disable-next-line no-undef -->
@@ -53,7 +53,7 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ```svelte
 <script>
-  /* eslint svelte/comment-directive: "error", no-undef: "error" */
+	/* eslint svelte/comment-directive: "error", no-undef: "error" */
 </script>
 
 <!-- eslint-disable-next-line no-undef -- Here's a description about why this disabling is necessary. -->
@@ -66,12 +66,12 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ```json
 {
-  "svelte/comment-directive": [
-    "error",
-    {
-      "reportUnusedDisableDirectives": false
-    }
-  ]
+	"svelte/comment-directive": [
+		"error",
+		{
+			"reportUnusedDisableDirectives": false
+		}
+	]
 }
 ```
 
@@ -85,8 +85,8 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ```svelte
 <script>
-  /* eslint svelte/comment-directive: ["error", { "reportUnusedDisableDirectives": true }], no-undef: "error" */
-  import DefinedComponent from "./DefinedComponent.svelte"
+	/* eslint svelte/comment-directive: ["error", { "reportUnusedDisableDirectives": true }], no-undef: "error" */
+	import DefinedComponent from './DefinedComponent.svelte';
 </script>
 
 <!-- ✓ GOOD -->

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dynamic-slot-name"
-description: "disallow dynamic slot name"
-since: "v0.14.0"
+title: 'svelte/no-dynamic-slot-name'
+description: 'disallow dynamic slot name'
+since: 'v0.14.0'
 ---
 
 # svelte/no-dynamic-slot-name
@@ -26,8 +26,8 @@ The auto-fix of this rule can be replaced with a static `<slot>` name if the exp
 
 ```svelte
 <script>
-  /* eslint svelte/no-dynamic-slot-name: "error" */
-  const SLOT_NAME = "bad"
+	/* eslint svelte/no-dynamic-slot-name: "error" */
+	const SLOT_NAME = 'bad';
 </script>
 
 <!-- ✓ GOOD -->

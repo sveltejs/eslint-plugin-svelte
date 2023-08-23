@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dupe-on-directives"
-description: "disallow duplicate `on:` directives"
-since: "v2.14.0"
+title: 'svelte/no-dupe-on-directives'
+description: 'disallow duplicate `on:` directives'
+since: 'v2.14.0'
 ---
 
 # svelte/no-dupe-on-directives
@@ -21,7 +21,7 @@ This rule reports reports `on:` directives with exactly the same event name and 
 
 ```svelte
 <script>
-  /* eslint svelte/no-dupe-on-directives: "error" */
+	/* eslint svelte/no-dupe-on-directives: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -33,10 +33,10 @@ This rule reports reports `on:` directives with exactly the same event name and 
 <button on:click={myHandler} on:click={myHandler} />
 
 <input
-  on:focus|once
-  on:focus
-  on:keydown={() => console.log("foo")}
-  on:keydown={() => console.log("foo")}
+	on:focus|once
+	on:focus
+	on:keydown={() => console.log('foo')}
+	on:keydown={() => console.log('foo')}
 />
 ```
 

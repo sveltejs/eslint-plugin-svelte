@@ -1,6 +1,6 @@
-import type { AST } from "svelte-eslint-parser"
+import type { AST } from 'svelte-eslint-parser';
 export type TransformResult = {
-  inputRange: AST.Range
-  output: string
-  mappings: string
-}
+	inputRange: AST.Range;
+	output: string;
+	mappings: string;
+};

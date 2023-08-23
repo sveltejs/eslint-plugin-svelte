@@ -1,16 +1,16 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    {
-      "repo": "sveltejs/eslint-plugin-svelte"
-    }
-  ],
-  "commit": false,
-  "linked": [],
-  "access": "restricted",
-  "baseBranch": "main",
-  "updateInternalDependencies": "patch",
-  "bumpVersionsWithWorkspaceProtocolOnly": true,
-  "ignore": []
+	"$schema": "https://unpkg.com/@changesets/config/schema.json",
+	"changelog": [
+		"@changesets/changelog-github",
+		{
+			"repo": "sveltejs/eslint-plugin-svelte"
+		}
+	],
+	"commit": false,
+	"linked": [],
+	"access": "restricted",
+	"baseBranch": "main",
+	"updateInternalDependencies": "patch",
+	"bumpVersionsWithWorkspaceProtocolOnly": true,
+	"ignore": []
 }

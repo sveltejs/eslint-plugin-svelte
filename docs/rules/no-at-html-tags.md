@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-at-html-tags"
-description: "disallow use of `{@html}` to prevent XSS attack"
-since: "v0.0.1"
+title: 'svelte/no-at-html-tags'
+description: 'disallow use of `{@html}` to prevent XSS attack'
+since: 'v0.0.1'
 ---
 
 # svelte/no-at-html-tags
@@ -22,7 +22,7 @@ This rule reports all uses of `{@html}` in order to reduce the risk of injecting
 
 ```svelte
 <script>
-  /* eslint svelte/no-at-html-tags: "error" */
+	/* eslint svelte/no-at-html-tags: "error" */
 </script>
 
 <!-- ✓ GOOD -->

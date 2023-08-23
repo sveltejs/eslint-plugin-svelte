@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/first-attribute-linebreak"
-description: "enforce the location of first attribute"
-since: "v0.6.0"
+title: 'svelte/first-attribute-linebreak'
+description: 'enforce the location of first attribute'
+since: 'v0.6.0'
 ---
 
 # svelte/first-attribute-linebreak
@@ -51,13 +51,13 @@ This rule aims to enforce a consistent location for the first attribute.
 
 ```json
 {
-  "svelte/first-attribute-linebreak": [
-    "error",
-    {
-      "multiline": "below", // or "beside"
-      "singleline": "beside" // "below"
-    }
-  ]
+	"svelte/first-attribute-linebreak": [
+		"error",
+		{
+			"multiline": "below", // or "beside"
+			"singleline": "beside" // "below"
+		}
+	]
 }
 ```
 

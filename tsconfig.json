@@ -1,36 +1,36 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "moduleResolution": "Node16",
-    "lib": ["es2020", "dom"],
-    "allowJs": true,
-    "checkJs": true,
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": true,
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "commonjs",
+		"moduleResolution": "Node16",
+		"lib": ["es2020", "dom"],
+		"allowJs": true,
+		"checkJs": true,
+		"declaration": true,
+		"strict": true,
+		"noImplicitAny": true,
 
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "outDir": "lib",
-    "paths": {
-      "*": ["typings/*"]
-    },
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
-  "include": [
-    "src/**/*",
-    "tests/src/**/*",
-    "tests/utils/**/*",
-    "tools/**/*",
-    "vite.config.mts",
-    "docs-svelte-kit/**/*.mts"
-    // "typings/**/*"
-  ],
-  "exclude": ["lib/**/*", "tests/fixtures/**/*"]
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"baseUrl": ".",
+		"esModuleInterop": true,
+		"outDir": "lib",
+		"paths": {
+			"*": ["typings/*"]
+		},
+		"skipLibCheck": true,
+		"resolveJsonModule": true
+	},
+	"include": [
+		"src/**/*",
+		"tests/src/**/*",
+		"tests/utils/**/*",
+		"tools/**/*",
+		"vite.config.mts",
+		"docs-svelte-kit/**/*.mts"
+		// "typings/**/*"
+	],
+	"exclude": ["lib/**/*", "tests/fixtures/**/*"]
 }

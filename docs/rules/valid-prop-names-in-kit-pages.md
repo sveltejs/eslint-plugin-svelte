@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/valid-prop-names-in-kit-pages"
-description: "disallow props other than data or errors in SvelteKit page components."
-since: "v2.12.0"
+title: 'svelte/valid-prop-names-in-kit-pages'
+description: 'disallow props other than data or errors in SvelteKit page components.'
+since: 'v2.12.0'
 ---
 
 # svelte/valid-prop-names-in-kit-pages
@@ -32,19 +32,19 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
 
 ```svelte
 <script>
-  /* eslint svelte/valid-prop-names-in-kit-pages: "error" */
-  /** ✓ GOOD */
-  export let data
-  export let errors
-  export let form
-  export let snapshot
-  // export let { data, errors } = { data: {}, errors: {} }
+	/* eslint svelte/valid-prop-names-in-kit-pages: "error" */
+	/** ✓ GOOD */
+	export let data;
+	export let errors;
+	export let form;
+	export let snapshot;
+	// export let { data, errors } = { data: {}, errors: {} }
 
-  /** ✗ BAD */
-  export let foo
-  export let bar
-  export let { baz, qux } = data
-  export let { data: data2, errors: errors2 } = { data: {}, errors: {} }
+	/** ✗ BAD */
+	export let foo;
+	export let bar;
+	export let { baz, qux } = data;
+	export let { data: data2, errors: errors2 } = { data: {}, errors: {} };
 </script>
 
 {foo}, {bar}

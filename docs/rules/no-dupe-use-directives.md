@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dupe-use-directives"
-description: "disallow duplicate `use:` directives"
-since: "v2.14.0"
+title: 'svelte/no-dupe-use-directives'
+description: 'disallow duplicate `use:` directives'
+since: 'v2.14.0'
 ---
 
 # svelte/no-dupe-use-directives
@@ -21,7 +21,7 @@ This rule reports reports `use:` directives with exactly the same action and exp
 
 ```svelte
 <script>
-  /* eslint svelte/no-dupe-use-directives: "error" */
+	/* eslint svelte/no-dupe-use-directives: "error" */
 </script>
 
 <!-- ✓ GOOD -->

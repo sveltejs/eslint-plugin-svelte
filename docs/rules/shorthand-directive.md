@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/shorthand-directive"
-description: "enforce use of shorthand syntax in directives"
-since: "v0.24.0"
+title: 'svelte/shorthand-directive'
+description: 'enforce use of shorthand syntax in directives'
+since: 'v0.24.0'
 ---
 
 # svelte/shorthand-directive
@@ -49,12 +49,12 @@ This rule enforces the use of the shorthand syntax in directives.
 
 ```json
 {
-  "svelte/shorthand-directive": [
-    "error",
-    {
-      "prefer": "always" // "never"
-    }
-  ]
+	"svelte/shorthand-directive": [
+		"error",
+		{
+			"prefer": "always" // "never"
+		}
+	]
 }
 ```
 

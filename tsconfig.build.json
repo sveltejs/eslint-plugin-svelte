@@ -1,13 +1,13 @@
 {
-  "extends": "./tsconfig.json",
-  "exclude": [
-    "tests/**/*",
-    "tools/**/*",
-    "typings/**/*",
-    "vite.config.mts",
-    "docs-svelte-kit/**/*.mts"
-  ],
-  "compilerOptions": {
-    "removeComments": true /* Do not emit comments to output. */
-  }
+	"extends": "./tsconfig.json",
+	"exclude": [
+		"tests/**/*",
+		"tools/**/*",
+		"typings/**/*",
+		"vite.config.mts",
+		"docs-svelte-kit/**/*.mts"
+	],
+	"compilerOptions": {
+		"removeComments": true /* Do not emit comments to output. */
+	}
 }

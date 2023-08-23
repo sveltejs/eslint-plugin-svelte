@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-target-blank"
+title: 'svelte/no-target-blank'
 description: 'disallow `target="_blank"` attribute without `rel="noopener noreferrer"`'
-since: "v0.0.4"
+since: 'v0.0.4'
 ---
 
 # svelte/no-target-blank
@@ -20,7 +20,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint svelte/no-target-blank: "error" */
+	/* eslint svelte/no-target-blank: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -36,13 +36,13 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```json
 {
-  "svelte/no-target-blank": [
-    "error",
-    {
-      "allowReferrer": true,
-      "enforceDynamicLinks": "always"
-    }
-  ]
+	"svelte/no-target-blank": [
+		"error",
+		{
+			"allowReferrer": true,
+			"enforceDynamicLinks": "always"
+		}
+	]
 }
 ```
 
@@ -57,7 +57,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint svelte/no-target-blank: ['error', { allowReferrer: false }] */
+	/* eslint svelte/no-target-blank: ['error', { allowReferrer: false }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -77,7 +77,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint svelte/no-target-blank: ['error', { allowReferrer: true }] */
+	/* eslint svelte/no-target-blank: ['error', { allowReferrer: true }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -97,7 +97,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'always' }] */
+	/* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'always' }] */
 </script>
 
 <!-- ✓ GOOD -->
@@ -117,7 +117,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 ```svelte
 <script>
-  /* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'never' }] */
+	/* eslint svelte/no-target-blank: ['error', { enforceDynamicLinks: 'never' }] */
 </script>
 
 <!-- ✓ GOOD -->

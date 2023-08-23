@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-dom-manipulating"
-description: "disallow DOM manipulating"
-since: "v2.13.0"
+title: 'svelte/no-dom-manipulating'
+description: 'disallow DOM manipulating'
+since: 'v2.13.0'
 ---
 
 # svelte/no-dom-manipulating
@@ -22,24 +22,24 @@ We don't recommend but If you intentionally manipulate the DOM, simply you can i
 
 ```svelte
 <script>
-  /* eslint svelte/no-dom-manipulating: "error" */
-  let foo, bar, show
+	/* eslint svelte/no-dom-manipulating: "error" */
+	let foo, bar, show;
 
-  /* ✓ GOOD */
-  const toggle = () => (show = !show)
+	/* ✓ GOOD */
+	const toggle = () => (show = !show);
 
-  /* ✗ BAD */
-  const remove = () => foo.remove()
-  const update = () => (bar.textContent = "Update!")
+	/* ✗ BAD */
+	const remove = () => foo.remove();
+	const update = () => (bar.textContent = 'Update!');
 </script>
 
 {#if show}
-  <div bind:this={foo}>Foo</div>
+	<div bind:this={foo}>Foo</div>
 {/if}
 <div bind:this={bar}>
-  {#if show}
-    Bar
-  {/if}
+	{#if show}
+		Bar
+	{/if}
 </div>
 
 <button on:click={() => toggle()}>Click Me (Good)</button>
@@ -57,40 +57,36 @@ This rule only tracks and checks variables given with `bind:this={}`. In other w
 
 ```svelte
 <script>
-  /* eslint svelte/no-dom-manipulating: "error" */
-  let visible = false
+	/* eslint svelte/no-dom-manipulating: "error" */
+	let visible = false;
 
-  function typewriter(node, { speed = 1 }) {
-    const valid =
-      node.childNodes.length === 1 &&
-      node.childNodes[0].nodeType === Node.TEXT_NODE
+	function typewriter(node, { speed = 1 }) {
+		const valid = node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE;
 
-    if (!valid) {
-      throw new Error(
-        `This transition only works on elements with a single text node child`,
-      )
-    }
+		if (!valid) {
+			throw new Error(`This transition only works on elements with a single text node child`);
+		}
 
-    const text = node.textContent
-    const duration = text.length / (speed * 0.01)
+		const text = node.textContent;
+		const duration = text.length / (speed * 0.01);
 
-    return {
-      duration,
-      tick: (t) => {
-        const i = Math.trunc(text.length * t)
-        node.textContent = text.slice(0, i) // It does not report.
-      },
-    }
-  }
+		return {
+			duration,
+			tick: (t) => {
+				const i = Math.trunc(text.length * t);
+				node.textContent = text.slice(0, i); // It does not report.
+			}
+		};
+	}
 </script>
 
 <label>
-  <input type="checkbox" bind:checked={visible} />
-  visible
+	<input type="checkbox" bind:checked={visible} />
+	visible
 </label>
 
 {#if visible}
-  <p transition:typewriter>The quick brown fox jumps over the lazy dog</p>
+	<p transition:typewriter>The quick brown fox jumps over the lazy dog</p>
 {/if}
 ```
 

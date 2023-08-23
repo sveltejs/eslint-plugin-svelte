@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/indent"
-description: "enforce consistent indentation"
-since: "v0.3.0"
+title: 'svelte/indent'
+description: 'enforce consistent indentation'
+since: 'v0.3.0'
 ---
 
 # svelte/indent
@@ -59,15 +59,15 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 
 ```json
 {
-  "overrides": [
-    {
-      "files": ["*.svelte"],
-      "rules": {
-        "svelte/indent": "error",
-        "indent": "off"
-      }
-    }
-  ]
+	"overrides": [
+		{
+			"files": ["*.svelte"],
+			"rules": {
+				"svelte/indent": "error",
+				"indent": "off"
+			}
+		}
+	]
 }
 ```
 
@@ -75,15 +75,15 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 
 ```json
 {
-  "svelte/indent": [
-    "error",
-    {
-      "indent": 2,
-      "ignoredNodes": [],
-      "switchCase": 1,
-      "alignAttributesVertically": false
-    }
-  ]
+	"svelte/indent": [
+		"error",
+		{
+			"indent": 2,
+			"ignoredNodes": [],
+			"switchCase": 1,
+			"alignAttributesVertically": false
+		}
+	]
 }
 ```
 

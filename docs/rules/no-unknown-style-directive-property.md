@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-unknown-style-directive-property"
-description: "disallow unknown `style:property`"
-since: "v0.31.0"
+title: 'svelte/no-unknown-style-directive-property'
+description: 'disallow unknown `style:property`'
+since: 'v0.31.0'
 ---
 
 # svelte/no-unknown-style-directive-property
@@ -26,9 +26,9 @@ Note that this rule only checks the `style:property` directive. If you want to c
 
 ```svelte
 <script>
-  /* eslint svelte/no-unknown-style-directive-property: "error" */
-  let red = "red"
-  let color = red
+	/* eslint svelte/no-unknown-style-directive-property: "error" */
+	let red = 'red';
+	let color = red;
 </script>
 
 <!-- ✓ GOOD -->
@@ -46,13 +46,13 @@ Note that this rule only checks the `style:property` directive. If you want to c
 
 ```json
 {
-  "svelte/no-unknown-style-directive-property": [
-    "error",
-    {
-      "ignoreProperties": [],
-      "ignorePrefixed": true
-    }
-  ]
+	"svelte/no-unknown-style-directive-property": [
+		"error",
+		{
+			"ignoreProperties": [],
+			"ignorePrefixed": true
+		}
+	]
 }
 ```
 

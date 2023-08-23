@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/block-lang"
-description: "disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks."
-since: "v2.18.0"
+title: 'svelte/block-lang'
+description: 'disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks.'
+since: 'v2.18.0'
 ---
 
 # svelte/block-lang
@@ -21,7 +21,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✓ GOOD -->
 <script lang="ts">
-  /* eslint svelte/block-lang: ["error", { "script": "ts" }] */
+	/* eslint svelte/block-lang: ["error", { "script": "ts" }] */
 </script>
 ```
 
@@ -34,7 +34,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✓ GOOD -->
 <script>
-  /* eslint svelte/block-lang: ["error", { "script": ["ts", null], "style": "scss" }] */
+	/* eslint svelte/block-lang: ["error", { "script": ["ts", null], "style": "scss" }] */
 </script>
 
 <style lang="scss">
@@ -50,7 +50,7 @@ This rule enforces all svelte components to use the same set of languages for th
 ```svelte
 <!-- ✗ BAD -->
 <script>
-  /* eslint svelte/block-lang: ["error", { "script": ["ts"] }] */
+	/* eslint svelte/block-lang: ["error", { "script": ["ts"] }] */
 </script>
 ```
 
@@ -60,15 +60,15 @@ This rule enforces all svelte components to use the same set of languages for th
 
 ```json
 {
-  "svelte/block-lang": [
-    "error",
-    {
-      "enforceScriptPresent": true,
-      "enforceStylePresent": false,
-      "script": ["ts", null], // a list of languages or null to signify no language specified
-      "style": "scss" // same as for script, a single value can be used instead of an array.
-    }
-  ]
+	"svelte/block-lang": [
+		"error",
+		{
+			"enforceScriptPresent": true,
+			"enforceStylePresent": false,
+			"script": ["ts", null], // a list of languages or null to signify no language specified
+			"style": "scss" // same as for script, a single value can be used instead of an array.
+		}
+	]
 }
 ```
 
