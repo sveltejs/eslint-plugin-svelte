@@ -1,20 +1,20 @@
-import { derived } from "svelte/store"
+import { derived } from 'svelte/store';
 
 derived(a, (b) => {
-  /** do nothing */
-})
+	/** do nothing */
+});
 derived(c, (d, set) => {
-  /** do nothing */
-})
+	/** do nothing */
+});
 derived([e, f], ([g, h]) => {
-  /** do nothing */
-})
+	/** do nothing */
+});
 derived([i, j], ([k, l], set) => {
-  /** do nothing */
-})
+	/** do nothing */
+});
 derived([null, l], ([$m, $n]) => {
-  /** do nothing */
-})
+	/** do nothing */
+});
 derived([o, null], ([$p, $q]) => {
-  /** do nothing */
-})
+	/** do nothing */
+});

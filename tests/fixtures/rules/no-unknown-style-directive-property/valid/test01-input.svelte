@@ -1,6 +1,6 @@
 <script>
-  let red = "red"
-  let color = red
+	let red = 'red';
+	let color = red;
 </script>
 
 <div style:color={red}>...</div>
@@ -9,10 +9,10 @@
 <div style:--color={red}>...</div>
 
 <style>
-  :root {
-    --color: blue;
-  }
-  div {
-    color: var(--color);
-  }
+	:root {
+		--color: blue;
+	}
+	div {
+		color: var(--color);
+	}
 </style>

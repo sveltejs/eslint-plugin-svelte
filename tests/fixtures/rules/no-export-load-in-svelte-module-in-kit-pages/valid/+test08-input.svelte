@@ -1,4 +1,4 @@
 <script context="module">
-  function load() {}
-  export const foo = load
+	function load() {}
+	export const foo = load;
 </script>

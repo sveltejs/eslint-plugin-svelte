@@ -1,3 +1,3 @@
 {
-  "options": [{ "script": ["javascript"], "style": ["javascript", null] }]
+	"options": [{ "script": ["javascript"], "style": ["javascript", null] }]
 }

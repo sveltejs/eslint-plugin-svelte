@@ -1,12 +1,12 @@
 <script>
-  export let tag = "div"
-  let foo
-  let bar
+	export let tag = 'div';
+	let foo;
+	let bar;
 
-  const remove = () => {
-    foo.remove()
-    bar.remove()
-  }
+	const remove = () => {
+		foo.remove();
+		bar.remove();
+	};
 </script>
 
 <p bind:this={foo}>div</p>

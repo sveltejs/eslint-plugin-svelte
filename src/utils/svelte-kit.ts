@@ -2,12 +2,12 @@
  * refer: https://github.com/mysticatea/eslint-plugin-node/blob/f45c6149be7235c0f7422d1179c25726afeecd83/lib/util/get-package-json.js
  */
 
-import type { RuleContext } from "../types"
-import fs from "fs"
-import path from "path"
-import { getPackageJson } from "./get-package-json"
+import type { RuleContext } from '../types';
+import fs from 'fs';
+import path from 'path';
+import { getPackageJson } from './get-package-json';
 
-const isRunOnBrowser = !fs.readFileSync
+const isRunOnBrowser = !fs.readFileSync;
 
 /**
  * return true if it's a SvelteKit page component.
@@ -15,20 +15,18 @@ const isRunOnBrowser = !fs.readFileSync
  * @returns
  */
 export function isKitPageComponent(context: RuleContext): boolean {
-  // Hack: if it runs on browser, it regards as SvelteKit project.
-  if (isRunOnBrowser) return true
-  if (!hasSvelteKit(context.getFilename())) return false
-  const routes =
-    context.settings?.svelte?.kit?.files?.routes?.replace(/^\//, "") ??
-    "src/routes"
-  const filePath = context.getFilename()
-  const projectRootDir = getProjectRootDir(context.getFilename()) ?? ""
-  const fileName = path.basename(filePath)
-  return (
-    filePath.startsWith(path.join(projectRootDir, routes)) &&
-    // MEMO: check only `+` and file extension for maintainability
-    Boolean(/^\+.+\.svelte$/.test(fileName))
-  )
+	// Hack: if it runs on browser, it regards as SvelteKit project.
+	if (isRunOnBrowser) return true;
+	if (!hasSvelteKit(context.getFilename())) return false;
+	const routes = context.settings?.svelte?.kit?.files?.routes?.replace(/^\//, '') ?? 'src/routes';
+	const filePath = context.getFilename();
+	const projectRootDir = getProjectRootDir(context.getFilename()) ?? '';
+	const fileName = path.basename(filePath);
+	return (
+		filePath.startsWith(path.join(projectRootDir, routes)) &&
+		// MEMO: check only `+` and file extension for maintainability
+		Boolean(/^\+.+\.svelte$/.test(fileName))
+	);
 }
 
 /**
@@ -40,22 +38,21 @@ export function isKitPageComponent(context: RuleContext): boolean {
  * @returns
  */
 function hasSvelteKit(filePath: string): boolean {
-  // Hack: if it runs on browser, it regards as SvelteKit project.
-  if (isRunOnBrowser) return true
-  try {
-    const packageJson = getPackageJson(filePath)
-    if (!packageJson) return false
-    if (packageJson.name === "eslint-plugin-svelte")
-      // Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
-      // So always it returns true if it runs on the package.
-      return true
-    return Boolean(
-      packageJson.dependencies?.["@sveltejs/kit"] ??
-        packageJson.devDependencies?.["@sveltejs/kit"],
-    )
-  } catch (_e) {
-    return false
-  }
+	// Hack: if it runs on browser, it regards as SvelteKit project.
+	if (isRunOnBrowser) return true;
+	try {
+		const packageJson = getPackageJson(filePath);
+		if (!packageJson) return false;
+		if (packageJson.name === 'eslint-plugin-svelte')
+			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
+			// So always it returns true if it runs on the package.
+			return true;
+		return Boolean(
+			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit']
+		);
+	} catch (_e) {
+		return false;
+	}
 }
 
 /**
@@ -64,8 +61,8 @@ function hasSvelteKit(filePath: string): boolean {
  * @returns A found project root folder path or null.
  */
 function getProjectRootDir(filePath: string): string | null {
-  if (isRunOnBrowser) return null
-  const packageJsonFilePath = getPackageJson(filePath)?.filePath
-  if (!packageJsonFilePath) return null
-  return path.dirname(path.resolve(packageJsonFilePath))
+	if (isRunOnBrowser) return null;
+	const packageJsonFilePath = getPackageJson(filePath)?.filePath;
+	if (!packageJsonFilePath) return null;
+	return path.dirname(path.resolve(packageJsonFilePath));
 }

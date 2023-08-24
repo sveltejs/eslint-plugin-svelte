@@ -1,109 +1,104 @@
-import { createRule } from "../utils"
-import type { AST } from "svelte-eslint-parser"
+import { createRule } from '../utils';
+import type { AST } from 'svelte-eslint-parser';
 
-export default createRule("html-closing-bracket-spacing", {
-  meta: {
-    docs: {
-      description: "require or disallow a space before tag's closing brackets",
-      category: "Stylistic Issues",
-      conflictWithPrettier: true,
-      recommended: false,
-    },
-    schema: [
-      {
-        type: "object",
-        properties: {
-          startTag: {
-            enum: ["always", "never", "ignore"],
-          },
-          endTag: {
-            enum: ["always", "never", "ignore"],
-          },
-          selfClosingTag: {
-            enum: ["always", "never", "ignore"],
-          },
-        },
-        additionalProperties: false,
-      },
-    ],
-    messages: {
-      expectedSpace: "Expected space before '>', but not found.",
-      unexpectedSpace: "Expected no space before '>', but found.",
-    },
-    fixable: "whitespace",
-    type: "layout",
-  },
-  create(ctx) {
-    const options = {
-      startTag: "never",
-      endTag: "never",
-      selfClosingTag: "always",
-      ...ctx.options[0],
-    }
-    const src = ctx.getSourceCode()
+export default createRule('html-closing-bracket-spacing', {
+	meta: {
+		docs: {
+			description: "require or disallow a space before tag's closing brackets",
+			category: 'Stylistic Issues',
+			conflictWithPrettier: true,
+			recommended: false
+		},
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					startTag: {
+						enum: ['always', 'never', 'ignore']
+					},
+					endTag: {
+						enum: ['always', 'never', 'ignore']
+					},
+					selfClosingTag: {
+						enum: ['always', 'never', 'ignore']
+					}
+				},
+				additionalProperties: false
+			}
+		],
+		messages: {
+			expectedSpace: "Expected space before '>', but not found.",
+			unexpectedSpace: "Expected no space before '>', but found."
+		},
+		fixable: 'whitespace',
+		type: 'layout'
+	},
+	create(ctx) {
+		const options = {
+			startTag: 'never',
+			endTag: 'never',
+			selfClosingTag: 'always',
+			...ctx.options[0]
+		};
+		const src = ctx.getSourceCode();
 
-    /**
-     * Returns true if string contains newline characters
-     */
-    function containsNewline(string: string): boolean {
-      return string.includes("\n")
-    }
+		/**
+		 * Returns true if string contains newline characters
+		 */
+		function containsNewline(string: string): boolean {
+			return string.includes('\n');
+		}
 
-    /**
-     * Report
-     */
-    function report(
-      node: AST.SvelteStartTag | AST.SvelteEndTag,
-      shouldHave: boolean,
-    ) {
-      const tagSrc = src.getText(node)
-      const match = /(\s*)\/?>$/.exec(tagSrc)
+		/**
+		 * Report
+		 */
+		function report(node: AST.SvelteStartTag | AST.SvelteEndTag, shouldHave: boolean) {
+			const tagSrc = src.getText(node);
+			const match = /(\s*)\/?>$/.exec(tagSrc);
 
-      const end = node.range[1]
-      const start = node.range[1] - match![0].length
-      const loc = {
-        start: src.getLocFromIndex(start),
-        end: src.getLocFromIndex(end),
-      }
+			const end = node.range[1];
+			const start = node.range[1] - match![0].length;
+			const loc = {
+				start: src.getLocFromIndex(start),
+				end: src.getLocFromIndex(end)
+			};
 
-      ctx.report({
-        loc,
-        messageId: shouldHave ? "expectedSpace" : "unexpectedSpace",
-        *fix(fixer) {
-          if (shouldHave) {
-            yield fixer.insertTextBeforeRange([start, end], " ")
-          } else {
-            const spaces = match![1]
+			ctx.report({
+				loc,
+				messageId: shouldHave ? 'expectedSpace' : 'unexpectedSpace',
+				*fix(fixer) {
+					if (shouldHave) {
+						yield fixer.insertTextBeforeRange([start, end], ' ');
+					} else {
+						const spaces = match![1];
 
-            yield fixer.removeRange([start, start + spaces.length])
-          }
-        },
-      })
-    }
+						yield fixer.removeRange([start, start + spaces.length]);
+					}
+				}
+			});
+		}
 
-    return {
-      "SvelteStartTag, SvelteEndTag"(
-        node: AST.SvelteStartTag | AST.SvelteEndTag,
-      ) {
-        const tagType =
-          node.type === "SvelteEndTag"
-            ? "endTag"
-            : node.selfClosing
-            ? "selfClosingTag"
-            : "startTag"
+		return {
+			'SvelteStartTag, SvelteEndTag'(node: AST.SvelteStartTag | AST.SvelteEndTag) {
+				const tagType =
+					node.type === 'SvelteEndTag'
+						? 'endTag'
+						: node.selfClosing
+						? 'selfClosingTag'
+						: 'startTag';
 
-        if (options[tagType] === "ignore") return
+				if (options[tagType] === 'ignore') return;
 
-        const tagSrc = src.getText(node)
-        const match = /(\s*)\/?>$/.exec(tagSrc)
-        if (containsNewline(match![1])) return
+				const tagSrc = src.getText(node);
+				const match = /(\s*)\/?>$/.exec(tagSrc);
+				if (containsNewline(match![1])) return;
 
-        if (options[tagType] === "always" && !match![1]) {
-          report(node, true)
-        } else if (options[tagType] === "never" && match![1]) {
-          report(node, false)
-        }
-      },
-    }
-  },
-})
+				if (options[tagType] === 'always' && !match![1]) {
+					report(node, true);
+				} else if (options[tagType] === 'never' && match![1]) {
+					report(node, false);
+				}
+			}
+		};
+	}
+});

@@ -1,43 +1,40 @@
-import type { Linter } from "eslint"
-import type { Shared } from "../shared"
-import { beginShared, terminateShared } from "../shared"
-export * as meta from "../meta"
+import type { Linter } from 'eslint';
+import type { Shared } from '../shared';
+import { beginShared, terminateShared } from '../shared';
+export * as meta from '../meta';
 
 /** preprocess */
 export function preprocess(code: string, filename: string): string[] {
-  if (filename) {
-    beginShared(filename)
-  }
+	if (filename) {
+		beginShared(filename);
+	}
 
-  return [code]
+	return [code];
 }
 
 /** postprocess */
 export function postprocess(
-  [messages]: Linter.LintMessage[][],
-  filename: string,
+	[messages]: Linter.LintMessage[][],
+	filename: string
 ): Linter.LintMessage[] {
-  const shared = terminateShared(filename)
-  if (shared) {
-    return filter(messages, shared)
-  }
+	const shared = terminateShared(filename);
+	if (shared) {
+		return filter(messages, shared);
+	}
 
-  return messages
+	return messages;
 }
 
-export const supportsAutofix = true
+export const supportsAutofix = true;
 
 /** Filter  */
-function filter(
-  messages: Linter.LintMessage[],
-  shared: Shared,
-): Linter.LintMessage[] {
-  if (shared.commentDirectives.length === 0) {
-    return messages
-  }
-  let filteredMessages = messages
-  for (const cd of shared.commentDirectives) {
-    filteredMessages = cd.filterMessages(filteredMessages)
-  }
-  return filteredMessages
+function filter(messages: Linter.LintMessage[], shared: Shared): Linter.LintMessage[] {
+	if (shared.commentDirectives.length === 0) {
+		return messages;
+	}
+	let filteredMessages = messages;
+	for (const cd of shared.commentDirectives) {
+		filteredMessages = cd.filterMessages(filteredMessages);
+	}
+	return filteredMessages;
 }

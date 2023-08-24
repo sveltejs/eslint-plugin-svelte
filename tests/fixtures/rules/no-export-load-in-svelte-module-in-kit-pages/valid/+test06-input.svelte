@@ -1,7 +1,7 @@
 <script context="module">
-  export function foo() {}
+	export function foo() {}
 </script>
 
 <script>
-  export function load() {}
+	export function load() {}
 </script>

@@ -1,11 +1,11 @@
 <script>
-  $: desc = $$slots.description
+	$: desc = $$slots.description;
 </script>
 
 <div>
-  <slot name="title" />
-  {#if desc}
-    <hr />
-    <slot name="description" />
-  {/if}
+	<slot name="title" />
+	{#if desc}
+		<hr />
+		<slot name="description" />
+	{/if}
 </div>

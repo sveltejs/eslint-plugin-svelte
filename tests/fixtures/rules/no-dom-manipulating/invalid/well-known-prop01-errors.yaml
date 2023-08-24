@@ -1,35 +1,30 @@
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 4
-  column: 5
+  column: 3
   suggestions: null
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 5
-  column: 5
+  column: 3
   suggestions: null
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 6
-  column: 5
+  column: 3
   suggestions: null
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 7
-  column: 5
+  column: 3
   suggestions: null
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 8
-  column: 5
+  column: 3
   suggestions: null

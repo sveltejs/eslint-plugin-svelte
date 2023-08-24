@@ -1,21 +1,5 @@
 <script>
-  function x() {}
+	function x() {}
 </script>
 
-<div
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-  use:x
-/>
+<div use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x use:x />

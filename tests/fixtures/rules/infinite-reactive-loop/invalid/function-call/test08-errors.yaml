@@ -1,12 +1,13 @@
 - message: Possibly it may occur an infinite reactive loop.
   line: 6
-  column: 5
+  column: 3
   suggestions: null
-- message: Possibly it may occur an infinite reactive loop because this function may update `foo`.
+- message: Possibly it may occur an infinite reactive loop because this function
+    may update `foo`.
   line: 12
-  column: 11
+  column: 9
   suggestions: null
 - message: Possibly it may occur an infinite reactive loop.
   line: 13
-  column: 5
+  column: 3
   suggestions: null

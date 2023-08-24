@@ -1,3 +1,3 @@
 <script>
-  $: console.log(unknown)
+	$: console.log(unknown);
 </script>

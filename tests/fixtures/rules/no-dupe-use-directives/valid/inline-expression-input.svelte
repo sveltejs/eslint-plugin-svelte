@@ -1,7 +1,7 @@
 <script>
-  function foo() {}
-  function bar() {}
-  const param = {}
+	function foo() {}
+	function bar() {}
+	const param = {};
 </script>
 
 <div use:foo use:foo={param} />

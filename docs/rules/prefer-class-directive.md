@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/prefer-class-directive"
-description: "require class directives instead of ternary expressions"
-since: "v0.0.1"
+title: 'svelte/prefer-class-directive'
+description: 'require class directives instead of ternary expressions'
+since: 'v0.0.1'
 ---
 
 # svelte/prefer-class-directive
@@ -26,10 +26,10 @@ This rule aims to replace a class with ternary operator with the class directive
 </script>
 
 <!-- ✓ GOOD -->
-<button class:selected={current === "foo"}>foo</button>
+<button class:selected={current === 'foo'}>foo</button>
 
 <!-- ✗ BAD -->
-<button class={current === "foo" ? "selected" : ""}>foo</button>
+<button class={current === 'foo' ? 'selected' : ''}>foo</button>
 ```
 
 </ESLintCodeBlock>

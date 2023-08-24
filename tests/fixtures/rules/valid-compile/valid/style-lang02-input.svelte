@@ -1,14 +1,14 @@
 <div class="foo">
-  <div class="bar" />
+	<div class="bar" />
 </div>
 
 <style lang="postcss">
-  .foo {
-    height: 20px;
-    width: 20px;
-    & .bar {
-      height: 10px;
-      width: 10px;
-    }
-  }
+	.foo {
+		height: 20px;
+		width: 20px;
+		& .bar {
+			height: 10px;
+			width: 10px;
+		}
+	}
 </style>

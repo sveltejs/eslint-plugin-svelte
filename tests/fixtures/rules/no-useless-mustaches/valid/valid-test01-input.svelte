@@ -1,10 +1,10 @@
 <script>
-  let foo = "foo"
+	let foo = 'foo';
 </script>
 
 foo 'foo'
 {foo}
-{"foo" || "bar"}
+{'foo' || 'bar'}
 {1}
 {null}
 {`foo${foo}`}

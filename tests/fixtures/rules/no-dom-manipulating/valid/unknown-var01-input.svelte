@@ -1,7 +1,7 @@
 <script>
-  const remove = () => {
-    unknown.remove()
-  }
+	const remove = () => {
+		unknown.remove();
+	};
 </script>
 
 <input bind:this={unknown} />

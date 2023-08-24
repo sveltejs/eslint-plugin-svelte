@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/first-attribute-linebreak"
-description: "enforce the location of first attribute"
-since: "v0.6.0"
+title: 'svelte/first-attribute-linebreak'
+description: 'enforce the location of first attribute'
+since: 'v0.6.0'
 ---
 
 # svelte/first-attribute-linebreak

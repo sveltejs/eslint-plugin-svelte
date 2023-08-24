@@ -1,1 +1,1 @@
-<slot name={"name"} />
+<slot name={'name'} />

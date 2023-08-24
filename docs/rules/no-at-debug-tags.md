@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-at-debug-tags"
-description: "disallow the use of `{@debug}`"
-since: "v0.0.1"
+title: 'svelte/no-at-debug-tags'
+description: 'disallow the use of `{@debug}`'
+since: 'v0.0.1'
 ---
 
 # svelte/no-at-debug-tags

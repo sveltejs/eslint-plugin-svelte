@@ -3,8 +3,8 @@
 <span class="span-class">World!</span>
 
 <style>
-  .div-class,
-  .span-class {
-    color: red;
-  }
+	.div-class,
+	.span-class {
+		color: red;
+	}
 </style>

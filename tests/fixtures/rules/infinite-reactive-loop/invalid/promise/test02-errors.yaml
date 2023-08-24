@@ -1,8 +1,8 @@
 - message: Possibly it may occur an infinite reactive loop.
   line: 10
-  column: 9
+  column: 5
   suggestions: null
 - message: Possibly it may occur an infinite reactive loop.
   line: 13
-  column: 9
+  column: 5
   suggestions: null

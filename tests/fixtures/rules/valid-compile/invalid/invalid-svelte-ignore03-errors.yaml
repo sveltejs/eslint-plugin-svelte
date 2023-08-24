@@ -1,53 +1,53 @@
 - message: Empty block(empty-block)
   line: 2
-  column: 31
+  column: 30
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 5
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: A form label must be associated with a
-    control.(a11y-label-has-associated-control)"
+- message: 'A11y: A form label must be associated with a
+    control.(a11y-label-has-associated-control)'
   line: 5
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 6
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 9
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: A form label must be associated with a
-    control.(a11y-label-has-associated-control)"
+- message: 'A11y: A form label must be associated with a
+    control.(a11y-label-has-associated-control)'
   line: 9
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 10
-  column: 5
+  column: 3
   suggestions: null
 - message: Empty block(empty-block)
   line: 14
-  column: 31
+  column: 30
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 17
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: A form label must be associated with a
-    control.(a11y-label-has-associated-control)"
+- message: 'A11y: A form label must be associated with a
+    control.(a11y-label-has-associated-control)'
   line: 17
-  column: 5
+  column: 3
   suggestions: null
-- message: "A11y: noninteractive element cannot have nonnegative tabIndex
-    value(a11y-no-noninteractive-tabindex)"
+- message: 'A11y: noninteractive element cannot have nonnegative tabIndex
+    value(a11y-no-noninteractive-tabindex)'
   line: 18
-  column: 5
+  column: 3
   suggestions: null

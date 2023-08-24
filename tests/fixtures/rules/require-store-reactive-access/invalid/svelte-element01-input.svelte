@@ -1,9 +1,9 @@
 <script>
-  import { writable } from "svelte/store"
-  let store = writable("hello")
-  let value = writable("hello")
-  let div = writable("div")
-  let input = writable("input")
+	import { writable } from 'svelte/store';
+	let store = writable('hello');
+	let value = writable('hello');
+	let div = writable('div');
+	let input = writable('input');
 </script>
 
 <svelte:element this={div} prop="Hello {store}" />

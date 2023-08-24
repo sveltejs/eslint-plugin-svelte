@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/prefer-style-directive"
-description: "require style directives instead of style attribute"
-since: "v0.22.0"
+title: 'svelte/prefer-style-directive'
+description: 'require style directives instead of style attribute'
+since: 'v0.22.0'
 ---
 
 # svelte/prefer-style-directive

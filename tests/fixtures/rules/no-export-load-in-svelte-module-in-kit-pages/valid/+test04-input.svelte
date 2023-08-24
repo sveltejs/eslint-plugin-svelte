@@ -1,3 +1,3 @@
 <script context="module">
-  const load = () => {}
+	const load = () => {};
 </script>

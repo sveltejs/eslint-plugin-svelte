@@ -1,7 +1,7 @@
 <script>
-  import store from "./store.js"
-  $: ({ foo, bar: b } = $store)
-  $: bbb = $store.baz
+	import store from './store.js';
+	$: ({ foo, bar: b } = $store);
+	$: bbb = $store.baz;
 </script>
 
 foo.bar: {foo.bar}

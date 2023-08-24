@@ -9,20 +9,14 @@
 
 <marquee direction="up">This text will scroll from bottom to top</marquee>
 
-<marquee
-  direction="down"
-  width="250"
-  height="200"
-  behavior="alternate"
-  style="border:solid"
->
-  <marquee behavior="alternate"> This text will bounce </marquee>
+<marquee direction="down" width="250" height="200" behavior="alternate" style="border:solid">
+	<marquee behavior="alternate"> This text will bounce </marquee>
 </marquee>
 
 <div>
-  <marquee>This text will scroll from right to left</marquee>
+	<marquee>This text will scroll from right to left</marquee>
 </div>
 
 <div>
-  <h6>Minor Subtitle - H6</h6>
+	<h6>Minor Subtitle - H6</h6>
 </div>

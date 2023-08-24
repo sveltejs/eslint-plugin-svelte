@@ -1,18 +1,18 @@
 <script>
-  import A from "prettier-playground/a.svelte"
+	import A from 'prettier-playground/a.svelte';
 
-  const foo = "foo"
-  let text = ""
-  let value = ""
-  let input
-  const myClass = "my-class"
-  const id = "id"
-  const attrs = {}
-  const bar = "<div></div>"
-  const o1 = 1,
-    o2 = 2
-  const expression = true
-  const list = []
+	const foo = 'foo';
+	let text = '';
+	let value = '';
+	let input;
+	const myClass = 'my-class';
+	const id = 'id';
+	const attrs = {};
+	const bar = '<div></div>';
+	const o1 = 1,
+		o2 = 2;
+	const expression = true;
+	const list = [];
 </script>
 
 <!-- prettier-ignore -->

@@ -1,6 +1,5 @@
-- message: >-
-    Do not assign literal values inside reactive statements unless absolutely
-    necessary.
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
   line: 3
   column: 5
   suggestions:
@@ -13,9 +12,8 @@
             $: bar = [];
             $: baz = {};
         </script>
-- message: >-
-    Do not assign literal values inside reactive statements unless absolutely
-    necessary.
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
   line: 4
   column: 5
   suggestions:
@@ -28,9 +26,8 @@
             let bar = []
             $: baz = {};
         </script>
-- message: >-
-    Do not assign literal values inside reactive statements unless absolutely
-    necessary.
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
   line: 5
   column: 5
   suggestions:

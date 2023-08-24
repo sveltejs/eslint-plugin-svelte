@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher as ced } from "svelte"
+	import { createEventDispatcher as ced } from 'svelte';
 
-  const dispatch = ced()
+	const dispatch = ced();
 </script>

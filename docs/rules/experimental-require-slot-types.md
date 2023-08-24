@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/experimental-require-slot-types"
-description: "require slot type declaration using the `$$Slots` interface"
-since: "v2.18.0"
+title: 'svelte/experimental-require-slot-types'
+description: 'require slot type declaration using the `$$Slots` interface'
+since: 'v2.18.0'
 ---
 
 # svelte/experimental-require-slot-types
@@ -40,7 +40,7 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    default: Record<string, never>
+    default: Record<string, never>;
   }
 </script>
 
@@ -59,7 +59,7 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    default: { prop: boolean }
+    default: { prop: boolean };
   }
 </script>
 
@@ -78,7 +78,7 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
   /* eslint svelte/experimental-require-slot-types: "error" */
 
   interface $$Slots {
-    named: Record<string, never>
+    named: Record<string, never>;
   }
 </script>
 

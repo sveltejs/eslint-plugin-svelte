@@ -1,16 +1,16 @@
 <script>
-  import { writable } from "svelte/store"
+	import { writable } from 'svelte/store';
 
-  let value
+	let value;
 
-  export let foo
-  $: {
-    if (foo) {
-      value = writable("hello")
-    } else {
-      value = null
-    }
-  }
+	export let foo;
+	$: {
+		if (foo) {
+			value = writable('hello');
+		} else {
+			value = null;
+		}
+	}
 </script>
 
 <!-- Unknown -->

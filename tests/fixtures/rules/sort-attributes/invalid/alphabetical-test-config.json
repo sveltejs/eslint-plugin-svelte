@@ -1,17 +1,17 @@
 {
-  "options": [
-    {
-      "order": [
-        {
-          "match": ["/^c-/u"],
-          "sort": "alphabetical"
-        },
-        "/^b-/u",
-        {
-          "match": ["/^a-/u"],
-          "sort": "ignore"
-        }
-      ]
-    }
-  ]
+	"options": [
+		{
+			"order": [
+				{
+					"match": ["/^c-/u"],
+					"sort": "alphabetical"
+				},
+				"/^b-/u",
+				{
+					"match": ["/^a-/u"],
+					"sort": "ignore"
+				}
+			]
+		}
+	]
 }

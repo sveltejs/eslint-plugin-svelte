@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-unused-svelte-ignore"
-description: "disallow unused svelte-ignore comments"
-since: "v0.19.0"
+title: 'svelte/no-unused-svelte-ignore'
+description: 'disallow unused svelte-ignore comments'
+since: 'v0.19.0'
 ---
 
 # svelte/no-unused-svelte-ignore

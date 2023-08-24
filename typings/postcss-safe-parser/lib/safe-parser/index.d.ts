@@ -1,17 +1,17 @@
-import type { Tokenizer } from "postcss/lib/tokenize"
-import type { Root, Input } from "postcss"
+import type { Tokenizer } from 'postcss/lib/tokenize';
+import type { Root, Input } from 'postcss';
 
 declare class Parser {
-  protected input: Input
+	protected input: Input;
 
-  public root: Root
+	public root: Root;
 
-  protected tokenizer: Tokenizer
+	protected tokenizer: Tokenizer;
 
-  public constructor(input: Input)
+	public constructor(input: Input);
 
-  public parse(): void
+	public parse(): void;
 
-  protected createTokenizer(): void
+	protected createTokenizer(): void;
 }
-export default Parser
+export default Parser;

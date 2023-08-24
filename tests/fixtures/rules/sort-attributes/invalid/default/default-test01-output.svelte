@@ -1,16 +1,16 @@
 <script>
-  import component from "./foo"
-  let style = { color: "red" }
-  let componentValue
-  let metaData = {}
-  let foo
-  let color = "red"
-  let disable = false
-  let inputValue
-  let abc, def
-  function fn() {}
-  function handleChange() {}
-  function action() {}
+	import component from './foo';
+	let style = { color: 'red' };
+	let componentValue;
+	let metaData = {};
+	let foo;
+	let color = 'red';
+	let disable = false;
+	let inputValue;
+	let abc, def;
+	function fn() {}
+	function handleChange() {}
+	function action() {}
 </script>
 
 <!-- prettier-ignore -->
@@ -25,18 +25,18 @@
   --style-props={color}
 />
 <input
-  bind:this={foo}
-  id="foo"
-  style:color
-  style="width: 150px;"
-  class="my-input"
-  class:disable
-  class:enable={!disable}
-  use:action
-  animate:name
-  transition:fn
-  bind:value={inputValue}
-  in:fn
-  out:fn
+	bind:this={foo}
+	id="foo"
+	style:color
+	style="width: 150px;"
+	class="my-input"
+	class:disable
+	class:enable={!disable}
+	use:action
+	animate:name
+	transition:fn
+	bind:value={inputValue}
+	in:fn
+	out:fn
 />
 <slot name="content" {abc} {def} data-foo />

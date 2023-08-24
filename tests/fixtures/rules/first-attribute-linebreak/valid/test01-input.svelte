@@ -1,5 +1,5 @@
 <script>
-  function click() {}
+	function click() {}
 </script>
 
 <!-- prettier-ignore -->

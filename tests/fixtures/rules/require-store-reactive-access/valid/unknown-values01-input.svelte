@@ -1,7 +1,7 @@
 <script>
-  const numValue = 42
-  const strValue = "string"
-  let anyValue
+	const numValue = 42;
+	const strValue = 'string';
+	let anyValue;
 </script>
 
 <!-- Non store -->

@@ -1,7 +1,6 @@
-- message:
-    Don't manipulate the DOM directly. The Svelte runtime can get confused
+- message: Don't manipulate the DOM directly. The Svelte runtime can get confused
     if there is a difference between the actual DOM and the DOM expected by the
     Svelte runtime.
   line: 9
-  column: 24
+  column: 23
   suggestions: null

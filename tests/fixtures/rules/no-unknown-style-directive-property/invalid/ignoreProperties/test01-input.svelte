@@ -1,8 +1,8 @@
 <script>
-  let red = "red"
-  let unknown = red
-  let foo = red
-  let bar = red
+	let red = 'red';
+	let unknown = red;
+	let foo = red;
+	let bar = red;
 </script>
 
 <div style:unknown-color={red}>...</div>

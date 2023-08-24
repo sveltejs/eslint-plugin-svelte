@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/mustache-spacing"
-description: "enforce unified spacing in mustache"
-since: "v0.15.0"
+title: 'svelte/mustache-spacing'
+description: 'enforce unified spacing in mustache'
+since: 'v0.15.0'
 ---
 
 # svelte/mustache-spacing

@@ -1,13 +1,13 @@
 {
-  "options": [
-    {
-      "textExpressions": "always",
-      "attributesAndProps": "always",
-      "directiveExpressions": "always",
-      "tags": {
-        "openingBrace": "never",
-        "closingBrace": "always-after-expression"
-      }
-    }
-  ]
+	"options": [
+		{
+			"textExpressions": "always",
+			"attributesAndProps": "always",
+			"directiveExpressions": "always",
+			"tags": {
+				"openingBrace": "never",
+				"closingBrace": "always-after-expression"
+			}
+		}
+	]
 }

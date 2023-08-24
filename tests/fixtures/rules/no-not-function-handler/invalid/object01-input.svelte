@@ -1,5 +1,5 @@
 <script>
-  function fn() {}
+	function fn() {}
 </script>
 
 <button on:click={{ fn }} />

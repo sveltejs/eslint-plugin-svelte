@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n"
+	import { _ } from 'svelte-i18n';
 </script>
 
-<h1>{$_("page.home.title")}</h1>
+<h1>{$_('page.home.title')}</h1>

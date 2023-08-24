@@ -1,11 +1,11 @@
 {
-  "settings": {
-    "svelte": {
-      "kit": {
-        "files": {
-          "routes": "some-path"
-        }
-      }
-    }
-  }
+	"settings": {
+		"svelte": {
+			"kit": {
+				"files": {
+					"routes": "some-path"
+				}
+			}
+		}
+	}
 }

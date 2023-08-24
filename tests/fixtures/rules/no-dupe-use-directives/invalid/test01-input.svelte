@@ -1,8 +1,8 @@
 <script>
-  function clickOutside() {}
-  const param = {}
-  const foo = {}
-  const bar = {}
+	function clickOutside() {}
+	const param = {};
+	const foo = {};
+	const bar = {};
 </script>
 
 <!-- ✓ GOOD -->

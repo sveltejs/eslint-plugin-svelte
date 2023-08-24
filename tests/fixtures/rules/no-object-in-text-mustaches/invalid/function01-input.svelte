@@ -1,9 +1,9 @@
 <script>
-  let a = "hello!"
+	let a = 'hello!';
 </script>
 
 {() => a}
 {function () {
-  return a
+	return a;
 }}
 <input class="{() => a} a" />

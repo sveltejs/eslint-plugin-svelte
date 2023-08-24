@@ -20,31 +20,31 @@
   suggestions: null
 - message: Attribute 'bind:this' should go before 'id'.
   line: 29
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'class:disable' should go before 'class:enable'.
   line: 34
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'use:action' should go before 'animate:name'.
   line: 36
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'transition:fn' should go before 'animate:name'.
   line: 37
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'bind:value' should go before 'animate:name'.
   line: 38
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'in:fn' should go before 'animate:name'.
   line: 39
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'out:fn' should go before 'animate:name'.
   line: 40
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'abc' should go before 'def'.
   line: 42

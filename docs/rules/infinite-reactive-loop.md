@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/infinite-reactive-loop"
+title: 'svelte/infinite-reactive-loop'
 description: "Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent."
-since: "v2.16.0"
+since: 'v2.16.0'
 ---
 
 # svelte/infinite-reactive-loop
@@ -23,62 +23,62 @@ This rule reports those possible infinite loop.
 ```svelte
 <script>
   /* eslint svelte/infinite-reactive-loop: "error" */
-  import { count } from "./store.js"
-  import { tick } from "svelte"
-  let a = 0
+  import { count } from './store.js';
+  import { tick } from 'svelte';
+  let a = 0;
 
   // ✓ GOOD
   $: if (a < 10) {
-    a += 1
-    $count += 1
+    a += 1;
+    $count += 1;
   }
 
   $: (async () => {
     // You can update a state in the same micro task.
-    a += 1
-    $count += 1
-    await new Promise((resolve) => setTimeout(resolve, 100))
-  })()
+    a += 1;
+    $count += 1;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  })();
 
   $: (async () => {
-    await doSomething_ok()
-  })()
+    await doSomething_ok();
+  })();
 
   const doSomething_ok = async () => {
-    await fetchFromServer()
+    await fetchFromServer();
     // You can update a state even in different microtask
     // if you don't refer the state in reactive statement.
-    a += 1
-  }
+    a += 1;
+  };
 
   // ✗ BAD
   $: (async () => {
-    await doSomething()
+    await doSomething();
     // Do not update a state in different micro task.
-    a += 1
-    $count += 1
-  })()
+    a += 1;
+    $count += 1;
+  })();
 
   $: tick(() => {
-    a = a + 1
-    $count += 1
-  })
+    a = a + 1;
+    $count += 1;
+  });
 
   $: (async () => {
-    console.log(a)
+    console.log(a);
     // This rule checks caller function recursively.
-    await doSomething_ng_1()
-  })()
+    await doSomething_ng_1();
+  })();
 
   const doSomething_ng_1 = async () => {
-    a += 1
-    await fetchFromServer()
-    doSomething_ng_2()
-  }
+    a += 1;
+    await fetchFromServer();
+    doSomething_ng_2();
+  };
 
   const doSomething_ng_2 = () => {
-    a += 1
-  }
+    a += 1;
+  };
 </script>
 ```
 

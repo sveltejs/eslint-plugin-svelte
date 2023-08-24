@@ -1,7 +1,7 @@
 <script>
-  let value = "hello!"
-  let active = true
-  let color = "red"
+	let value = 'hello!';
+	let active = true;
+	let color = 'red';
 </script>
 
 <!-- ✓ GOOD -->

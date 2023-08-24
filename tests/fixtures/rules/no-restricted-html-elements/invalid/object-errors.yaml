@@ -35,14 +35,14 @@
   column: 1
   suggestions: null
 - message: Do not use deprecated HTML tags
-  line: 19
-  column: 3
+  line: 13
+  column: 2
   suggestions: null
 - message: Do not use deprecated HTML tags
-  line: 23
-  column: 3
+  line: 17
+  column: 2
   suggestions: null
 - message: Prefer use of our custom <Heading /> component
-  line: 27
-  column: 3
+  line: 21
+  column: 2
   suggestions: null

@@ -1,8 +1,8 @@
 <script>
-  let text = "abc"
-  const maxlength = 42
-  const attrs = { disabled: true }
-  function click() {}
+	let text = 'abc';
+	const maxlength = 42;
+	const attrs = { disabled: true };
+	function click() {}
 </script>
 
 <input type="text" bind:value={text} {maxlength}

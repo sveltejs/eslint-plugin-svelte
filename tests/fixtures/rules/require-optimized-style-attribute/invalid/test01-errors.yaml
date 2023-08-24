@@ -1,18 +1,17 @@
 - message: It cannot be optimized because too complex.
-  line: 14
+  line: 12
   column: 12
   suggestions: null
 - message: It cannot be optimized because too complex.
-  line: 17
+  line: 15
   column: 46
   suggestions: null
 - message: It cannot be optimized because contains comments.
-  line: 20
+  line: 18
   column: 30
   suggestions: null
-- message: >-
-    It cannot be optimized because property of style declaration contain
+- message: It cannot be optimized because property of style declaration contain
     interpolation.
-  line: 21
+  line: 19
   column: 30
   suggestions: null

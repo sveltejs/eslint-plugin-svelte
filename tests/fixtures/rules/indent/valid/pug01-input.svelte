@@ -1,5 +1,6 @@
+<!-- prettier-ignore -->
 <script>
-  export const hello = "world"
+  export const hello = 'world';
 </script>
 
 <template lang="pug">

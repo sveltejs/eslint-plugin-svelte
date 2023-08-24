@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-spaces-around-equal-signs-in-attribute"
-description: "disallow spaces around equal signs in attribute"
-since: "v2.3.0"
+title: 'svelte/no-spaces-around-equal-signs-in-attribute'
+description: 'disallow spaces around equal signs in attribute'
+since: 'v2.3.0'
 ---
 
 # svelte/no-spaces-around-equal-signs-in-attribute

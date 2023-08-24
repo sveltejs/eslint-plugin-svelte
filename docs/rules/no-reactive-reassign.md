@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-reactive-reassign"
-description: "disallow reassigning reactive values"
-since: "v2.27.0"
+title: 'svelte/no-reactive-reassign'
+description: 'disallow reassigning reactive values'
+since: 'v2.27.0'
 ---
 
 # svelte/no-reactive-reassign
@@ -21,15 +21,15 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 ```svelte
 <script>
   /* eslint svelte/no-reactive-reassign: "error" */
-  let value = 0
-  $: reactiveValue = value * 2
+  let value = 0;
+  $: reactiveValue = value * 2;
 
   function handleClick() {
     /* ✓ GOOD */
-    value++
+    value++;
     /* ✗ BAD */
-    reactiveValue = value * 3
-    reactiveValue++
+    reactiveValue = value * 3;
+    reactiveValue++;
   }
 </script>
 
@@ -65,15 +65,15 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 ```svelte
 <script>
   /* eslint svelte/no-reactive-reassign: ["error", { "props": true }] */
-  let value = 0
-  $: reactiveValue = { value: value * 2 }
+  let value = 0;
+  $: reactiveValue = { value: value * 2 };
 
   function handleClick() {
     /* ✓ GOOD */
-    value++
+    value++;
     /* ✗ BAD */
-    reactiveValue.value++
-    reactiveValue = { value: reactiveValue.value + 1 }
+    reactiveValue.value++;
+    reactiveValue = { value: reactiveValue.value + 1 };
   }
 </script>
 
@@ -95,16 +95,16 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 ```svelte
 <script>
   /* eslint svelte/no-reactive-reassign: ["error", { "props": false }] */
-  let value = 0
-  $: reactiveValue = { value: value * 2 }
+  let value = 0;
+  $: reactiveValue = { value: value * 2 };
 
   function handleClick() {
     /* ✓ GOOD */
-    value++
+    value++;
     /* OK */
-    reactiveValue.value++
+    reactiveValue.value++;
     /* ✗ BAD */
-    reactiveValue = { value: reactiveValue.value + 1 }
+    reactiveValue = { value: reactiveValue.value + 1 };
   }
 </script>
 

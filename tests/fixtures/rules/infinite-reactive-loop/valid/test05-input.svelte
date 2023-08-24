@@ -1,11 +1,11 @@
 <script>
-  import { store } from "./store.js"
+	import { store } from './store.js';
 
-  const doSomething = () => {
-    $store += 1
-  }
+	const doSomething = () => {
+		$store += 1;
+	};
 
-  $: (async () => {
-    await doSomething()
-  })()
+	$: (async () => {
+		await doSomething();
+	})();
 </script>

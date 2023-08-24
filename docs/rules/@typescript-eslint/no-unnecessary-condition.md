@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/@typescript-eslint/no-unnecessary-condition"
-description: "disallow conditionals where the type is always truthy or always falsy"
-since: "v2.9.0"
+title: 'svelte/@typescript-eslint/no-unnecessary-condition'
+description: 'disallow conditionals where the type is always truthy or always falsy'
+since: 'v2.9.0'
 ---
 
 # svelte/@typescript-eslint/no-unnecessary-condition
@@ -27,11 +27,11 @@ The [@typescript-eslint/no-unnecessary-condition] rule does not understand react
 ```svelte
 <script lang="ts">
   /* eslint svelte/@typescript-eslint/no-unnecessary-condition: "error" */
-  export let foo: number | null = null
+  export let foo: number | null = null;
   /* ✗ BAD */
-  let b = foo || 42
+  let b = foo || 42;
   /* ✓ GOOD */
-  $: a = foo || 42
+  $: a = foo || 42;
 </script>
 
 <!-- ✓ GOOD -->

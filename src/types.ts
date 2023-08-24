@@ -1,344 +1,323 @@
-import type { JSONSchema4 } from "json-schema"
-import type { Linter, Rule, SourceCode as ESLintSourceCode } from "eslint"
-import type { AST } from "svelte-eslint-parser"
-import type { TSESTree } from "@typescript-eslint/types"
-import type {
-  ScopeManager,
-  Scope,
-  Variable,
-} from "@typescript-eslint/scope-manager"
-import type {
-  ASTNode,
-  ASTNodeWithParent,
-  ASTNodeListener,
-} from "./types-for-node"
+import type { JSONSchema4 } from 'json-schema';
+import type { Linter, Rule, SourceCode as ESLintSourceCode } from 'eslint';
+import type { AST } from 'svelte-eslint-parser';
+import type { TSESTree } from '@typescript-eslint/types';
+import type { ScopeManager, Scope, Variable } from '@typescript-eslint/scope-manager';
+import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node';
 
-export type { ASTNode, ASTNodeWithParent, ASTNodeListener }
+export type { ASTNode, ASTNodeWithParent, ASTNodeListener };
 export interface RuleListener extends ASTNodeListener {
-  onCodePathStart?(codePath: Rule.CodePath, node: never): void
+	onCodePathStart?(codePath: Rule.CodePath, node: never): void;
 
-  onCodePathEnd?(codePath: Rule.CodePath, node: never): void
+	onCodePathEnd?(codePath: Rule.CodePath, node: never): void;
 
-  onCodePathSegmentStart?(segment: Rule.CodePathSegment, node: never): void
+	onCodePathSegmentStart?(segment: Rule.CodePathSegment, node: never): void;
 
-  onCodePathSegmentEnd?(segment: Rule.CodePathSegment, node: never): void
+	onCodePathSegmentEnd?(segment: Rule.CodePathSegment, node: never): void;
 
-  onCodePathSegmentLoop?(
-    fromSegment: Rule.CodePathSegment,
-    toSegment: Rule.CodePathSegment,
-    node: never,
-  ): void
+	onCodePathSegmentLoop?(
+		fromSegment: Rule.CodePathSegment,
+		toSegment: Rule.CodePathSegment,
+		node: never
+	): void;
 
-  [key: string]:
-    | ((codePath: Rule.CodePath, node: never) => void)
-    | ((segment: Rule.CodePathSegment, node: never) => void)
-    | ((
-        fromSegment: Rule.CodePathSegment,
-        toSegment: Rule.CodePathSegment,
-        node: never,
-      ) => void)
-    | ASTNodeListener[keyof ASTNodeListener]
-    | ((node: never) => void)
-    | undefined
+	[key: string]:
+		| ((codePath: Rule.CodePath, node: never) => void)
+		| ((segment: Rule.CodePathSegment, node: never) => void)
+		| ((fromSegment: Rule.CodePathSegment, toSegment: Rule.CodePathSegment, node: never) => void)
+		| ASTNodeListener[keyof ASTNodeListener]
+		| ((node: never) => void)
+		| undefined;
 }
 
 export interface RuleModule {
-  meta: RuleMetaData
-  create: (context: RuleContext) => RuleListener
+	meta: RuleMetaData;
+	create: (context: RuleContext) => RuleListener;
 }
 
 export type RuleCategory =
-  | "Possible Errors"
-  | "Security Vulnerability"
-  | "Best Practices"
-  | "Stylistic Issues"
-  | "Extension Rules"
-  | "Experimental"
-  | "System"
+	| 'Possible Errors'
+	| 'Security Vulnerability'
+	| 'Best Practices'
+	| 'Stylistic Issues'
+	| 'Extension Rules'
+	| 'Experimental'
+	| 'System';
 
 export interface RuleMetaData {
-  docs: {
-    description: string
-    category: RuleCategory
-    recommended: boolean | "base"
-    extensionRule?:
-      | string
-      | {
-          plugin: string
-          url: string
-        }
-    url: string
-    ruleId: string
-    ruleName: string
-    default?: "error" | "warn"
-    conflictWithPrettier?: boolean
-  }
-  messages: { [messageId: string]: string }
-  fixable?: "code" | "whitespace"
-  hasSuggestions?: boolean
-  schema: JSONSchema4 | JSONSchema4[]
-  deprecated?: boolean
-  replacedBy?: string[] | { note: string }
-  type: "problem" | "suggestion" | "layout"
+	docs: {
+		description: string;
+		category: RuleCategory;
+		recommended: boolean | 'base';
+		extensionRule?:
+			| string
+			| {
+					plugin: string;
+					url: string;
+			  };
+		url: string;
+		ruleId: string;
+		ruleName: string;
+		default?: 'error' | 'warn';
+		conflictWithPrettier?: boolean;
+	};
+	messages: { [messageId: string]: string };
+	fixable?: 'code' | 'whitespace';
+	hasSuggestions?: boolean;
+	schema: JSONSchema4 | JSONSchema4[];
+	deprecated?: boolean;
+	replacedBy?: string[] | { note: string };
+	type: 'problem' | 'suggestion' | 'layout';
 }
 
 export interface PartialRuleModule {
-  meta: PartialRuleMetaData
-  create: (context: RuleContext) => RuleListener
+	meta: PartialRuleMetaData;
+	create: (context: RuleContext) => RuleListener;
 }
 
 export interface PartialRuleMetaData {
-  docs: {
-    description: string
-    recommended: boolean | "base"
-    extensionRule?:
-      | string
-      | {
-          plugin: string
-          url: string
-        }
-    default?: "error" | "warn"
-  } & (
-    | {
-        category: Exclude<RuleCategory, "Stylistic Issues">
-        conflictWithPrettier?: boolean
-      }
-    | {
-        category: "Stylistic Issues"
-        conflictWithPrettier: boolean
-      }
-  )
-  messages: { [messageId: string]: string }
-  fixable?: "code" | "whitespace"
-  hasSuggestions?: boolean
-  schema: JSONSchema4 | JSONSchema4[]
-  deprecated?: boolean
-  replacedBy?: string[] | { note: string }
-  type: "problem" | "suggestion" | "layout"
+	docs: {
+		description: string;
+		recommended: boolean | 'base';
+		extensionRule?:
+			| string
+			| {
+					plugin: string;
+					url: string;
+			  };
+		default?: 'error' | 'warn';
+	} & (
+		| {
+				category: Exclude<RuleCategory, 'Stylistic Issues'>;
+				conflictWithPrettier?: boolean;
+		  }
+		| {
+				category: 'Stylistic Issues';
+				conflictWithPrettier: boolean;
+		  }
+	);
+	messages: { [messageId: string]: string };
+	fixable?: 'code' | 'whitespace';
+	hasSuggestions?: boolean;
+	schema: JSONSchema4 | JSONSchema4[];
+	deprecated?: boolean;
+	replacedBy?: string[] | { note: string };
+	type: 'problem' | 'suggestion' | 'layout';
 }
 
 export type RuleContext = {
-  id: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
-  options: any[]
-  settings?: {
-    svelte?: {
-      ignoreWarnings?: unknown
-      compileOptions?: {
-        babel?: boolean
-        postcss?: false | { configFilePath?: unknown }
-      }
-      kit?: {
-        files?: {
-          routes?: string
-        }
-      }
-    }
-  }
-  parserPath: string
-  parserOptions: Linter.ParserOptions
-  parserServices: ESLintSourceCode.ParserServices
+	id: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
+	options: any[];
+	settings?: {
+		svelte?: {
+			ignoreWarnings?: unknown;
+			compileOptions?: {
+				babel?: boolean;
+				postcss?: false | { configFilePath?: unknown };
+			};
+			kit?: {
+				files?: {
+					routes?: string;
+				};
+			};
+		};
+	};
+	parserPath: string;
+	parserOptions: Linter.ParserOptions;
+	parserServices: ESLintSourceCode.ParserServices;
 
-  getAncestors(): ASTNode[]
+	getAncestors(): ASTNode[];
 
-  getDeclaredVariables(node: TSESTree.Node): Variable[]
+	getDeclaredVariables(node: TSESTree.Node): Variable[];
 
-  getFilename(): string
+	getFilename(): string;
 
-  getScope(): Scope
+	getScope(): Scope;
 
-  getSourceCode(): SourceCode
+	getSourceCode(): SourceCode;
 
-  markVariableAsUsed(name: string): boolean
+	markVariableAsUsed(name: string): boolean;
 
-  report(descriptor: ReportDescriptor): void
+	report(descriptor: ReportDescriptor): void;
 
-  // eslint@6 does not have this method.
-  getCwd?: () => string
-  // eslint@<7.11.0 does not have this method.
-  getPhysicalFilename?: () => string
-}
+	// eslint@6 does not have this method.
+	getCwd?: () => string;
+	// eslint@<7.11.0 does not have this method.
+	getPhysicalFilename?: () => string;
+};
 
 export type NodeOrToken = {
-  type: string
-  loc?: AST.SourceLocation | null
-  range?: [number, number]
-}
+	type: string;
+	loc?: AST.SourceLocation | null;
+	range?: [number, number];
+};
 
 interface ReportDescriptorOptionsBase {
-  data?: { [key: string]: string }
+	data?: { [key: string]: string };
 
-  fix?:
-    | null
-    | ((
-        fixer: RuleFixer,
-      ) => null | Rule.Fix | IterableIterator<Rule.Fix> | Rule.Fix[])
+	fix?: null | ((fixer: RuleFixer) => null | Rule.Fix | IterableIterator<Rule.Fix> | Rule.Fix[]);
 }
 
-type SuggestionDescriptorMessage = { desc: string } | { messageId: string }
-export type SuggestionReportDescriptor = SuggestionDescriptorMessage &
-  ReportDescriptorOptionsBase
+type SuggestionDescriptorMessage = { desc: string } | { messageId: string };
+export type SuggestionReportDescriptor = SuggestionDescriptorMessage & ReportDescriptorOptionsBase;
 
 interface ReportDescriptorOptions extends ReportDescriptorOptionsBase {
-  suggest?: SuggestionReportDescriptor[] | null
+	suggest?: SuggestionReportDescriptor[] | null;
 }
 
 type ReportDescriptor = ReportDescriptorMessage &
-  ReportDescriptorLocation &
-  ReportDescriptorOptions
-type ReportDescriptorMessage = { message: string } | { messageId: string }
+	ReportDescriptorLocation &
+	ReportDescriptorOptions;
+type ReportDescriptorMessage = { message: string } | { messageId: string };
 type ReportDescriptorLocation =
-  | { node: NodeOrToken }
-  | { loc: AST.SourceLocation | { line: number; column: number } }
+	| { node: NodeOrToken }
+	| { loc: AST.SourceLocation | { line: number; column: number } };
 
 export interface RuleFixer {
-  insertTextAfter(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+	insertTextAfter(nodeOrToken: NodeOrToken, text: string): Rule.Fix;
 
-  insertTextAfterRange(range: AST.Range, text: string): Rule.Fix
+	insertTextAfterRange(range: AST.Range, text: string): Rule.Fix;
 
-  insertTextBefore(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+	insertTextBefore(nodeOrToken: NodeOrToken, text: string): Rule.Fix;
 
-  insertTextBeforeRange(range: AST.Range, text: string): Rule.Fix
+	insertTextBeforeRange(range: AST.Range, text: string): Rule.Fix;
 
-  remove(nodeOrToken: NodeOrToken): Rule.Fix
+	remove(nodeOrToken: NodeOrToken): Rule.Fix;
 
-  removeRange(range: AST.Range): Rule.Fix
+	removeRange(range: AST.Range): Rule.Fix;
 
-  replaceText(nodeOrToken: NodeOrToken, text: string): Rule.Fix
+	replaceText(nodeOrToken: NodeOrToken, text: string): Rule.Fix;
 
-  replaceTextRange(range: AST.Range, text: string): Rule.Fix
+	replaceTextRange(range: AST.Range, text: string): Rule.Fix;
 }
 // eslint-disable-next-line @typescript-eslint/no-namespace -- ignore
 export declare namespace SourceCode {
-  export function splitLines(text: string): string[]
+	export function splitLines(text: string): string[];
 }
 export interface SourceCode {
-  text: string
-  ast: AST.SvelteProgram
-  lines: string[]
-  hasBOM: boolean
-  parserServices: ESLintSourceCode.ParserServices
-  scopeManager: ScopeManager
-  visitorKeys: ESLintSourceCode.VisitorKeys
+	text: string;
+	ast: AST.SvelteProgram;
+	lines: string[];
+	hasBOM: boolean;
+	parserServices: ESLintSourceCode.ParserServices;
+	scopeManager: ScopeManager;
+	visitorKeys: ESLintSourceCode.VisitorKeys;
 
-  getText(node?: NodeOrToken, beforeCount?: number, afterCount?: number): string
+	getText(node?: NodeOrToken, beforeCount?: number, afterCount?: number): string;
 
-  getLines(): string[]
+	getLines(): string[];
 
-  getAllComments(): AST.Comment[]
+	getAllComments(): AST.Comment[];
 
-  getComments(node: NodeOrToken): {
-    leading: AST.Comment[]
-    trailing: AST.Comment[]
-  }
+	getComments(node: NodeOrToken): {
+		leading: AST.Comment[];
+		trailing: AST.Comment[];
+	};
 
-  getJSDocComment(node: NodeOrToken): AST.Comment | null
+	getJSDocComment(node: NodeOrToken): AST.Comment | null;
 
-  getNodeByRangeIndex(index: number): ASTNodeWithParent | null
+	getNodeByRangeIndex(index: number): ASTNodeWithParent | null;
 
-  isSpaceBetweenTokens(first: AST.Token, second: AST.Token): boolean
+	isSpaceBetweenTokens(first: AST.Token, second: AST.Token): boolean;
 
-  getLocFromIndex(index: number): AST.Position
+	getLocFromIndex(index: number): AST.Position;
 
-  getIndexFromLoc(location: AST.Position): number
+	getIndexFromLoc(location: AST.Position): number;
 
-  // Inherited methods from TokenStore
-  // ---------------------------------
+	// Inherited methods from TokenStore
+	// ---------------------------------
 
-  getTokenByRangeStart(
-    offset: number,
-    options?: { includeComments?: boolean },
-  ): AST.Token | AST.Comment | null
+	getTokenByRangeStart(
+		offset: number,
+		options?: { includeComments?: boolean }
+	): AST.Token | AST.Comment | null;
 
-  getFirstToken(node: NodeOrToken): AST.Token
-  getFirstToken(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getFirstToken"]>[1],
-  ): AST.Token | AST.Comment | null
+	getFirstToken(node: NodeOrToken): AST.Token;
+	getFirstToken(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getFirstToken']>[1]
+	): AST.Token | AST.Comment | null;
 
-  getFirstTokens(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getFirstTokens"]>[1],
-  ): (AST.Token | AST.Comment)[]
+	getFirstTokens(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getFirstTokens']>[1]
+	): (AST.Token | AST.Comment)[];
 
-  getLastToken(node: NodeOrToken): AST.Token
-  getLastToken(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getLastToken"]>[1],
-  ): AST.Token | AST.Comment | null
+	getLastToken(node: NodeOrToken): AST.Token;
+	getLastToken(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getLastToken']>[1]
+	): AST.Token | AST.Comment | null;
 
-  getLastTokens(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getLastTokens"]>[1],
-  ): (AST.Token | AST.Comment)[]
+	getLastTokens(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getLastTokens']>[1]
+	): (AST.Token | AST.Comment)[];
 
-  getTokenBefore(node: NodeOrToken): AST.Token | null
-  getTokenBefore(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getTokenBefore"]>[1],
-  ): AST.Token | AST.Comment | null
+	getTokenBefore(node: NodeOrToken): AST.Token | null;
+	getTokenBefore(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getTokenBefore']>[1]
+	): AST.Token | AST.Comment | null;
 
-  getTokensBefore(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getTokensBefore"]>[1],
-  ): (AST.Token | AST.Comment)[]
+	getTokensBefore(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getTokensBefore']>[1]
+	): (AST.Token | AST.Comment)[];
 
-  getTokenAfter(node: NodeOrToken): AST.Token | null
-  getTokenAfter(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getTokenAfter"]>[1],
-  ): AST.Token | AST.Comment | null
+	getTokenAfter(node: NodeOrToken): AST.Token | null;
+	getTokenAfter(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getTokenAfter']>[1]
+	): AST.Token | AST.Comment | null;
 
-  getTokensAfter(
-    node: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getTokensAfter"]>[1],
-  ): (AST.Token | AST.Comment)[]
+	getTokensAfter(
+		node: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getTokensAfter']>[1]
+	): (AST.Token | AST.Comment)[];
 
-  getFirstTokenBetween(
-    left: NodeOrToken,
-    right: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getFirstTokenBetween"]>[2],
-  ): AST.Token | AST.Comment | null
+	getFirstTokenBetween(
+		left: NodeOrToken,
+		right: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getFirstTokenBetween']>[2]
+	): AST.Token | AST.Comment | null;
 
-  getFirstTokensBetween(
-    left: NodeOrToken,
-    right: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getFirstTokensBetween"]>[2],
-  ): (AST.Token | AST.Comment)[]
+	getFirstTokensBetween(
+		left: NodeOrToken,
+		right: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getFirstTokensBetween']>[2]
+	): (AST.Token | AST.Comment)[];
 
-  getLastTokenBetween(
-    left: NodeOrToken,
-    right: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getLastTokenBetween"]>[2],
-  ): AST.Token | AST.Comment | null
+	getLastTokenBetween(
+		left: NodeOrToken,
+		right: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getLastTokenBetween']>[2]
+	): AST.Token | AST.Comment | null;
 
-  getLastTokensBetween(
-    left: NodeOrToken,
-    right: NodeOrToken,
-    options?: Parameters<ESLintSourceCode["getLastTokensBetween"]>[2],
-  ): (AST.Token | AST.Comment)[]
+	getLastTokensBetween(
+		left: NodeOrToken,
+		right: NodeOrToken,
+		options?: Parameters<ESLintSourceCode['getLastTokensBetween']>[2]
+	): (AST.Token | AST.Comment)[];
 
-  getTokensBetween(
-    left: NodeOrToken,
-    right: NodeOrToken,
-    padding?: Parameters<ESLintSourceCode["getTokensBetween"]>[2],
-  ): (AST.Token | AST.Comment)[]
+	getTokensBetween(
+		left: NodeOrToken,
+		right: NodeOrToken,
+		padding?: Parameters<ESLintSourceCode['getTokensBetween']>[2]
+	): (AST.Token | AST.Comment)[];
 
-  getTokens(
-    node: NodeOrToken,
-    beforeCount?: number,
-    afterCount?: number,
-  ): AST.Token[]
-  getTokens(
-    node: NodeOrToken,
-    options: Parameters<ESLintSourceCode["getTokens"]>[1],
-  ): (AST.Token | AST.Comment)[]
+	getTokens(node: NodeOrToken, beforeCount?: number, afterCount?: number): AST.Token[];
+	getTokens(
+		node: NodeOrToken,
+		options: Parameters<ESLintSourceCode['getTokens']>[1]
+	): (AST.Token | AST.Comment)[];
 
-  commentsExistBetween(left: NodeOrToken, right: NodeOrToken): boolean
+	commentsExistBetween(left: NodeOrToken, right: NodeOrToken): boolean;
 
-  getCommentsBefore(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[]
+	getCommentsBefore(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[];
 
-  getCommentsAfter(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[]
+	getCommentsAfter(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[];
 
-  getCommentsInside(node: NodeOrToken): AST.Comment[]
+	getCommentsInside(node: NodeOrToken): AST.Comment[];
 }

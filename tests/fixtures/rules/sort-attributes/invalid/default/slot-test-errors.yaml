@@ -1,8 +1,8 @@
 - message: Attribute 'slot' should go before 'let:item'.
   line: 7
-  column: 30
+  column: 29
   suggestions: null
 - message: Attribute 'slot' should go before 'class'.
   line: 8
-  column: 21
+  column: 20
   suggestions: null

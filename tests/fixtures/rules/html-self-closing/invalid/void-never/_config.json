@@ -1,7 +1,7 @@
 {
-  "options": [
-    {
-      "void": "never"
-    }
-  ]
+	"options": [
+		{
+			"void": "never"
+		}
+	]
 }

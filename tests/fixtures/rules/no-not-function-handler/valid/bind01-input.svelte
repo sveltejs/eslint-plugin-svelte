@@ -1,4 +1,4 @@
 <script>
 </script>
 
-<input bind:value={""} />
+<input bind:value={''} />

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/sort-attributes"
-description: "enforce order of attributes"
-since: "v2.4.0"
+title: 'svelte/sort-attributes'
+description: 'enforce order of attributes'
+since: 'v2.4.0'
 ---
 
 # svelte/sort-attributes

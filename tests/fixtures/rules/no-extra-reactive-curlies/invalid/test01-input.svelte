@@ -1,5 +1,5 @@
 <script>
-  $: {
-    foo = info
-  }
+	$: {
+		foo = info;
+	}
 </script>

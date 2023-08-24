@@ -1,6 +1,6 @@
 <script lang="ts">
-  import * as stores from "../../ts/store"
-  import { get } from "svelte/store"
+	import * as stores from '../../ts/store';
+	import { get } from 'svelte/store';
 </script>
 
 <p>{get(stores.wStore)}</p>

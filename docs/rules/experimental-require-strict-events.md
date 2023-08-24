@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/experimental-require-strict-events"
-description: "require the strictEvents attribute on `<script>` tags"
-since: "v2.18.0"
+title: 'svelte/experimental-require-strict-events'
+description: 'require the strictEvents attribute on `<script>` tags'
+since: 'v2.18.0'
 ---
 
 # svelte/experimental-require-strict-events

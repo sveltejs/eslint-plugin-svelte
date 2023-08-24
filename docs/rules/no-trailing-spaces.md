@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-trailing-spaces"
-description: "disallow trailing whitespace at the end of lines"
-since: "v2.7.0"
+title: 'svelte/no-trailing-spaces'
+description: 'disallow trailing whitespace at the end of lines'
+since: 'v2.7.0'
 ---
 
 # svelte/no-trailing-spaces

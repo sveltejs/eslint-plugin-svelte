@@ -1,8 +1,8 @@
 <script>
-  let value = "hello!"
-  let active = true
-  let color = "red"
-  let foo = 42
+	let value = 'hello!';
+	let active = true;
+	let color = 'red';
+	let foo = 42;
 </script>
 
 <!-- ✓ GOOD -->

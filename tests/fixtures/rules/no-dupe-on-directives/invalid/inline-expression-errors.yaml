@@ -1,16 +1,16 @@
-- message: This `on:keydown` directive is the same and duplicate directives in L3.
-  line: 2
-  column: 3
+- message: This `on:keydown` directive is the same and duplicate directives in L1.
+  line: 1
+  column: 9
   suggestions: null
-- message: This `on:keydown` directive is the same and duplicate directives in L2.
-  line: 3
-  column: 3
-  suggestions: null
-- message: This `on:keydown` directive is the same and duplicate directives in L10.
-  line: 7
-  column: 3
+- message: This `on:keydown` directive is the same and duplicate directives in L1.
+  line: 1
+  column: 47
   suggestions: null
 - message: This `on:keydown` directive is the same and duplicate directives in L7.
-  line: 10
-  column: 3
+  line: 4
+  column: 2
+  suggestions: null
+- message: This `on:keydown` directive is the same and duplicate directives in L4.
+  line: 7
+  column: 2
   suggestions: null

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/block-lang"
-description: "disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks."
-since: "v2.18.0"
+title: 'svelte/block-lang'
+description: 'disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks.'
+since: 'v2.18.0'
 ---
 
 # svelte/block-lang

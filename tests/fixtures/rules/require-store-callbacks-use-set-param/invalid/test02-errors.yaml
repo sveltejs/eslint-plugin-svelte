@@ -1,16 +1,16 @@
 - message: Store callbacks must use `set` param.
   line: 4
-  column: 19
+  column: 18
   suggestions: null
 - message: Store callbacks must use `set` param.
   line: 5
-  column: 19
+  column: 18
   suggestions: null
 - message: Store callbacks must use `set` param.
   line: 7
-  column: 19
+  column: 18
   suggestions: null
 - message: Store callbacks must use `set` param.
   line: 8
-  column: 19
+  column: 18
   suggestions: null

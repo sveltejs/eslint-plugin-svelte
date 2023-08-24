@@ -1,27 +1,27 @@
 - message: Destructure baz from $store for better change tracking & fewer redraws
   line: 18
-  column: 9
+  column: 8
   suggestions:
-    - desc: "Using destructuring like $: ({ baz } = $store); will run faster"
+    - desc: 'Using destructuring like $: ({ baz } = $store); will run faster'
       messageId: fixUseDestructuring
       output: |
         <script>
-          import store from "./store.js"
+        	import store from './store.js';
 
-          let foo, bar
-          $: {
-            foo = $store.foo
-            bar = $store.bar
-          }
+        	let foo, bar;
+        	$: {
+        		foo = $store.foo;
+        		bar = $store.bar;
+        	}
         $: ({ baz } = $store);
         </script>
 
         <div>
-          foo: {`${foo} ${Date.now()}`}
+        	foo: {`${foo} ${Date.now()}`}
         </div>
         <div>
-          bar: {`${bar} ${Date.now()}`}
+        	bar: {`${bar} ${Date.now()}`}
         </div>
         <div>
-          baz: {baz}
+        	baz: {baz}
         </div>

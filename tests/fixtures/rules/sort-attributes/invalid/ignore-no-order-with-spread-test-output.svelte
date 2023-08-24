@@ -1,5 +1,5 @@
 <script>
-  let attrs
+	let attrs;
 </script>
 
 <div order-b {...attrs} order-a order-c />

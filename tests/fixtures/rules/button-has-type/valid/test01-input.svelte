@@ -1,6 +1,6 @@
 <script>
-  import Button from "./my-button"
-  let buttonType = "button"
+	import Button from './my-button';
+	let buttonType = 'button';
 </script>
 
 <button type="button">Hello World</button>

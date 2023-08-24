@@ -1,5 +1,5 @@
 <script>
-  export let name = "s"
+  export let name = 's';
 </script>
 
 <!-- prettier-ignore -->

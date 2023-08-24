@@ -1,13 +1,6 @@
 <script lang="ts">
-  import {
-    wStore,
-    rStore,
-    dStore,
-    unionStore,
-    storeLike,
-    stores,
-  } from "../../ts/store"
-  import { get } from "svelte/store"
+	import { wStore, rStore, dStore, unionStore, storeLike, stores } from '../../ts/store';
+	import { get } from 'svelte/store';
 </script>
 
 <!-- ✓ GOOD -->

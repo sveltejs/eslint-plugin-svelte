@@ -1,5 +1,5 @@
 <script>
-  let link = ""
+	let link = '';
 </script>
 
 <a href="https://svelte.dev/" target="_blank">link</a>

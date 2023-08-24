@@ -1,5 +1,5 @@
 <script>
-  let a = null
+	let a = null;
 </script>
 
 <button on:click={null} />

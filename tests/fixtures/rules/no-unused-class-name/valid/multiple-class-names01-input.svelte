@@ -3,19 +3,19 @@
 <span class="span-class span-class-two">World!</span>
 
 <style>
-  .div-class {
-    color: red;
-  }
+	.div-class {
+		color: red;
+	}
 
-  .div-class-two {
-    color: blue;
-  }
+	.div-class-two {
+		color: blue;
+	}
 
-  .span-class {
-    font-weight: bold;
-  }
+	.span-class {
+		font-weight: bold;
+	}
 
-  .span-class-two {
-    font-weight: normal;
-  }
+	.span-class-two {
+		font-weight: normal;
+	}
 </style>

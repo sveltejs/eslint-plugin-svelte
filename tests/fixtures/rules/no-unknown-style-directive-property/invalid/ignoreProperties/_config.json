@@ -1,3 +1,3 @@
 {
-  "options": [{ "ignoreProperties": ["foo", "/^bar/"] }]
+	"options": [{ "ignoreProperties": ["foo", "/^bar/"] }]
 }

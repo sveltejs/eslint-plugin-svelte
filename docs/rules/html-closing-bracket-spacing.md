@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/html-closing-bracket-spacing"
+title: 'svelte/html-closing-bracket-spacing'
 description: "require or disallow a space before tag's closing brackets"
-since: "v2.3.0"
+since: 'v2.3.0'
 ---
 
 # svelte/html-closing-bracket-spacing
