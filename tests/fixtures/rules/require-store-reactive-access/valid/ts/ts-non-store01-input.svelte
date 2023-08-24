@@ -1,14 +1,14 @@
 <script lang="ts">
-  import {
-    numValue,
-    strValue,
-    anyValue,
-    nullableValue,
-    hasSubscribe1,
-    hasSubscribe2,
-    hasSubscribe3,
-  } from "../../ts/non-store"
-  import { get } from "svelte/store"
+	import {
+		numValue,
+		strValue,
+		anyValue,
+		nullableValue,
+		hasSubscribe1,
+		hasSubscribe2,
+		hasSubscribe3
+	} from '../../ts/non-store';
+	import { get } from 'svelte/store';
 </script>
 
 <!-- Non store -->

@@ -1,15 +1,15 @@
 <script>
-  let div
-  let show
+	let div;
+	let show;
 
-  // ✓ GOOD
-  const toggle = () => (show = !show)
+	// ✓ GOOD
+	const toggle = () => (show = !show);
 </script>
 
 <div bind:this={div}>
-  {#if show}
-    div
-  {/if}
+	{#if show}
+		div
+	{/if}
 </div>
 
 <button on:click={() => toggle()}>Click Me</button>

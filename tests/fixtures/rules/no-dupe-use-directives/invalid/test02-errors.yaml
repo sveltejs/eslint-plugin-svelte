@@ -1,60 +1,60 @@
-- message: This `use:x` directive is the same and duplicate directives in L7.
-  line: 6
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 6
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 7
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 12
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 8
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 18
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 9
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 24
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 10
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 30
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 11
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 36
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 12
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 42
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 13
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 48
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 14
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 54
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 15
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 60
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 16
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 66
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 17
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 72
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 18
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 78
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 19
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 84
   suggestions: null
-- message: This `use:x` directive is the same and duplicate directives in L6.
-  line: 20
-  column: 3
+- message: This `use:x` directive is the same and duplicate directives in L5.
+  line: 5
+  column: 90
   suggestions: null

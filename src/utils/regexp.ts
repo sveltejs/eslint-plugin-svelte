@@ -1,4 +1,4 @@
-const RE_REGEXP_STR = /^\/(.+)\/([A-Za-z]*)$/u
+const RE_REGEXP_STR = /^\/(.+)\/([A-Za-z]*)$/u;
 
 /**
  * Convert a string to the `RegExp`.
@@ -9,11 +9,11 @@ const RE_REGEXP_STR = /^\/(.+)\/([A-Za-z]*)$/u
  * @returns {RegExp} Returns the `RegExp`.
  */
 export function toRegExp(string: string): { test(s: string): boolean } {
-  const parts = RE_REGEXP_STR.exec(string)
-  if (parts) {
-    return new RegExp(parts[1], parts[2])
-  }
-  return { test: (s) => s === string }
+	const parts = RE_REGEXP_STR.exec(string);
+	if (parts) {
+		return new RegExp(parts[1], parts[2]);
+	}
+	return { test: (s) => s === string };
 }
 
 /**
@@ -22,5 +22,5 @@ export function toRegExp(string: string): { test(s: string): boolean } {
  * @returns {boolean}
  */
 export function isRegExp(string: string): boolean {
-  return Boolean(RE_REGEXP_STR.test(string))
+	return Boolean(RE_REGEXP_STR.test(string));
 }

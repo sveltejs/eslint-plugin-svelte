@@ -1,10 +1,10 @@
 {
-  "options": [
-    {
-      "enforceScriptPresent": true,
-      "enforceStylePresent": true,
-      "script": "ts",
-      "style": "scss"
-    }
-  ]
+	"options": [
+		{
+			"enforceScriptPresent": true,
+			"enforceStylePresent": true,
+			"script": "ts",
+			"style": "scss"
+		}
+	]
 }

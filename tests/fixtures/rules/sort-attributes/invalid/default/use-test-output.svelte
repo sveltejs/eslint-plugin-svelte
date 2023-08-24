@@ -1,6 +1,6 @@
 <script>
-  function a() {}
-  function b() {}
+	function a() {}
+	function b() {}
 </script>
 
 <div use:a use:b />

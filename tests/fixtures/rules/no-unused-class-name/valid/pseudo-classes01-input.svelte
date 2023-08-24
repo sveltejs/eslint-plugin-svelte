@@ -5,10 +5,10 @@
 <span class="span-class-two">!</span>
 
 <style>
-  :not(.div-class) {
-    color: red;
-  }
-  :is(.span-class-one, .span-class-two) {
-    color: red;
-  }
+	:not(.div-class) {
+		color: red;
+	}
+	:is(.span-class-one, .span-class-two) {
+		color: red;
+	}
 </style>

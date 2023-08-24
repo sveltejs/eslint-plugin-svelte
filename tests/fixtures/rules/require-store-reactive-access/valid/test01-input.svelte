@@ -1,11 +1,11 @@
 <script>
-  import { writable, readable, derived, get } from "svelte/store"
-  const storeValue1 = writable("hello")
-  const storeValue2 = readable("hello")
-  const storeValue3 = derived(storeValue1, () => {})
-  const numValue = 42
-  const strValue = "string"
-  let anyValue
+	import { writable, readable, derived, get } from 'svelte/store';
+	const storeValue1 = writable('hello');
+	const storeValue2 = readable('hello');
+	const storeValue3 = derived(storeValue1, () => {});
+	const numValue = 42;
+	const strValue = 'string';
+	let anyValue;
 </script>
 
 <!-- ✓ GOOD -->

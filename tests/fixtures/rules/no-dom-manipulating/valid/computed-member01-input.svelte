@@ -1,6 +1,6 @@
 <script>
-  let div
-  const remove = () => div[remove]()
+	let div;
+	const remove = () => div[remove]();
 </script>
 
 <div bind:this={div}>div</div>

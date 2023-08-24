@@ -1,17 +1,17 @@
 /* eslint require-jsdoc:0 -- shim */
-import nested from "postcss-nested"
+import nested from 'postcss-nested';
 
 function loadConfig() {
-  // noop
+	// noop
 }
 
 export function sync(options) {
-  return {
-    plugins: [nested],
-    options,
-  }
+	return {
+		plugins: [nested],
+		options
+	};
 }
 
-loadConfig.sync = sync
+loadConfig.sync = sync;
 
-export default loadConfig
+export default loadConfig;

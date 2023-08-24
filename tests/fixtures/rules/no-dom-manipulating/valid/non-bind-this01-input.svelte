@@ -1,11 +1,11 @@
 <script>
-  let foo
-  let bar
+	let foo;
+	let bar;
 
-  const remove = () => {
-    foo.remove()
-    bar.remove()
-  }
+	const remove = () => {
+		foo.remove();
+		bar.remove();
+	};
 </script>
 
 <input bind:value={foo} />

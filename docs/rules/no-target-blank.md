@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-target-blank"
+title: 'svelte/no-target-blank'
 description: 'disallow `target="_blank"` attribute without `rel="noopener noreferrer"`'
-since: "v0.0.4"
+since: 'v0.0.4'
 ---
 
 # svelte/no-target-blank

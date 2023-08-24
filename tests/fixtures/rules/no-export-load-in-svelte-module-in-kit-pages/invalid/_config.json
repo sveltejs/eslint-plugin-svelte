@@ -1,11 +1,11 @@
 {
-  "settings": {
-    "svelte": {
-      "kit": {
-        "files": {
-          "routes": "tests/fixtures"
-        }
-      }
-    }
-  }
+	"settings": {
+		"svelte": {
+			"kit": {
+				"files": {
+					"routes": "tests/fixtures"
+				}
+			}
+		}
+	}
 }

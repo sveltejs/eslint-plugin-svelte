@@ -1,7 +1,7 @@
 <script>
-  const a = 42
-  const b = 42n
-  const c = /reg/
+	const a = 42;
+	const b = 42n;
+	const c = /reg/;
 </script>
 
 <button on:click={a} />

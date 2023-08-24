@@ -1,3 +1,3 @@
 <script context="module">
-  export function load() {}
+	export function load() {}
 </script>

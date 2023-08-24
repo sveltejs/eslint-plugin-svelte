@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-restricted-html-elements"
-description: "disallow specific HTML elements"
-since: "v2.31.0"
+title: 'svelte/no-restricted-html-elements'
+description: 'disallow specific HTML elements'
+since: 'v2.31.0'
 ---
 
 # svelte/no-restricted-html-elements
@@ -70,15 +70,7 @@ This rule takes a list of strings, where each string is an HTML element name to 
 
 ```json
 {
-  "svelte/no-restricted-html-elements": [
-    "error",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6"
-  ]
+  "svelte/no-restricted-html-elements": ["error", "h1", "h2", "h3", "h4", "h5", "h6"]
 }
 ```
 

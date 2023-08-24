@@ -1,13 +1,13 @@
 <script>
-  let obj = { a: 0 }
+	let obj = { a: 0 };
 
-  const doSomething = async () => {
-    obj.a += 1
-    await fetch()
-  }
+	const doSomething = async () => {
+		obj.a += 1;
+		await fetch();
+	};
 
-  $: (async () => {
-    obj.a += 1
-    await doSomething()
-  })()
+	$: (async () => {
+		obj.a += 1;
+		await doSomething();
+	})();
 </script>

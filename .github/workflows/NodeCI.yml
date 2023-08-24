@@ -34,7 +34,7 @@ jobs:
           pnpm run update
           pnpm run build
   test:
-    name: "Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}"
+    name: 'Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

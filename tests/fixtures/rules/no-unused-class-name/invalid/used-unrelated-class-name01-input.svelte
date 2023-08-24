@@ -3,7 +3,7 @@
 <span class="span-class">World!</span>
 
 <style>
-  .unrelated-class {
-    color: red;
-  }
+	.unrelated-class {
+		color: red;
+	}
 </style>

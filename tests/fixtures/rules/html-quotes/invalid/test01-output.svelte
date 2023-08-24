@@ -1,8 +1,8 @@
 <script>
-  let text = ""
-  let value = ""
-  let src = "tutorial/image.gif"
-  let name = "Rick Astley"
+	let text = '';
+	let value = '';
+	let src = 'tutorial/image.gif';
+	let name = 'Rick Astley';
 </script>
 
 <!-- prettier-ignore -->

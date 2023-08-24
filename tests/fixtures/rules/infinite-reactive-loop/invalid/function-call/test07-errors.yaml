@@ -1,8 +1,9 @@
 - message: Possibly it may occur an infinite reactive loop.
   line: 5
-  column: 5
+  column: 3
   suggestions: null
-- message: Possibly it may occur an infinite reactive loop because this function may update `$store`.
+- message: Possibly it may occur an infinite reactive loop because this function
+    may update `$store`.
   line: 11
-  column: 5
+  column: 3
   suggestions: null

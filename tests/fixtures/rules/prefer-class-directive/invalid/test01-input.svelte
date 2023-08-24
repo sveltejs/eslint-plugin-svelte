@@ -1,8 +1,8 @@
 <script>
-  let selected = "foo"
+	let selected = 'foo';
 </script>
 
-<button class={selected ? "selected" : ""}>foo</button>
+<button class={selected ? 'selected' : ''}>foo</button>
 <button class="a {selected ? 'selected' : ''} b">foo</button>
 <button class="a{selected ? ' selected ' : ' '}b">foo</button>
 

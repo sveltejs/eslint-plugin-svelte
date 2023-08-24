@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "./unknown"
+	import { createEventDispatcher } from './unknown';
 
-  const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 </script>

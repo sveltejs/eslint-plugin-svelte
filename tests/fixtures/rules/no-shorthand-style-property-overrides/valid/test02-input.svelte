@@ -1,5 +1,5 @@
 <script>
-  let red = "red"
+	let red = 'red';
 </script>
 
 <div style:background-repeat="repeat" not-style="background: green">...</div>

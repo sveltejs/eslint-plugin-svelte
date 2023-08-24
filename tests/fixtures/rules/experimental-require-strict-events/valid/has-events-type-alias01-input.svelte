@@ -1,3 +1,3 @@
 <script lang="ts">
-  type $$Events = {}
+	type $$Events = {};
 </script>

@@ -1,8 +1,8 @@
 <script>
-  import { writable, readable, derived, get } from "svelte/store"
-  const storeValue1 = writable("hello")
-  const storeValue2 = readable("hello")
-  const storeValue3 = derived(storeValue1, () => {})
+	import { writable, readable, derived, get } from 'svelte/store';
+	const storeValue1 = writable('hello');
+	const storeValue2 = readable('hello');
+	const storeValue3 = derived(storeValue1, () => {});
 </script>
 
 <!-- ✓ GOOD -->

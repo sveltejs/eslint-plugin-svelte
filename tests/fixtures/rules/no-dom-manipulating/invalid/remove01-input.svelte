@@ -1,16 +1,16 @@
 <script>
-  let div
-  let show
+	let div;
+	let show;
 
-  // ✓ GOOD
-  const toggle = () => (show = !show)
+	// ✓ GOOD
+	const toggle = () => (show = !show);
 
-  // ✗ BAD
-  const remove = () => div.remove()
+	// ✗ BAD
+	const remove = () => div.remove();
 </script>
 
 {#if show}
-  <div bind:this={div}>div</div>
+	<div bind:this={div}>div</div>
 {/if}
 
 <button on:click={() => toggle()}>Click Me (Good)</button>

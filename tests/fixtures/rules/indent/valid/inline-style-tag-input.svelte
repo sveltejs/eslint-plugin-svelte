@@ -2,7 +2,7 @@
   <style>
     /* prettier-ignore */
     .test {
-        fill: red;
-      }
+      fill: red;
+    }
   </style>
 </svg>

@@ -1,8 +1,8 @@
 <script>
-  let divElement
-  let foo = ""
+	let divElement;
+	let foo = '';
 
-  $: if (divElement) foo = `${divElement.data.foo}`
+	$: if (divElement) foo = `${divElement.data.foo}`;
 </script>
 
 <div bind:this={divElement} data-foo="Foo" />

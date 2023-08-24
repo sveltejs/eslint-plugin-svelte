@@ -1,5 +1,5 @@
 <script>
-  const a = "hello!"
+	const a = 'hello!';
 </script>
 
 <button on:click={[a]} />

@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/html-self-closing"
-description: "enforce self-closing style"
-since: "v2.5.0"
+title: 'svelte/html-self-closing'
+description: 'enforce self-closing style'
+since: 'v2.5.0'
 ---
 
 # svelte/html-self-closing

@@ -1,8 +1,8 @@
 <script>
-  let a = true
-  let b = true
-  let c = true
-  let d = true
+	let a = true;
+	let b = true;
+	let c = true;
+	let d = true;
 </script>
 
 <button class:a-or-b={a || b} class:not-a-and-not-b={!(a || b)}>foo</button>

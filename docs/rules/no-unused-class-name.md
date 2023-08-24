@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-unused-class-name"
-description: "disallow the use of a class in the template without a corresponding style"
-since: "v2.31.0"
+title: 'svelte/no-unused-class-name'
+description: 'disallow the use of a class in the template without a corresponding style'
+since: 'v2.31.0'
 ---
 
 # svelte/no-unused-class-name

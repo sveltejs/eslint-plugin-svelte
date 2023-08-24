@@ -1,7 +1,7 @@
 {
-  "options": [
-    {
-      "component": "never"
-    }
-  ]
+	"options": [
+		{
+			"component": "never"
+		}
+	]
 }

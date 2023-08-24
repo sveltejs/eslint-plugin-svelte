@@ -1,15 +1,15 @@
 <script>
-  export const thisIs = "readonly"
+	export const thisIs = 'readonly';
 
-  export function greet(name) {
-    console.log(`hello ${name}!`)
-  }
+	export function greet(name) {
+		console.log(`hello ${name}!`);
+	}
 
-  export class Foo {}
+	export class Foo {}
 
-  const immutableVar = "hello"
+	const immutableVar = 'hello';
 
-  $: message1 = greet(immutableVar)
-  $: message2 = `this is${thisIs}`
-  $: instance = new Foo()
+	$: message1 = greet(immutableVar);
+	$: message2 = `this is${thisIs}`;
+	$: instance = new Foo();
 </script>

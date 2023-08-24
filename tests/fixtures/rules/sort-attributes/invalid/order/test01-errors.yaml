@@ -8,43 +8,43 @@
   suggestions: null
 - message: Attribute 'class' should go before 'class:bar'.
   line: 14
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'id' should go before 'class:bar'.
   line: 15
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'value' should go before 'bind:this'.
   line: 17
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'style:color' should go before 'bind:this'.
   line: 18
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'style' should go before 'bind:this'.
   line: 19
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'data-value' should go before 'bind:this'.
   line: 20
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'animate:name' should go before 'bind:this'.
   line: 21
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'in:fn' should go before 'bind:this'.
   line: 22
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'out:fn' should go before 'bind:this'.
   line: 23
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'transition:fn' should go before 'bind:this'.
   line: 24
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'src' should go before 'alt'.
   line: 26

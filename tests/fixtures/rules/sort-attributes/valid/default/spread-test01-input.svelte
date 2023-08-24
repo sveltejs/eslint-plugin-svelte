@@ -1,5 +1,5 @@
 <script>
-  let attrs
+	let attrs;
 </script>
 
 <div b c d {...attrs} a />

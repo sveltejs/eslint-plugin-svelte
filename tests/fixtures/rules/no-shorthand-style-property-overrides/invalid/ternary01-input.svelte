@@ -1,12 +1,12 @@
 <script>
-  let red = "red"
+	let red = 'red';
 </script>
 
 <div
-  style="
+	style="
     background-repeat: repeat;
     {red ? `background: ${red}` : 'background: green'}
   "
 >
-  ...
+	...
 </div>

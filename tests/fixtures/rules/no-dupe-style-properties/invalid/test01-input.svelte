@@ -1,5 +1,5 @@
 <script>
-  let red = "red"
+	let red = 'red';
 </script>
 
 <!-- ✓ GOOD -->

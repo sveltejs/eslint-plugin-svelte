@@ -1,7 +1,7 @@
 <script>
-  function myHandler() {}
-  function foo() {}
-  function bar() {}
+	function myHandler() {}
+	function foo() {}
+	function bar() {}
 </script>
 
 <!-- ✓ GOOD -->

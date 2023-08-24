@@ -1,24 +1,24 @@
 - message: disallow props other than data or errors in SvelteKit page components.
   line: 2
-  column: 14
+  column: 13
   suggestions: null
 - message: disallow props other than data or errors in SvelteKit page components.
   line: 3
-  column: 14
+  column: 13
   suggestions: null
 - message: disallow props other than data or errors in SvelteKit page components.
   line: 4
-  column: 16
+  column: 15
   suggestions: null
 - message: disallow props other than data or errors in SvelteKit page components.
   line: 4
+  column: 20
+  suggestions: null
+- message: disallow props other than data or errors in SvelteKit page components.
+  line: 5
   column: 21
   suggestions: null
 - message: disallow props other than data or errors in SvelteKit page components.
   line: 5
-  column: 22
-  suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
-  line: 5
-  column: 37
+  column: 36
   suggestions: null

@@ -1,5 +1,5 @@
 <script>
-  let link = ""
+	let link = '';
 </script>
 
 <a>link</a>

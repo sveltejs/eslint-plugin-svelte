@@ -1,4 +1,4 @@
 <div
-  data-text="{/* comment */ 'comment'} {// comment
-  'comment'} "
+	data-text="{/* comment */ 'comment'} {// comment
+	'comment'} "
 />

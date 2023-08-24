@@ -1,3 +1,3 @@
 <script context="module">
-  function load() {}
+	function load() {}
 </script>

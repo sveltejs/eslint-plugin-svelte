@@ -1,9 +1,9 @@
 <script>
-  let foo = true
+	let foo = true;
 </script>
 
 {#if foo}
-  <div>if</div>
+	<div>if</div>
 {:else if foo}
-  <div>else if</div>
+	<div>else if</div>
 {/if}

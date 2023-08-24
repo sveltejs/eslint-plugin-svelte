@@ -2,5 +2,5 @@
 {f$oo.bar}
 
 {#each list as baz}
-  {$foo[`bar${baz}`]}
+	{$foo[`bar${baz}`]}
 {/each}

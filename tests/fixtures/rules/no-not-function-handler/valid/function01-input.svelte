@@ -1,6 +1,6 @@
 <script>
-  let a = "hello!"
-  function fn() {}
+	let a = 'hello!';
+	function fn() {}
 </script>
 
 <button on:click={() => a} />

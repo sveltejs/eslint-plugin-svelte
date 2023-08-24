@@ -1,12 +1,10 @@
-- message: >-
-    This branch can never execute. Its condition is a duplicate or covered by
-    previous conditions in the `{#if}` / `{:else if}` chain.
+- message: This branch can never execute. Its condition is a duplicate or covered
+    by previous conditions in the `{#if}` / `{:else if}` chain.
   line: 21
   column: 11
   suggestions: null
-- message: >-
-    This branch can never execute. Its condition is a duplicate or covered by
-    previous conditions in the `{#if}` / `{:else if}` chain.
+- message: This branch can never execute. Its condition is a duplicate or covered
+    by previous conditions in the `{#if}` / `{:else if}` chain.
   line: 31
-  column: 8
+  column: 7
   suggestions: null

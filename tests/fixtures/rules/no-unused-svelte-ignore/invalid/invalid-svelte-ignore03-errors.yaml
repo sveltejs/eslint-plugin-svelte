@@ -1,24 +1,24 @@
 - message: svelte-ignore comment is used, but not warned
   line: 3
-  column: 24
+  column: 22
   suggestions: null
 - message: svelte-ignore comment is used, but not warned
   line: 3
-  column: 58
+  column: 56
   suggestions: null
 - message: svelte-ignore comment is used, but not warned
   line: 7
-  column: 24
+  column: 22
   suggestions: null
 - message: svelte-ignore comment is used, but not warned
   line: 7
-  column: 58
+  column: 56
   suggestions: null
 - message: svelte-ignore comment is used, but not warned
   line: 15
-  column: 24
+  column: 22
   suggestions: null
 - message: svelte-ignore comment is used, but not warned
   line: 15
-  column: 58
+  column: 56
   suggestions: null

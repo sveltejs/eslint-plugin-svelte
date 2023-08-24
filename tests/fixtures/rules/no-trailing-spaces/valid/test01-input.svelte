@@ -1,17 +1,17 @@
 <script>
-  const str = `
+	const str = `
   
-`
-  // line comment
-  /**
-   * block comment
-   */
-  /**
-   * block comment2
-   */ const a = 42
-  // empty line
+`;
+	// line comment
+	/**
+	 * block comment
+	 */
+	/**
+	 * block comment2
+	 */ const a = 42;
+	// empty line
 
-  // empty line
+	// empty line
 </script>
 
 <!--

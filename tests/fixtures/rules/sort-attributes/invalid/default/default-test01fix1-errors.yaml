@@ -1,34 +1,34 @@
 - message: Attribute 'def' should go before 'bind:value'.
   line: 20
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'data-foo' should go before 'bind:value'.
   line: 21
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'abc' should go before 'bind:value'.
   line: 22
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute '--style-props' should go before 'bind:value'.
   line: 24
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'transition:fn' should go before 'animate:name'.
   line: 36
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'bind:value' should go before 'use:action'.
   line: 37
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'in:fn' should go before 'animate:name'.
   line: 38
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'out:fn' should go before 'animate:name'.
   line: 39
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'data-foo' should go before 'def'.
   line: 41

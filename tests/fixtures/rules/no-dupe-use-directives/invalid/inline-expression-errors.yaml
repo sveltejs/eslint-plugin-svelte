@@ -8,9 +8,9 @@
   suggestions: null
 - message: This `use:bar` directive is the same and duplicate directives in L12.
   line: 9
-  column: 3
+  column: 2
   suggestions: null
 - message: This `use:bar` directive is the same and duplicate directives in L9.
   line: 12
-  column: 3
+  column: 2
   suggestions: null

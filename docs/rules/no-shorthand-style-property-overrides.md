@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-shorthand-style-property-overrides"
-description: "disallow shorthand style properties that override related longhand properties"
-since: "v0.31.0"
+title: 'svelte/no-shorthand-style-property-overrides'
+description: 'disallow shorthand style properties that override related longhand properties'
+since: 'v0.31.0'
 ---
 
 # svelte/no-shorthand-style-property-overrides
@@ -25,7 +25,7 @@ This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-o
 ```svelte
 <script>
   /* eslint svelte/no-shorthand-style-property-overrides: "error" */
-  let red = "red"
+  let red = 'red';
 </script>
 
 <!-- ✓ GOOD -->

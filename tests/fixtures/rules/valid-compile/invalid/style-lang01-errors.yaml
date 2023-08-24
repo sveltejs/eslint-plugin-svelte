@@ -1,4 +1,4 @@
 - message: Unused CSS selector ".foo .foo"(css-unused-selector)
   line: 9
-  column: 5
+  column: 3
   suggestions: null

@@ -1,3 +1,3 @@
 <script>
-  export function load() {}
+	export function load() {}
 </script>

@@ -1,5 +1,5 @@
 <script>
-  let transform = "scale(2)"
+	let transform = 'scale(2)';
 </script>
 
 <div style:-moz-transform={transform}>...</div>

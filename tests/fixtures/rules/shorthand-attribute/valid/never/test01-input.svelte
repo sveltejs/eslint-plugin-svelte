@@ -1,5 +1,5 @@
 <script>
-  let disabled = false
+	let disabled = false;
 </script>
 
 <!-- prettier-ignore -->

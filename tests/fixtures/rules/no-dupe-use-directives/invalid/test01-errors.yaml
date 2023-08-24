@@ -1,23 +1,19 @@
-- message:
-    This `use:clickOutside` directive is the same and duplicate directives
+- message: This `use:clickOutside` directive is the same and duplicate directives
     in L13.
   line: 13
   column: 6
   suggestions: null
-- message:
-    This `use:clickOutside` directive is the same and duplicate directives
+- message: This `use:clickOutside` directive is the same and duplicate directives
     in L13.
   line: 13
   column: 23
   suggestions: null
-- message:
-    This `use:clickOutside` directive is the same and duplicate directives
+- message: This `use:clickOutside` directive is the same and duplicate directives
     in L14.
   line: 14
   column: 6
   suggestions: null
-- message:
-    This `use:clickOutside` directive is the same and duplicate directives
+- message: This `use:clickOutside` directive is the same and duplicate directives
     in L14.
   line: 14
   column: 31

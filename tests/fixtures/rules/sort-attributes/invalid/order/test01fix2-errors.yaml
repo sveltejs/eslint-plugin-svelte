@@ -1,24 +1,24 @@
 - message: Attribute 'style' should go before 'style:color'.
   line: 19
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'data-value' should go before 'style:color'.
   line: 20
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'animate:name' should go before 'bind:this'.
   line: 21
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'in:fn' should go before 'bind:this'.
   line: 22
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'out:fn' should go before 'bind:this'.
   line: 23
-  column: 3
+  column: 2
   suggestions: null
 - message: Attribute 'transition:fn' should go before 'bind:this'.
   line: 24
-  column: 3
+  column: 2
   suggestions: null

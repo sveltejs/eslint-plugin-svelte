@@ -1,5 +1,5 @@
 <script context="module">
-  export function fn() {
-    function load() {}
-  }
+	export function fn() {
+		function load() {}
+	}
 </script>

@@ -1,6 +1,6 @@
 <script>
-  $: prop = $$props.prop
-  $: type = $$restProps.type
+	$: prop = $$props.prop;
+	$: type = $$restProps.type;
 </script>
 
 <Widget {prop} />

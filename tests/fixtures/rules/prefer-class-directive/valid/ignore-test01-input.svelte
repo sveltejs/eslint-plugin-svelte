@@ -1,5 +1,5 @@
 <script>
-  let selected = "foo"
+	let selected = 'foo';
 </script>
 
 <button class="{selected ? 'selected' : ''}-b">foo</button>

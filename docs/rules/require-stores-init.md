@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/require-stores-init"
-description: "require initial value in store"
-since: "v2.5.0"
+title: 'svelte/require-stores-init'
+description: 'require initial value in store'
+since: 'v2.5.0'
 ---
 
 # svelte/require-stores-init
@@ -21,17 +21,17 @@ This rule is aimed to enforce initial values when initializing the Svelte stores
 ```js
 /* eslint svelte/require-stores-init: "error" */
 
-import { writable, readable, derived } from "svelte/store"
+import { writable, readable, derived } from 'svelte/store';
 
 /* ✓ GOOD */
-export const w1 = writable(false)
-export const r1 = readable({})
-export const d1 = derived([a, b], () => {}, false)
+export const w1 = writable(false);
+export const r1 = readable({});
+export const d1 = derived([a, b], () => {}, false);
 
 /* ✗ BAD */
-export const w2 = writable()
-export const r2 = readable()
-export const d2 = derived([a, b], () => {})
+export const w2 = writable();
+export const r2 = readable();
+export const d2 = derived([a, b], () => {});
 ```
 
 </ESLintCodeBlock>

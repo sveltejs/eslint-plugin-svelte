@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/system"
-description: "system rule for working this plugin"
-since: "v0.0.13"
+title: 'svelte/system'
+description: 'system rule for working this plugin'
+since: 'v0.0.13'
 ---
 
 # svelte/system

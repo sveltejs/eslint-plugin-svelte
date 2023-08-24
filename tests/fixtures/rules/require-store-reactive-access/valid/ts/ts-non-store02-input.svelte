@@ -1,6 +1,6 @@
 <script lang="ts">
-  import * as nonStore from "../../ts/non-store"
-  import { get } from "svelte/store"
+	import * as nonStore from '../../ts/non-store';
+	import { get } from 'svelte/store';
 </script>
 
 <!-- Non store -->

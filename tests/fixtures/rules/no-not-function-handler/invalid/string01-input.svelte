@@ -1,6 +1,6 @@
 <script>
-  const a = "hello!"
-  const b = `${a} world`
+	const a = 'hello!';
+	const b = `${a} world`;
 </script>
 
 <button on:click={a} />

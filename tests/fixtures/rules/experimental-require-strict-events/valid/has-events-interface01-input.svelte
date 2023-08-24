@@ -1,3 +1,3 @@
 <script lang="ts">
-  interface $$Events {}
+	interface $$Events {}
 </script>

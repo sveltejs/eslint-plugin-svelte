@@ -1,7 +1,7 @@
 /* eslint require-jsdoc:0 -- shim */
 function platform() {
-  return ""
+	return '';
 }
 
-export { platform }
-export default { platform }
+export { platform };
+export default { platform };

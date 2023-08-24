@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/no-useless-mustaches"
-description: "disallow unnecessary mustache interpolations"
-since: "v0.0.4"
+title: 'svelte/no-useless-mustaches'
+description: 'disallow unnecessary mustache interpolations'
+since: 'v0.0.4'
 ---
 
 # svelte/no-useless-mustaches
@@ -32,10 +32,10 @@ Lorem ipsum {foo}
 <div data-text={bar} />
 
 <!-- ✗ BAD -->
-{"Lorem ipsum"}
-{"Lorem ipsum"}
+{'Lorem ipsum'}
+{'Lorem ipsum'}
 {`Lorem ipsum`}
-<div data-text={"Lorem ipsum"} />
+<div data-text={'Lorem ipsum'} />
 ```
 
 </ESLintCodeBlock>
@@ -69,10 +69,10 @@ Lorem ipsum {foo}
 </script>
 
 <!-- ✓ GOOD -->
-<div data-text={/* comment */ "Lorem ipsum"} />
+<div data-text={/* comment */ 'Lorem ipsum'} />
 
 <!-- ✗ BAD -->
-<div data-text={"Lorem ipsum"} />
+<div data-text={'Lorem ipsum'} />
 ```
 
 </ESLintCodeBlock>
@@ -83,8 +83,8 @@ Lorem ipsum {foo}
 
 ```svelte
 <!-- ✓ GOOD -->
-{"Lorem \n ipsum"}
-<div data-text={"Lorem \n ipsum"} />
+{'Lorem \n ipsum'}
+<div data-text={'Lorem \n ipsum'} />
 ```
 
 </ESLintCodeBlock>

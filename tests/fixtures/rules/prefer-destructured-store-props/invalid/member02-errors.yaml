@@ -6,9 +6,9 @@
       messageId: fixUseVariable
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         </script>
 
         foo.bar: {foo.bar}
@@ -19,13 +19,13 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {$store.baz.bar}
-    - desc: "Using destructuring like $: ({ foo } = $store); will run faster"
+    - desc: 'Using destructuring like $: ({ foo } = $store); will run faster'
       messageId: fixUseDestructuring
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         $: ({ foo: foo1 } = $store);
         </script>
 
@@ -45,9 +45,9 @@
       messageId: fixUseVariable
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         </script>
 
         foo.bar: {foo.bar}
@@ -58,13 +58,13 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {$store.baz.bar}
-    - desc: "Using destructuring like $: ({ bar } = $store); will run faster"
+    - desc: 'Using destructuring like $: ({ bar } = $store); will run faster'
       messageId: fixUseDestructuring
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         $: ({ bar } = $store);
         </script>
 
@@ -84,9 +84,9 @@
       messageId: fixUseVariable
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         </script>
 
         foo.bar: {foo.bar}
@@ -101,9 +101,9 @@
       messageId: fixUseVariable
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         </script>
 
         foo.bar: {foo.bar}
@@ -114,13 +114,13 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {bbb.bar}
-    - desc: "Using destructuring like $: ({ baz } = $store); will run faster"
+    - desc: 'Using destructuring like $: ({ baz } = $store); will run faster'
       messageId: fixUseDestructuring
       output: |
         <script>
-          import store from "./store.js"
-          $: ({ foo, bar: b } = $store)
-          $: bbb = $store.baz
+        	import store from './store.js';
+        	$: ({ foo, bar: b } = $store);
+        	$: bbb = $store.baz;
         $: ({ baz } = $store);
         </script>
 

@@ -1,10 +1,10 @@
 - message: Assignment to reactive value 'reactiveValue'.
   line: 7
-  column: 5
+  column: 3
   suggestions: null
 - message: Assignment to reactive value 'reactiveValue'.
   line: 8
-  column: 5
+  column: 3
   suggestions: null
 - message: Assignment to reactive value 'reactiveValue'.
   line: 16

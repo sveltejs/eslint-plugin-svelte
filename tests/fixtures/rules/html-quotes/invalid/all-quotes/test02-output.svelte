@@ -1,5 +1,5 @@
 <script>
-  let text = ""
+	let text = '';
 </script>
 
 <!-- prettier-ignore -->

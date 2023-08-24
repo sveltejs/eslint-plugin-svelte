@@ -1,9 +1,9 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/valid-compile"
-description: "disallow warnings when compiling."
-since: "v0.7.0"
+title: 'svelte/valid-compile'
+description: 'disallow warnings when compiling.'
+since: 'v0.7.0'
 ---
 
 # svelte/valid-compile
@@ -23,7 +23,7 @@ This rule uses Svelte compiler to check the source code.
 ```svelte
 <script>
   /* eslint svelte/valid-compile: "error" */
-  let src = "tutorial/image.gif"
+  let src = 'tutorial/image.gif';
 </script>
 
 <!-- ✓ GOOD -->
@@ -59,7 +59,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 ```svelte
 <script>
   /* eslint svelte/valid-compile: ["error", { ignoreWarnings: true }] */
-  let src = "tutorial/image.gif"
+  let src = 'tutorial/image.gif';
 </script>
 
 <!-- Ignore -->

@@ -1,6 +1,6 @@
 <script>
-  let red = "red"
-  let unknown = red
+	let red = 'red';
+	let unknown = red;
 </script>
 
 <div style:unknown-color={red}>...</div>
