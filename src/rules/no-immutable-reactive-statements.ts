@@ -1,6 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import type { Scope, Variable, Reference, Definition } from '@typescript-eslint/scope-manager';
+import type { TSESTree } from '@typescript-eslint/types';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
@@ -55,45 +56,79 @@ export default createRule('no-immutable-reactive-statements', {
 				// Global variables are assumed to be immutable.
 				return true;
 			}
-			const isMutable = variable.defs.some((def) => {
-				if (def.type === 'Variable') {
-					const parent = def.parent;
-					if (parent.kind === 'const') {
-						return false;
-					}
-					const pp = parent.parent;
-					if (pp && pp.type === 'ExportNamedDeclaration' && pp.declaration === parent) {
-						// Props
-						return true;
-					}
-					return hasWrite(variable);
-				}
+			const isMutableDefine = variable.defs.some((def) => {
 				if (def.type === 'ImportBinding') {
 					return false;
 				}
-
 				if (def.node.type === 'AssignmentExpression') {
 					// Reactive values
 					return true;
 				}
+				if (def.type === 'Variable') {
+					const parent = def.parent;
+					if (parent.kind === 'const') {
+						if (
+							def.node.init &&
+							(def.node.init.type === 'FunctionExpression' ||
+								def.node.init.type === 'ArrowFunctionExpression' ||
+								def.node.init.type === 'Literal')
+						) {
+							return false;
+						}
+					} else {
+						const pp = parent.parent;
+						if (pp && pp.type === 'ExportNamedDeclaration' && pp.declaration === parent) {
+							// Props
+							return true;
+						}
+					}
+					return hasWrite(variable);
+				}
 				return false;
 			});
-			cacheMutableVariable.set(variable, isMutable);
-			return isMutable;
+			cacheMutableVariable.set(variable, isMutableDefine);
+			return isMutableDefine;
 		}
 
 		/** Checks whether the given variable has a write or reactive store reference or not. */
 		function hasWrite(variable: Variable) {
 			const defIds = variable.defs.map((def: Definition) => def.name);
-			return variable.references.some(
-				(reference) =>
+			for (const reference of variable.references) {
+				if (
 					reference.isWrite() &&
 					!defIds.some(
 						(defId) =>
 							defId.range[0] <= reference.identifier.range[0] &&
 							reference.identifier.range[1] <= defId.range[1]
 					)
-			);
+				) {
+					return true;
+				}
+				if (isMutableMember(reference.identifier)) {
+					return true;
+				}
+			}
+			return false;
+
+			function isMutableMember(
+				expr: TSESTree.Identifier | TSESTree.JSXIdentifier | TSESTree.MemberExpression
+			): boolean {
+				if (expr.type === 'JSXIdentifier') return false;
+				const parent = expr.parent;
+				if (parent.type === 'AssignmentExpression') {
+					return parent.left === expr;
+				}
+				if (parent.type === 'UpdateExpression') {
+					return parent.argument === expr;
+				}
+				if (parent.type === 'UnaryExpression') {
+					return parent.operator === 'delete' && parent.argument === expr;
+				}
+				if (parent.type === 'MemberExpression') {
+					return parent.object === expr && isMutableMember(parent);
+				}
+				return false;
+			}
 		}
 
 		/**

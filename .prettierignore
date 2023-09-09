@@ -4,3 +4,4 @@ build
 /lib
 .npmrc
 /tests/fixtures/rules/indent/valid/
+.changeset
