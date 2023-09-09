@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.33.1
+
+### Patch Changes
+
+- [#581](https://github.com/sveltejs/eslint-plugin-svelte/pull/581) [`1645a9e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1645a9eb28519051f997c019ed95347055a76959) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for mutable member in `svelte/no-immutable-reactive-statements` rule
+
 ## 2.33.0
 
 ### Minor Changes
