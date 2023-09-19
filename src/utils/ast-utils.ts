@@ -230,6 +230,40 @@ export function findVariable(context: RuleContext, node: TSESTree.Identifier): V
 	// Remove the $ and search for the variable again, as it may be a store access variable.
 	return eslintUtils.findVariable(initialScope, node.name.slice(1));
 }
+/**
+ * Iterate the identifiers of a given pattern node.
+ */
+export function* iterateIdentifiers(
+	node: TSESTree.DestructuringPattern
+): Iterable<TSESTree.Identifier> {
+	const buffer = [node];
+	let pattern: TSESTree.DestructuringPattern | undefined;
+	while ((pattern = buffer.shift())) {
+		if (pattern.type === 'Identifier') {
+			yield pattern;
+		} else if (pattern.type === 'ArrayPattern') {
+			for (const element of pattern.elements) {
+				if (element) {
+					buffer.push(element);
+				}
+			}
+		} else if (pattern.type === 'ObjectPattern') {
+			for (const property of pattern.properties) {
+				if (property.type === 'Property') {
+					buffer.push(property.value as TSESTree.DestructuringPattern);
+				} else if (property.type === 'RestElement') {
+					buffer.push(property);
+				}
+			}
+		} else if (pattern.type === 'AssignmentPattern') {
+			buffer.push(pattern.left);
+		} else if (pattern.type === 'RestElement') {
+			buffer.push(pattern.argument);
+		} else if (pattern.type === 'MemberExpression') {
+			// noop
+		}
+	}
+}
 
 /**
  * Gets the scope for the current node
@@ -367,8 +401,8 @@ export function getMustacheTokens(
 		return null;
 	}
 	if (
-		node.key.range[0] <= node.expression.range![0] &&
-		node.expression.range![1] <= node.key.range[1]
+		node.key.range[0] <= node.expression.range[0] &&
+		node.expression.range[1] <= node.key.range[1]
 	) {
 		// shorthand
 		return null;

@@ -192,8 +192,8 @@ export default createRule('html-quotes', {
 					return;
 				}
 				if (
-					node.key.range[0] <= node.expression.range![0] &&
-					node.expression.range![1] <= node.key.range[1]
+					node.key.range[0] <= node.expression.range[0] &&
+					node.expression.range[1] <= node.key.range[1]
 				) {
 					// shorthand
 					return;

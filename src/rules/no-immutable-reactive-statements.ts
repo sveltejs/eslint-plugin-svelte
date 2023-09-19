@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import type { Scope, Variable, Reference, Definition } from '@typescript-eslint/scope-manager';
 import type { TSESTree } from '@typescript-eslint/types';
+import { findVariable, iterateIdentifiers } from '../utils/ast-utils';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
@@ -104,31 +105,49 @@ export default createRule('no-immutable-reactive-statements', {
 				) {
 					return true;
 				}
-				if (isMutableMember(reference.identifier)) {
+				if (hasWriteMember(reference.identifier)) {
 					return true;
 				}
 			}
 			return false;
+		}
 
-			function isMutableMember(
-				expr: TSESTree.Identifier | TSESTree.JSXIdentifier | TSESTree.MemberExpression
-			): boolean {
-				if (expr.type === 'JSXIdentifier') return false;
-				const parent = expr.parent;
-				if (parent.type === 'AssignmentExpression') {
-					return parent.left === expr;
-				}
-				if (parent.type === 'UpdateExpression') {
-					return parent.argument === expr;
-				}
-				if (parent.type === 'UnaryExpression') {
-					return parent.operator === 'delete' && parent.argument === expr;
-				}
-				if (parent.type === 'MemberExpression') {
-					return parent.object === expr && isMutableMember(parent);
-				}
-				return false;
+		/** Checks whether the given expression has writing to a member or not. */
+		function hasWriteMember(
+			expr: TSESTree.Identifier | TSESTree.JSXIdentifier | TSESTree.MemberExpression
+		): boolean {
+			if (expr.type === 'JSXIdentifier') return false;
+			const parent = expr.parent as TSESTree.Node | AST.SvelteNode;
+			if (parent.type === 'AssignmentExpression') {
+				return parent.left === expr;
 			}
+			if (parent.type === 'UpdateExpression') {
+				return parent.argument === expr;
+			}
+			if (parent.type === 'UnaryExpression') {
+				return parent.operator === 'delete' && parent.argument === expr;
+			}
+			if (parent.type === 'MemberExpression') {
+				return parent.object === expr && hasWriteMember(parent);
+			}
+			if (parent.type === 'SvelteDirective') {
+				return parent.kind === 'Binding' && parent.expression === expr;
+			}
+			if (parent.type === 'SvelteEachBlock') {
+				return parent.expression === expr && hasWriteReference(parent.context);
+			}
+
+			return false;
+		}
+
+		/** Checks whether the given pattern has writing or not. */
+		function hasWriteReference(pattern: TSESTree.DestructuringPattern): boolean {
+			for (const id of iterateIdentifiers(pattern)) {
+				const variable = findVariable(context, id);
+				if (variable && hasWrite(variable)) return true;
+			}
+
+			return false;
 		}
 
 		/**

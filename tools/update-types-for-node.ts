@@ -37,7 +37,7 @@ export type Node = TSESTree.Node
 export type Program = TSESTree.Program
 export type Expression = TSESTree.Expression
 export type Statement = TSESTree.Statement
-export type Pattern = TSESTree.Pattern`
+export type Pattern = TSESTree.DestructuringPattern`
 ];
 const typesForNodeCode = [
 	`/*
