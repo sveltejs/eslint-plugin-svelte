@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.33.2
+
+### Patch Changes
+
+- [#585](https://github.com/sveltejs/eslint-plugin-svelte/pull/585) [`d9866a1`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d9866a1396da2374926158034e92464164c061c0) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for `bind:` with member in `svelte/no-immutable-reactive-statements` rule
+
 ## 2.33.1
 
 ### Patch Changes
