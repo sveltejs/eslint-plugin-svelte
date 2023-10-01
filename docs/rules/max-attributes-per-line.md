@@ -48,7 +48,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
   {...attrs}
   disabled
   data-my-data="foo"
->
+/>
 
 <!-- ✗ BAD -->
 <input type="text" bind:value={text} {maxlength} {...attrs} readonly />
