@@ -80,8 +80,8 @@ This rule aims at enforcing unified spacing in mustaches.
 }
 ```
 
-- `"never"` ... Expect one space between token and curly brackets. This is default.
-- `"always"` ... Expect no spaces between token and curly brackets. This is default.
+- `"never"` ... Expect no spaces between token and curly brackets. This is default.
+- `"always"` ... Expect one space between token and curly brackets.
 - `"always-after-expression"` ... Expect one space between expression and closing curly brackets, if the expression before the closing curly bracket.
 - `textExpressions` ... Enforces the style of the mustache for the text expressions. e.g. `{text}`.
 - `attributesAndProps` ... Enforces the style of the mustache for the attributes and props. e.g. `<input value={text}`.
