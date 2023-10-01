@@ -24,6 +24,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 <ESLintCodeBlock fix>
 
+<!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
 ```svelte
@@ -32,10 +33,22 @@ There is a configurable number of attributes that are acceptable in one-line cas
 </script>
 
 <!-- ✓ GOOD -->
-<input type="text" bind:value={text} {maxlength} {...attrs} readonly size="20" />
-<button type="button" on:click={click} {maxlength} {...attrs} disabled data-my-data="foo">
-  CLICK ME!
-</button>
+<input
+  type="text"
+  bind:value={text}
+  {maxlength}
+  {...attrs}
+  readonly
+  size="20"
+/>
+<button
+  type="button"
+  on:click={click}
+  {maxlength}
+  {...attrs}
+  disabled
+  data-my-data="foo"
+>
 
 <!-- ✗ BAD -->
 <input type="text" bind:value={text} {maxlength} {...attrs} readonly />
@@ -43,6 +56,8 @@ There is a configurable number of attributes that are acceptable in one-line cas
 ```
 
 </ESLintCodeBlock>
+
+<!-- prettier-ignore-end -->
 
 ## :wrench: Options
 
