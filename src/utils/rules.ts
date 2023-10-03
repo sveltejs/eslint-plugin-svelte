@@ -61,6 +61,7 @@ import system from '../rules/system';
 import validCompile from '../rules/valid-compile';
 import validEachKey from '../rules/valid-each-key';
 import validPropNamesInKitPages from '../rules/valid-prop-names-in-kit-pages';
+import noIgnoredUnsubscribe from "../rules/no-ignored-unsubscribe";
 
 export const rules = [
 	typescriptEslintNoUnnecessaryCondition,
@@ -88,6 +89,7 @@ export const rules = [
 	noDynamicSlotName,
 	noExportLoadInSvelteModuleInKitPages,
 	noExtraReactiveCurlies,
+	noIgnoredUnsubscribe,
 	noImmutableReactiveStatements,
 	noInnerDeclarations,
 	noNotFunctionHandler,
