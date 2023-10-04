@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.34.0
+
+### Minor Changes
+
+- [#592](https://github.com/sveltejs/eslint-plugin-svelte/pull/592) [`1fe38d7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1fe38d770928bb890d4292e6a10028b93d9ba843) Thanks [@moufmouf](https://github.com/moufmouf)! - feat: add new `svelte/no-ignored-unsubscribe` rule.
+
 ## 2.33.2
 
 ### Patch Changes
