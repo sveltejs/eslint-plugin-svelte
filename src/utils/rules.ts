@@ -27,6 +27,7 @@ import noDupeUseDirectives from '../rules/no-dupe-use-directives';
 import noDynamicSlotName from '../rules/no-dynamic-slot-name';
 import noExportLoadInSvelteModuleInKitPages from '../rules/no-export-load-in-svelte-module-in-kit-pages';
 import noExtraReactiveCurlies from '../rules/no-extra-reactive-curlies';
+import noIgnoredUnsubscribe from '../rules/no-ignored-unsubscribe';
 import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statements';
 import noInnerDeclarations from '../rules/no-inner-declarations';
 import noNotFunctionHandler from '../rules/no-not-function-handler';
@@ -61,7 +62,6 @@ import system from '../rules/system';
 import validCompile from '../rules/valid-compile';
 import validEachKey from '../rules/valid-each-key';
 import validPropNamesInKitPages from '../rules/valid-prop-names-in-kit-pages';
-import noIgnoredUnsubscribe from "../rules/no-ignored-unsubscribe";
 
 export const rules = [
 	typescriptEslintNoUnnecessaryCondition,

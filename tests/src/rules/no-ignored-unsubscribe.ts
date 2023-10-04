@@ -5,7 +5,7 @@ import { loadTestCases } from '../../utils/utils';
 const tester = new RuleTester({
 	parserOptions: {
 		ecmaVersion: 2020,
-		sourceType: 'module',
+		sourceType: 'module'
 	}
 });
 

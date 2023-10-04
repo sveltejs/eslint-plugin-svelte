@@ -2,12 +2,14 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-ignored-unsubscribe'
-description: 'disallow ignoring the return value of `subscribe()`'
+description: 'disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.'
 ---
 
-# (svelte/no-ignored-unsubscribe)
+# svelte/no-ignored-unsubscribe
 
-> disallow ignoring the return value of `subscribe()`
+> disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -23,7 +25,7 @@ This rule helps to find such cases by ensuring that the unsubscriber (the return
 ```svelte
 <script>
   /* eslint svelte/no-ignored-unsubscribe: "error" */
-  
+
   import myStore from './my-stores';
 
   /* ✓ GOOD */
@@ -31,7 +33,6 @@ This rule helps to find such cases by ensuring that the unsubscriber (the return
 
   /* ✗ BAD */
   myStore.subscribe(() => {});
-
 </script>
 ```
 
@@ -40,10 +41,6 @@ This rule helps to find such cases by ensuring that the unsubscriber (the return
 ## :wrench: Options
 
 Nothing.
-
-## :rocket: Version
-
-This rule was introduced in eslint-plugin-svelte v2.34.0
 
 ## :mag: Implementation
 

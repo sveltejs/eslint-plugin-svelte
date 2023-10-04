@@ -1,9 +1,9 @@
 <script>
-    import {writable} from "svelte/store";
+	import { writable } from 'svelte/store';
 
-    const foo = writable(0);
+	const foo = writable(0);
 
-    foo.subscribe(() => {
-        console.log('foo changed');
-    });
+	foo.subscribe(() => {
+		console.log('foo changed');
+	});
 </script>

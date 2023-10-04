@@ -1,10 +1,12 @@
 <script>
-    import {writable} from "svelte/store";
+	import { writable } from 'svelte/store';
 
-    const foo = writable(0);
+	const foo = writable(0);
 
-    const unsubscribers = [];
-    unsubscribers.push(foo.subscribe(() => {
-        console.log('foo changed');
-    }));
+	const unsubscribers = [];
+	unsubscribers.push(
+		foo.subscribe(() => {
+			console.log('foo changed');
+		})
+	);
 </script>
