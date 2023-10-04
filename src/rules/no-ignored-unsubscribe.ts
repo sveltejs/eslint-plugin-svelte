@@ -4,7 +4,7 @@ import { createRule } from "../utils";
 export default createRule("no-ignored-unsubscribe", {
 	meta: {
 		docs: {
-			description: "Forbids ignoring the unsubscribe method returned by the `subscribe()` os Svelte stores.",
+			description: "disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores",
 			category: 'Best Practices',
 			recommended: false,
 		},
@@ -18,7 +18,7 @@ export default createRule("no-ignored-unsubscribe", {
 	},
 	create: (context) => {
 		return {
-			"ExpressionStatement > CallExpression > MemberExpression[property.name='subscribe']":
+			"ExpressionStatement > CallExpression > MemberExpression.callee[property.name='subscribe']":
 				(node: TSESTree.MemberExpression) => {
 					context.report({
 						messageId: "forbidden",

@@ -3,7 +3,6 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-ignored-unsubscribe'
 description: 'disallow ignoring the return value of `subscribe()`'
-since: 'v2.34.0'
 ---
 
 # (svelte/no-ignored-unsubscribe)
