@@ -165,7 +165,7 @@
     "stylus": "^0.60.0",
     "svelte": "^4.0.0",
     "svelte-adapter-ghpages": "0.1.0",
-    "svelte-i18n": "^3.6.0",
+    "svelte-i18n": "^4.0.0",
     "tslib": "^2.5.0",
     "type-coverage": "^2.22.0",
     "typescript": "~5.1.0",
