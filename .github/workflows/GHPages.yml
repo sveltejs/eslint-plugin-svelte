@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
       - name: Install And Build
         run: |+
           pnpm install
