@@ -109,6 +109,10 @@ module.exports = {
 					{
 						selector: 'method',
 						format: null
+					},
+					{
+						selector: 'import',
+						format: null
 					}
 				],
 				'@typescript-eslint/no-non-null-assertion': 'off'
