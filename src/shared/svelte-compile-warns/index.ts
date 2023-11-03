@@ -18,7 +18,6 @@ import { extractLeadingComments } from './extract-leading-comments';
 import { getLangValue } from '../../utils/ast-utils';
 import path from 'path';
 import fs from 'fs';
-import semver from 'semver';
 
 type WarningTargetNode =
 	| (AST.SvelteProgram & ASTNodeWithParent)
