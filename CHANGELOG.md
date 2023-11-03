@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.34.1
+
+### Patch Changes
+
+- [#604](https://github.com/sveltejs/eslint-plugin-svelte/pull/604) [`796c0ad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/796c0ad5f71dd927989caea109027e1735202c3b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for custom-element with svelte v3 in `svelte/valid-compile`
+
 ## 2.34.0
 
 ### Minor Changes
