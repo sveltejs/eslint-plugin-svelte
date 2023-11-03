@@ -15,7 +15,7 @@ import { transform as transformWithStylus } from './transform/stylus';
 import type { IgnoreItem } from './ignore-comment';
 import { getSvelteIgnoreItems } from './ignore-comment';
 import { extractLeadingComments } from './extract-leading-comments';
-import { getLangValue } from '../../utils/ast-utils';
+import { findAttribute, getLangValue } from '../../utils/ast-utils';
 import path from 'path';
 import fs from 'fs';
 import semver from 'semver';
@@ -115,7 +115,7 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	transformResults.push(...transformScripts(context, text));
 
 	if (!transformResults.length) {
-		const warnings = getWarningsFromCode(text);
+		const warnings = getWarningsFromCode(text, context);
 		return {
 			...processIgnore(
 				warnings.warnings,
@@ -296,7 +296,7 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	}
 
 	const code = remapContext.postprocess();
-	const baseWarnings = getWarningsFromCode(code);
+	const baseWarnings = getWarningsFromCode(code, context);
 
 	const warnings: Warning[] = [];
 	for (const warn of baseWarnings.warnings) {
@@ -401,17 +401,37 @@ function* transformScripts(context: RuleContext, text: string) {
 	}
 }
 
+function hasTagOption(program: AST.SvelteProgram) {
+	return program.body.some((body) => {
+		if (body.type !== 'SvelteElement' || body.kind !== 'special') {
+			return false;
+		}
+		if (body.name.name !== 'svelte:options') {
+			return false;
+		}
+
+		return Boolean(findAttribute(body, 'tag'));
+	});
+}
+
 /**
  * Get compile warnings
  */
-function getWarningsFromCode(code: string): {
+function getWarningsFromCode(
+	code: string,
+	context: RuleContext
+): {
 	warnings: Warning[];
 	kind: 'warn' | 'error';
 } {
 	try {
 		const result = compiler.compile(code, {
 			generate: false,
-			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0') ? { customElement: true } : {})
+			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0')
+				? { customElement: true }
+				: hasTagOption(context.getSourceCode().ast)
+				? { customElement: true }
+				: {})
 		});
 
 		return { warnings: result.warnings as Warning[], kind: 'warn' };
