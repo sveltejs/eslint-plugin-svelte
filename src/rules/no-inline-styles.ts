@@ -3,7 +3,7 @@ import { createRule } from '../utils';
 export default createRule('no-inline-styles', {
 	meta: {
 		docs: {
-			description: 'disallow properties and directives that produce inline styles',
+			description: 'disallow attributes and directives that produce inline styles',
 			category: 'Best Practices',
 			recommended: false
 		},
