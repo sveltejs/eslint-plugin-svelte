@@ -7,14 +7,26 @@ export default createRule('no-inline-styles', {
 			category: 'Best Practices',
 			recommended: false
 		},
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					allowTransitions: {
+						type: 'boolean'
+					}
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			hasStyleAttribute: 'Found disallowed style attribute.',
-			hasStyleDirective: 'Found disallowed style directive.'
+			hasStyleDirective: 'Found disallowed style directive.',
+			hasTransition: 'Found disallowed transition.'
 		},
 		type: 'suggestion'
 	},
 	create(context) {
+		const allowTransitions: boolean = context.options[0]?.allowTransitions ?? false;
 		return {
 			SvelteElement(node) {
 				if (node.kind !== 'html') {
@@ -26,6 +38,13 @@ export default createRule('no-inline-styles', {
 					}
 					if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'style') {
 						context.report({ loc: attribute.loc, messageId: 'hasStyleAttribute' });
+					}
+					if (
+						!allowTransitions &&
+						attribute.type === 'SvelteDirective' &&
+						attribute.kind === 'Transition'
+					) {
+						context.report({ loc: attribute.loc, messageId: 'hasTransition' });
 					}
 				}
 			}

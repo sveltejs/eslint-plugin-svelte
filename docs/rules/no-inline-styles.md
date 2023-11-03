@@ -23,6 +23,8 @@ This rule reports all attributes and directives that would compile to inline sty
 <script>
   /* eslint svelte/no-inline-styles: "error" */
 
+  import { fade } from 'svelte/transition';
+
   export let classTwo;
   export let blockDisplay;
 </script>
@@ -36,6 +38,8 @@ This rule reports all attributes and directives that would compile to inline sty
 <span style="display: block;">Hello World!</span>
 
 <span style:display={blockDisplay ? 'block' : 'inline'}>Hello World!</span>
+
+<span transition:fade>Hello World!</span>
 ```
 
 </ESLintCodeBlock>
@@ -44,7 +48,12 @@ This rule reports all attributes and directives that would compile to inline sty
 
 ```json
 {
-  "svelte/no-inline-styles": ["error", {}]
+  "svelte/no-inline-styles": [
+    "error",
+    {
+      "allowTransitions": false
+    }
+  ]
 }
 ```
 
