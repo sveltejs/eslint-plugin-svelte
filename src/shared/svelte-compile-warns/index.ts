@@ -411,7 +411,7 @@ function getWarningsFromCode(code: string): {
 	try {
 		const result = compiler.compile(code, {
 			generate: false,
-			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0') ? { customElement: true } : {})
+			customElement: true
 		});
 
 		return { warnings: result.warnings as Warning[], kind: 'warn' };
