@@ -2,6 +2,7 @@ import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns';
 import { createRule } from '../utils';
 import type { IgnoreItem } from '../shared/svelte-compile-warns/ignore-comment';
 import { getSvelteIgnoreItems } from '../shared/svelte-compile-warns/ignore-comment';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-unused-svelte-ignore', {
 	meta: {
@@ -19,10 +20,10 @@ export default createRule('no-unused-svelte-ignore', {
 	},
 
 	create(context) {
-		if (!context.parserServices.isSvelte) {
+		const sourceCode = getSourceCode(context);
+		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
-		const sourceCode = context.getSourceCode();
 
 		const ignoreComments: IgnoreItem[] = [];
 		for (const item of getSvelteIgnoreItems(context)) {

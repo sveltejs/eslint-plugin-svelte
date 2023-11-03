@@ -3,6 +3,7 @@ import { createRule } from '../utils';
 import type { Scope, Variable, Reference, Definition } from '@typescript-eslint/scope-manager';
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, iterateIdentifiers } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
@@ -20,7 +21,7 @@ export default createRule('no-immutable-reactive-statements', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const scopeManager = context.getSourceCode().scopeManager;
+		const scopeManager = getSourceCode(context).scopeManager;
 		const globalScope = scopeManager.globalScope;
 		const toplevelScope =
 			globalScope?.childScopes.find((scope) => scope.type === 'module') || globalScope;

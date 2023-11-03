@@ -1,6 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import { getAttributeValueQuoteAndRange } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('shorthand-directive', {
 	meta: {
@@ -27,7 +28,7 @@ export default createRule('shorthand-directive', {
 		type: 'layout'
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 		const always: boolean = context.options[0]?.prefer !== 'never';
 
 		/** Report for always */

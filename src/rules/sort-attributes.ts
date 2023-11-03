@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import { getAttributeKeyText } from '../utils/ast-utils';
 import { toRegExp } from '../utils/regexp';
+import { getSourceCode } from '../utils/compat';
 
 type UserOrderObjectOption = {
 	match: string | string[];
@@ -253,7 +254,7 @@ export default createRule('sort-attributes', {
 						attributes.indexOf(node)
 					);
 					const moveNodes = [node, ...previousNodes];
-					const sourceCode = context.getSourceCode();
+					const sourceCode = getSourceCode(context);
 					return moveNodes.map((moveNode, index) => {
 						const text = sourceCode.getText(moveNode);
 						return fixer.replaceText(previousNodes[index] || node, text);

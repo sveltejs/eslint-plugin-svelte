@@ -1,5 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-extra-reactive-curlies', {
 	meta: {
@@ -23,7 +24,7 @@ export default createRule('no-extra-reactive-curlies', {
 			[`SvelteReactiveStatement > BlockStatement[body.length=1]`]: (
 				node: TSESTree.BlockStatement
 			) => {
-				const source = context.getSourceCode();
+				const source = getSourceCode(context);
 
 				return context.report({
 					node,

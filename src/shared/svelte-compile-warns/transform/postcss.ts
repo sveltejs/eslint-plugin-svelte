@@ -3,6 +3,7 @@ import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import type { RuleContext } from '../../../types';
 import type { TransformResult } from './types';
+import { getCwd, getFilename } from '../../../utils/compat';
 
 /**
  * Transform with postcss
@@ -24,13 +25,13 @@ export function transform(
 	}
 	const code = text.slice(...inputRange);
 
-	const filename = `${context.getFilename()}.css`;
+	const filename = `${getFilename(context)}.css`;
 	try {
 		const configFilePath = postcssConfig?.configFilePath;
 
 		const config = postcssLoadConfig.sync(
 			{
-				cwd: context.getCwd?.() ?? process.cwd(),
+				cwd: getCwd(context),
 				from: filename
 			},
 			typeof configFilePath === 'string' ? configFilePath : undefined

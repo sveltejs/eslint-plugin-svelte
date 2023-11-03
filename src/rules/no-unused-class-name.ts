@@ -10,6 +10,7 @@ import type {
 } from 'svelte-eslint-parser/lib/ast';
 import type { AnyNode } from 'postcss';
 import { default as selectorParser, type Node as SelectorNode } from 'postcss-selector-parser';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-unused-class-name', {
 	meta: {
@@ -36,7 +37,8 @@ export default createRule('no-unused-class-name', {
 		type: 'suggestion'
 	},
 	create(context) {
-		if (!context.parserServices.isSvelte) {
+		const sourceCode = getSourceCode(context);
+		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
 		const allowedClassNames = context.options[0]?.allowedClassNames ?? [];
@@ -53,7 +55,7 @@ export default createRule('no-unused-class-name', {
 				}
 			},
 			'Program:exit'() {
-				const styleContext = context.parserServices.getStyleContext();
+				const styleContext = sourceCode.parserServices.getStyleContext();
 				if (['parse-error', 'unknown-lang'].includes(styleContext.status)) {
 					return;
 				}

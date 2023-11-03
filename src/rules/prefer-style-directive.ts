@@ -9,6 +9,7 @@ import type {
 import { parseStyleAttributeValue } from '../utils/css-utils';
 import type { RuleFixer } from '../types';
 import { isHTMLElementLike } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(node: TSESTree.Expression): node is TSESTree.StringLiteral {
@@ -31,7 +32,7 @@ export default createRule('prefer-style-directive', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		/**
 		 * Process for `style=" ... "`

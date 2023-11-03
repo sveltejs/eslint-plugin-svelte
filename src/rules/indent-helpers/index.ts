@@ -9,6 +9,7 @@ import { isCommentToken } from '@eslint-community/eslint-utils';
 import type { AnyToken, IndentOptions } from './commons';
 import type { OffsetCalculator } from './offset-context';
 import { OffsetContext } from './offset-context';
+import { getFilename, getSourceCode } from '../../utils/compat';
 
 type IndentUserOptions = {
 	indent?: number | 'tab';
@@ -78,10 +79,10 @@ export function defineVisitor(
 	context: RuleContext,
 	defaultOptions: Partial<IndentOptions>
 ): RuleListener {
-	if (!context.getFilename().endsWith('.svelte')) return {};
+	if (!getFilename(context).endsWith('.svelte')) return {};
 
 	const options = parseOptions(context.options[0] || {}, defaultOptions);
-	const sourceCode = context.getSourceCode();
+	const sourceCode = getSourceCode(context);
 	const offsets = new OffsetContext({ sourceCode, options });
 
 	/**

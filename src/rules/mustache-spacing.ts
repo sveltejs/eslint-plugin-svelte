@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { isClosingBraceToken, isOpeningBraceToken } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils';
 import { getMustacheTokens } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 type DeepPartial<T> = {
 	[P in keyof T]?: DeepPartial<T[P]>;
 };
@@ -73,7 +74,7 @@ export default createRule('mustache-spacing', {
 	},
 	create(context) {
 		const options = parseOptions(context.options[0]);
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		function verifyBraces(
 			openingBrace: AST.Token | AST.Comment,

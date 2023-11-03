@@ -3,6 +3,7 @@ import { createRule } from '../utils';
 import type { QuoteAndRange } from '../utils/ast-utils';
 import { getMustacheTokens } from '../utils/ast-utils';
 import { getAttributeValueQuoteAndRange } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 const QUOTE_CHARS = {
 	double: '"',
@@ -48,7 +49,7 @@ export default createRule('html-quotes', {
 		type: 'layout' // "problem",
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 		const preferQuote: 'double' | 'single' = context.options[0]?.prefer ?? 'double';
 		const dynamicQuote = context.options[0]?.dynamic?.quoted ? preferQuote : 'unquoted';
 		const avoidInvalidUnquotedInHTML = Boolean(
