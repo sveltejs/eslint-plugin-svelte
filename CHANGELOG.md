@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.35.0
+
+### Minor Changes
+
+- [#608](https://github.com/sveltejs/eslint-plugin-svelte/pull/608) [`ff28fd3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ff28fd328254a0b7327078a878c9486f4db1b7c8) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-inline-styles rule
+
+- [#605](https://github.com/sveltejs/eslint-plugin-svelte/pull/605) [`ef5f965`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ef5f965024935c9bf6224450243223066789501e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: use eslint-compat-utils
+
 ## 2.34.1
 
 ### Patch Changes
