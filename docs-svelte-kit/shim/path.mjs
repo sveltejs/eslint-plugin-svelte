@@ -8,6 +8,14 @@ function extname(p) {
 	return /\.[\w$-]+$/iu.exec(p)[0];
 }
 
+function basename(p, ext) {
+	const nm = p.split('/').slice(-1)[0];
+	if (!ext) {
+		return nm;
+	}
+	return nm.endsWith(ext) ? nm.slice(0, -ext.length) : nm;
+}
+
 function relative(s) {
 	return s;
 }
@@ -47,8 +55,9 @@ const posix = {
 	sep,
 	isAbsolute,
 	join,
-	normalize
+	normalize,
+	basename
 };
 posix.posix = posix;
-export { dirname, extname, posix, resolve, relative, sep, isAbsolute, join, normalize };
+export { dirname, extname, posix, resolve, relative, sep, isAbsolute, join, normalize, basename };
 export default posix;
