@@ -3,6 +3,7 @@ import type typescript from 'typescript';
 import type { RuleContext } from '../../../types';
 import type { TransformResult } from './types';
 import { loadModule } from '../../../utils/load-module';
+import { getSourceCode } from '../../../utils/compat';
 
 type TS = typeof typescript;
 /**
@@ -30,7 +31,8 @@ export function transform(
 			reportDiagnostics: false,
 			compilerOptions: {
 				target:
-					context.parserServices.program?.getCompilerOptions()?.target || ts.ScriptTarget.ESNext,
+					getSourceCode(context).parserServices.program?.getCompilerOptions()?.target ||
+					ts.ScriptTarget.ESNext,
 				module: ts.ModuleKind.ESNext,
 				importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
 				sourceMap: true

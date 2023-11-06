@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { getShared } from '../shared';
 import type { CommentDirectives } from '../shared/comment-directives';
 import { createRule } from '../utils';
+import { getFilename, getSourceCode } from '../utils/compat';
 
 type RuleAndLocation = {
 	ruleId: string;
@@ -53,7 +54,7 @@ export default createRule('comment-directive', {
 		type: 'problem'
 	},
 	create(context) {
-		const shared = getShared(context.getFilename());
+		const shared = getShared(getFilename(context));
 		if (!shared) return {};
 		const options = context.options[0] || {};
 		const reportUnusedDisableDirectives = Boolean(options.reportUnusedDisableDirectives);
@@ -62,7 +63,7 @@ export default createRule('comment-directive', {
 			reportUnusedDisableDirectives
 		});
 
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		/**
 		 * Parse a given comment.

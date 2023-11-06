@@ -6,6 +6,7 @@ import {
 	getAttributeValueQuoteAndRange,
 	getStringIfConstant
 } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-dynamic-slot-name', {
 	meta: {
@@ -23,7 +24,7 @@ export default createRule('no-dynamic-slot-name', {
 		type: 'problem'
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 		return {
 			"SvelteElement[name.name='slot'] > SvelteStartTag.startTag > SvelteAttribute[key.name='name']"(
 				node: AST.SvelteAttribute

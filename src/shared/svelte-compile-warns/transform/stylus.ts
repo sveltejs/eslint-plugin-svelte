@@ -4,6 +4,7 @@ import type { RawSourceMap } from 'source-map-js';
 import type { RuleContext } from '../../../types';
 import type { TransformResult } from './types';
 import { loadModule } from '../../../utils/load-module';
+import { getFilename } from '../../../utils/compat';
 
 type Stylus = typeof stylus;
 /**
@@ -26,7 +27,7 @@ export function transform(
 	}
 	const code = text.slice(...inputRange);
 
-	const filename = `${context.getFilename()}.stylus`;
+	const filename = `${getFilename(context)}.stylus`;
 	try {
 		let output: string | undefined;
 

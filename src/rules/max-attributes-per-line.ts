@@ -1,5 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
+import { getSourceCode } from '../utils/compat';
 
 /**
  * Check whether the component is declared in a single line or not.
@@ -57,7 +58,7 @@ export default createRule('max-attributes-per-line', {
 	create(context) {
 		const multilineMaximum = context.options[0]?.multiline ?? 1;
 		const singlelineMaximum = context.options[0]?.singleline ?? 1;
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		/**
 		 * Report attributes

@@ -2,13 +2,14 @@ import { isOpeningParenToken } from '@eslint-community/eslint-utils';
 import type { AST } from 'svelte-eslint-parser';
 import type { RuleContext } from '../../types';
 import type { ASTNodeWithParent } from '../../types-for-node';
+import { getSourceCode } from '../../utils/compat';
 
 /** Extract comments */
 export function extractLeadingComments(
 	context: RuleContext,
 	node: ASTNodeWithParent
 ): (AST.Token | AST.Comment)[] {
-	const sourceCode = context.getSourceCode();
+	const sourceCode = getSourceCode(context);
 	const beforeToken = sourceCode.getTokenBefore(node, {
 		includeComments: false,
 		filter(token) {

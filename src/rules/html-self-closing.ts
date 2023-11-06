@@ -1,6 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import { getNodeName, isVoidHtmlElement } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 const TYPE_MESSAGES = {
 	normal: 'HTML elements',
@@ -126,9 +127,9 @@ export default createRule('html-self-closing', {
 			context.report({
 				node,
 				loc: {
-					start: context
-						.getSourceCode()
-						.getLocFromIndex(node.startTag.range[1] - (node.startTag.selfClosing ? 2 : 1)),
+					start: getSourceCode(context).getLocFromIndex(
+						node.startTag.range[1] - (node.startTag.selfClosing ? 2 : 1)
+					),
 					end: node.loc.end
 				},
 				messageId: shouldBeClosed ? 'requireClosing' : 'disallowClosing',

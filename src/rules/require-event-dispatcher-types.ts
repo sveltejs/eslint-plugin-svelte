@@ -2,6 +2,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils';
 import { getLangValue } from '../utils/ast-utils';
 import type { TSESTree } from '@typescript-eslint/types';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('require-event-dispatcher-types', {
 	meta: {
@@ -30,7 +31,7 @@ export default createRule('require-event-dispatcher-types', {
 					return;
 				}
 				const referenceTracker = new ReferenceTracker(
-					context.getSourceCode().scopeManager.globalScope!
+					getSourceCode(context).scopeManager.globalScope!
 				);
 				for (const { node: n } of referenceTracker.iterateEsmReferences({
 					svelte: {

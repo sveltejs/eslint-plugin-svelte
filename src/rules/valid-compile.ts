@@ -1,6 +1,7 @@
 import { createRule } from '../utils';
 import type { Warning } from '../shared/svelte-compile-warns';
 import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('valid-compile', {
 	meta: {
@@ -22,7 +23,7 @@ export default createRule('valid-compile', {
 		type: 'problem'
 	},
 	create(context) {
-		if (!context.parserServices.isSvelte) {
+		if (!getSourceCode(context).parserServices.isSvelte) {
 			return {};
 		}
 		const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings);

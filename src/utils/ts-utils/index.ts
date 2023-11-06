@@ -1,6 +1,7 @@
 import type { RuleContext, ASTNode } from '../../types';
 import type * as TS from 'typescript';
 import { loadModule } from '../load-module';
+import { getSourceCode } from '../compat';
 export type TypeScript = typeof TS;
 export type { TS };
 
@@ -22,11 +23,12 @@ export function getTypeScriptTools(context: RuleContext): TSTools | null {
 	if (!ts) {
 		return null;
 	}
-	const { program, esTreeNodeToTSNodeMap, tsNodeToESTreeNodeMap } = context.parserServices;
+	const sourceCode = getSourceCode(context);
+	const { program, esTreeNodeToTSNodeMap, tsNodeToESTreeNodeMap } = sourceCode.parserServices;
 	if (!program || !esTreeNodeToTSNodeMap || !tsNodeToESTreeNodeMap) {
 		return null;
 	}
-	const hasFullTypeInformation = context.parserServices.hasFullTypeInformation ?? true;
+	const hasFullTypeInformation = sourceCode.parserServices.hasFullTypeInformation ?? true;
 
 	if (!hasFullTypeInformation) {
 		// Full type information is required. User must specify parserOptions.project.

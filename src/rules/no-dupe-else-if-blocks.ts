@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
 import { equalTokens } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 // ------------------------------------------------------------------------------
 // Helpers
@@ -81,7 +82,7 @@ export default createRule('no-dupe-else-if-blocks', {
 		type: 'problem' // "problem",
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		/**
 		 * Determines whether the two given nodes are considered to be equal. In particular, given that the nodes

@@ -5,6 +5,7 @@ import { createRule } from '../utils';
 import type { RuleContext } from '../types';
 import { findVariable } from '../utils/ast-utils';
 import { traverseNodes } from 'svelte-eslint-parser';
+import { getSourceCode } from '../utils/compat';
 
 /**
  * Get usage of `tick`
@@ -12,7 +13,7 @@ import { traverseNodes } from 'svelte-eslint-parser';
 function extractTickReferences(
 	context: RuleContext
 ): { node: TSESTree.CallExpression; name: string }[] {
-	const referenceTracker = new ReferenceTracker(context.getSourceCode().scopeManager.globalScope!);
+	const referenceTracker = new ReferenceTracker(getSourceCode(context).scopeManager.globalScope!);
 	const a = referenceTracker.iterateEsmReferences({
 		svelte: {
 			[ReferenceTracker.ESM]: true,
@@ -35,7 +36,7 @@ function extractTickReferences(
 function extractTaskReferences(
 	context: RuleContext
 ): { node: TSESTree.CallExpression; name: string }[] {
-	const referenceTracker = new ReferenceTracker(context.getSourceCode().scopeManager.globalScope!);
+	const referenceTracker = new ReferenceTracker(getSourceCode(context).scopeManager.globalScope!);
 	const a = referenceTracker.iterateGlobalReferences({
 		setTimeout: { [ReferenceTracker.CALL]: true },
 		setInterval: { [ReferenceTracker.CALL]: true },
@@ -122,7 +123,7 @@ function isPromiseThenOrCatchBody(node: TSESTree.Node): boolean {
  * Get all reactive variable reference.
  */
 function getReactiveVariableReferences(context: RuleContext) {
-	const scopeManager = context.getSourceCode().scopeManager;
+	const scopeManager = getSourceCode(context).scopeManager;
 	// Find the top-level (module or global) scope.
 	// Any variable defined at the top-level (module scope or global scope) can be made reactive.
 	const toplevelScope =

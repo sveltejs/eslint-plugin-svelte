@@ -6,6 +6,7 @@ import type { RuleContext } from '../types';
 import fs from 'fs';
 import path from 'path';
 import { getPackageJson } from './get-package-json';
+import { getFilename } from './compat';
 
 const isRunOnBrowser = !fs.readFileSync;
 
@@ -17,10 +18,10 @@ const isRunOnBrowser = !fs.readFileSync;
 export function isKitPageComponent(context: RuleContext): boolean {
 	// Hack: if it runs on browser, it regards as SvelteKit project.
 	if (isRunOnBrowser) return true;
-	if (!hasSvelteKit(context.getFilename())) return false;
+	if (!hasSvelteKit(getFilename(context))) return false;
 	const routes = context.settings?.svelte?.kit?.files?.routes?.replace(/^\//, '') ?? 'src/routes';
-	const filePath = context.getFilename();
-	const projectRootDir = getProjectRootDir(context.getFilename()) ?? '';
+	const filePath = getFilename(context);
+	const projectRootDir = getProjectRootDir(getFilename(context)) ?? '';
 	const fileName = path.basename(filePath);
 	return (
 		filePath.startsWith(path.join(projectRootDir, routes)) &&

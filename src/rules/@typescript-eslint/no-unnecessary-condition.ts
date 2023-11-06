@@ -22,6 +22,7 @@ import {
 	isTupleType
 } from '../../utils/ts-utils';
 import type { TS, TSTools } from '../../utils/ts-utils';
+import { getSourceCode } from '../../utils/compat';
 
 /**
  * Returns all types of a union type or an array containing `type` itself if it's no union type.
@@ -156,7 +157,7 @@ export default createRule('@typescript-eslint/no-unnecessary-condition', {
 
 		const { service, ts } = tools;
 		const checker = service.program.getTypeChecker();
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 		const compilerOptions = service.program.getCompilerOptions();
 		const isStrictNullChecks = compilerOptions.strict
 			? compilerOptions.strictNullChecks !== false

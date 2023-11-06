@@ -1,6 +1,7 @@
 import { createRule } from '../utils';
 import { getLangValue } from '../utils/ast-utils';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('block-lang', {
 	meta: {
@@ -56,7 +57,7 @@ export default createRule('block-lang', {
 		type: 'suggestion'
 	},
 	create(context) {
-		if (!context.parserServices.isSvelte) {
+		if (!getSourceCode(context).parserServices.isSvelte) {
 			return {};
 		}
 		const enforceScriptPresent: boolean = context.options[0]?.enforceScriptPresent ?? false;

@@ -1,5 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
+import { getSourceCode } from '../utils/compat';
 
 /**
  * Strip quotes string
@@ -45,7 +46,7 @@ export default createRule('no-useless-mustaches', {
 		const opts = context.options[0] || {};
 		const ignoreIncludesComment = Boolean(opts.ignoreIncludesComment);
 		const ignoreStringEscape = Boolean(opts.ignoreStringEscape);
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		/**
 		 * Report if the value expression is string literals

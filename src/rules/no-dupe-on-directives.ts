@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
 import { equalTokens } from '../utils/ast-utils';
+import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-dupe-on-directives', {
 	meta: {
@@ -18,7 +19,7 @@ export default createRule('no-dupe-on-directives', {
 		type: 'problem'
 	},
 	create(context) {
-		const sourceCode = context.getSourceCode();
+		const sourceCode = getSourceCode(context);
 
 		const directiveDataMap = new Map<
 			string, // event type
