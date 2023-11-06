@@ -1,0 +1,4 @@
+- message: Found disallowed style attribute.
+  line: 1
+  column: 7
+  suggestions: null

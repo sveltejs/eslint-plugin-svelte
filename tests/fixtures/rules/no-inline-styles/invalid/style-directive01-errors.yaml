@@ -1,0 +1,4 @@
+- message: Found disallowed style directive.
+  line: 5
+  column: 7
+  suggestions: null

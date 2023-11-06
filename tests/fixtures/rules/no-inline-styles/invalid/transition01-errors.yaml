@@ -1,0 +1,8 @@
+- message: Found disallowed transition.
+  line: 5
+  column: 7
+  suggestions: null
+- message: Found disallowed transition.
+  line: 7
+  column: 7
+  suggestions: null
