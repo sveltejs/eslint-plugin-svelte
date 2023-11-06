@@ -57,7 +57,7 @@ This rule reports all attributes and directives that would compile to inline sty
 }
 ```
 
--
+- `allowTransitions` ... Most svelte transitions (including the built-in ones) use inline styles. However, it is theoretically possible to only use transitions that don't (see this [issue](https://github.com/sveltejs/svelte/issues/6662) about removing inline styles from built-in transitions). This option allows transitions to be used in such cases. Default `false`.
 
 ## :books: Further Reading
 
