@@ -430,7 +430,7 @@ function getWarningsFromCode(
 			generate: false,
 			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0')
 				? { customElement: true }
-				: hasTagOption(context.getSourceCode().ast)
+				: hasTagOption(getSourceCode(context).ast)
 				? { customElement: true }
 				: {})
 		});
