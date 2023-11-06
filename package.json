@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.34.0",
+  "version": "2.34.1",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
   "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
@@ -163,7 +163,7 @@
     "source-map-js": "^1.0.2",
     "stylelint": "^15.0.0",
     "stylelint-config-standard": "^34.0.0",
-    "stylus": "^0.60.0",
+    "stylus": "^0.61.0",
     "svelte": "^4.0.0",
     "svelte-adapter-ghpages": "0.1.0",
     "svelte-i18n": "^4.0.0",
