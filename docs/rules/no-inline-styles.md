@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-inline-styles'
 description: 'disallow attributes and directives that produce inline styles'
+since: 'v2.35.0'
 ---
 
 # svelte/no-inline-styles
 
 > disallow attributes and directives that produce inline styles
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -62,6 +61,10 @@ This rule reports all attributes and directives that would compile to inline sty
 ## :books: Further Reading
 
 - [CSP documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.35.0
 
 ## :mag: Implementation
 
