@@ -21,7 +21,7 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 ```svelte
 <script lang="ts">
   /* eslint svelte/no-unused-class-name: "error" */
-</scrip>
+</script>
 
 <!-- ✓ GOOD -->
 <div class="first-class">Hello</div>
