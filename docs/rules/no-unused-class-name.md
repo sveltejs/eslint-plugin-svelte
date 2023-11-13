@@ -33,18 +33,18 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 <div class="sixth-class first-class">Hello</div>
 
 <style>
- .first-class {
-  color: red;
- }
+  .first-class {
+    color: red;
+  }
 
- .second-class,
- .third-class {
-  color: blue;
- }
+  .second-class,
+  .third-class {
+    color: blue;
+  }
 
- .fourth-class {
-  color: green;
- }
+  .fourth-class {
+    color: green;
+  }
 </style>
 ```
 
