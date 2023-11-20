@@ -205,8 +205,8 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 		path.extname(inputFile) === '.svelte'
 			? 'svelte-eslint-parser'
 			: path.extname(inputFile) === '.ts'
-			? '@typescript-eslint/parser'
-			: undefined;
+			  ? '@typescript-eslint/parser'
+			  : undefined;
 	const { code, filename, options, ...verifyConfig } = config;
 	const result = linter.verify(
 		code,
@@ -285,8 +285,8 @@ function getConfig(ruleName: string, inputFile: string) {
 		path.extname(filename) === '.svelte'
 			? require.resolve('svelte-eslint-parser')
 			: path.extname(inputFile) === '.ts'
-			? require.resolve('@typescript-eslint/parser')
-			: undefined;
+			  ? require.resolve('@typescript-eslint/parser')
+			  : undefined;
 
 	return Object.assign(
 		{

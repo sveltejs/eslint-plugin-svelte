@@ -84,8 +84,8 @@ export default createRule('html-closing-bracket-spacing', {
 					node.type === 'SvelteEndTag'
 						? 'endTag'
 						: node.selfClosing
-						? 'selfClosingTag'
-						: 'startTag';
+						  ? 'selfClosingTag'
+						  : 'startTag';
 
 				if (options[tagType] === 'ignore') return;
 
