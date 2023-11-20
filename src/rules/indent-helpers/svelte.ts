@@ -6,6 +6,7 @@ import type { IndentContext } from './commons';
 import { isBeginningOfElement } from './commons';
 import { isBeginningOfLine } from './commons';
 import { getFirstAndLastTokens } from './commons';
+import { isClosingParenToken, isOpeningParenToken } from '@eslint-community/eslint-utils';
 
 type NodeListener = SvelteNodeListener;
 const PREFORMATTED_ELEMENT_NAMES = ['pre', 'textarea', 'template'];
@@ -212,6 +213,21 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			offsets.setOffsetToken(constToken, 1, openToken);
 			offsets.setOffsetToken(declarationToken, 1, openToken);
 			offsets.setOffsetToken(closeToken, 0, openToken);
+		},
+		SvelteRenderTag(node: AST.SvelteRenderTag) {
+			const openToken = sourceCode.getFirstToken(node);
+			const renderToken = sourceCode.getTokenAfter(openToken)!;
+			offsets.setOffsetToken(renderToken, 1, openToken);
+			const calleeToken = sourceCode.getFirstToken(node.callee);
+			offsets.setOffsetToken(calleeToken, 1, renderToken);
+			const leftParenToken = sourceCode.getTokenAfter(node.callee, {
+				filter: isOpeningParenToken,
+				includeComments: false
+			})!;
+			const rightParenToken = sourceCode.getTokenBefore(sourceCode.getLastToken(node));
+
+			offsets.setOffsetToken(leftParenToken, 1, calleeToken);
+			offsets.setOffsetElementList([node.argument], leftParenToken, rightParenToken, 1);
 		},
 		// ----------------------------------------------------------------------
 		// BLOCKS
@@ -461,6 +477,30 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			offsets.setOffsetToken(openCloseTagToken, 0, openToken);
 			offsets.setOffsetToken(endAwaitToken, 1, openCloseTagToken);
 			offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken);
+		},
+		SvelteSnippetBlock(node: AST.SvelteSnippetBlock) {
+			const [openToken, snippetToken] = sourceCode.getFirstTokens(node, {
+				count: 2,
+				includeComments: false
+			});
+			offsets.setOffsetToken(snippetToken, 1, openToken);
+			const id = getFirstAndLastTokens(sourceCode, node.id);
+			offsets.setOffsetToken(id.firstToken, 1, snippetToken);
+
+			const leftParenToken = sourceCode.getTokenBefore(
+				node.context || sourceCode.getLastToken(node),
+				{
+					filter: isOpeningParenToken,
+					includeComments: false
+				}
+			)!;
+
+			const rightParenToken = sourceCode.getTokenAfter(node.context || leftParenToken, {
+				filter: isClosingParenToken,
+				includeComments: false
+			})!;
+			offsets.setOffsetToken(leftParenToken, 1, id.firstToken);
+			offsets.setOffsetElementList([node.context], leftParenToken, rightParenToken, 1);
 		},
 		// ----------------------------------------------------------------------
 		// COMMENTS
