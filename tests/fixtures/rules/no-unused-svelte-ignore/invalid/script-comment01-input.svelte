@@ -1,11 +1,11 @@
 <script>
 	// svelte-ignore state-rune-not-mutated
-	let used = $state(42);
+	let mutable = $state(42);
 	// svelte-ignore state-rune-not-mutated
-	let unused = $state(42);
+	let immutable = $state(42);
 	export function update(a) {
-		used = a;
+		immutable = a;
 	}
 </script>
 
-{used}{unused}
+{mutable}{immutable}
