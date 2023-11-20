@@ -16,6 +16,7 @@
 /tests/fixtures/rules/valid-compile/valid/ts
 /tests/fixtures/rules/prefer-style-directive
 /tests/fixtures/rules/@typescript-eslint
+/tests/fixtures/rules/valid-compile/valid/svelte3-options-custom-element-input.svelte
 /.svelte-kit
 /svelte.config-dist.js
 /build
