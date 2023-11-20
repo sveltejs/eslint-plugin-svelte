@@ -34,13 +34,13 @@ jobs:
           pnpm run update
           pnpm run build
   test:
-    name: 'Test for ESLint ${{ matrix.eslint }} on ${{ matrix.node }} OS: ${{matrix.os}}'
+    name: 'Test for ESLint ${{ matrix.eslint }} on Node.js: ${{ matrix.node }} OS: ${{matrix.os}}'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         eslint: [7, 8]
-        node: [16, 17, 18, 20]
+        node: [20]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,6 +54,29 @@ jobs:
           pnpm install -D eslint@${{ matrix.eslint }}
           rm -rf node_modules
         if: matrix.eslint != 8
+      - name: Install Packages
+        run: pnpm install
+      - name: Test
+        run: pnpm run test
+  test-for-svelte-v4:
+    name: 'Test for Svelte v4 on Node.js: ${{ matrix.node }} OS: ${{matrix.os}}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [16, 17, 18, 20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install svelte@4
+        run: |+
+          pnpm install -D svelte@4
+          rm -rf node_modules
       - name: Install Packages
         run: pnpm install
       - name: Test
