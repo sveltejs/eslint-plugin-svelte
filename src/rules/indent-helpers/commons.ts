@@ -90,6 +90,7 @@ export function isBeginningOfElement(node: AST.SvelteText): boolean {
 		node.parent.type === 'SvelteElseBlock' ||
 		node.parent.type === 'SvelteIfBlock' ||
 		node.parent.type === 'SvelteKeyBlock' ||
+		node.parent.type === 'SvelteSnippetBlock' ||
 		node.parent.type === 'SvelteStyleElement'
 	) {
 		return node.parent.children[0] === node;
