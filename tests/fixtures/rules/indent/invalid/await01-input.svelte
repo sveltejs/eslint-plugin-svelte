@@ -83,3 +83,5 @@ name
 /await
 }
 </div>
+
+<!--tests/fixtures/rules/indent/invalid/await01-input.svelte-->

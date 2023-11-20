@@ -46,3 +46,5 @@
 { #await expression }...{ :then}...{ :catch}...{ /await }
 
 { #key expression }...{ /key }
+
+<!--tests/fixtures/rules/mustache-spacing/invalid/always/test01-input.svelte-->
