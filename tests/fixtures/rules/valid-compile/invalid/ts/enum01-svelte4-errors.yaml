@@ -1,0 +1,5 @@
+- message: The $ prefix is reserved, and cannot be used for variable and import
+    names(illegal-declaration)
+  line: 2
+  column: 3
+  suggestions: null

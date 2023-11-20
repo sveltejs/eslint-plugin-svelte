@@ -1,5 +1,5 @@
-- message: The $ prefix is reserved, and cannot be used for variable and import
-    names(illegal-declaration)
+- message: The $ prefix is reserved, and cannot be used for variables and
+    imports(invalid-dollar-prefix)
   line: 2
-  column: 3
+  column: 8
   suggestions: null
