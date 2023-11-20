@@ -42,7 +42,7 @@ export default createRule('require-event-dispatcher-types', {
 					}
 				})) {
 					const node = n as TSESTree.CallExpression;
-					if (node.typeParameters === undefined) {
+					if ((node.typeArguments ?? node.typeParameters) === undefined) {
 						context.report({ node, messageId: 'missingTypeParameter' });
 					}
 				}

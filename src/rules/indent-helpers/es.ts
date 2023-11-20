@@ -183,19 +183,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.BreakStatement(node);
 		},
 		CallExpression(node: TSESTree.CallExpression) {
+			const typeArguments = node.typeArguments ?? node.typeParameters;
 			const firstToken = sourceCode.getFirstToken(node);
-			const leftParenToken = sourceCode.getTokenAfter(node.typeParameters || node.callee, {
+			const leftParenToken = sourceCode.getTokenAfter(typeArguments || node.callee, {
 				filter: isOpeningParenToken,
 				includeComments: false
 			})!;
 			const rightParenToken = sourceCode.getLastToken(node);
 
-			if (node.typeParameters) {
-				offsets.setOffsetToken(sourceCode.getFirstToken(node.typeParameters), 1, firstToken);
+			if (typeArguments) {
+				offsets.setOffsetToken(sourceCode.getFirstToken(typeArguments), 1, firstToken);
 			}
 
 			for (const optionalToken of sourceCode.getTokensBetween(
-				sourceCode.getLastToken(node.typeParameters || node.callee),
+				sourceCode.getLastToken(typeArguments || node.callee),
 				leftParenToken,
 				{ filter: isOptionalToken, includeComments: false }
 			)) {
@@ -693,18 +694,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.MethodDefinition(node);
 		},
 		NewExpression(node: TSESTree.NewExpression) {
+			const typeArguments = node.typeArguments ?? node.typeParameters;
 			const newToken = sourceCode.getFirstToken(node);
 			const calleeTokens = getFirstAndLastTokens(sourceCode, node.callee);
 			offsets.setOffsetToken(calleeTokens.firstToken, 1, newToken);
 
-			if (node.typeParameters) {
-				offsets.setOffsetToken(
-					sourceCode.getFirstToken(node.typeParameters),
-					1,
-					calleeTokens.firstToken
-				);
+			if (typeArguments) {
+				offsets.setOffsetToken(sourceCode.getFirstToken(typeArguments), 1, calleeTokens.firstToken);
 			}
-			const leftParenBefore = node.typeParameters || calleeTokens.lastToken;
+			const leftParenBefore = typeArguments || calleeTokens.lastToken;
 			if (node.arguments.length || leftParenBefore.range[1] < node.range[1]) {
 				const rightParenToken = sourceCode.getLastToken(node);
 				const leftParenToken = sourceCode.getTokenAfter(leftParenBefore)!;
