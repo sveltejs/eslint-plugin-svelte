@@ -92,6 +92,7 @@ export function loadTestCases(
 		const requirements = getRequirements(inputFile);
 		if (
 			Object.entries(requirements).some(([pkgName, pkgVersion]) => {
+				if (pkgName === 'FIXME') return false; // Comments
 				const pkg =
 					pkgName === 'node'
 						? { version: process.version }

@@ -1,0 +1,4 @@
+{
+	"FIXME": "It seems that unused selectors are not checked yet in Svelte v5.",
+	"svelte": "^4 || ^3"
+}

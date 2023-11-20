@@ -1,10 +1,9 @@
-<script context="module">
-	let foo;
+<script>
+	// svelte-ignore state-rune-not-mutated
+	let immutable = $state(42);
+	export function update(a) {
+		immutable = a;
+	}
 </script>
 
-<script>
-	// svelte-ignore unused-export-let
-	export let unused;
-	// svelte-ignore module-script-reactive-declaration
-	$: reactive = foo;
-</script>
+{immutable}
