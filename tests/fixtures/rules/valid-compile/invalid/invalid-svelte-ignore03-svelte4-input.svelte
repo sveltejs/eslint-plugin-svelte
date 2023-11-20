@@ -19,4 +19,4 @@
 	{/await}
 </div>
 
-<!--tests/fixtures/rules/valid-compile/invalid/invalid-svelte-ignore03-input.svelte-->
+<!--tests/fixtures/rules/valid-compile/invalid/invalid-svelte-ignore03-svelte4-input.svelte-->
