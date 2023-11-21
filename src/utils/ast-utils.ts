@@ -352,7 +352,8 @@ export function getMustacheTokens(
 		| SvAST.SvelteMustacheTag
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
-		| SvAST.SvelteDebugTag,
+		| SvAST.SvelteDebugTag
+		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
 	openToken: SvAST.Token;
@@ -365,7 +366,8 @@ export function getMustacheTokens(
 		| SvAST.SvelteMustacheTag
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
-		| SvAST.SvelteDebugTag,
+		| SvAST.SvelteDebugTag
+		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
 	openToken: SvAST.Token;
@@ -379,18 +381,14 @@ export function getMustacheTokens(
 		| SvAST.SvelteMustacheTag
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
-		| SvAST.SvelteDebugTag,
+		| SvAST.SvelteDebugTag
+		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
 	openToken: SvAST.Token;
 	closeToken: SvAST.Token;
 } | null {
-	if (
-		node.type === 'SvelteMustacheTag' ||
-		node.type === 'SvelteShorthandAttribute' ||
-		node.type === 'SvelteSpreadAttribute' ||
-		node.type === 'SvelteDebugTag'
-	) {
+	if (isWrappedInBraces(node)) {
 		const openToken = sourceCode.getFirstToken(node);
 		const closeToken = sourceCode.getLastToken(node);
 		return {
@@ -431,6 +429,30 @@ export function getMustacheTokens(
 		openToken,
 		closeToken
 	};
+}
+
+function isWrappedInBraces(
+	node:
+		| SvAST.SvelteDirective
+		| SvAST.SvelteSpecialDirective
+		| SvAST.SvelteMustacheTag
+		| SvAST.SvelteShorthandAttribute
+		| SvAST.SvelteSpreadAttribute
+		| SvAST.SvelteDebugTag
+		| SvAST.SvelteRenderTag
+): node is
+	| SvAST.SvelteMustacheTag
+	| SvAST.SvelteShorthandAttribute
+	| SvAST.SvelteSpreadAttribute
+	| SvAST.SvelteDebugTag
+	| SvAST.SvelteRenderTag {
+	return (
+		node.type === 'SvelteMustacheTag' ||
+		node.type === 'SvelteShorthandAttribute' ||
+		node.type === 'SvelteSpreadAttribute' ||
+		node.type === 'SvelteDebugTag' ||
+		node.type === 'SvelteRenderTag'
+	);
 }
 
 /** Get attribute key text */

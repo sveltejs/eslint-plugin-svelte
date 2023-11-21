@@ -217,6 +217,16 @@ export default createRule('mustache-spacing', {
 					true
 				);
 			},
+			SvelteRenderTag(node) {
+				const mustacheTokens = getMustacheTokens(node, sourceCode);
+				verifyBraces(
+					mustacheTokens.openToken,
+					mustacheTokens.closeToken,
+					options.tags.openingBrace,
+					options.tags.closingBrace,
+					true
+				);
+			},
 			SvelteIfBlock(node) {
 				const openBlockOpeningToken = sourceCode.getFirstToken(node);
 				const openBlockClosingToken = sourceCode.getTokenAfter(node.expression, {
@@ -292,7 +302,7 @@ export default createRule('mustache-spacing', {
 					false
 				);
 			},
-			SvelteKeyBlock(node: AST.SvelteEachBlock | AST.SvelteKeyBlock) {
+			SvelteKeyBlock(node: AST.SvelteKeyBlock) {
 				const openBlockOpeningToken = sourceCode.getFirstToken(node);
 				const openBlockClosingToken = sourceCode.getTokenAfter(node.expression, {
 					includeComments: false,
@@ -386,6 +396,32 @@ export default createRule('mustache-spacing', {
 							openBlockLast &&
 							openBlockClosingToken === sourceCode.getTokenAfter(openBlockLast)
 					)
+				);
+			},
+			SvelteSnippetBlock(node) {
+				const openBlockOpeningToken = sourceCode.getFirstToken(node);
+				const openBlockClosingToken = sourceCode.getTokenAfter(node.context || node.id, {
+					includeComments: false,
+					filter: isClosingBraceToken
+				})!;
+				verifyBraces(
+					openBlockOpeningToken,
+					openBlockClosingToken,
+					options.tags.openingBrace,
+					options.tags.closingBrace,
+					true
+				);
+				const closeBlockClosingToken = sourceCode.getLastToken(node);
+				const closeBlockOpeningToken = sourceCode.getTokenBefore(closeBlockClosingToken, {
+					includeComments: false,
+					filter: isOpeningBraceToken
+				})!;
+				verifyBraces(
+					closeBlockOpeningToken,
+					closeBlockClosingToken,
+					options.tags.openingBrace,
+					options.tags.closingBrace,
+					false
 				);
 			}
 		};
