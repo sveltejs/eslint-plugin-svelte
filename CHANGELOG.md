@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.0
+
+### Minor Changes
+
+- [#620](https://github.com/sveltejs/eslint-plugin-svelte/pull/620) [`1097107`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1097107afce00fd8b959261b015a4eb1f39f116d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: (experimental) partial support for Svelte v5
+
 ## 2.35.1
 
 ### Patch Changes

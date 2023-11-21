@@ -4,5 +4,7 @@
   "initialVersions": {
     "eslint-plugin-svelte": "2.35.0"
   },
-  "changesets": []
+  "changesets": [
+    "cuddly-cats-beam"
+  ]
 }
