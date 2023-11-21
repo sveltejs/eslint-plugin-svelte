@@ -1,9 +1,11 @@
 <script>
-	let foo;
-	// svelte-ignore unused-export-let
-	export let used;
-	// svelte-ignore module-script-reactive-declaration
-	$: reactive = foo;
+	// svelte-ignore state-rune-not-mutated
+	let mutable = $state(42);
+	// svelte-ignore state-rune-not-mutated
+	let immutable = $state(42);
+	export function update(a) {
+		immutable = a;
+	}
 </script>
 
-{used}
+{mutable}{immutable}

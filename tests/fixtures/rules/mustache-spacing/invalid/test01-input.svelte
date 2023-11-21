@@ -46,3 +46,5 @@
 
 { #key expression }...{ /key }
 </div>
+
+<!--tests/fixtures/rules/mustache-spacing/invalid/test01-input.svelte-->

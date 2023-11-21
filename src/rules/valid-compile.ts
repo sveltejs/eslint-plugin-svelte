@@ -28,7 +28,13 @@ export default createRule('valid-compile', {
 		}
 		const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings);
 
-		const ignores = ['missing-declaration', 'dynamic-slot-name'];
+		const ignores = [
+			'missing-declaration',
+			// Svelte v4
+			'dynamic-slot-name',
+			// Svelte v5
+			'invalid-slot-name'
+		];
 
 		/**
 		 * report
