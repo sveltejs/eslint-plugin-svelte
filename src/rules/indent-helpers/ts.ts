@@ -62,9 +62,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			// or
 			// const ErrorMap = Map<string, Error>
 			//                  ^^^^^^^^^^^^^^^^^^
-			if (node.typeParameters) {
+			const typeArguments = node.typeArguments ?? node.typeParameters;
+			if (typeArguments) {
 				const firstToken = sourceCode.getFirstToken(node);
-				offsets.setOffsetToken(sourceCode.getFirstToken(node.typeParameters), 1, firstToken);
+				offsets.setOffsetToken(sourceCode.getFirstToken(typeArguments), 1, firstToken);
 			}
 		},
 		TSInstantiationExpression(node: TSESTree.TSInstantiationExpression) {
@@ -401,9 +402,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		TSClassImplements(node: TSESTree.TSClassImplements | TSESTree.TSInterfaceHeritage) {
 			// class C implements T {}
 			//                    ^
-			if (node.typeParameters) {
+			const typeArguments = node.typeArguments ?? node.typeParameters;
+			if (typeArguments) {
 				offsets.setOffsetToken(
-					sourceCode.getFirstToken(node.typeParameters),
+					sourceCode.getFirstToken(typeArguments),
 					1,
 					sourceCode.getFirstToken(node)
 				);
@@ -675,6 +677,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		},
 		TSImportType(node: TSESTree.TSImportType) {
 			// import('foo').B
+			const typeArguments = node.typeArguments ?? node.typeParameters;
 			const firstToken = sourceCode.getFirstToken(node);
 			const leftParenToken = sourceCode.getTokenAfter(firstToken, {
 				filter: isOpeningParenToken,
@@ -695,8 +698,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				const propertyToken = sourceCode.getTokenAfter(dotToken);
 				offsets.setOffsetToken([dotToken, propertyToken], 1, firstToken);
 			}
-			if (node.typeParameters) {
-				offsets.setOffsetToken(sourceCode.getFirstToken(node.typeParameters), 1, firstToken);
+			if (typeArguments) {
+				offsets.setOffsetToken(sourceCode.getFirstToken(typeArguments), 1, firstToken);
 			}
 		},
 		TSParameterProperty(node: TSESTree.TSParameterProperty) {
@@ -1055,9 +1058,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 					sourceCode.getFirstToken(node.id || node)
 				);
 			}
-			if (node.superTypeParameters != null && node.superClass != null) {
+			const superTypeArguments = node.superTypeArguments ?? node.superTypeParameters;
+			if (superTypeArguments != null && node.superClass != null) {
 				offsets.setOffsetToken(
-					sourceCode.getFirstToken(node.superTypeParameters),
+					sourceCode.getFirstToken(superTypeArguments),
 					1,
 					sourceCode.getFirstToken(node.superClass)
 				);
