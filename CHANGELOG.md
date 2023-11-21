@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.35.1
+
+### Patch Changes
+
+- [#623](https://github.com/sveltejs/eslint-plugin-svelte/pull/623) [`a8b4bd4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a8b4bd4bb7c0164f76e4efd19bd8ab6de3185cd6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: replace deprecated typeParameters with typeArguments
+
 ## 2.35.0
 
 ### Minor Changes
