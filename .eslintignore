@@ -17,6 +17,8 @@
 /tests/fixtures/rules/prefer-style-directive
 /tests/fixtures/rules/@typescript-eslint
 /tests/fixtures/rules/valid-compile/valid/svelte3-options-custom-element-input.svelte
+/tests/fixtures/rules/mustache-spacing/valid/always/snippet-render01-input.svelte
+/tests/fixtures/rules/mustache-spacing/invalid/snippet-render01-input.svelte
 /.svelte-kit
 /svelte.config-dist.js
 /build
