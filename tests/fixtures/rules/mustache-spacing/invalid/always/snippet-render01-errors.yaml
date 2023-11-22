@@ -1,0 +1,24 @@
+- message: Expected 1 space after '{', but not found.
+  line: 2
+  column: 1
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 2
+  column: 16
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 3
+  column: 1
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 3
+  column: 10
+  suggestions: null
+- message: Expected 1 space after '{', but not found.
+  line: 4
+  column: 1
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 4
+  column: 15
+  suggestions: null

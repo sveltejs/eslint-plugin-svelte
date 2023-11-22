@@ -1,0 +1,8 @@
+- message: Expected 1 space before '}', but not found.
+  line: 2
+  column: 16
+  suggestions: null
+- message: Expected 1 space before '}', but not found.
+  line: 4
+  column: 15
+  suggestions: null

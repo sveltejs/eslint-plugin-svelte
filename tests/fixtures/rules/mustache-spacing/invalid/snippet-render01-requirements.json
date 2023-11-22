@@ -1,0 +1,4 @@
+{
+	"FIXME": "It seems to return the wrong location in Svelte v5.",
+	"svelte": "<=0.0.0 >=5.0.0-0"
+}
