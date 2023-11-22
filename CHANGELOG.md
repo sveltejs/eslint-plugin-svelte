@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.1
+
+### Minor Changes
+
+- [#622](https://github.com/sveltejs/eslint-plugin-svelte/pull/622) [`470ef6c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/470ef6cd1ef4767528ff15b5fbdfec1740a5ec02) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for `{@snippet}`and `{@render}` in indent rule
+
+- [#624](https://github.com/sveltejs/eslint-plugin-svelte/pull/624) [`7df5b6f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7df5b6f0963f1fb8fc9256f8ed6f034e5f7fbf3d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for `{@snippet}` and `{@render}` in mustache-spacing rule
+
 ## 2.36.0-next.0
 
 ### Minor Changes
