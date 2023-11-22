@@ -8,7 +8,7 @@
 	const dispatch = createEventDispatcher();
 
 	function handleToggleSidebar() {
-		dispatch('toggle-sidebar-open');
+		dispatch('toggleSidebarOpen');
 	}
 </script>
 

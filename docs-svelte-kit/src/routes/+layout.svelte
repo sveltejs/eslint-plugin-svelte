@@ -29,7 +29,7 @@
 
 <svelte:window on:resize={sidebarOpen ? resetSidebarOpen : null} />
 
-<Header on:toggle-sidebar-open={handleToggleSidebar} />
+<Header on:toggleSidebarOpen={handleToggleSidebar} />
 
 <SideMenu {sidebarOpen} hiddenMenu={frontmatter.hiddenMenu} />
 
