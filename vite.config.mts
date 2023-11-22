@@ -44,6 +44,7 @@ const config: UserConfig = {
 			os: path.join(dirname, './docs-svelte-kit/shim/os.mjs'),
 			fs: path.join(dirname, './docs-svelte-kit/shim/fs.mjs'),
 			globby: path.join(dirname, './docs-svelte-kit/shim/globby.mjs'),
+			picocolors: path.join(dirname, './docs-svelte-kit/shim/picocolors.mjs'),
 			tslib: path.join(dirname, './node_modules/tslib/tslib.es6.js'),
 
 			// Alias to CJS
