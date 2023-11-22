@@ -5,6 +5,8 @@
     "eslint-plugin-svelte": "2.35.0"
   },
   "changesets": [
-    "cuddly-cats-beam"
+    "calm-fans-refuse",
+    "cuddly-cats-beam",
+    "yellow-icons-explode"
   ]
 }
