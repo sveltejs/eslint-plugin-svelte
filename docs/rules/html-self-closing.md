@@ -71,7 +71,7 @@ config object:
       "void": "always", // or "never" or "ignore"
       "normal": "always", // or "never" or "ignore"
       "component": "always", // or "never" or "ignore"
-      "svelte": "always" // or "never" or "igore"
+      "svelte": "always" // or "never" or "ignore"
     }
   ]
 }
