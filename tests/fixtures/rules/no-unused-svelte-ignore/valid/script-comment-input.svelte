@@ -1,5 +1,5 @@
 <script>
-	// svelte-ignore state-rune-not-mutated
+	// svelte-ignore state-not-mutated
 	let immutable = $state(42);
 </script>
 
