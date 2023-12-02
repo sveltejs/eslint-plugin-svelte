@@ -50,7 +50,7 @@ And the API has changed.
 
 ## :wrench: Options
 
-Nothing. But if use are using not default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte-kit).
+Nothing. But if you are not using the default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte-kit).
 
 ## :books: Further Reading
 
