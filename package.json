@@ -162,7 +162,7 @@
     "sass": "^1.64.0",
     "source-map-js": "^1.0.2",
     "stylelint": "^15.0.0",
-    "stylelint-config-standard": "^34.0.0",
+    "stylelint-config-standard": "^35.0.0",
     "stylus": "^0.62.0",
     "svelte": "^5.0.0-next.16",
     "svelte-adapter-ghpages": "0.1.0",
