@@ -12,7 +12,7 @@ since: 'v0.0.4'
 
 ## :book: Rule Details
 
-This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
+This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability in legacy browsers where a page can trigger a navigation in the opener regardless of origin ([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
 
 <ESLintCodeBlock>
 
@@ -46,8 +46,8 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 }
 ```
 
-- `allowReferrer` ... If `true`, does not require noreferrer.default `false`
-- `enforceDynamicLinks ("always" | "never")` ... If `always`, enforces the rule if the href is a dynamic link. default `always`.
+- `allowReferrer` ... If `true`, allows the `Referrer` header to be sent by not requiring `noreferrer` to be present. default `false`
+- `enforceDynamicLinks ("always" | "never")` ... If `always`, enforces the rule if the href is a dynamic link. default `always`
 
 ### `{ allowReferrer: false }` (default)
 
