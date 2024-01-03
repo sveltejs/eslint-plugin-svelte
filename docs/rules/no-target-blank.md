@@ -12,7 +12,7 @@ since: 'v0.0.4'
 
 ## :book: Rule Details
 
-This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability in legacy browsers ([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
+This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability in legacy browsers where a page can trigger a navigation in the opener regardless of origin ([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
 
 <ESLintCodeBlock>
 
