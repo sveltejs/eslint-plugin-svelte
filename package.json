@@ -92,7 +92,7 @@
     "@fontsource/fira-mono": "^5.0.0",
     "@ota-meshi/eslint-plugin": "^0.15.0",
     "@sindresorhus/slugify": "^2.1.0",
-    "@sveltejs/adapter-static": "^2.0.2",
+    "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/kit": "^1.16.3",
     "@types/babel__core": "^7.1.19",
     "@types/cross-spawn": "^6.0.2",
