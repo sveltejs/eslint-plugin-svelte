@@ -338,11 +338,11 @@ export function defineVisitor(context: IndentContext): NodeListener {
 						? sourceCode.getTokenBefore(node.source, {
 								filter: isClosingBraceToken,
 								includeComments: false
-						  })!
+							})!
 						: sourceCode.getLastToken(node, {
 								filter: isClosingBraceToken,
 								includeComments: false
-						  })!;
+							})!;
 					offsets.setOffsetToken(leftBraceTokens, 0, exportToken);
 					offsets.setOffsetElementList(
 						node.specifiers,
@@ -535,12 +535,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
 							fromToken: tokens[fromIndex],
 							beforeTokens: tokens.slice(0, fromIndex),
 							afterTokens: [...tokens.slice(fromIndex + 1), sourceCode.getFirstToken(node.source)]
-					  }
+						}
 					: {
 							fromToken: null,
 							beforeTokens: [...tokens, sourceCode.getFirstToken(node.source)],
 							afterTokens: []
-					  };
+						};
 
 			const namedSpecifiers: TSESTree.ImportSpecifier[] = [];
 			for (const specifier of node.specifiers) {

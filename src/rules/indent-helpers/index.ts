@@ -127,8 +127,8 @@ export function defineVisitor(
 					actualUnit: mismatchCharIndexes.length
 						? 'whitespace'
 						: options.indentChar === '\t'
-						  ? 'tab'
-						  : 'space',
+							? 'tab'
+							: 'space',
 					expectedIndentPlural: expectedIndent === 1 ? '' : 's',
 					actualIndentPlural: actualIndent === 1 ? '' : 's'
 				},

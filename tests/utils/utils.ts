@@ -97,7 +97,7 @@ export function loadTestCases(
 					pkgName === 'node'
 						? { version: process.version }
 						: // eslint-disable-next-line @typescript-eslint/no-require-imports -- test
-						  require(`${pkgName}/package.json`);
+							require(`${pkgName}/package.json`);
 				return !semver.satisfies(pkg.version, pkgVersion);
 			})
 		) {
@@ -206,8 +206,8 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 		path.extname(inputFile) === '.svelte'
 			? 'svelte-eslint-parser'
 			: path.extname(inputFile) === '.ts'
-			  ? '@typescript-eslint/parser'
-			  : undefined;
+				? '@typescript-eslint/parser'
+				: undefined;
 	const { code, filename, options, ...verifyConfig } = config;
 	const result = linter.verify(
 		code,
@@ -244,7 +244,7 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 								messageId: s.messageId,
 								// Need to have this be the *fixed* output, not just the fix content or anything
 								output: applySuggestion(config.code, s)
-						  }))
+							}))
 						: null
 				}))
 			)}`
@@ -286,8 +286,8 @@ function getConfig(ruleName: string, inputFile: string) {
 		path.extname(filename) === '.svelte'
 			? require.resolve('svelte-eslint-parser')
 			: path.extname(inputFile) === '.ts'
-			  ? require.resolve('@typescript-eslint/parser')
-			  : undefined;
+				? require.resolve('@typescript-eslint/parser')
+				: undefined;
 
 	return Object.assign(
 		{

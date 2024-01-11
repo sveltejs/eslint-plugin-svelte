@@ -363,7 +363,7 @@ export default createRule('mustache-spacing', {
 					? sourceCode.getTokenAfter(openBlockLast, {
 							includeComments: false,
 							filter: isClosingBraceToken
-					  })
+						})
 					: null;
 				verifyBraces(
 					openBlockOpeningToken,
@@ -384,7 +384,7 @@ export default createRule('mustache-spacing', {
 					? sourceCode.getTokenAfter(openBlockLast, {
 							includeComments: false,
 							filter: isClosingBraceToken
-					  })
+						})
 					: null;
 				verifyBraces(
 					openBlockOpeningToken,

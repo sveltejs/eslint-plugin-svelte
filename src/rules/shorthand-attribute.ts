@@ -59,7 +59,7 @@ export default createRule('shorthand-attribute', {
 							});
 						}
 					}
-			  }
+				}
 			: {
 					SvelteShorthandAttribute(node) {
 						context.report({
@@ -70,6 +70,6 @@ export default createRule('shorthand-attribute', {
 							}
 						});
 					}
-			  };
+				};
 	}
 });

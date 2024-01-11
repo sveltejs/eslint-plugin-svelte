@@ -27,7 +27,7 @@
 			? async () => {
 					tsParser = await loadTsParser();
 					return loadLinter;
-			  }
+				}
 			: () => loadLinter
 	);
 	let showDiff = fix;

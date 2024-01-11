@@ -76,7 +76,7 @@ export default createRule('no-trailing-spaces', {
 			...(ignoreComments
 				? {
 						SvelteHTMLComment: collectIgnoreLineNumbers
-				  }
+					}
 				: {}),
 			'Program:exit'() {
 				const lines = sourceCode.lines;

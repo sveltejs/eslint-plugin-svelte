@@ -385,8 +385,8 @@ function* transformScripts(context: RuleContext, text: string) {
 			? transformWithTypescript
 			: transformWithBabel
 		: isUseBabel(context)
-		  ? transformWithBabel
-		  : null;
+			? transformWithBabel
+			: null;
 
 	const sourceCode = getSourceCode(context);
 	if (transform) {
@@ -431,8 +431,8 @@ function getWarningsFromCode(
 			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0')
 				? { customElement: true }
 				: hasTagOption(getSourceCode(context).ast)
-				  ? { customElement: true }
-				  : {})
+					? { customElement: true }
+					: {})
 		});
 
 		return { warnings: result.warnings as Warning[], kind: 'warn' };
