@@ -81,7 +81,7 @@
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^2.0.0",
-    "@1stg/stylelint-config": "^5.0.0",
+    "@1stg/stylelint-config": "^6.0.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-proposal-function-bind": "^7.16.7",
