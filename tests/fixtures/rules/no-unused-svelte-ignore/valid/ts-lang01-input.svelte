@@ -1,10 +1,8 @@
-<script>
-	let mutable = $state(42);
-	// svelte-ignore state-not-mutated
-	let immutable = $state(42);
-	export function update(a) {
-		mutable = a;
-	}
+<script lang="ts">
+	let count = $state(0);
+	let doubled = $derived(count * 2);
+	// svelte-ignore static-state-reference
+	console.log(count as any);
+	// svelte-ignore static-state-reference
+	console.log(doubled!);
 </script>
-
-{mutable}{immutable}
