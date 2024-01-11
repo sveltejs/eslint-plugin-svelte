@@ -147,7 +147,7 @@
     "magic-string": "^0.30.0",
     "markdown-it-anchor": "^8.4.1",
     "markdown-it-container": "^4.0.0",
-    "markdown-it-emoji": "^2.0.0",
+    "markdown-it-emoji": "^3.0.0",
     "mocha": "^10.0.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
