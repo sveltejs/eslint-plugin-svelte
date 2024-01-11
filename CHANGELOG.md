@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.4
+
+### Patch Changes
+
+- [#657](https://github.com/sveltejs/eslint-plugin-svelte/pull/657) [`b159b46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b159b467427aab17c74246f9b89283aa966bb2e4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte to v5.0.0-next.33
+
 ## 2.36.0-next.3
 
 ### Patch Changes

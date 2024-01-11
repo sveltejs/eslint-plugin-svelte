@@ -5,6 +5,7 @@
     "eslint-plugin-svelte": "2.35.0"
   },
   "changesets": [
+    "brown-gorillas-fly",
     "calm-fans-refuse",
     "cuddly-cats-beam",
     "hip-eels-unite",
