@@ -1,9 +1,19 @@
 import type { AST } from 'svelte-eslint-parser';
-import postcss from 'postcss';
-import postcssLoadConfig from 'postcss-load-config';
+import { createSyncFn } from 'synckit';
+
 import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
 import { getCwd, getFilename } from '../../../utils/compat';
+import type { TransformResult } from './types';
+
+const postcssProcess = createSyncFn(require.resolve('./postcss.worker')) as (options: {
+	cwd: string;
+	filename: string;
+	code: string;
+	configFilePath?: unknown;
+}) => {
+	output: string;
+	mappings: string;
+};
 
 /**
  * Transform with postcss
@@ -24,33 +34,24 @@ export function transform(
 		inputRange = [node.startTag.range[1], node.range[1]];
 	}
 	const code = text.slice(...inputRange);
-
 	const filename = `${getFilename(context)}.css`;
+
 	try {
 		const configFilePath = postcssConfig?.configFilePath;
 
-		const config = postcssLoadConfig.sync(
-			{
-				cwd: getCwd(context),
-				from: filename
-			},
-			typeof configFilePath === 'string' ? configFilePath : undefined
-		);
-
-		const result = postcss(config.plugins).process(code, {
-			...config.options,
-			map: {
-				inline: false
-			}
+		const result = postcssProcess({
+			cwd: getCwd(context),
+			filename,
+			code,
+			configFilePath
 		});
 
 		return {
 			inputRange,
-			output: result.content,
-			mappings: result.map.toJSON().mappings
+			...result
 		};
 	} catch (_e) {
-		// console.log(e)
+		// console.error(_e);
 		return null;
 	}
 }

@@ -12,7 +12,6 @@ export type Program = TSESTree.Program;
 export type Expression = TSESTree.Expression;
 export type Statement = TSESTree.Statement;
 export type Pattern = TSESTree.DestructuringPattern;
-export type AccessorProperty = TSESTree.AccessorProperty;
 export type ArrayExpression = TSESTree.ArrayExpression;
 export type ArrayPattern = TSESTree.ArrayPattern;
 export type ArrowFunctionExpression = TSESTree.ArrowFunctionExpression;
