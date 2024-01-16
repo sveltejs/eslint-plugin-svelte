@@ -1,4 +1,4 @@
-import { Rule } from 'eslint';
+import type { Rule } from 'eslint';
 import { getCoreRule } from '../../../src/utils/eslint-core';
 import { RuleTester } from '../../utils/eslint-compat';
 

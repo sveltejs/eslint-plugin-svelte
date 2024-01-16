@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { RuleTester } from 'eslint';
-import { Linter as LinterType } from 'eslint';
+import type { Linter as LinterType } from 'eslint';
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require('../../src/index');
 import { applyFixes } from './source-code-fixer';
@@ -226,7 +226,7 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 				svelte: plugin
 			},
 			rules: {
-				['svelte/' + ruleName]: ['error', ...(options || [])]
+				[`svelte/${ruleName}`]: ['error', ...(options || [])]
 			},
 			languageOptions: {
 				globals,

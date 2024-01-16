@@ -77,7 +77,7 @@ let ruleMap: Map<string, RuleModule> | null = null;
  */
 export function getCoreRule(ruleName: string): RuleModule {
 	try {
-		let map: Map<string, RuleModule> = ruleMap
+		const map: Map<string, RuleModule> = ruleMap
 			? ruleMap
 			: (ruleMap = (new Linter() as any).getRules());
 		return map.get(ruleName)!;

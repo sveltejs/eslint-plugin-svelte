@@ -3,7 +3,7 @@
 /* eslint func-style: off, eslint-plugin/consistent-output: off -- respect original  */
 import * as path from 'path';
 import { RuleTester } from '../../../../utils/eslint-compat';
-import * as eslint from 'eslint';
+import type * as eslint from 'eslint';
 
 import rule from '../../../../../src/rules/@typescript-eslint/no-unnecessary-condition';
 
