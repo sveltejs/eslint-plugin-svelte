@@ -1,16 +1,18 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '../../../utils/eslint-compat';
 import rule from '../../../../src/rules/@typescript-eslint/no-unnecessary-condition';
 import { loadTestCases, RULES_PROJECT } from '../../../utils/utils';
 
 const tester = new RuleTester({
-	parserOptions: {
+	languageOptions: {
 		ecmaVersion: 2020,
 		sourceType: 'module',
-		parser: {
-			ts: '@typescript-eslint/parser',
-			js: 'espree'
-		},
-		project: RULES_PROJECT
+		parserOptions: {
+			parser: {
+				ts: '@typescript-eslint/parser',
+				js: 'espree'
+			},
+			project: RULES_PROJECT
+		}
 	}
 });
 

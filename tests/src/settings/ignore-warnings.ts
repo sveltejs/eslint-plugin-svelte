@@ -1,6 +1,6 @@
 import assert from 'assert';
-import eslint from 'eslint';
 import plugin from '../../../src/index';
+import { ESLint } from '../../utils/eslint-compat';
 
 describe('ignore-warnings', () => {
 	it('disable rules if ignoreWarnings: [ruleName]', async () => {
@@ -14,16 +14,17 @@ describe('ignore-warnings', () => {
       {@debug a}
       `;
 
-		const linter = new eslint.ESLint({
-			plugins: {
-				svelte: plugin as never
-			},
+		const linter = new ESLint({
 			baseConfig: {
-				parser: require.resolve('svelte-eslint-parser'),
-				parserOptions: {
+				files: ['**'],
+				languageOptions: {
+					parser: require('svelte-eslint-parser'),
 					ecmaVersion: 2020
 				},
-				plugins: ['svelte'],
+				plugins: {
+					// @ts-expect-error -- Type error for eslint v9
+					svelte: plugin as never
+				},
 				rules: {
 					'no-undef': 'error',
 					'space-infix-ops': 'error',
@@ -35,9 +36,11 @@ describe('ignore-warnings', () => {
 					svelte: {
 						ignoreWarnings: ['no-undef', 'space-infix-ops', 'svelte/no-at-debug-tags']
 					}
-				}
+				},
+				processor: 'svelte/svelte'
 			},
-			useEslintrc: false
+			// @ts-expect-error -- Type error for eslint v9
+			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
 		const messages = result[0].messages;
@@ -79,16 +82,17 @@ describe('ignore-warnings', () => {
       {@debug a}
       `;
 
-		const linter = new eslint.ESLint({
-			plugins: {
-				svelte: plugin as never
-			},
+		const linter = new ESLint({
 			baseConfig: {
-				parser: require.resolve('svelte-eslint-parser'),
-				parserOptions: {
+				files: ['**'],
+				languageOptions: {
+					parser: require('svelte-eslint-parser'),
 					ecmaVersion: 2020
 				},
-				plugins: ['svelte'],
+				plugins: {
+					// @ts-expect-error -- Type error for eslint v9
+					svelte: plugin as never
+				},
 				rules: {
 					'no-undef': 'error',
 					'space-infix-ops': 'error',
@@ -100,9 +104,11 @@ describe('ignore-warnings', () => {
 					svelte: {
 						ignoreWarnings: ['no-undef', '/debug/', '/^space/']
 					}
-				}
+				},
+				processor: 'svelte/svelte'
 			},
-			useEslintrc: false
+			// @ts-expect-error -- Type error for eslint v9
+			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
 		const messages = result[0].messages;
@@ -145,21 +151,24 @@ describe('ignore-warnings', () => {
       {@debug a}
       `;
 
-		const linter = new eslint.ESLint({
-			plugins: {
-				svelte: plugin as never
-			},
+		const linter = new ESLint({
 			baseConfig: {
-				parser: require.resolve('svelte-eslint-parser'),
-				parserOptions: {
+				files: ['**'],
+				languageOptions: {
+					parser: require('svelte-eslint-parser'),
 					ecmaVersion: 2020
 				},
-				plugins: ['svelte'],
+				plugins: {
+					// @ts-expect-error -- Type error for eslint v9
+					svelte: plugin as never
+				},
 				rules: {
 					'svelte/system': 'error'
-				}
+				},
+				processor: 'svelte/svelte'
 			},
-			useEslintrc: false
+			// @ts-expect-error -- Type error for eslint v9
+			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
 		const messages = result[0].messages;

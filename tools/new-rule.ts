@@ -70,15 +70,15 @@ export default createRule('${ruleId}', {
 	);
 	await writeAndFormat(
 		testFile,
-		`import { RuleTester } from 'eslint';
+		`import { RuleTester } from '../../utils/eslint-compat';
 import rule from '${getModulePath(testFile, ruleFile)}';
 import { loadTestCases } from '${getModulePath(testFile, testUtilsPath)}';
 
 const tester = new RuleTester({
-    parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: 'module',
-    },
+	languageOptions: {
+		ecmaVersion: 2020,
+		sourceType: 'module'
+	}
 });
 
 tester.run('${ruleId}', rule as any, loadTestCases('${ruleId}'));

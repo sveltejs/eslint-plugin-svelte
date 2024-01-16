@@ -1,16 +1,23 @@
 import fs from 'fs';
 import path from 'path';
 import type { RuleTester } from 'eslint';
-import { Linter } from 'eslint';
-import * as svelteESLintParser from 'svelte-eslint-parser';
-import * as typescriptESLintParser from '@typescript-eslint/parser';
+import { Linter as LinterType } from 'eslint';
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require('../../src/index');
 import { applyFixes } from './source-code-fixer';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import semver from 'semver';
 import { writeAndFormat } from '../../tools/lib/write';
+import { Linter } from './eslint-compat';
 
+const globals = {
+	console: 'readonly',
+	setTimeout: 'readonly',
+	setInterval: 'readonly',
+	queueMicrotask: 'readonly',
+	window: 'readonly',
+	globalThis: 'readonly'
+};
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
  */
@@ -189,14 +196,14 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
 
 // Necessary because of this:
 // https://github.com/eslint/eslint/issues/14936#issuecomment-906746754
-function applySuggestion(code: string, suggestion: Linter.LintSuggestion) {
+function applySuggestion(code: string, suggestion: LinterType.LintSuggestion) {
 	const { fix } = suggestion;
 
 	return `${code.slice(0, fix.range[0])}${fix.text}${code.slice(fix.range[1])}`;
 }
 
 function writeFixtures(ruleName: string, inputFile: string, { force }: { force?: boolean } = {}) {
-	const linter = getLinter(ruleName);
+	const linter = new Linter();
 	const errorFile = inputFile.replace(/input\.[a-z]+$/u, 'errors.yaml');
 	const outputFile = inputFile.replace(/input\.[a-z]+$/u, 'output.svelte');
 
@@ -204,27 +211,41 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 
 	const parser =
 		path.extname(inputFile) === '.svelte'
-			? 'svelte-eslint-parser'
+			? require('svelte-eslint-parser')
 			: path.extname(inputFile) === '.ts'
-				? '@typescript-eslint/parser'
+				? require('@typescript-eslint/parser')
 				: undefined;
 	const { code, filename, options, ...verifyConfig } = config;
+	const resolvedParser = verifyConfig.languageOptions?.parser ?? parser;
 	const result = linter.verify(
 		code,
 		{
+			files: ['**'],
 			...verifyConfig,
-			rules: {
-				[ruleName]: ['error', ...(options || [])]
+			plugins: {
+				svelte: plugin
 			},
-			parser,
-			parserOptions: {
+			rules: {
+				['svelte/' + ruleName]: ['error', ...(options || [])]
+			},
+			languageOptions: {
+				globals,
 				ecmaVersion: 2020,
 				sourceType: 'module',
-				parser: {
-					ts: '@typescript-eslint/parser',
-					js: 'espree'
+				...verifyConfig?.languageOptions,
+				parserOptions: {
+					project: RULES_PROJECT,
+					parser: {
+						ts: '@typescript-eslint/parser',
+						js: 'espree'
+					},
+					...verifyConfig.languageOptions?.parserOptions
 				},
-				...verifyConfig.parserOptions
+				...(resolvedParser
+					? {
+							parser: resolvedParser
+						}
+					: {})
 			}
 		},
 		filename
@@ -260,17 +281,6 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 	}
 }
 
-function getLinter(ruleName: string) {
-	const linter = new Linter();
-	// @ts-expect-error for test
-	linter.defineParser('svelte-eslint-parser', svelteESLintParser);
-	// @ts-expect-error for test
-	linter.defineParser('@typescript-eslint/parser', typescriptESLintParser);
-	linter.defineRule(ruleName, plugin.rules[ruleName] as any);
-
-	return linter;
-}
-
 function getConfig(ruleName: string, inputFile: string) {
 	const filename = inputFile.slice(inputFile.indexOf(ruleName));
 	const code = fs.readFileSync(inputFile, 'utf8');
@@ -282,33 +292,43 @@ function getConfig(ruleName: string, inputFile: string) {
 	if (fs.existsSync(configFile)) {
 		config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 	}
+	if (config?.languageOptions?.parserOptions) {
+		debugger;
+	}
 	const parser =
 		path.extname(filename) === '.svelte'
-			? require.resolve('svelte-eslint-parser')
+			? require('svelte-eslint-parser')
 			: path.extname(inputFile) === '.ts'
-				? require.resolve('@typescript-eslint/parser')
+				? require('@typescript-eslint/parser')
 				: undefined;
 
+	const resolvedParser = config?.languageOptions?.parser
+		? require(config.languageOptions.parser)
+		: parser;
 	return Object.assign(
 		{
-			parser,
-			parserOptions: {
-				project: RULES_PROJECT,
-				parser: {
-					ts: '@typescript-eslint/parser',
-					js: 'espree'
+			...config,
+			languageOptions: {
+				globals,
+				ecmaVersion: 2020,
+				sourceType: 'module',
+				...config?.languageOptions,
+				parserOptions: {
+					project: RULES_PROJECT,
+					parser: {
+						ts: '@typescript-eslint/parser',
+						js: 'espree'
+					},
+					extraFileExtensions: ['.svelte'],
+					...config?.languageOptions?.parserOptions
 				},
-				extraFileExtensions: ['.svelte']
-			},
-			env: {
-				browser: true,
-				es2017: true
-			},
-			globals: {
-				console: 'readonly'
+				...(resolvedParser
+					? {
+							parser: resolvedParser
+						}
+					: {})
 			}
 		},
-		config,
 		{ code, filename: inputFile }
 	);
 }

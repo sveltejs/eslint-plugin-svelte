@@ -41,6 +41,11 @@ jobs:
         os: [ubuntu-latest]
         eslint: [7, 8]
         node: [20]
+        include:
+          # On next ESLint version
+          - eslint: ^9.0.0-0
+            node: 20
+            os: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4

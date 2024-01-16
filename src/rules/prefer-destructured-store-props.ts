@@ -186,7 +186,7 @@ export default createRule('prefer-destructured-store-props', {
 						//  dynamic accesses like {$foo[bar]}
 						!node.computed
 					) {
-						for (const variable of findReactiveVariable(node.object, node.property.name)) {
+						for (const variable of new Set(findReactiveVariable(node.object, node.property.name))) {
 							suggest.push({
 								messageId: 'fixUseVariable',
 								data: {
