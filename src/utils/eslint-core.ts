@@ -88,5 +88,5 @@ export function getCoreRule(ruleName: string): RuleModule {
 	// eslint-disable-next-line @typescript-eslint/no-require-imports , @typescript-eslint/no-var-requires -- Ignore
 	const { builtinRules } = require('eslint/use-at-your-own-risk');
 	ruleMap = builtinRules;
-	return /** @type {any} */ builtinRules.get(ruleName) || null;
+	return builtinRules.get(ruleName) || null;
 }
