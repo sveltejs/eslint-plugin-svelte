@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import type { RuleTester } from 'eslint';
 import type { Linter as LinterType } from 'eslint';
-// eslint-disable-next-line @typescript-eslint/no-require-imports -- tests
 import plugin = require('../../src/index');
 import { applyFixes } from './source-code-fixer';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
@@ -101,10 +100,7 @@ export function loadTestCases(
 			Object.entries(requirements).some(([pkgName, pkgVersion]) => {
 				if (pkgName === 'FIXME') return false; // Comments
 				const pkg =
-					pkgName === 'node'
-						? { version: process.version }
-						: // eslint-disable-next-line @typescript-eslint/no-require-imports -- test
-							require(`${pkgName}/package.json`);
+					pkgName === 'node' ? { version: process.version } : require(`${pkgName}/package.json`);
 				return !semver.satisfies(pkg.version, pkgVersion);
 			})
 		) {
@@ -291,9 +287,6 @@ function getConfig(ruleName: string, inputFile: string) {
 	}
 	if (fs.existsSync(configFile)) {
 		config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
-	}
-	if (config?.languageOptions?.parserOptions) {
-		debugger;
 	}
 	const parser =
 		path.extname(filename) === '.svelte'

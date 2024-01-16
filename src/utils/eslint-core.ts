@@ -81,10 +81,11 @@ export function getCoreRule(ruleName: string): RuleModule {
 			? ruleMap
 			: (ruleMap = (new Linter() as any).getRules());
 		return map.get(ruleName)!;
-	} catch (e) {
+	} catch {
 		// getRules() is no longer available in flat config.
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-require-imports , @typescript-eslint/no-var-requires -- Ignore
 	const { builtinRules } = require('eslint/use-at-your-own-risk');
 	ruleMap = builtinRules;
 	return /** @type {any} */ builtinRules.get(ruleName) || null;
