@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.5
+
+### Patch Changes
+
+- [#670](https://github.com/sveltejs/eslint-plugin-svelte/pull/670) [`6121a56`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6121a562f8a6d34bb338a5a2df373032abe514d6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency eslint-compat-utils to ^0.3.0
+
+- [#673](https://github.com/sveltejs/eslint-plugin-svelte/pull/673) [`b72b97b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b72b97ba617ff5eeb9b6f4e600c511250c19a72b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for eslint v9
+
 ## 2.36.0-next.4
 
 ### Patch Changes
