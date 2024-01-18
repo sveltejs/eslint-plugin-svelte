@@ -1,14 +1,16 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '../../utils/eslint-compat';
 import rule from '../../../src/rules/indent';
 import { loadTestCases } from '../../utils/utils';
 
 const tester = new RuleTester({
-	parserOptions: {
+	languageOptions: {
 		ecmaVersion: 2020,
 		sourceType: 'module',
-		parser: {
-			ts: '@typescript-eslint/parser',
-			js: 'espree'
+		parserOptions: {
+			parser: {
+				ts: '@typescript-eslint/parser',
+				js: 'espree'
+			}
 		}
 	}
 });

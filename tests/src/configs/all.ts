@@ -1,12 +1,12 @@
 import assert from 'assert';
-import eslint from 'eslint';
 import plugin from '../../../src/index';
+import { LegacyESLint } from '../../utils/eslint-compat';
 
 describe('`all` config', () => {
 	it('`all` config should work. ', async () => {
 		const code = `<script>const a = 1, b = 2;</script>{@html a+b}`;
 
-		const linter = new eslint.ESLint({
+		const linter = new LegacyESLint({
 			plugins: {
 				svelte: plugin as never
 			},

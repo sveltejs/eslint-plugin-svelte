@@ -1,9 +1,9 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '../../utils/eslint-compat';
 import rule from '../../../src/rules/valid-prop-names-in-kit-pages';
 import { loadTestCases } from '../../utils/utils';
 
 const tester = new RuleTester({
-	parserOptions: {
+	languageOptions: {
 		ecmaVersion: 2020,
 		sourceType: 'module'
 	}

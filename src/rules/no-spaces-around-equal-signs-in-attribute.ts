@@ -9,7 +9,7 @@ export default createRule('no-spaces-around-equal-signs-in-attribute', {
 			recommended: false,
 			conflictWithPrettier: true
 		},
-		schema: {},
+		schema: [],
 		fixable: 'whitespace',
 		messages: {
 			noSpaces: 'Unexpected spaces found around equal signs.'

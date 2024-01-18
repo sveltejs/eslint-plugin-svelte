@@ -1,30 +1,33 @@
 import assert from 'assert';
-import eslint from 'eslint';
 import plugin from '../../../src/index';
+import { ESLint } from '../../utils/eslint-compat';
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
 // Initialize linter.
-const linter = new eslint.ESLint({
-	plugins: {
-		svelte: plugin as never
-	},
+const linter = new ESLint({
 	baseConfig: {
-		parser: require.resolve('svelte-eslint-parser'),
-		parserOptions: {
+		languageOptions: {
+			parser: require('svelte-eslint-parser'),
 			ecmaVersion: 2020
 		},
-		plugins: ['svelte'],
+		plugins: {
+			// @ts-expect-error -- Type error for eslint v9
+			svelte: plugin
+		},
 		rules: {
 			'no-undef': 'error',
 			'space-infix-ops': 'error',
 			'svelte/no-at-html-tags': 'error',
 			'svelte/comment-directive': 'error'
-		}
+		},
+		processor: 'svelte/svelte',
+		files: ['**']
 	},
-	useEslintrc: false
+	// @ts-expect-error -- Type error for eslint v9
+	overrideConfigFile: true
 });
 
 describe('comment-directive', () => {
@@ -348,24 +351,27 @@ describe('comment-directive', () => {
 	});
 
 	describe('reportUnusedDisableDirectives', () => {
-		const linter = new eslint.ESLint({
-			plugins: {
-				svelte: plugin as never
-			},
+		const linter = new ESLint({
 			baseConfig: {
-				parser: require.resolve('svelte-eslint-parser'),
-				parserOptions: {
-					ecmaVersion: 2015
+				languageOptions: {
+					parser: require('svelte-eslint-parser'),
+					ecmaVersion: 2020
 				},
-				plugins: ['svelte'],
+				plugins: {
+					// @ts-expect-error -- Type error for eslint v9
+					svelte: plugin
+				},
 				rules: {
 					'no-unused-vars': 'error',
 					'svelte/comment-directive': ['error', { reportUnusedDisableDirectives: true }],
 					'svelte/no-at-html-tags': 'error',
 					'svelte/no-at-debug-tags': 'error'
-				}
+				},
+				files: ['**'],
+				processor: 'svelte/svelte'
 			},
-			useEslintrc: false
+			// @ts-expect-error -- Type error for eslint v9
+			overrideConfigFile: true
 		});
 		it('report unused <!-- eslint-disable -->', async () => {
 			const code = `

@@ -2,7 +2,8 @@
 // https://github.com/typescript-eslint/typescript-eslint/blob/78467fc1bde9bd2db1e08b3d19f151f4adaff8a9/packages/eslint-plugin/tests/rules/no-unnecessary-condition.test.ts
 /* eslint func-style: off, eslint-plugin/consistent-output: off -- respect original  */
 import * as path from 'path';
-import { RuleTester } from 'eslint';
+import { RuleTester } from '../../../../utils/eslint-compat';
+import type * as eslint from 'eslint';
 
 import rule from '../../../../../src/rules/@typescript-eslint/no-unnecessary-condition';
 
@@ -13,25 +14,27 @@ function getFixturesRootDir(): string {
 const rootPath = getFixturesRootDir();
 
 const ruleTester = new RuleTester({
-	parser: require.resolve('@typescript-eslint/parser'),
-	parserOptions: {
-		tsconfigRootDir: rootPath,
-		project: './tsconfig.json'
+	languageOptions: {
+		parser: require('@typescript-eslint/parser'),
+		parserOptions: {
+			tsconfigRootDir: rootPath,
+			project: './tsconfig.json'
+		}
 	}
 });
 
-function withFileName<TestCase extends RuleTester.ValidTestCase | RuleTester.InvalidTestCase>(
-	list: (string | TestCase)[]
-): TestCase[] {
-	return list.map((e) => {
+function withFileName<
+	TestCase extends eslint.RuleTester.ValidTestCase | eslint.RuleTester.InvalidTestCase
+>(list: (string | TestCase)[]): TestCase[] {
+	return list.map((e: any) => {
 		if (typeof e === 'string') {
 			return { code: e, filename: path.join(rootPath, 'file.ts') } as TestCase;
 		}
 		if (e.filename) return e;
 		return {
 			...e,
-			filename: e.parserOptions?.tsconfigRootDir
-				? path.join(e.parserOptions.tsconfigRootDir, 'file.ts')
+			filename: e.languageOptions?.parserOptions?.tsconfigRootDir
+				? path.join(e.languageOptions?.parserOptions.tsconfigRootDir, 'file.ts')
 				: path.join(rootPath, 'file.ts')
 		} as TestCase;
 	});
@@ -60,7 +63,7 @@ const t1 = b1 && b2;
 const unnecessaryConditionTest = (
 	condition: string,
 	messageId: string
-): RuleTester.InvalidTestCase => ({
+): eslint.RuleTester.InvalidTestCase => ({
 	code: necessaryConditionTest(condition),
 	errors: [ruleError(4, 12, messageId)]
 });
@@ -536,8 +539,10 @@ if (x) {
 					allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing: true
 				}
 			],
-			parserOptions: {
-				tsconfigRootDir: path.join(rootPath, 'unstrict')
+			languageOptions: {
+				parserOptions: {
+					tsconfigRootDir: path.join(rootPath, 'unstrict')
+				}
 			}
 		}
 	]),
@@ -1539,8 +1544,10 @@ declare const x: string[] | null;
 if (x) {
 }
       `,
-			parserOptions: {
-				tsconfigRootDir: path.join(rootPath, 'unstrict')
+			languageOptions: {
+				parserOptions: {
+					tsconfigRootDir: path.join(rootPath, 'unstrict')
+				}
 			},
 			errors: [
 				{

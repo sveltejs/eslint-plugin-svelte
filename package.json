@@ -57,7 +57,7 @@
     "version:ci": "env-cmd -e version-ci pnpm run update && changeset version"
   },
   "peerDependencies": {
-    "eslint": "^7.0.0 || ^8.0.0-0",
+    "eslint": "^7.0.0 || ^8.0.0-0 || ^9.0.0-0",
     "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0-next.33"
   },
   "peerDependenciesMeta": {
@@ -69,7 +69,7 @@
     "@eslint-community/eslint-utils": "^4.2.0",
     "@jridgewell/sourcemap-codec": "^1.4.14",
     "debug": "^4.3.1",
-    "eslint-compat-utils": "^0.4.0",
+    "eslint-compat-utils": "^0.4.1",
     "esutils": "^2.0.3",
     "known-css-properties": "^0.29.0",
     "postcss": "^8.4.5",

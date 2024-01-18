@@ -76,11 +76,17 @@ let ruleMap: Map<string, RuleModule> | null = null;
  * Get the core rule implementation from the rule name
  */
 export function getCoreRule(ruleName: string): RuleModule {
-	let map: Map<string, RuleModule>;
-	if (ruleMap) {
-		map = ruleMap;
-	} else {
-		ruleMap = map = (new Linter() as any).getRules();
+	try {
+		const map: Map<string, RuleModule> = ruleMap
+			? ruleMap
+			: (ruleMap = (new Linter() as any).getRules());
+		return map.get(ruleName)!;
+	} catch {
+		// getRules() is no longer available in flat config.
 	}
-	return map.get(ruleName)!;
+
+	// eslint-disable-next-line @typescript-eslint/no-require-imports , @typescript-eslint/no-var-requires -- Ignore
+	const { builtinRules } = require('eslint/use-at-your-own-risk');
+	ruleMap = builtinRules;
+	return builtinRules.get(ruleName) || null;
 }

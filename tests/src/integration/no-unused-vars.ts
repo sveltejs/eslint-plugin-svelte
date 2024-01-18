@@ -1,10 +1,12 @@
-import { RuleTester, Linter } from 'eslint';
+import type { Rule } from 'eslint';
+import { getCoreRule } from '../../../src/utils/eslint-core';
+import { RuleTester } from '../../utils/eslint-compat';
 
 describe('Integration test for no-unused-vars', () => {
-	const ruleNoUnusedVars = new Linter().getRules().get('no-unused-vars')!;
+	const ruleNoUnusedVars = getCoreRule('no-unused-vars') as unknown as Rule.RuleModule;
 	const tester = new RuleTester({
-		parser: require.resolve('svelte-eslint-parser'),
-		parserOptions: {
+		languageOptions: {
+			parser: require('svelte-eslint-parser'),
 			ecmaVersion: 2020,
 			sourceType: 'module'
 		}
