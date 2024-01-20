@@ -21,7 +21,7 @@ export function writeAndFormat(fileName: string, content: string): Promise<void>
 			return eslint.lintText(formatted, { filePath: fileName });
 		})
 		.then(([result]) => {
-			if (result?.output) {
+			if (result.output) {
 				fs.writeFileSync(fileName, result.output, 'utf8');
 			}
 		});
