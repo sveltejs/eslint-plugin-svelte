@@ -47,12 +47,12 @@
     "prerelease": "pnpm run clean && pnpm run build",
     "release": "changeset publish",
     "svelte-kit": "env-cmd -e sveltekit node node_modules/vite/bin/vite.js",
-    "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "test": "env-cmd -e synckit pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "test:debug": "env-cmd -e debug pnpm run test",
     "test:update-fixtures": "env-cmd -e update-fixtures pnpm run test",
     "ts": "node -r esbuild-register",
     "typecov": "type-coverage",
-    "update": "pnpm run ts ./tools/update.ts && pnpm run lint-fix:md",
+    "update": "env-cmd -e synckit pnpm run ts ./tools/update.ts && pnpm run lint-fix:md",
     "version": "env-cmd -e version pnpm run update",
     "version:ci": "env-cmd -e version-ci pnpm run update && changeset version"
   },
@@ -73,11 +73,12 @@
     "esutils": "^2.0.3",
     "known-css-properties": "^0.29.0",
     "postcss": "^8.4.5",
-    "postcss-load-config": "^3.1.4",
+    "postcss-load-config": "^5.0.2",
     "postcss-safe-parser": "^6.0.0",
     "postcss-selector-parser": "^6.0.11",
     "semver": "^7.5.3",
-    "svelte-eslint-parser": ">=0.34.0-next.4 <1.0.0"
+    "svelte-eslint-parser": ">=0.34.0-next.4 <1.0.0",
+    "synckit": "^0.9.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^2.0.0",

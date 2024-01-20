@@ -18,5 +18,9 @@ module.exports = {
 			// eslint-disable-next-line no-process-env -- ignore
 			process.env.NODE_OPTIONS || ''
 		}`
+	},
+	synckit: {
+		SYNCKIT_TIMEOUT: 1000,
+		SYNCKIT_TS_RUNNER: 'esbuild-register'
 	}
 };
