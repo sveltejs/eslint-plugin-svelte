@@ -142,7 +142,7 @@
     "eslint-plugin-yml": "^1.0.0",
     "eslint-scope": "^8.0.0",
     "eslint-visitor-keys": "^3.4.1",
-    "espree": "^9.5.2",
+    "espree": "^10.0.0",
     "estree-walker": "^3.0.0",
     "less": "^4.1.2",
     "locate-character": "^3.0.0",
