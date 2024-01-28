@@ -1,7 +1,8 @@
 <script>
-  import { base } from "$app/paths";
-  import { goto } from "$app/navigation";
+	import { base } from '$app/paths';
+	import { goto } from '$app/navigation';
 
-  goto(base + "/foo/");
-  goto(`${base}/foo/`);
+	// eslint-disable-next-line prefer-template -- Testing both variants
+	goto(base + '/foo/');
+	goto(`${base}/foo/`);
 </script>

@@ -1,5 +1,5 @@
 <script>
-  import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 
-  goto("/foo");
+	goto('/foo');
 </script>

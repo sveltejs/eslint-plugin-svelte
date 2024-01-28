@@ -1,6 +1,6 @@
 <script>
-  import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 
-  goto("http://localhost/foo/");
-  goto("https://localhost/foo/");
+	goto('http://localhost/foo/');
+	goto('https://localhost/foo/');
 </script>
