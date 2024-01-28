@@ -30,6 +30,7 @@ export default createRule('no-goto-without-base', {
 					const path = gotoCall.arguments[0];
 					if (path.type === 'BinaryExpression') {
 						if (path.left.type === 'Identifier' && basePathNames.includes(path.left.name)) {
+							// The URL is in the form `base + "/foo"`, which is OK
 							continue;
 						}
 						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
@@ -40,7 +41,12 @@ export default createRule('no-goto-without-base', {
 						// TODO Parse literals begining with base
 					}
 					if (path.type === 'Literal') {
-						// TODO: Absolute url
+						const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
+						if (absolutePathRegex.test(path.value)) {
+							// The URL is absolute, which is OK
+							continue;
+						}
+						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 						continue;
 					}
 					context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
