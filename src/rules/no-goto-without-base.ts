@@ -1,3 +1,4 @@
+import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { getSourceCode } from '../utils/compat';
@@ -50,7 +51,7 @@ export default createRule('no-goto-without-base', {
 					}
 					if (path.type === 'Literal') {
 						const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-						if (absolutePathRegex.test(path.value)) {
+						if (absolutePathRegex.test(path.value?.toString() ?? '')) {
 							// The URL is absolute, which is OK
 							continue;
 						}
@@ -64,10 +65,12 @@ export default createRule('no-goto-without-base', {
 	}
 });
 
-function extractStartingIdentifier(templateLiteral) {
-	const literalParts = templateLiteral.expressions
-		.concat(templateLiteral.quasis)
-		.sort((a, b) => (a.range[0] < b.range[0] ? -1 : 1));
+function extractStartingIdentifier(
+	templateLiteral: TSESTree.TemplateLiteral
+): TSESTree.Identifier | undefined {
+	const literalParts = [...templateLiteral.expressions, ...templateLiteral.quasis].sort((a, b) =>
+		a.range[0] < b.range[0] ? -1 : 1
+	);
 	for (const part of literalParts) {
 		if (part.type === 'TemplateElement' && part.value.raw === '') {
 			// Skip empty quasi in the begining
@@ -78,10 +81,10 @@ function extractStartingIdentifier(templateLiteral) {
 		}
 		return undefined;
 	}
+	return undefined;
 }
 
-// TODO: Return type
-function extractGotoReferences(referenceTracker: ReferenceTracker) {
+function extractGotoReferences(referenceTracker: ReferenceTracker): TSESTree.CallExpression[] {
 	return Array.from(
 		referenceTracker.iterateEsmReferences({
 			'$app/navigation': {
