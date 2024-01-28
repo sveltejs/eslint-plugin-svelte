@@ -101,6 +101,13 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 | [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star:   |
 | [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)       | disallow trailing whitespace at the end of lines              | :wrench: |
 
+## SvelteKit
+
+These rules relate to SvelteKit and its best Practices.
+
+| Rule ID                                                        | Description      |     |
+| :------------------------------------------------------------- | :--------------- | :-- |
+
 ## Experimental
 
 :warning: These rules are considered experimental and may change or be removed in the future:
