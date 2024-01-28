@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { getSourceCode } from '../utils/compat';
+import type { RuleContext } from '../types';
 
 export default createRule('no-goto-without-base', {
 	meta: {
@@ -29,41 +30,52 @@ export default createRule('no-goto-without-base', {
 						continue;
 					}
 					const path = gotoCall.arguments[0];
-					if (path.type === 'BinaryExpression') {
-						if (path.left.type === 'Identifier' && basePathNames.includes(path.left.name)) {
-							// The URL is in the form `base + "/foo"`, which is OK
-							continue;
-						}
-						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-						continue;
+					switch (path.type) {
+						case 'BinaryExpression':
+							checkBinaryExpression(context, path, basePathNames);
+							break;
+						case 'Literal':
+							checkLiteral(context, path);
+							break;
+						case 'TemplateLiteral':
+							checkTemplateLiteral(context, path, basePathNames);
+							break;
+						default:
+							context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 					}
-					if (path.type === 'TemplateLiteral') {
-						const startingIdentifier = extractStartingIdentifier(path);
-						if (
-							startingIdentifier !== undefined &&
-							basePathNames.includes(startingIdentifier.name)
-						) {
-							// The URL is in the form `${base}/foo`, which is OK
-							continue;
-						}
-						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-						continue;
-					}
-					if (path.type === 'Literal') {
-						const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-						if (absolutePathRegex.test(path.value?.toString() ?? '')) {
-							// The URL is absolute, which is OK
-							continue;
-						}
-						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-						continue;
-					}
-					context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 				}
 			}
 		};
 	}
 });
+
+function checkBinaryExpression(
+	context: RuleContext,
+	path: TSESTree.BinaryExpression,
+	basePathNames: string[]
+): void {
+	if (path.left.type !== 'Identifier' || !basePathNames.includes(path.left.name)) {
+		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
+	}
+}
+
+function checkTemplateLiteral(
+	context: RuleContext,
+	path: TSESTree.TemplateLiteral,
+	basePathNames: string[]
+): void {
+	const startingIdentifier = extractStartingIdentifier(path);
+	if (startingIdentifier === undefined || !basePathNames.includes(startingIdentifier.name)) {
+		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
+	}
+}
+
+function checkLiteral(context: RuleContext, path: TSESTree.Literal): void {
+	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
+	if (!absolutePathRegex.test(path.value?.toString() ?? '')) {
+		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
+	}
+}
 
 function extractStartingIdentifier(
 	templateLiteral: TSESTree.TemplateLiteral
