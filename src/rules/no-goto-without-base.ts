@@ -37,8 +37,16 @@ export default createRule('no-goto-without-base', {
 						continue;
 					}
 					if (path.type === 'TemplateLiteral') {
+						const startingIdentifier = extractStartingIdentifier(path);
+						if (
+							startingIdentifier !== undefined &&
+							basePathNames.includes(startingIdentifier.name)
+						) {
+							// The URL is in the form `${base}/foo`, which is OK
+							continue;
+						}
+						context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 						continue;
-						// TODO Parse literals begining with base
 					}
 					if (path.type === 'Literal') {
 						const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
@@ -55,6 +63,22 @@ export default createRule('no-goto-without-base', {
 		};
 	}
 });
+
+function extractStartingIdentifier(templateLiteral) {
+	const literalParts = templateLiteral.expressions
+		.concat(templateLiteral.quasis)
+		.sort((a, b) => (a.range[0] < b.range[0] ? -1 : 1));
+	for (const part of literalParts) {
+		if (part.type === 'TemplateElement' && part.value.raw === '') {
+			// Skip empty quasi in the begining
+			continue;
+		}
+		if (part.type === 'Identifier') {
+			return part;
+		}
+		return undefined;
+	}
+}
 
 // TODO: Return type
 function extractGotoReferences(referenceTracker: ReferenceTracker) {
