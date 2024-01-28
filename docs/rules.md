@@ -105,8 +105,9 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                        | Description      |     |
-| :------------------------------------------------------------- | :--------------- | :-- |
+| Rule ID                                                        | Description                                 |     |
+| :------------------------------------------------------------- | :------------------------------------------ | :-- |
+| [svelte/no-goto-without-base](./rules/no-goto-without-base.md) | disallow using goto() without the base path |     |
 
 ## Experimental
 
