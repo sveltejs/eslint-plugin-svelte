@@ -42,8 +42,6 @@ This rule reports navigation using SvelteKit's `goto()` function without prefixi
   goto('/foo/' + base);
   goto(`/foo/${base}`);
 </script>
-
-
 ```
 
 </ESLintCodeBlock>
