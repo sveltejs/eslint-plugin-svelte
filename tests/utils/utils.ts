@@ -132,15 +132,23 @@ export function loadTestCases(
 			}
 			const errors = fs.readFileSync(errorFile, 'utf8');
 			config.errors = parseYaml(errors);
+			for (const error of config.errors) {
+				if (error.suggestions) {
+					error.suggestions = error.suggestions?.map((s: any) => ({
+						output: s.output,
+						desc: s.desc
+					}));
+				}
+			}
 			if (fixable) {
-				let output = null;
+				let output;
 				try {
 					output = fs.readFileSync(outputFile, 'utf8');
 				} catch (_e) {
 					writeFixtures(ruleName, inputFile);
 					output = fs.readFileSync(outputFile, 'utf8');
 				}
-				config.output = output;
+				config.output = output === config.code ? null : output;
 			}
 
 			return config;
