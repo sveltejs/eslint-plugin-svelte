@@ -32,3 +32,6 @@
 
 # JSONSchema bug?
 /.devcontainer/devcontainer.json
+
+# Parser bug?
+/tests/fixtures/rules/indent/invalid/const-tag01-input.svelte
