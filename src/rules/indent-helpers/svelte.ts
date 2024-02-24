@@ -227,7 +227,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			const rightParenToken = sourceCode.getTokenBefore(sourceCode.getLastToken(node));
 
 			offsets.setOffsetToken(leftParenToken, 1, calleeToken);
-			offsets.setOffsetElementList([node.argument], leftParenToken, rightParenToken, 1);
+			offsets.setOffsetElementList(node.arguments, leftParenToken, rightParenToken, 1);
 		},
 		// ----------------------------------------------------------------------
 		// BLOCKS
@@ -488,19 +488,22 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			offsets.setOffsetToken(id.firstToken, 1, snippetToken);
 
 			const leftParenToken = sourceCode.getTokenBefore(
-				node.context || sourceCode.getLastToken(node),
+				node.params[0] || sourceCode.getLastToken(node),
 				{
 					filter: isOpeningParenToken,
 					includeComments: false
 				}
 			)!;
 
-			const rightParenToken = sourceCode.getTokenAfter(node.context || leftParenToken, {
-				filter: isClosingParenToken,
-				includeComments: false
-			})!;
+			const rightParenToken = sourceCode.getTokenAfter(
+				node.params[node.params.length - 1] || leftParenToken,
+				{
+					filter: isClosingParenToken,
+					includeComments: false
+				}
+			)!;
 			offsets.setOffsetToken(leftParenToken, 1, id.firstToken);
-			offsets.setOffsetElementList([node.context], leftParenToken, rightParenToken, 1);
+			offsets.setOffsetElementList(node.params, leftParenToken, rightParenToken, 1);
 		},
 		// ----------------------------------------------------------------------
 		// COMMENTS
