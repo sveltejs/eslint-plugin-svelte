@@ -133,7 +133,7 @@ export function loadTestCases(
 			const errors = fs.readFileSync(errorFile, 'utf8');
 			config.errors = parseYaml(errors);
 			if (fixable) {
-				let output;
+				let output = null;
 				try {
 					output = fs.readFileSync(outputFile, 'utf8');
 				} catch (_e) {
