@@ -400,10 +400,13 @@ export default createRule('mustache-spacing', {
 			},
 			SvelteSnippetBlock(node) {
 				const openBlockOpeningToken = sourceCode.getFirstToken(node);
-				const openBlockClosingToken = sourceCode.getTokenAfter(node.context || node.id, {
-					includeComments: false,
-					filter: isClosingBraceToken
-				})!;
+				const openBlockClosingToken = sourceCode.getTokenAfter(
+					node.params[node.params.length - 1] || node.id,
+					{
+						includeComments: false,
+						filter: isClosingBraceToken
+					}
+				)!;
 				verifyBraces(
 					openBlockOpeningToken,
 					openBlockClosingToken,
