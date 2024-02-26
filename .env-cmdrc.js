@@ -14,7 +14,7 @@ module.exports = {
 		UPDATE_FIXTURES: 'true'
 	},
 	sveltekit: {
-		NODE_OPTIONS: `--experimental-loader ./svelte-kit-import-hook.mjs ${
+		NODE_OPTIONS: `--import ./svelte-kit-import.mjs ${
 			// eslint-disable-next-line no-process-env -- ignore
 			process.env.NODE_OPTIONS || ''
 		}`

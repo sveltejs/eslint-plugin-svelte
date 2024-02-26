@@ -30,7 +30,8 @@ const config = {
 	extensions: ['.svelte', '.md'],
 	kit: {
 		paths: {
-			base: '/eslint-plugin-svelte'
+			base: '/eslint-plugin-svelte',
+			relative: false
 		},
 		adapter: ghpagesAdapter({
 			// default options are shown
