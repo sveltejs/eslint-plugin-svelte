@@ -27,7 +27,7 @@ This rule aims to replace a class with ternary operator with the class directive
 </script>
 
 <!-- ✓ GOOD -->
-<button class:selected={selected}>foo</button>
+<button class:selected>foo</button>
 <button class:selected={current === 'foo'}>foo</button>
 
 <!-- ✗ BAD -->
@@ -55,8 +55,8 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 ```
 
 - `prefer` ... Whether to apply this rule always or just when there's an empty string. Default is `"empty"`.
-    - `"empty"` ... Requires class directives only if one of the strings is empty.
-    - `"always"` ... Requires class directives always rather than interpolation.
+  - `"empty"` ... Requires class directives only if one of the strings is empty.
+  - `"always"` ... Requires class directives always rather than interpolation.
 
 ## :couple: Related Rules
 
