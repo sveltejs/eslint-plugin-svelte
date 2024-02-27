@@ -14,7 +14,15 @@ export default createRule('prefer-class-directive', {
 			conflictWithPrettier: false
 		},
 		fixable: 'code',
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					prefer: { enum: ['always', 'empty'] }
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			unexpected: 'Unexpected class using the ternary operator.'
 		},
@@ -22,6 +30,7 @@ export default createRule('prefer-class-directive', {
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);
+		const preferEmpty = context.options[0]?.prefer !== 'always';
 
 		type Expr = {
 			not?: true;
@@ -301,6 +310,7 @@ export default createRule('prefer-class-directive', {
 			const prevIsWord = !startsWithNonWord(attr, index + 1);
 			const nextIsWord = !endsWithNonWord(attr, index - 1);
 			let canTransform = true;
+			let foundEmpty = false;
 			for (const className of map.values()) {
 				if (className) {
 					if (!/^[\w-]*$/u.test(className.trim())) {
@@ -317,12 +327,16 @@ export default createRule('prefer-class-directive', {
 						break;
 					}
 				} else {
+					foundEmpty = true;
 					if (prevIsWord && nextIsWord) {
 						// The previous and next may be connected.
 						canTransform = false;
 						break;
 					}
 				}
+			}
+			if (preferEmpty && !foundEmpty) {
+				return;
 			}
 			if (!canTransform) {
 				return;

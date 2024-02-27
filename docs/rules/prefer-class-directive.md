@@ -22,13 +22,16 @@ This rule aims to replace a class with ternary operator with the class directive
 
 ```svelte
 <script>
-  /* eslint svelte/prefer-class-directive: "error" */
+  /* eslint svelte/prefer-class-directive: "empty" */
+  const selected = true;
 </script>
 
 <!-- ✓ GOOD -->
+<button class:selected={selected}>foo</button>
 <button class:selected={current === 'foo'}>foo</button>
 
 <!-- ✗ BAD -->
+<button class={selected ? 'selected' : ''}>foo</button>
 <button class={current === 'foo' ? 'selected' : ''}>foo</button>
 ```
 
@@ -40,7 +43,20 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "svelte/html-quotes": [
+    "error",
+    {
+      "prefer": "empty" // or "always"
+    }
+  ]
+}
+```
+
+- `prefer` ... Whether to apply this rule always or just when there's an empty string. Default is `"empty"`.
+    - `"empty"` ... Requires class directives only if one of the strings is empty.
+    - `"always"` ... Requires class directives always rather than interpolation.
 
 ## :couple: Related Rules
 
