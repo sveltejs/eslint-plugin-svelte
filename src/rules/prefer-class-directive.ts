@@ -307,10 +307,14 @@ export default createRule('prefer-class-directive', {
 				// It's too complicated.
 				return;
 			}
+			if (preferEmpty && [...map.values()].every((x) => x.trim())) {
+				// We prefer directives when there's an empty string, but they're all not empty
+				return;
+			}
+
 			const prevIsWord = !startsWithNonWord(attr, index + 1);
 			const nextIsWord = !endsWithNonWord(attr, index - 1);
 			let canTransform = true;
-			let foundEmpty = false;
 			for (const className of map.values()) {
 				if (className) {
 					if (!/^[\w-]*$/u.test(className.trim())) {
@@ -327,16 +331,12 @@ export default createRule('prefer-class-directive', {
 						break;
 					}
 				} else {
-					foundEmpty = true;
 					if (prevIsWord && nextIsWord) {
 						// The previous and next may be connected.
 						canTransform = false;
 						break;
 					}
 				}
-			}
-			if (preferEmpty && !foundEmpty) {
-				return;
 			}
 			if (!canTransform) {
 				return;

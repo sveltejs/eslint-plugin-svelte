@@ -22,7 +22,7 @@ This rule aims to replace a class with ternary operator with the class directive
 
 ```svelte
 <script>
-  /* eslint svelte/prefer-class-directive: "empty" */
+  /* eslint svelte/prefer-class-directive: ["error", {"prefer": "empty"}] */
   const selected = true;
 </script>
 
