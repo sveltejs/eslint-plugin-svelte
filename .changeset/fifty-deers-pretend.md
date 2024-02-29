@@ -2,4 +2,4 @@
 "eslint-plugin-svelte": patch
 ---
 
-fix: update dependencies
+fix: update dependencies & some fixes
