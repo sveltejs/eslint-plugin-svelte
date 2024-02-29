@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.7
+
+### Minor Changes
+
+- [#690](https://github.com/sveltejs/eslint-plugin-svelte/pull/690) [`e84397d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e84397dd71300fc5e4200e9e6c807a3e5f901e23) Thanks [@sdarnell](https://github.com/sdarnell)! - Added prefer option to prefer-class-directive rule ('always' or 'empty'). The default is now 'empty' which is a slight relaxation of the rule.
+
+### Patch Changes
+
+- [#693](https://github.com/sveltejs/eslint-plugin-svelte/pull/693) [`b11ff34`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b11ff34de949f778d9344ec1143d1a636864d95b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update dependencies & some fixes
+
 ## 2.36.0-next.6
 
 ### Patch Changes
