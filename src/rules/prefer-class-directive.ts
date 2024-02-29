@@ -14,7 +14,15 @@ export default createRule('prefer-class-directive', {
 			conflictWithPrettier: false
 		},
 		fixable: 'code',
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					prefer: { enum: ['always', 'empty'] }
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			unexpected: 'Unexpected class using the ternary operator.'
 		},
@@ -22,6 +30,7 @@ export default createRule('prefer-class-directive', {
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);
+		const preferEmpty = context.options[0]?.prefer !== 'always';
 
 		type Expr = {
 			not?: true;
@@ -298,6 +307,11 @@ export default createRule('prefer-class-directive', {
 				// It's too complicated.
 				return;
 			}
+			if (preferEmpty && [...map.values()].every((x) => x.trim())) {
+				// We prefer directives when there's an empty string, but they're all not empty
+				return;
+			}
+
 			const prevIsWord = !startsWithNonWord(attr, index + 1);
 			const nextIsWord = !endsWithNonWord(attr, index - 1);
 			let canTransform = true;
