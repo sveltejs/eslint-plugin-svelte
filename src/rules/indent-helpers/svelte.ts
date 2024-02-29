@@ -218,16 +218,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			const openToken = sourceCode.getFirstToken(node);
 			const renderToken = sourceCode.getTokenAfter(openToken)!;
 			offsets.setOffsetToken(renderToken, 1, openToken);
-			const calleeToken = sourceCode.getFirstToken(node.callee);
-			offsets.setOffsetToken(calleeToken, 1, renderToken);
-			const leftParenToken = sourceCode.getTokenAfter(node.callee, {
-				filter: isOpeningParenToken,
-				includeComments: false
-			})!;
-			const rightParenToken = sourceCode.getTokenBefore(sourceCode.getLastToken(node));
-
-			offsets.setOffsetToken(leftParenToken, 1, calleeToken);
-			offsets.setOffsetElementList(node.arguments, leftParenToken, rightParenToken, 1);
+			offsets.setOffsetToken(node.expression, 1, renderToken);
 		},
 		// ----------------------------------------------------------------------
 		// BLOCKS
