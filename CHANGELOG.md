@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.8
+
+### Patch Changes
+
+- [#694](https://github.com/sveltejs/eslint-plugin-svelte/pull/694) [`73d6fd8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/73d6fd832d88af44feb9a8b86826e138d47251de) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: style report location
+
 ## 2.36.0-next.7
 
 ### Minor Changes
