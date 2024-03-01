@@ -5,6 +5,7 @@
     "eslint-plugin-svelte": "2.35.0"
   },
   "changesets": [
+    "blue-plants-pump",
     "brown-gorillas-fly",
     "calm-fans-refuse",
     "cuddly-cats-beam",
