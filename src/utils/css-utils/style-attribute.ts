@@ -353,10 +353,7 @@ function convertChild<E extends SvelteStyleInterpolation>(
 
 /** convert range */
 function convertRange(node: AnyNode, ctx: Ctx): AST.Range {
-	return [
-		ctx.startOffset + node.source!.start!.offset,
-		ctx.startOffset + node.source!.end!.offset + 1
-	];
+	return [ctx.startOffset + node.source!.start!.offset, ctx.startOffset + node.source!.end!.offset];
 }
 
 /** convert range */
