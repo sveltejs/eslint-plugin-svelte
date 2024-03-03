@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { getSourceCode } from '../utils/compat';
+import { findVariable } from '../utils/ast-utils';
 import type { RuleContext } from '../types';
 
 export default createRule('no-goto-without-base', {
@@ -24,7 +25,7 @@ export default createRule('no-goto-without-base', {
 				const referenceTracker = new ReferenceTracker(
 					getSourceCode(context).scopeManager.globalScope!
 				);
-				const basePathNames = extractBasePathNames(referenceTracker);
+				const basePathNames = extractBasePathReferences(referenceTracker, context);
 				for (const gotoCall of extractGotoReferences(referenceTracker)) {
 					if (gotoCall.arguments.length < 1) {
 						continue;
@@ -52,9 +53,9 @@ export default createRule('no-goto-without-base', {
 function checkBinaryExpression(
 	context: RuleContext,
 	path: TSESTree.BinaryExpression,
-	basePathNames: string[]
+	basePathNames: Set<TSESTree.Identifier>
 ): void {
-	if (path.left.type !== 'Identifier' || !basePathNames.includes(path.left.name)) {
+	if (path.left.type !== 'Identifier' || !basePathNames.has(path.left)) {
 		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 	}
 }
@@ -62,10 +63,10 @@ function checkBinaryExpression(
 function checkTemplateLiteral(
 	context: RuleContext,
 	path: TSESTree.TemplateLiteral,
-	basePathNames: string[]
+	basePathNames: Set<TSESTree.Identifier>
 ): void {
 	const startingIdentifier = extractStartingIdentifier(path);
-	if (startingIdentifier === undefined || !basePathNames.includes(startingIdentifier.name)) {
+	if (startingIdentifier === undefined || !basePathNames.has(startingIdentifier)) {
 		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 	}
 }
@@ -110,16 +111,24 @@ function extractGotoReferences(referenceTracker: ReferenceTracker): TSESTree.Cal
 	);
 }
 
-function extractBasePathNames(referenceTracker: ReferenceTracker): string[] {
-	return Array.from(
-		referenceTracker.iterateEsmReferences({
-			'$app/paths': {
-				[ReferenceTracker.ESM]: true,
-				base: {
-					[ReferenceTracker.READ]: true
-				}
+function extractBasePathReferences(
+	referenceTracker: ReferenceTracker,
+	context: RuleContext
+): Set<TSESTree.Identifier> {
+	const set = new Set<TSESTree.Identifier>();
+	for (const { node } of referenceTracker.iterateEsmReferences({
+		'$app/paths': {
+			[ReferenceTracker.ESM]: true,
+			base: {
+				[ReferenceTracker.READ]: true
 			}
-		}),
-		({ node }) => node.local.name
-	);
+		}
+	})) {
+		const variable = findVariable(context, (node as TSESTree.ImportSpecifier).local);
+		if (!variable) continue;
+		for (const reference of variable.references) {
+			if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
+		}
+	}
+	return set;
 }
