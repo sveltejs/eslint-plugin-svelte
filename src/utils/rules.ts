@@ -27,6 +27,7 @@ import noDupeUseDirectives from '../rules/no-dupe-use-directives';
 import noDynamicSlotName from '../rules/no-dynamic-slot-name';
 import noExportLoadInSvelteModuleInKitPages from '../rules/no-export-load-in-svelte-module-in-kit-pages';
 import noExtraReactiveCurlies from '../rules/no-extra-reactive-curlies';
+import noGotoWithoutBase from '../rules/no-goto-without-base';
 import noIgnoredUnsubscribe from '../rules/no-ignored-unsubscribe';
 import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statements';
 import noInlineStyles from '../rules/no-inline-styles';
@@ -90,6 +91,7 @@ export const rules = [
 	noDynamicSlotName,
 	noExportLoadInSvelteModuleInKitPages,
 	noExtraReactiveCurlies,
+	noGotoWithoutBase,
 	noIgnoredUnsubscribe,
 	noImmutableReactiveStatements,
 	noInlineStyles,
