@@ -3,6 +3,7 @@ import type {
 	SourceLocation,
 	SvelteAttribute,
 	SvelteDirective,
+	SvelteGenericsDirective,
 	SvelteShorthandAttribute,
 	SvelteSpecialDirective,
 	SvelteSpreadAttribute,
@@ -85,6 +86,7 @@ function findClassesInAttribute(
 		| SvelteDirective
 		| SvelteStyleDirective
 		| SvelteSpecialDirective
+		| SvelteGenericsDirective
 ): string[] {
 	if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'class') {
 		return attribute.value.flatMap((value) =>
