@@ -469,6 +469,7 @@ export function getAttributeKeyText(
 	switch (node.type) {
 		case 'SvelteAttribute':
 		case 'SvelteShorthandAttribute':
+		case 'SvelteGenericsDirective':
 			return node.key.name;
 		case 'SvelteStyleDirective':
 			return `style:${node.key.name.name}`;
@@ -481,7 +482,12 @@ export function getAttributeKeyText(
 			}`;
 		}
 		default:
-			throw new Error(`Unknown node type: ${node.type}`);
+			throw new Error(
+				`Unknown node type: ${
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
+					(node as any).type
+				}`
+			);
 	}
 }
 
