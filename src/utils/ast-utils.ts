@@ -462,12 +462,14 @@ export function getAttributeKeyText(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteStyleDirective
 		| SvAST.SvelteDirective
-		| SvAST.SvelteSpecialDirective,
+		| SvAST.SvelteSpecialDirective
+		| SvAST.SvelteGenericsDirective,
 	context: RuleContext
 ): string {
 	switch (node.type) {
 		case 'SvelteAttribute':
 		case 'SvelteShorthandAttribute':
+		case 'SvelteGenericsDirective':
 			return node.key.name;
 		case 'SvelteStyleDirective':
 			return `style:${node.key.name.name}`;
