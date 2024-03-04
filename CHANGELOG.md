@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.9
+
+### Minor Changes
+
+- [#679](https://github.com/sveltejs/eslint-plugin-svelte/pull/679) [`4e6c681`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4e6c6817681b81bd546b032d7b1ff9a6a6e1935a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-goto-without-base rule
+
+### Patch Changes
+
+- [#696](https://github.com/sveltejs/eslint-plugin-svelte/pull/696) [`d4303f5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d4303f5347dae7828e08e699741a276ee35dbd43) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser
+
 ## 2.36.0-next.8
 
 ### Patch Changes

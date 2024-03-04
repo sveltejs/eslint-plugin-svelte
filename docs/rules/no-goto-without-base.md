@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-goto-without-base'
 description: 'disallow using goto() without the base path'
+since: 'v2.36.0-next.9'
 ---
 
 # svelte/no-goto-without-base
 
 > disallow using goto() without the base path
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -54,6 +53,10 @@ Nothing.
 
 - [`goto()` documentation](https://kit.svelte.dev/docs/modules#$app-navigation-goto)
 - [`base` documentation](https://kit.svelte.dev/docs/modules#$app-paths-base)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.36.0-next.9
 
 ## :mag: Implementation
 
