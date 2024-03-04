@@ -462,7 +462,8 @@ export function getAttributeKeyText(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteStyleDirective
 		| SvAST.SvelteDirective
-		| SvAST.SvelteSpecialDirective,
+		| SvAST.SvelteSpecialDirective
+		| SvAST.SvelteGenericsDirective,
 	context: RuleContext
 ): string {
 	switch (node.type) {
@@ -480,12 +481,7 @@ export function getAttributeKeyText(
 			}`;
 		}
 		default:
-			throw new Error(
-				`Unknown node type: ${
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
-					(node as any).type
-				}`
-			);
+			throw new Error(`Unknown node type: ${node.type}`);
 	}
 }
 
