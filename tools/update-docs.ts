@@ -24,7 +24,7 @@ const ROOT = path.resolve(__dirname, '../docs/rules');
 function pickSince(content: string): string | null | Promise<string> {
 	const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content);
 	if (fileIntro) {
-		const since = /since: ["']?(v\d+\.\d+\.\d+)["']?/.exec(fileIntro[1]);
+		const since = /since: ["']?(v\d+\.\d+\.\d+(?:-[\w.]+)?)["']?/.exec(fileIntro[1]);
 		if (since) {
 			return since[1];
 		}
