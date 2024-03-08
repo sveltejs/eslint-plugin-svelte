@@ -78,7 +78,7 @@
     "postcss-safe-parser": "^6.0.0",
     "postcss-selector-parser": "^6.0.15",
     "semver": "^7.6.0",
-    "svelte-eslint-parser": ">=0.34.0-next.11 <1.0.0"
+    "svelte-eslint-parser": ">=0.34.0-next.12 <1.0.0"
   },
   "devDependencies": {
     "@1stg/browserslist-config": "^2.0.0",
