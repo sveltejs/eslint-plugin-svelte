@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.10
+
+### Patch Changes
+
+- [#704](https://github.com/sveltejs/eslint-plugin-svelte/pull/704) [`af2ccf9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/af2ccf9f85af00221f9ec10efbc770cba5615a62) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Update svelte-eslint-parser
+
 ## 2.36.0-next.9
 
 ### Minor Changes
