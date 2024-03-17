@@ -1,4 +1,5 @@
 import assert from 'assert';
+import semver from 'semver';
 import plugin from '../../../src/index';
 import { LegacyESLint, ESLint } from '../../utils/eslint-compat';
 
@@ -33,6 +34,7 @@ describe('`all` config', () => {
 		);
 	});
 	it('`all` config should work. ', async () => {
+		if (semver.satisfies(ESLint.version, '<8.0.0')) return;
 		const code = `<script>const a = 1, b = 2;</script>{@html a+b}`;
 
 		const linter = new ESLint({
