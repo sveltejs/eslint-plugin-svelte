@@ -15,7 +15,7 @@ describe('`all` config', () => {
 				parserOptions: {
 					ecmaVersion: 2020
 				},
-				extends: ['plugin:svelte/all']
+				extends: ['plugin:svelte/recommended']
 			},
 			useEslintrc: false
 		});
@@ -39,7 +39,7 @@ describe('`all` config', () => {
 
 		const linter = new ESLint({
 			overrideConfigFile: true as never,
-			overrideConfig: plugin.configs['flat/all'] as never
+			overrideConfig: plugin.configs['flat/recommended'] as never
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
 		const messages = result[0].messages;
