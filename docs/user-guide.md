@@ -19,6 +19,38 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
+#### For ESLint>=v9 Config (Flat Config)
+
+Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
+
+Example **eslint.config.js**:
+
+```mjs
+import eslintPluginSvelte from 'eslint-plugin-svelte';
+export default [
+  // add more generic rule sets here, such as:
+  // js.configs.recommended,
+  ...eslintPluginSvelte.configs['flat/recommended'],
+  {
+    rules: {
+      // override/add rules settings here, such as:
+      // 'svelte/rule-name': 'error'
+    }
+  }
+];
+```
+
+This plugin provides configs:
+
+- `eslintPluginSvelte.configs['flat/base']` ... Configuration to enable correct Svelte parsing.
+- `eslintPluginSvelte.configs['flat/recommended']` ... Above, plus rules to prevent errors or unintended behavior.
+- `eslintPluginSvelte.configs['flat/prettier']` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
+- `eslintPluginSvelte.configs['flat/all']` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
+
+See [the rule list](./rules.md) to get the `rules` that this plugin provides.
+
+#### Legacy Config (ESLint<v9)
+
 Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
 
 Example **.eslintrc.js**:
