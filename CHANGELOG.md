@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.12
+
+### Patch Changes
+
+- [#711](https://github.com/sveltejs/eslint-plugin-svelte/pull/711) [`aaba61f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/aaba61f1d7f8337e690659e396d52453b3cc0002) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: flat config would cause an error with non-svelte files
+
 ## 2.36.0-next.11
 
 ### Minor Changes
