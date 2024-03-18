@@ -70,7 +70,7 @@
     "@eslint-community/eslint-utils": "^4.4.0",
     "@jridgewell/sourcemap-codec": "^1.4.15",
     "debug": "^4.3.4",
-    "eslint-compat-utils": "^0.4.1",
+    "eslint-compat-utils": "^0.5.0",
     "esutils": "^2.0.3",
     "known-css-properties": "^0.30.0",
     "postcss": "^8.4.35",
