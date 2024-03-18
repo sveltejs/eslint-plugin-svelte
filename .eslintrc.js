@@ -60,6 +60,12 @@ module.exports = {
 			}
 		},
 		{
+			files: ['*.md/**', '**/*.md/**'],
+			rules: {
+				'n/no-missing-import': 'off'
+			}
+		},
+		{
 			files: ['*.mjs'],
 			parserOptions: {
 				sourceType: 'module'
