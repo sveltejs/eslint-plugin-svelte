@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.11
+
+### Minor Changes
+
+- [#708](https://github.com/sveltejs/eslint-plugin-svelte/pull/708) [`d597a69`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d597a69637d95f6be13eaa10a7cc6feebd812e23) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for flat config
+
 ## 2.36.0-next.10
 
 ### Patch Changes
