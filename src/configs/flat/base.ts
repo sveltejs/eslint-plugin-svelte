@@ -4,13 +4,15 @@
 import type { ESLint } from 'eslint';
 export default [
 	{
-		files: ['*.svelte', '**/*.svelte'],
 		plugins: {
 			get svelte(): ESLint.Plugin {
 				// eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
 				return require('../../index');
 			}
-		},
+		}
+	},
+	{
+		files: ['*.svelte', '**/*.svelte'],
 		languageOptions: {
 			// eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
 			parser: require('svelte-eslint-parser')
