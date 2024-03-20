@@ -102,7 +102,7 @@
     "@types/eslint": "^8.56.5",
     "@types/eslint-scope": "^3.7.7",
     "@types/eslint-utils": "^3.0.5",
-    "@types/eslint-visitor-keys": "^1.0.0",
+    "@types/eslint-visitor-keys": "^3.0.0",
     "@types/esutils": "^2.0.2",
     "@types/json-schema": "^7.0.15",
     "@types/less": "^3.0.6",
