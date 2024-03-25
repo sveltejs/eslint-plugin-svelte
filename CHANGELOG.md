@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.36.0-next.13
+
+### Patch Changes
+
+- [#719](https://github.com/sveltejs/eslint-plugin-svelte/pull/719) [`eaf5e6a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eaf5e6af1edab5a4d565b74be6bcc02c71c13ac6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: suppress comment not working in flat config.
+
 ## 2.36.0-next.12
 
 ### Patch Changes
