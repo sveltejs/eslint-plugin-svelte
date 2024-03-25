@@ -139,6 +139,7 @@ export default [
 				})
 				.join(',\n        ')},
     },
+		processor: 'svelte/svelte'
   },
 ]
 `;

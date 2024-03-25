@@ -3,9 +3,12 @@ import semver from 'semver';
 import plugin from '../../../src/index';
 import { LegacyESLint, ESLint } from '../../utils/eslint-compat';
 
-describe('`recommended` config', () => {
-	it('legacy `recommended` config should work. ', async () => {
-		const code = `<script>const a = 1, b = 2;</script>{@html a+b}`;
+describe('`base` config', () => {
+	it('legacy `base` config should work. ', async () => {
+		const code = `<script>const a = 1, b = 2;</script>
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+{@html a+b}
+{@html a+b}`;
 
 		const linter = new LegacyESLint({
 			plugins: {
@@ -15,7 +18,10 @@ describe('`recommended` config', () => {
 				parserOptions: {
 					ecmaVersion: 2020
 				},
-				extends: ['plugin:svelte/recommended']
+				extends: ['plugin:svelte/base'],
+				rules: {
+					'svelte/no-at-html-tags': 'error'
+				}
 			},
 			useEslintrc: false
 		});
@@ -28,18 +34,27 @@ describe('`recommended` config', () => {
 				{
 					ruleId: 'svelte/no-at-html-tags',
 					message: '`{@html}` can lead to XSS attack.',
-					line: 1
+					line: 4
 				}
 			]
 		);
 	});
-	it('`recommended` config should work. ', async () => {
+	it('`base` config should work. ', async () => {
 		if (semver.satisfies(ESLint.version, '<8.0.0')) return;
-		const code = `<script>const a = 1, b = 2;</script>{@html a+b}`;
-
+		const code = `<script>const a = 1, b = 2;</script>
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+{@html a+b}
+{@html a+b}`;
 		const linter = new ESLint({
 			overrideConfigFile: true as never,
-			overrideConfig: plugin.configs['flat/recommended'] as never
+			overrideConfig: [
+				...plugin.configs['flat/base'],
+				{
+					rules: {
+						'svelte/no-at-html-tags': 'error'
+					}
+				}
+			] as never
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
 		const messages = result[0].messages;
@@ -50,7 +65,7 @@ describe('`recommended` config', () => {
 				{
 					ruleId: 'svelte/no-at-html-tags',
 					message: '`{@html}` can lead to XSS attack.',
-					line: 1
+					line: 4
 				}
 			]
 		);
