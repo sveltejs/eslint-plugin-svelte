@@ -10,7 +10,7 @@
   ],
   "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
-  "packageManager": "pnpm@7.33.7",
+  "packageManager": "pnpm@8.15.5",
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
   },
