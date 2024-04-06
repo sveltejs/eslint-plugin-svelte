@@ -106,7 +106,7 @@
     "@types/esutils": "^2.0.2",
     "@types/json-schema": "^7.0.15",
     "@types/less": "^3.0.6",
-    "@types/markdown-it": "^13.0.7",
+    "@types/markdown-it": "^14.0.0",
     "@types/markdown-it-container": "^2.0.9",
     "@types/markdown-it-emoji": "^2.0.4",
     "@types/mocha": "^10.0.6",
