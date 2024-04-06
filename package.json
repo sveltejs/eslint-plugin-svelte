@@ -132,7 +132,7 @@
     "eslint-plugin-eslint-plugin": "^5.4.0",
     "eslint-plugin-json-schema-validator": "^5.0.0",
     "eslint-plugin-jsonc": "^2.13.0",
-    "eslint-plugin-markdown": "^3.0.1",
+    "eslint-plugin-markdown": "^4.0.0",
     "eslint-plugin-mdx": "^3.1.5",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-node-dependencies": "^0.11.2",
