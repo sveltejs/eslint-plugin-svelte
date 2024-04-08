@@ -24,7 +24,6 @@
 - [#690](https://github.com/sveltejs/eslint-plugin-svelte/pull/690) [`e84397d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e84397dd71300fc5e4200e9e6c807a3e5f901e23) Thanks [@sdarnell](https://github.com/sdarnell)! - Added prefer option to prefer-class-directive rule ('always' or 'empty'). The default is now 'empty' which is a slight relaxation of the rule.
 - [#679](https://github.com/sveltejs/eslint-plugin-svelte/pull/679) [`4e6c681`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4e6c6817681b81bd546b032d7b1ff9a6a6e1935a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-goto-without-base rule
 
-
 ### Patch Changes
 
 - [#694](https://github.com/sveltejs/eslint-plugin-svelte/pull/694) [`73d6fd8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/73d6fd832d88af44feb9a8b86826e138d47251de) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: style report location
