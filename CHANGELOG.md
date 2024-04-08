@@ -1,5 +1,47 @@
 # eslint-plugin-svelte
 
+## 2.36.0
+
+### Minor Changes
+
+- [#622](https://github.com/sveltejs/eslint-plugin-svelte/pull/622) [`470ef6c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/470ef6cd1ef4767528ff15b5fbdfec1740a5ec02) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for `{@snippet}`and `{@render}` in indent rule
+
+- [#620](https://github.com/sveltejs/eslint-plugin-svelte/pull/620) [`1097107`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1097107afce00fd8b959261b015a4eb1f39f116d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: (experimental) partial support for Svelte v5
+
+- [#708](https://github.com/sveltejs/eslint-plugin-svelte/pull/708) [`d597a69`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d597a69637d95f6be13eaa10a7cc6feebd812e23) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for flat config
+
+- [#690](https://github.com/sveltejs/eslint-plugin-svelte/pull/690) [`e84397d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e84397dd71300fc5e4200e9e6c807a3e5f901e23) Thanks [@sdarnell](https://github.com/sdarnell)! - Added prefer option to prefer-class-directive rule ('always' or 'empty'). The default is now 'empty' which is a slight relaxation of the rule.
+
+- [#679](https://github.com/sveltejs/eslint-plugin-svelte/pull/679) [`4e6c681`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4e6c6817681b81bd546b032d7b1ff9a6a6e1935a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-goto-without-base rule
+
+- [#624](https://github.com/sveltejs/eslint-plugin-svelte/pull/624) [`7df5b6f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7df5b6f0963f1fb8fc9256f8ed6f034e5f7fbf3d) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for `{@snippet}` and `{@render}` in mustache-spacing rule
+
+### Patch Changes
+
+- [#694](https://github.com/sveltejs/eslint-plugin-svelte/pull/694) [`73d6fd8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/73d6fd832d88af44feb9a8b86826e138d47251de) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: style report location
+
+- [#657](https://github.com/sveltejs/eslint-plugin-svelte/pull/657) [`b159b46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b159b467427aab17c74246f9b89283aa966bb2e4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte to v5.0.0-next.33
+
+- [#719](https://github.com/sveltejs/eslint-plugin-svelte/pull/719) [`eaf5e6a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eaf5e6af1edab5a4d565b74be6bcc02c71c13ac6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: suppress comment not working in flat config.
+
+- [#704](https://github.com/sveltejs/eslint-plugin-svelte/pull/704) [`af2ccf9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/af2ccf9f85af00221f9ec10efbc770cba5615a62) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Update svelte-eslint-parser
+
+- [#693](https://github.com/sveltejs/eslint-plugin-svelte/pull/693) [`b11ff34`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b11ff34de949f778d9344ec1143d1a636864d95b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update dependencies & some fixes
+
+- [#628](https://github.com/sveltejs/eslint-plugin-svelte/pull/628) [`85fc8f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/85fc8f467bd9c69475b2ef46fae7bfdd7360158f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update parser and fix some tests
+
+- [#696](https://github.com/sveltejs/eslint-plugin-svelte/pull/696) [`d4303f5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d4303f5347dae7828e08e699741a276ee35dbd43) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser
+
+- [#635](https://github.com/sveltejs/eslint-plugin-svelte/pull/635) [`ec3f1cf`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ec3f1cf5ab1726e2a8b79225c231159333474c71) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte to v5.0.0-next.16
+
+- [#670](https://github.com/sveltejs/eslint-plugin-svelte/pull/670) [`6121a56`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6121a562f8a6d34bb338a5a2df373032abe514d6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency eslint-compat-utils to ^0.3.0
+
+- [#711](https://github.com/sveltejs/eslint-plugin-svelte/pull/711) [`aaba61f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/aaba61f1d7f8337e690659e396d52453b3cc0002) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: flat config would cause an error with non-svelte files
+
+- [#673](https://github.com/sveltejs/eslint-plugin-svelte/pull/673) [`b72b97b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b72b97ba617ff5eeb9b6f4e600c511250c19a72b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add support for eslint v9
+
+- [#687](https://github.com/sveltejs/eslint-plugin-svelte/pull/687) [`2943021`](https://github.com/sveltejs/eslint-plugin-svelte/commit/29430210e25cbe417ba28d65d7bf1b07ed4e08e3) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update parser
+
 ## 2.36.0-next.13
 
 ### Patch Changes
