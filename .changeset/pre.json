@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "next",
   "initialVersions": {
     "eslint-plugin-svelte": "2.35.0"
