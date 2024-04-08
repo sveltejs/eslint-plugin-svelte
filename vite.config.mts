@@ -48,7 +48,7 @@ const config: UserConfig = {
 			tslib: path.join(dirname, './node_modules/tslib/tslib.es6.js'),
 
 			// Alias to CJS
-			'svelte/compiler': path.join(dirname, './node_modules/svelte/compiler.cjs'),
+			'svelte/compiler': path.join(dirname, './node_modules/svelte/compiler/index.js'),
 			'eslint-visitor-keys': path.join(
 				dirname,
 				'./node_modules/eslint-visitor-keys/dist/eslint-visitor-keys.cjs'
