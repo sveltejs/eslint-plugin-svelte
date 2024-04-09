@@ -5,3 +5,4 @@ import './update-readme';
 import './update-docs-rules-index';
 import './update-types-for-node';
 import './update-meta';
+import './update-rule-types';

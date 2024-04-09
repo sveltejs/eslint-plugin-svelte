@@ -27,9 +27,10 @@
     "sveltejs"
   ],
   "scripts": {
-    "build": "pnpm run build:meta && pnpm run build:ts",
+    "build": "pnpm run build:meta && pnpm run build:ts && pnpm run build:types",
     "build:meta": "pnpm run ts ./tools/update-meta.ts",
     "build:ts": "tsc --project ./tsconfig.build.json",
+	"build:types": "pnpm run ts ./tools/update-rule-types.ts && copyfiles -f ./src/rule-types.d.ts ./lib",
     "clean": "rimraf .nyc_output lib coverage build .svelte-kit svelte.config-dist.js",
     "cover": "nyc --reporter=lcov pnpm run test",
     "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
@@ -120,6 +121,7 @@
     "@typescript/vfs": "^1.5.0",
     "acorn": "^8.11.3",
     "assert": "^2.1.0",
+    "copyfiles": "^2.4.1",
     "cross-spawn": "^7.0.3",
     "env-cmd": "^10.1.0",
     "esbuild": "^0.20.2",
@@ -141,6 +143,7 @@
     "eslint-plugin-svelte": "^2.35.1",
     "eslint-plugin-yml": "^1.14.0",
     "eslint-scope": "^8.0.1",
+    "eslint-typegen": "^0.2.1",
     "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.1",
     "estree-walker": "^3.0.3",
