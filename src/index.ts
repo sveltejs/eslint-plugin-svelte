@@ -1,3 +1,4 @@
+import './rule-types.d.ts';
 import type { RuleModule } from './types';
 import { rules as ruleList } from './utils/rules';
 import base from './configs/base';
