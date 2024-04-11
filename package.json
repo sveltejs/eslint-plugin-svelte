@@ -141,6 +141,7 @@
     "eslint-plugin-svelte": "^2.35.1",
     "eslint-plugin-yml": "^1.14.0",
     "eslint-scope": "^8.0.1",
+    "eslint-typegen": "^0.2.1",
     "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.1",
     "estree-walker": "^3.0.3",
