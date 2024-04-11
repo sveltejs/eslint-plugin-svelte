@@ -7,7 +7,4 @@
 		"vite.config.mts",
 		"docs-svelte-kit/**/*.mts"
 	],
-	"compilerOptions": {
-		"removeComments": true /* Do not emit comments to output. */
-	}
 }
