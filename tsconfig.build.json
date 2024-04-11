@@ -6,5 +6,5 @@
 		"typings/**/*",
 		"vite.config.mts",
 		"docs-svelte-kit/**/*.mts"
-	],
+	]
 }
