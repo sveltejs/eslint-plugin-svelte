@@ -29,7 +29,7 @@
 /docs-svelte-kit/src/routes/*.md
 /docs-svelte-kit/src/routes/**/*.md
 /docs-svelte-kit/src/app.html
-/src/rule-types.d.ts
+/src/rule-types.ts
 
 # JSONSchema bug?
 /.devcontainer/devcontainer.json
