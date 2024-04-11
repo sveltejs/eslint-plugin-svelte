@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.37.0
+
+### Minor Changes
+
+- [#735](https://github.com/sveltejs/eslint-plugin-svelte/pull/735) [`33f0de2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/33f0de261636e0dca77ec0479fa93a988e6ca950) Thanks [@xiBread](https://github.com/xiBread)! - feat: add rule types
+
 ## 2.36.0
 
 ### Minor Changes
