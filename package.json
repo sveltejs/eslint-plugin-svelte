@@ -27,10 +27,9 @@
     "sveltejs"
   ],
   "scripts": {
-    "build": "pnpm run build:meta && pnpm run build:ts && pnpm run build:types",
+    "build": "pnpm run build:meta && pnpm run build:ts",
     "build:meta": "pnpm run ts ./tools/update-meta.ts",
     "build:ts": "tsc --project ./tsconfig.build.json",
-    "build:types": "pnpm run ts ./tools/update-rule-types.ts",
     "clean": "rimraf .nyc_output lib coverage build .svelte-kit svelte.config-dist.js",
     "cover": "nyc --reporter=lcov pnpm run test",
     "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
