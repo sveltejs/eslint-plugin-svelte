@@ -1,6 +1,6 @@
+import fs from 'fs'
 import path from 'path';
 import plugin from '../src/index';
-import { writeAndFormat } from './lib/write';
 
 void main();
 
@@ -10,10 +10,9 @@ async function main() {
 	// @ts-expect-error - types are a bit strict here
 	const ruleTypes = await pluginsToRulesDTS({ svelte: plugin });
 
-	void writeAndFormat(
+	void fs.writeFileSync(
 		path.join(__dirname, '../src/rule-types.d.ts'),
-		`
-// IMPORTANT!
+`// IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
 
