@@ -91,7 +91,7 @@
     "@changesets/cli": "^2.27.1",
     "@changesets/get-release-plan": "^4.0.0",
     "@fontsource/fira-mono": "^5.0.12",
-    "@ota-meshi/eslint-plugin": "^0.15.3",
+    "@ota-meshi/eslint-plugin": "^0.17.0",
     "@sindresorhus/slugify": "^2.2.1",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.5.5",
