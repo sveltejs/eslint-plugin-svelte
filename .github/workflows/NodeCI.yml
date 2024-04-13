@@ -39,13 +39,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        eslint: [7, 8]
+        eslint: [7, 8, 9]
         node: [20]
         include:
-          # On next ESLint version
-          - eslint: ^9.0.0-0
-            node: 20
-            os: ubuntu-latest
           # On old Node.js version
           - eslint: 8
             node: 16
@@ -65,7 +61,7 @@ jobs:
         run: |+
           pnpm install -D eslint@${{ matrix.eslint }}
           rm -rf node_modules
-        if: matrix.eslint != 8
+        if: matrix.eslint != 9
       - name: Install Packages
         run: pnpm install
       - name: Test
