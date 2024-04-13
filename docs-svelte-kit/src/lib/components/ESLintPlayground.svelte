@@ -5,19 +5,21 @@
 	import {
 		DEFAULT_RULES_CONFIG,
 		getRule,
-		createLinter,
 		preprocess,
-		postprocess
+		postprocess,
+		createLinterConfig
 	} from '../eslint/scripts/linter.js';
 	import { loadTsParser } from '../eslint/scripts/ts-parser.js';
 	import { loadModulesForBrowser } from '../../../../src/utils/load-module';
+	import { Linter } from 'eslint';
+	import globals from 'globals';
 	let tsParser = null;
 	const linter = loadModulesForBrowser()
 		.then(async () => {
 			tsParser = await loadTsParser();
 		})
 		.then(() => {
-			return createLinter();
+			return new Linter();
 		});
 
 	const DEFAULT_CODE =
@@ -117,13 +119,13 @@
 
 	/** */
 	function equalsRules(a, b) {
-		const akeys = Object.keys(a).filter((k) => a[k] !== 'off');
-		const bkeys = Object.keys(b).filter((k) => b[k] !== 'off');
-		if (akeys.length !== bkeys.length) {
+		const aKeys = Object.keys(a).filter((k) => a[k] !== 'off');
+		const bKeys = Object.keys(b).filter((k) => b[k] !== 'off');
+		if (aKeys.length !== bKeys.length) {
 			return false;
 		}
 
-		for (const k of akeys) {
+		for (const k of aKeys) {
 			if (a[k] !== b[k]) {
 				return false;
 			}
@@ -162,22 +164,25 @@
 				bind:this={editor}
 				{linter}
 				bind:code
-				config={{
-					parser: 'svelte-eslint-parser',
-					parserOptions: {
-						ecmaVersion: 2020,
-						sourceType: 'module',
-						parser: {
-							ts: tsParser,
-							typescript: tsParser
-						}
-					},
-					rules,
-					env: {
-						browser: true,
-						es2021: true
+				config={[
+					...createLinterConfig(),
+					{
+						files: ['**'],
+						languageOptions: {
+							parserOptions: {
+								parser: {
+									ts: tsParser,
+									typescript: tsParser
+								}
+							},
+							globals: {
+								...globals.browser,
+								...globals.es2021
+							}
+						},
+						rules
 					}
-				}}
+				]}
 				{options}
 				on:result={onLintedResult}
 			/>

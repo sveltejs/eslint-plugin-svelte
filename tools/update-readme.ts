@@ -37,9 +37,9 @@ ${newReadme
 	.replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, '')
 	.replace(
 		/\(https:\/\/sveltejs.github.io\/eslint-plugin-svelte(.*?)\)/gu,
-		(_ptn, path: string) => {
-			const [hash] = /(?:#.*)?$/u.exec(path)!;
-			const pathWithoutHash = hash ? path.slice(0, -hash.length) : path;
+		(_ptn, filepath: string) => {
+			const [hash] = /(?:#.*)?$/u.exec(filepath)!;
+			const pathWithoutHash = hash ? filepath.slice(0, -hash.length) : filepath;
 			const normalizePathWithoutHash = pathWithoutHash.replace(/\/$/u, '');
 			const [file] = /[^/]+$/u.exec(normalizePathWithoutHash)!;
 			const pathWithoutFile = file

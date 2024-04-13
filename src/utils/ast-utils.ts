@@ -560,12 +560,8 @@ export function isVoidHtmlElement(node: SvAST.SvelteElement): boolean {
 	return voidElements.includes(getNodeName(node));
 }
 
-/* eslint-disable complexity -- better than refactoring because type guards work well. */
 /** Checks whether the given identifier node is used as an expression. */
-export function isExpressionIdentifier(
-	/* eslint-enable complexity -- :) */
-	node: TSESTree.Identifier
-): boolean {
+export function isExpressionIdentifier(node: TSESTree.Identifier): boolean {
 	const parent = node.parent;
 	if (!parent) {
 		return true;

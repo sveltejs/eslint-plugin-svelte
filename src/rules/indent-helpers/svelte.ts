@@ -87,7 +87,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		// ----------------------------------------------------------------------
 		// ATTRIBUTES
 		// ----------------------------------------------------------------------
-		// eslint-disable-next-line complexity -- X(
 		SvelteAttribute(
 			node:
 				| AST.SvelteAttribute

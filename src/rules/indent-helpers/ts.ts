@@ -978,7 +978,6 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				}
 			}
 		},
-		// eslint-disable-next-line complexity -- ignore
 		'*[type=/^TS/]'(node: TSESTree.Node) {
 			if (
 				node.type !== 'TSAnyKeyword' &&

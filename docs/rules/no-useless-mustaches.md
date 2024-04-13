@@ -81,6 +81,8 @@ Lorem ipsum {foo}
 
 <ESLintCodeBlock fix>
 
+<!--eslint-skip-->
+
 ```svelte
 <!-- ✓ GOOD -->
 {'Lorem \n ipsum'}

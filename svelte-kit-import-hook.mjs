@@ -44,10 +44,13 @@ function transform(code, filename) {
  */
 export async function load(url, context, defaultLoad) {
 	const result = await defaultLoad(url, context, defaultLoad);
-	return {
-		format: result.format,
-		source: transform(`${result.source}`, url)
-	};
+	if (url.includes('/@sveltejs/kit/') && result.source.includes('svelte.config.js')) {
+		return {
+			format: result.format,
+			source: transform(`${result.source}`, url)
+		};
+	}
+	return result;
 }
 
 /**

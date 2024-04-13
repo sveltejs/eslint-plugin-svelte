@@ -1,5 +1,6 @@
 <script>
 	import MonacoEditor from './MonacoEditor.svelte';
+	import { rulesMap } from './scripts/linter';
 	import { loadMonacoEditor } from './scripts/monaco-loader';
 	import { createEventDispatcher, onMount } from 'svelte';
 
@@ -50,12 +51,6 @@
 		/* eslint-enable no-param-reassign -- ignore */
 
 		const start = Date.now();
-		// eslint-disable-next-line no-undef -- Workaround X(
-		if (typeof require === 'undefined' && typeof window !== 'undefined') {
-			window.require = function () {
-				throw new Error();
-			};
-		}
 		const messages = linter.verify(code, config, options);
 		const time = Date.now() - start;
 
@@ -89,7 +84,7 @@
 	/** message to marker */
 	async function messageToMarker(message, messageMap) {
 		const monaco = await loadMonacoEditor();
-		const rule = message.ruleId && (await linter).getRules().get(message.ruleId);
+		const rule = message.ruleId && rulesMap().get(message.ruleId);
 		const docUrl = rule && rule.meta && rule.meta.docs && rule.meta.docs.url;
 		const startLineNumber = ensurePositiveInt(message.line, 1);
 		const startColumn = ensurePositiveInt(message.column, 1);

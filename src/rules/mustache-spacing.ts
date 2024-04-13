@@ -109,17 +109,15 @@ export default createRule('mustache-spacing', {
 						fix: (fixer) => fixer.insertTextAfter(openingBrace, ' ')
 					});
 				}
-			} else {
-				if (openingBrace.range[1] !== firstToken.range[0]) {
-					context.report({
-						loc: {
-							start: openingBrace.loc.start,
-							end: firstToken.loc.start
-						},
-						messageId: 'unexpectedOpening',
-						fix: (fixer) => fixer.removeRange([openingBrace.range[1], firstToken.range[0]])
-					});
-				}
+			} else if (openingBrace.range[1] !== firstToken.range[0]) {
+				context.report({
+					loc: {
+						start: openingBrace.loc.start,
+						end: firstToken.loc.start
+					},
+					messageId: 'unexpectedOpening',
+					fix: (fixer) => fixer.removeRange([openingBrace.range[1], firstToken.range[0]])
+				});
 			}
 			if (!closingBrace) {
 				return;
@@ -140,17 +138,15 @@ export default createRule('mustache-spacing', {
 						fix: (fixer) => fixer.insertTextBefore(closingBrace, ' ')
 					});
 				}
-			} else {
-				if (closingBrace.range[0] !== lastToken.range[1]) {
-					context.report({
-						loc: {
-							start: lastToken.loc.end,
-							end: closingBrace.loc.end
-						},
-						messageId: 'unexpectedClosing',
-						fix: (fixer) => fixer.removeRange([lastToken.range[1], closingBrace.range[0]])
-					});
-				}
+			} else if (closingBrace.range[0] !== lastToken.range[1]) {
+				context.report({
+					loc: {
+						start: lastToken.loc.end,
+						end: closingBrace.loc.end
+					},
+					messageId: 'unexpectedClosing',
+					fix: (fixer) => fixer.removeRange([lastToken.range[1], closingBrace.range[0]])
+				});
 			}
 		}
 

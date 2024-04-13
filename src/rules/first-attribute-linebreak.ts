@@ -68,10 +68,8 @@ export default createRule('first-attribute-linebreak', {
 					if (node.parent.name.loc.end.line === firstAttribute.loc.start.line) {
 						return;
 					}
-				} else {
-					if (node.parent.name.loc.end.line < firstAttribute.loc.start.line) {
-						return;
-					}
+				} else if (node.parent.name.loc.end.line < firstAttribute.loc.start.line) {
+					return;
 				}
 				report(firstAttribute, location);
 			}

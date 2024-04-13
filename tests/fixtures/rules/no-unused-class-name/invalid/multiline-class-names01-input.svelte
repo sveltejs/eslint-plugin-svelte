@@ -1,19 +1,20 @@
 <!-- eslint-disable prettier/prettier -->
-<div class="div-class	div-class-two">Hello</div>
+<div class="div-class div-class-two">Hello</div>
 
 <span
-  class="
+	class="
     span-class
     span-class-two
     span-class-three
-  ">World!</span>
+  ">World!</span
+>
 
 <style>
-  .div-class {
-    color: red;
-  }
+	.div-class {
+		color: red;
+	}
 
-  .span-class {
-    font-weight: bold;
-  }
+	.span-class {
+		font-weight: bold;
+	}
 </style>

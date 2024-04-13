@@ -1,4 +1,3 @@
-/* eslint require-jsdoc:0 -- shim */
 import nested from 'postcss-nested';
 
 function loadConfig() {
