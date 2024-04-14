@@ -144,5 +144,5 @@ export function createLinterConfig() {
 }
 
 export function rulesMap() {
-	return new Map([...builtinRules, pluginRules.map((rule) => [rule.meta.docs.ruleId, rule])]);
+	return new Map([...builtinRules, ...pluginRules.map((rule) => [rule.meta.docs.ruleId, rule])]);
 }
