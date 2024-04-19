@@ -1,10 +1,8 @@
 import { rules as pluginRules } from '../../../../../src/utils/rules.ts';
-import { Linter } from 'eslint';
+import { builtinRules } from 'eslint/use-at-your-own-risk';
 import * as svelteEslintParser from 'svelte-eslint-parser';
 
 export { preprocess, postprocess } from '../../../../../src/processor/index.ts';
-
-const linter = new Linter();
 
 export const categories = [
 	{
@@ -85,13 +83,14 @@ for (const rule of pluginRules) {
 
 	if (
 		rule.meta.docs.ruleId !== 'svelte/no-export-load-in-svelte-module-in-kit-pages' &&
-		rule.meta.docs.ruleId !== 'svelte/valid-prop-names-in-kit-pages'
+		rule.meta.docs.ruleId !== 'svelte/valid-prop-names-in-kit-pages' &&
+		rule.meta.docs.ruleId !== 'svelte/no-restricted-html-elements'
 	) {
 		DEFAULT_RULES_CONFIG[rule.meta.docs.ruleId] = 'error';
 	}
 }
 
-for (const [ruleId, rule] of linter.getRules()) {
+for (const [ruleId, rule] of builtinRules) {
 	if (rule.meta.deprecated) {
 		continue;
 	}
@@ -122,12 +121,28 @@ export function getRule(ruleId) {
 	return '';
 }
 
-export function createLinter() {
-	const linter = new Linter();
-	linter.defineParser('svelte-eslint-parser', svelteEslintParser);
-	for (const rule of pluginRules) {
-		linter.defineRule(rule.meta.docs.ruleId, rule);
-	}
+/**
+ * @returns {import('eslint').Linter.FlatConfig[]}
+ */
+export function createLinterConfig() {
+	return [
+		{
+			files: ['**'],
+			plugins: {
+				svelte: {
+					rules: Object.fromEntries(pluginRules.map((rule) => [rule.meta.docs.ruleName, rule]))
+				}
+			}
+		},
+		{
+			files: ['**/*.svelte', '*.svelte'],
+			languageOptions: {
+				parser: svelteEslintParser
+			}
+		}
+	];
+}
 
-	return linter;
+export function rulesMap() {
+	return new Map([...builtinRules, ...pluginRules.map((rule) => [rule.meta.docs.ruleId, rule])]);
 }

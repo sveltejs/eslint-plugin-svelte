@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import type { RuleTester } from 'eslint';
 import type { Linter as LinterType } from 'eslint';
-import plugin = require('../../src/index');
+import plugin from '../../src/index';
 import { applyFixes } from './source-code-fixer';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import semver from 'semver';

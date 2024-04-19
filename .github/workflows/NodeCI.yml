@@ -39,13 +39,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        eslint: [7, 8]
+        eslint: [7, 8, 9]
         node: [20]
-        include:
-          # On next ESLint version
-          - eslint: ^9.0.0-0
-            node: 20
-            os: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,7 +53,7 @@ jobs:
         run: |+
           pnpm install -D eslint@${{ matrix.eslint }}
           rm -rf node_modules
-        if: matrix.eslint != 8
+        if: matrix.eslint != 9
       - name: Install Packages
         run: pnpm install
       - name: Test
@@ -69,7 +64,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16, 17, 18, 20]
+        eslint: [9]
+        node: [18, 20]
+        include:
+          # On old Node.js version
+          - eslint: 8
+            node: 16
+            os: ubuntu-latest
+          - eslint: 8
+            node: 17
+            os: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -81,6 +85,10 @@ jobs:
       - name: Install svelte@4
         run: |+
           pnpm install -D svelte@4
+          rm -rf node_modules
+      - name: Install ESLint ${{ matrix.eslint }}
+        run: |+
+          pnpm install -D eslint@${{ matrix.eslint }}
           rm -rf node_modules
       - name: Install Packages
         run: pnpm install
@@ -107,7 +115,7 @@ jobs:
           rm -rf node_modules
       - name: Install svelte@3
         run: |+
-          pnpm install -D svelte@3 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
+          pnpm install -D svelte@3 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
           rm -rf node_modules
       - name: Install Packages
         run: pnpm install

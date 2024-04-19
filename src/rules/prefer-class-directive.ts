@@ -330,12 +330,10 @@ export default createRule('prefer-class-directive', {
 						canTransform = false;
 						break;
 					}
-				} else {
-					if (prevIsWord && nextIsWord) {
-						// The previous and next may be connected.
-						canTransform = false;
-						break;
-					}
+				} else if (prevIsWord && nextIsWord) {
+					// The previous and next may be connected.
+					canTransform = false;
+					break;
 				}
 			}
 			if (!canTransform) {

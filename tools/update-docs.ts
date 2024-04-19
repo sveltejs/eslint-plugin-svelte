@@ -89,15 +89,13 @@ class DocFile {
 			} else {
 				notes.push('- :warning: This rule was **deprecated**.');
 			}
-		} else {
-			if (recommended) {
-				if (recommended === 'base') {
-					notes.push(
-						'- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.'
-					);
-				} else {
-					notes.push('- :gear: This rule is included in `"plugin:svelte/recommended"`.');
-				}
+		} else if (recommended) {
+			if (recommended === 'base') {
+				notes.push(
+					'- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.'
+				);
+			} else {
+				notes.push('- :gear: This rule is included in `"plugin:svelte/recommended"`.');
 			}
 		}
 		if (fixable) {

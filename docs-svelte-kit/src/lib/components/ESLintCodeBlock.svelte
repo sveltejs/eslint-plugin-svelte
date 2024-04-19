@@ -1,12 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 	import ESLintEditor from '../eslint/ESLintEditor.svelte';
-	import { createLinter, preprocess, postprocess } from '../eslint/scripts/linter.js';
+	import { preprocess, postprocess, createLinterConfig } from '../eslint/scripts/linter.js';
 	import { loadTsParser } from '../eslint/scripts/ts-parser.js';
 	import { loadModulesForBrowser } from '../../../../src/utils/load-module';
+	import { Linter } from 'eslint';
+	import globals from 'globals';
 
 	const modulesForBrowser = loadModulesForBrowser();
-	const loadLinter = createLinter();
 
 	let tsParser = null;
 
@@ -26,9 +27,9 @@
 		hasLangTs && !tsParser
 			? async () => {
 					tsParser = await loadTsParser();
-					return loadLinter;
+					return new Linter();
 				}
-			: () => loadLinter
+			: () => new Linter()
 	);
 	let showDiff = fix;
 
@@ -51,23 +52,26 @@
 	<ESLintEditor
 		{linter}
 		bind:code
-		config={{
-			parser: language === 'svelte' ? 'svelte-eslint-parser' : undefined,
-			parserOptions: {
-				ecmaVersion: 2020,
-				sourceType: 'module',
-				parser: {
-					ts: tsParser,
-					typescript: tsParser
-				}
-			},
-			rules,
-			env: {
-				browser: true,
-				es2021: true
-			},
-			...config
-		}}
+		config={[
+			...createLinterConfig(),
+			{
+				files: ['**'],
+				languageOptions: {
+					parserOptions: {
+						parser: {
+							ts: tsParser,
+							typescript: tsParser
+						}
+					},
+					globals: {
+						...globals.browser,
+						...globals.es2021
+					}
+				},
+				rules,
+				...config
+			}
+		]}
 		{language}
 		{options}
 		on:result={onLintedResult}

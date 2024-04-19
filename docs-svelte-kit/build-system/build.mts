@@ -2,20 +2,9 @@ import esbuild from 'esbuild';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-// const babelCore = require("@babel/core")
-// const t = require("@babel/types")
 
-const dirname = path.dirname(
-	fileURLToPath(
-		// @ts-expect-error -- Cannot change `module` option
-		import.meta.url
-	)
-);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-build(path.join(dirname, './src/eslint.mjs'), path.join(dirname, '../shim/eslint.mjs'), [
-	'assert',
-	'util'
-]);
 build(path.join(dirname, '../../node_modules/assert'), path.join(dirname, '../shim/assert.mjs'));
 
 /** build */

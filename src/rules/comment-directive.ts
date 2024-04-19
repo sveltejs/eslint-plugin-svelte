@@ -136,32 +136,30 @@ export default createRule('comment-directive', {
 							loc: comment.loc.start
 						});
 					}
-				} else {
-					if (parsed.rules.length) {
-						for (const rule of parsed.rules) {
-							if (reportUnusedDisableDirectives) {
-								context.report({
-									loc: rule.loc,
-									messageId: 'unusedEnableRule',
-									data: { rule: rule.ruleId, kind: parsed.type }
-								});
-							}
-							directives.enableBlock(comment.loc.start, rule.ruleId, {
-								loc: rule.loc.start
-							});
-						}
-					} else {
+				} else if (parsed.rules.length) {
+					for (const rule of parsed.rules) {
 						if (reportUnusedDisableDirectives) {
 							context.report({
-								loc: comment.loc,
-								messageId: 'unusedEnable',
-								data: { kind: parsed.type }
+								loc: rule.loc,
+								messageId: 'unusedEnableRule',
+								data: { rule: rule.ruleId, kind: parsed.type }
 							});
 						}
-						directives.enableBlock(comment.loc.start, ALL_RULES, {
-							loc: comment.loc.start
+						directives.enableBlock(comment.loc.start, rule.ruleId, {
+							loc: rule.loc.start
 						});
 					}
+				} else {
+					if (reportUnusedDisableDirectives) {
+						context.report({
+							loc: comment.loc,
+							messageId: 'unusedEnable',
+							data: { kind: parsed.type }
+						});
+					}
+					directives.enableBlock(comment.loc.start, ALL_RULES, {
+						loc: comment.loc.start
+					});
 				}
 			}
 		}

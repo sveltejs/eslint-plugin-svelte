@@ -1,7 +1,8 @@
-// @ts-expect-error -- Missing type information
 import { sveltekit } from '@sveltejs/kit/vite';
 import path from 'path';
+// @ts-expect-error -- Missing types
 import svelteMd from 'vite-plugin-svelte-md';
+import eslint4b, { requireESLintUseAtYourOwnRisk4b } from 'vite-plugin-eslint4b';
 import svelteMdOption from './docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs';
 
 import './docs-svelte-kit/build-system/build.mts';
@@ -11,12 +12,7 @@ import { fileURLToPath } from 'url';
 
 generateRoutes();
 
-const dirname = path.dirname(
-	fileURLToPath(
-		// @ts-expect-error -- Cannot change `module` option
-		import.meta.url
-	)
-);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('vite').UserConfig} */
 const config: UserConfig = {
@@ -27,19 +23,19 @@ const config: UserConfig = {
 				root: path.join(dirname, './docs')
 			})
 		),
-		sveltekit()
+		sveltekit(),
+		eslint4b(),
+		requireESLintUseAtYourOwnRisk4b()
 	],
 	server: {
 		fs: { strict: false }
 	},
 	resolve: {
 		alias: {
-			eslint: path.join(dirname, './docs-svelte-kit/shim/eslint.mjs'),
 			assert: path.join(dirname, './docs-svelte-kit/shim/assert.mjs'),
 			'postcss-load-config': path.join(dirname, './docs-svelte-kit/shim/postcss-load-config.mjs'),
 			'source-map-js': path.join(dirname, './docs-svelte-kit/shim/source-map-js.mjs'),
 			module: path.join(dirname, './docs-svelte-kit/shim/module.mjs'),
-			path: path.join(dirname, './docs-svelte-kit/shim/path.mjs'),
 			url: path.join(dirname, './docs-svelte-kit/shim/url.mjs'),
 			os: path.join(dirname, './docs-svelte-kit/shim/os.mjs'),
 			fs: path.join(dirname, './docs-svelte-kit/shim/fs.mjs'),

@@ -50,8 +50,7 @@ export class CommentDirectives {
 						blockEnableDirectives.clear();
 					}
 					blockEnableDirectives.add(block);
-				} else {
-					// block.kind === "disable"
+				} else if (block.kind === 'disable') {
 					if (block.targetRule === ALL) {
 						for (const b of blockEnableDirectives) {
 							usedDirectives.add(b);

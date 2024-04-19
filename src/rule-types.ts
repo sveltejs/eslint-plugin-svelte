@@ -409,7 +409,9 @@ type SvelteNoInlineStyles = []|[{
   allowTransitions?: boolean
 }]
 // ----- svelte/no-inner-declarations -----
-type SvelteNoInnerDeclarations = []|[("functions" | "both")]
+type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "both"), {
+  blockScopedFunctions?: ("allow" | "disallow")
+}]
 // ----- svelte/no-reactive-reassign -----
 type SvelteNoReactiveReassign = []|[{
   props?: boolean

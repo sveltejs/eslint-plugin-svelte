@@ -1,4 +1,3 @@
-/* eslint require-jsdoc:0 -- shim */
 function _createRequire() {
 	return () => null;
 }
