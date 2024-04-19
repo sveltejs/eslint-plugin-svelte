@@ -2,7 +2,7 @@
 	<!-- svelte-ignore a11y-label-has-associated-control a11y-no-noninteractive-tabindex -->
 	{#if true}
 		<label tabindex="0">Click</label>
-		<ul tabindex="0" />
+		<ul tabindex="0"></ul>
 	{/if}
 </div>
 <div>
@@ -10,8 +10,8 @@
 	{#if true}
 		A
 	{:else}
-		<div />
+		<div></div>
 		<label tabindex="0">Click</label>
-		<ul tabindex="0" />
+		<ul tabindex="0"></ul>
 	{/if}
 </div>
