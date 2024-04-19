@@ -1,5 +1,5 @@
 <div class="foo">
-	<div class="bar" />
+	<div class="bar"></div>
 </div>
 
 <style lang="postcss">

@@ -2,5 +2,5 @@
 TEXT
 <div class="dropdown">
 	<label tabindex="0">Click</label>
-	<ul tabindex="0" />
+	<ul tabindex="0"></ul>
 </div>

@@ -1,4 +1,4 @@
-<div class="foo" />
+<div class="foo"></div>
 
 <!-- svelte-ignore css-unused-selector -->
 <style>
