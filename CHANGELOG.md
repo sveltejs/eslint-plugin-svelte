@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.38.0
+
+### Minor Changes
+
+- [#741](https://github.com/sveltejs/eslint-plugin-svelte/pull/741) [`33626a3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/33626a3444cc6bd5a1789b0043ea5799b81711d1) Thanks [@baseballyama](https://github.com/baseballyama)! - Use the latest Svelte 5
+
 ## 2.37.0
 
 ### Minor Changes
