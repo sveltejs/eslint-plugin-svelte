@@ -1,4 +1,4 @@
 <script lang="ts">
-  // svelte-ignore unused-export-let
-  export let something
+	// svelte-ignore export_let_unused
+	export let something;
 </script>

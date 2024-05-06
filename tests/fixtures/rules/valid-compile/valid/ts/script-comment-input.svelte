@@ -1,10 +1,10 @@
 <script context="module">
-  let foo
+	let foo;
 </script>
 
 <script lang="ts">
-  // svelte-ignore unused-export-let
-  export let unused
-  // svelte-ignore module-script-reactive-declaration
-  $: reactive = foo
+	// svelte-ignore export_let_unused
+	export let unused;
+	// svelte-ignore reactive_declaration_module_script
+	$: reactive = foo;
 </script>

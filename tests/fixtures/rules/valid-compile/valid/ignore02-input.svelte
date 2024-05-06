@@ -1,4 +1,4 @@
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <span tabindex="0">
 	<span class="element"></span>
 </span>
