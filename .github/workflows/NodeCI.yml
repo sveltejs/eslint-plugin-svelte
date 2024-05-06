@@ -65,7 +65,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         eslint: [9]
-        node: [18, 20]
+        node: [18, 20, 22]
         include:
           # On old Node.js version
           - eslint: 8
