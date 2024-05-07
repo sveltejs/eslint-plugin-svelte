@@ -129,7 +129,9 @@ const config = [
 		rules: {
 			'n/file-extension-in-import': 'off',
 			'n/no-unsupported-features/es-syntax': 'off',
-			'n/no-unsupported-features/es-builtins': 'off'
+			'n/no-unsupported-features/es-builtins': 'off',
+			'n/no-unsupported-features/node-builtins': 'off',
+			'n/no-missing-import': 'off'
 		}
 	},
 	{
