@@ -33,7 +33,7 @@
 
 <SideMenu {sidebarOpen} hiddenMenu={frontmatter.hiddenMenu} />
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <main
 	class:hidden-menu={frontmatter.hiddenMenu}
 	on:click={sidebarOpen ? resetSidebarOpen : null}

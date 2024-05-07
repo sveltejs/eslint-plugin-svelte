@@ -2,18 +2,18 @@
 </script>
 
 <!-- ✓ GOOD -->
-<!-- svelte-ignore a11y-autofocus a11y-missing-attribute -->
+<!-- svelte-ignore a11y_autofocus a11y_missing_attribute -->
 <img src="https://example.com/img.png" autofocus />
 
 <!-- ✗ BAD -->
-<!-- svelte-ignore a11y-autofocus a11y-missing-attribute -->
+<!-- svelte-ignore a11y_autofocus a11y_missing_attribute -->
 <img src="https://example.com/img.png" alt="Foo" />
 
 <div class="foo">
 	<div class="bar" />
 </div>
 
-<!-- svelte-ignore css-unused-selector -->
+<!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
 	.foo {
 		height: 20px;

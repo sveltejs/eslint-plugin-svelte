@@ -190,10 +190,9 @@
 				<ol>
 					{#each messages as msg, i (`${msg.line}:${msg.column}:${msg.ruleId}@${i}`)}
 						<li class="message">
-							<!-- svelte-ignore a11y-invalid-attribute -->
-							<a href="#" on:click={(evt) => onClickMessage(evt, msg)} class="message-link"
-								>[{msg.line}:{msg.column}]</a
-							>:
+							<button on:click={(evt) => onClickMessage(evt, msg)} class="message-link">
+								[{msg.line}:{msg.column}]
+							</button>:
 							{msg.message}
 							<a
 								class="rule-link {getRule(msg.ruleId)?.classes}"
@@ -268,6 +267,12 @@
 		color: #8080f2;
 	}
 	.message-link {
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+		outline: none;
+		padding: 0;
+		appearance: none;
 		color: #40b3ff;
 	}
 </style>

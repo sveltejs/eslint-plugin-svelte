@@ -3,13 +3,12 @@
 </script>
 
 <script>
-	// svelte-ignore unused-export-let
+	// svelte-ignore export_let_unused
 	export let unused;
 	let bar;
 
-	// svelte-ignore module-script-reactive-declaration
+	// svelte-ignore reactive_declaration_module_script
 	$: {
-		// svelte-ignore module-script-reactive-declaration
 		bar = foo;
 	}
 </script>

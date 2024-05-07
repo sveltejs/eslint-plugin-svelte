@@ -1,0 +1,4 @@
+- message: 'A11y: <img> element should have an alt attribute(a11y-missing-attribute)'
+  line: 5
+  column: 1
+  suggestions: null

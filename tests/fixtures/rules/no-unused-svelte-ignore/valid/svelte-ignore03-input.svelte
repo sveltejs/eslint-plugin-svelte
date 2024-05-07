@@ -1,11 +1,11 @@
-<!-- svelte-ignore a11y-label-has-associated-control a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y_label_has_associated_control a11y_no_noninteractive_tabindex -->
 <!-- comment -->
 <div class="dropdown">
 	<label tabindex="0">Click</label>
 	<ul tabindex="0"></ul>
 </div>
-<!-- svelte-ignore a11y-label-has-associated-control -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y_label_has_associated_control -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div class="dropdown">
 	<label tabindex="0">Click</label>
 	<ul tabindex="0"></ul>
