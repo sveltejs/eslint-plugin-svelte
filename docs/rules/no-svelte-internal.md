@@ -37,9 +37,9 @@ This rule reports the use of the deprecated API `svelte/internal` and `svelte/in
 
 Nothing.
 
--
-
 ## :books: Further Reading
+
+<!--TODO: update here when relevant statements are added in Svelte 5 documentation -->
 
 Nothing.
 
