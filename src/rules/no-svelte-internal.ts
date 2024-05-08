@@ -18,7 +18,10 @@ export default createRule('no-svelte-internal', {
 	create(context) {
 		return {
 			ImportDeclaration(node) {
-				if (node.source.value === 'svelte/internal') {
+				if (
+					node.source.value === 'svelte/internal' ||
+					node.source.value.startsWith('svelte/internal/')
+				) {
 					context.report({
 						node,
 						messageId: 'unexpected'
