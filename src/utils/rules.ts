@@ -41,6 +41,7 @@ import noRestrictedHtmlElements from '../rules/no-restricted-html-elements';
 import noShorthandStylePropertyOverrides from '../rules/no-shorthand-style-property-overrides';
 import noSpacesAroundEqualSignsInAttribute from '../rules/no-spaces-around-equal-signs-in-attribute';
 import noStoreAsync from '../rules/no-store-async';
+import noSvelteInternal from '../rules/no-svelte-internal';
 import noTargetBlank from '../rules/no-target-blank';
 import noTrailingSpaces from '../rules/no-trailing-spaces';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property';
@@ -105,6 +106,7 @@ export const rules = [
 	noShorthandStylePropertyOverrides,
 	noSpacesAroundEqualSignsInAttribute,
 	noStoreAsync,
+	noSvelteInternal,
 	noTargetBlank,
 	noTrailingSpaces,
 	noUnknownStyleDirectiveProperty,

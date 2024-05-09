@@ -210,6 +210,11 @@ export interface RuleOptions {
    */
   'svelte/no-store-async'?: Linter.RuleEntry<[]>
   /**
+   * svelte/internal will be removed in Svelte 6.
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/
+   */
+  'svelte/no-svelte-internal'?: Linter.RuleEntry<[]>
+  /**
    * disallow `target="_blank"` attribute without `rel="noopener noreferrer"`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank/
    */
