@@ -28,9 +28,12 @@ This rule reports the use of the deprecated API `svelte/internal` and `svelte/in
   // ✗ BAD
   import { get_current_component } from 'svelte/internal';
   import { inspect } from 'svelte/internal/client';
+  import('svelte/internal');
+  import('svelte/internal/disclose-version');
 
   export * from 'svelte/internal';
-  export * from 'svelte/internal/client';
+  export { listen } from 'svelte/internal';
+  export * from 'svelte/internal/server';
 </script>
 ```
 
