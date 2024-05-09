@@ -1,4 +1,5 @@
 import { createRule } from '../utils';
+import type { TSESTree } from '@typescript-eslint/types';
 
 export default createRule('no-svelte-internal', {
 	meta: {
@@ -11,21 +12,46 @@ export default createRule('no-svelte-internal', {
 		},
 		schema: [],
 		messages: {
-			unexpected: 'Importing from svelte/internal is prohibited. This will be removed in Svelte 6.'
+			unexpected: 'Using svelte/internal is prohibited. This will be removed in Svelte 6.'
 		},
 		type: 'problem'
 	},
 	create(context) {
+		function report(node: TSESTree.Node) {
+			context.report({
+				node,
+				messageId: 'unexpected'
+			});
+		}
+
+		function isSvelteInternal(value: string) {
+			return value === 'svelte/internal' || value.startsWith('svelte/internal/');
+		}
+
 		return {
 			ImportDeclaration(node) {
+				if (node.source && isSvelteInternal(node.source.value)) {
+					report(node);
+				}
+			},
+			ImportExpression(node) {
 				if (
-					node.source.value === 'svelte/internal' ||
-					node.source.value.startsWith('svelte/internal/')
+					node.source &&
+					node.source.type === 'Literal' &&
+					typeof node.source.value === 'string' &&
+					isSvelteInternal(node.source.value)
 				) {
-					context.report({
-						node,
-						messageId: 'unexpected'
-					});
+					report(node);
+				}
+			},
+			ExportNamedDeclaration(node) {
+				if (node.source && isSvelteInternal(node.source.value)) {
+					report(node);
+				}
+			},
+			ExportAllDeclaration(node) {
+				if (node.source && isSvelteInternal(node.source.value)) {
+					report(node);
 				}
 			}
 		};
