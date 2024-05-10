@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-svelte-internal'
 description: 'svelte/internal will be removed in Svelte 6.'
+since: 'v2.39.0'
 ---
 
 # svelte/no-svelte-internal
 
 > svelte/internal will be removed in Svelte 6.
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -48,6 +47,10 @@ Nothing.
 <!--TODO: update here when relevant statements are added in Svelte 5 documentation -->
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.39.0
 
 ## :mag: Implementation
 

@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.39.0
+
+### Minor Changes
+
+- [#749](https://github.com/sveltejs/eslint-plugin-svelte/pull/749) [`da4d535`](https://github.com/sveltejs/eslint-plugin-svelte/commit/da4d5357344805ef4e95aac681c2c58158199b8e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/no-svelte-internal` rule
+
+- [#758](https://github.com/sveltejs/eslint-plugin-svelte/pull/758) [`6ee50c8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6ee50c8b0d8e183cf0e3c974e3b3b131007a5a30) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: Update svelte-eslint-parser to 0.36
+
 ## 2.38.0
 
 ### Minor Changes
