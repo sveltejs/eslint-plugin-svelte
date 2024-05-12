@@ -4,7 +4,6 @@
 
 	function handleClick() {
 		reactiveValue.value = 42;
-		// eslint-disable-next-line no-unsafe-optional-chaining -- ignore
 		(reactiveValue?.foo).bar = 42;
 	}
 </script>

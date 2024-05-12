@@ -7,7 +7,7 @@ const insertText = `\n${renderRulesTableContent(
 	(name) => `https://sveltejs.github.io/eslint-plugin-svelte/rules/${name}/`
 )}\n`;
 
-const readmeFilePath = path.resolve(__dirname, '../README.md');
+const readmeFilePath = path.resolve(__dirname, '../../../README.md');
 const newReadme = fs
 	.readFileSync(readmeFilePath, 'utf8')
 	.replace(
@@ -16,7 +16,7 @@ const newReadme = fs
 	);
 void writeAndFormat(readmeFilePath, newReadme);
 
-const docsReadmeFilePath = path.resolve(__dirname, '../docs/README.md');
+const docsReadmeFilePath = path.resolve(__dirname, '../../../docs/README.md');
 
 void writeAndFormat(
 	docsReadmeFilePath,
@@ -63,7 +63,7 @@ ${newReadme
 	.replace(/\n{3,}/gu, '\n\n')}`
 );
 
-const docsUserGuideFilePath = path.resolve(__dirname, '../docs/user-guide.md');
+const docsUserGuideFilePath = path.resolve(__dirname, '../../../docs/user-guide.md');
 
 const docsUserGuide = fs.readFileSync(docsUserGuideFilePath, 'utf8');
 

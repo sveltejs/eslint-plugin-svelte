@@ -7,7 +7,6 @@
 	};
 
 	$: (async () => {
-		// eslint-disable-next-line require-atomic-updates -- ignore
 		obj.a += await doSomething((obj.a += 1));
 	})();
 </script>

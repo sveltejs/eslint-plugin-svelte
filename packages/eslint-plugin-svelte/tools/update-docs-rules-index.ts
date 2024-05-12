@@ -3,7 +3,7 @@ import renderRulesTableContent from './render-rules';
 import { writeAndFormat } from './lib/write';
 
 // -----------------------------------------------------------------------------
-const readmeFilePath = path.resolve(__dirname, '../docs/rules.md');
+const readmeFilePath = path.resolve(__dirname, '../../../docs/rules.md');
 void writeAndFormat(
 	readmeFilePath,
 	`---

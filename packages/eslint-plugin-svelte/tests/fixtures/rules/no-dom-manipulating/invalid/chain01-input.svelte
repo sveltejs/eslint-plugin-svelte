@@ -5,7 +5,6 @@
 		foo?.remove();
 	};
 	const remove2 = () => {
-		// eslint-disable-next-line no-unsafe-optional-chaining -- ignore
 		(foo?.remove)();
 	};
 </script>

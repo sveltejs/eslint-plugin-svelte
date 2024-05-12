@@ -3,6 +3,6 @@
   column: 3
   suggestions: null
 - message: Assignment to property of reactive value 'reactiveValue'.
-  line: 8
+  line: 7
   column: 3
   suggestions: null

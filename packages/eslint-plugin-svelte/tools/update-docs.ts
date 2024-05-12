@@ -19,7 +19,7 @@ function yamlValue(val: unknown) {
 	return val;
 }
 
-const ROOT = path.resolve(__dirname, '../docs/rules');
+const ROOT = path.resolve(__dirname, '../../../docs/rules');
 
 function pickSince(content: string): string | null | Promise<string> {
 	const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content);
