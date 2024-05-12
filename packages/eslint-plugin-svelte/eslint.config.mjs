@@ -1,6 +1,5 @@
 import * as myPlugin from '@ota-meshi/eslint-plugin';
 import * as tseslint from 'typescript-eslint';
-import globals from 'globals';
 
 /**
  * @type {import('eslint').Linter.FlatConfig[]}
@@ -87,23 +86,6 @@ const config = [
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'parserServices', message: 'Use src/utils/compat.ts' }
 			]
-		}
-	},
-	{
-		files: ['docs-svelte-kit/**'],
-		languageOptions: {
-			sourceType: 'module',
-			globals: {
-				...globals.browser,
-				require: 'readonly'
-			}
-		},
-		rules: {
-			'n/file-extension-in-import': 'off',
-			'n/no-unsupported-features/es-syntax': 'off',
-			'n/no-unsupported-features/es-builtins': 'off',
-			'n/no-unsupported-features/node-builtins': 'off',
-			'n/no-missing-import': 'off'
 		}
 	},
 	{
