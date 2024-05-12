@@ -81,7 +81,6 @@
     "svelte-eslint-parser": ">=0.36.0 <1.0.0"
   },
   "devDependencies": {
-    "@1stg/browserslist-config": "^2.0.0",
     "@1stg/stylelint-config": "^6.0.0",
     "@babel/core": "^7.24.4",
     "@babel/eslint-parser": "^7.24.1",
