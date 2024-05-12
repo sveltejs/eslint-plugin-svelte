@@ -1,5 +1,5 @@
 <script>
-	import A from 'prettier-playground/a.svelte';
+	import A from 'A.svelte';
 
 	const foo = 'foo';
 	let text = '';
