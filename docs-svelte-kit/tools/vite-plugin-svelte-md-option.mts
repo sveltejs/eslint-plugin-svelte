@@ -1,6 +1,5 @@
 import highlight from './highlight.mjs';
 import replaceLinkPlugin from './markdown-it-replace-link.mjs';
-// @ts-expect-error missing types
 import { full as emojiPlugin } from 'markdown-it-emoji';
 import anchorPlugin from 'markdown-it-anchor';
 import containerPlugin from 'markdown-it-container';

@@ -1,12 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-const dirname = path.dirname(
-	fileURLToPath(
-		// @ts-expect-error -- Cannot change `module` option
-		import.meta.url
-	)
-);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** Generate SvelteKit routes files */
 export default function generateRoutes(): void {
