@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
-// eslint-disable-next-line no-undef -- There seems to be a package that uses `self`.
 if (typeof self === 'undefined') {
 	globalThis.self = globalThis;
 }

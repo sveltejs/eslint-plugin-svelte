@@ -11,15 +11,10 @@ const config = [
 			'coverage/',
 			'lib/',
 			'node_modules/',
-			'!.vscode/',
-			'!.github/',
-			'!.devcontainer/',
-			'tests/fixtures/**',
 			'build/',
 			'!.*.js',
 			'src/rule-types.ts',
-			// JSONSchema bug?
-			'.devcontainer/devcontainer.json'
+			'tests'
 		]
 	},
 	...myPlugin.config({
@@ -86,12 +81,6 @@ const config = [
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'parserServices', message: 'Use src/utils/compat.ts' }
 			]
-		}
-	},
-	{
-		files: ['docs-svelte-kit/**/*.svelte'],
-		languageOptions: {
-			parserOptions: { project: null }
 		}
 	},
 	...tseslint.config({

@@ -18,11 +18,16 @@ jobs:
       - uses: actions/setup-node@v4
       - name: Install Packages
         run: pnpm install
-      - name: Lint
+      - name: Lint eslint-plugin-svelte
         run: |
           pnpm run build
           pnpm run lint
         working-directory: ${{ env.project_root_path }}
+      - name: Lint docs-svelte-kit
+        run: |
+          pnpm run build
+          pnpm run lint
+        working-directory: ./docs-svelte-kit
       - name: Type Coverage
         run: pnpm run typecov
         working-directory: ${{ env.project_root_path }}

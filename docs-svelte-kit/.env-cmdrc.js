@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
 	sveltekit: {
 		NODE_OPTIONS: `--import ./svelte-kit-import.mjs ${
