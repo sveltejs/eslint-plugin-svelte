@@ -67,14 +67,16 @@ jobs:
       - name: Build eslint-plugin-svelte
         run: pnpm build
         working-directory: ${{ env.project_root_path }}
+      # Hack: Install `eslint-plugin-svelte` is necessary for `packages/eslint-plugin-svelte/tests/src/configs` tests.
+      - name: Install eslint-plugin-svelte
+        run: pnpm install -D eslint-plugin-svelte
+        working-directory: ${{ env.project_root_path }}
       - name: Install ESLint ${{ matrix.eslint }}
         if: matrix.eslint != 9
-        # Hack: Install `eslint-plugin-svelte` is necessary for `packages/eslint-plugin-svelte/tests/src/configs` tests.
-        run: pnpm install -D eslint@${{ matrix.eslint }} eslint-plugin-svelte
-        working-directory: ${{ env.project_root_path }}
+        run: pnpm install -D -w eslint@${{ matrix.eslint }}
 
       - name: Test
-        run: pnpm run test
+        run: pnpm test
         working-directory: ${{ env.project_root_path }}
 
   test-for-svelte-v4:
@@ -108,9 +110,8 @@ jobs:
         working-directory: ${{ env.project_root_path }}
       - name: Install ESLint ${{ matrix.eslint }}
         run: |
-          pnpm install -D eslint@${{ matrix.eslint }}
+          pnpm install -D -w eslint@${{ matrix.eslint }}
           rm -rf node_modules
-        working-directory: ${{ env.project_root_path }}
       - name: Install Packages
         run: pnpm install
       - name: Test
@@ -123,7 +124,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16]
+        node: [14]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -137,8 +138,11 @@ jobs:
         run: |
           cd docs-svelte-kit
           pnpm rm @sveltejs/kit
-          cd ../packages/eslint-plugin-svelte
-          pnpm install -D svelte@3 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
+          cd ..
+          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
+          cd packages/eslint-plugin-svelte
+          pnpm install -D svelte@3
+          cd ../..
           rm -rf packages/eslint-plugin-svelte/node_modules
           rm -rf docs-svelte-kit/node_modules
           rm -rf node_modules
@@ -165,9 +169,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install typescript-eslint v5
         run: |
-          pnpm install -D @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
+          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
           rm -rf node_modules
-        working-directory: ${{ env.project_root_path }}
       - name: Install Packages
         run: pnpm install
       - name: Test
