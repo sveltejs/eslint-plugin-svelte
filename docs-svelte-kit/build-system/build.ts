@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-build(path.join(dirname, '../../node_modules/assert'), path.join(dirname, '../shim/assert.mjs'));
+build(path.join(dirname, '../node_modules/assert'), path.join(dirname, '../shim/assert.mjs'));
 
 /** build */
 function build(input: string, out: string, injects: string[] = []) {

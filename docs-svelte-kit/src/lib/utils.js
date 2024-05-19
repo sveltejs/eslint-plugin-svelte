@@ -1,4 +1,4 @@
-import { rules } from '../../../src/utils/rules.ts';
+import { rules } from '../../../packages/eslint-plugin-svelte/src/utils/rules.ts';
 import { readable, writable } from 'svelte/store';
 import { page } from '$app/stores';
 import { base as baseUrl } from '$app/paths';

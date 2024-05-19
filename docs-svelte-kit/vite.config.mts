@@ -3,10 +3,10 @@ import path from 'path';
 // @ts-expect-error -- Missing types
 import svelteMd from 'vite-plugin-svelte-md';
 import eslint4b, { requireESLintUseAtYourOwnRisk4b } from 'vite-plugin-eslint4b';
-import svelteMdOption from './docs-svelte-kit/tools/vite-plugin-svelte-md-option.mjs';
+import svelteMdOption from './tools/vite-plugin-svelte-md-option.mjs';
 
-import './docs-svelte-kit/build-system/build.mts';
-import generateRoutes from './docs-svelte-kit/tools/generate-routes.mjs';
+import './build-system/build.ts';
+import generateRoutes from './tools/generate-routes.mjs';
 import type { UserConfig } from 'vite';
 import { fileURLToPath } from 'url';
 
@@ -20,7 +20,7 @@ const config: UserConfig = {
 		svelteMd(
 			svelteMdOption({
 				baseUrl: '/eslint-plugin-svelte',
-				root: path.join(dirname, './docs')
+				root: path.join(dirname, '../docs')
 			})
 		),
 		sveltekit(),
@@ -32,15 +32,15 @@ const config: UserConfig = {
 	},
 	resolve: {
 		alias: {
-			assert: path.join(dirname, './docs-svelte-kit/shim/assert.mjs'),
-			'postcss-load-config': path.join(dirname, './docs-svelte-kit/shim/postcss-load-config.mjs'),
-			'source-map-js': path.join(dirname, './docs-svelte-kit/shim/source-map-js.mjs'),
-			module: path.join(dirname, './docs-svelte-kit/shim/module.mjs'),
-			url: path.join(dirname, './docs-svelte-kit/shim/url.mjs'),
-			os: path.join(dirname, './docs-svelte-kit/shim/os.mjs'),
-			fs: path.join(dirname, './docs-svelte-kit/shim/fs.mjs'),
-			globby: path.join(dirname, './docs-svelte-kit/shim/globby.mjs'),
-			picocolors: path.join(dirname, './docs-svelte-kit/shim/picocolors.mjs'),
+			assert: path.join(dirname, './shim/assert.mjs'),
+			'postcss-load-config': path.join(dirname, './shim/postcss-load-config.mjs'),
+			'source-map-js': path.join(dirname, './shim/source-map-js.mjs'),
+			module: path.join(dirname, './shim/module.mjs'),
+			url: path.join(dirname, './shim/url.mjs'),
+			os: path.join(dirname, './shim/os.mjs'),
+			fs: path.join(dirname, './shim/fs.mjs'),
+			globby: path.join(dirname, './shim/globby.mjs'),
+			picocolors: path.join(dirname, './shim/picocolors.mjs'),
 			tslib: path.join(dirname, './node_modules/tslib/tslib.es6.js'),
 
 			// Alias to CJS

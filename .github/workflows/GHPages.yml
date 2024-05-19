@@ -31,15 +31,16 @@ jobs:
         run: |
           pnpm install
           pnpm run update
-          pnpm run build
+          pnpm build
           export NODE_OPTIONS="--max-old-space-size=8192"
-          pnpm run docs:build
+          cd docs-svelte-kit
+          pnpm build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/eslint-plugin-svelte
+          path: ./docs-svelte-kit/build/eslint-plugin-svelte
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

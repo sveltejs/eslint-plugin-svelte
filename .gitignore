@@ -105,8 +105,8 @@ dist
 packages/eslint-plugin-svelte/lib
 packages/eslint-plugin-svelte/.type-coverage
 
-/.svelte-kit
-/build
+docs-svelte-kit/.svelte-kit
+docs-svelte-kit/build
 /svelte.config-dist.js
 /docs-svelte-kit/shim/eslint.mjs
 /docs-svelte-kit/shim/assert.mjs

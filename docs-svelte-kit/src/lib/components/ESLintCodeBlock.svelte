@@ -3,7 +3,7 @@
 	import ESLintEditor from '../eslint/ESLintEditor.svelte';
 	import { preprocess, postprocess, createLinterConfig } from '../eslint/scripts/linter.js';
 	import { loadTsParser } from '../eslint/scripts/ts-parser.js';
-	import { loadModulesForBrowser } from '../../../../src/utils/load-module';
+	import { loadModulesForBrowser } from '../../../../packages/eslint-plugin-svelte/src/utils/load-module.ts';
 	import { Linter } from 'eslint';
 	import globals from 'globals';
 

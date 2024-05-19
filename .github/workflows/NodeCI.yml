@@ -127,17 +127,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name:
-          Install svelte@3
-          # Remove @sveltejs/kit because postinstall fails on old node.
+      - name: Install svelte@3
+        # Remove @sveltejs/kit because postinstall fails on old node.
         run: |
           cd docs-svelte-kit
           pnpm rm @sveltejs/kit
-          cd ..
+          cd ../packages/eslint-plugin-svelte
           pnpm install -D svelte@3 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
+          rm -rf packages/eslint-plugin-svelte/node_modules
+          rm -rf docs-svelte-kit/node_modules
           rm -rf node_modules
-          rm -rf ../../node_modules
-        working-directory: ${{ env.project_root_path }}
       - name: Install Packages
         run: pnpm install
       - name: Test

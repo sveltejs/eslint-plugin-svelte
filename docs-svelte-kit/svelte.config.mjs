@@ -39,14 +39,14 @@ const config = {
 			assets: outDir
 		}),
 		files: {
-			routes: path.join(dirname, './docs-svelte-kit/src/routes'),
-			appTemplate: path.join(dirname, './docs-svelte-kit/src/app.html'),
+			routes: path.join(dirname, './src/routes'),
+			appTemplate: path.join(dirname, './src/app.html'),
 			hooks: {
-				server: path.join(dirname, './docs-svelte-kit/src/hooks/server'),
-				client: path.join(dirname, './docs-svelte-kit/src/hooks/client')
+				server: path.join(dirname, './src/hooks/server'),
+				client: path.join(dirname, './src/hooks/client')
 			},
-			lib: path.join(dirname, './docs-svelte-kit/src/lib'),
-			assets: path.join(dirname, './docs-svelte-kit/statics')
+			lib: path.join(dirname, './src/lib'),
+			assets: path.join(dirname, './statics')
 		}
 	}
 };

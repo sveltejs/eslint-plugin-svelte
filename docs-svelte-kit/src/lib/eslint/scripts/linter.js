@@ -1,8 +1,11 @@
-import { rules as pluginRules } from '../../../../../src/utils/rules.ts';
+import { rules as pluginRules } from '../../../../../packages/eslint-plugin-svelte/src/utils/rules.ts';
 import { builtinRules } from 'eslint/use-at-your-own-risk';
 import * as svelteEslintParser from 'svelte-eslint-parser';
 
-export { preprocess, postprocess } from '../../../../../src/processor/index.ts';
+export {
+	preprocess,
+	postprocess
+} from '../../../../../packages/eslint-plugin-svelte/src/processor/index.ts';
 
 export const categories = [
 	{
