@@ -2,24 +2,10 @@
   "name": "docs",
   "private": true,
   "scripts": {
-    "build": "pnpm run svelte-kit build",
+    "build": "cd ../packages/eslint-plugin-svelte && pnpm build && cd ../../docs-svelte-kit && pnpm run svelte-kit build",
     "preview": "pnpm run svelte-kit preview",
     "dev": "pnpm run svelte-kit dev",
     "svelte-kit": "env-cmd -e sveltekit node node_modules/vite/bin/vite.js"
-  },
-  "dependencies": {
-    "@eslint-community/eslint-utils": "^4.4.0",
-    "@jridgewell/sourcemap-codec": "^1.4.15",
-    "debug": "^4.3.4",
-    "eslint-compat-utils": "^0.5.0",
-    "esutils": "^2.0.3",
-    "known-css-properties": "^0.31.0",
-    "postcss": "^8.4.38",
-    "postcss-load-config": "^3.1.4",
-    "postcss-safe-parser": "^6.0.0",
-    "postcss-selector-parser": "^6.0.16",
-    "semver": "^7.6.0",
-    "svelte-eslint-parser": ">=0.36.0 <1.0.0"
   },
   "devDependencies": {
     "@1stg/stylelint-config": "^6.0.0",
@@ -47,11 +33,9 @@
     "@types/markdown-it": "^14.0.1",
     "@types/markdown-it-container": "^2.0.10",
     "@types/markdown-it-emoji": "^3.0.0",
-    "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.7",
     "@types/postcss-safe-parser": "^5.0.4",
     "@types/prismjs": "^1.26.3",
-    "@types/semver": "^7.5.8",
     "@types/stylus": "^0.48.42",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
@@ -106,11 +90,9 @@
     "svelte": "^5.0.0-next.112",
     "svelte-adapter-ghpages": "0.2.2",
     "tslib": "^2.6.2",
-    "typescript-eslint": "^7.7.0",
     "util": "^0.12.5",
     "vite": "^5.2.9",
     "vite-plugin-eslint4b": "^0.4.0",
-    "vite-plugin-svelte-md": "^0.1.7",
-    "yaml": "^2.4.1"
+    "vite-plugin-svelte-md": "^0.1.7"
   }
 }
