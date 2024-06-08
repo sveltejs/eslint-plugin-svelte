@@ -1,6 +1,5 @@
 import ghpagesAdapter from 'svelte-adapter-ghpages';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 if (typeof self === 'undefined') {
