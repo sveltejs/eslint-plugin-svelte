@@ -4,7 +4,7 @@
   column: 3
   suggestions: null
 - message: A form label must be associated with a
-    control.(a11y_label_has_associated_control)
+    control(a11y_label_has_associated_control)
   line: 6
   column: 3
   suggestions: null
