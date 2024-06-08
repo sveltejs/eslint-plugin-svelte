@@ -1,9 +1,6 @@
 name: GHPages test
 
 on:
-  workflow_dispatch: null
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
