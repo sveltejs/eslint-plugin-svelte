@@ -43,7 +43,7 @@
     "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.1",
     "globals": "^15.2.0",
-    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-anchor": "^9.0.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-emoji": "^3.0.0",
     "pako": "^2.1.0",
