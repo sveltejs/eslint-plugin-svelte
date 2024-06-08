@@ -1,14 +1,14 @@
 {
   "name": "docs",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "lint": "eslint --cache .",
     "lint-fix": "eslint --cache . --fix",
     "build": "cd ../packages/eslint-plugin-svelte && pnpm build && cd ../../docs-svelte-kit && pnpm run svelte-kit build",
     "preview": "pnpm run svelte-kit preview",
     "dev": "pnpm run svelte-kit dev",
-    "svelte-kit": "env-cmd -e sveltekit node node_modules/vite/bin/vite.js"
+    "svelte-kit": "vite"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
@@ -55,8 +55,9 @@
     "stylus": "^0.63.0",
     "svelte": "^5.0.0-next.112",
     "svelte-adapter-ghpages": "0.2.2",
+    "util": "^0.12.5",
     "vite": "^5.2.11",
-    "vite-plugin-eslint4b": "^0.4.1",
+    "vite-plugin-eslint4b": "^0.4.2",
     "vite-plugin-svelte-md": "^0.1.7"
   }
 }

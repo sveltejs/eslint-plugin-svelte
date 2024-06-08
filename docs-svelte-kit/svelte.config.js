@@ -9,16 +9,6 @@ if (typeof self === 'undefined') {
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// This project can't be ESM yet, so hack it to get svelte-kit to work.
-// A hack that treats files in the `.svelte-kit` directory as ESM.
-if (!fs.existsSync(path.join(dirname, '.svelte-kit'))) {
-	fs.mkdirSync(path.join(dirname, '.svelte-kit'));
-}
-fs.writeFileSync(
-	path.join(dirname, '.svelte-kit/package.json'),
-	JSON.stringify({ type: 'module' })
-);
-
 const outDir = path.join(dirname, 'build/eslint-plugin-svelte');
 
 /** @type {import('@sveltejs/kit').Config} */
