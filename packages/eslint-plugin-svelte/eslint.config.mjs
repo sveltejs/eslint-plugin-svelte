@@ -123,12 +123,18 @@ const config = [
 			'yml/no-tab-indent': 'off'
 		}
 	},
-
 	{
 		files: ['tests/**'],
 		rules: {
 			'@typescript-eslint/no-misused-promises': 'off',
 			'@typescript-eslint/no-require-imports': 'off'
+		}
+	},
+	{
+		files: ['eslint.config.mjs'],
+		rules: {
+			// Some ESLint plugins specify in repository root's package.json, so this rule should be disabled.
+			'n/no-extraneous-import': 'off'
 		}
 	}
 ];
