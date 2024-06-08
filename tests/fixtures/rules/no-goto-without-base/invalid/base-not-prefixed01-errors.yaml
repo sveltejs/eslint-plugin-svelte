@@ -1,8 +1,0 @@
-- message: Found a goto() call with a url that isn't prefixed with the base path.
-  line: 6
-  column: 7
-  suggestions: null
-- message: Found a goto() call with a url that isn't prefixed with the base path.
-  line: 7
-  column: 7
-  suggestions: null

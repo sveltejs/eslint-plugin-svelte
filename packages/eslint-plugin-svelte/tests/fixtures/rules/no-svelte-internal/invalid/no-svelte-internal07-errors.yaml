@@ -1,0 +1,4 @@
+- message: Using svelte/internal is prohibited. This will be removed in Svelte 6.
+  line: 2
+  column: 2
+  suggestions: null

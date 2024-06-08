@@ -1,0 +1,8 @@
+- message: Assignment to property of reactive value 'reactiveValue'.
+  line: 6
+  column: 3
+  suggestions: null
+- message: Assignment to property of reactive value 'reactiveValue'.
+  line: 7
+  column: 3
+  suggestions: null

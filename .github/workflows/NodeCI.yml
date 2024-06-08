@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  project_root_path: ./packages/eslint-plugin-svelte
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -15,12 +18,20 @@ jobs:
       - uses: actions/setup-node@v4
       - name: Install Packages
         run: pnpm install
-      - name: Lint
-        run: |+
+      - name: Lint eslint-plugin-svelte
+        run: |
           pnpm run build
           pnpm run lint
+        working-directory: ${{ env.project_root_path }}
+      - name: Lint docs-svelte-kit
+        run: |
+          pnpm run build
+          pnpm run lint
+        working-directory: ./docs-svelte-kit
       - name: Type Coverage
         run: pnpm run typecov
+        working-directory: ${{ env.project_root_path }}
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -30,9 +41,11 @@ jobs:
       - name: Install Packages
         run: pnpm install
       - name: Build
-        run: |+
+        run: |
           pnpm run update
           pnpm run build
+        working-directory: ${{ env.project_root_path }}
+
   test:
     name: 'Test for ESLint ${{ matrix.eslint }} on Node.js: ${{ matrix.node }} OS: ${{matrix.os}}'
     runs-on: ${{ matrix.os }}
@@ -49,15 +62,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Install ESLint ${{ matrix.eslint }}
-        run: |+
-          pnpm install -D eslint@${{ matrix.eslint }}
-          rm -rf node_modules
-        if: matrix.eslint != 9
       - name: Install Packages
         run: pnpm install
+      - name: Build eslint-plugin-svelte
+        run: pnpm build
+        working-directory: ${{ env.project_root_path }}
+      # Hack: Install `eslint-plugin-svelte` is necessary for `packages/eslint-plugin-svelte/tests/src/configs` tests.
+      - name: Install eslint-plugin-svelte
+        run: pnpm install -D eslint-plugin-svelte
+        working-directory: ${{ env.project_root_path }}
+      - name: Install ESLint ${{ matrix.eslint }}
+        if: matrix.eslint != 9
+        run: pnpm install -D -w eslint@${{ matrix.eslint }}
+
       - name: Test
-        run: pnpm run test
+        run: pnpm test
+        working-directory: ${{ env.project_root_path }}
+
   test-for-svelte-v4:
     name: 'Test for Svelte v4 on Node.js: ${{ matrix.node }} OS: ${{matrix.os}}'
     runs-on: ${{ matrix.os }}
@@ -83,17 +104,20 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@4
-        run: |+
+        run: |
           pnpm install -D svelte@4
           rm -rf node_modules
+        working-directory: ${{ env.project_root_path }}
       - name: Install ESLint ${{ matrix.eslint }}
-        run: |+
-          pnpm install -D eslint@${{ matrix.eslint }}
+        run: |
+          pnpm install -D -w eslint@${{ matrix.eslint }}
           rm -rf node_modules
       - name: Install Packages
         run: pnpm install
       - name: Test
         run: pnpm run test
+        working-directory: ${{ env.project_root_path }}
+
   test-for-svelte-v3:
     name: Test for Svelte v3
     runs-on: ${{ matrix.os }}
@@ -109,18 +133,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Remove @sveltejs/kit # Remove @sveltejs/kit because postinstall fails on old node.
-        run: |+
-          pnpm rm @sveltejs/kit
-          rm -rf node_modules
       - name: Install svelte@3
-        run: |+
-          pnpm install -D svelte@3 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
+        # Remove @sveltejs/kit because postinstall fails on old node.
+        run: |
+          cd docs-svelte-kit
+          pnpm rm @sveltejs/kit
+          cd ..
+          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
+          cd packages/eslint-plugin-svelte
+          pnpm install -D svelte@3
+          cd ../..
+          rm -rf packages/eslint-plugin-svelte/node_modules
+          rm -rf docs-svelte-kit/node_modules
           rm -rf node_modules
       - name: Install Packages
         run: pnpm install
       - name: Test
         run: pnpm run test
+        working-directory: ${{ env.project_root_path }}
+
   test-for-typescript-eslint-v5:
     name: Test for typescript-eslint v5
     runs-on: ${{ matrix.os }}
@@ -137,13 +168,15 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install typescript-eslint v5
-        run: |+
-          pnpm install -D @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
+        run: |
+          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
           rm -rf node_modules
       - name: Install Packages
         run: pnpm install
       - name: Test
         run: pnpm run test
+        working-directory: ${{ env.project_root_path }}
+
   update-resources:
     runs-on: ubuntu-latest
     steps:
@@ -156,6 +189,7 @@ jobs:
         run: pnpm install
       - name: Update resources
         run: pnpm run update
+        working-directory: ${{ env.project_root_path }}
       - name: Check changes
         run: |
           git add --all && \
