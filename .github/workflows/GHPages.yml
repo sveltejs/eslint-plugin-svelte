@@ -31,14 +31,14 @@ jobs:
         run: pnpm install
       - name: Build eslint-plugin-svelte
         run: |
-          cd packages/eslint-plugin-svelte
           pnpm run update
           pnpm build
+        working-directory: ./packages/eslint-plugin-svelte
       - name: Build docs-svelte-kit
         run: |
-          cd ./docs-svelte-kit
           export NODE_OPTIONS="--max-old-space-size=8192"
           pnpm build
+        working-directory: ./docs-svelte-kit
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
