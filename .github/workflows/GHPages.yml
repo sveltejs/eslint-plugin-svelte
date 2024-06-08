@@ -30,10 +30,11 @@ jobs:
       - name: Install And Build
         run: |
           pnpm install
+          cd packages/eslint-plugin-svelte
           pnpm run update
           pnpm build
+          cd ../../docs-svelte-kit
           export NODE_OPTIONS="--max-old-space-size=8192"
-          cd docs-svelte-kit
           pnpm build
       - name: Setup Pages
         uses: actions/configure-pages@v5
