@@ -45,6 +45,7 @@ const STYLE_TRANSFORMS: Record<string, typeof transformWithPostCSS | undefined> 
 
 const CSS_WARN_CODES = new Set([
 	'css-unused-selector',
+	'css_unused_selector',
 	'css-invalid-global',
 	'css-invalid-global-selector'
 ]);
@@ -481,7 +482,9 @@ function processIgnore(
 		while (node) {
 			for (const comment of extractLeadingComments(context, node).reverse()) {
 				const ignoreItem = ignoreComments.find(
-					(item) => item.token === comment && item.code === warning.code
+					(item) =>
+						item.token === comment &&
+						(item.code === warning.code || item.codeForV5 === warning.code)
 				);
 				if (ignoreItem) {
 					unusedIgnores.delete(ignoreItem);
@@ -497,7 +500,9 @@ function processIgnore(
 	for (const node of stripStyleElements) {
 		for (const comment of extractLeadingComments(context, node).reverse()) {
 			const ignoreItem = ignoreComments.find(
-				(item) => item.token === comment && CSS_WARN_CODES.has(item.code)
+				(item) =>
+					item.token === comment &&
+					(CSS_WARN_CODES.has(item.code) || CSS_WARN_CODES.has(item.codeForV5))
 			);
 			if (ignoreItem) {
 				unusedIgnores.delete(ignoreItem);
