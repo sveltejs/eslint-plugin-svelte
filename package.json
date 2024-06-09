@@ -8,8 +8,8 @@
   "scripts": {
     "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../..",
     "release": "changeset publish",
-    "version": "env-cmd -e version cd packages/eslint-plugin-svelte && pnpm run update && cd ../..",
-    "version:ci": "env-cmd -e version-ci cd packages/eslint-plugin-svelte && pnpm run update && cd ../.. && changeset version"
+    "version": "cd packages/eslint-plugin-svelte && env-cmd -e version pnpm run update && cd ../..",
+    "version:ci": "cd packages/eslint-plugin-svelte && env-cmd -e version-ci pnpm run update && cd ../.. && changeset version"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
