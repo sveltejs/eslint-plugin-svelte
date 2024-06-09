@@ -4,6 +4,22 @@ import { getSourceCode } from '../../utils/compat';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m;
 
+/**
+ * Map of legacy code -> new code
+ * See https://github.com/sveltejs/svelte/blob/c9202a889612df3c2fcb369096a5573668be99d6/packages/svelte/src/compiler/utils/extract_svelte_ignore.js#L6
+ */
+const V5_REPLACEMENTS: Record<string, string | undefined> = {
+	'non-top-level-reactive-declaration': 'reactive_declaration_invalid_placement',
+	'module-script-reactive-declaration': 'reactive_declaration_module_script',
+	'empty-block': 'block_empty',
+	'avoid-is': 'attribute_avoid_is',
+	'invalid-html-attribute': 'attribute_invalid_property_name',
+	'a11y-structure': 'a11y_figcaption_parent',
+	'illegal-attribute-character': 'attribute_illegal_colon',
+	'invalid-rest-eachblock-binding': 'bind_invalid_each_rest',
+	'unused-export-let': 'export_let_unused'
+};
+
 export type IgnoreItemWithoutCode = {
 	range: [number, number];
 	code: null;
@@ -12,6 +28,7 @@ export type IgnoreItemWithoutCode = {
 export type IgnoreItem = {
 	range: [number, number];
 	code: string;
+	codeForV5: string; // Code targeting Svelte v5.
 	token: AST.Token | AST.Comment;
 };
 
@@ -75,6 +92,7 @@ function extractSvelteIgnore(
 		if (trimmed) {
 			results.push({
 				code: trimmed,
+				codeForV5: V5_REPLACEMENTS[trimmed] || trimmed.replace(/-/gu, '_'),
 				range: [start, end],
 				token
 			});
