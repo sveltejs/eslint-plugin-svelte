@@ -6,7 +6,7 @@
   "funding": "https://github.com/sponsors/ota-meshi",
   "packageManager": "pnpm@7.33.7",
   "scripts": {
-    "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../..",
+    "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../.. && cp README.md packages/eslint-plugin-svelte",
     "release": "changeset publish",
     "version": "cd packages/eslint-plugin-svelte && env-cmd -e version pnpm run update && cd ../..",
     "version:ci": "cd packages/eslint-plugin-svelte && env-cmd -e version-ci pnpm run update && cd ../.. && changeset version"
