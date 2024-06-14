@@ -1,7 +1,6 @@
 <!-- prettier-ignore -->
 <script lang="ts">
   declare function
-    *
     foo
     (
       arg1: string,
