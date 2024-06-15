@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.39.4
+
+### Patch Changes
+
+- [#786](https://github.com/sveltejs/eslint-plugin-svelte/pull/786) [`e7e25d6`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e7e25d62db5050e6d16e16518a4afe67499d8efc) Thanks [@baseballyama](https://github.com/baseballyama)! - deps: update `svelte-eslint-parser` to support Svelte `5.0.0-next.155`
+
 ## 2.39.3
 
 ### Patch Changes
