@@ -6,7 +6,7 @@ export = {
 	extends: [baseExtend],
 	rules: Object.fromEntries(
 		rules
-			.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error'])
+			.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error' as const])
 			.filter(
 				([ruleName]) =>
 					![
