@@ -1,9 +1,10 @@
 import type { JSONSchema4 } from 'json-schema';
 import type { Linter, Rule, SourceCode as ESLintSourceCode } from 'eslint';
-import type { AST } from 'svelte-eslint-parser';
+import type { AST, StyleContext, SvelteConfig } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { ScopeManager, Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node';
+import type * as TS from 'typescript';
 
 export type { ASTNode, ASTNodeWithParent, ASTNodeListener };
 export interface RuleListener extends ASTNodeListener {
@@ -201,7 +202,29 @@ export interface SourceCode {
 	ast: AST.SvelteProgram;
 	lines: string[];
 	hasBOM: boolean;
-	parserServices: ESLintSourceCode.ParserServices;
+	parserServices: {
+		isSvelte?: boolean;
+		isSvelteScript?: boolean;
+		getSvelteHtmlAst?: () => unknown;
+		getStyleContext?: () => StyleContext;
+		svelteParseContext?: {
+			/**
+			 * Whether to use Runes mode.
+			 * May be `true` if the user is using Svelte v5.
+			 * Resolved from `svelte.config.js` or `parserOptions`, but may be overridden by `<svelte:options>`.
+			 */
+			runes?: boolean;
+			/** The version of "svelte/compiler". */
+			compilerVersion?: string;
+			/** The result of static analysis of `svelte.config.js`. */
+			svelteConfig?: SvelteConfig | null;
+		};
+		program?: TS.Program;
+		esTreeNodeToTSNodeMap?: ReadonlyMap<unknown, TS.Node>;
+		tsNodeToESTreeNodeMap?: ReadonlyMap<TS.Node, ASTNode>;
+		hasFullTypeInformation?: boolean; // Old typescript-eslint
+		[key: string]: unknown;
+	};
 	scopeManager: ScopeManager;
 	visitorKeys: ESLintSourceCode.VisitorKeys;
 

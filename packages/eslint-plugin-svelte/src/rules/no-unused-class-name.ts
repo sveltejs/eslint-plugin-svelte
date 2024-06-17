@@ -56,12 +56,12 @@ export default createRule('no-unused-class-name', {
 				}
 			},
 			'Program:exit'() {
-				const styleContext = sourceCode.parserServices.getStyleContext();
-				if (['parse-error', 'unknown-lang'].includes(styleContext.status)) {
+				const styleContext = sourceCode.parserServices.getStyleContext!();
+				if (styleContext.status === 'parse-error' || styleContext.status === 'unknown-lang') {
 					return;
 				}
 				const classesUsedInStyle =
-					styleContext.sourceAst != null ? findClassesInPostCSSNode(styleContext.sourceAst) : [];
+					styleContext.status === 'success' ? findClassesInPostCSSNode(styleContext.sourceAst) : [];
 				for (const className in classesUsedInTemplate) {
 					if (!allowedClassNames.includes(className) && !classesUsedInStyle.includes(className)) {
 						context.report({

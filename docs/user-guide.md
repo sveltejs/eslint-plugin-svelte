@@ -180,6 +180,36 @@ for some context.
 
 :::
 
+#### Specify `svelte.config.js`
+
+If you are using `eslint.config.js`, we recommend that you import and specify `svelte.config.js`.
+By specifying it, some rules of `eslint-plugin-svelte` will read it and try to behave well for you by default.
+Some Svelte configurations will be statically loaded from `svelte.config.js` even if you don't specify it, but you need to specify it to make it work better.
+
+Example **eslint.config.js**:
+
+```js
+import eslintPluginSvelte from 'eslint-plugin-svelte';
+import svelteConfig from './svelte.config.js';
+export default [
+  ...eslintPluginSvelte.configs['flat/recommended'],
+  {
+    files: [
+      '**/*.svelte',
+      '*.svelte'
+      // Add more files if you need.
+      // '**/*.svelte.ts', '*.svelte.ts', '**/*.svelte.js', '*.svelte.js',
+    ],
+    languageOptions: {
+      parserOptions: {
+        // Specify the `svelte.config.js`.
+        svelteConfig
+      }
+    }
+  }
+];
+```
+
 #### settings.svelte
 
 You can change the behavior of this plugin with some settings.
@@ -224,6 +254,12 @@ Specifies options for Svelte compile. Effects rules that use Svelte compile. The
   - `configFilePath` ... Specifies the path of the directory containing the PostCSS configuration.
 
 #### settings.svelte.kit
+
+::: warning
+
+Even if you don't specify `settings.svelte.kit`, the rules will try to load information from `svelte.config.js`, so specify `settings.svelte.kit` if the default doesn't work.
+
+:::
 
 If you use SvelteKit with not default configuration, you need to set below configurations.
 The schema is subset of SvelteKit's configuration.
