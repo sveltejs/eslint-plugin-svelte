@@ -36,6 +36,7 @@ export function transform(
 				module: ts.ModuleKind.ESNext,
 				importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
 				preserveValueImports: true,
+				verbatimModuleSyntax: true,
 				sourceMap: true
 			}
 		});
