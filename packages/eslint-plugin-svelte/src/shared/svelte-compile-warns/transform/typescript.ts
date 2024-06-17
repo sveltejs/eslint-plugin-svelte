@@ -35,7 +35,8 @@ export function transform(
 					ts.ScriptTarget.ESNext,
 				module: ts.ModuleKind.ESNext,
 				importsNotUsedAsValues: ts.ImportsNotUsedAsValues.Preserve,
-				sourceMap: true
+				sourceMap: true,
+				preserveValueImports: true
 			}
 		});
 
