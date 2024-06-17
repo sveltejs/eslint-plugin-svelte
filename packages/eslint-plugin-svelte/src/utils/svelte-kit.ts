@@ -6,7 +6,7 @@ import type { RuleContext } from '../types';
 import fs from 'fs';
 import path from 'path';
 import { getPackageJson } from './get-package-json';
-import { getFilename } from './compat';
+import { getFilename, getSourceCode } from './compat';
 
 const isRunOnBrowser = !fs.readFileSync;
 
@@ -19,7 +19,11 @@ export function isKitPageComponent(context: RuleContext): boolean {
 	// Hack: if it runs on browser, it regards as SvelteKit project.
 	if (isRunOnBrowser) return true;
 	if (!hasSvelteKit(getFilename(context))) return false;
-	const routes = context.settings?.svelte?.kit?.files?.routes?.replace(/^\//, '') ?? 'src/routes';
+	const routes =
+		(
+			context.settings?.svelte?.kit?.files?.routes ??
+			getSourceCode(context).parserServices.svelteParseContext?.svelteConfig?.kit?.files?.routes
+		)?.replace(/^\//, '') ?? 'src/routes';
 	const filePath = getFilename(context);
 	const projectRootDir = getProjectRootDir(getFilename(context)) ?? '';
 	const fileName = path.basename(filePath);
