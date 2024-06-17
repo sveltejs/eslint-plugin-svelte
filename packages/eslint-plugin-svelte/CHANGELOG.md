@@ -1,5 +1,23 @@
 # eslint-plugin-svelte
 
+## 2.40.0
+
+### Minor Changes
+
+- [#792](https://github.com/sveltejs/eslint-plugin-svelte/pull/792) [`cb722bc`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cb722bc9d455f4caeaa4dfdf5771dc95f06b26b8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte-eslint-parser to 0.39
+
+- [#796](https://github.com/sveltejs/eslint-plugin-svelte/pull/796) [`5e4d264`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5e4d26495a377860f7db2ba042993fd686d41a8f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve `svelte/valid-compile` to use `svelte.config.js`'s `onwarn` from the parser.
+
+- [#794](https://github.com/sveltejs/eslint-plugin-svelte/pull/794) [`7894f82`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7894f82263d114c948cfe46a041c43a93a5d9249) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve `svelte/valid-prop-names-in-kit-pages` to use `svelte.config.js` data from the parser.
+
+- [#794](https://github.com/sveltejs/eslint-plugin-svelte/pull/794) [`7894f82`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7894f82263d114c948cfe46a041c43a93a5d9249) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve `svelte/no-export-load-in-svelte-module-in-kit-pages` to use `svelte.config.js` data from the parser.
+
+### Patch Changes
+
+- [#795](https://github.com/sveltejs/eslint-plugin-svelte/pull/795) [`df947a7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/df947a7161fe97021da37f4fcde44fe9923c0a22) Thanks [@baseballyama](https://github.com/baseballyama)! - deps: update `svelte-eslint-parser` to 0.39.1 to set `svelteFeatures.runes` to `true` by default for Svelte 5
+
+- [#797](https://github.com/sveltejs/eslint-plugin-svelte/pull/797) [`f6d4e4c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f6d4e4c974924ef5da1a970d88f04b81a36e19b6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: `svelte/valid-compile` to use verbatimModuleSyntax to work with TS v5.5.
+
 ## 2.39.5
 
 ### Patch Changes
