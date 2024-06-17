@@ -289,12 +289,16 @@ function getConfig(ruleName: string, inputFile: string) {
 	const filename = inputFile.slice(inputFile.indexOf(ruleName));
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
-	let configFile: string = inputFile.replace(/input\.[a-z]+$/u, 'config.json');
-	if (!fs.existsSync(configFile)) {
-		configFile = path.join(path.dirname(inputFile), '_config.json');
-	}
-	if (fs.existsSync(configFile)) {
-		config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+	let configFile = [
+		inputFile.replace(/input\.[a-z]+$/u, 'config.json'),
+		path.join(path.dirname(inputFile), '_config.json'),
+		inputFile.replace(/input\.[a-z]+$/u, 'config.js'),
+		path.join(path.dirname(inputFile), '_config.js')
+	].find((f) => fs.existsSync(f));
+	if (configFile) {
+		config = configFile.endsWith('.js')
+			? require(configFile)
+			: JSON.parse(fs.readFileSync(configFile, 'utf8'));
 	}
 	const parser =
 		path.extname(filename) === '.svelte'

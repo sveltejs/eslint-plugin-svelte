@@ -1,5 +1,5 @@
 import { createRule } from '../utils';
-import type { Warning } from '../shared/svelte-compile-warns';
+import type { SvelteCompileWarnings, Warning } from '../shared/svelte-compile-warns';
 import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns';
 import { getSourceCode } from '../utils/compat';
 
@@ -23,9 +23,21 @@ export default createRule('valid-compile', {
 		type: 'problem'
 	},
 	create(context) {
-		if (!getSourceCode(context).parserServices.isSvelte) {
+		const sourceCode = getSourceCode(context);
+		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
+		const onwarn = sourceCode.parserServices.svelteParseContext?.svelteConfig?.onwarn;
+
+		const transform: (warning: Warning) => Warning | null = onwarn
+			? (warning) => {
+					if (!warning.code) return warning;
+					let result: Warning | null = null;
+					onwarn(warning, (reportWarn) => (result = reportWarn));
+					return result;
+				}
+			: (warning) => warning;
+
 		const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings);
 
 		const ignores = [
@@ -39,17 +51,21 @@ export default createRule('valid-compile', {
 		/**
 		 * report
 		 */
-		function report(warnings: Warning[]) {
+		function report({ warnings, kind }: SvelteCompileWarnings) {
 			for (const warn of warnings) {
 				if (warn.code && ignores.includes(warn.code)) {
 					continue;
 				}
+				const reportWarn = kind === 'warn' ? transform(warn) : warn;
+				if (!reportWarn) {
+					continue;
+				}
 				context.report({
 					loc: {
-						start: warn.start || warn.end || { line: 1, column: 0 },
-						end: warn.end || warn.start || { line: 1, column: 0 }
+						start: reportWarn.start || reportWarn.end || { line: 1, column: 0 },
+						end: reportWarn.end || reportWarn.start || { line: 1, column: 0 }
 					},
-					message: `${warn.message}${warn.code ? `(${warn.code})` : ''}`
+					message: `${reportWarn.message}${reportWarn.code ? `(${reportWarn.code})` : ''}`
 				});
 			}
 		}
@@ -60,7 +76,7 @@ export default createRule('valid-compile', {
 				if (ignoreWarnings && result.kind === 'warn') {
 					return;
 				}
-				report(result.warnings);
+				report(result);
 			}
 		};
 	}
