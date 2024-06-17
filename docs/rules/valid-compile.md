@@ -37,6 +37,45 @@ This rule uses Svelte compiler to check the source code.
 
 Note that we exclude reports for some checks, such as `missing-declaration`, and `dynamic-slot-name`, which you can check with different ESLint rules.
 
+### Using `svelte.config.js`
+
+If you want to suppress messages using [`onwarn` like `vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#onwarn), Use `eslint.config.js` and specify the information in `svelte.config.js` in your parser configuration.
+
+```js
+import svelteConfig from './svelte.config.js';
+export default [
+  // ...
+  {
+    files: ['**/*.svelte', '*.svelte'],
+    languageOptions: {
+      parserOptions: {
+        svelteConfig: svelteConfig
+      }
+    }
+  }
+];
+```
+
+See also [User Guide > Specify `svelte.config.js`](../user-guide.md#specify-svelte-config-js)
+
+#### onwarn
+
+This rule can use [`onwarn` like `vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#onwarn).
+
+Example:
+
+```js
+// svelte.config.js
+export default {
+  onwarn: (warning, handler) => {
+    if (warning.code === 'a11y-distracting-elements') return;
+    if (warning.code === 'a11y_distracting_elements') return; // for Svelte v5
+
+    handler(warning);
+  }
+};
+```
+
 ## :wrench: Options
 
 ```json

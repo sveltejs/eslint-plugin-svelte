@@ -1,5 +1,4 @@
 import type { AST } from 'svelte-eslint-parser';
-import type {} from 'svelte'; // FIXME: Workaround to get type information for "svelte/compiler"
 import * as compiler from 'svelte/compiler';
 import type { SourceMapMappings } from '@jridgewell/sourcemap-codec';
 import { decode } from '@jridgewell/sourcemap-codec';
@@ -60,16 +59,25 @@ export type Loc = {
 	start?: {
 		line: number;
 		column: number;
+		character: number;
 	};
 	end?: {
 		line: number;
 		column: number;
+		character: number;
 	};
 };
-export type Warning = {
-	code?: string;
-	message: string;
-} & Loc;
+export type Warning = (
+	| {
+			code: string;
+			message: string;
+	  }
+	| {
+			code?: undefined;
+			message: string;
+	  }
+) &
+	Loc;
 
 /**
  * Get svelte compile warnings
@@ -228,51 +236,24 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 			}
 		}
 
-		public remapLocs(points: {
-			start?: {
-				line: number;
-				column: number;
-			};
-			end?: {
-				line: number;
-				column: number;
-			};
-		}): {
-			start?: {
-				line: number;
-				column: number;
-			};
-			end?: {
-				line: number;
-				column: number;
-			};
-		} {
+		public remapLocs(points: Loc): Loc {
 			const mapIndexes = this.mapIndexes;
 			const locs = (this.locs = this.locs ?? new LinesAndColumns(this.code));
-			let start:
-				| {
-						line: number;
-						column: number;
-				  }
-				| undefined = undefined;
-			let end:
-				| {
-						line: number;
-						column: number;
-				  }
-				| undefined = undefined;
+			let start: Loc['start'] | undefined = undefined;
+			let end: Loc['end'] | undefined = undefined;
 			if (points.start) {
 				const index = locs.getIndexFromLoc(points.start);
 				const remapped = remapIndex(index);
 				if (remapped) {
-					start = sourceCode.getLocFromIndex(remapped);
+					start = { ...sourceCode.getLocFromIndex(remapped), character: remapped };
 				}
 			}
 			if (points.end) {
 				const index = locs.getIndexFromLoc(points.end);
 				const remapped = remapIndex(index - 1 /* include index */);
 				if (remapped) {
-					end = sourceCode.getLocFromIndex(remapped + 1 /* restore */);
+					const character = remapped + 1; /* restore */
+					end = { ...sourceCode.getLocFromIndex(character), character };
 				}
 			}
 

@@ -1,0 +1,4 @@
+- message: 'A11y: Avoid using autofocus(a11y-autofocus)'
+  line: 5
+  column: 12
+  suggestions: null

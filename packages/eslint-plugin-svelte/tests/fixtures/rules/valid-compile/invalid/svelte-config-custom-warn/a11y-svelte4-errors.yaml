@@ -1,0 +1,8 @@
+- message: 'A11y: <img> element should have an alt attribute(foo)'
+  line: 5
+  column: 1
+  suggestions: null
+- message: 'A11y: Avoid using autofocus(foo)'
+  line: 5
+  column: 12
+  suggestions: null
