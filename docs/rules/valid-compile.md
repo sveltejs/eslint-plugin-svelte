@@ -56,7 +56,7 @@ export default [
 ];
 ```
 
-See also [User Guide > Specify `svelte.config.js`](../user-guide.md#specify-svelteconfigjs)
+See also [User Guide > Specify `svelte.config.js`](../user-guide.md#specify-svelte-config-js)
 
 #### onwarn
 
