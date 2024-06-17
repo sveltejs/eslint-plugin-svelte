@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.39.5
+
+### Patch Changes
+
+- [#790](https://github.com/sveltejs/eslint-plugin-svelte/pull/790) [`f7b7649`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f7b76494efbf82d3bce1b963740ef20884aa6998) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for import vars with TS in `svelte/valid-compile`
+
 ## 2.39.4
 
 ### Patch Changes
