@@ -1,23 +1,25 @@
 // IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
-import path from 'path';
+import type { Linter } from 'eslint';
+import path from 'node:path';
 const base = require.resolve('./base');
 const baseExtend = path.extname(`${base}`) === '.ts' ? 'plugin:svelte/base' : base;
-export = {
+const config: Linter.Config = {
 	extends: [baseExtend],
 	rules: {
 		// eslint-plugin-svelte rules
-		'svelte/first-attribute-linebreak': 'off' as const,
-		'svelte/html-closing-bracket-spacing': 'off' as const,
-		'svelte/html-quotes': 'off' as const,
-		'svelte/html-self-closing': 'off' as const,
-		'svelte/indent': 'off' as const,
-		'svelte/max-attributes-per-line': 'off' as const,
-		'svelte/mustache-spacing': 'off' as const,
-		'svelte/no-spaces-around-equal-signs-in-attribute': 'off' as const,
-		'svelte/no-trailing-spaces': 'off' as const,
-		'svelte/shorthand-attribute': 'off' as const,
-		'svelte/shorthand-directive': 'off' as const
+		'svelte/first-attribute-linebreak': 'off',
+		'svelte/html-closing-bracket-spacing': 'off',
+		'svelte/html-quotes': 'off',
+		'svelte/html-self-closing': 'off',
+		'svelte/indent': 'off',
+		'svelte/max-attributes-per-line': 'off',
+		'svelte/mustache-spacing': 'off',
+		'svelte/no-spaces-around-equal-signs-in-attribute': 'off',
+		'svelte/no-trailing-spaces': 'off',
+		'svelte/shorthand-attribute': 'off',
+		'svelte/shorthand-directive': 'off'
 	}
 };
+export = config;

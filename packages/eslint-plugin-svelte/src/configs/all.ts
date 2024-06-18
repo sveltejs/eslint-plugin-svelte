@@ -1,12 +1,13 @@
-import path from 'path';
+import type { Linter } from 'eslint';
+import path from 'node:path';
 import { rules } from '../utils/rules';
 const base = require.resolve('./base');
 const baseExtend = path.extname(`${base}`) === '.ts' ? 'plugin:svelte/base' : base;
-export = {
+const config: Linter.Config = {
 	extends: [baseExtend],
 	rules: Object.fromEntries(
 		rules
-			.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error' as const])
+			.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error'])
 			.filter(
 				([ruleName]) =>
 					![
@@ -16,3 +17,4 @@ export = {
 			)
 	)
 };
+export = config;

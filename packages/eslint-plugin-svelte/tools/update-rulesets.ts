@@ -11,7 +11,8 @@ const legacyBaseContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-export = {
+import type { Linter } from 'eslint'
+const config: Linter.Config = {
   plugins: ["svelte"],
   overrides: [
     {
@@ -36,6 +37,7 @@ export = {
     },
   ],
 }
+export = config
 `;
 
 const legacyBaseFilePath = path.resolve(__dirname, '../src/configs/base.ts');
@@ -48,11 +50,12 @@ const legacyRecommendedContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-import path from "path"
+import type { Linter } from 'eslint'
+import path from "node:path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
-export = {
+const config: Linter.Config = {
   extends: [baseExtend],
   rules: {
     // eslint-plugin-svelte rules
@@ -65,6 +68,7 @@ export = {
 			.join(',\n    ')},
   },
 }
+export = config
 `;
 
 const legacyRecommendedFilePath = path.resolve(__dirname, '../src/configs/recommended.ts');
@@ -77,11 +81,12 @@ const legacyPrettierContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-import path from "path"
+import type { Linter } from 'eslint'
+import path from "node:path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
-export = {
+const config: Linter.Config = {
   extends: [baseExtend],
   rules: {
     // eslint-plugin-svelte rules
@@ -91,6 +96,7 @@ export = {
 			.join(',\n    ')},
   },
 }
+export = config
 `;
 
 const legacyPrettierFilePath = path.resolve(__dirname, '../src/configs/prettier.ts');
@@ -107,8 +113,8 @@ const baseContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-import type { ESLint } from 'eslint';
-export default [
+import type { ESLint, Linter } from 'eslint';
+const config: Linter.FlatConfig[] = [
   {
     plugins: {
       get svelte(): ESLint.Plugin {
@@ -142,6 +148,7 @@ export default [
 		processor: 'svelte/svelte'
   },
 ]
+export default config
 `;
 
 const baseFilePath = path.resolve(__dirname, '../src/configs/flat/base.ts');
@@ -154,8 +161,9 @@ const recommendedContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
+import type { Linter } from 'eslint';
 import base from "./base"
-export default [
+const config: Linter.FlatConfig[] = [
   ...base,
   {
     rules: {
@@ -170,6 +178,7 @@ export default [
     },
   }
 ]
+export default config
 `;
 
 const recommendedFilePath = path.resolve(__dirname, '../src/configs/flat/recommended.ts');
@@ -182,8 +191,9 @@ const prettierContent = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
+import type { Linter } from 'eslint';
 import base from "./base"
-export default [
+const config: Linter.FlatConfig[] = [
   ...base,
   {
     rules: {
@@ -195,6 +205,7 @@ export default [
     },
   }
 ]
+export default config
 `;
 
 const prettierFilePath = path.resolve(__dirname, '../src/configs/flat/prettier.ts');

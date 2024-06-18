@@ -1,11 +1,12 @@
+import type { Linter } from 'eslint';
 import { rules } from '../../utils/rules';
 import base from './base';
-export default [
+const config: Linter.FlatConfig[] = [
 	...base,
 	{
 		rules: Object.fromEntries(
 			rules
-				.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error' as const])
+				.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error'])
 				.filter(
 					([ruleName]) =>
 						![
@@ -16,3 +17,4 @@ export default [
 		)
 	}
 ];
+export default config;
