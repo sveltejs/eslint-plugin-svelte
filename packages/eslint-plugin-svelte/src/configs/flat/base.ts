@@ -4,6 +4,7 @@
 import type { ESLint } from 'eslint';
 export default [
 	{
+		name: 'svelte:base:setup-plugin',
 		plugins: {
 			get svelte(): ESLint.Plugin {
 				// eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
@@ -12,6 +13,7 @@ export default [
 		}
 	},
 	{
+		name: 'svelte:base:setup-for-svelte',
 		files: ['*.svelte', '**/*.svelte'],
 		languageOptions: {
 			// eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore

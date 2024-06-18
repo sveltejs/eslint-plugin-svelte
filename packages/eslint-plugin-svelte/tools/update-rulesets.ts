@@ -110,14 +110,16 @@ const baseContent = `/*
 import type { ESLint } from 'eslint';
 export default [
   {
+    name: 'svelte:base:setup-plugin',
     plugins: {
       get svelte(): ESLint.Plugin {
-				// eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
+        // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
         return require("../../index")
       }
     },
   },
   {
+    name: 'svelte:base:setup-for-svelte',
     files: ["*.svelte", "**/*.svelte"],
     languageOptions: {
       // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
@@ -158,6 +160,7 @@ import base from "./base"
 export default [
   ...base,
   {
+    name: 'svelte:recommended:rules',
     rules: {
       // eslint-plugin-svelte rules
       ${rules
@@ -186,6 +189,7 @@ import base from "./base"
 export default [
   ...base,
   {
+    name: 'svelte:prettier:turn-off-rules',
     rules: {
       // eslint-plugin-svelte rules
       ${rules

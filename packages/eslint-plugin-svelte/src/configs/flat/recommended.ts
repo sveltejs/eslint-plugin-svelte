@@ -5,6 +5,7 @@ import base from './base';
 export default [
 	...base,
 	{
+		name: 'svelte:recommended:rules',
 		rules: {
 			// eslint-plugin-svelte rules
 			'svelte/comment-directive': 'error',
