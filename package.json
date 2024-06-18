@@ -9,7 +9,9 @@
     "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../.. && cp README.md packages/eslint-plugin-svelte",
     "release": "changeset publish",
     "version": "cd packages/eslint-plugin-svelte && env-cmd -e version pnpm run update && cd ../..",
-    "version:ci": "cd packages/eslint-plugin-svelte && env-cmd -e version-ci pnpm run update && cd ../.. && changeset version"
+    "version:ci": "cd packages/eslint-plugin-svelte && env-cmd -e version-ci pnpm run update && cd ../.. && changeset version",
+    "build": "pnpm --filter {packages/*} run build",
+    "test": "pnpm --recursive run test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
