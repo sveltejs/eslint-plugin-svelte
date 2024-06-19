@@ -3,6 +3,7 @@ import base from './base';
 export default [
 	...base,
 	{
+		name: 'svelte:all:rules',
 		rules: Object.fromEntries(
 			rules
 				.map((rule) => [`svelte/${rule.meta.docs.ruleName}`, 'error'])

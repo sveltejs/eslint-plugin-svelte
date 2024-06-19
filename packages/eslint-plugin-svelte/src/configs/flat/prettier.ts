@@ -5,6 +5,7 @@ import base from './base';
 export default [
 	...base,
 	{
+		name: 'svelte:prettier:turn-off-rules',
 		rules: {
 			// eslint-plugin-svelte rules
 			'svelte/first-attribute-linebreak': 'off',
