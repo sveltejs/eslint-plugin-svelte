@@ -30,9 +30,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
 	const { sourceCode, offsets, options } = context;
 
 	/**
-	 * Find the root of left node.
+	 * Find the head of chaining nodes.
 	 */
-	function getRootLeft(
+	function getChainHeadNode(
 		node:
 			| TSESTree.AssignmentExpression
 			| TSESTree.AssignmentPattern
@@ -49,13 +49,20 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				parent.type === 'LogicalExpression')
 		) {
 			const prevToken = sourceCode.getTokenBefore(target);
-			if (prevToken && isOpeningParenToken(prevToken)) {
+			const nextToken = sourceCode.getTokenAfter(target);
+			if (
+				prevToken &&
+				isOpeningParenToken(prevToken) &&
+				nextToken &&
+				isClosingParenToken(nextToken)
+			) {
+				// The chain is broken because it is enclosed in parentheses.
 				break;
 			}
 			target = parent;
 			parent = getParent(target);
 		}
-		return target.left;
+		return target;
 	}
 
 	const visitor = {
@@ -116,17 +123,22 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				| TSESTree.BinaryExpression
 				| TSESTree.LogicalExpression
 		) {
-			const leftNode = getRootLeft(node);
+			const baseNode = getChainHeadNode(node);
 			const opToken = sourceCode.getTokenAfter(node.left, {
 				filter: isNotClosingParenToken,
 				includeComments: false
 			})!;
+			const baseToken =
+				baseNode.type === 'AssignmentExpression' || baseNode.type === 'AssignmentPattern'
+					? sourceCode.getFirstToken(baseNode)
+					: getFirstAndLastTokens(sourceCode, baseNode).firstToken;
+			const leftToken = getFirstAndLastTokens(sourceCode, node.left).firstToken;
 			const rightToken = getFirstAndLastTokens(sourceCode, node.right).firstToken;
 
 			offsets.setOffsetToken(
-				[opToken, rightToken],
+				[leftToken === baseToken ? null : leftToken, opToken, rightToken],
 				1,
-				getFirstAndLastTokens(sourceCode, leftNode).firstToken
+				baseToken
 			);
 		},
 		AssignmentPattern(node: TSESTree.AssignmentPattern) {
