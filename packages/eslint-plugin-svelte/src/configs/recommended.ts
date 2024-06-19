@@ -1,10 +1,11 @@
 // IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
-import path from 'path';
+import type { Linter } from 'eslint';
+import path from 'node:path';
 const base = require.resolve('./base');
 const baseExtend = path.extname(`${base}`) === '.ts' ? 'plugin:svelte/base' : base;
-export = {
+const config: Linter.Config = {
 	extends: [baseExtend],
 	rules: {
 		// eslint-plugin-svelte rules
@@ -24,3 +25,4 @@ export = {
 		'svelte/valid-compile': 'error'
 	}
 };
+export = config;

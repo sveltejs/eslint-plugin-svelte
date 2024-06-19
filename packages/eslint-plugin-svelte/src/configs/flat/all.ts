@@ -1,6 +1,7 @@
+import type { Linter } from 'eslint';
 import { rules } from '../../utils/rules';
 import base from './base';
-export default [
+const config: Linter.FlatConfig[] = [
 	...base,
 	{
 		name: 'svelte:all:rules',
@@ -17,3 +18,4 @@ export default [
 		)
 	}
 ];
+export default config;

@@ -1,7 +1,8 @@
 // IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
-export = {
+import type { Linter } from 'eslint';
+const config: Linter.Config = {
 	plugins: ['svelte'],
 	overrides: [
 		{
@@ -21,3 +22,4 @@ export = {
 		}
 	]
 };
+export = config;

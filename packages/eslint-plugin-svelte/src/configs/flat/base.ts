@@ -1,8 +1,8 @@
 // IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
-import type { ESLint } from 'eslint';
-export default [
+import type { ESLint, Linter } from 'eslint';
+const config: Linter.FlatConfig[] = [
 	{
 		name: 'svelte:base:setup-plugin',
 		plugins: {
@@ -33,3 +33,4 @@ export default [
 		processor: 'svelte/svelte'
 	}
 ];
+export default config;
