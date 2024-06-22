@@ -300,6 +300,11 @@ export interface RuleOptions {
    */
   'svelte/shorthand-directive'?: Linter.RuleEntry<SvelteShorthandDirective>
   /**
+   * use let instead of const for signals values
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/signal-prefer-let/
+   */
+  'svelte/signal-prefer-let'?: Linter.RuleEntry<[]>
+  /**
    * enforce order of attributes
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/
    */

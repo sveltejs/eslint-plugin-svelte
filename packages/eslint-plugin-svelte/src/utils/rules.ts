@@ -59,6 +59,7 @@ import requireStoreReactiveAccess from '../rules/require-store-reactive-access';
 import requireStoresInit from '../rules/require-stores-init';
 import shorthandAttribute from '../rules/shorthand-attribute';
 import shorthandDirective from '../rules/shorthand-directive';
+import signalPreferLet from '../rules/signal-prefer-let';
 import sortAttributes from '../rules/sort-attributes';
 import spacedHtmlComment from '../rules/spaced-html-comment';
 import system from '../rules/system';
@@ -124,6 +125,7 @@ export const rules = [
 	requireStoresInit,
 	shorthandAttribute,
 	shorthandDirective,
+	signalPreferLet,
 	sortAttributes,
 	spacedHtmlComment,
 	system,
