@@ -76,7 +76,9 @@ jobs:
         run: pnpm install -D -w eslint@${{ matrix.eslint }}
 
       - name: Test
-        run: pnpm test
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=8192"
+          pnpm test
         working-directory: ${{ env.project_root_path }}
 
   test-for-svelte-v4:
