@@ -1,5 +1,19 @@
 # eslint-plugin-svelte
 
+## 2.41.0
+
+### Minor Changes
+
+- [#802](https://github.com/sveltejs/eslint-plugin-svelte/pull/802) [`be64d36`](https://github.com/sveltejs/eslint-plugin-svelte/commit/be64d36dfe07f37cdd10d4bac9d80989518dccc2) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: broken indentation of if condition in `svelte/indent` rule
+
+### Patch Changes
+
+- [#789](https://github.com/sveltejs/eslint-plugin-svelte/pull/789) [`0bc17df`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0bc17dfe72aca1236a7e693ac7e23240c8d72910) Thanks [@KuSh](https://github.com/KuSh)! - chore: Use eslint types for exported configs
+
+- [#805](https://github.com/sveltejs/eslint-plugin-svelte/pull/805) [`6e4d3ed`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6e4d3edd17cf930b3e266f51e8ae999e1961006f) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: update `svelte-eslint-parser` to fix nested `{#snippet}`
+
+- [#800](https://github.com/sveltejs/eslint-plugin-svelte/pull/800) [`580f44f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/580f44fa4a64af32d7d3257b871745e926305b8c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add name to flat configs.
+
 ## 2.40.0
 
 ### Minor Changes
