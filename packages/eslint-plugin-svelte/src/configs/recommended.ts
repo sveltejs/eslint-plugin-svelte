@@ -19,6 +19,7 @@ const config: Linter.Config = {
 		'svelte/no-not-function-handler': 'error',
 		'svelte/no-object-in-text-mustaches': 'error',
 		'svelte/no-shorthand-style-property-overrides': 'error',
+		'svelte/no-undefined-print': 'error',
 		'svelte/no-unknown-style-directive-property': 'error',
 		'svelte/no-unused-svelte-ignore': 'error',
 		'svelte/system': 'error',

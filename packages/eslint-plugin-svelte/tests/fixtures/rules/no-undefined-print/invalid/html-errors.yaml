@@ -1,0 +1,4 @@
+- message: 'Unexpected `undefined`aa.'
+  line: 52
+  column: 44
+  suggestions: null

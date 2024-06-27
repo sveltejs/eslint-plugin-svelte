@@ -44,6 +44,7 @@ import noStoreAsync from '../rules/no-store-async';
 import noSvelteInternal from '../rules/no-svelte-internal';
 import noTargetBlank from '../rules/no-target-blank';
 import noTrailingSpaces from '../rules/no-trailing-spaces';
+import noUndefinedPrint from '../rules/no-undefined-print';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property';
 import noUnusedClassName from '../rules/no-unused-class-name';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore';
@@ -109,6 +110,7 @@ export const rules = [
 	noSvelteInternal,
 	noTargetBlank,
 	noTrailingSpaces,
+	noUndefinedPrint,
 	noUnknownStyleDirectiveProperty,
 	noUnusedClassName,
 	noUnusedSvelteIgnore,

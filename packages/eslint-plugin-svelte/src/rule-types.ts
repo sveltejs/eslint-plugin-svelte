@@ -225,6 +225,11 @@ export interface RuleOptions {
    */
   'svelte/no-trailing-spaces'?: Linter.RuleEntry<SvelteNoTrailingSpaces>
   /**
+   * Disallow from printing `undefined`
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-undefined-print/
+   */
+  'svelte/no-undefined-print'?: Linter.RuleEntry<[]>
+  /**
    * disallow unknown `style:property`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/
    */
