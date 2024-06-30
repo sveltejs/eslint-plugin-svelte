@@ -36,7 +36,7 @@
     "assert": "^2.1.0",
     "cross-spawn": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.21.3",
+    "esbuild": "^0.22.0",
     "escape-html": "^1.0.3",
     "eslint-plugin-svelte": "workspace:^",
     "eslint-scope": "^8.0.1",
