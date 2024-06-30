@@ -1,22 +1,22 @@
 ---
 pageClass: 'rule-details'
 sidebarDepth: 0
-title: 'svelte/signal-prefer-let'
-description: 'use let instead of const for signals values'
+title: 'svelte/rune-prefer-let'
+description: 'use let instead of const for reactive variables created by runes'
 ---
 
-# svelte/signal-prefer-let
+# svelte/rune-prefer-let
 
-> use let instead of const for signals values
+> use let instead of const for reactive variables created by runes
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
-This rule reports whenever a signal is assigned to a const.
+This rule reports whenever a rune that creates a reactive value is assigned to a const.
 In JavaScript `const` are defined as immutable references which cannot be reassigned.
-Signals are by definition changing and are reassigned by Svelte's reactivity system.
+Reactive variables can be reassigned by Svelte's reactivity system.
 
 <ESLintCodeBlock fix>
 
@@ -24,7 +24,7 @@ Signals are by definition changing and are reassigned by Svelte's reactivity sys
 
 ```svelte
 <script>
-  /* eslint svelte/signal-prefer-let: "error" */
+  /* eslint svelte/rune-prefer-let: "error" */
 
   /* ✓ GOOD */
   let { value } = $props();
@@ -46,5 +46,5 @@ Nothing
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/signal-prefer-let.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/signal-prefer-let.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/rune-prefer-let.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/rune-prefer-let.ts)

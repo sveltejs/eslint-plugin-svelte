@@ -290,6 +290,11 @@ export interface RuleOptions {
    */
   'svelte/require-stores-init'?: Linter.RuleEntry<[]>
   /**
+   * use let instead of const for reactive variables created by runes
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/rune-prefer-let/
+   */
+  'svelte/rune-prefer-let'?: Linter.RuleEntry<[]>
+  /**
    * enforce use of shorthand syntax in attribute
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/
    */
@@ -299,11 +304,6 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-directive/
    */
   'svelte/shorthand-directive'?: Linter.RuleEntry<SvelteShorthandDirective>
-  /**
-   * use let instead of const for signals values
-   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/signal-prefer-let/
-   */
-  'svelte/signal-prefer-let'?: Linter.RuleEntry<[]>
   /**
    * enforce order of attributes
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/

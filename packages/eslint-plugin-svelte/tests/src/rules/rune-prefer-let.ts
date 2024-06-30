@@ -1,5 +1,5 @@
 import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/signal-prefer-let';
+import rule from '../../../src/rules/rune-prefer-let';
 import { loadTestCases } from '../../utils/utils';
 
 const tester = new RuleTester({
@@ -9,4 +9,4 @@ const tester = new RuleTester({
 	}
 });
 
-tester.run('signal-prefer-let', rule as any, loadTestCases('signal-prefer-let'));
+tester.run('rune-prefer-let', rule as any, loadTestCases('rune-prefer-let'));
