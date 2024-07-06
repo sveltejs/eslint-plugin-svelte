@@ -49,6 +49,7 @@ import noUnusedClassName from '../rules/no-unused-class-name';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore';
 import noUselessMustaches from '../rules/no-useless-mustaches';
 import preferClassDirective from '../rules/prefer-class-directive';
+import preferConst from '../rules/prefer-const';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props';
 import preferStyleDirective from '../rules/prefer-style-directive';
 import requireEachKey from '../rules/require-each-key';
@@ -114,6 +115,7 @@ export const rules = [
 	noUnusedSvelteIgnore,
 	noUselessMustaches,
 	preferClassDirective,
+	preferConst,
 	preferDestructuredStoreProps,
 	preferStyleDirective,
 	requireEachKey,
