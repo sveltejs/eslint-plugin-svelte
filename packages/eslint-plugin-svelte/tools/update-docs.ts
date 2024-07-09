@@ -144,8 +144,8 @@ This rule was introduced in eslint-plugin-svelte ${await this.since}
 				: ''
 		}## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/${ruleName}.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/${ruleName}.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/${ruleName}.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/${ruleName}.ts)
 ${
 	extensionRule
 		? typeof extensionRule === 'string'

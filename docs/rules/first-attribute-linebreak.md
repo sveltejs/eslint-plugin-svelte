@@ -80,5 +80,5 @@ This rule was introduced in eslint-plugin-svelte v0.6.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/first-attribute-linebreak.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/first-attribute-linebreak.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/first-attribute-linebreak.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/first-attribute-linebreak.ts)
