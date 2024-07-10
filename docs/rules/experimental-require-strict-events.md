@@ -64,5 +64,5 @@ This rule was introduced in eslint-plugin-svelte v2.18.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/experimental-require-strict-events.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/experimental-require-strict-events.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/experimental-require-strict-events.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/experimental-require-strict-events.ts)

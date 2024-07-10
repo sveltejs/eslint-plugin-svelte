@@ -104,5 +104,5 @@ This rule was introduced in eslint-plugin-svelte v0.32.0
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/src/rules/require-optimized-style-attribute.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/tests/src/rules/require-optimized-style-attribute.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-optimized-style-attribute.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-optimized-style-attribute.ts)
