@@ -12,7 +12,7 @@ module.exports = {
 				 */
 				onwarn(warning, handler) {
 					// transform code
-					handler({ ...warning, code: 'foo' });
+					handler({ ...warning, message: warning.message, code: 'foo' });
 				}
 			}
 		}
