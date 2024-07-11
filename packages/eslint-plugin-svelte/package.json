@@ -98,7 +98,7 @@
     "sass": "^1.77.5",
     "source-map-js": "^1.2.0",
     "stylus": "^0.63.0",
-    "svelte": "^5.0.0-next.155",
+    "svelte": "^5.0.0-next.181",
     "svelte-i18n": "^4.0.0",
     "type-coverage": "^2.29.0",
     "yaml": "^2.4.5"
