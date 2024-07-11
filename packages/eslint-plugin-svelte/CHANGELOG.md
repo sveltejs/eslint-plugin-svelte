@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.42.0
+
+### Minor Changes
+
+- [#822](https://github.com/sveltejs/eslint-plugin-svelte/pull/822) [`88da3cf`](https://github.com/sveltejs/eslint-plugin-svelte/commit/88da3cfbfe4be364a4f6860b53fbe389264c318d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.40.0
+
 ## 2.41.0
 
 ### Minor Changes
