@@ -50,14 +50,12 @@ const SIDE_MENU = {
 			title: 'Available Rules',
 			children: categoryRules
 		},
-		{ path: '/playground/', title: 'Playground' },
 		{ path: '/migration/', title: 'Migration' }
 	],
 	'/': [
 		{ path: '/', title: 'Introduction' },
 		{ path: '/user-guide/', title: 'User Guide' },
 		{ path: '/rules/', title: 'Available Rules' },
-		{ path: '/playground/', title: 'Playground' },
 		{ path: '/migration/', title: 'Migration' }
 	]
 };

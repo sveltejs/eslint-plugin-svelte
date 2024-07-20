@@ -53,8 +53,14 @@
 			<li class:active={isActive('/rules/', $page)}>
 				<a href="{baseUrl}/rules/">Rules</a>
 			</li>
-			<li class:active={isActive('/playground/', $page)}>
-				<a href="{baseUrl}/playground/">Playground</a>
+			<li>
+				<a
+					href="https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Playground
+				</a>
 			</li>
 		</ul>
 		<div class="nav-title">

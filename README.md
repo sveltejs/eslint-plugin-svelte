@@ -2,7 +2,7 @@
 
 `eslint-plugin-svelte` is the official [ESLint] plugin for [Svelte].  
 It provides many unique check rules by using the template AST.  
-You can check on the [Online DEMO](https://sveltejs.github.io/eslint-plugin-svelte/playground/).
+You can check on the [Online DEMO](https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript).
 
 **_We are working on experimental support for Svelte v5, but may break with new versions of Svelte v5._**
 
