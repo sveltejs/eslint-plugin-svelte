@@ -10,10 +10,10 @@ since: 'v2.9.0'
 
 > disallow conditionals where the type is always truthy or always falsy
 
-- :warning: This rule was **deprecated**. This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- ⚠️ This rule was **deprecated**. This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 **This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.**
 
@@ -40,7 +40,7 @@ The [@typescript-eslint/no-unnecessary-condition] rule does not understand react
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -63,11 +63,11 @@ Same as [@typescript-eslint/no-unnecessary-condition] rule option. See [here](ht
 
 [@typescript-eslint/no-unnecessary-condition]: https://typescript-eslint.io/rules/no-unnecessary-condition/
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.9.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/@typescript-eslint/no-unnecessary-condition.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/@typescript-eslint/no-unnecessary-condition.ts)

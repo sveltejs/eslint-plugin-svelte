@@ -12,7 +12,7 @@ since: 'v0.5.0'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule disallows the use of objects in text mustache interpolation.  
 When you use an object for text interpolation, it is drawn as `[object Object]`. It's almost always a mistake. You may have written a lot of unnecessary curly braces.
@@ -38,7 +38,7 @@ When you use an object for text interpolation, it is drawn as `[object Object]`.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -48,11 +48,11 @@ Nothing.
 
 [svelte/no-not-function-handler]: ./no-not-function-handler.md
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.5.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-object-in-text-mustaches.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-object-in-text-mustaches.ts)

@@ -12,7 +12,7 @@ since: 'v0.31.0'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports when a shorthand style property overrides a previously defined longhand property.
 
@@ -41,21 +41,21 @@ This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-o
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further reading
+## 📚 Further reading
 
 - [Stylelint - declaration-block-no-shorthand-property-overrides]
 
 [stylelint - declaration-block-no-shorthand-property-overrides]: https://stylelint.io/user-guide/rules/list/declaration-block-no-shorthand-property-overrides/
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.31.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-shorthand-style-property-overrides.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-shorthand-style-property-overrides.ts)

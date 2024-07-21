@@ -10,7 +10,7 @@ since: 'v2.16.0'
 
 > require type parameters for `createEventDispatcher`
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule is aimed to enforce type parameters when calling `createEventDispatcher`. Adding types makes all `dispatch` calls as well as all event listeners typechecked. For more information, see the [svelte docs](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-component-events).
 
@@ -37,15 +37,15 @@ This rule is aimed to enforce type parameters when calling `createEventDispatche
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.16.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-event-dispatcher-types.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-event-dispatcher-types.ts)

@@ -10,9 +10,9 @@ since: 'v0.0.1'
 
 > enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule will enforce consistency of spacing after the start of a comment `<!--` and before the end of a comment `-->`.
 
@@ -36,7 +36,7 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 [prettier-plugin-svelte]: https://github.com/sveltejs/prettier-plugin-svelte
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -50,11 +50,11 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 - `"always"` ... There must be at least one whitespace after `<!--` and before `-->`.
 - `"never"` ... There should be no leading or trailing whitespace. There should be no whitespace following.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.1
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/spaced-html-comment.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/spaced-html-comment.ts)

@@ -10,9 +10,9 @@ since: 'v2.5.0'
 
 > enforce self-closing style
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 You can choose either two styles for elements without content
 
@@ -48,7 +48,7 @@ You can choose either two styles for elements without content
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 presets:
 
@@ -96,11 +96,11 @@ Every config oject option can be set to
 - "never" (`<div></div>`)
 - "ignore" (either `<div />` or `<div></div>`)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.5.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/html-self-closing.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/html-self-closing.ts)

@@ -10,10 +10,10 @@ since: 'v2.16.0'
 
 > Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.
 
-## :book: Rule Details
+## 📖 Rule Details
 
-Svelte runtime prevents calling the same reactive statement twice in a microtask.<br/>
-But between different microtask, it doesn't prevent.<br/>
+Svelte runtime prevents calling the same reactive statement twice in a microtask.  
+But between different microtask, it doesn't prevent.  
 This rule reports those possible infinite loop.
 
 <ESLintCodeBlock>
@@ -84,20 +84,20 @@ This rule reports those possible infinite loop.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Docs > COMPONENT FORMAT > 3. $: marks a statement as reactive](https://svelte.dev/docs#component-format-script-3-$-marks-a-statement-as-reactive)
 - [Svelte - Docs > COMPONENT FORMAT > 4. Prefix stores with $ to access their values](https://svelte.dev/docs#component-format-script-4-prefix-stores-with-$-to-access-their-values)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.16.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/infinite-reactive-loop.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/infinite-reactive-loop.ts)

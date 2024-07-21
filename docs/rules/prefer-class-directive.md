@@ -10,9 +10,9 @@ since: 'v0.0.1'
 
 > require class directives instead of ternary expressions
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule aims to replace a class with ternary operator with the class directive.
 
@@ -41,7 +41,7 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 [prettier-plugin-svelte]: https://github.com/sveltejs/prettier-plugin-svelte
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -64,15 +64,15 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 [svelte/prefer-style-directive]: ./prefer-style-directive.md
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Tutorial > 13. Classes / The class directive](https://svelte.dev/tutorial/classes)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.1
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/prefer-class-directive.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/prefer-class-directive.ts)
