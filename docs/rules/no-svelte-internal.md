@@ -10,7 +10,7 @@ since: 'v2.39.0'
 
 > svelte/internal will be removed in Svelte 6.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports the use of the deprecated API `svelte/internal` and `svelte/internal/xxx`. `svelte/internal` is deprecated in Svelte 5. And it will be deleted in Svelte 6. These APIs can change in breaking ways at any time without notice.
 
@@ -38,21 +38,21 @@ This rule reports the use of the deprecated API `svelte/internal` and `svelte/in
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 <!--TODO: update here when relevant statements are added in Svelte 5 documentation -->
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.39.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-svelte-internal.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-svelte-internal.ts)

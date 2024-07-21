@@ -10,7 +10,7 @@ since: 'v2.27.0'
 
 > disallow reactive statements that don't reference reactive values.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports if all variables referenced in reactive statements are immutable. That reactive statement is immutable and not reactive.
 
@@ -56,15 +56,15 @@ This rule reports if all variables referenced in reactive statements are immutab
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.27.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-immutable-reactive-statements.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-immutable-reactive-statements.ts)

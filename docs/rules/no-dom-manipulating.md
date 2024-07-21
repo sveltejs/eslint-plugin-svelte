@@ -10,7 +10,7 @@ since: 'v2.13.0'
 
 > disallow DOM manipulating
 
-## :book: Rule Details
+## 📖 Rule Details
 
 In general, DOM manipulating should delegate to Svelte runtime. If you manipulate the DOM directly, the Svelte runtime may confuse because there is a difference between the actual DOM and the Svelte runtime's expected DOM.
 Therefore this rule reports where you use DOM manipulating function.
@@ -94,15 +94,15 @@ This rule only tracks and checks variables given with `bind:this={}`. In other w
 
 See also <https://svelte.dev/examples/custom-js-transitions>.
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.13.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-dom-manipulating.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-dom-manipulating.ts)

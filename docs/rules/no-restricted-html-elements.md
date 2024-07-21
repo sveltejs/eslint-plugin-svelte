@@ -10,7 +10,7 @@ since: 'v2.31.0'
 
 > disallow specific HTML elements
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports to usage of resticted HTML elements.
 
@@ -64,7 +64,7 @@ This rule reports to usage of resticted HTML elements.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 This rule takes a list of strings, where each string is an HTML element name to be restricted:
 
@@ -92,11 +92,11 @@ Alternatively, the rule also accepts objects.
 }
 ```
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.31.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-restricted-html-elements.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-restricted-html-elements.ts)

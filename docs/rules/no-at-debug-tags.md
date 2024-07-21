@@ -12,7 +12,7 @@ since: 'v0.0.1'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports all uses of `{@debug}`.
 
@@ -35,19 +35,19 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Tutorial > 18. Debugging / The @debug tags](https://svelte.dev/tutorial/debug)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.1
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-at-debug-tags.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-at-debug-tags.ts)

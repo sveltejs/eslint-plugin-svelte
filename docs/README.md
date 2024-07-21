@@ -42,7 +42,7 @@ The [svelte-eslint-parser] and the `eslint-plugin-svelte` can not be used with t
 
 We are working on support for Svelte v5, but it is still an experimental feature. Please note that rules and features related to Svelte v5 may be changed or removed in minor versions without notice.
 
-## :book: Usage
+## 📖 Usage
 
 See [User Guide](./user-guide.md).
 

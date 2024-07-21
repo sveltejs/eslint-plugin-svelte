@@ -10,7 +10,7 @@ since: 'v2.31.0'
 
 > disallow the use of a class in the template without a corresponding style
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule is aimed at reducing unused classes in the HTML template. While `svelte-check` will produce the `css-unused-selector` if your `<style>` block includes any classes that aren't used in the template, this rule works the other way around - it reports cases wehre the template contains classes that aren't referred to in the `<style>` block.
 
@@ -50,7 +50,7 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -65,11 +65,11 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
 
 - `allowedClassNames` ... A list of class names that shouldn't be reported by this rule. Default `[]`.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.31.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-unused-class-name.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-unused-class-name.ts)

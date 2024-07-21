@@ -12,7 +12,7 @@ since: 'v0.0.1'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chain.
 
@@ -112,7 +112,7 @@ This rule can also detect some cases where the conditions are not identical, but
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -122,11 +122,11 @@ Nothing.
 
 [no-dupe-else-if]: https://eslint.org/docs/rules/no-dupe-else-if
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.1
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-dupe-else-if-blocks.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-dupe-else-if-blocks.ts)

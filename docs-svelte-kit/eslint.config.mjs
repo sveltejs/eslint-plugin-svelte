@@ -41,12 +41,20 @@ const config = [
 			'jsdoc/require-jsdoc': 'off',
 			'@typescript-eslint/no-shadow': 'off',
 			'no-shadow': 'off',
+			// SvelteKit's docs usually use const instead of function.
+			'func-style': 'off',
+			// SvelteKit sometimes needs to use @sveltejs/kit package's `error` instead of return.
+			'consistent-return': 'off',
 			'@typescript-eslint/naming-convention': 'off',
 			'new-cap': 'off',
 			complexity: 'off',
 			'n/no-missing-import': 'off',
 			'n/file-extension-in-import': 'off',
-			'n/no-extraneous-import': 'off'
+			'n/no-extraneous-import': 'off',
+			// We need to use {@html} for markdown rendering.
+			'svelte/no-at-html-tags': 'off',
+			// Delegate it to Svelte compiler's check.
+			'svelte/valid-compile': 'off'
 		}
 	},
 	{

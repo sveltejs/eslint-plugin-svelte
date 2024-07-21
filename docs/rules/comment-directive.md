@@ -24,7 +24,7 @@ It supports usage of the following comments:
 We can't write HTML comments in tags.
 :::
 
-## :book: Rule Details
+## 📖 Rule Details
 
 ESLint doesn't provide any API to enhance `eslint-disable` functionality and ESLint rules cannot affect other rules. But ESLint provides [processors API](https://eslint.org/docs/developer-guide/working-with-plugins#processors-in-plugins).
 
@@ -62,7 +62,7 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -100,17 +100,17 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 </ESLintCodeBlock>
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Disabling rules with inline comments]
 
 [disabling rules with inline comments]: https://eslint.org/docs/user-guide/configuring#disabling-rules-with-inline-comments
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.13
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/comment-directive.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/comment-directive.ts)

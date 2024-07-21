@@ -10,7 +10,7 @@ since: 'v2.28.0'
 
 > require keyed `{#each}` block
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports `{#each}` block without key
 
@@ -36,7 +36,7 @@ This rule reports `{#each}` block without key
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -44,15 +44,15 @@ Nothing.
 
 - [svelte/valid-each-key](./valid-each-key.md)
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/keyed-each-blocks)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.28.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-each-key.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-each-key.ts)

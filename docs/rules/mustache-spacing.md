@@ -10,9 +10,9 @@ since: 'v0.15.0'
 
 > enforce unified spacing in mustache
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule aims at enforcing unified spacing in mustaches.
 
@@ -61,7 +61,7 @@ This rule aims at enforcing unified spacing in mustaches.
 
 <!-- prettier-ignore-end -->
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -88,11 +88,11 @@ This rule aims at enforcing unified spacing in mustaches.
 - `directiveExpressions` ... Enforces the style of the mustache for the directive expressions. e.g. `<input bind:value={text}`.
 - `tags` ... Enforces the style of the mustache for the mustache tags. e.g. `{#if condition}`.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.15.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/mustache-spacing.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/mustache-spacing.ts)

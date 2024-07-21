@@ -10,7 +10,7 @@ since: 'v2.14.0'
 
 > disallow duplicate `use:` directives
 
-## :book: Rule Details
+## 📖 Rule Details
 
 We can define any number of `use:` directive with the same action, but duplicate directives with the exact same action and expression are probably a mistake.
 This rule reports reports `use:` directives with exactly the same action and expression.
@@ -35,15 +35,15 @@ This rule reports reports `use:` directives with exactly the same action and exp
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.14.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-dupe-use-directives.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-dupe-use-directives.ts)

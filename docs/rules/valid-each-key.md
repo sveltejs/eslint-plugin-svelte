@@ -10,7 +10,7 @@ since: 'v2.28.0'
 
 > enforce keys to use variables defined in the `{#each}` block
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports that `{#each}` block keys does not use the variables which are defined by the `{#each}` block.
 
@@ -45,7 +45,7 @@ This rule reports that `{#each}` block keys does not use the variables which are
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -53,15 +53,15 @@ Nothing.
 
 - [svelte/require-each-key](./require-each-key.md)
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/keyed-each-blocks)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.28.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/valid-each-key.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/valid-each-key.ts)

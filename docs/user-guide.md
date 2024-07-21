@@ -1,6 +1,6 @@
 # User Guide
 
-## :cd: Installation
+## 💿 Installation
 
 ```bash
 npm install --save-dev eslint eslint-plugin-svelte svelte
@@ -13,7 +13,7 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 :::
 
-## :book: Usage
+## 📖 Usage
 
 <!--USAGE_GUIDE_START-->
 
@@ -294,7 +294,7 @@ eslint --ext .js,.svelte src
 eslint "src/**/*.{js,svelte}"
 ```
 
-## :computer: Editor Integrations
+## 💻 Editor Integrations
 
 ### Visual Studio Code
 
@@ -312,7 +312,7 @@ Example **.vscode/settings.json**:
 
 <!--USAGE_GUIDE_END-->
 
-## :question: FAQ
+## ❓ FAQ
 
 ### Parsing the `.svelte` file fails
 

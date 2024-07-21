@@ -10,7 +10,7 @@ since: 'v2.18.0'
 
 > disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule enforces all svelte components to use the same set of languages for their scripts and styles.
 
@@ -56,7 +56,7 @@ This rule enforces all svelte components to use the same set of languages for th
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -77,11 +77,11 @@ This rule enforces all svelte components to use the same set of languages for th
 - `script` ... A list of languages allowed for the `<script>` block. If `null` is included, no `lang` attribute is also allowed. A plain string or `null` can be used instead of one-item array. Default `null`.
 - `style` ... A list of languages allowed for the `<style>` block. If `null` is included, no `lang` attribute is also allowed. A plain string or `null` can be used instead of one-item array. Default `null`.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.18.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/block-lang.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/block-lang.ts)

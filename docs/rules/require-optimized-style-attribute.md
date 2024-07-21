@@ -10,7 +10,7 @@ since: 'v0.32.0'
 
 > require style attributes that can be optimized
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports `style` attributes written in a format that cannot be optimized.
 
@@ -94,15 +94,15 @@ Examples:
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.32.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-optimized-style-attribute.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-optimized-style-attribute.ts)

@@ -10,9 +10,9 @@ since: 'v0.6.0'
 
 > enforce the location of first attribute
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule aims to enforce a consistent location for the first attribute.
 
@@ -47,7 +47,7 @@ This rule aims to enforce a consistent location for the first attribute.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -74,11 +74,11 @@ This rule aims to enforce a consistent location for the first attribute.
 
 [svelte/max-attributes-per-line]: ./max-attributes-per-line.md
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.6.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/first-attribute-linebreak.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/first-attribute-linebreak.ts)

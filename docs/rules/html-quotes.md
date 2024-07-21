@@ -10,9 +10,9 @@ since: 'v0.5.0'
 
 > enforce quotes style of HTML attributes
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 You can choose quotes of HTML attributes from:
 
@@ -45,7 +45,7 @@ This rule enforces the quotes style of HTML attributes.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -67,11 +67,11 @@ This rule enforces the quotes style of HTML attributes.
   - `quoted` ... If `true`, enforce the use of quotes. If `false`, do not allow the use of quotes. The default is `false`.
   - `avoidInvalidUnquotedInHTML` ... If `true`, enforces the use of quotes if they are invalid as HTML attribute when not using quotes. The default is `false`.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.5.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/html-quotes.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/html-quotes.ts)

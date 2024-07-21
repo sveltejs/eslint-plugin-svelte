@@ -10,7 +10,7 @@ since: 'v2.18.0'
 
 > require slot type declaration using the `$$Slots` interface
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule enforces the presence of the `$$Slots` interface if any slots are present in the component. This interface declares all of the used slots and their props and enables typechecking both in the component itself as well as all components that include it.
 The `$$Slots` interface is experimental and is documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-slots).
@@ -102,15 +102,15 @@ The `$$Slots` interface is experimental and is documented in [svelte RFC #38](ht
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.18.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/experimental-require-slot-types.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/experimental-require-slot-types.ts)
