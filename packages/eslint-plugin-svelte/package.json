@@ -88,7 +88,7 @@
     "esbuild": "^0.23.0",
     "esbuild-register": "^3.5.0",
     "eslint-scope": "^8.0.1",
-    "eslint-typegen": "^0.2.4",
+    "eslint-typegen": "^0.3.0",
     "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.1",
     "less": "^4.2.0",
