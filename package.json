@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "funding": "https://github.com/sponsors/ota-meshi",
-  "packageManager": "pnpm@7.33.7",
+  "packageManager": "pnpm@9.7.0",
   "scripts": {
     "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../.. && cp README.md packages/eslint-plugin-svelte",
     "release": "changeset publish",
