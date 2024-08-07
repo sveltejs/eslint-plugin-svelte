@@ -19,7 +19,7 @@
     "@changesets/get-release-plan": "^4.0.2",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.3.0",
     "@ota-meshi/eslint-plugin": "^0.17.1",
-    "@types/eslint": "^8.56.10",
+    "@types/eslint": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "env-cmd": "^10.1.0",
