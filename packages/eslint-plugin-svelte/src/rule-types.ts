@@ -290,6 +290,11 @@ export interface RuleOptions {
    */
   'svelte/require-stores-init'?: Linter.RuleEntry<[]>
   /**
+   * disallow non-string values in string contexts
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/restrict-mustache-expressions/
+   */
+  'svelte/restrict-mustache-expressions'?: Linter.RuleEntry<SvelteRestrictMustacheExpressions>
+  /**
    * enforce use of shorthand syntax in attribute
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/
    */
@@ -459,6 +464,19 @@ type SvelteNoUselessMustaches = []|[{
 // ----- svelte/prefer-class-directive -----
 type SveltePreferClassDirective = []|[{
   prefer?: ("always" | "empty")
+}]
+// ----- svelte/restrict-mustache-expressions -----
+type SvelteRestrictMustacheExpressions = []|[{
+  allowBoolean?: boolean
+  allowNull?: boolean
+  allowUndefined?: boolean
+  allowNumber?: boolean
+  textExpressions?: {
+    [k: string]: unknown | undefined
+  }
+  stringTemplateExpressions?: {
+    [k: string]: unknown | undefined
+  }
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

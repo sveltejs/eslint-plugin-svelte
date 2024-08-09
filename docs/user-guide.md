@@ -243,7 +243,7 @@ module.exports = {
 
 #### settings.svelte.ignoreWarnings
 
-Specifies an array of rules that ignore reports in the template.  
+Specifies an array of rules that ignore reports in the template.
 For example, set rules on the template that cannot avoid false positives.
 
 #### settings.svelte.compileOptions

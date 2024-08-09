@@ -1,0 +1,9 @@
+{
+    "options": [
+        {
+            "stringTemplateExpressions": {
+                "allowNumber": false
+            }
+        }
+    ]
+}
