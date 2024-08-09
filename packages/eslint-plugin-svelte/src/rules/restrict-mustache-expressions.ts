@@ -4,7 +4,6 @@ import { TypeFlags } from 'typescript';
 import { type TSESTree } from '@typescript-eslint/types';
 import type { TS, TSTools } from '../utils/ts-utils';
 import { getConstrainedTypeAtLocation, getTypeName, getTypeScriptTools } from '../utils/ts-utils';
-import { getSourceCode } from '../utils/compat';
 
 const props = {
 	allowBoolean: {
@@ -108,8 +107,6 @@ export default createRule('restrict-mustache-expressions', {
 			} else {
 				return;
 			}
-			console.log(getSourceCode(context).getText(node));
-			console.log(node);
 
 			const { allowBoolean, allowNull, allowUndefined, allowNumber } = opts;
 			if (allowBoolean === true) allowed_types.add('boolean');
