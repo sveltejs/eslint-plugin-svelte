@@ -57,6 +57,7 @@ import requireOptimizedStyleAttribute from '../rules/require-optimized-style-att
 import requireStoreCallbacksUseSetParam from '../rules/require-store-callbacks-use-set-param';
 import requireStoreReactiveAccess from '../rules/require-store-reactive-access';
 import requireStoresInit from '../rules/require-stores-init';
+import restrictMustacheExpressions from '../rules/restrict-mustache-expressions';
 import shorthandAttribute from '../rules/shorthand-attribute';
 import shorthandDirective from '../rules/shorthand-directive';
 import sortAttributes from '../rules/sort-attributes';
@@ -122,6 +123,7 @@ export const rules = [
 	requireStoreCallbacksUseSetParam,
 	requireStoreReactiveAccess,
 	requireStoresInit,
+	restrictMustacheExpressions,
 	shorthandAttribute,
 	shorthandDirective,
 	sortAttributes,

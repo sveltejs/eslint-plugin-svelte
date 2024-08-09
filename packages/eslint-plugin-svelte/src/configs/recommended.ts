@@ -21,6 +21,7 @@ const config: Linter.Config = {
 		'svelte/no-shorthand-style-property-overrides': 'error',
 		'svelte/no-unknown-style-directive-property': 'error',
 		'svelte/no-unused-svelte-ignore': 'error',
+		'svelte/restrict-mustache-expressions': 'error',
 		'svelte/system': 'error',
 		'svelte/valid-compile': 'error'
 	}
