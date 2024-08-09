@@ -2,8 +2,9 @@ import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
 import { TypeFlags } from 'typescript';
 import { type TSESTree } from '@typescript-eslint/types';
-import type { TS } from '../utils/ts-utils';
+import type { TS, TSTools } from '../utils/ts-utils';
 import { getConstrainedTypeAtLocation, getTypeName, getTypeScriptTools } from '../utils/ts-utils';
+import { getSourceCode } from '../utils/compat';
 
 const props = {
 	allowBoolean: {
@@ -85,10 +86,10 @@ export default createRule('restrict-mustache-expressions', {
 			return tsNode && getConstrainedTypeAtLocation(checker, tsNode);
 		}
 
-		const config: Config = context.options[0] || getDefaultOptions();
+		const config: Config = Object.assign(getDefaultOptions(), context.options[0] || {});
 
 		function checkExpression(node: AST.SvelteMustacheTag) {
-			const allowed_types: string[] = ['string'];
+			const allowed_types: Set<string> = new Set(['string']);
 			let opts: Props;
 			if (node.parent.type === 'SvelteAttribute') {
 				if (!node.parent.value.find((n) => n.type === 'SvelteLiteral')) {
@@ -99,35 +100,26 @@ export default createRule('restrict-mustache-expressions', {
 				opts = config?.stringTemplateExpressions
 					? Object.assign(getDefaultOptions(), config.stringTemplateExpressions)
 					: config;
-			} else {
+			} else if (node.parent.type !== 'SvelteStyleDirective') {
 				// we are rendering a text expression, so we only allow stringifiable types
 				opts = config?.textExpressions
 					? Object.assign(getDefaultOptions(), config.textExpressions)
 					: config;
+			} else {
+				return;
 			}
+			console.log(getSourceCode(context).getText(node));
+			console.log(node);
 
 			const { allowBoolean, allowNull, allowUndefined, allowNumber } = opts;
-			if (allowBoolean === true) allowed_types.push('boolean');
-			if (allowNumber === true) allowed_types.push('number');
-			if (allowNull) allowed_types.push('null');
-			if (allowUndefined) allowed_types.push('undefined');
+			if (allowBoolean === true) allowed_types.add('boolean');
+			if (allowNumber === true) allowed_types.add('number');
+			if (allowNull) allowed_types.add('null');
+			if (allowUndefined) allowed_types.add('undefined');
 
 			const type = getNodeType(node.expression);
-
 			if (type) {
-				if (type.flags & TypeFlags.StringLike) {
-					return;
-				}
-				if (type.flags & TypeFlags.BooleanLike && allowBoolean) {
-					return;
-				}
-				if (type.flags & TypeFlags.NumberLike && allowNumber) {
-					return;
-				}
-				if (type.flags & TypeFlags.Null && allowNull) {
-					return;
-				}
-				if (type.flags & TypeFlags.Undefined && allowUndefined) {
+				if (type_allowed(type, allowed_types, tools!)) {
 					return;
 				}
 				context.report({
@@ -135,7 +127,7 @@ export default createRule('restrict-mustache-expressions', {
 					messageId: 'expectedStringifyableType',
 					data: {
 						type: getTypeName(type, tools!),
-						types: allowed_types.map((t) => `\`${t}\``).join(', ')
+						types: [...allowed_types].map((t) => `\`${t}\``).join(', ')
 					}
 				});
 			}
@@ -146,3 +138,32 @@ export default createRule('restrict-mustache-expressions', {
 		};
 	}
 });
+
+function type_allowed(type: TS.Type, allowed_types: Set<string>, tools: TSTools): boolean {
+	if (type.flags & TypeFlags.StringLike) {
+		return true;
+	}
+	if (type.flags & TypeFlags.BooleanLike) {
+		return allowed_types.has('boolean');
+	}
+	if (type.flags & TypeFlags.NumberLike) {
+		return allowed_types.has('number');
+	}
+	if (type.flags & TypeFlags.Null) {
+		return allowed_types.has('null');
+	}
+	if (type.flags & TypeFlags.Undefined) {
+		return allowed_types.has('undefined');
+	}
+	if (type.isUnion()) {
+		for (const sub_type of type.types) {
+			if (!type_allowed(sub_type, allowed_types, tools)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
