@@ -76,6 +76,7 @@ type Options = {
   allowNull?: boolean;
   // allows undefined in both svelte template literals and text expressions
   allowUndefined?: boolean;
+  // eg: <foo>{bar}</foo>
   textExpressions?: {
     // allows numbers in text expressions
     allowNumbers?: boolean;
@@ -86,6 +87,7 @@ type Options = {
     // allows undefined in text expressions
     allowUndefined?: boolean;
   };
+  // eg: <a href="foo/{bar}">foo</a>
   stringTemplateExpressions?: {
     // allows numbers in string template expressions
     allowNumbers?: boolean;
