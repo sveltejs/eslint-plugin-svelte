@@ -67,7 +67,6 @@ with that rule, as this only performs checks on svelte template strings (eg: `<a
 ```
 
 ```ts
-
 type Options = {
   // allows numbers in both svelte template literals and text expressions
   allowNumbers?: boolean;
@@ -86,7 +85,7 @@ type Options = {
     allowNull?: boolean;
     // allows undefined in text expressions
     allowUndefined?: boolean;
-  },
+  };
   stringTemplateExpressions?: {
     // allows numbers in string template expressions
     allowNumbers?: boolean;
@@ -96,7 +95,7 @@ type Options = {
     allowNull?: boolean;
     // allows undefined in string template expressions
     allowUndefined?: boolean;
-  }
+  };
 };
 
 type DefaultOptions = {
@@ -104,7 +103,7 @@ type DefaultOptions = {
   allowBooleans: true;
   allowNull: false;
   allowUndefined: false;
-}
+};
 ```
 
 ## More examples
@@ -112,12 +111,12 @@ type DefaultOptions = {
 <ESLintCodeBlock>
 
 ### Disallowing numbers
+
 <!--eslint-skip-->
 
 ```svelte
 <script lang="ts">
   /* eslint svelte/restrict-mustache-expressions: ["error", { "allowNumbers": false }] */
-
 </script>
 
 <!-- ✓ GOOD -->
@@ -190,7 +189,6 @@ type DefaultOptions = {
 ```
 
 </ESLintCodeBlock>
-
 
 ## :books: Further Reading
 

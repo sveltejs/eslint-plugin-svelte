@@ -4,7 +4,6 @@ import { TypeFlags } from 'typescript';
 import { type TSESTree } from '@typescript-eslint/types';
 import type { TS } from '../utils/ts-utils';
 import { getConstrainedTypeAtLocation, getTypeName, getTypeScriptTools } from '../utils/ts-utils';
-import { getSourceCode } from '../utils/compat';
 
 const props = {
 	allowBoolean: {
@@ -112,10 +111,6 @@ export default createRule('restrict-mustache-expressions', {
 			if (allowNumber === true) allowed_types.push('number');
 			if (allowNull) allowed_types.push('null');
 			if (allowUndefined) allowed_types.push('undefined');
-
-			// const sourceCode = getSourceCode(context);
-			// console.log(node.parent);
-			// console.log(sourceCode.getText(node));
 
 			const type = getNodeType(node.expression);
 
