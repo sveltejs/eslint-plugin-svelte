@@ -1,12 +1,12 @@
-- message: "Expected { invalid: string; } to be one of the following: `string`,
+- message: 'Expected `{ invalid: string; }` to be one of the following: `string`,
     `boolean`, `number`. You must cast or convert the expression to one of the
-    allowed types."
+    allowed types.'
   line: 6
   column: 14
   suggestions: null
-- message: "Expected { bar: string; } to be one of the following: `string`,
+- message: 'Expected `{ bar: string; }` to be one of the following: `string`,
     `boolean`, `number`. You must cast or convert the expression to one of the
-    allowed types."
+    allowed types.'
   line: 7
   column: 14
   suggestions: null

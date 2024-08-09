@@ -1,10 +1,10 @@
-- message: 'Expected undefined to be one of the following: `string`, `boolean`,
+- message: 'Expected `undefined` to be one of the following: `string`, `boolean`,
     `number`. You must cast or convert the expression to one of the allowed
     types.'
   line: 4
   column: 14
   suggestions: null
-- message: 'Expected any to be one of the following: `string`, `boolean`,
+- message: 'Expected `undefined` to be one of the following: `string`, `boolean`,
     `number`. You must cast or convert the expression to one of the allowed
     types.'
   line: 5

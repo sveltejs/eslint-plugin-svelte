@@ -1,10 +1,10 @@
-- message: "Expected true to be one of the following: `string`, `number`. You must
-    cast or convert the expression to one of the allowed types."
+- message: 'Expected `true` to be one of the following: `string`, `number`. You
+    must cast or convert the expression to one of the allowed types.'
   line: 4
   column: 14
   suggestions: null
-- message: "Expected boolean to be one of the following: `string`, `number`. You
-    must cast or convert the expression to one of the allowed types."
+- message: 'Expected `boolean` to be one of the following: `string`, `number`. You
+    must cast or convert the expression to one of the allowed types.'
   line: 5
   column: 14
   suggestions: null
