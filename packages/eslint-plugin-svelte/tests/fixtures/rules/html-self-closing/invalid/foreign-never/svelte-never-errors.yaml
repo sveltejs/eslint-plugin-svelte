@@ -1,0 +1,8 @@
+- message: Disallow self-closing on foreign (SVG or MathML) elements.
+  line: 2
+  column: 12
+  suggestions: null
+- message: Disallow self-closing on foreign (SVG or MathML) elements.
+  line: 3
+  column: 13
+  suggestions: null

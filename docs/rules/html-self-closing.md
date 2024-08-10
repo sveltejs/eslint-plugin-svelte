@@ -70,6 +70,7 @@ config object:
     {
       "void": "always", // or "never" or "ignore"
       "normal": "always", // or "never" or "ignore"
+      "foreign": "always", // or "never" or "ignore"
       "component": "always", // or "never" or "ignore"
       "svelte": "always" // or "never" or "ignore"
     }
@@ -86,6 +87,7 @@ presets:
 config object:
 
 - `void` (`"always"` in default preset)... Style of HTML void elements
+- `foreign` (`"always"` in default preset)... Style of foreign elements (SVG and MathML)
 - `component` (`"always"` in default preset)... Style of svelte components
 - `svelte` (`"always"` in default preset)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
 - `normal` (`"always"` in default preset)... Style of other elements

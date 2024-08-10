@@ -379,6 +379,7 @@ type SvelteHtmlQuotes = []|[{
 type SvelteHtmlSelfClosing = []|[({
   void?: ("never" | "always" | "ignore")
   normal?: ("never" | "always" | "ignore")
+  foreign?: ("never" | "always" | "ignore")
   component?: ("never" | "always" | "ignore")
   svelte?: ("never" | "always" | "ignore")
 } | ("all" | "html" | "none"))]

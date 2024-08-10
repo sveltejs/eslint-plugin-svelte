@@ -3,7 +3,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import * as eslintUtils from '@eslint-community/eslint-utils';
-import voidElements from './void-elements';
+import { voidElements, svgElements, mathmlElements } from './element-types';
 import { getSourceCode } from './compat';
 
 /**
@@ -558,6 +558,13 @@ export function getNodeName(node: SvAST.SvelteElement): string {
  */
 export function isVoidHtmlElement(node: SvAST.SvelteElement): boolean {
 	return voidElements.includes(getNodeName(node));
+}
+
+/**
+ * Returns true if element is known foreign (SVG or MathML) element
+ */
+export function isForeignElement(node: SvAST.SvelteElement): boolean {
+	return svgElements.includes(getNodeName(node)) || mathmlElements.includes(getNodeName(node));
 }
 
 /** Checks whether the given identifier node is used as an expression. */

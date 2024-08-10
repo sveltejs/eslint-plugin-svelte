@@ -1,16 +1,17 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils';
-import { getNodeName, isVoidHtmlElement } from '../utils/ast-utils';
+import { getNodeName, isVoidHtmlElement, isForeignElement } from '../utils/ast-utils';
 import { getSourceCode } from '../utils/compat';
 
 const TYPE_MESSAGES = {
 	normal: 'HTML elements',
 	void: 'HTML void elements',
+	foreign: 'foreign (SVG or MathML) elements',
 	component: 'Svelte custom components',
 	svelte: 'Svelte special elements'
 };
 
-type ElementTypes = 'normal' | 'void' | 'component' | 'svelte';
+type ElementTypes = 'normal' | 'void' | 'foreign' | 'component' | 'svelte';
 
 export default createRule('html-self-closing', {
 	meta: {
@@ -37,6 +38,9 @@ export default createRule('html-self-closing', {
 							normal: {
 								enum: ['never', 'always', 'ignore']
 							},
+							foreign: {
+								enum: ['never', 'always', 'ignore']
+							},
 							component: {
 								enum: ['never', 'always', 'ignore']
 							},
@@ -57,6 +61,7 @@ export default createRule('html-self-closing', {
 		let options = {
 			void: 'always',
 			normal: 'always',
+			foreign: 'always',
 			component: 'always',
 			svelte: 'always'
 		};
@@ -67,6 +72,7 @@ export default createRule('html-self-closing', {
 				options = {
 					void: 'never',
 					normal: 'never',
+					foreign: 'never',
 					component: 'never',
 					svelte: 'never'
 				};
@@ -75,6 +81,7 @@ export default createRule('html-self-closing', {
 				options = {
 					void: 'always',
 					normal: 'never',
+					foreign: 'always',
 					component: 'never',
 					svelte: 'always'
 				};
@@ -101,6 +108,7 @@ export default createRule('html-self-closing', {
 			if (node.kind === 'component') return 'component';
 			if (node.kind === 'special') return 'svelte';
 			if (isVoidHtmlElement(node)) return 'void';
+			if (isForeignElement(node)) return 'foreign';
 			return 'normal';
 		}
 
