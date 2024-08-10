@@ -5,8 +5,8 @@ import { loadTestCases } from '../../utils/utils';
 const tester = new RuleTester({
     languageOptions: {
         ecmaVersion: 2020,
-        sourceType: 'module'
-    }
+        sourceType: 'module',
+    },
 });
 
 tester.run('restrict-mustache-expressions', rule as any, loadTestCases('restrict-mustache-expressions'));

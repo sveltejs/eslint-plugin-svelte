@@ -1,5 +1,5 @@
 // IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
-export const name = 'eslint-plugin-svelte';
-export const version = '2.43.0';
+export const name = 'eslint-plugin-svelte-albert';
+export const version = '2.50.0';
