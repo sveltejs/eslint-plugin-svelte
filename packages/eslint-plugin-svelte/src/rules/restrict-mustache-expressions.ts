@@ -6,7 +6,6 @@ import type { TS, TSTools } from '../utils/ts-utils';
 import { getTypeName, getTypeScriptTools } from '../utils/ts-utils';
 import { findVariable } from '../utils/ast-utils';
 import type { RuleContext } from '../types';
-import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 
 const props = {
 	allowBoolean: {
