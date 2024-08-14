@@ -136,6 +136,7 @@ export type ASTNodeListener = {
 		node: TSESTree.TSEmptyBodyFunctionExpression & ASTNodeWithParent
 	) => void;
 	TSEnumDeclaration?: (node: TSESTree.TSEnumDeclaration & ASTNodeWithParent) => void;
+	TSEnumBody?: (node: TSESTree.TSEnumBody & ASTNodeWithParent) => void;
 	TSEnumMember?: (node: TSESTree.TSEnumMember & ASTNodeWithParent) => void;
 	TSExportAssignment?: (node: TSESTree.TSExportAssignment & ASTNodeWithParent) => void;
 	TSExportKeyword?: (node: TSESTree.TSExportKeyword & ASTNodeWithParent) => void;
@@ -355,6 +356,7 @@ export type TSNodeListener = {
 		node: TSESTree.TSEmptyBodyFunctionExpression & ASTNodeWithParent
 	) => void;
 	TSEnumDeclaration?: (node: TSESTree.TSEnumDeclaration & ASTNodeWithParent) => void;
+	TSEnumBody?: (node: TSESTree.TSEnumBody & ASTNodeWithParent) => void;
 	TSEnumMember?: (node: TSESTree.TSEnumMember & ASTNodeWithParent) => void;
 	TSExportAssignment?: (node: TSESTree.TSExportAssignment & ASTNodeWithParent) => void;
 	TSExportKeyword?: (node: TSESTree.TSExportKeyword & ASTNodeWithParent) => void;
