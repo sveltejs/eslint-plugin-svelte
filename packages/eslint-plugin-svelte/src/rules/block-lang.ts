@@ -1,5 +1,5 @@
 import { createRule } from '../utils';
-import { getLangValue } from '../utils/ast-utils';
+import { findAttribute, getLangValue } from '../utils/ast-utils';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
 import { getSourceCode } from '../utils/compat';
 
@@ -11,6 +11,7 @@ export default createRule('block-lang', {
 			category: 'Best Practices',
 			recommended: false
 		},
+		fixable: 'code',
 		schema: [
 			{
 				type: 'object',
@@ -88,7 +89,15 @@ export default createRule('block-lang', {
 						loc: { line: 1, column: 1 },
 						message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedScriptLangs
-						)}.`
+						)}.`,
+						*fix(fixer) {
+							const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
+
+							yield fixer.insertTextAfterRange(
+								[0, 0],
+								`<script${langAttributeText}>\n</script>\n\n`
+							);
+						}
 					});
 				}
 				for (const scriptNode of scriptNodes) {
@@ -97,7 +106,20 @@ export default createRule('block-lang', {
 							node: scriptNode,
 							message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
 								allowedScriptLangs
-							)}.`
+							)}.`,
+							*fix(fixer) {
+								const langAttribute = findAttribute(scriptNode, 'lang');
+								const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
+
+								if (langAttribute) {
+									yield fixer.replaceText(langAttribute, langAttributeText.trim());
+								} else {
+									yield fixer.insertTextBeforeRange(
+										[scriptNode.startTag.range[0] + 7, 0],
+										langAttributeText
+									);
+								}
+							}
 						});
 					}
 				}
@@ -106,7 +128,16 @@ export default createRule('block-lang', {
 						loc: { line: 1, column: 1 },
 						message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedStyleLangs
-						)}.`
+						)}.`,
+						*fix(fixer) {
+							const sourceCode = getSourceCode(context);
+							const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
+
+							yield fixer.insertTextAfterRange(
+								[sourceCode.text.length, sourceCode.text.length],
+								`\n\n<style${langAttributeText}>\n</style>`
+							);
+						}
 					});
 				}
 				for (const styleNode of styleNodes) {
@@ -115,7 +146,20 @@ export default createRule('block-lang', {
 							node: styleNode,
 							message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
 								allowedStyleLangs
-							)}.`
+							)}.`,
+							*fix(fixer) {
+								const langAttribute = findAttribute(styleNode, 'lang');
+								const langAttributeText = getLangAttributeText(allowedStyleLangs, true);
+
+								if (langAttribute) {
+									yield fixer.replaceText(langAttribute, langAttributeText.trim());
+								} else {
+									yield fixer.insertTextBeforeRange(
+										[styleNode.startTag.range[0] + 6, 0],
+										langAttributeText
+									);
+								}
+							}
 						});
 					}
 				}
@@ -138,4 +182,16 @@ function prettyPrintLangs(langs: (string | null)[]): string {
 	const nonNullText =
 		nonNullLangs.length === 1 ? nonNullLangs[0] : `one of ${nonNullLangs.join(', ')}`;
 	return hasNullText + nonNullText;
+}
+
+/**
+ * Returns the lang attribute text, with special handling of the `null` lang option with respect to the `prependWhitespace` argument.
+ */
+function getLangAttributeText(langs: (string | null)[], prependWhitespace: boolean): string {
+	if (!langs.length || langs.includes(null)) return '';
+	const [firstLang] = langs;
+	if (langs.length === 1 && firstLang) {
+		return `${prependWhitespace ? ' ' : ''}lang="${firstLang}"`;
+	}
+	return '';
 }
