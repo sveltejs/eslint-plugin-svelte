@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 2.44.0
+
+### Minor Changes
+
+- [#841](https://github.com/sveltejs/eslint-plugin-svelte/pull/841) [`85053a1`](https://github.com/sveltejs/eslint-plugin-svelte/commit/85053a1af237b78548a0a52f9d73ed5af695c354) Thanks [@jrmajor](https://github.com/jrmajor)! - feat: add config option for foreign elements in `svelte/html-self-closing` rule
+
+### Patch Changes
+
+- [#853](https://github.com/sveltejs/eslint-plugin-svelte/pull/853) [`690c04e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/690c04e5ce61999cb3846881cd8bd0b571fe2874) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to 0.41.1
+
 ## 2.43.0
 
 ### Minor Changes
