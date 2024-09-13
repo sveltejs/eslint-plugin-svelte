@@ -12,7 +12,7 @@ const legacyBaseContent = `/*
  * in order to update its content execute "pnpm run update"
  */
 import type { Linter } from 'eslint'
-const config: Linter.Config = {
+const config: Linter.LegacyConfig = {
   plugins: ["svelte"],
   overrides: [
     {
@@ -55,7 +55,7 @@ import path from "node:path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
-const config: Linter.Config = {
+const config: Linter.LegacyConfig = {
   extends: [baseExtend],
   rules: {
     // eslint-plugin-svelte rules
@@ -86,7 +86,7 @@ import path from "node:path"
 const base = require.resolve("./base")
 const baseExtend =
   path.extname(\`\${base}\`) === ".ts" ? "plugin:svelte/base" : base
-const config: Linter.Config = {
+const config: Linter.LegacyConfig = {
   extends: [baseExtend],
   rules: {
     // eslint-plugin-svelte rules
@@ -114,7 +114,7 @@ const baseContent = `/*
  * in order to update its content execute "pnpm run update"
  */
 import type { ESLint, Linter } from 'eslint';
-const config: Linter.FlatConfig[] = [
+const config: Linter.Config[] = [
   {
     name: 'svelte:base:setup-plugin',
     plugins: {
@@ -165,7 +165,7 @@ const recommendedContent = `/*
  */
 import type { Linter } from 'eslint';
 import base from "./base"
-const config: Linter.FlatConfig[] = [
+const config: Linter.Config[] = [
   ...base,
   {
     name: 'svelte:recommended:rules',
@@ -196,7 +196,7 @@ const prettierContent = `/*
  */
 import type { Linter } from 'eslint';
 import base from "./base"
-const config: Linter.FlatConfig[] = [
+const config: Linter.Config[] = [
   ...base,
   {
     name: 'svelte:prettier:turn-off-rules',

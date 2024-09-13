@@ -5,7 +5,7 @@ import type { Linter } from 'eslint';
 import path from 'node:path';
 const base = require.resolve('./base');
 const baseExtend = path.extname(`${base}`) === '.ts' ? 'plugin:svelte/base' : base;
-const config: Linter.Config = {
+const config: Linter.LegacyConfig = {
 	extends: [baseExtend],
 	rules: {
 		// eslint-plugin-svelte rules
