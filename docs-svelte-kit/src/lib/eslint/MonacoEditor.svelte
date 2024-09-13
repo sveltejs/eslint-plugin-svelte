@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	const appStarting = new Promise((resolve) => setTimeout(resolve, 300));
 </script>
 
