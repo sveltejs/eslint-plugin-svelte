@@ -10,7 +10,7 @@ since: 'v2.35.0'
 
 > disallow attributes and directives that produce inline styles
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports all attributes and directives that would compile to inline styles. This is mainly useful when adding Content Security Policy to your app, as having inline styles requires the `style-src: 'unsafe-inline'` directive, which is generally discouraged and unsafe.
 
@@ -43,7 +43,7 @@ This rule reports all attributes and directives that would compile to inline sty
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -58,15 +58,15 @@ This rule reports all attributes and directives that would compile to inline sty
 
 - `allowTransitions` ... Most svelte transitions (including the built-in ones) use inline styles. However, it is theoretically possible to only use transitions that don't (see this [issue](https://github.com/sveltejs/svelte/issues/6662) about removing inline styles from built-in transitions). This option allows transitions to be used in such cases. Default `false`.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [CSP documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.35.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-inline-styles.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-inline-styles.ts)

@@ -10,7 +10,7 @@ since: 'v2.5.0'
 
 > require initial value in store
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule is aimed to enforce initial values when initializing the Svelte stores.
 
@@ -36,7 +36,7 @@ export const d2 = derived([a, b], () => {});
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -47,11 +47,11 @@ This rule is compatible with `@tivac/svelte/stores-initial-value` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.5.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-stores-init.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-stores-init.ts)

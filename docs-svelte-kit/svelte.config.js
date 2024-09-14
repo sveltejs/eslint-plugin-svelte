@@ -1,3 +1,4 @@
+import { sveltePreprocess } from 'svelte-preprocess';
 import ghpagesAdapter from 'svelte-adapter-ghpages';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,6 +17,7 @@ const config = {
 		preserveWhitespace: true
 	},
 	extensions: ['.svelte', '.md'],
+	preprocess: sveltePreprocess(),
 	kit: {
 		paths: {
 			base: '/eslint-plugin-svelte',
@@ -26,6 +28,7 @@ const config = {
 			pages: outDir,
 			assets: outDir
 		}),
+
 		files: {
 			routes: path.join(dirname, './src/routes'),
 			appTemplate: path.join(dirname, './src/app.html'),

@@ -10,7 +10,7 @@ since: 'v2.14.0'
 
 > disallow duplicate `on:` directives
 
-## :book: Rule Details
+## 📖 Rule Details
 
 We can define any number of `on:` directive with the same event name, but duplicate directives with the exact same event name and expression are probably a mistake.
 This rule reports reports `on:` directives with exactly the same event name and expression.
@@ -42,15 +42,15 @@ This rule reports reports `on:` directives with exactly the same event name and 
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.14.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-dupe-on-directives.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-dupe-on-directives.ts)

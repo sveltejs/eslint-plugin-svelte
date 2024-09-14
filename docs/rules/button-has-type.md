@@ -10,7 +10,7 @@ since: 'v0.0.4'
 
 > disallow usage of button without an explicit type attribute
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule aims to warn if no type or an invalid type is used on a button type attribute.
 
@@ -36,7 +36,7 @@ This rule aims to warn if no type or an invalid type is used on a button type at
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -61,11 +61,11 @@ This rule aims to warn if no type or an invalid type is used on a button type at
   - `true` (default) ... allow value `reset`.
   - `false` ... disallow value `reset`.
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.4
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/button-has-type.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/button-has-type.ts)

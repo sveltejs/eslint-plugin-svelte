@@ -10,9 +10,9 @@ since: 'v2.3.0'
 
 > require or disallow a space before tag's closing brackets
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 You can choose either two styles for spacing before closing bracket
 
@@ -47,7 +47,7 @@ You can choose either two styles for spacing before closing bracket
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -72,11 +72,11 @@ Every option can be set to
 - "never" (`<div/>`)
 - "ignore" (either `<div />` or `<div/>`)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.3.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/html-closing-bracket-spacing.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/html-closing-bracket-spacing.ts)

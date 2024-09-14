@@ -10,7 +10,7 @@ since: 'v2.7.0'
 
 > disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports all uses of async/await inside svelte stores.
 Because it causes issues with the auto-unsubscribing features.
@@ -37,19 +37,19 @@ const d2 = derived(a1, async ($a1) => {});
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Docs > 4. Prefix stores with $ to access their values / Store contract](https://svelte.dev/docs#component-format-script-4-prefix-stores-with-$-to-access-their-values-store-contract)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.7.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-store-async.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-store-async.ts)

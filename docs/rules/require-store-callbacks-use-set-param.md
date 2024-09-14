@@ -10,7 +10,7 @@ since: 'v2.12.0'
 
 > store callbacks must use `set` param
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule disallows if `readable` / `writable` store's setter function doesn't use `set` parameter.<br>
 This rule doesn't check `derived` store. Therefore if you set a updated value asynchronously, please don't forget to use `set` function.
@@ -65,19 +65,19 @@ This rule doesn't check `derived` store. Therefore if you set a updated value as
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [Svelte - Docs > RUN TIME > svelte/store](https://svelte.dev/docs#run-time-svelte-store)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.12.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/require-store-callbacks-use-set-param.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/require-store-callbacks-use-set-param.ts)

@@ -12,7 +12,7 @@ since: 'v0.0.8'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule requires that function declarations and, optionally, variable declarations be in the root of a program or the body of a function.
 
@@ -45,7 +45,7 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -64,11 +64,11 @@ Same as [no-inner-declarations] rule option. See [here](https://eslint.org/docs/
 
 [no-inner-declarations]: https://eslint.org/docs/rules/no-inner-declarations
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.8
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-inner-declarations.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-inner-declarations.ts)

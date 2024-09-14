@@ -31,11 +31,11 @@
 
 <Header on:toggleSidebarOpen={handleToggleSidebar} />
 
-<SideMenu {sidebarOpen} hiddenMenu={frontmatter.hiddenMenu} />
+<SideMenu {sidebarOpen} hiddenMenu={false} />
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <main
-	class:hidden-menu={frontmatter.hiddenMenu}
+	class:hidden-menu={false}
 	on:click={sidebarOpen ? resetSidebarOpen : null}
 	on:keydown={sidebarOpen ? resetSidebarOpen : null}
 >

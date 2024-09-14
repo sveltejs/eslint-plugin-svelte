@@ -10,7 +10,7 @@ since: 'v2.27.0'
 
 > disallow reassigning reactive values
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule aims to prevent unintended behavior caused by modification or reassignment of reactive values.
 
@@ -41,7 +41,7 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -118,11 +118,11 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 
 </ESLintCodeBlock>
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.27.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-reactive-reassign.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-reactive-reassign.ts)

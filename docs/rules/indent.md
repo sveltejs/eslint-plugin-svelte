@@ -10,9 +10,9 @@ since: 'v0.3.0'
 
 > enforce consistent indentation
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule enforces a consistent indentation style in `.svelte`. The default style is 2 spaces.
 
@@ -71,7 +71,7 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 }
 ```
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -93,11 +93,11 @@ This rule only checks `.svelte` files and does not interfere with other `.js` fi
 - `switchCase` ... Enforces indentation level for case clauses in switch statements. Default is `1`.
 - `alignAttributesVertically` ... Condition for whether attributes should be vertically aligned to the first attribute in multiline case or not. Default is `false`
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.3.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/indent.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/indent.ts)
