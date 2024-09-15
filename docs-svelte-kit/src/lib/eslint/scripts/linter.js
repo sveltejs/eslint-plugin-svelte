@@ -125,7 +125,7 @@ export function getRule(ruleId) {
 }
 
 /**
- * @returns {import('eslint').Linter.FlatConfig[]}
+ * @returns {import('eslint').Linter.Config[]}
  */
 export function createLinterConfig() {
 	return [

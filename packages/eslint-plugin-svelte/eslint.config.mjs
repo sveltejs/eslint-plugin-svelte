@@ -2,7 +2,7 @@ import * as myPlugin from '@ota-meshi/eslint-plugin';
 import * as tseslint from 'typescript-eslint';
 
 /**
- * @type {import('eslint').Linter.FlatConfig[]}
+ * @type {import('eslint').Linter.Config[]}
  */
 const config = [
 	{
