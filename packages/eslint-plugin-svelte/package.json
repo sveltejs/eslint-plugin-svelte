@@ -85,7 +85,7 @@
     "@types/stylus": "^0.48.42",
     "acorn": "^8.12.1",
     "assert": "^2.1.0",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "esbuild-register": "^3.6.0",
     "eslint-scope": "^8.0.2",
     "eslint-typegen": "^0.3.2",
