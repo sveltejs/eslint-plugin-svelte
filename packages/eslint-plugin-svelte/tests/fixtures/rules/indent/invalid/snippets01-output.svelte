@@ -14,3 +14,16 @@
     }
   )
 }
+<div>
+  {#snippet example()}
+    <div></div>
+  {/snippet}
+
+  {
+    #snippet example_2()
+  }
+    <div></div>
+  {
+    /snippet
+  }
+</div>
