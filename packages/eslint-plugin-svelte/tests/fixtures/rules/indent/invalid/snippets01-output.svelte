@@ -27,3 +27,13 @@
     /snippet
   }
 </div>
+{
+  #snippet example_3
+    (
+
+    )
+}
+  <div></div>
+{
+  /snippet
+}
