@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.44.1
+
+### Patch Changes
+
+- [#864](https://github.com/sveltejs/eslint-plugin-svelte/pull/864) [`580e48a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/580e48ae0edcfd2cb5dd51863130a9c08b24829e) Thanks [@mikededo](https://github.com/mikededo)! - fix(svelte/indent): ensure proper snippet indent
+
 ## 2.44.0
 
 ### Minor Changes
