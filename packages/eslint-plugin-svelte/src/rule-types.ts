@@ -165,6 +165,7 @@ export interface RuleOptions {
    */
   'svelte/no-inner-declarations'?: Linter.RuleEntry<SvelteNoInnerDeclarations>
   /**
+   * Warns against the use of `$inspect` directive
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>

@@ -5,9 +5,10 @@ import { createRule } from '../utils';
 export default createRule('no-inspect', {
 	meta: {
 		docs: {
-			description: '',
+			description: 'Warns against the use of `$inspect` directive',
 			category: 'Best Practices',
-			recommended: true,
+			// TODO: Enable recommended in major version
+			recommended: false,
 			default: 'warn'
 		},
 		schema: [],

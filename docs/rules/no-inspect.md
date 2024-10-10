@@ -2,15 +2,14 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-inspect'
-description: ''
+description: 'Warns against the use of `$inspect` directive'
 ---
 
 # svelte/no-inspect
 
->
+> Warns against the use of `$inspect` directive
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
