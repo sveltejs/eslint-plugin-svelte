@@ -1,0 +1,12 @@
+- message: Do not use $inspect directive
+  line: 2
+  column: 3
+  suggestions: null
+- message: Do not use $inspect directive
+  line: 5
+  column: 13
+  suggestions: null
+- message: Do not use $inspect directive
+  line: 8
+  column: 5
+  suggestions: null
