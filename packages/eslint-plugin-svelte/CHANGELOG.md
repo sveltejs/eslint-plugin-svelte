@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.44.2
+
+### Patch Changes
+
+- [#856](https://github.com/sveltejs/eslint-plugin-svelte/pull/856) [`cf6c842`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cf6c842abc8730ef3841686a52273eec3906abcf) Thanks [@KuSh](https://github.com/KuSh)! - chore: Avoid using deprecated FlatConfig eslint type
+
 ## 2.44.1
 
 ### Patch Changes
