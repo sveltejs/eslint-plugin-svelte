@@ -21,7 +21,7 @@ void (async (ruleId) => {
 
 	const ruleFile = path.resolve(__dirname, `../src/rules/${ruleId}.ts`);
 	const testFile = path.resolve(__dirname, `../tests/src/rules/${ruleId}.ts`);
-	const docFile = path.resolve(__dirname, `../docs/rules/${ruleId}.md`);
+	const docFile = path.resolve(__dirname, `../../../docs/rules/${ruleId}.md`);
 	const fixturesRoot = path.resolve(__dirname, `../tests/fixtures/rules/${ruleId}/`);
 	try {
 		fs.mkdirSync(path.dirname(ruleFile), { recursive: true });
