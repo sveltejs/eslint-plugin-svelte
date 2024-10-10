@@ -1,0 +1,12 @@
+- message: Expected no line breaks before closing bracket, but 3 line breaks found.
+  line: 3
+  column: 8
+  suggestions: null
+- message: Expected no line breaks before closing bracket, but 1 line break found.
+  line: 8
+  column: 5
+  suggestions: null
+- message: Expected 1 line break before closing bracket, but no line breaks found.
+  line: 11
+  column: 14
+  suggestions: null
