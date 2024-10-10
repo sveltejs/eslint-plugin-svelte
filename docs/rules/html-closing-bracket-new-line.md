@@ -14,7 +14,7 @@ description: "require or disallow a line break before tag's closing brackets"
 
 ## :book: Rule Details
 
-This rule reports ???.
+This rule enforces a line break (or no line break) before tag's closing brackets, which can also be configured to be enforced on self-closing tags.
 
 <ESLintCodeBlock fix>
 
@@ -26,8 +26,31 @@ This rule reports ???.
 </script>
 
 <!-- ✓ GOOD -->
+<div></div>
+<div
+  multiline
+>
+  Children
+</div>
+
+<SelfClosing />
+<SelfClosing
+  multiline
+/>
 
 <!-- ✗ BAD -->
+
+<div
+></div>
+<div 
+  multiline>
+  Children
+</div>
+
+<SelfClosing
+/>
+<SelfClosing
+  multiline />
 ```
 
 </ESLintCodeBlock>
@@ -36,15 +59,23 @@ This rule reports ???.
 
 ```json
 {
-  "svelte/brackets-same-line": ["error", {}]
+  "svelte/brackets-same-line": ["error", {
+    "singleline": "never", // ["never", "always"]
+    "multiline": "always", // ["never", "always"]
+    "selfClosingTag": { 
+      "singleline": "never", // ["never", "always"]
+      "multiline": "always" // ["never", "always"]
+    }
+  }]
 }
 ```
 
--
+- `singleline`: (`"never"` by default) Configuration for single-line elements. It's a single-line element if the element does not have attributes or the last attribute is on the same line as the opening bracket.
+- `multiline`: (`"always"` by default) Configuration for multi-line elements. It's a multi-line element if the last attribute is not on the same line of the opening bracket.
+- `selfClosingTag.singleline`: Configuration for single-line self closing elements.
+- `selfClosingTag.multiline`: Configuration for multi-line self closing elements.
 
-## :books: Further Reading
-
--
+The `selfClosing` is optional, and by default it will use the same configuration as `singleline` and `multiline`, respectively.
 
 ## :mag: Implementation
 

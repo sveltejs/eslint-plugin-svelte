@@ -87,7 +87,7 @@ function getNodeData(
 export default createRule('html-closing-bracket-new-line', {
 	meta: {
 		docs: {
-			description: "require or disallow a line break before tag's closing brackets",
+			description: "Require or disallow a line break before tag's closing brackets",
 			category: 'Stylistic Issues',
 			recommended: false,
 			conflictWithPrettier: true
