@@ -5,7 +5,7 @@ import { writeAndFormat } from './lib/write';
 const logger = console;
 
 // main
-void (async (ruleId) => {
+void (async ([ruleId, ...args]) => {
 	if (ruleId == null) {
 		logger.error('Usage: pnpm run new <RuleID>');
 		process.exitCode = 1;
@@ -130,12 +130,43 @@ This rule reports ???.
 `
 	);
 
-	cp.execSync(`code "${ruleFile}"`);
-	cp.execSync(`code "${testFile}"`);
-	cp.execSync(`code "${docFile}"`);
-})(process.argv[2]);
+	const { code } = expectedArgs(args);
+	if (!code) {
+		return;
+	}
+
+	try {
+		// Use code -v to know if vscode is installed and do not print anything to the console
+		cp.execSync('code -v', { stdio: 'ignore' });
+		cp.execSync(`code "${ruleFile}"`);
+		cp.execSync(`code "${testFile}"`);
+		cp.execSync(`code "${docFile}"`);
+	} catch (_) {
+		logger.error('Unable to find code command. Will not open files with VSCode.');
+	}
+})(process.argv.slice(2));
 
 /** Get module path */
 function getModulePath(from: string, module: string): string {
 	return path.relative(path.dirname(from), module).replace(/.ts$/u, '');
+}
+
+/** Argument parsing */
+function expectedArgs(args: string[]) {
+	const result = { code: false };
+
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		const split = args[i].split('=');
+		if (arg === '--code') {
+			// Passing --code alone is the same as --code=true
+			result.code = args[i + 1] === 'true' || args[i + 1] === undefined;
+		} else if (split.length === 2) {
+			result.code = split[1] === 'true';
+		} else if (split.length > 2) {
+			logger.error('Usage: pnpm run new <RuleID> <--code=boolean>');
+		}
+	}
+
+	return result;
 }
