@@ -2,12 +2,12 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/html-closing-bracket-new-line'
-description: "require or disallow a line break before tag's closing brackets"
+description: "Require or disallow a line break before tag's closing brackets"
 ---
 
 # svelte/html-closing-bracket-new-line
 
-> require or disallow a line break before tag's closing brackets
+> Require or disallow a line break before tag's closing brackets
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
@@ -18,6 +18,7 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 <ESLintCodeBlock fix>
 
+<!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
 ```svelte
@@ -42,7 +43,7 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 <div
 ></div>
-<div 
+<div
   multiline>
   Children
 </div>
@@ -50,8 +51,10 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 <SelfClosing
 />
 <SelfClosing
-  multiline />
+  multiline/>
 ```
+
+<!-- prettier-ignore-end -->
 
 </ESLintCodeBlock>
 
@@ -59,14 +62,17 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 ```jsonc
 {
-  "svelte/brackets-same-line": ["error", {
-    "singleline": "never", // ["never", "always"]
-    "multiline": "always", // ["never", "always"]
-    "selfClosingTag": { 
+  "svelte/brackets-same-line": [
+    "error",
+    {
       "singleline": "never", // ["never", "always"]
-      "multiline": "always" // ["never", "always"]
+      "multiline": "always", // ["never", "always"]
+      "selfClosingTag": {
+        "singleline": "never", // ["never", "always"]
+        "multiline": "always" // ["never", "always"]
+      }
     }
-  }]
+  ]
 }
 ```
 

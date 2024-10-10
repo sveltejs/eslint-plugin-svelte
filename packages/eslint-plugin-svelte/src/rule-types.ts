@@ -55,7 +55,7 @@ export interface RuleOptions {
    */
   'svelte/first-attribute-linebreak'?: Linter.RuleEntry<SvelteFirstAttributeLinebreak>
   /**
-   * require or disallow a line break before tag's closing brackets
+   * Require or disallow a line break before tag's closing brackets
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/
    */
   'svelte/html-closing-bracket-new-line'?: Linter.RuleEntry<SvelteHtmlClosingBracketNewLine>
