@@ -13,7 +13,7 @@ This rule reports usages of `$inspect`.
 ```svelte
 <script>
   /* eslint svelte/no-inspect: "error" */
-  <!-- ✗ BAD -->
+  // ✗ BAD
   $inspect(1);
 </script>
 ```
