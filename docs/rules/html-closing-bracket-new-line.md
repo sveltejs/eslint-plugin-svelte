@@ -57,7 +57,7 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 ## :wrench: Options
 
-```json
+```jsonc
 {
   "svelte/brackets-same-line": ["error", {
     "singleline": "never", // ["never", "always"]
