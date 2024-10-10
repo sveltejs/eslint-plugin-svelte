@@ -16,6 +16,7 @@ const config: Linter.LegacyConfig = {
 		'svelte/no-dupe-style-properties': 'error',
 		'svelte/no-dynamic-slot-name': 'error',
 		'svelte/no-inner-declarations': 'error',
+		'svelte/no-inspect': 'warn',
 		'svelte/no-not-function-handler': 'error',
 		'svelte/no-object-in-text-mustaches': 'error',
 		'svelte/no-shorthand-style-property-overrides': 'error',

@@ -1,6 +1,16 @@
-# (svelte/no-inspect)
+---
+pageClass: 'rule-details'
+sidebarDepth: 0
+title: 'svelte/no-inspect'
+description: ''
+---
 
-> Warns against the usage of `$inspect`.
+# svelte/no-inspect
+
+>
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 

@@ -165,6 +165,10 @@ export interface RuleOptions {
    */
   'svelte/no-inner-declarations'?: Linter.RuleEntry<SvelteNoInnerDeclarations>
   /**
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/
+   */
+  'svelte/no-inspect'?: Linter.RuleEntry<[]>
+  /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
    */
