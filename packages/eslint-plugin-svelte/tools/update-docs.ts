@@ -79,15 +79,13 @@ class DocFile {
 				if (Array.isArray(replacedBy)) {
 					const replacedRules = replacedBy.map((name) => `[svelte/${name}](${name}.md) rule`);
 					notes.push(
-						`- :warning: This rule was **deprecated** and replaced by ${formatItems(
-							replacedRules
-						)}.`
+						`- ⚠️ This rule was **deprecated** and replaced by ${formatItems(replacedRules)}.`
 					);
 				} else {
-					notes.push(`- :warning: This rule was **deprecated**. ${replacedBy.note}`);
+					notes.push(`- ⚠️ This rule was **deprecated**. ${replacedBy.note}`);
 				}
 			} else {
-				notes.push('- :warning: This rule was **deprecated**.');
+				notes.push('- ⚠️ This rule was **deprecated**.');
 			}
 		} else if (recommended) {
 			if (recommended === 'base') {
@@ -100,12 +98,12 @@ class DocFile {
 		}
 		if (fixable) {
 			notes.push(
-				'- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.'
+				'- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.'
 			);
 		}
 		if (hasSuggestions) {
 			notes.push(
-				'- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).'
+				'- 💡 Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).'
 			);
 		}
 		if (!this.since) {
@@ -133,16 +131,16 @@ class DocFile {
 
 	public async updateFooter() {
 		const { ruleName, extensionRule } = this.rule.meta.docs;
-		const footerPattern = /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s;
+		const footerPattern = /## (?:(?:🔍)? ?Implementation|🚀 Version).+$/s;
 		const footer = `${
 			this.since
-				? `## :rocket: Version
+				? `## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte ${await this.since}
 
 `
 				: ''
-		}## :mag: Implementation
+		}## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/${ruleName}.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/${ruleName}.ts)

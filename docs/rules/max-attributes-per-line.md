@@ -10,9 +10,9 @@ since: 'v0.2.0'
 
 > enforce the maximum number of attributes per line
 
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- 🔧 The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 Limits the maximum number of attributes/directives per line to improve readability.
 
@@ -59,7 +59,7 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 <!-- prettier-ignore-end -->
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -82,11 +82,11 @@ There is a configurable number of attributes that are acceptable in one-line cas
 
 [svelte/first-attribute-linebreak]: ./first-attribute-linebreak.md
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.2.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/max-attributes-per-line.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/max-attributes-per-line.ts)

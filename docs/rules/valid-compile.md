@@ -12,7 +12,7 @@ since: 'v0.7.0'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule uses Svelte compiler to check the source code.
 
@@ -76,7 +76,7 @@ export default {
 };
 ```
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -107,11 +107,11 @@ export default {
 
 </ESLintCodeBlock>
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.7.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/valid-compile.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/valid-compile.ts)

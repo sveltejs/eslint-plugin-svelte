@@ -10,7 +10,7 @@ since: 'v2.12.0'
 
 > disallow props other than data or errors in SvelteKit page components.
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports unexpected exported variables at `<script>`.<br>
 At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to the props returned from a load function, page components now have a single data prop.
@@ -52,19 +52,19 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing. But if use are using not default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte-kit).
 
-## :books: Further Reading
+## 📚 Further Reading
 
 - [SvelteKit Migration Guide (v1.0.0-next.405)](https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.12.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/valid-prop-names-in-kit-pages.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/valid-prop-names-in-kit-pages.ts)

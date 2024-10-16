@@ -10,9 +10,9 @@ since: 'v2.4.0'
 
 > disallow wrapping single reactive statements in curly braces
 
-- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
+- 💡 Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule reports if curly brackets (`{` and `}`) are used unnecessarily around a reactive statement body containing only a single expression.
 
@@ -36,7 +36,7 @@ This rule reports if curly brackets (`{` and `}`) are used unnecessarily around 
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 Nothing.
 
@@ -47,11 +47,11 @@ This rule is compatible with `@tivac/svelte/reactive-curlies` rule.
 
 [@tivac/eslint-plugin-svelte]: https://github.com/tivac/eslint-plugin-svelte/
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v2.4.0
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-extra-reactive-curlies.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-extra-reactive-curlies.ts)

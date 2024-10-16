@@ -10,7 +10,7 @@ since: 'v0.0.4'
 
 > disallow `target="_blank"` attribute without `rel="noopener noreferrer"`
 
-## :book: Rule Details
+## 📖 Rule Details
 
 This rule disallows using `target="_blank"` attribute without `rel="noopener noreferrer"` to avoid a security vulnerability in legacy browsers where a page can trigger a navigation in the opener regardless of origin ([see here for more details](https://mathiasbynens.github.io/rel-noopener/)).
 
@@ -32,7 +32,7 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 </ESLintCodeBlock>
 
-## :wrench: Options
+## 🔧 Options
 
 ```json
 {
@@ -129,11 +129,11 @@ This rule disallows using `target="_blank"` attribute without `rel="noopener nor
 
 </ESLintCodeBlock>
 
-## :rocket: Version
+## 🚀 Version
 
 This rule was introduced in eslint-plugin-svelte v0.0.4
 
-## :mag: Implementation
+## 🔍 Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-target-blank.ts)
 - [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-target-blank.ts)
