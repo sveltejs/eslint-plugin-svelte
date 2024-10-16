@@ -32,6 +32,7 @@ import noIgnoredUnsubscribe from '../rules/no-ignored-unsubscribe';
 import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statements';
 import noInlineStyles from '../rules/no-inline-styles';
 import noInnerDeclarations from '../rules/no-inner-declarations';
+import noInspect from '../rules/no-inspect';
 import noNotFunctionHandler from '../rules/no-not-function-handler';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches';
 import noReactiveFunctions from '../rules/no-reactive-functions';
@@ -97,6 +98,7 @@ export const rules = [
 	noImmutableReactiveStatements,
 	noInlineStyles,
 	noInnerDeclarations,
+	noInspect,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noReactiveFunctions,
