@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 2.45.0
+
+### Minor Changes
+
+- [#870](https://github.com/sveltejs/eslint-plugin-svelte/pull/870) [`b0373be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b0373bef49e4225751c98c3c46c6099cb7d1ca72) Thanks [@mikededo](https://github.com/mikededo)! - feat(html-closing-bracket-new-line): add `html-closing-bracket-new-line` rule
+
+- [#868](https://github.com/sveltejs/eslint-plugin-svelte/pull/868) [`edf99d3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/edf99d3d7b7bf47def460efce4aabe59c2ce446d) Thanks [@mikededo](https://github.com/mikededo)! - feat(no-inspect): add `no-inspect` rule
+
+### Patch Changes
+
+- [#856](https://github.com/sveltejs/eslint-plugin-svelte/pull/856) [`cf6c842`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cf6c842abc8730ef3841686a52273eec3906abcf) Thanks [@KuSh](https://github.com/KuSh)! - chore: Avoid using deprecated FlatConfig eslint type
+
 ## 2.44.1
 
 ### Patch Changes
