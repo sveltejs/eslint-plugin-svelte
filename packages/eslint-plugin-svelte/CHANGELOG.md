@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 2.45.1
+
+### Patch Changes
+
+- [#874](https://github.com/sveltejs/eslint-plugin-svelte/pull/874) [`457521a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/457521aef18ba95b99eb5e9c79a81d0a4fb3552e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to v0.42
+
 ## 2.45.0
 
 ### Minor Changes
