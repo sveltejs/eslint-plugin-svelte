@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [`7460836`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7460836b0d81f45bbe86a1f0394aec34b94039c6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(html-closing-bracket-new-line): add `html-closing-bracket-new-line` rule
+- [#870](https://github.com/sveltejs/eslint-plugin-svelte/pull/870) [`b0373be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b0373bef49e4225751c98c3c46c6099cb7d1ca72) Thanks [@mikededo](https://github.com/mikededo)! - feat(html-closing-bracket-new-line): add `html-closing-bracket-new-line` rule
 
 - [#868](https://github.com/sveltejs/eslint-plugin-svelte/pull/868) [`edf99d3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/edf99d3d7b7bf47def460efce4aabe59c2ce446d) Thanks [@mikededo](https://github.com/mikededo)! - feat(no-inspect): add `no-inspect` rule
 
