@@ -10,6 +10,7 @@ import derivedHasSameInputsOutputs from '../rules/derived-has-same-inputs-output
 import experimentalRequireSlotTypes from '../rules/experimental-require-slot-types';
 import experimentalRequireStrictEvents from '../rules/experimental-require-strict-events';
 import firstAttributeLinebreak from '../rules/first-attribute-linebreak';
+import htmlClosingBracketNewLine from '../rules/html-closing-bracket-new-line';
 import htmlClosingBracketSpacing from '../rules/html-closing-bracket-spacing';
 import htmlQuotes from '../rules/html-quotes';
 import htmlSelfClosing from '../rules/html-self-closing';
@@ -76,6 +77,7 @@ export const rules = [
 	experimentalRequireSlotTypes,
 	experimentalRequireStrictEvents,
 	firstAttributeLinebreak,
+	htmlClosingBracketNewLine,
 	htmlClosingBracketSpacing,
 	htmlQuotes,
 	htmlSelfClosing,

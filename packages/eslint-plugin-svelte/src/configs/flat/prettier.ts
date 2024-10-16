@@ -10,6 +10,7 @@ const config: Linter.Config[] = [
 		rules: {
 			// eslint-plugin-svelte rules
 			'svelte/first-attribute-linebreak': 'off',
+			'svelte/html-closing-bracket-new-line': 'off',
 			'svelte/html-closing-bracket-spacing': 'off',
 			'svelte/html-quotes': 'off',
 			'svelte/html-self-closing': 'off',

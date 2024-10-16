@@ -55,6 +55,11 @@ export interface RuleOptions {
    */
   'svelte/first-attribute-linebreak'?: Linter.RuleEntry<SvelteFirstAttributeLinebreak>
   /**
+   * Require or disallow a line break before tag's closing brackets
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/
+   */
+  'svelte/html-closing-bracket-new-line'?: Linter.RuleEntry<SvelteHtmlClosingBracketNewLine>
+  /**
    * require or disallow a space before tag's closing brackets
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/
    */
@@ -365,6 +370,15 @@ type SvelteCommentDirective = []|[{
 type SvelteFirstAttributeLinebreak = []|[{
   multiline?: ("below" | "beside")
   singleline?: ("below" | "beside")
+}]
+// ----- svelte/html-closing-bracket-new-line -----
+type SvelteHtmlClosingBracketNewLine = []|[{
+  singleline?: ("always" | "never")
+  multiline?: ("always" | "never")
+  selfClosingTag?: {
+    singleline?: ("always" | "never")
+    multiline?: ("always" | "never")
+  }
 }]
 // ----- svelte/html-closing-bracket-spacing -----
 type SvelteHtmlClosingBracketSpacing = []|[{
