@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/html-closing-bracket-new-line'
 description: "Require or disallow a line break before tag's closing brackets"
+since: 'v2.45.0'
 ---
 
 # svelte/html-closing-bracket-new-line
 
 > Require or disallow a line break before tag's closing brackets
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -82,6 +82,10 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 - `selfClosingTag.multiline`: Configuration for multi-line self closing elements.
 
 The `selfClosing` is optional, and by default it will use the same configuration as `singleline` and `multiline`, respectively.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.45.0
 
 ## :mag: Implementation
 

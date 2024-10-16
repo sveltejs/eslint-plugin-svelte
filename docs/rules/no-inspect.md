@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-inspect'
 description: 'Warns against the use of `$inspect` directive'
+since: 'v2.45.0'
 ---
 
 # svelte/no-inspect
 
 > Warns against the use of `$inspect` directive
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -32,6 +31,10 @@ This rule reports usages of `$inspect`.
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v2.45.0
 
 ## :mag: Implementation
 
