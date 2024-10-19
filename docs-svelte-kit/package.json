@@ -18,7 +18,7 @@
     "@sindresorhus/slugify": "^2.2.1",
     "@sveltejs/adapter-static": "^3.0.5",
     "@sveltejs/kit": "^2.7.1",
-    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@types/babel__core": "^7.20.5",
     "@types/cross-spawn": "^6.0.6",
     "@types/escape-html": "^1.0.4",
