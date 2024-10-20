@@ -97,7 +97,7 @@
     "postcss-nested": "^6.2.0",
     "sass": "^1.79.5",
     "source-map-js": "^1.2.1",
-    "stylus": "^0.63.0",
+    "stylus": "^0.64.0",
     "svelte": "^5.0.0-next.268",
     "svelte-i18n": "^4.0.0",
     "type-coverage": "^2.29.7",
