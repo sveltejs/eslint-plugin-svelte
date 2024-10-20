@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 2.46.0
+
+### Minor Changes
+
+- [#881](https://github.com/sveltejs/eslint-plugin-svelte/pull/881) [`051925c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/051925c742e1cae98cc8e7f637a6a510e472128f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte to v5.0.0
+
+- [#884](https://github.com/sveltejs/eslint-plugin-svelte/pull/884) [`bbc3e07`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bbc3e07931da8f4aff2044a4792064200b63ab60) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.43.0
+
 ## 2.45.1
 
 ### Patch Changes
