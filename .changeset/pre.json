@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "eslint-plugin-svelte": "2.46.0"
+  },
+  "changesets": []
+}
