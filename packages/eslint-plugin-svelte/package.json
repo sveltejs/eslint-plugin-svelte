@@ -8,7 +8,7 @@
   "funding": "https://github.com/sponsors/ota-meshi",
   "license": "MIT",
   "engines": {
-    "node": "^14.17.0 || >=16.0.0"
+    "node": "^18.20.4 || ^20.18.0 || >=22.10.0"
   },
   "type": "commonjs",
   "main": "lib/index.js",
