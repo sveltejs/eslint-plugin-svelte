@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.0
+
+### Major Changes
+
+- [#885](https://github.com/sveltejs/eslint-plugin-svelte/pull/885) [`ce2ffad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ce2ffad105b1c6ed2df02a9c2b84f3b654d99ad5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old node versions (<18, 19, 21)
+
 ## 2.46.0
 
 ### Minor Changes
