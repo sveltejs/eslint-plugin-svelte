@@ -94,7 +94,7 @@
     "less": "^4.2.0",
     "mocha": "^10.7.3",
     "nyc": "^17.1.0",
-    "postcss-nested": "^6.2.0",
+    "postcss-nested": "^7.0.0",
     "sass": "^1.79.5",
     "source-map-js": "^1.2.1",
     "stylus": "^0.64.0",
