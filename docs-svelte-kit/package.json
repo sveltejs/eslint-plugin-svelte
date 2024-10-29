@@ -29,7 +29,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-container": "^2.0.10",
     "@types/markdown-it-emoji": "^3.0.1",
-    "@types/node": "^20.16.13",
+    "@types/node": "^22.0.0",
     "@types/prismjs": "^1.26.4",
     "@types/stylus": "^0.48.43",
     "@typescript/vfs": "^1.6.0",
