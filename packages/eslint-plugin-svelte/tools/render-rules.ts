@@ -90,7 +90,7 @@ ${cat.rules.map(toRuleRow).join('\n')}
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID | Replaced by |
+| Rule ID | Note |
 |:--------|:------------|
 ${deprecatedRules.map(toDeprecatedRuleRow).join('\n')}
 `;
