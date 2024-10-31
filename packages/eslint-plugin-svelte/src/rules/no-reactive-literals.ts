@@ -4,6 +4,10 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-reactive-literals', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Reactive statements are deprecated in Svelte 5'
+		},
 		docs: {
 			description: "don't assign literal values in reactive statements",
 			category: 'Best Practices',

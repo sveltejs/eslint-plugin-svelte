@@ -10,6 +10,8 @@ since: 'v2.14.0'
 
 > disallow duplicate `on:` directives
 
+- :warning: This rule was **deprecated**. Duplicate `on:` cause an error in Svelte 5
+
 ## :book: Rule Details
 
 We can define any number of `on:` directive with the same event name, but duplicate directives with the exact same event name and expression are probably a mistake.

@@ -10,6 +10,8 @@ since: 'v2.27.0'
 
 > disallow reassigning reactive values
 
+- :warning: This rule was **deprecated**. Reactive statements are deprecated in Svelte 5
+
 ## :book: Rule Details
 
 This rule aims to prevent unintended behavior caused by modification or reassignment of reactive values.

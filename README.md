@@ -379,17 +379,13 @@ These rules relate to possible syntax or logic errors in Svelte code:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |  |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
-| [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives |  |
 | [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives |  |
-| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |  |
 | [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
-| [svelte/no-reactive-reassign](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/) | disallow reassigning reactive values |  |
 | [svelte/no-shorthand-style-property-overrides](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :star: |
 | [svelte/no-store-async](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
 | [svelte/no-unknown-style-directive-property](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
@@ -417,18 +413,14 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/button-has-type](https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star: |
 | [svelte/no-ignored-unsubscribe](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/) | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores. |  |
-| [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. |  |
 | [svelte/no-inline-styles](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/) | disallow attributes and directives that produce inline styles |  |
 | [svelte/no-inspect](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/) | Warns against the use of `$inspect` directive |  |
-| [svelte/no-reactive-functions](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :bulb: |
-| [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-svelte-internal](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/) | svelte/internal will be removed in Svelte 6. |  |
 | [svelte/no-unused-class-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/) | disallow the use of a class in the template without a corresponding style |  |
 | [svelte/no-unused-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block |  |
-| [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` |  |
 | [svelte/require-optimized-style-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
 | [svelte/require-stores-init](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 | [svelte/valid-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/) | enforce keys to use variables defined in the `{#each}` block |  |
@@ -481,8 +473,7 @@ These rules relate to SvelteKit and its best Practices.
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/experimental-require-slot-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types/) | require slot type declaration using the `$$Slots` interface |  |
-| [svelte/experimental-require-strict-events](https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/) | require the strictEvents attribute on `<script>` tags |  |
+
 
 ## System
 
@@ -498,9 +489,19 @@ These rules relate to this plugin works:
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID | Replaced by |
+| Rule ID | Note |
 |:--------|:------------|
 | [svelte/@typescript-eslint/no-unnecessary-condition](https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| [svelte/experimental-require-slot-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types/) | Slots are deprecated in Svelte 5 |
+| [svelte/experimental-require-strict-events](https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/) | Slots are deprecated in Svelte 5 |
+| [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Slots are deprecated in Svelte 5 |
+| [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | Duplicate `on:` cause an error in Svelte 5 |
+| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | Slots are deprecated in Svelte 5 |
+| [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | Reactive statements are deprecated in Svelte 5 |
+| [svelte/no-reactive-functions](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | Reactive statements are deprecated in Svelte 5 |
+| [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | Reactive statements are deprecated in Svelte 5 |
+| [svelte/no-reactive-reassign](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/) | Reactive statements are deprecated in Svelte 5 |
+| [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | Event dispatchers are deprecated in Svelte 5 |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

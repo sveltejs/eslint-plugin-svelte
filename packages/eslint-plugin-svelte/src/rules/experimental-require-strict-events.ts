@@ -7,6 +7,10 @@ const EVENTS_TYPE_NAME = '$$Events';
 
 export default createRule('experimental-require-strict-events', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Slots are deprecated in Svelte 5'
+		},
 		docs: {
 			description: 'require the strictEvents attribute on `<script>` tags',
 			category: 'Experimental',

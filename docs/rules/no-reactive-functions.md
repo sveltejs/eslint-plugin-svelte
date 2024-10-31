@@ -10,6 +10,7 @@ since: 'v2.5.0'
 
 > it's not necessary to define functions in reactive statements
 
+- :warning: This rule was **deprecated**. Reactive statements are deprecated in Svelte 5
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details

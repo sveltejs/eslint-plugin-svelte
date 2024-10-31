@@ -14,7 +14,6 @@ const config: Linter.Config[] = [
 			'svelte/no-at-html-tags': 'error',
 			'svelte/no-dupe-else-if-blocks': 'error',
 			'svelte/no-dupe-style-properties': 'error',
-			'svelte/no-dynamic-slot-name': 'error',
 			'svelte/no-inner-declarations': 'error',
 			'svelte/no-not-function-handler': 'error',
 			'svelte/no-object-in-text-mustaches': 'error',

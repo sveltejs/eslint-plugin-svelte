@@ -42,11 +42,13 @@ export interface RuleOptions {
   /**
    * require slot type declaration using the `$$Slots` interface
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types/
+   * @deprecated
    */
   'svelte/experimental-require-slot-types'?: Linter.RuleEntry<[]>
   /**
    * require the strictEvents attribute on `<script>` tags
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/
+   * @deprecated
    */
   'svelte/experimental-require-strict-events'?: Linter.RuleEntry<[]>
   /**
@@ -82,6 +84,7 @@ export interface RuleOptions {
   /**
    * Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/
+   * @deprecated
    */
   'svelte/infinite-reactive-loop'?: Linter.RuleEntry<[]>
   /**
@@ -117,6 +120,7 @@ export interface RuleOptions {
   /**
    * disallow duplicate `on:` directives
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/
+   * @deprecated
    */
   'svelte/no-dupe-on-directives'?: Linter.RuleEntry<[]>
   /**
@@ -132,6 +136,7 @@ export interface RuleOptions {
   /**
    * disallow dynamic slot name
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/
+   * @deprecated
    */
   'svelte/no-dynamic-slot-name'?: Linter.RuleEntry<[]>
   /**
@@ -157,6 +162,7 @@ export interface RuleOptions {
   /**
    * disallow reactive statements that don't reference reactive values.
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/
+   * @deprecated
    */
   'svelte/no-immutable-reactive-statements'?: Linter.RuleEntry<[]>
   /**
@@ -187,16 +193,19 @@ export interface RuleOptions {
   /**
    * it's not necessary to define functions in reactive statements
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/
+   * @deprecated
    */
   'svelte/no-reactive-functions'?: Linter.RuleEntry<[]>
   /**
    * don't assign literal values in reactive statements
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/
+   * @deprecated
    */
   'svelte/no-reactive-literals'?: Linter.RuleEntry<[]>
   /**
    * disallow reassigning reactive values
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/
+   * @deprecated
    */
   'svelte/no-reactive-reassign'?: Linter.RuleEntry<SvelteNoReactiveReassign>
   /**
@@ -277,6 +286,7 @@ export interface RuleOptions {
   /**
    * require type parameters for `createEventDispatcher`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/
+   * @deprecated
    */
   'svelte/require-event-dispatcher-types'?: Linter.RuleEntry<[]>
   /**

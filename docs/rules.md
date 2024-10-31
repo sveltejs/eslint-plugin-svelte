@@ -14,26 +14,22 @@ sidebarDepth: 0
 
 These rules relate to possible syntax or logic errors in Svelte code:
 
-| Rule ID                                                                                                        | Description                                                                                                                            |                |
-| :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
-| [svelte/infinite-reactive-loop](./rules/infinite-reactive-loop.md)                                             | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |                |
-| [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md)                                                   | disallow DOM manipulating                                                                                                              |                |
-| [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md)                                             | disallow duplicate conditions in `{#if}` / `{:else if}` chains                                                                         | :star:         |
-| [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md)                                               | disallow duplicate `on:` directives                                                                                                    |                |
-| [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md)                                         | disallow duplicate style properties                                                                                                    | :star:         |
-| [svelte/no-dupe-use-directives](./rules/no-dupe-use-directives.md)                                             | disallow duplicate `use:` directives                                                                                                   |                |
-| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md)                                                 | disallow dynamic slot name                                                                                                             | :star::wrench: |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.                                                   |                |
-| [svelte/no-not-function-handler](./rules/no-not-function-handler.md)                                           | disallow use of not function in event handler                                                                                          | :star:         |
-| [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md)                                   | disallow objects in text mustache interpolation                                                                                        | :star:         |
-| [svelte/no-reactive-reassign](./rules/no-reactive-reassign.md)                                                 | disallow reassigning reactive values                                                                                                   |                |
-| [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md)               | disallow shorthand style properties that override related longhand properties                                                          | :star:         |
-| [svelte/no-store-async](./rules/no-store-async.md)                                                             | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features                          |                |
-| [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md)                   | disallow unknown `style:property`                                                                                                      | :star:         |
-| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md)               | store callbacks must use `set` param                                                                                                   |                |
-| [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                               | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                                               | :wrench:       |
-| [svelte/valid-compile](./rules/valid-compile.md)                                                               | disallow warnings when compiling.                                                                                                      | :star:         |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                                                                 |                |
+| Rule ID                                                                                                        | Description                                                                                                   |          |
+| :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ | :------- |
+| [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md)                                                   | disallow DOM manipulating                                                                                     |          |
+| [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md)                                             | disallow duplicate conditions in `{#if}` / `{:else if}` chains                                                | :star:   |
+| [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md)                                         | disallow duplicate style properties                                                                           | :star:   |
+| [svelte/no-dupe-use-directives](./rules/no-dupe-use-directives.md)                                             | disallow duplicate `use:` directives                                                                          |          |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.                          |          |
+| [svelte/no-not-function-handler](./rules/no-not-function-handler.md)                                           | disallow use of not function in event handler                                                                 | :star:   |
+| [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md)                                   | disallow objects in text mustache interpolation                                                               | :star:   |
+| [svelte/no-shorthand-style-property-overrides](./rules/no-shorthand-style-property-overrides.md)               | disallow shorthand style properties that override related longhand properties                                 | :star:   |
+| [svelte/no-store-async](./rules/no-store-async.md)                                                             | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |          |
+| [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md)                   | disallow unknown `style:property`                                                                             | :star:   |
+| [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md)               | store callbacks must use `set` param                                                                          |          |
+| [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                               | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                      | :wrench: |
+| [svelte/valid-compile](./rules/valid-compile.md)                                                               | disallow warnings when compiling.                                                                             | :star:   |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                                        |          |
 
 ## Security Vulnerability
 
@@ -54,18 +50,14 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/button-has-type](./rules/button-has-type.md)                                     | disallow usage of button without an explicit type attribute                                                                               |          |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md)                                   | disallow the use of `{@debug}`                                                                                                            | :star:   |
 | [svelte/no-ignored-unsubscribe](./rules/no-ignored-unsubscribe.md)                       | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.                                                  |          |
-| [svelte/no-immutable-reactive-statements](./rules/no-immutable-reactive-statements.md)   | disallow reactive statements that don't reference reactive values.                                                                        |          |
 | [svelte/no-inline-styles](./rules/no-inline-styles.md)                                   | disallow attributes and directives that produce inline styles                                                                             |          |
 | [svelte/no-inspect](./rules/no-inspect.md)                                               | Warns against the use of `$inspect` directive                                                                                             |          |
-| [svelte/no-reactive-functions](./rules/no-reactive-functions.md)                         | it's not necessary to define functions in reactive statements                                                                             | :bulb:   |
-| [svelte/no-reactive-literals](./rules/no-reactive-literals.md)                           | don't assign literal values in reactive statements                                                                                        | :bulb:   |
 | [svelte/no-svelte-internal](./rules/no-svelte-internal.md)                               | svelte/internal will be removed in Svelte 6.                                                                                              |          |
 | [svelte/no-unused-class-name](./rules/no-unused-class-name.md)                           | disallow the use of a class in the template without a corresponding style                                                                 |          |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md)                     | disallow unused svelte-ignore comments                                                                                                    | :star:   |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md)                           | disallow unnecessary mustache interpolations                                                                                              | :wrench: |
 | [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md)     | destructure values from object stores for better change tracking & fewer redraws                                                          | :bulb:   |
 | [svelte/require-each-key](./rules/require-each-key.md)                                   | require keyed `{#each}` block                                                                                                             |          |
-| [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)       | require type parameters for `createEventDispatcher`                                                                                       |          |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized                                                                                            |          |
 | [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            |          |
 | [svelte/valid-each-key](./rules/valid-each-key.md)                                       | enforce keys to use variables defined in the `{#each}` block                                                                              |          |
@@ -116,10 +108,8 @@ These rules relate to SvelteKit and its best Practices.
 
 :warning: These rules are considered experimental and may change or be removed in the future:
 
-| Rule ID                                                                                    | Description                                                 |     |
-| :----------------------------------------------------------------------------------------- | :---------------------------------------------------------- | :-- |
-| [svelte/experimental-require-slot-types](./rules/experimental-require-slot-types.md)       | require slot type declaration using the `$$Slots` interface |     |
-| [svelte/experimental-require-strict-events](./rules/experimental-require-strict-events.md) | require the strictEvents attribute on `<script>` tags       |     |
+| Rule ID | Description |     |
+| :------ | :---------- | :-- |
 
 ## System
 
@@ -135,6 +125,16 @@ These rules relate to this plugin works:
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID                                                                                                      | Replaced by                                                             |
+| Rule ID                                                                                                      | Note                                                                    |
 | :----------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
 | [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| [svelte/experimental-require-slot-types](./rules/experimental-require-slot-types.md)                         | Slots are deprecated in Svelte 5                                        |
+| [svelte/experimental-require-strict-events](./rules/experimental-require-strict-events.md)                   | Slots are deprecated in Svelte 5                                        |
+| [svelte/infinite-reactive-loop](./rules/infinite-reactive-loop.md)                                           | Slots are deprecated in Svelte 5                                        |
+| [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md)                                             | Duplicate `on:` cause an error in Svelte 5                              |
+| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md)                                               | Slots are deprecated in Svelte 5                                        |
+| [svelte/no-immutable-reactive-statements](./rules/no-immutable-reactive-statements.md)                       | Reactive statements are deprecated in Svelte 5                          |
+| [svelte/no-reactive-functions](./rules/no-reactive-functions.md)                                             | Reactive statements are deprecated in Svelte 5                          |
+| [svelte/no-reactive-literals](./rules/no-reactive-literals.md)                                               | Reactive statements are deprecated in Svelte 5                          |
+| [svelte/no-reactive-reassign](./rules/no-reactive-reassign.md)                                               | Reactive statements are deprecated in Svelte 5                          |
+| [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)                           | Event dispatchers are deprecated in Svelte 5                            |

@@ -7,10 +7,13 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Reactive statements are deprecated in Svelte 5'
+		},
 		docs: {
 			description: "disallow reactive statements that don't reference reactive values.",
 			category: 'Best Practices',
-			// TODO Switch to recommended in the major version.
 			recommended: false
 		},
 		schema: [],

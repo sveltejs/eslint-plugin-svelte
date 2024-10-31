@@ -5,6 +5,10 @@ const SLOTS_TYPE_NAME = '$$Slots';
 
 export default createRule('experimental-require-slot-types', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Slots are deprecated in Svelte 5'
+		},
 		docs: {
 			description: 'require slot type declaration using the `$$Slots` interface',
 			category: 'Experimental',

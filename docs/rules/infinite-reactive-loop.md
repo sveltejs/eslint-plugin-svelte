@@ -10,6 +10,8 @@ since: 'v2.16.0'
 
 > Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.
 
+- :warning: This rule was **deprecated**. Slots are deprecated in Svelte 5
+
 ## :book: Rule Details
 
 Svelte runtime prevents calling the same reactive statement twice in a microtask.<br/>

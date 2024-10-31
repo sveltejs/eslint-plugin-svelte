@@ -10,6 +10,8 @@ since: 'v2.16.0'
 
 > require type parameters for `createEventDispatcher`
 
+- :warning: This rule was **deprecated**. Event dispatchers are deprecated in Svelte 5
+
 ## :book: Rule Details
 
 This rule is aimed to enforce type parameters when calling `createEventDispatcher`. Adding types makes all `dispatch` calls as well as all event listeners typechecked. For more information, see the [svelte docs](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-component-events).

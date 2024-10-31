@@ -6,10 +6,13 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-reactive-reassign', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Reactive statements are deprecated in Svelte 5'
+		},
 		docs: {
 			description: 'disallow reassigning reactive values',
 			category: 'Possible Errors',
-			// TODO Switch to recommended in the major version.
 			recommended: false
 		},
 		schema: [

@@ -6,6 +6,10 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-dupe-on-directives', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Duplicate `on:` cause an error in Svelte 5'
+		},
 		docs: {
 			description: 'disallow duplicate `on:` directives',
 			category: 'Possible Errors',

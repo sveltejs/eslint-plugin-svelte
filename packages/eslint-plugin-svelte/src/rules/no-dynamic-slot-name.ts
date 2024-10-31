@@ -10,10 +10,14 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-dynamic-slot-name', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Slots are deprecated in Svelte 5'
+		},
 		docs: {
 			description: 'disallow dynamic slot name',
 			category: 'Possible Errors',
-			recommended: true
+			recommended: false
 		},
 		fixable: 'code',
 		schema: [],

@@ -6,6 +6,10 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('require-event-dispatcher-types', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Event dispatchers are deprecated in Svelte 5'
+		},
 		docs: {
 			description: 'require type parameters for `createEventDispatcher`',
 			category: 'Best Practices',

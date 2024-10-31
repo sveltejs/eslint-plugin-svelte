@@ -10,6 +10,8 @@ since: 'v2.18.0'
 
 > require slot type declaration using the `$$Slots` interface
 
+- :warning: This rule was **deprecated**. Slots are deprecated in Svelte 5
+
 ## :book: Rule Details
 
 This rule enforces the presence of the `$$Slots` interface if any slots are present in the component. This interface declares all of the used slots and their props and enables typechecking both in the component itself as well as all components that include it.

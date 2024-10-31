@@ -5,6 +5,10 @@ import { getSourceCode } from '../utils/compat';
 
 export default createRule('no-reactive-functions', {
 	meta: {
+		deprecated: true,
+		replacedBy: {
+			note: 'Reactive statements are deprecated in Svelte 5'
+		},
 		docs: {
 			description: "it's not necessary to define functions in reactive statements",
 			category: 'Best Practices',
