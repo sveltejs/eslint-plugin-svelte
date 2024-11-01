@@ -152,6 +152,7 @@ export interface RuleOptions {
   /**
    * disallow using goto() without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/
+   * @deprecated
    */
   'svelte/no-goto-without-base'?: Linter.RuleEntry<[]>
   /**
