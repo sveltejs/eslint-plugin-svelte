@@ -2,13 +2,13 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-navigation-without-base'
-description: 'disallow using goto() without the base path'
+description: 'disallow using navigation (links, goto, pushState, replaceState) without the base path'
 since: 'v2.36.0-next.9'
 ---
 
 # svelte/no-navigation-without-base
 
-> disallow using goto() without the base path
+> disallow using navigation (links, goto, pushState, replaceState) without the base path
 
 ## :book: Rule Details
 

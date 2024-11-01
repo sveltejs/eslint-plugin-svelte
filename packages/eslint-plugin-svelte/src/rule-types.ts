@@ -181,7 +181,7 @@ export interface RuleOptions {
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>
   /**
-   * disallow using goto() without the base path
+   * disallow using navigation (links, goto, pushState, replaceState) without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
    */
   'svelte/no-navigation-without-base'?: Linter.RuleEntry<[]>
