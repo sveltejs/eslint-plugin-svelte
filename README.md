@@ -410,6 +410,7 @@ These rules relate to SvelteKit and its best Practices.
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | disallow using goto() without the base path |  |
+| [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) | disallow using goto() without the base path |  |
 
 ## Experimental
 

@@ -180,6 +180,11 @@ export interface RuleOptions {
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>
   /**
+   * disallow using goto() without the base path
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
+   */
+  'svelte/no-navigation-without-base'?: Linter.RuleEntry<[]>
+  /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
    */
