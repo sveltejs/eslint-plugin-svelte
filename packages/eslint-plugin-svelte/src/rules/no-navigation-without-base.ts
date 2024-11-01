@@ -8,14 +8,19 @@ import type { RuleContext } from '../types.js';
 export default createRule('no-navigation-without-base', {
 	meta: {
 		docs: {
-			description: 'disallow using goto() without the base path',
+			description:
+				'disallow using navigation (links, goto, pushState, replaceState) without the base path',
 			category: 'SvelteKit',
 			recommended: false
 		},
 		schema: [],
 		messages: {
-			isNotPrefixedWithBasePath:
-				"Found a goto() call with a url that isn't prefixed with the base path."
+			gotoNotPrefixed: "Found a goto() call with a url that isn't prefixed with the base path.",
+			linkNotPrefixed: "Found a link with a url that isn't prefixed with the base path.",
+			pushStateNotPrefixed:
+				"Found a pushState() call with a url that isn't prefixed with the base path.",
+			replaceStateNotPrefixed:
+				"Found a replaceState() call with a url that isn't prefixed with the base path."
 		},
 		type: 'suggestion'
 	},
@@ -26,90 +31,31 @@ export default createRule('no-navigation-without-base', {
 					getSourceCode(context).scopeManager.globalScope!
 				);
 				const basePathNames = extractBasePathReferences(referenceTracker, context);
-				for (const gotoCall of extractGotoReferences(referenceTracker)) {
-					if (gotoCall.arguments.length < 1) {
-						continue;
-					}
-					const path = gotoCall.arguments[0];
-					switch (path.type) {
-						case 'BinaryExpression':
-							checkBinaryExpression(context, path, basePathNames);
-							break;
-						case 'Literal':
-							checkLiteral(context, path);
-							break;
-						case 'TemplateLiteral':
-							checkTemplateLiteral(context, path, basePathNames);
-							break;
-						default:
-							context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-					}
+				const {
+					goto: gotoCalls,
+					pushState: pushStateCalls,
+					replaceState: replaceStateCalls
+				} = extractFunctionCallReferences(referenceTracker);
+				for (const gotoCall of gotoCalls) {
+					checkGotoCall(context, gotoCall, basePathNames);
+				}
+				for (const pushStateCall of pushStateCalls) {
+					checkShallowNavigationCall(context, pushStateCall, basePathNames, 'pushStateNotPrefixed');
+				}
+				for (const replaceStateCall of replaceStateCalls) {
+					checkShallowNavigationCall(
+						context,
+						replaceStateCall,
+						basePathNames,
+						'replaceStateNotPrefixed'
+					);
 				}
 			}
 		};
 	}
 });
 
-function checkBinaryExpression(
-	context: RuleContext,
-	path: TSESTree.BinaryExpression,
-	basePathNames: Set<TSESTree.Identifier>
-): void {
-	if (path.left.type !== 'Identifier' || !basePathNames.has(path.left)) {
-		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-	}
-}
-
-function checkTemplateLiteral(
-	context: RuleContext,
-	path: TSESTree.TemplateLiteral,
-	basePathNames: Set<TSESTree.Identifier>
-): void {
-	const startingIdentifier = extractStartingIdentifier(path);
-	if (startingIdentifier === undefined || !basePathNames.has(startingIdentifier)) {
-		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-	}
-}
-
-function checkLiteral(context: RuleContext, path: TSESTree.Literal): void {
-	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-	if (!absolutePathRegex.test(path.value?.toString() ?? '')) {
-		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
-	}
-}
-
-function extractStartingIdentifier(
-	templateLiteral: TSESTree.TemplateLiteral
-): TSESTree.Identifier | undefined {
-	const literalParts = [...templateLiteral.expressions, ...templateLiteral.quasis].sort((a, b) =>
-		a.range[0] < b.range[0] ? -1 : 1
-	);
-	for (const part of literalParts) {
-		if (part.type === 'TemplateElement' && part.value.raw === '') {
-			// Skip empty quasi in the begining
-			continue;
-		}
-		if (part.type === 'Identifier') {
-			return part;
-		}
-		return undefined;
-	}
-	return undefined;
-}
-
-function extractGotoReferences(referenceTracker: ReferenceTracker): TSESTree.CallExpression[] {
-	return Array.from(
-		referenceTracker.iterateEsmReferences({
-			'$app/navigation': {
-				[ReferenceTracker.ESM]: true,
-				goto: {
-					[ReferenceTracker.CALL]: true
-				}
-			}
-		}),
-		({ node }) => node
-	);
-}
+// Extract all imports of the base path
 
 function extractBasePathReferences(
 	referenceTracker: ReferenceTracker,
@@ -132,3 +78,139 @@ function extractBasePathReferences(
 	}
 	return set;
 }
+
+// Extract all references to goto, pushState and replaceState
+
+function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
+	goto: TSESTree.CallExpression[];
+	pushState: TSESTree.CallExpression[];
+	replaceState: TSESTree.CallExpression[];
+} {
+	const rawReferences = Array.from(
+		referenceTracker.iterateEsmReferences({
+			'$app/navigation': {
+				[ReferenceTracker.ESM]: true,
+				goto: {
+					[ReferenceTracker.CALL]: true
+				},
+				pushState: {
+					[ReferenceTracker.CALL]: true
+				},
+				replaceState: {
+					[ReferenceTracker.CALL]: true
+				}
+			}
+		})
+	);
+	return {
+		goto: rawReferences
+			.filter(({ path }) => path[path.length - 1] === 'goto')
+			.map(({ node }) => node),
+		pushState: rawReferences
+			.filter(({ path }) => path[path.length - 1] === 'pushState')
+			.map(({ node }) => node),
+		replaceState: rawReferences
+			.filter(({ path }) => path[path.length - 1] === 'replaceState')
+			.map(({ node }) => node)
+	};
+}
+
+// Actual function checking
+
+function checkGotoCall(
+	context: RuleContext,
+	call: TSESTree.CallExpression,
+	basePathNames: Set<TSESTree.Identifier>
+): void {
+	if (call.arguments.length < 1) {
+		return;
+	}
+	const url = call.arguments[0];
+	if (!urlStartsWithBase(url, basePathNames)) {
+		context.report({ loc: url.loc, messageId: 'gotoNotPrefixed' });
+	}
+}
+
+function checkShallowNavigationCall(
+	context: RuleContext,
+	call: TSESTree.CallExpression,
+	basePathNames: Set<TSESTree.Identifier>,
+	messageId: string
+): void {
+	if (call.arguments.length < 1) {
+		return;
+	}
+	const url = call.arguments[0];
+	if (!urlIsEmpty(url) && !urlStartsWithBase(url, basePathNames)) {
+		context.report({ loc: url.loc, messageId });
+	}
+}
+
+// Helper functions
+
+function urlStartsWithBase(
+	url: TSESTree.CallExpressionArgument,
+	basePathNames: Set<TSESTree.Identifier>
+): boolean {
+	switch (url.type) {
+		case 'BinaryExpression':
+			return binaryExpressionStartsWithBase(url, basePathNames);
+		case 'TemplateLiteral':
+			return templateLiteralStartsWithBase(url, basePathNames);
+		default:
+			return false;
+	}
+}
+
+function binaryExpressionStartsWithBase(
+	url: TSESTree.BinaryExpression,
+	basePathNames: Set<TSESTree.Identifier>
+): boolean {
+	return url.left.type === 'Identifier' && basePathNames.has(url.left);
+}
+
+function templateLiteralStartsWithBase(
+	url: TSESTree.TemplateLiteral,
+	basePathNames: Set<TSESTree.Identifier>
+): boolean {
+	const startingIdentifier = extractLiteralStartingIdentifier(url);
+	return startingIdentifier !== undefined && basePathNames.has(startingIdentifier);
+}
+
+function extractLiteralStartingIdentifier(
+	templateLiteral: TSESTree.TemplateLiteral
+): TSESTree.Identifier | undefined {
+	const literalParts = [...templateLiteral.expressions, ...templateLiteral.quasis].sort((a, b) =>
+		a.range[0] < b.range[0] ? -1 : 1
+	);
+	for (const part of literalParts) {
+		if (part.type === 'TemplateElement' && part.value.raw === '') {
+			// Skip empty quasi in the begining
+			continue;
+		}
+		if (part.type === 'Identifier') {
+			return part;
+		}
+		return undefined;
+	}
+	return undefined;
+}
+
+function urlIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
+	return (
+		(url.type === 'Literal' && url.value === '') ||
+		(url.type === 'TemplateLiteral' &&
+			url.expressions.length === 0 &&
+			url.quasis.length === 1 &&
+			url.quasis[0].value.raw === '')
+	);
+}
+
+/*
+function checkLiteral(context: RuleContext, url: TSESTree.Literal): void {
+	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
+	if (!absolutePathRegex.test(url.value?.toString() ?? '')) {
+		context.report({ loc: url.loc, messageId: 'gotoNotPrefixed' });
+	}
+}
+*/
