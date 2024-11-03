@@ -14,7 +14,26 @@ export default createRule('no-navigation-without-base', {
 			category: 'SvelteKit',
 			recommended: false
 		},
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					ignoreGoto: {
+						type: 'boolean'
+					},
+					ignoreLinks: {
+						type: 'boolean'
+					},
+					ignorePushState: {
+						type: 'boolean'
+					},
+					ignoreReplaceState: {
+						type: 'boolean'
+					}
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			gotoNotPrefixed: "Found a goto() call with a url that isn't prefixed with the base path.",
 			linkNotPrefixed: "Found a link with a url that isn't prefixed with the base path.",
@@ -38,23 +57,35 @@ export default createRule('no-navigation-without-base', {
 					pushState: pushStateCalls,
 					replaceState: replaceStateCalls
 				} = extractFunctionCallReferences(referenceTracker);
-				for (const gotoCall of gotoCalls) {
-					checkGotoCall(context, gotoCall, basePathNames);
+				if (context.options[0]?.ignoreGoto !== true) {
+					for (const gotoCall of gotoCalls) {
+						checkGotoCall(context, gotoCall, basePathNames);
+					}
 				}
-				for (const pushStateCall of pushStateCalls) {
-					checkShallowNavigationCall(context, pushStateCall, basePathNames, 'pushStateNotPrefixed');
+				if (context.options[0]?.ignorePushState !== true) {
+					for (const pushStateCall of pushStateCalls) {
+						checkShallowNavigationCall(
+							context,
+							pushStateCall,
+							basePathNames,
+							'pushStateNotPrefixed'
+						);
+					}
 				}
-				for (const replaceStateCall of replaceStateCalls) {
-					checkShallowNavigationCall(
-						context,
-						replaceStateCall,
-						basePathNames,
-						'replaceStateNotPrefixed'
-					);
+				if (context.options[0]?.ignoreReplaceState !== true) {
+					for (const replaceStateCall of replaceStateCalls) {
+						checkShallowNavigationCall(
+							context,
+							replaceStateCall,
+							basePathNames,
+							'replaceStateNotPrefixed'
+						);
+					}
 				}
 			},
 			SvelteAttribute(node) {
 				if (
+					context.options[0]?.ignoreLinks === true ||
 					node.parent.parent.type !== 'SvelteElement' ||
 					node.parent.parent.kind !== 'html' ||
 					node.parent.parent.name.type !== 'SvelteName' ||
