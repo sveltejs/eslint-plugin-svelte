@@ -96,14 +96,14 @@ export default createRule('no-navigation-without-base', {
 				}
 				const hrefValue = node.value[0];
 				if (hrefValue.type === 'SvelteLiteral') {
-					if (!urlIsAbsolute(hrefValue)) {
+					if (!expressionIsAbsolute(hrefValue)) {
 						context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
 					}
 					return;
 				}
 				if (
-					!urlStartsWithBase(hrefValue.expression, basePathNames) &&
-					!urlIsAbsolute(hrefValue.expression)
+					!expressionStartsWithBase(context, hrefValue.expression, basePathNames) &&
+					!expressionIsAbsolute(hrefValue.expression)
 				) {
 					context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
 				}
@@ -183,7 +183,7 @@ function checkGotoCall(
 		return;
 	}
 	const url = call.arguments[0];
-	if (!urlStartsWithBase(url, basePathNames)) {
+	if (url.type === 'SpreadElement' || !expressionStartsWithBase(context, url, basePathNames)) {
 		context.report({ loc: url.loc, messageId: 'gotoNotPrefixed' });
 	}
 }
@@ -198,45 +198,79 @@ function checkShallowNavigationCall(
 		return;
 	}
 	const url = call.arguments[0];
-	if (!urlIsEmpty(url) && !urlStartsWithBase(url, basePathNames)) {
+	if (
+		url.type === 'SpreadElement' ||
+		(!expressionIsEmpty(url) && !expressionStartsWithBase(context, url, basePathNames))
+	) {
 		context.report({ loc: url.loc, messageId });
 	}
 }
 
 // Helper functions
 
-function urlStartsWithBase(
-	url: TSESTree.CallExpressionArgument,
+function expressionStartsWithBase(
+	context: RuleContext,
+	url: TSESTree.Expression,
 	basePathNames: Set<TSESTree.Identifier>
 ): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
-			return binaryExpressionStartsWithBase(url, basePathNames);
+			return binaryExpressionStartsWithBase(context, url, basePathNames);
+		case 'Identifier':
+			return variableStartsWithBase(context, url, basePathNames);
 		case 'TemplateLiteral':
-			return templateLiteralStartsWithBase(url, basePathNames);
+			return templateLiteralStartsWithBase(context, url, basePathNames);
 		default:
 			return false;
 	}
 }
 
 function binaryExpressionStartsWithBase(
+	context: RuleContext,
 	url: TSESTree.BinaryExpression,
 	basePathNames: Set<TSESTree.Identifier>
 ): boolean {
-	return url.left.type === 'Identifier' && basePathNames.has(url.left);
+	return (
+		url.left.type !== 'PrivateIdentifier' &&
+		expressionStartsWithBase(context, url.left, basePathNames)
+	);
+}
+
+function variableStartsWithBase(
+	context: RuleContext,
+	url: TSESTree.Identifier,
+	basePathNames: Set<TSESTree.Identifier>
+): boolean {
+	if (basePathNames.has(url)) {
+		return true;
+	}
+	const variable = findVariable(context, url);
+	if (
+		variable === null ||
+		variable.identifiers.length !== 1 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionStartsWithBase(context, variable.identifiers[0].parent.init, basePathNames);
 }
 
 function templateLiteralStartsWithBase(
+	context: RuleContext,
 	url: TSESTree.TemplateLiteral,
 	basePathNames: Set<TSESTree.Identifier>
 ): boolean {
-	const startingIdentifier = extractLiteralStartingIdentifier(url);
-	return startingIdentifier !== undefined && basePathNames.has(startingIdentifier);
+	const startingIdentifier = extractLiteralStartingExpression(url);
+	return (
+		startingIdentifier !== undefined &&
+		expressionStartsWithBase(context, startingIdentifier, basePathNames)
+	);
 }
 
-function extractLiteralStartingIdentifier(
+function extractLiteralStartingExpression(
 	templateLiteral: TSESTree.TemplateLiteral
-): TSESTree.Identifier | undefined {
+): TSESTree.Expression | undefined {
 	const literalParts = [...templateLiteral.expressions, ...templateLiteral.quasis].sort((a, b) =>
 		a.range[0] < b.range[0] ? -1 : 1
 	);
@@ -245,7 +279,7 @@ function extractLiteralStartingIdentifier(
 			// Skip empty quasi in the begining
 			continue;
 		}
-		if (part.type === 'Identifier') {
+		if (part.type !== 'TemplateElement') {
 			return part;
 		}
 		return undefined;
@@ -253,7 +287,7 @@ function extractLiteralStartingIdentifier(
 	return undefined;
 }
 
-function urlIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
+function expressionIsEmpty(url: TSESTree.Expression): boolean {
 	return (
 		(url.type === 'Literal' && url.value === '') ||
 		(url.type === 'TemplateLiteral' &&
@@ -263,7 +297,7 @@ function urlIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 	);
 }
 
-function urlIsAbsolute(url: SvelteLiteral | TSESTree.Expression): boolean {
+function expressionIsAbsolute(url: SvelteLiteral | TSESTree.Expression): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
 			return binaryExpressionIsAbsolute(url);
@@ -280,13 +314,14 @@ function urlIsAbsolute(url: SvelteLiteral | TSESTree.Expression): boolean {
 
 function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression): boolean {
 	return (
-		(url.left.type !== 'PrivateIdentifier' && urlIsAbsolute(url.left)) || urlIsAbsolute(url.right)
+		(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(url.left)) ||
+		expressionIsAbsolute(url.right)
 	);
 }
 
 function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
 	return (
-		url.expressions.some(urlIsAbsolute) ||
+		url.expressions.some(expressionIsAbsolute) ||
 		url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
 	);
 }
