@@ -4,6 +4,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { getSourceCode } from '../utils/compat.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
+import type { SvelteLiteral } from 'svelte-eslint-parser/lib/ast';
 
 export default createRule('no-navigation-without-base', {
 	meta: {
@@ -25,12 +26,13 @@ export default createRule('no-navigation-without-base', {
 		type: 'suggestion'
 	},
 	create(context) {
+		let basePathNames: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
 				const referenceTracker = new ReferenceTracker(
 					getSourceCode(context).scopeManager.globalScope!
 				);
-				const basePathNames = extractBasePathReferences(referenceTracker, context);
+				basePathNames = extractBasePathReferences(referenceTracker, context);
 				const {
 					goto: gotoCalls,
 					pushState: pushStateCalls,
@@ -49,6 +51,30 @@ export default createRule('no-navigation-without-base', {
 						basePathNames,
 						'replaceStateNotPrefixed'
 					);
+				}
+			},
+			SvelteAttribute(node) {
+				if (
+					node.parent.parent.type !== 'SvelteElement' ||
+					node.parent.parent.kind !== 'html' ||
+					node.parent.parent.name.type !== 'SvelteName' ||
+					node.parent.parent.name.name !== 'a' ||
+					node.key.name !== 'href'
+				) {
+					return;
+				}
+				const hrefValue = node.value[0];
+				if (hrefValue.type === 'SvelteLiteral') {
+					if (!urlIsAbsolute(hrefValue)) {
+						context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
+					}
+					return;
+				}
+				if (
+					!urlStartsWithBase(hrefValue.expression, basePathNames) &&
+					!urlIsAbsolute(hrefValue.expression)
+				) {
+					context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
 				}
 			}
 		};
@@ -206,11 +232,34 @@ function urlIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 	);
 }
 
-/*
-function checkLiteral(context: RuleContext, url: TSESTree.Literal): void {
-	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-	if (!absolutePathRegex.test(url.value?.toString() ?? '')) {
-		context.report({ loc: url.loc, messageId: 'gotoNotPrefixed' });
+function urlIsAbsolute(url: SvelteLiteral | TSESTree.Expression): boolean {
+	switch (url.type) {
+		case 'BinaryExpression':
+			return binaryExpressionIsAbsolute(url);
+		case 'Literal':
+			return typeof url.value === 'string' && urlValueIsAbsolute(url.value);
+		case 'SvelteLiteral':
+			return urlValueIsAbsolute(url.value);
+		case 'TemplateLiteral':
+			return templateLiteralIsAbsolute(url);
+		default:
+			return false;
 	}
 }
-*/
+
+function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression): boolean {
+	return (
+		(url.left.type !== 'PrivateIdentifier' && urlIsAbsolute(url.left)) || urlIsAbsolute(url.right)
+	);
+}
+
+function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
+	return (
+		url.expressions.some(urlIsAbsolute) ||
+		url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
+	);
+}
+
+function urlValueIsAbsolute(url: string): boolean {
+	return url.includes('://');
+}
