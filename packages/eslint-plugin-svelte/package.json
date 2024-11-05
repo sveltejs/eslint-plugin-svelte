@@ -58,7 +58,7 @@
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.4.0",
     "@jridgewell/sourcemap-codec": "^1.4.15",
-    "eslint-compat-utils": "^0.5.1",
+    "eslint-compat-utils": "^0.6.0",
     "esutils": "^2.0.3",
     "known-css-properties": "^0.35.0",
     "postcss": "^8.4.38",
