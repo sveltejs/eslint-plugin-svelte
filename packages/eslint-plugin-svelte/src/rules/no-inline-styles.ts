@@ -26,7 +26,7 @@ export default createRule('no-inline-styles', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const allowTransitions: boolean = context.options[0]?.allowTransitions ?? false;
+		const allowTransitions: boolean = context.options[0]?.allowTransitions ?? true;
 		return {
 			SvelteElement(node) {
 				if (node.kind !== 'html') {
