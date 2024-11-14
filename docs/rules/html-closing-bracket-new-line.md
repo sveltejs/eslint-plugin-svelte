@@ -23,7 +23,7 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 ```svelte
 <script>
-  /* eslint svelte/brackets-same-line: "error" */
+  /* eslint svelte/html-closing-bracket-new-line: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -60,9 +60,9 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 
 ## :wrench: Options
 
-```jsonc
+```json
 {
-  "svelte/brackets-same-line": [
+  "svelte/html-closing-bracket-new-line": [
     "error",
     {
       "singleline": "never", // ["never", "always"]
