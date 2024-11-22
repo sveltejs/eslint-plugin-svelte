@@ -35,6 +35,11 @@ export interface RuleOptions {
    */
   'svelte/comment-directive'?: Linter.RuleEntry<SvelteCommentDirective>
   /**
+   * enforce a consistent style for CSS selectors
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/consistent-selector-style/
+   */
+  'svelte/consistent-selector-style'?: Linter.RuleEntry<[]>
+  /**
    * derived store should use same variable names between values and callback
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/
    */
