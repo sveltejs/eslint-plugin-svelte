@@ -77,6 +77,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 | Rule ID                                                                                                  | Description                                                                        |          |
 | :------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
+| [svelte/consistent-selector-style](./rules/consistent-selector-style.md)                                 | enforce a consistent style for CSS selectors                                       |          |
 | [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md)                     | derived store should use same variable names between values and callback           |          |
 | [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md)                                 | enforce the location of first attribute                                            | :wrench: |
 | [svelte/html-closing-bracket-new-line](./rules/html-closing-bracket-new-line.md)                         | Require or disallow a line break before tag's closing brackets                     | :wrench: |
