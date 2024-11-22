@@ -1,0 +1,3 @@
+<Foo>
+  Hello
+</Foo>

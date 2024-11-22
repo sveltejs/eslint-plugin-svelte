@@ -1,0 +1,4 @@
+- message: Found an unnecessary children snippet.
+  line: 2
+  column: 3
+  suggestions: null
