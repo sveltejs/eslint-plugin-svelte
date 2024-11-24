@@ -10,12 +10,13 @@ description: 'Disallows valid Svelte 4 tags, that no are no longer valid in Svel
 > Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
 This rule reports the invalid usage of `head`, `body`, `window`, `document`, `element` and `options` HTML elements, **in Svelte 5**. These elements were valid in Svelte 4, but since Svelte 5 they must be used with `svelte:`.
 
-<ESLintCodeBlock>
+<ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 

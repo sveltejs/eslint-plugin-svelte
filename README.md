@@ -387,7 +387,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives |  |
 | [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |  |
-| [svelte/no-invalid-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-invalid-html-elements/) | Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5 |  |
+| [svelte/no-invalid-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-invalid-html-elements/) | Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5 | :wrench: |
 | [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-reactive-reassign](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/) | disallow reassigning reactive values |  |
