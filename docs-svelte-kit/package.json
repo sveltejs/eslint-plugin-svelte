@@ -57,7 +57,7 @@
     "svelte": "^5.0.3",
     "svelte-adapter-ghpages": "0.2.2",
     "util": "^0.12.5",
-    "vite": "^5.4.9",
+    "vite": "^6.0.0",
     "vite-plugin-eslint4b": "^0.4.6",
     "vite-plugin-svelte-md": "^0.1.7"
   }
