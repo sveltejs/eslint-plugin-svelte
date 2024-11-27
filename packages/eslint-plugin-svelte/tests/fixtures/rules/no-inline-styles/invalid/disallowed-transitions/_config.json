@@ -1,7 +1,7 @@
 {
 	"options": [
 		{
-			"allowTransitions": true
+			"allowTransitions": false
 		}
 	]
 }
