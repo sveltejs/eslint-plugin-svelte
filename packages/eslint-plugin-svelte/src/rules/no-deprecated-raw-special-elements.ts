@@ -7,7 +7,7 @@ const VALID_PREFIX = 'svelte:';
 export default createRule('no-deprecated-raw-special-elements', {
 	meta: {
 		docs: {
-			description: 'Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5',
+			description: 'Recommends not using raw special elements in Svelte versions previous to 5.',
 			category: 'Possible Errors',
 			// TODO: Switch to recommended in the major version
 			recommended: false

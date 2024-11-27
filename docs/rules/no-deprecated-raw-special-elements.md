@@ -2,7 +2,7 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-deprecated-raw-special-elements'
-description: 'Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5'
+description: 'Recommends not using raw special elements in Svelte versions previous to 5.'
 ---
 
 # svelte/no-deprecated-raw-special-elements
