@@ -42,7 +42,11 @@ export default createRule('require-event-dispatcher-types', {
 					}
 				})) {
 					const node = n as TSESTree.CallExpression;
-					if ((node.typeArguments ?? node.typeParameters) === undefined) {
+					if (
+						(node.typeArguments ??
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+							(node as any).typeParameters) === undefined
+					) {
 						context.report({ node, messageId: 'missingTypeParameter' });
 					}
 				}

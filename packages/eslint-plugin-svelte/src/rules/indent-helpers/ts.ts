@@ -62,7 +62,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			// or
 			// const ErrorMap = Map<string, Error>
 			//                  ^^^^^^^^^^^^^^^^^^
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			if (typeArguments) {
 				const firstToken = sourceCode.getFirstToken(node);
 				offsets.setOffsetToken(sourceCode.getFirstToken(typeArguments), 1, firstToken);
@@ -254,19 +257,33 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			// {[key in foo]: bar}
 			const leftBraceToken = sourceCode.getFirstToken(node);
 
-			const leftBracketToken = sourceCode.getTokenBefore(node.typeParameter)!;
-			const rightBracketToken = sourceCode.getTokenAfter(node.nameType || node.typeParameter)!;
+			const leftBracketToken = sourceCode.getTokenBefore(node.key || node.typeParameter)!;
+			const rightBracketToken = sourceCode.getTokenAfter(
+				node.nameType || node.constraint || node.typeParameter
+			)!;
 			offsets.setOffsetToken(
 				[...sourceCode.getTokensBetween(leftBraceToken, leftBracketToken), leftBracketToken],
 				1,
 				leftBraceToken
 			);
 			offsets.setOffsetElementList(
-				[node.typeParameter, node.nameType],
+				[node.key, node.constraint, node.typeParameter, node.nameType],
 				leftBracketToken,
 				rightBracketToken,
 				1
 			);
+
+			if (node.key && node.constraint) {
+				const firstToken = sourceCode.getFirstToken(node.key);
+				offsets.setOffsetToken(
+					[
+						...sourceCode.getTokensBetween(firstToken, node.constraint),
+						sourceCode.getFirstToken(node.constraint)
+					],
+					1,
+					firstToken
+				);
+			}
 
 			const rightBraceToken = sourceCode.getLastToken(node);
 			if (node.typeAnnotation) {
@@ -402,7 +419,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		TSClassImplements(node: TSESTree.TSClassImplements | TSESTree.TSInterfaceHeritage) {
 			// class C implements T {}
 			//                    ^
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			if (typeArguments) {
 				offsets.setOffsetToken(
 					sourceCode.getFirstToken(typeArguments),
@@ -427,6 +447,14 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			const leftBraceToken = sourceCode.getTokenAfter(idTokens.lastToken)!;
 			const rightBraceToken = sourceCode.getLastToken(node);
 			offsets.setOffsetToken(leftBraceToken, 0, firstToken);
+			if (node.members)
+				offsets.setOffsetElementList(node.members, leftBraceToken, rightBraceToken, 1);
+		},
+		TSEnumBody(node: TSESTree.TSEnumBody) {
+			// enum E {...}
+			//        ^^^^^
+			const leftBraceToken = sourceCode.getFirstToken(node);
+			const rightBraceToken = sourceCode.getLastToken(node);
 			offsets.setOffsetElementList(node.members, leftBraceToken, rightBraceToken, 1);
 		},
 		TSModuleDeclaration(node: TSESTree.TSModuleDeclaration) {
@@ -677,7 +705,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		},
 		TSImportType(node: TSESTree.TSImportType) {
 			// import('foo').B
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			const firstToken = sourceCode.getFirstToken(node);
 			const leftParenToken = sourceCode.getTokenAfter(firstToken, {
 				filter: isOpeningParenToken,
@@ -1057,7 +1088,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 					sourceCode.getFirstToken(node.id || node)
 				);
 			}
-			const superTypeArguments = node.superTypeArguments ?? node.superTypeParameters;
+			const superTypeArguments =
+				node.superTypeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).superTypeParameters;
 			if (superTypeArguments != null && node.superClass != null) {
 				offsets.setOffsetToken(
 					sourceCode.getFirstToken(superTypeArguments),
