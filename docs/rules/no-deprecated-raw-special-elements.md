@@ -22,17 +22,17 @@ This rule reports the usage of `head`, `body`, `window`, `document`, `element` a
 
 ```svelte
 <script>
-  /* eslint svelte/no-invalid-html-elements: "error" */
+  /* eslint svelte/no-deprecated-raw-special-elements: "error" */
 </script>
 
 <!-- ✓ GOOD -->
 <svelte:head>
-  <title>Invalid HTML Elements</title>
+  <title>Valid</title>
 </svelte:head>
 
 <!-- ✗ BAD -->
 <head>
-  <title>Invalid HTML Elements</title>
+  <title>Invalid</title>
 </head>
 ```
 
@@ -40,11 +40,7 @@ This rule reports the usage of `head`, `body`, `window`, `document`, `element` a
 
 ## :wrench: Options
 
-```json
-{
-  "svelte/no-invalid-html-elements": ["error", {}]
-}
-```
+Nothing.
 
 ## :books: Further Reading
 
