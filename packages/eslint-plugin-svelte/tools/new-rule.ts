@@ -141,7 +141,7 @@ This rule reports ???.
 		cp.execSync(`code "${ruleFile}"`);
 		cp.execSync(`code "${testFile}"`);
 		cp.execSync(`code "${docFile}"`);
-	} catch (_) {
+	} catch {
 		logger.error('Unable to find code command. Will not open files with VSCode.');
 	}
 })(process.argv.slice(2));

@@ -195,7 +195,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.BreakStatement(node);
 		},
 		CallExpression(node: TSESTree.CallExpression) {
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			const firstToken = sourceCode.getFirstToken(node);
 			const leftParenToken = sourceCode.getTokenAfter(typeArguments || node.callee, {
 				filter: isOpeningParenToken,
@@ -706,7 +709,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.MethodDefinition(node);
 		},
 		NewExpression(node: TSESTree.NewExpression) {
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			const newToken = sourceCode.getFirstToken(node);
 			const calleeTokens = getFirstAndLastTokens(sourceCode, node.callee);
 			offsets.setOffsetToken(calleeTokens.firstToken, 1, newToken);
