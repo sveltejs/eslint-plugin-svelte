@@ -18,7 +18,8 @@ const ruleTester = new RuleTester({
 		parser: require('@typescript-eslint/parser'),
 		parserOptions: {
 			tsconfigRootDir: rootPath,
-			project: './tsconfig.json'
+			project: './tsconfig.json',
+			disallowAutomaticSingleRunInference: true
 		}
 	}
 });
