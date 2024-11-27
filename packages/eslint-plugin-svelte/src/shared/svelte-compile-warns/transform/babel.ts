@@ -43,7 +43,7 @@ export function transform(
 			output: output.code!,
 			mappings: output.map!.mappings
 		};
-	} catch (_e) {
+	} catch {
 		return null;
 	}
 }

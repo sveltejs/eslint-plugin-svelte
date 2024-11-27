@@ -55,7 +55,7 @@ function hasSvelteKit(filePath: string): boolean {
 		return Boolean(
 			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit']
 		);
-	} catch (_e) {
+	} catch {
 		return false;
 	}
 }
