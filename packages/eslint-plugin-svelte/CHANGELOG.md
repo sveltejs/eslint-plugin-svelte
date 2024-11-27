@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.0
+
+### Major Changes
+
+- [#885](https://github.com/sveltejs/eslint-plugin-svelte/pull/885) [`ce2ffad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ce2ffad105b1c6ed2df02a9c2b84f3b654d99ad5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old node versions (<18, 19, 21)
+
+- [#930](https://github.com/sveltejs/eslint-plugin-svelte/pull/930) [`eae1b4f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eae1b4fcbfbaec926cfa63a5d08eafcb2238bf82) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: upgrade svelte-eslint-parser to v1
+
+### Minor Changes
+
+- [#911](https://github.com/sveltejs/eslint-plugin-svelte/pull/911) [`452ffed`](https://github.com/sveltejs/eslint-plugin-svelte/commit/452ffed53791cb9e158636bcd80a221d2840cc4a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-inline-styles): allowing transitions by default
+
 ## 2.46.0
 
 ### Minor Changes
