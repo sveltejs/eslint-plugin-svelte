@@ -20,6 +20,7 @@ import maxAttributesPerLine from '../rules/max-attributes-per-line';
 import mustacheSpacing from '../rules/mustache-spacing';
 import noAtDebugTags from '../rules/no-at-debug-tags';
 import noAtHtmlTags from '../rules/no-at-html-tags';
+import noDeprecatedRawSpecialElements from '../rules/no-deprecated-raw-special-elements';
 import noDomManipulating from '../rules/no-dom-manipulating';
 import noDupeElseIfBlocks from '../rules/no-dupe-else-if-blocks';
 import noDupeOnDirectives from '../rules/no-dupe-on-directives';
@@ -34,7 +35,6 @@ import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statem
 import noInlineStyles from '../rules/no-inline-styles';
 import noInnerDeclarations from '../rules/no-inner-declarations';
 import noInspect from '../rules/no-inspect';
-import noInvalidHtmlElements from '../rules/no-invalid-html-elements';
 import noNotFunctionHandler from '../rules/no-not-function-handler';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches';
 import noReactiveFunctions from '../rules/no-reactive-functions';
@@ -88,6 +88,7 @@ export const rules = [
 	mustacheSpacing,
 	noAtDebugTags,
 	noAtHtmlTags,
+	noDeprecatedRawSpecialElements,
 	noDomManipulating,
 	noDupeElseIfBlocks,
 	noDupeOnDirectives,
@@ -102,7 +103,6 @@ export const rules = [
 	noInlineStyles,
 	noInnerDeclarations,
 	noInspect,
-	noInvalidHtmlElements,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noReactiveFunctions,

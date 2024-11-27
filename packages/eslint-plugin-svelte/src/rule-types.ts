@@ -105,6 +105,11 @@ export interface RuleOptions {
    */
   'svelte/no-at-html-tags'?: Linter.RuleEntry<[]>
   /**
+   * Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/
+   */
+  'svelte/no-deprecated-raw-special-elements'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
@@ -174,11 +179,6 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5
-   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-invalid-html-elements/
-   */
-  'svelte/no-invalid-html-elements'?: Linter.RuleEntry<[]>
   /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/

@@ -1,5 +1,5 @@
 import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/no-invalid-html-elements';
+import rule from '../../../src/rules/no-deprecated-raw-special-elements';
 import { loadTestCases } from '../../utils/utils';
 
 const tester = new RuleTester({
@@ -9,4 +9,4 @@ const tester = new RuleTester({
 	}
 });
 
-tester.run('no-invalid-html-elements', rule as any, loadTestCases('no-invalid-html-elements'));
+tester.run('no-deprecated-raw-special-elements', rule as any, loadTestCases('no-deprecated-raw-special-elements'));

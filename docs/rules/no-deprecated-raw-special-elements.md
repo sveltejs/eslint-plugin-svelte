@@ -1,11 +1,11 @@
 ---
 pageClass: 'rule-details'
 sidebarDepth: 0
-title: 'svelte/no-invalid-html-elements'
+title: 'svelte/no-deprecated-raw-special-elements'
 description: 'Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5'
 ---
 
-# svelte/no-invalid-html-elements
+# svelte/no-deprecated-raw-special-elements
 
 > Disallows valid Svelte 4 tags, that no are no longer valid in Svelte 5
 
@@ -54,5 +54,5 @@ This rule reports the invalid usage of `head`, `body`, `window`, `document`, `el
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-invalid-html-elements.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-invalid-html-elements.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-deprecated-raw-special-elements.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-deprecated-raw-special-elements.ts)
