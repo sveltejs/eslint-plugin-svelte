@@ -2,7 +2,12 @@
   "mode": "pre",
   "tag": "next",
   "initialVersions": {
-    "eslint-plugin-svelte": "2.46.0"
+    "eslint-plugin-svelte": "2.46.0",
+    "docs": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "olive-wolves-travel",
+    "small-days-agree",
+    "twenty-nails-end"
+  ]
 }
