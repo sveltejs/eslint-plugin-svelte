@@ -20,6 +20,7 @@ import maxAttributesPerLine from '../rules/max-attributes-per-line';
 import mustacheSpacing from '../rules/mustache-spacing';
 import noAtDebugTags from '../rules/no-at-debug-tags';
 import noAtHtmlTags from '../rules/no-at-html-tags';
+import noDeprecatedRawSpecialElements from '../rules/no-deprecated-raw-special-elements';
 import noDomManipulating from '../rules/no-dom-manipulating';
 import noDupeElseIfBlocks from '../rules/no-dupe-else-if-blocks';
 import noDupeOnDirectives from '../rules/no-dupe-on-directives';
@@ -87,6 +88,7 @@ export const rules = [
 	mustacheSpacing,
 	noAtDebugTags,
 	noAtHtmlTags,
+	noDeprecatedRawSpecialElements,
 	noDomManipulating,
 	noDupeElseIfBlocks,
 	noDupeOnDirectives,

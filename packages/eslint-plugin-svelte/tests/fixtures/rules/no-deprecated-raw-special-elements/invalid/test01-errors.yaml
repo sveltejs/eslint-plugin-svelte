@@ -1,0 +1,24 @@
+- message: Special head element is deprecated in v5, use svelte:head instead.
+  line: 1
+  column: 1
+  suggestions: null
+- message: Special body element is deprecated in v5, use svelte:body instead.
+  line: 2
+  column: 1
+  suggestions: null
+- message: Special window element is deprecated in v5, use svelte:window instead.
+  line: 3
+  column: 1
+  suggestions: null
+- message: Special document element is deprecated in v5, use svelte:document instead.
+  line: 4
+  column: 1
+  suggestions: null
+- message: Special element element is deprecated in v5, use svelte:element instead.
+  line: 5
+  column: 1
+  suggestions: null
+- message: Special options element is deprecated in v5, use svelte:options instead.
+  line: 6
+  column: 1
+  suggestions: null

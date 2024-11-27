@@ -105,6 +105,11 @@ export interface RuleOptions {
    */
   'svelte/no-at-html-tags'?: Linter.RuleEntry<[]>
   /**
+   * Recommends not using raw special elements in Svelte versions previous to 5.
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/
+   */
+  'svelte/no-deprecated-raw-special-elements'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
