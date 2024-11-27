@@ -11,7 +11,8 @@ const tester = new RuleTester({
 				ts: '@typescript-eslint/parser',
 				js: 'espree'
 			},
-			project: RULES_PROJECT
+			project: RULES_PROJECT,
+			disallowAutomaticSingleRunInference: true
 		}
 	}
 });
