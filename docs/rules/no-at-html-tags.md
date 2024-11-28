@@ -16,8 +16,6 @@ since: 'v0.0.1'
 
 This rule reports all uses of `{@html}` in order to reduce the risk of injecting potentially unsafe / unescaped html into the browser leading to Cross-Site Scripting (XSS) attacks.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -31,8 +29,6 @@ This rule reports all uses of `{@html}` in order to reduce the risk of injecting
 <!-- ✗ BAD -->
 {@html foo}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -15,8 +15,6 @@ since: 'v2.8.0'
 This rule reports where variable names and callback function's argument names are different.
 This is mainly a recommended rule to avoid implementation confusion.
 
-<ESLintCodeBlock language="javascript">
-
 <!--eslint-skip-->
 
 ```js
@@ -34,8 +32,6 @@ derived(a, (b) => {});
 derived(a, (b, set) => {});
 derived([a, b], ([one, two]) => {});
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

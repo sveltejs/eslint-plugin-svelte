@@ -20,8 +20,6 @@ since: 'v2.9.0'
 This rule extends the base `@typescript-eslint`'s [@typescript-eslint/no-unnecessary-condition] rule.
 The [@typescript-eslint/no-unnecessary-condition] rule does not understand reactive or rerendering of Svelte components and has false positives when used with Svelte components. This rule understands reactive and rerendering of Svelte components.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -37,8 +35,6 @@ The [@typescript-eslint/no-unnecessary-condition] rule does not understand react
 <!-- ✓ GOOD -->
 {foo || 42}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

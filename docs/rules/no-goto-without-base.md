@@ -14,8 +14,6 @@ since: 'v2.36.0-next.9'
 
 This rule reports navigation using SvelteKit's `goto()` function without prefixing a relative URL with the base path. If a non-prefixed relative URL is used for navigation, the `goto` function navigates away from the base path, which is usually not what you wanted to do (for external URLs, `window.location = url` should be used instead).
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -42,8 +40,6 @@ This rule reports navigation using SvelteKit's `goto()` function without prefixi
   goto(`/foo/${base}`);
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

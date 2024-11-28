@@ -15,8 +15,6 @@ since: 'v2.14.0'
 We can define any number of `use:` directive with the same action, but duplicate directives with the exact same action and expression are probably a mistake.
 This rule reports reports `use:` directives with exactly the same action and expression.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -32,8 +30,6 @@ This rule reports reports `use:` directives with exactly the same action and exp
 <div use:clickOutside use:clickOutside />
 <div use:clickOutside={param} use:clickOutside={param} />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

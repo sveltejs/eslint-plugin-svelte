@@ -20,8 +20,6 @@ Dynamic `<slot>` names are not allowed in Svelte, so you must use static names.
 
 The auto-fix of this rule can be replaced with a static `<slot>` name if the expression given to the `<slot>` name is static and resolvable.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -36,8 +34,6 @@ The auto-fix of this rule can be replaced with a static `<slot>` name if the exp
 <!-- ✗ BAD -->
 <slot name={SLOT_NAME} />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

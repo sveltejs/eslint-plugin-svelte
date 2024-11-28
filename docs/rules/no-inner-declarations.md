@@ -21,8 +21,6 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 [svelte-eslint-parser]: https://github.com/sveltejs/svelte-eslint-parser
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -42,8 +40,6 @@ This rule supports [svelte-eslint-parser]'s AST.
   }
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -14,8 +14,6 @@ since: 'v2.31.0'
 
 This rule reports to usage of resticted HTML elements.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -36,11 +34,7 @@ This rule reports to usage of resticted HTML elements.
 </div>
 ```
 
-</ESLintCodeBlock>
-
 ---
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -61,8 +55,6 @@ This rule reports to usage of resticted HTML elements.
   <marquee>bar</marquee>
 </div>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

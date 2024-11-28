@@ -16,8 +16,6 @@ since: 'v2.4.0'
 
 This rule reports if curly brackets (`{` and `}`) are used unnecessarily around a reactive statement body containing only a single expression.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -33,8 +31,6 @@ This rule reports if curly brackets (`{` and `}`) are used unnecessarily around 
   }
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -14,8 +14,6 @@ since: 'v2.28.0'
 
 This rule reports `{#each}` block without key
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -33,8 +31,6 @@ This rule reports `{#each}` block without key
   <Thing name={thing.name} />
 {/each}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

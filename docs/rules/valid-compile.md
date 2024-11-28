@@ -16,8 +16,6 @@ since: 'v0.7.0'
 
 This rule uses Svelte compiler to check the source code.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -32,8 +30,6 @@ This rule uses Svelte compiler to check the source code.
 <!-- ✗ BAD -->
 <img {src} />
 ```
-
-</ESLintCodeBlock>
 
 Note that we exclude reports for some checks, such as `missing-declaration`, and `dynamic-slot-name`, which you can check with different ESLint rules.
 
@@ -91,8 +87,6 @@ export default {
 
 - `ignoreWarnings` ... If set to `true`, ignores any warnings other than fatal errors reported by the svelte compiler.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -104,8 +98,6 @@ export default {
 <!-- Ignore -->
 <img {src} />
 ```
-
-</ESLintCodeBlock>
 
 ## :rocket: Version
 

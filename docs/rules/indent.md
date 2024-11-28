@@ -19,8 +19,6 @@ This rule enforces a consistent indentation style in `.svelte`. The default styl
 - This rule checks all tags, also all expressions in directives and mustaches.
 - In the expressions, this rule supports ECMAScript 2021 syntaxes and some TypeScript syntaxes. It ignores unknown AST nodes, but it might be confused by non-standard syntaxes.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -50,8 +48,6 @@ CLICK ME!
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ::: warning Note
 This rule only checks `.svelte` files and does not interfere with other `.js` files. Unfortunately the default `indent` rule when turned on will try to lint both, so in order to make them complementary you can use `overrides` setting and disable `indent` rule on `.svelte` files:

@@ -16,8 +16,6 @@ since: 'v2.45.0'
 
 This rule enforces a line break (or no line break) before tag's closing brackets, which can also be configured to be enforced on self-closing tags.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -55,8 +53,6 @@ This rule enforces a line break (or no line break) before tag's closing brackets
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

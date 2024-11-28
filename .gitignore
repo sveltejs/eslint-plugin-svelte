@@ -112,4 +112,5 @@ docs-svelte-kit/build
 /docs-svelte-kit/shim/assert.mjs
 /docs-svelte-kit/src/routes/*.md
 /docs-svelte-kit/src/routes/**/*.md
+/docs-svelte-kit/src/lib/rules-meta.js
 packages/eslint-plugin-svelte/README.md

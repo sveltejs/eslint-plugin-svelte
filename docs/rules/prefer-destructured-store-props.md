@@ -18,8 +18,6 @@ This rule reports on directly accessing properties of a store containing an obje
 
 An example of the improvements can be see in this [REPL](https://svelte.dev/repl/7de86fea94ff40c48abb82da534dfb89)
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -35,8 +33,6 @@ An example of the improvements can be see in this [REPL](https://svelte.dev/repl
 <!-- ✗ BAD -->
 {$store.foo}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

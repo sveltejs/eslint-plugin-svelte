@@ -22,8 +22,6 @@ You can choose quotes of HTML attributes from:
 
 This rule enforces the quotes style of HTML attributes.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -42,8 +40,6 @@ This rule enforces the quotes style of HTML attributes.
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

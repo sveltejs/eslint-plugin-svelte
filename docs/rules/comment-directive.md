@@ -30,8 +30,6 @@ ESLint doesn't provide any API to enhance `eslint-disable` functionality and ESL
 
 This rule sends all `eslint-disable`-like comments to the post-process of the `.svelte` file processor, then the post-process removes the reported errors in disabled areas.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -43,11 +41,7 @@ This rule sends all `eslint-disable`-like comments to the post-process of the `.
 <UndefComponent />
 ```
 
-</ESLintCodeBlock>
-
 The `eslint-disable`-like comments can include descriptions to explain why the comment is necessary. The description must occur after the directive and is separated from the directive by two or more consecutive `-` characters. For example:
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -59,8 +53,6 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 <!-- eslint-disable-next-line no-undef -- Here's a description about why this disabling is necessary. -->
 <UndefComponent />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
@@ -79,8 +71,6 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 
 ### `{ "reportUnusedDisableDirectives": true }`
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -97,8 +87,6 @@ The `eslint-disable`-like comments can include descriptions to explain why the c
 <!-- eslint-disable-next-line no-undef -->
 <DefinedComponent />
 ```
-
-</ESLintCodeBlock>
 
 ## :books: Further Reading
 

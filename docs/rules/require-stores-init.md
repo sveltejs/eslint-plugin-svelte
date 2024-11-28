@@ -14,8 +14,6 @@ since: 'v2.5.0'
 
 This rule is aimed to enforce initial values when initializing the Svelte stores.
 
-<ESLintCodeBlock language="javascript">
-
 <!--eslint-skip-->
 
 ```js
@@ -33,8 +31,6 @@ export const w2 = writable();
 export const r2 = readable();
 export const d2 = derived([a, b], () => {});
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

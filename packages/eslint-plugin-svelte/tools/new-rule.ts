@@ -94,8 +94,6 @@ tester.run('${ruleId}', rule as any, loadTestCases('${ruleId}'));
 
 This rule reports ???.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 \`\`\`svelte
@@ -108,8 +106,6 @@ This rule reports ???.
 <!-- ✗ BAD -->
 
 \`\`\`
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -19,8 +19,6 @@ You can choose either two styles for spacing before closing bracket
 - always: `<div />`
 - never: `<div/>`
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -44,8 +42,6 @@ You can choose either two styles for spacing before closing bracket
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

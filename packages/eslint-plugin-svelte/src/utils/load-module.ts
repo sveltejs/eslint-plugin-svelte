@@ -43,10 +43,3 @@ export function loadModule<R>(context: RuleContext, name: string): R | null {
 	}
 	return null;
 }
-
-/**  Load modules for browser */
-export async function loadModulesForBrowser(): Promise<void> {
-	const [sass, typescript] = await Promise.all([import('sass'), import('typescript')]);
-	cache4b.set('sass', sass);
-	cache4b.set('typescript', typescript);
-}

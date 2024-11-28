@@ -18,8 +18,6 @@ This rule reports when a shorthand style property overrides a previously defined
 
 This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-overrides rule](https://stylelint.io/user-guide/rules/list/declaration-block-no-shorthand-property-overrides/).
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -38,8 +36,6 @@ This rule was inspired by [Stylelint's declaration-block-no-shorthand-property-o
 <div style="background-repeat: repeat; background: {red};">...</div>
 <div style:background-repeat="repeat" style="background: {red}">...</div>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

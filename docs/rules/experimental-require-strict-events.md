@@ -14,8 +14,6 @@ since: 'v2.18.0'
 
 This rule enforces the presence of the `strictEvents` attribute on the main `<script>` tag of all components. This attributes enforces typechecking of events dispatched by the component, e.g. making it a typescript error to listen to any non-existent events. Alternatively, the event types may be defined manually by declaring the `$$Events` interface. The `strictEvents` attribute and the `$$Events` interface are experimental and are documented in [svelte RFC #38](https://github.com/dummdidumm/rfcs/blob/ts-typedefs-within-svelte-components/text/ts-typing-props-slots-events.md#typing-events).
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -24,10 +22,6 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
   /* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
-
-</ESLintCodeBlock>
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -39,10 +33,6 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
 </script>
 ```
 
-</ESLintCodeBlock>
-
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -51,8 +41,6 @@ This rule enforces the presence of the `strictEvents` attribute on the main `<sc
   /* eslint svelte/experimental-require-strict-events: "error" */
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -14,8 +14,6 @@ since: 'v2.18.0'
 
 This rule enforces all svelte components to use the same set of languages for their scripts and styles.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -24,10 +22,6 @@ This rule enforces all svelte components to use the same set of languages for th
   /* eslint svelte/block-lang: ["error", { "script": "ts" }] */
 </script>
 ```
-
-</ESLintCodeBlock>
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -41,10 +35,6 @@ This rule enforces all svelte components to use the same set of languages for th
 </style>
 ```
 
-</ESLintCodeBlock>
-
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -53,8 +43,6 @@ This rule enforces all svelte components to use the same set of languages for th
   /* eslint svelte/block-lang: ["error", { "script": ["ts"] }] */
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

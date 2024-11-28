@@ -14,7 +14,8 @@ const config = [
 			'shim/assert.mjs',
 			'src/routes/*.md',
 			'src/routes/**/*.md',
-			'src/app.html'
+			'src/app.html',
+			'src/lib/rules-meta.js'
 		]
 	},
 	...myPlugin.config({

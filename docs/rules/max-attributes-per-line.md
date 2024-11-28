@@ -22,8 +22,6 @@ An attribute is considered to be in a new line when there is a line break betwee
 
 There is a configurable number of attributes that are acceptable in one-line case (default 1), as well as how many attributes are acceptable per line in multi-line case (default 1).
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -54,8 +52,6 @@ There is a configurable number of attributes that are acceptable in one-line cas
 <input type="text" bind:value={text} {maxlength} {...attrs} readonly />
 <button type="button" on:click={click} {maxlength} {...attrs}> CLICK ME! </button>
 ```
-
-</ESLintCodeBlock>
 
 <!-- prettier-ignore-end -->
 

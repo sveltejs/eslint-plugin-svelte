@@ -18,8 +18,6 @@ This rule reports all uses of `{@debug}`.
 
 The `{@debug}` should be removed when you no longer need it after you use it for debugging.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -32,8 +30,6 @@ The `{@debug}` should be removed when you no longer need it after you use it for
 {@debug user1, user2, user3}
 {@debug}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
