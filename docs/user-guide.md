@@ -1,8 +1,8 @@
 # User Guide
 
 > [!NOTE]
-> This README is in development.\
-> Please refer to the README for the version you are using.\
+> This document is in development.\
+> Please refer to the document for the version you are using.\
 > For example, <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/docs/user-guide.md>
 
 ## :cd: Installation
