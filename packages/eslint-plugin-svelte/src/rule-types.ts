@@ -265,7 +265,7 @@ export interface RuleOptions {
    */
   'svelte/prefer-class-directive'?: Linter.RuleEntry<SveltePreferClassDirective>
   /**
-   * Require `const` declarations for variables that are never reassigned after declared (excludes reactive values).
+   * Require `const` declarations for variables that are never reassigned after declared (excluding Svelte reactive values).
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/
    */
   'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
