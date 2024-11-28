@@ -1,4 +1,4 @@
-declare module 'postcss-safe-parser/lib/safe-parser' {
+declare module 'postcss-safe-parser/lib/safe-parser.js' {
 	import type { Tokenizer } from 'postcss/lib/tokenize';
 	import type { Root, Input } from 'postcss';
 
