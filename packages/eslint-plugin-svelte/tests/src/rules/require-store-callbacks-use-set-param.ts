@@ -1,6 +1,6 @@
-import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/require-store-callbacks-use-set-param';
-import { loadTestCases } from '../../utils/utils';
+import { RuleTester } from '../../utils/eslint-compat.js';
+import rule from '../../../src/rules/require-store-callbacks-use-set-param.js';
+import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {

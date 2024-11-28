@@ -1,12 +1,12 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import {
 	findVariable,
 	getAttributeValueQuoteAndRange,
 	getStringIfConstant
-} from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+} from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-dynamic-slot-name', {
 	meta: {

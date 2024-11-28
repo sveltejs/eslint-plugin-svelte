@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('no-spaces-around-equal-signs-in-attribute', {

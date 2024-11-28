@@ -1,6 +1,6 @@
-import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/prefer-destructured-store-props';
-import { loadTestCases } from '../../utils/utils';
+import { RuleTester } from '../../utils/eslint-compat.js';
+import rule from '../../../src/rules/prefer-destructured-store-props.js';
+import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {

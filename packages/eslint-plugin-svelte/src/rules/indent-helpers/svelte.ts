@@ -1,11 +1,11 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { ASTNode } from '../../types';
-import type { SvelteNodeListener } from '../../types-for-node';
-import { isNotWhitespace } from './ast';
-import type { IndentContext } from './commons';
-import { isBeginningOfElement } from './commons';
-import { isBeginningOfLine } from './commons';
-import { getFirstAndLastTokens } from './commons';
+import type { ASTNode } from '../../types.js';
+import type { SvelteNodeListener } from '../../types-for-node.js';
+import { isNotWhitespace } from './ast.js';
+import type { IndentContext } from './commons.js';
+import { isBeginningOfElement } from './commons.js';
+import { isBeginningOfLine } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
 import { isClosingParenToken, isOpeningParenToken } from '@eslint-community/eslint-utils';
 
 type NodeListener = SvelteNodeListener;

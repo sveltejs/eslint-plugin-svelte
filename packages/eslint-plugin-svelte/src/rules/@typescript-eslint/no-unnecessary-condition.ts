@@ -3,7 +3,7 @@
 // https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/rules/no-unnecessary-condition.ts
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../../utils';
+import { createRule } from '../../utils/index.js';
 import {
 	isFalsyType,
 	getConstrainedTypeAtLocation,
@@ -20,9 +20,9 @@ import {
 	getTypeOfPropertyOfType,
 	getTypeName,
 	isTupleType
-} from '../../utils/ts-utils';
-import type { TS, TSTools } from '../../utils/ts-utils';
-import { getSourceCode } from '../../utils/compat';
+} from '../../utils/ts-utils/index.js';
+import type { TS, TSTools } from '../../utils/ts-utils/index.js';
+import { getSourceCode } from '../../utils/compat.js';
 
 /**
  * Returns all types of a union type or an array containing `type` itself if it's no union type.

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import plugin from '../../src';
+import plugin from '../../src/index.js';
 import { version } from '../../package.json';
 const expectedMeta = {
 	name: 'eslint-plugin-svelte',

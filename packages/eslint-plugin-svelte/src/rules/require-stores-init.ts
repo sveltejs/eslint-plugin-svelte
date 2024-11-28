@@ -1,5 +1,5 @@
-import { createRule } from '../utils';
-import { extractStoreReferences } from './reference-helpers/svelte-store';
+import { createRule } from '../utils/index.js';
+import { extractStoreReferences } from './reference-helpers/svelte-store.js';
 
 export default createRule('require-stores-init', {
 	meta: {

@@ -1,11 +1,11 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import {
 	findAttribute,
 	findBindDirective,
 	findShorthandAttribute,
 	getStaticAttributeValue
-} from '../utils/ast-utils';
+} from '../utils/ast-utils.js';
 
 /** Checks wether the given attr node is target="_blank"  */
 function isTargetBlank(node: AST.SvelteAttribute) {

@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 
-import { createRule } from '../utils';
-import { findAttribute, getLangValue } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { findAttribute, getLangValue } from '../utils/ast-utils.js';
 
 const EVENTS_TYPE_NAME = '$$Events';
 

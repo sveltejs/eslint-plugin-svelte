@@ -1,8 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import { getPropertyName } from '@eslint-community/eslint-utils';
-import { getSourceCode } from '../utils/compat';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-reactive-reassign', {
 	meta: {

@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { getCwd, getFilename } from '../../../utils/compat';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { getCwd, getFilename } from '../../../utils/compat.js';
 
 /**
  * Transform with postcss

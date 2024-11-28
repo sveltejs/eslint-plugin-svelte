@@ -1,6 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getScope } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { getScope } from '../utils/ast-utils.js';
 
 export default createRule('valid-each-key', {
 	meta: {

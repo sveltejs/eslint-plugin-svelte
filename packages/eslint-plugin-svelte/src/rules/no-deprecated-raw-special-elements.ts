@@ -1,5 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 const INVALID_HTML_ELEMENTS = ['head', 'body', 'window', 'document', 'element', 'options'];
 const VALID_PREFIX = 'svelte:';

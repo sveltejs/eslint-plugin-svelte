@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import { findVariable } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { findVariable } from '../utils/ast-utils.js';
 
 const PHRASES = {
 	ObjectExpression: 'object',

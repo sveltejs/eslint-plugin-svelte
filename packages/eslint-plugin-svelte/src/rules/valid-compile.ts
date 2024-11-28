@@ -1,7 +1,7 @@
-import { createRule } from '../utils';
-import type { SvelteCompileWarnings, Warning } from '../shared/svelte-compile-warns';
-import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import type { SvelteCompileWarnings, Warning } from '../shared/svelte-compile-warns/index.js';
+import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns/index.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('valid-compile', {
 	meta: {

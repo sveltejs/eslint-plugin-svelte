@@ -1,11 +1,11 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import {
 	findAttribute,
 	findShorthandAttribute,
 	findBindDirective,
 	getStaticAttributeValue
-} from '../utils/ast-utils';
+} from '../utils/ast-utils.js';
 
 type Options = {
 	button: boolean;

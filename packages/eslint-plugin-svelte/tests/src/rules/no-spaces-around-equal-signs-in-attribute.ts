@@ -1,6 +1,6 @@
-import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/no-spaces-around-equal-signs-in-attribute';
-import { loadTestCases } from '../../utils/utils';
+import { RuleTester } from '../../utils/eslint-compat.js';
+import rule from '../../../src/rules/no-spaces-around-equal-signs-in-attribute.js';
+import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {

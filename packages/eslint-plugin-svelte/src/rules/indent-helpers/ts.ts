@@ -10,10 +10,10 @@ import {
 	isOpeningParenToken,
 	isSemicolonToken
 } from '@eslint-community/eslint-utils';
-import type { AnyToken, IndentContext } from './commons';
-import { isBeginningOfLine } from './commons';
-import { getFirstAndLastTokens } from './commons';
-import type { TSNodeListener } from '../../types-for-node';
+import type { AnyToken, IndentContext } from './commons.js';
+import { isBeginningOfLine } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
+import type { TSNodeListener } from '../../types-for-node.js';
 
 type NodeListener = TSNodeListener;
 

@@ -1,4 +1,4 @@
-import type { RuleModule, PartialRuleModule } from '../types';
+import type { RuleModule, PartialRuleModule } from '../types.js';
 
 /**
  * Define the rule.

@@ -1,6 +1,6 @@
-import { createRule } from '../utils';
-import { getAttributeValueQuoteAndRange } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import { getAttributeValueQuoteAndRange } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('shorthand-attribute', {
 	meta: {

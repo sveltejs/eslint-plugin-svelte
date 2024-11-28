@@ -1,5 +1,5 @@
-import { createRule } from '../utils';
-import { defineVisitor } from './indent-helpers';
+import { createRule } from '../utils/index.js';
+import { defineVisitor } from './indent-helpers/index.js';
 
 export default createRule('indent', {
 	meta: {

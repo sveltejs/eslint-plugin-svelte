@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getNodeName, isVoidHtmlElement, isForeignElement } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import { getNodeName, isVoidHtmlElement, isForeignElement } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 const TYPE_MESSAGES = {
 	normal: 'HTML elements',

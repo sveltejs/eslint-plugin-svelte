@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import { getStringIfConstant, isHTMLElementLike, needParentheses } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { getStringIfConstant, isHTMLElementLike, needParentheses } from '../utils/ast-utils.js';
 import type { Rule } from 'eslint';
-import { getSourceCode } from '../utils/compat';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('prefer-class-directive', {
 	meta: {

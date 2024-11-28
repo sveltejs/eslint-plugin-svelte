@@ -1,8 +1,8 @@
-import type { ASTNode, SourceCode } from '../../types';
-import { isNotWhitespace } from './ast';
-import type { AnyToken, IndentOptions, MaybeNode } from './commons';
-import { isBeginningOfLine } from './commons';
-import { getFirstAndLastTokens } from './commons';
+import type { ASTNode, SourceCode } from '../../types.js';
+import { isNotWhitespace } from './ast.js';
+import type { AnyToken, IndentOptions, MaybeNode } from './commons.js';
+import { isBeginningOfLine } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
 const enum OffsetDataType {
 	normal,
 	align,

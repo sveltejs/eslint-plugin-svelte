@@ -1,6 +1,6 @@
-import { RuleTester } from '../../utils/eslint-compat';
-import rule from '../../../src/rules/html-closing-bracket-new-line';
-import { loadTestCases } from '../../utils/utils';
+import { RuleTester } from '../../utils/eslint-compat.js';
+import rule from '../../../src/rules/html-closing-bracket-new-line.js';
+import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {
@@ -9,4 +9,8 @@ const tester = new RuleTester({
 	}
 });
 
-tester.run('html-closing-bracket-new-line', rule as any, loadTestCases('html-closing-bracket-new-line'));
+tester.run(
+	'html-closing-bracket-new-line',
+	rule as any,
+	loadTestCases('html-closing-bracket-new-line')
+);

@@ -3,7 +3,7 @@ import type { Linter, Rule, SourceCode as ESLintSourceCode } from 'eslint';
 import type { AST, StyleContext, SvelteConfig } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { ScopeManager, Scope, Variable } from '@typescript-eslint/scope-manager';
-import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node';
+import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node.js';
 import type * as TS from 'typescript';
 
 export type { ASTNode, ASTNodeWithParent, ASTNodeListener };

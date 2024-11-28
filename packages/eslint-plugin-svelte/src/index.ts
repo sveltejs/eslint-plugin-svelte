@@ -1,29 +1,26 @@
 import './rule-types';
-import type { RuleModule } from './types';
-import { rules as ruleList } from './utils/rules';
-import base from './configs/base';
-import recommended from './configs/recommended';
-import prettier from './configs/prettier';
-import all from './configs/all';
-import flatBase from './configs/flat/base';
-import flatRecommended from './configs/flat/recommended';
-import flatPrettier from './configs/flat/prettier';
-import flatAll from './configs/flat/all';
-import * as processor from './processor';
-import * as meta from './meta';
+import type { RuleModule } from './types.js';
+import { rules as ruleList } from './utils/rules.js';
+import base, { setPluginObject } from './configs/flat/base.js';
+import recommended from './configs/flat/recommended.js';
+import prettier from './configs/flat/prettier.js';
+import all from './configs/flat/all.js';
+import * as processor from './processor/index.js';
+import * as meta from './meta.js';
 
-const configs = {
+export const configs = {
 	base,
 	recommended,
 	prettier,
 	all,
-	'flat/base': flatBase,
-	'flat/recommended': flatRecommended,
-	'flat/prettier': flatPrettier,
-	'flat/all': flatAll
+	// For backward compatibility
+	'flat/base': base,
+	'flat/recommended': recommended,
+	'flat/prettier': prettier,
+	'flat/all': all
 };
 
-const rules = ruleList.reduce(
+export const rules = ruleList.reduce(
 	(obj, r) => {
 		obj[r.meta.docs.ruleName] = r;
 		return obj;
@@ -31,12 +28,17 @@ const rules = ruleList.reduce(
 	{} as { [key: string]: RuleModule }
 );
 
-export = {
-	meta,
-	configs,
-	rules,
-	processors: {
-		'.svelte': processor,
-		svelte: processor
-	}
+export { meta };
+export const processors = {
+	'.svelte': processor,
+	svelte: processor
 };
+
+const plugin = {
+	rules,
+	configs,
+	meta,
+	processors
+};
+setPluginObject(plugin as never);
+export default plugin;

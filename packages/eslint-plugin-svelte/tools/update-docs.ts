@@ -1,9 +1,11 @@
 import path from 'path';
 import fs from 'fs';
-import { rules } from '../src/utils/rules';
-import type { RuleModule } from '../src/types';
-import { getNewVersion } from './lib/changesets-util';
-import { writeAndFormat } from './lib/write';
+import { rules } from '../src/utils/rules.js';
+import type { RuleModule } from '../src/types.js';
+import { getNewVersion } from './lib/changesets-util.js';
+import { writeAndFormat } from './lib/write.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function formatItems(items: string[]) {
 	if (items.length <= 2) {

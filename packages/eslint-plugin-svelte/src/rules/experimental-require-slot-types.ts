@@ -1,5 +1,5 @@
-import { createRule } from '../utils';
-import { getLangValue } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { getLangValue } from '../utils/ast-utils.js';
 
 const SLOTS_TYPE_NAME = '$$Slots';
 

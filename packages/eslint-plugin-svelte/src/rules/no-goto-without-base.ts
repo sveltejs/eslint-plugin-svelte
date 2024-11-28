@@ -1,9 +1,9 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { getSourceCode } from '../utils/compat';
-import { findVariable } from '../utils/ast-utils';
-import type { RuleContext } from '../types';
+import { getSourceCode } from '../utils/compat.js';
+import { findVariable } from '../utils/ast-utils.js';
+import type { RuleContext } from '../types.js';
 
 export default createRule('no-goto-without-base', {
 	meta: {

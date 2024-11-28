@@ -1,5 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 export default createRule('no-at-html-tags', {
 	meta: {

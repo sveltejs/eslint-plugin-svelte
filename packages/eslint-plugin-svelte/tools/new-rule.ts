@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import cp from 'child_process';
-import { writeAndFormat } from './lib/write';
+import { writeAndFormat } from './lib/write.js';
 const logger = console;
 
 // main
@@ -16,7 +16,7 @@ void (async ([ruleId, ...args]) => {
 		process.exitCode = 1;
 		return;
 	}
-	const utilsPath = path.resolve(__dirname, `../src/utils`);
+	const utilsPath = path.resolve(__dirname, `../src/utils/index.ts`);
 	const testUtilsPath = path.resolve(__dirname, `../tests/utils/utils.ts`);
 
 	const ruleFile = path.resolve(__dirname, `../src/rules/${ruleId}.ts`);
@@ -70,7 +70,7 @@ export default createRule('${ruleId}', {
 	);
 	await writeAndFormat(
 		testFile,
-		`import { RuleTester } from '../../utils/eslint-compat';
+		`import { RuleTester } from '../../utils/eslint-compat.js';
 import rule from '${getModulePath(testFile, ruleFile)}';
 import { loadTestCases } from '${getModulePath(testFile, testUtilsPath)}';
 
@@ -144,7 +144,7 @@ This rule reports ???.
 
 /** Get module path */
 function getModulePath(from: string, module: string): string {
-	return path.relative(path.dirname(from), module).replace(/.ts$/u, '');
+	return path.relative(path.dirname(from), module).replace(/.ts$/u, '.js');
 }
 
 /** Argument parsing */

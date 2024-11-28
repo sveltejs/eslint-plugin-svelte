@@ -1,7 +1,9 @@
 import path from 'path';
 // import eslint from "eslint"
-import { rules } from './lib/load-rules';
-import { writeAndFormat } from './lib/write';
+import { rules } from './lib/load-rules.js';
+import { writeAndFormat } from './lib/write.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 /**
  * Convert text to camelCase
@@ -26,11 +28,11 @@ const content = `/*
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-import type { RuleModule } from "../types"
+import type { RuleModule } from "../types.js"
 ${rules
 	.map(
 		(rule) =>
-			`import ${toIdentifier(rule.meta.docs.ruleName)} from "../rules/${rule.meta.docs.ruleName}"`
+			`import ${toIdentifier(rule.meta.docs.ruleName)} from "../rules/${rule.meta.docs.ruleName}.js"`
 	)
 	.join('\n')}
 

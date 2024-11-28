@@ -1,7 +1,9 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/types';
 import { parseForESLint } from 'svelte-eslint-parser';
 import path from 'path';
-import { writeAndFormat } from './lib/write';
+import { writeAndFormat } from './lib/write.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // import { fileURLToPath } from "url"
 // const filename = fileURLToPath(import.meta.url)

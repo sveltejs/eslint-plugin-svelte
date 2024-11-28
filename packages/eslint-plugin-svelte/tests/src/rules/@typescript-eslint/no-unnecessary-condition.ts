@@ -1,6 +1,6 @@
-import { RuleTester } from '../../../utils/eslint-compat';
-import rule from '../../../../src/rules/@typescript-eslint/no-unnecessary-condition';
-import { loadTestCases, RULES_PROJECT } from '../../../utils/utils';
+import { RuleTester } from '../../../utils/eslint-compat.js';
+import rule from '../../../../src/rules/@typescript-eslint/no-unnecessary-condition.js';
+import { loadTestCases, RULES_PROJECT } from '../../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {

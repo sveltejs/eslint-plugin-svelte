@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
 import type typescript from 'typescript';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { loadModule } from '../../../utils/load-module';
-import { getSourceCode } from '../../../utils/compat';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { loadModule } from '../../../utils/load-module.js';
+import { getSourceCode } from '../../../utils/compat.js';
 
 type TS = typeof typescript;
 /**

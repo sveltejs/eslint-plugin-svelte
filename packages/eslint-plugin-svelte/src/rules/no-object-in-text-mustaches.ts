@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 const PHRASES = {
 	ObjectExpression: 'object',

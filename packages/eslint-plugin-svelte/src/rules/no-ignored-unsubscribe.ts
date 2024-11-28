@@ -1,5 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 export default createRule('no-ignored-unsubscribe', {
 	meta: {

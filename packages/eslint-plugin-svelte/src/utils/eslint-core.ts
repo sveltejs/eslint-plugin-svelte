@@ -1,9 +1,11 @@
 /* eslint @typescript-eslint/no-explicit-any: off -- util */
-import type { RuleListener, RuleContext, RuleModule } from '../types';
+import type { RuleListener, RuleContext, RuleModule } from '../types.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import { Linter } from 'eslint';
+import { Module } from 'module';
 
+const require = Module.createRequire(import.meta.url);
 /**
  * Define the wrapped core rule.
  */
@@ -85,7 +87,6 @@ export function getCoreRule(ruleName: string): RuleModule {
 		// getRules() is no longer available in flat config.
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-require-imports , @typescript-eslint/no-var-requires -- Ignore
 	const { builtinRules } = require('eslint/use-at-your-own-risk');
 	ruleMap = builtinRules;
 	return builtinRules.get(ruleName) || null;

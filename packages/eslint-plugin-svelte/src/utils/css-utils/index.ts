@@ -1,3 +1,3 @@
-export * from './style-attribute';
-export * from './resource';
-export * from './utils';
+export * from './style-attribute.js';
+export * from './resource.js';
+export * from './utils.js';

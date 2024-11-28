@@ -2,12 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import type { RuleTester } from 'eslint';
 import type { Linter as LinterType } from 'eslint';
-import plugin from '../../src/index';
-import { applyFixes } from './source-code-fixer';
+import plugin from '../../src/index.js';
+import { applyFixes } from './source-code-fixer.js';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import semver from 'semver';
-import { writeAndFormat } from '../../tools/lib/write';
-import { Linter } from './eslint-compat';
+import { writeAndFormat } from '../../tools/lib/write.js';
+import { Linter } from './eslint-compat.js';
+import * as svelteParser from 'svelte-eslint-parser';
+import * as typescriptParser from '@typescript-eslint/parser';
+import { Module } from 'module';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const require = Module.createRequire(import.meta.url);
 
 const globals = {
 	console: 'readonly',
@@ -215,9 +221,9 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 
 	const parser =
 		path.extname(inputFile) === '.svelte'
-			? require('svelte-eslint-parser')
+			? svelteParser
 			: path.extname(inputFile) === '.ts'
-				? require('@typescript-eslint/parser')
+				? typescriptParser
 				: undefined;
 	const { code, filename, options, ...verifyConfig } = config;
 	const resolvedParser = verifyConfig.languageOptions?.parser ?? parser;
@@ -293,18 +299,21 @@ function getConfig(ruleName: string, inputFile: string) {
 		inputFile.replace(/input\.[a-z]+$/u, 'config.json'),
 		path.join(path.dirname(inputFile), '_config.json'),
 		inputFile.replace(/input\.[a-z]+$/u, 'config.js'),
-		path.join(path.dirname(inputFile), '_config.js')
+		path.join(path.dirname(inputFile), '_config.js'),
+		inputFile.replace(/input\.[a-z]+$/u, 'config.cjs'),
+		path.join(path.dirname(inputFile), '_config.cjs')
 	].find((f) => fs.existsSync(f));
 	if (configFile) {
-		config = configFile.endsWith('.js')
-			? require(configFile)
-			: JSON.parse(fs.readFileSync(configFile, 'utf8'));
+		config =
+			configFile.endsWith('.js') || configFile.endsWith('.cjs')
+				? require(configFile)
+				: JSON.parse(fs.readFileSync(configFile, 'utf8'));
 	}
 	const parser =
 		path.extname(filename) === '.svelte'
-			? require('svelte-eslint-parser')
+			? svelteParser
 			: path.extname(inputFile) === '.ts'
-				? require('@typescript-eslint/parser')
+				? typescriptParser
 				: undefined;
 
 	const resolvedParser = config?.languageOptions?.parser

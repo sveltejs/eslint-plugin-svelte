@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 
 export default createRule('no-svelte-internal', {

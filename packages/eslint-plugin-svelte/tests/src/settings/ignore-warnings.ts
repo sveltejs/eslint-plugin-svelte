@@ -1,6 +1,7 @@
 import assert from 'assert';
-import plugin from '../../../src/index';
-import { ESLint } from '../../utils/eslint-compat';
+import plugin from '../../../src/index.js';
+import { ESLint } from '../../utils/eslint-compat.js';
+import * as svelteParser from 'svelte-eslint-parser';
 
 describe('ignore-warnings', () => {
 	it('disable rules if ignoreWarnings: [ruleName]', async () => {
@@ -18,11 +19,10 @@ describe('ignore-warnings', () => {
 			baseConfig: {
 				files: ['**'],
 				languageOptions: {
-					parser: require('svelte-eslint-parser'),
+					parser: svelteParser,
 					ecmaVersion: 2020
 				},
 				plugins: {
-					// @ts-expect-error -- Type error for eslint v9
 					svelte: plugin as never
 				},
 				rules: {
@@ -39,7 +39,6 @@ describe('ignore-warnings', () => {
 				},
 				processor: 'svelte/svelte'
 			},
-			// @ts-expect-error -- Type error for eslint v9
 			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
@@ -86,11 +85,10 @@ describe('ignore-warnings', () => {
 			baseConfig: {
 				files: ['**'],
 				languageOptions: {
-					parser: require('svelte-eslint-parser'),
+					parser: svelteParser,
 					ecmaVersion: 2020
 				},
 				plugins: {
-					// @ts-expect-error -- Type error for eslint v9
 					svelte: plugin as never
 				},
 				rules: {
@@ -107,7 +105,6 @@ describe('ignore-warnings', () => {
 				},
 				processor: 'svelte/svelte'
 			},
-			// @ts-expect-error -- Type error for eslint v9
 			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });
@@ -155,11 +152,10 @@ describe('ignore-warnings', () => {
 			baseConfig: {
 				files: ['**'],
 				languageOptions: {
-					parser: require('svelte-eslint-parser'),
+					parser: svelteParser,
 					ecmaVersion: 2020
 				},
 				plugins: {
-					// @ts-expect-error -- Type error for eslint v9
 					svelte: plugin as never
 				},
 				rules: {
@@ -167,7 +163,6 @@ describe('ignore-warnings', () => {
 				},
 				processor: 'svelte/svelte'
 			},
-			// @ts-expect-error -- Type error for eslint v9
 			overrideConfigFile: true
 		});
 		const result = await linter.lintText(code, { filePath: 'test.svelte' });

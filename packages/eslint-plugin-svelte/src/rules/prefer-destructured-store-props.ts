@@ -2,10 +2,10 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { getPropertyName } from '@eslint-community/eslint-utils';
 import type { AST } from 'svelte-eslint-parser';
 import { keyword } from 'esutils';
-import type { SuggestionReportDescriptor } from '../types';
-import { createRule } from '../utils';
-import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+import type { SuggestionReportDescriptor } from '../types.js';
+import { createRule } from '../utils/index.js';
+import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 type StoreMemberExpression = TSESTree.MemberExpression & {
 	object: TSESTree.Identifier & { name: string };

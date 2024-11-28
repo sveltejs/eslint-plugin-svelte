@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 export default createRule('no-restricted-html-elements', {
 	meta: {

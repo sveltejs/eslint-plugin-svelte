@@ -1,11 +1,11 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { createRule } from '../utils';
-import type { RuleContext } from '../types';
-import { findVariable } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import type { RuleContext } from '../types.js';
+import { findVariable } from '../utils/ast-utils.js';
 import { traverseNodes } from 'svelte-eslint-parser';
-import { getSourceCode } from '../utils/compat';
+import { getSourceCode } from '../utils/compat.js';
 
 /**
  * Get usage of `tick`

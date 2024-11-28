@@ -1,17 +1,18 @@
 import path from 'path';
 import fs from 'fs';
-import type { RuleModule } from '../../src/types';
+import type { RuleModule } from '../../src/types.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 /**
  * Get the all rules
  * @returns {Array} The all rules
  */
-function readRules() {
+async function readRules() {
 	const rulesLibRoot = path.resolve(__dirname, '../../src/rules');
 	const rules: RuleModule[] = [];
 	for (const name of iterateTsFiles()) {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore
-		const module = require(path.join(rulesLibRoot, name));
+		const module = await import(path.join(rulesLibRoot, name));
 		const rule: RuleModule = module && module.default;
 		if (!rule || typeof rule.create !== 'function') {
 			continue;
@@ -22,7 +23,7 @@ function readRules() {
 	return rules;
 }
 
-export const rules = readRules();
+export const rules = await readRules();
 
 /** Iterate ts files */
 function* iterateTsFiles() {

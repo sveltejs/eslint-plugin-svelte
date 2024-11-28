@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import type { IndentContext } from './commons';
-import { getFirstAndLastTokens } from './commons';
+import type { IndentContext } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
 import {
 	isArrowToken,
 	isClosingBraceToken,
@@ -15,8 +15,8 @@ import {
 	isOpeningParenToken,
 	isSemicolonToken
 } from '@eslint-community/eslint-utils';
-import type { ESNodeListener } from '../../types-for-node';
-import { getParent } from '../../utils/ast-utils';
+import type { ESNodeListener } from '../../types-for-node.js';
+import { getParent } from '../../utils/ast-utils.js';
 
 type NodeListener = ESNodeListener;
 

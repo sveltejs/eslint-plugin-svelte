@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getSourceCode } from '../utils/compat';
-import type { SourceCode } from '../types';
+import { createRule } from '../utils/index.js';
+import { getSourceCode } from '../utils/compat.js';
+import type { SourceCode } from '../types.js';
 
 type ExpectedNode = AST.SvelteStartTag | AST.SvelteEndTag;
 type OptionValue = 'always' | 'never';
@@ -119,7 +119,7 @@ export default createRule('html-closing-bracket-new-line', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const options: RuleOptions = context.options[0] ?? {};
+		const options: RuleOptions = { ...(context.options[0] ?? {}) };
 		options.singleline ??= 'never';
 		options.multiline ??= 'always';
 
