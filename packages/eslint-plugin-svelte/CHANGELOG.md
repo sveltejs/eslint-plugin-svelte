@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.1
+
+### Minor Changes
+
+- [#918](https://github.com/sveltejs/eslint-plugin-svelte/pull/918) [`5da98c9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5da98c94f452c8436f26af4172e095fd91f66e1a) Thanks [@mikededo](https://github.com/mikededo)! - Added new `no-deprecated-raw-special-elements` rule
+
+- [#836](https://github.com/sveltejs/eslint-plugin-svelte/pull/836) [`3fa90aa`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3fa90aa57a15ad18105b0d80b1ed975f1f782a11) Thanks [@renovate](https://github.com/apps/renovate)! - feat: support for typescript-eslint v8 to `svelte/indent` rule
+
 ## 3.0.0-next.0
 
 ### Major Changes
