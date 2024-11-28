@@ -3,7 +3,7 @@ import type { RuleListener, RuleContext, RuleModule } from '../types.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import { Linter } from 'eslint';
-import { Module } from 'module';
+import Module from 'module';
 
 const require = Module.createRequire(import.meta.url);
 /**

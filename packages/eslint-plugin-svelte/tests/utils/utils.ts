@@ -10,7 +10,7 @@ import { writeAndFormat } from '../../tools/lib/write.js';
 import { Linter } from './eslint-compat.js';
 import * as svelteParser from 'svelte-eslint-parser';
 import * as typescriptParser from '@typescript-eslint/parser';
-import { Module } from 'module';
+import Module from 'module';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const require = Module.createRequire(import.meta.url);
