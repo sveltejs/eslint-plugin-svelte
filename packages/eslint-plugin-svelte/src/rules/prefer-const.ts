@@ -117,7 +117,7 @@ export default createRule('prefer-const', {
 		type: 'suggestion',
 		docs: {
 			description:
-				'Require `const` declarations for variables that are never reassigned after declared (excludes reactive values).',
+				'Require `const` declarations for variables that are never reassigned after declared (excluding Svelte reactive values).',
 			category: 'Best Practices',
 			recommended: false
 		},
