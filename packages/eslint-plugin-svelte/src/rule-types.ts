@@ -265,6 +265,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-class-directive'?: Linter.RuleEntry<SveltePreferClassDirective>
   /**
+   * Require `const` declarations for variables that are never reassigned after declared (excludes reactive values).
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/
+   */
+  'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
+  /**
    * destructure values from object stores for better change tracking & fewer redraws
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/
    */
@@ -484,6 +489,11 @@ type SvelteNoUselessMustaches = []|[{
 // ----- svelte/prefer-class-directive -----
 type SveltePreferClassDirective = []|[{
   prefer?: ("always" | "empty")
+}]
+// ----- svelte/prefer-const -----
+type SveltePreferConst = []|[{
+  destructuring?: ("any" | "all")
+  ignoreReadBeforeAssign?: boolean
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{
