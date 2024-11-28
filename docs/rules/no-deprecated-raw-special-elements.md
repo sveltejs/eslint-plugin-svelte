@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-deprecated-raw-special-elements'
 description: 'Recommends not using raw special elements in Svelte versions previous to 5.'
+since: 'v3.0.0-next.1'
 ---
 
 # svelte/no-deprecated-raw-special-elements
 
 > Recommends not using raw special elements in Svelte versions previous to 5.
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -45,6 +45,10 @@ Nothing.
 ## :books: Further Reading
 
 - See special elements section in [Svelte docs](https://svelte.dev/docs/svelte/svelte-window)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.0.0-next.1
 
 ## :mag: Implementation
 
