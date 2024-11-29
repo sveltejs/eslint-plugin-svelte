@@ -135,6 +135,7 @@ export type ASTNodeListener = {
 	TSEmptyBodyFunctionExpression?: (
 		node: TSESTree.TSEmptyBodyFunctionExpression & ASTNodeWithParent
 	) => void;
+	TSEnumBody?: (node: TSESTree.TSEnumBody & ASTNodeWithParent) => void;
 	TSEnumDeclaration?: (node: TSESTree.TSEnumDeclaration & ASTNodeWithParent) => void;
 	TSEnumMember?: (node: TSESTree.TSEnumMember & ASTNodeWithParent) => void;
 	TSExportAssignment?: (node: TSESTree.TSExportAssignment & ASTNodeWithParent) => void;
@@ -143,9 +144,6 @@ export type ASTNodeListener = {
 		node: TSESTree.TSExternalModuleReference & ASTNodeWithParent
 	) => void;
 	TSFunctionType?: (node: TSESTree.TSFunctionType & ASTNodeWithParent) => void;
-	TSInstantiationExpression?: (
-		node: TSESTree.TSInstantiationExpression & ASTNodeWithParent
-	) => void;
 	TSImportEqualsDeclaration?: (
 		node: TSESTree.TSImportEqualsDeclaration & ASTNodeWithParent
 	) => void;
@@ -153,6 +151,9 @@ export type ASTNodeListener = {
 	TSIndexedAccessType?: (node: TSESTree.TSIndexedAccessType & ASTNodeWithParent) => void;
 	TSIndexSignature?: (node: TSESTree.TSIndexSignature & ASTNodeWithParent) => void;
 	TSInferType?: (node: TSESTree.TSInferType & ASTNodeWithParent) => void;
+	TSInstantiationExpression?: (
+		node: TSESTree.TSInstantiationExpression & ASTNodeWithParent
+	) => void;
 	TSInterfaceBody?: (node: TSESTree.TSInterfaceBody & ASTNodeWithParent) => void;
 	TSInterfaceDeclaration?: (node: TSESTree.TSInterfaceDeclaration & ASTNodeWithParent) => void;
 	TSInterfaceHeritage?: (node: TSESTree.TSInterfaceHeritage & ASTNodeWithParent) => void;
@@ -354,6 +355,7 @@ export type TSNodeListener = {
 	TSEmptyBodyFunctionExpression?: (
 		node: TSESTree.TSEmptyBodyFunctionExpression & ASTNodeWithParent
 	) => void;
+	TSEnumBody?: (node: TSESTree.TSEnumBody & ASTNodeWithParent) => void;
 	TSEnumDeclaration?: (node: TSESTree.TSEnumDeclaration & ASTNodeWithParent) => void;
 	TSEnumMember?: (node: TSESTree.TSEnumMember & ASTNodeWithParent) => void;
 	TSExportAssignment?: (node: TSESTree.TSExportAssignment & ASTNodeWithParent) => void;
@@ -362,9 +364,6 @@ export type TSNodeListener = {
 		node: TSESTree.TSExternalModuleReference & ASTNodeWithParent
 	) => void;
 	TSFunctionType?: (node: TSESTree.TSFunctionType & ASTNodeWithParent) => void;
-	TSInstantiationExpression?: (
-		node: TSESTree.TSInstantiationExpression & ASTNodeWithParent
-	) => void;
 	TSImportEqualsDeclaration?: (
 		node: TSESTree.TSImportEqualsDeclaration & ASTNodeWithParent
 	) => void;
@@ -372,6 +371,9 @@ export type TSNodeListener = {
 	TSIndexedAccessType?: (node: TSESTree.TSIndexedAccessType & ASTNodeWithParent) => void;
 	TSIndexSignature?: (node: TSESTree.TSIndexSignature & ASTNodeWithParent) => void;
 	TSInferType?: (node: TSESTree.TSInferType & ASTNodeWithParent) => void;
+	TSInstantiationExpression?: (
+		node: TSESTree.TSInstantiationExpression & ASTNodeWithParent
+	) => void;
 	TSInterfaceBody?: (node: TSESTree.TSInterfaceBody & ASTNodeWithParent) => void;
 	TSInterfaceDeclaration?: (node: TSESTree.TSInterfaceDeclaration & ASTNodeWithParent) => void;
 	TSInterfaceHeritage?: (node: TSESTree.TSInterfaceHeritage & ASTNodeWithParent) => void;
