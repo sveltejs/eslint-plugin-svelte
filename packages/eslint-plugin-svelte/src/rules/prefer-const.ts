@@ -8,11 +8,6 @@ import {
 	isInitOfForStatement
 } from './prefer-const-helpers';
 
-/**
- * Rule and helpers are copied from ESLint
- * https://github.com/eslint/eslint/blob/main/lib/rules/prefer-const.js
- */
-
 export default createRule('prefer-const', {
 	meta: {
 		type: 'suggestion',
