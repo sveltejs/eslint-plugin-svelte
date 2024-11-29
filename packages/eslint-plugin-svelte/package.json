@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "2.46.0",
+  "version": "2.46.1",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
   "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
