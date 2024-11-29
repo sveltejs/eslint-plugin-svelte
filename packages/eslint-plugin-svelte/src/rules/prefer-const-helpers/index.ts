@@ -6,12 +6,24 @@ import type { RuleContext } from '../../types';
 
 type ASTNode = TSESTree.Node;
 type CheckedNode = NonNullable<ASTNode & { parent: NonNullable<ASTNode> }>;
+type VariableDeclaration =
+	| TSESTree.LetOrConstOrVarDeclaration
+	| TSESTree.UsingInForOfDeclaration
+	| TSESTree.UsingInNormalContextDeclaration;
+type VariableDeclarator =
+	| TSESTree.LetOrConstOrVarDeclarator
+	| TSESTree.UsingInForOfDeclarator
+	| TSESTree.UsingInNomalConextDeclarator;
 
 const PATTERN_TYPE =
 	/^(?:.+?Pattern|RestElement|SpreadProperty|ExperimentalRestProperty|Property)$/u;
 const DECLARATION_HOST_TYPE = /^(?:Program|BlockStatement|StaticBlock|SwitchCase)$/u;
 const DESTRUCTURING_HOST_TYPE = /^(?:VariableDeclarator|AssignmentExpression)$/u;
 
+/**
+ * Finds the callee of a `CallExpression` if the given node is part of a
+ * `VariableDeclarator` or an ObjectPattern within a `VariableDeclarator`.
+ */
 function findIdentifierCallee(node: CheckedNode) {
 	const { parent } = node;
 	if (parent.type === 'VariableDeclarator' && parent.init?.type === 'CallExpression') {
@@ -70,7 +82,8 @@ function skipReactiveValues(identifier: ASTNode | null) {
 }
 
 /**
- * Checks whether a given Identifier node becomes a VariableDeclaration or not.
+ * Checks whether a given `Identifier` node becomes a `VariableDeclaration` or
+ * not.
  */
 function canBecomeVariableDeclaration(identifier: ASTNode) {
 	let node = identifier.parent;
@@ -91,8 +104,8 @@ function canBecomeVariableDeclaration(identifier: ASTNode) {
 }
 
 /**
- * Checks if an property or element is from outer scope or export function parameters
- * in destructing pattern.
+ * Checks if an property or element is from outer scope or export function
+ * parameters in destructing pattern.
  */
 function isOuterVariableInDestructing(name: string, initScope: Scope) {
 	if (initScope.through.some((ref) => ref.resolved && ref.resolved.name === name)) {
@@ -104,10 +117,9 @@ function isOuterVariableInDestructing(name: string, initScope: Scope) {
 }
 
 /**
- * Gets the VariableDeclarator/AssignmentExpression node that a given reference
- * belongs to.
- * This is used to detect a mix of reassigned and never reassigned in a
- * destructuring.
+ * Gets the `VariableDeclarator/AssignmentExpression` node that a given
+ * reference belongs to. It is used to detect a mix of reassigned and never
+ * reassigned in a destructuring.
  */
 function getDestructuringHost(reference: Reference) {
 	if (!reference.isWrite()) {
@@ -127,10 +139,10 @@ function getDestructuringHost(reference: Reference) {
 }
 
 /**
- * Determines if a destructuring assignment node contains
- * any MemberExpression nodes. This is used to determine if a
- * variable that is only written once using destructuring can be
- * safely converted into a const declaration.
+ * Determines if a destructuring assignment node contains any
+ * `MemberExpression` nodes. is used to determine if a variable that is only
+ * written once using destructuring can be safely converted into a const
+ * declaration.
  */
 function hasMemberExpressionAssignment(node: ASTNode): boolean {
 	if (node.type === 'MemberExpression') {
@@ -153,6 +165,10 @@ function hasMemberExpressionAssignment(node: ASTNode): boolean {
 	return false;
 }
 
+/**
+ * Validates an object pattern to determine if it contains outer variables or
+ * non-identifier assignments.
+ */
 function validateObjectPattern(node: TSESTree.ObjectPattern, variable: Variable) {
 	const properties = node.properties;
 	const hasOuterVariables = properties
@@ -170,6 +186,10 @@ function validateObjectPattern(node: TSESTree.ObjectPattern, variable: Variable)
 	return hasOuterVariables || hasNonIdentifiers;
 }
 
+/**
+ * Validates an array pattern to determine if it contains outer variables or
+ * non-identifier elements.
+ */
 function validateArrayPattern(node: TSESTree.ArrayPattern, variable: Variable): boolean {
 	const elements = node.elements;
 	const hasOuterVariables = elements
@@ -187,15 +207,15 @@ function validateArrayPattern(node: TSESTree.ArrayPattern, variable: Variable): 
  * the first assignment, the identifier node is the node of the declaration.
  * Otherwise, the identifier node is the node of the first assignment.
  *
- * If the variable should not change to const, this export function returns null.
+ * If the variable should not change to const, export function returns null.
  * - If the variable is reassigned.
  * - If the variable is never initialized nor assigned.
  * - If the variable is initialized in a different scope from the declaration.
  * - If the unique assignment of the variable cannot change to a declaration.
  *   e.g. `if (a) b = 1` / `return (b = 1)`
  * - If the variable is declared in the global scope and `eslintUsed` is `true`.
- *   `/*exported foo` directive comment makes such variables. This rule does not
- *   warn such variables because this rule cannot distinguish whether the
+ *   `/*exported foo` directive comment makes such variables. rule does not
+ *   warn such variables because rule cannot distinguish whether the
  *   exported variables are reassigned or not.
  */
 function getIdentifierIfShouldBeConst(variable: Variable, ignoreReadBeforeAssign: boolean) {
@@ -247,6 +267,7 @@ function getIdentifierIfShouldBeConst(variable: Variable, ignoreReadBeforeAssign
 	if (!shouldBeConst) {
 		return null;
 	}
+
 	if (isReadBeforeInit) {
 		return variable.defs[0].name;
 	}
@@ -295,7 +316,7 @@ export function isInitOfForStatement(node: ASTNode): boolean {
 /**
  * Groups by the VariableDeclarator/AssignmentExpression node that each
  * reference of given variables belongs to.
- * This is used to detect a mix of reassigned and never reassigned in a
+ * is used to detect a mix of reassigned and never reassigned in a
  * destructuring.
  */
 export function groupByDestructuring(
@@ -336,6 +357,13 @@ export function groupByDestructuring(
 	return identifierMap;
 }
 
+/**
+ * Calculates the retained text range by comparing the given range with an
+ * optional retained range. If a retained range is provided, it merges the two
+ * ranges to form an actual range. It then returns two ranges: one from the
+ * start of the actual range to the start of the given range, and another from
+ * the end of the given range to the end of the actual range.
+ */
 function calculateRetainedTextRange(
 	range: TSESTree.Range,
 	retainedRange: TSESTree.Range | null
@@ -350,33 +378,32 @@ function calculateRetainedTextRange(
 	];
 }
 
-type CheckOptions = { destructuring: 'any' | 'all' };
-type VariableDeclaration =
-	| TSESTree.LetOrConstOrVarDeclaration
-	| TSESTree.UsingInForOfDeclaration
-	| TSESTree.UsingInNormalContextDeclaration;
-type VariableDeclarator =
-	| TSESTree.LetOrConstOrVarDeclarator
-	| TSESTree.UsingInForOfDeclarator
-	| TSESTree.UsingInNomalConextDeclarator;
-export class GroupChecker {
-	private reportCount = 0;
+type NodeReporterOptions = { destructuring: 'any' | 'all' };
+type NodeReporter = { report: (nodes: ASTNode[]) => void };
 
-	private checkedId: TSESTree.BindingName | null = null;
+/**
+ * Creates a node reporter function that checks and reports nodes based on the
+ * provided context and options.
+ *
+ * @remarks The `report` function checks and reports nodes that should be
+ * converted to `const` declarations. It performs various checks to ensure that
+ * the nodes meet the criteria for reporting and fixing.
+ *
+ * The function also handles cases where variables are declared using
+ * destructuring patterns and ensures that the correct number of nodes are
+ * reported and fixed.
+ */
+export function createNodeReporter(
+	context: RuleContext,
+	{ destructuring }: NodeReporterOptions
+): NodeReporter {
+	let reportCount = 0;
+	let checkedId: TSESTree.BindingName | null = null;
+	let checkedName = '';
+	const shouldMatchAnyDestructuredVariable = destructuring !== 'all';
 
-	private checkedName = '';
-
-	private readonly shouldMatchAnyDestructuredVariable: boolean;
-
-	private readonly context: RuleContext;
-
-	public constructor(context: RuleContext, { destructuring }: CheckOptions) {
-		this.context = context;
-		this.shouldMatchAnyDestructuredVariable = destructuring !== 'all';
-	}
-
-	public checkAndReportNodes(nodes: ASTNode[]): void {
-		const shouldCheckGroup = nodes.length && this.shouldMatchAnyDestructuredVariable;
+	function checkAndReportNodes(nodes: ASTNode[]): void {
+		const shouldCheckGroup = nodes.length && shouldMatchAnyDestructuredVariable;
 		if (!shouldCheckGroup) {
 			return;
 		}
@@ -396,28 +423,28 @@ export class GroupChecker {
 		}
 
 		const dec = variableDeclarationParent.declarations[0];
-		this.checkDeclarator(dec);
+		checkDeclarator(dec);
 
-		const shouldFix = this.checkShouldFix(variableDeclarationParent, nodes.length);
+		const shouldFix = checkShouldFix(variableDeclarationParent, nodes.length);
 		if (!shouldFix) {
 			return;
 		}
 
-		const sourceCode = getSourceCode(this.context);
+		const sourceCode = getSourceCode(context);
 		nodes.filter(skipReactiveValues).forEach((node) => {
-			this.report(sourceCode, node, variableDeclarationParent);
+			report(sourceCode, node, variableDeclarationParent);
 		});
 	}
 
-	private report(
+	function report(
 		sourceCode: ReturnType<typeof getSourceCode>,
 		node: ASTNode,
 		nodeParent: VariableDeclaration
 	) {
-		this.context.report({
+		context.report({
 			node,
 			messageId: 'useConst',
-			// @ts-expect-error Name will exist at this point
+			// @ts-expect-error Name will exist at point
 			data: { name: node.name },
 			fix: (fixer) => {
 				const letKeywordToken = sourceCode.getFirstToken(nodeParent, {
@@ -440,7 +467,7 @@ export class GroupChecker {
 		});
 	}
 
-	private checkShouldFix(declaration: VariableDeclaration, totalNodes: number) {
+	function checkShouldFix(declaration: VariableDeclaration, totalNodes: number) {
 		const shouldFix =
 			declaration &&
 			(declaration.parent.type === 'ForInStatement' ||
@@ -448,15 +475,15 @@ export class GroupChecker {
 				('declarations' in declaration &&
 					declaration.declarations.every((declaration) => declaration.init)));
 
-		const totalDeclarationCount = this.checkDestructuredDeclaration(declaration, totalNodes);
+		const totalDeclarationCount = checkDestructuredDeclaration(declaration, totalNodes);
 		if (totalDeclarationCount === -1) {
 			return shouldFix;
 		}
 
-		return shouldFix && this.reportCount === totalDeclarationCount;
+		return shouldFix && reportCount === totalDeclarationCount;
 	}
 
-	private checkDestructuredDeclaration(declaration: VariableDeclaration, totalNodes: number) {
+	function checkDestructuredDeclaration(declaration: VariableDeclaration, totalNodes: number) {
 		const hasMultipleDeclarations =
 			declaration !== null &&
 			'declarations' in declaration &&
@@ -471,7 +498,7 @@ export class GroupChecker {
 			return -1;
 		}
 
-		this.reportCount += totalNodes;
+		reportCount += totalNodes;
 
 		return declaration.declarations.reduce((total, declaration) => {
 			if (declaration.id.type === 'ObjectPattern') {
@@ -486,7 +513,7 @@ export class GroupChecker {
 		}, 0);
 	}
 
-	private checkDeclarator(declarator: VariableDeclarator) {
+	function checkDeclarator(declarator: VariableDeclarator) {
 		if (!declarator.init) {
 			return;
 		}
@@ -497,22 +524,28 @@ export class GroupChecker {
 		}
 
 		const { id } = firstDecParent;
-		if ('name' in id && id.name !== this.checkedName) {
-			this.checkedName = id.name;
-			this.reportCount = 0;
+		if ('name' in id && id.name !== checkedName) {
+			checkedName = id.name;
+			reportCount = 0;
 		}
 
 		if (firstDecParent.id.type === 'ObjectPattern') {
 			const { init } = firstDecParent;
-			if (init && 'name' in init && init.name !== this.checkedName) {
-				this.checkedName = init.name;
-				this.reportCount = 0;
+			if (init && 'name' in init && init.name !== checkedName) {
+				checkedName = init.name;
+				reportCount = 0;
 			}
 		}
 
-		if (firstDecParent.id !== this.checkedId) {
-			this.checkedId = firstDecParent.id;
-			this.reportCount = 0;
+		if (firstDecParent.id !== checkedId) {
+			checkedId = firstDecParent.id;
+			reportCount = 0;
 		}
 	}
+
+	return {
+		report(group) {
+			checkAndReportNodes(group);
+		}
+	};
 }

@@ -2,7 +2,11 @@ import type { Variable } from '@typescript-eslint/scope-manager';
 import { createRule } from '../utils';
 import { getSourceCode } from '../utils/compat';
 
-import { GroupChecker, groupByDestructuring, isInitOfForStatement } from './prefer-const-helpers';
+import {
+	createNodeReporter,
+	groupByDestructuring,
+	isInitOfForStatement
+} from './prefer-const-helpers';
 
 /**
  * Rule and helpers are copied from ESLint
@@ -43,11 +47,11 @@ export default createRule('prefer-const', {
 
 		return {
 			'Program:exit'() {
-				const checker = new GroupChecker(context, {
+				const nodeReporter = createNodeReporter(context, {
 					destructuring: options.destructuring
 				});
 				groupByDestructuring(variables, ignoreReadBeforeAssign).forEach((group) => {
-					checker.checkAndReportNodes(group);
+					nodeReporter.report(group);
 				});
 			},
 			VariableDeclaration(node) {
