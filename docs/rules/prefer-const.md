@@ -24,12 +24,11 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
 <script>
   /* eslint svelte/prefer-const: "error" */
 
-  <!-- ✓ GOOD -->
+  // ✓ GOOD
   const { a, b } = $props();
   let { a, b } = $state();
 
-
-  <!-- ✗ BAD -->
+  // ✗ BAD
   // Imagine obj is not re-assigned, therefore it should be constant
   let obj = { a, b };
 </script>
