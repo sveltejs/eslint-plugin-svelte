@@ -1,3 +1,9 @@
+/**
+ * Atributions:
+ * Rule and helpers are adapted from ESLint
+ * https://github.com/eslint/eslint/blob/main/lib/rules/prefer-const.js
+ */
+
 import type { Reference, Variable, Scope } from '@typescript-eslint/scope-manager';
 import type { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
