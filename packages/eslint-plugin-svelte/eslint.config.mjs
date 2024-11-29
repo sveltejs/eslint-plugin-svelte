@@ -80,8 +80,7 @@ const config = [
 				{ object: 'context', property: 'getCwd', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'parserServices', message: 'Use src/utils/compat.ts' }
-			],
-			'@typescript-eslint/no-empty-function': 'off'
+			]
 		}
 	},
 	...tseslint.config({
@@ -109,6 +108,11 @@ const config = [
 			}
 		}
 	}),
+	{
+		rules: {
+			'@typescript-eslint/no-empty-function': 'off'
+		}
+	},
 	{
 		files: [
 			'tests/fixtures/rules/**/*output.*',
