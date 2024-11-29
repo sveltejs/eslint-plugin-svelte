@@ -1,7 +1,7 @@
 import type { Reference, Variable, Scope } from '@typescript-eslint/scope-manager';
 import type { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 import { createRule } from '../utils';
-import type { RuleFixer, SourceCode } from '../types';
+import type { RuleContext, RuleFixer, SourceCode } from '../types';
 import { getSourceCode } from '../utils/compat';
 
 type ASTNode = TSESTree.Node;
@@ -112,6 +112,168 @@ class FixTracker {
 	}
 }
 
+type CheckOptions = { destructuring: 'any' | 'all' };
+type VariableDeclaration =
+	| TSESTree.LetOrConstOrVarDeclaration
+	| TSESTree.UsingInForOfDeclaration
+	| TSESTree.UsingInNormalContextDeclaration;
+type VariableDeclarator =
+	| TSESTree.LetOrConstOrVarDeclarator
+	| TSESTree.UsingInForOfDeclarator
+	| TSESTree.UsingInNomalConextDeclarator;
+class GroupChecker {
+	private reportCount = 0;
+
+	private checkedId: TSESTree.BindingName | null = null;
+
+	private checkedName = '';
+
+	private readonly shouldMatchAnyDestructuredVariable: boolean;
+
+	private readonly context: RuleContext;
+
+	public constructor(context: RuleContext, { destructuring }: CheckOptions) {
+		this.context = context;
+		this.shouldMatchAnyDestructuredVariable = destructuring !== 'all';
+	}
+
+	public checkAndReportNodes(nodes: ASTNode[]) {
+		const shouldCheckGroup = nodes.length && this.shouldMatchAnyDestructuredVariable;
+		if (!shouldCheckGroup) {
+			return;
+		}
+
+		const variableDeclarationParent = findUp(
+			nodes[0],
+			'VariableDeclaration',
+			(parentNode: ASTNode) => parentNode.type.endsWith('Statement')
+		);
+		const isVarDecParentNull = variableDeclarationParent === null;
+		const isValidDecParent =
+			!isVarDecParentNull &&
+			'declarations' in variableDeclarationParent &&
+			variableDeclarationParent.declarations.length > 0;
+		if (!isValidDecParent) {
+			return;
+		}
+
+		const dec = variableDeclarationParent.declarations[0];
+		this.checkDeclarator(dec);
+
+		const shouldFix = this.checkShouldFix(variableDeclarationParent, nodes.length);
+		if (!shouldFix) {
+			return;
+		}
+
+		const sourceCode = getSourceCode(this.context);
+		nodes.filter(skipReactiveValues).forEach((node) => {
+			this.report(sourceCode, node, variableDeclarationParent);
+		});
+	}
+
+	private report(
+		sourceCode: ReturnType<typeof getSourceCode>,
+		node: ASTNode,
+		nodeParent: VariableDeclaration
+	) {
+		this.context.report({
+			node,
+			messageId: 'useConst',
+			// @ts-expect-error Name will exist at this point
+			data: { name: node.name },
+			fix: (fixer) => {
+				const letKeywordToken = sourceCode.getFirstToken(nodeParent, {
+					includeComments: false,
+					filter: (t) => 'kind' in nodeParent && t.value === nodeParent.kind
+				});
+				if (!letKeywordToken) {
+					return null;
+				}
+
+				return new FixTracker(fixer, sourceCode)
+					.retainRange(nodeParent.range)
+					.replaceTextRange(letKeywordToken.range, 'const');
+			}
+		});
+	}
+
+	private checkShouldFix(declaration: VariableDeclaration, totalNodes: number) {
+		const shouldFix =
+			declaration &&
+			(declaration.parent.type === 'ForInStatement' ||
+				declaration.parent.type === 'ForOfStatement' ||
+				('declarations' in declaration &&
+					declaration.declarations.every((declaration) => declaration.init)));
+
+		const totalDeclarationCount = this.checkDestructuredDeclaration(declaration, totalNodes);
+		if (totalDeclarationCount === -1) {
+			return shouldFix;
+		}
+
+		return shouldFix && this.reportCount === totalDeclarationCount;
+	}
+
+	private checkDestructuredDeclaration(declaration: VariableDeclaration, totalNodes: number) {
+		const hasMultipleDeclarations =
+			declaration !== null &&
+			'declarations' in declaration &&
+			declaration.declarations.length !== 1;
+		if (!hasMultipleDeclarations) {
+			return -1;
+		}
+
+		const hasMoreThanOneDeclaration =
+			declaration && declaration.declarations && declaration.declarations.length >= 1;
+		if (!hasMoreThanOneDeclaration) {
+			return -1;
+		}
+
+		this.reportCount += totalNodes;
+
+		return declaration.declarations.reduce((total, declaration) => {
+			if (declaration.id.type === 'ObjectPattern') {
+				return total + declaration.id.properties.length;
+			}
+
+			if (declaration.id.type === 'ArrayPattern') {
+				return total + declaration.id.elements.length;
+			}
+
+			return total + 1;
+		}, 0);
+	}
+
+	private checkDeclarator(declarator: VariableDeclarator) {
+		if (!declarator.init) {
+			return;
+		}
+
+		const firstDecParent = declarator.init.parent;
+		if (firstDecParent.type !== 'VariableDeclarator') {
+			return;
+		}
+
+		const { id } = firstDecParent;
+		if ('name' in id && id.name !== this.checkedName) {
+			this.checkedName = id.name;
+			this.reportCount = 0;
+		}
+
+		if (firstDecParent.id.type === 'ObjectPattern') {
+			const { init } = firstDecParent;
+			if (init && 'name' in init && init.name !== this.checkedName) {
+				this.checkedName = init.name;
+				this.reportCount = 0;
+			}
+		}
+
+		if (firstDecParent.id !== this.checkedId) {
+			this.checkedId = firstDecParent.id;
+			this.reportCount = 0;
+		}
+	}
+}
+
 export default createRule('prefer-const', {
 	meta: {
 		type: 'suggestion',
@@ -140,135 +302,18 @@ export default createRule('prefer-const', {
 		const sourceCode = getSourceCode(context);
 
 		const options = context.options[0] || {};
-		const shouldMatchAnyDestructuredVariable = options.destructuring !== 'all';
 		const ignoreReadBeforeAssign = options.ignoreReadBeforeAssign === true;
 
 		const variables: Variable[] = [];
-		let reportCount = 0;
-		let checkedId: TSESTree.BindingName | null = null;
-		let checkedName = '';
-
-		function checkGroup(nodes: (ASTNode | null)[]) {
-			const nodesToReport = nodes.filter(Boolean);
-			if (
-				nodes.length &&
-				(shouldMatchAnyDestructuredVariable || nodesToReport.length === nodes.length) &&
-				nodes[0] !== null
-			) {
-				const varDeclParent = findUp(nodes[0], 'VariableDeclaration', (parentNode: ASTNode) =>
-					parentNode.type.endsWith('Statement')
-				);
-
-				const isVarDecParentNull = varDeclParent === null;
-				const isValidDecParent =
-					!isVarDecParentNull &&
-					'declarations' in varDeclParent &&
-					varDeclParent.declarations.length > 0;
-
-				if (isValidDecParent) {
-					const firstDeclaration = varDeclParent.declarations[0];
-
-					if (firstDeclaration.init) {
-						const firstDecParent = firstDeclaration.init.parent;
-
-						if (firstDecParent.type === 'VariableDeclarator') {
-							const { id } = firstDecParent;
-							if ('name' in id && id.name !== checkedName) {
-								checkedName = id.name;
-								reportCount = 0;
-							}
-
-							if (firstDecParent.id.type === 'ObjectPattern') {
-								const { init } = firstDecParent;
-								if (init && 'name' in init && init.name !== checkedName) {
-									checkedName = init.name;
-									reportCount = 0;
-								}
-							}
-
-							if (firstDecParent.id !== checkedId) {
-								checkedId = firstDecParent.id;
-								reportCount = 0;
-							}
-						}
-					}
-				}
-
-				let shouldFix =
-					varDeclParent &&
-					(varDeclParent.parent.type === 'ForInStatement' ||
-						varDeclParent.parent.type === 'ForOfStatement' ||
-						('declarations' in varDeclParent &&
-							varDeclParent.declarations.every((declaration) => declaration.init))) &&
-					nodesToReport.length === nodes.length;
-
-				if (
-					!isVarDecParentNull &&
-					'declarations' in varDeclParent &&
-					varDeclParent.declarations &&
-					varDeclParent.declarations.length !== 1
-				) {
-					if (
-						varDeclParent &&
-						varDeclParent.declarations &&
-						varDeclParent.declarations.length >= 1
-					) {
-						reportCount += nodesToReport.length;
-						let totalDeclarationsCount = 0;
-
-						varDeclParent.declarations.forEach((declaration) => {
-							if (declaration.id.type === 'ObjectPattern') {
-								totalDeclarationsCount += declaration.id.properties.length;
-								return;
-							}
-
-							if (declaration.id.type === 'ArrayPattern') {
-								totalDeclarationsCount += declaration.id.elements.length;
-								return;
-							}
-
-							totalDeclarationsCount += 1;
-						});
-						shouldFix = shouldFix && reportCount === totalDeclarationsCount;
-					}
-				}
-
-				if (!shouldFix) {
-					return;
-				}
-
-				nodesToReport.filter(skipReactiveValues).forEach((node) => {
-					if (!node || !varDeclParent) {
-						// TS check
-						return;
-					}
-
-					context.report({
-						node,
-						messageId: 'useConst',
-						// @ts-expect-error Name will exist at this point
-						data: { name: node.name },
-						fix: (fixer) => {
-							const letKeywordToken = sourceCode.getFirstToken(varDeclParent, {
-								includeComments: false,
-								filter: (t) => 'kind' in varDeclParent && t.value === varDeclParent.kind
-							});
-							if (!letKeywordToken) {
-								return null;
-							}
-
-							return new FixTracker(fixer, sourceCode)
-								.retainRange(varDeclParent.range)
-								.replaceTextRange(letKeywordToken.range, 'const');
-						}
-					});
-				});
-			}
-		}
 
 		return {
 			'Program:exit'() {
-				groupByDestructuring(variables, ignoreReadBeforeAssign).forEach(checkGroup);
+				const checker = new GroupChecker(context, {
+					destructuring: options.destructuring
+				});
+				groupByDestructuring(variables, ignoreReadBeforeAssign).forEach((group) => {
+					checker.checkAndReportNodes(group);
+				});
 			},
 			VariableDeclaration(node) {
 				if (node.kind === 'let' && !isInitOfForStatement(node)) {
@@ -419,6 +464,7 @@ function getIdentifierIfShouldBeConst(variable: Variable, ignoreReadBeforeAssign
 	if (variable.eslintUsed && variable.scope.type === 'global') {
 		return null;
 	}
+
 	let writer = null;
 	let isReadBeforeInit = false;
 	const references = variable.references;
@@ -487,7 +533,7 @@ function groupByDestructuring(
 		const references = variable.references;
 		const identifier = getIdentifierIfShouldBeConst(variable, ignoreReadBeforeAssign);
 		if (!identifier) {
-			return identifierMap;
+			continue;
 		}
 
 		let prevId: TSESTree.Identifier | TSESTree.JSXIdentifier | null = null;
