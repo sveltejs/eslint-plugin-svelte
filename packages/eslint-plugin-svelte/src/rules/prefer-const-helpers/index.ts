@@ -19,7 +19,7 @@ type VariableDeclaration =
 type VariableDeclarator =
 	| TSESTree.LetOrConstOrVarDeclarator
 	| TSESTree.UsingInForOfDeclarator
-	| TSESTree.UsingInNomalConextDeclarator;
+	| TSESTree.UsingInNormalContextDeclarator;
 
 const PATTERN_TYPE =
 	/^(?:.+?Pattern|RestElement|SpreadProperty|ExperimentalRestProperty|Property)$/u;
