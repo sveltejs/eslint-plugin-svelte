@@ -1,3 +1,4 @@
+/* globals RULES_META */
 import { readable, writable } from 'svelte/store';
 import { page } from '$app/stores';
 import { base as baseUrl } from '$app/paths';
