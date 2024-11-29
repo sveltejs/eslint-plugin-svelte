@@ -1,7 +1,8 @@
-import { rules } from './rules-meta.js';
 import { readable, writable } from 'svelte/store';
 import { page } from '$app/stores';
 import { base as baseUrl } from '$app/paths';
+
+const rules = RULES_META;
 
 export function stripBaseUrl(path) {
 	if (path.startsWith(baseUrl)) {
