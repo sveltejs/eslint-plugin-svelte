@@ -14,7 +14,7 @@ description: 'Require `const` declarations for variables that are never reassign
 
 ## :book: Rule Details
 
-This rule reports ???.
+This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$state`, `$derived` and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
 
 <ESLintCodeBlock fix>
 
@@ -23,11 +23,16 @@ This rule reports ???.
 ```svelte
 <script>
   /* eslint svelte/prefer-const: "error" */
+
+  <!-- ✓ GOOD -->
+  const { a, b } = $props();
+  let { a, b } = $state();
+
+
+  <!-- ✗ BAD -->
+  // Imagine obj is not re-assigned, therefore it should be constant
+  let obj = { a, b };
 </script>
-
-<!-- ✓ GOOD -->
-
-<!-- ✗ BAD -->
 ```
 
 </ESLintCodeBlock>
@@ -36,15 +41,24 @@ This rule reports ???.
 
 ```json
 {
-  "svelte/prefer-const": ["error", {}]
+  "svelte/prefer-const": [
+    "error",
+    {
+      "destructuring": "any",
+      "ignoreReadonly": true
+    }
+  ]
 }
 ```
 
--
+- `destructuring`: The kind of the way to address variables in destructuring. There are 2 values:
+  - `any` (default): if any variables in destructuring should be const, this rule warns for those variables.
+  - `all`: if all variables in destructuring should be const, this rule warns the variables. Otherwise, ignores them.
+- `ignoreReadonly`: If `true`, this rule will ignore variables that are read between the declaration and the _first_ assignment.
 
 ## :books: Further Reading
 
--
+- See [ESLint `prefer-const` rule](https://eslint.org/docs/latest/rules/prefer-const) for more information about the base rule.
 
 ## :mag: Implementation
 
