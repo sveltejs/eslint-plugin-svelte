@@ -10,6 +10,7 @@ const coreRule = getCoreRule('no-inner-declarations');
 
 export default createRule('no-inner-declarations', {
 	meta: {
+		...coreRule.meta,
 		docs: {
 			description: 'disallow variable or `function` declarations in nested blocks',
 			category: 'Extension Rules',
