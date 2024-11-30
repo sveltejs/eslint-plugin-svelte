@@ -369,7 +369,6 @@ export default createRule('infinite-reactive-loop', {
 			description:
 				"Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent.",
 			category: 'Possible Errors',
-			// TODO Switch to recommended in the major version.
 			recommended: false
 		},
 		schema: [],

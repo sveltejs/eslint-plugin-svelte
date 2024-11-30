@@ -13,7 +13,7 @@ export default createRule('no-dynamic-slot-name', {
 		docs: {
 			description: 'disallow dynamic slot name',
 			category: 'Possible Errors',
-			recommended: true
+			recommended: false
 		},
 		fixable: 'code',
 		schema: [],

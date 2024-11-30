@@ -10,7 +10,6 @@ export default createRule('no-immutable-reactive-statements', {
 		docs: {
 			description: "disallow reactive statements that don't reference reactive values.",
 			category: 'Best Practices',
-			// TODO Switch to recommended in the major version.
 			recommended: false
 		},
 		schema: [],

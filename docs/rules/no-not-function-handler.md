@@ -10,8 +10,6 @@ since: 'v0.5.0'
 
 > disallow use of not function in event handler
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
-
 ## :book: Rule Details
 
 This rule reports where you used not function value in event handlers.  

@@ -26,7 +26,7 @@ export default createRule('no-not-function-handler', {
 		docs: {
 			description: 'disallow use of not function in event handler',
 			category: 'Possible Errors',
-			recommended: true
+			recommended: false
 		},
 		schema: [],
 		messages: {
