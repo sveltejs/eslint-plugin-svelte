@@ -8,7 +8,7 @@ type InvalidTestCases = ReturnType<typeof loadTestCases>['invalid'];
 const tester = new RuleTester({
 	languageOptions: {
 		ecmaVersion: 2020,
-		sourceType: 'module'
+		sourceType: 'script'
 	},
 	plugins: {
 		custom: {
@@ -73,8 +73,7 @@ const ESLINT_RULE_TEST_CASES = {
 			'foo();'
 		].join('\n'),
 		'/*exported a*/ let a; function init() { a = foo(); }',
-		// TODO: Skipping this test until https://github.com/typescript-eslint/typescript-eslint/issues/10426
-		// '/*exported a*/ let a = 1',
+		'/*exported a*/ let a = 1',
 		'let a; if (true) a = 0; foo(a);',
 		`
         (function (a) {
