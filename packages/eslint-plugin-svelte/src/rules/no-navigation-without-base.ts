@@ -127,10 +127,20 @@ function extractBasePathReferences(
 			}
 		}
 	})) {
-		const variable = findVariable(context, (node as TSESTree.ImportSpecifier).local);
-		if (!variable) continue;
-		for (const reference of variable.references) {
-			if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
+		if (node.type === 'ImportSpecifier') {
+			const variable = findVariable(context, node.local);
+			if (variable === null) {
+				continue;
+			}
+			for (const reference of variable.references) {
+				if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
+			}
+		} else if (
+			node.type === 'MemberExpression' &&
+			node.property.type === 'Identifier' &&
+			node.property.name === 'base'
+		) {
+			set.add(node.property);
 		}
 	}
 	return set;
@@ -218,6 +228,8 @@ function expressionStartsWithBase(
 			return binaryExpressionStartsWithBase(context, url, basePathNames);
 		case 'Identifier':
 			return variableStartsWithBase(context, url, basePathNames);
+		case 'MemberExpression':
+			return memberExpressionStartsWithBase(url, basePathNames);
 		case 'TemplateLiteral':
 			return templateLiteralStartsWithBase(context, url, basePathNames);
 		default:
@@ -234,6 +246,13 @@ function binaryExpressionStartsWithBase(
 		url.left.type !== 'PrivateIdentifier' &&
 		expressionStartsWithBase(context, url.left, basePathNames)
 	);
+}
+
+function memberExpressionStartsWithBase(
+	url: TSESTree.MemberExpression,
+	basePathNames: Set<TSESTree.Identifier>
+): boolean {
+	return url.property.type === 'Identifier' && basePathNames.has(url.property);
 }
 
 function variableStartsWithBase(
