@@ -135,7 +135,7 @@ function getDestructuringHost(reference: Reference) {
 	let node = reference.identifier.parent;
 	while (PATTERN_TYPE.test(node.type)) {
 		if (!node.parent) {
-			return null;
+			break;
 		}
 
 		node = node.parent;
@@ -278,7 +278,7 @@ function getIdentifierIfShouldBeConst(variable: Variable, ignoreReadBeforeAssign
 		return variable.defs[0].name;
 	}
 
-	return writer?.identifier;
+	return writer?.identifier ?? null;
 }
 
 /**
@@ -328,16 +328,13 @@ export function isInitOfForStatement(node: ASTNode): boolean {
 export function groupByDestructuring(
 	variables: Variable[],
 	ignoreReadBeforeAssign: boolean
-): Map<ASTNode, ASTNode[]> {
-	const identifierMap = new Map<ASTNode, ASTNode[]>();
+): Map<ASTNode, (ASTNode | null)[]> {
+	const identifierMap = new Map<ASTNode, (ASTNode | null)[]>();
 
 	for (let i = 0; i < variables.length; ++i) {
 		const variable = variables[i];
 		const references = variable.references;
 		const identifier = getIdentifierIfShouldBeConst(variable, ignoreReadBeforeAssign);
-		if (!identifier) {
-			continue;
-		}
 
 		let prevId: TSESTree.Identifier | TSESTree.JSXIdentifier | null = null;
 		references.forEach((reference) => {
@@ -385,7 +382,7 @@ function calculateRetainedTextRange(
 }
 
 type NodeReporterOptions = { destructuring: 'any' | 'all' };
-type NodeReporter = { report: (nodes: ASTNode[]) => void };
+type NodeReporter = { report: (nodes: (ASTNode | null)[]) => void };
 
 /**
  * Creates a node reporter function that checks and reports nodes based on the
@@ -408,8 +405,10 @@ export function createNodeReporter(
 	let checkedName = '';
 	const shouldMatchAnyDestructuredVariable = destructuring !== 'all';
 
-	function checkAndReportNodes(nodes: ASTNode[]): void {
-		const shouldCheckGroup = nodes.length && shouldMatchAnyDestructuredVariable;
+	function checkAndReportNodes(initialNodes: (ASTNode | null)[]): void {
+		const nodes = initialNodes.filter(Boolean) as ASTNode[];
+		const shouldCheckGroup =
+			nodes.length && (shouldMatchAnyDestructuredVariable || initialNodes.length === nodes.length);
 		if (!shouldCheckGroup) {
 			return;
 		}
@@ -424,62 +423,70 @@ export function createNodeReporter(
 			!isVarDecParentNull &&
 			'declarations' in variableDeclarationParent &&
 			variableDeclarationParent.declarations.length > 0;
-		if (!isValidDecParent) {
-			return;
+		if (isValidDecParent) {
+			checkDeclarator(variableDeclarationParent.declarations[0]);
 		}
 
-		const dec = variableDeclarationParent.declarations[0];
-		checkDeclarator(dec);
-
-		const shouldFix = checkShouldFix(variableDeclarationParent, nodes.length);
-		if (!shouldFix) {
-			return;
-		}
-
+		const shouldFix =
+			isValidDecParent &&
+			checkShouldFix(variableDeclarationParent, nodes.length, initialNodes.length);
 		const sourceCode = getSourceCode(context);
 		nodes.filter(skipReactiveValues).forEach((node) => {
-			report(sourceCode, node, variableDeclarationParent);
+			report(sourceCode, node, variableDeclarationParent!, shouldFix);
 		});
 	}
 
 	function report(
 		sourceCode: ReturnType<typeof getSourceCode>,
 		node: ASTNode,
-		nodeParent: VariableDeclaration
+		nodeParent: ASTNode,
+		shouldFix: boolean
 	) {
 		context.report({
 			node,
 			messageId: 'useConst',
 			// @ts-expect-error Name will exist at point
 			data: { name: node.name },
-			fix: (fixer) => {
-				const letKeywordToken = sourceCode.getFirstToken(nodeParent, {
-					includeComments: false,
-					filter: (t) => 'kind' in nodeParent && t.value === nodeParent.kind
-				});
-				if (!letKeywordToken) {
-					return null;
-				}
+			fix: !shouldFix
+				? null
+				: (fixer) => {
+						const letKeywordToken = sourceCode.getFirstToken(nodeParent, {
+							includeComments: false,
+							filter: (t) => 'kind' in nodeParent && t.value === nodeParent.kind
+						});
+						if (!letKeywordToken) {
+							return null;
+						}
 
-				const [initialRange, finalRange] = calculateRetainedTextRange(
-					letKeywordToken.range,
-					nodeParent.range
-				);
-				const prefix = sourceCode.text.slice(...initialRange);
-				const suffix = sourceCode.text.slice(...finalRange);
+						const [initialRange, finalRange] = calculateRetainedTextRange(
+							letKeywordToken.range,
+							nodeParent.range
+						);
+						const prefix = sourceCode.text.slice(...initialRange);
+						const suffix = sourceCode.text.slice(...finalRange);
 
-				return fixer.replaceTextRange([initialRange[0], finalRange[1]], `${prefix}const${suffix}`);
-			}
+						return fixer.replaceTextRange(
+							[initialRange[0], finalRange[1]],
+							`${prefix}const${suffix}`
+						);
+					}
 		});
 	}
 
-	function checkShouldFix(declaration: VariableDeclaration, totalNodes: number) {
+	function checkShouldFix(
+		declaration: VariableDeclaration,
+		totalNodes: number,
+		totalInitialNodes: number
+	) {
+		const isParentForStatement =
+			declaration?.parent.type === 'ForInStatement' ||
+			declaration?.parent.type === 'ForOfStatement';
+		const areAllDeclarationsInitialized =
+			'declarations' in declaration && declaration.declarations.every((decl) => decl.init);
 		const shouldFix =
+			totalNodes === totalInitialNodes &&
 			declaration &&
-			(declaration.parent.type === 'ForInStatement' ||
-				declaration.parent.type === 'ForOfStatement' ||
-				('declarations' in declaration &&
-					declaration.declarations.every((declaration) => declaration.init)));
+			(isParentForStatement || areAllDeclarationsInitialized);
 
 		const totalDeclarationCount = checkDestructuredDeclaration(declaration, totalNodes);
 		if (totalDeclarationCount === -1) {
@@ -490,16 +497,14 @@ export function createNodeReporter(
 	}
 
 	function checkDestructuredDeclaration(declaration: VariableDeclaration, totalNodes: number) {
-		const hasMultipleDeclarations =
-			declaration !== null &&
-			'declarations' in declaration &&
-			declaration.declarations.length !== 1;
+		const isValidDeclaration = declaration !== null && 'declarations' in declaration;
+		const hasMultipleDeclarations = isValidDeclaration && declaration.declarations.length !== 1;
 		if (!hasMultipleDeclarations) {
 			return -1;
 		}
 
 		const hasMoreThanOneDeclaration =
-			declaration && declaration.declarations && declaration.declarations.length >= 1;
+			declaration.declarations && declaration.declarations.length >= 1;
 		if (!hasMoreThanOneDeclaration) {
 			return -1;
 		}
@@ -524,27 +529,27 @@ export function createNodeReporter(
 			return;
 		}
 
-		const firstDecParent = declarator.init.parent;
-		if (firstDecParent.type !== 'VariableDeclarator') {
+		const firstDeclaratorParent = declarator.init.parent;
+		if (firstDeclaratorParent.type !== 'VariableDeclarator') {
 			return;
 		}
 
-		const { id } = firstDecParent;
+		const { id } = firstDeclaratorParent;
 		if ('name' in id && id.name !== checkedName) {
 			checkedName = id.name;
 			reportCount = 0;
 		}
 
-		if (firstDecParent.id.type === 'ObjectPattern') {
-			const { init } = firstDecParent;
+		if (firstDeclaratorParent.id.type === 'ObjectPattern') {
+			const { init } = firstDeclaratorParent;
 			if (init && 'name' in init && init.name !== checkedName) {
 				checkedName = init.name;
 				reportCount = 0;
 			}
 		}
 
-		if (firstDecParent.id !== checkedId) {
-			checkedId = firstDecParent.id;
+		if (firstDeclaratorParent.id !== checkedId) {
+			checkedId = firstDeclaratorParent.id;
 			reportCount = 0;
 		}
 	}
