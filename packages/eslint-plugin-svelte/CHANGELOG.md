@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.2
+
+### Patch Changes
+
+- [#941](https://github.com/sveltejs/eslint-plugin-svelte/pull/941) [`fce2f74`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fce2f74b4b2fe8185742f0411739103301f8ea9f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with eslint v9.16.0 in `svelte/no-inner-declarations`
+
 ## 3.0.0-next.1
 
 ### Minor Changes
