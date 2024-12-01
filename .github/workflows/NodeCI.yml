@@ -52,7 +52,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        eslint: [7, 8, 9]
+        eslint: [8, 9]
         node: [18.x, 20.x, 22.x, latest]
     steps:
       - name: Checkout
@@ -126,13 +126,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@3
-        # Remove @sveltejs/kit because postinstall fails on old node.
         run: |
-          cd docs-svelte-kit
-          pnpm rm @sveltejs/kit
-          cd ..
-          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
-          cd packages/eslint-plugin-svelte
+          cd ./packages/eslint-plugin-svelte
           pnpm install -D svelte@3
           cd ../..
           rm -rf packages/eslint-plugin-svelte/node_modules
