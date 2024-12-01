@@ -16,8 +16,6 @@ since: 'v0.15.0'
 
 This rule aims at enforcing unified spacing in mustaches.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -56,8 +54,6 @@ This rule aims at enforcing unified spacing in mustaches.
 
 { #key id }...{ /key }
 ```
-
-</ESLintCodeBlock>
 
 <!-- prettier-ignore-end -->
 

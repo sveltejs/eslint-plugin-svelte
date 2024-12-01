@@ -14,8 +14,6 @@ since: 'v2.45.0'
 
 This rule reports usages of `$inspect`.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -25,8 +23,6 @@ This rule reports usages of `$inspect`.
   $inspect(1);
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

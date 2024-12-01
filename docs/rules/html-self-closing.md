@@ -19,8 +19,6 @@ You can choose either two styles for elements without content
 - always: `<div />`
 - never: `<div></div>`
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -45,8 +43,6 @@ You can choose either two styles for elements without content
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

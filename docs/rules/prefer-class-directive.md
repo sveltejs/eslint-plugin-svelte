@@ -16,8 +16,6 @@ since: 'v0.0.1'
 
 This rule aims to replace a class with ternary operator with the class directive.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -34,8 +32,6 @@ This rule aims to replace a class with ternary operator with the class directive
 <button class={selected ? 'selected' : ''}>foo</button>
 <button class={current === 'foo' ? 'selected' : ''}>foo</button>
 ```
-
-</ESLintCodeBlock>
 
 You cannot enforce this style by using [prettier-plugin-svelte]. That is, this rule does not conflict with [prettier-plugin-svelte] and can be used with [prettier-plugin-svelte].
 

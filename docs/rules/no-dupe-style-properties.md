@@ -16,8 +16,6 @@ since: 'v0.31.0'
 
 This rule reports duplicate style properties.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -34,8 +32,6 @@ This rule reports duplicate style properties.
 <div style="background: green; background: {red};">...</div>
 <div style:background="green" style="background: {red}">...</div>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

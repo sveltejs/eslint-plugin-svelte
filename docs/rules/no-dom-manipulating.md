@@ -16,8 +16,6 @@ In general, DOM manipulating should delegate to Svelte runtime. If you manipulat
 Therefore this rule reports where you use DOM manipulating function.
 We don't recommend but If you intentionally manipulate the DOM, simply you can ignore this ESLint report.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -47,11 +45,7 @@ We don't recommend but If you intentionally manipulate the DOM, simply you can i
 <button on:click={() => update()}>Click Me (Bad)</button>
 ```
 
-</ESLintCodeBlock>
-
 This rule only tracks and checks variables given with `bind:this={}`. In other words, it doesn't track things like function arguments given to `transition:` directives. These functions have been well tested and are often used more carefully.
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -89,8 +83,6 @@ This rule only tracks and checks variables given with `bind:this={}`. In other w
   <p transition:typewriter>The quick brown fox jumps over the lazy dog</p>
 {/if}
 ```
-
-</ESLintCodeBlock>
 
 See also <https://svelte.dev/examples/custom-js-transitions>.
 

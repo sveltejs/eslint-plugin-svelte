@@ -14,8 +14,6 @@ since: 'v2.27.0'
 
 This rule reports if all variables referenced in reactive statements are immutable. That reactive statement is immutable and not reactive.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -53,8 +51,6 @@ This rule reports if all variables referenced in reactive statements are immutab
 
 <input bind:value={mutableVar} />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

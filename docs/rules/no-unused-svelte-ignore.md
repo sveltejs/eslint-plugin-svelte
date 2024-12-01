@@ -16,8 +16,6 @@ since: 'v0.19.0'
 
 This rule warns unnecessary `svelte-ignore` comments.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -33,8 +31,6 @@ This rule warns unnecessary `svelte-ignore` comments.
 <!-- svelte-ignore a11y-autofocus a11y-missing-attribute -->
 <img src="https://example.com/img.png" alt="Foo" />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

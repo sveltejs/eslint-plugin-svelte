@@ -16,8 +16,6 @@ Svelte runtime prevents calling the same reactive statement twice in a microtask
 But between different microtask, it doesn't prevent.<br/>
 This rule reports those possible infinite loop.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -81,8 +79,6 @@ This rule reports those possible infinite loop.
   };
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

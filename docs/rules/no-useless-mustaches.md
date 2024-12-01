@@ -17,8 +17,6 @@ since: 'v0.0.4'
 This rule reports mustache interpolation with a string literal value.  
 The mustache interpolation with a string literal value can be changed to a static contents.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -37,8 +35,6 @@ Lorem ipsum {foo}
 {`Lorem ipsum`}
 <div data-text={'Lorem ipsum'} />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
@@ -59,8 +55,6 @@ Lorem ipsum {foo}
 
 ### `"ignoreIncludesComment": true`
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -75,11 +69,7 @@ Lorem ipsum {foo}
 <div data-text={'Lorem ipsum'} />
 ```
 
-</ESLintCodeBlock>
-
 ### `"ignoreStringEscape": true`
-
-<ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 
@@ -88,8 +78,6 @@ Lorem ipsum {foo}
 {'Lorem \n ipsum'}
 <div data-text={'Lorem \n ipsum'} />
 ```
-
-</ESLintCodeBlock>
 
 ## :rocket: Version
 

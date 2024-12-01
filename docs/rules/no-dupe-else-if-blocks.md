@@ -16,8 +16,6 @@ since: 'v0.0.1'
 
 This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chain.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -55,11 +53,7 @@ This rule disallows duplicate conditions in the same `{#if}` / `{:else if}` chai
 {/if}
 ```
 
-</ESLintCodeBlock>
-
 This rule can also detect some cases where the conditions are not identical, but the branch can never execute due to the logic of `||` and `&&` operators.
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -109,8 +103,6 @@ This rule can also detect some cases where the conditions are not identical, but
   3
 {/if}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

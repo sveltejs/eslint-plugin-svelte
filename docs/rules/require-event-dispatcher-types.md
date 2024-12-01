@@ -14,8 +14,6 @@ since: 'v2.16.0'
 
 This rule is aimed to enforce type parameters when calling `createEventDispatcher`. Adding types makes all `dispatch` calls as well as all event listeners typechecked. For more information, see the [svelte docs](https://github.com/sveltejs/language-tools/blob/master/docs/preprocessors/typescript.md#typing-component-events).
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -34,8 +32,6 @@ This rule is aimed to enforce type parameters when calling `createEventDispatche
   const dispatch5 = createEventDispatcher();
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -1,5 +1,11 @@
 /* @import "prismjs/themes/prism"; */
 @import "prismjs/themes/prism-tomorrow";
+@import "@shikijs/twoslash/style-rich.css";
+
+.twoslash .twoslash-popup-container {
+  transform: translateY(2em);
+  white-space: pre-wrap;
+}
 
 /* theme */
 :root {

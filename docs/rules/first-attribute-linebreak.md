@@ -16,8 +16,6 @@ since: 'v0.6.0'
 
 This rule aims to enforce a consistent location for the first attribute.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 
 <!--eslint-skip-->
@@ -44,8 +42,6 @@ This rule aims to enforce a consistent location for the first attribute.
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

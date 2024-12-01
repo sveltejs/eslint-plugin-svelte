@@ -14,8 +14,6 @@ since: 'v2.35.0'
 
 This rule reports all attributes and directives that would compile to inline styles. This is mainly useful when adding Content Security Policy to your app, as having inline styles requires the `style-src: 'unsafe-inline'` directive, which is generally discouraged and unsafe.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -40,8 +38,6 @@ This rule reports all attributes and directives that would compile to inline sty
 
 <span transition:fade>Hello World!</span>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

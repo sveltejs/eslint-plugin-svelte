@@ -16,8 +16,6 @@ since: 'v3.0.0-next.1'
 
 This rule reports the usage of `head`, `body`, `window`, `document`, `element` and `options` HTML elements. These elements were valid in in versions proior to 5, but since Svelte 5 they must be used with `svelte:`.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -35,8 +33,6 @@ This rule reports the usage of `head`, `body`, `window`, `document`, `element` a
   <title>Invalid</title>
 </head>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
