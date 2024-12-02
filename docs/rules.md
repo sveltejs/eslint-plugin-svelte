@@ -69,6 +69,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)       | require type parameters for `createEventDispatcher`                                                                                       |          |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized                                                                                            |          |
 | [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            |          |
+| [svelte/rune-prefer-let](./rules/rune-prefer-let.md)                                     | use let instead of const for reactive variables created by runes                                                                          | :wrench: |
 | [svelte/valid-each-key](./rules/valid-each-key.md)                                       | enforce keys to use variables defined in the `{#each}` block                                                                              |          |
 
 ## Stylistic Issues

@@ -1,0 +1,20 @@
+- message: const is used for a reactive variable from $props(). Use 'let' instead.
+  line: 2
+  column: 2
+  suggestions: null
+- message: const is used for a reactive variable from $state(). Use 'let' instead.
+  line: 4
+  column: 2
+  suggestions: null
+- message: const is used for a reactive variable from $state.frozen(). Use 'let' instead.
+  line: 5
+  column: 2
+  suggestions: null
+- message: const is used for a reactive variable from $derived(). Use 'let' instead.
+  line: 7
+  column: 2
+  suggestions: null
+- message: const is used for a reactive variable from $derived.by(). Use 'let' instead.
+  line: 8
+  column: 2
+  suggestions: null
