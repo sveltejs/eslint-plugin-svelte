@@ -16,8 +16,6 @@ description: 'Require `const` declarations for variables that are never reassign
 
 This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$state`, `$derived` and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -33,8 +31,6 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
   let obj = { a, b };
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
