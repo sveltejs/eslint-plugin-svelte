@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
 import Module from 'module';
 import path from 'path';
-import type { RuleContext } from '../types';
-import { getCwd, getFilename, getPhysicalFilename, getSourceCode } from './compat';
+import type { RuleContext } from '../types.js';
+import { getCwd, getFilename, getPhysicalFilename, getSourceCode } from './compat.js';
 const cache = new WeakMap<AST.SvelteProgram, Record<string, unknown>>();
 const cache4b = new Map<string, unknown>();
 /**

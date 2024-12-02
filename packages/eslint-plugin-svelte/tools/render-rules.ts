@@ -1,5 +1,5 @@
-import type { RuleModule } from '../src/types';
-import { rules } from '../src/utils/rules';
+import type { RuleModule } from '../src/types.js';
+import { rules } from '../src/utils/rules.js';
 
 const categories = [
 	'Possible Errors',

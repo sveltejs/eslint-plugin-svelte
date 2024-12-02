@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import { isKitPageComponent } from '../utils/svelte-kit';
+import { createRule } from '../utils/index.js';
+import { isKitPageComponent } from '../utils/svelte-kit.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
 

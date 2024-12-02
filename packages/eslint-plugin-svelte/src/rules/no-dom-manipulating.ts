@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import { findVariable, getNodeName } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { findVariable, getNodeName } from '../utils/ast-utils.js';
 import type { Variable } from '@typescript-eslint/scope-manager';
 import { getPropertyName } from '@eslint-community/eslint-utils';
 

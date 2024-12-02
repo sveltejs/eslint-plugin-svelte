@@ -1,7 +1,7 @@
 import type { Linter } from 'eslint';
-import type { Shared } from '../shared';
-import { beginShared, terminateShared } from '../shared';
-export * as meta from '../meta';
+import type { Shared } from '../shared/index.js';
+import { beginShared, terminateShared } from '../shared/index.js';
+export * as meta from '../meta.js';
 
 /** preprocess */
 export function preprocess(code: string, filename: string): string[] {

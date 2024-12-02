@@ -1,7 +1,7 @@
-import { getShared } from '../shared';
-import { createRule } from '../utils';
-import { getFilename } from '../utils/compat';
-import { isRegExp, toRegExp } from '../utils/regexp';
+import { getShared } from '../shared/index.js';
+import { createRule } from '../utils/index.js';
+import { getFilename } from '../utils/compat.js';
+import { isRegExp, toRegExp } from '../utils/regexp.js';
 
 export default createRule('system', {
 	meta: {

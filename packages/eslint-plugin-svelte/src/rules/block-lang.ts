@@ -1,7 +1,7 @@
-import { createRule } from '../utils';
-import { getLangValue } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { getLangValue } from '../utils/ast-utils.js';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
-import { getSourceCode } from '../utils/compat';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('block-lang', {
 	meta: {

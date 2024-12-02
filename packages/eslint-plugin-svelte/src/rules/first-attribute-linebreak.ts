@@ -1,6 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('first-attribute-linebreak', {
 	meta: {

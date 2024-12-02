@@ -1,10 +1,10 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import {
 	buildProxyListener,
 	defineWrapperListener,
 	getCoreRule,
 	getProxyNode
-} from '../utils/eslint-core';
+} from '../utils/eslint-core.js';
 
 const coreRule = getCoreRule('no-inner-declarations');
 

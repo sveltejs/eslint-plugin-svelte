@@ -1,19 +1,17 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { RuleContext } from '../../types';
-import Parser from './template-safe-parser';
+import type { RuleContext } from '../../types.js';
+import Parser from './template-safe-parser.js';
 import type { Root, ChildNode, AnyNode } from 'postcss';
 import { Input } from 'postcss';
 import type { TSESTree } from '@typescript-eslint/types';
-import { getSourceCode } from '../compat';
+import { getSourceCode } from '../compat.js';
 
 /** Parse for CSS */
 function safeParseCss(css: string): Root | null {
 	try {
 		const input = new Input(css);
-
 		const parser = new Parser(input);
 		parser.parse();
-
 		return parser.root;
 	} catch {
 		return null;

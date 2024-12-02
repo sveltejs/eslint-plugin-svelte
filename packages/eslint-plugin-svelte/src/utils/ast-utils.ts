@@ -1,10 +1,10 @@
-import type { ASTNode, RuleContext, SourceCode } from '../types';
+import type { ASTNode, RuleContext, SourceCode } from '../types.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import * as eslintUtils from '@eslint-community/eslint-utils';
-import { voidElements, svgElements, mathmlElements } from './element-types';
-import { getSourceCode } from './compat';
+import { voidElements, svgElements, mathmlElements } from './element-types.js';
+import { getSourceCode } from './compat.js';
 
 /**
  * Checks whether or not the tokens of two given nodes are same.

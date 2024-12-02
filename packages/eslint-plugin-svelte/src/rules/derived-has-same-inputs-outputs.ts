@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import type { RuleContext } from '../types';
-import { extractStoreReferences } from './reference-helpers/svelte-store';
+import { createRule } from '../utils/index.js';
+import type { RuleContext } from '../types.js';
+import { extractStoreReferences } from './reference-helpers/svelte-store.js';
 
 export default createRule('derived-has-same-inputs-outputs', {
 	meta: {

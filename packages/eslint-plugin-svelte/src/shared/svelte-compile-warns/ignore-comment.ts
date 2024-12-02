@@ -1,6 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { RuleContext } from '../../types';
-import { getSourceCode } from '../../utils/compat';
+import type { RuleContext } from '../../types.js';
+import { getSourceCode } from '../../utils/compat.js';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m;
 

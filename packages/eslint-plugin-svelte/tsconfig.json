@@ -17,9 +17,6 @@
 		"baseUrl": ".",
 		"esModuleInterop": true,
 		"outDir": "lib",
-		"paths": {
-			"*": ["typings/*"]
-		},
 		"skipLibCheck": true,
 		"resolveJsonModule": true
 	},
@@ -30,7 +27,6 @@
 		"tools/**/*",
 		"vite.config.mts",
 		"docs-svelte-kit/**/*.mts"
-		// "typings/**/*"
 	],
 	"exclude": ["lib/**/*", "tests/fixtures/**/*"]
 }

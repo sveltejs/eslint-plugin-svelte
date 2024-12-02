@@ -1,7 +1,7 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import { all as allKnownCSSProperties } from 'known-css-properties';
-import { toRegExp } from '../utils/regexp';
-import { hasVendorPrefix } from '../utils/css-utils';
+import { toRegExp } from '../utils/regexp.js';
+import { hasVendorPrefix } from '../utils/css-utils/index.js';
 
 export default createRule('no-unknown-style-directive-property', {
 	meta: {

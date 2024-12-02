@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import type { SvelteStyleInterpolation, SvelteStyleRoot } from '../utils/css-utils';
-import { parseStyleAttributeValue } from '../utils/css-utils';
+import { createRule } from '../utils/index.js';
+import type { SvelteStyleInterpolation, SvelteStyleRoot } from '../utils/css-utils/index.js';
+import { parseStyleAttributeValue } from '../utils/css-utils/index.js';
 
 export default createRule('no-dupe-style-properties', {
 	meta: {

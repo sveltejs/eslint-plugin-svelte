@@ -4,7 +4,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { createCache } from './cache';
+import { createCache } from './cache.js';
 
 type PackageJson = {
 	name?: unknown;

@@ -1,8 +1,8 @@
-import type { ASTNode, SourceCode } from '../../types';
+import type { ASTNode, SourceCode } from '../../types.js';
 import type { AST } from 'svelte-eslint-parser';
 import { isOpeningParenToken, isClosingParenToken } from '@eslint-community/eslint-utils';
-import { isNotWhitespace, isWhitespace } from './ast';
-import type { OffsetContext } from './offset-context';
+import { isNotWhitespace, isWhitespace } from './ast.js';
+import type { OffsetContext } from './offset-context.js';
 
 export type AnyToken = AST.Token | AST.Comment;
 export type MaybeNode = {
