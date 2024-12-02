@@ -91,7 +91,7 @@
     "eslint-visitor-keys": "^4.2.0",
     "espree": "^10.3.0",
     "less": "^4.2.1",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.0",
     "postcss-nested": "^7.0.2",
     "sass": "^1.81.0",
     "source-map-js": "^1.2.1",
