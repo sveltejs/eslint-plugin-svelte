@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.4
+
+### Major Changes
+
+- [#932](https://github.com/sveltejs/eslint-plugin-svelte/pull/932) [`b136ab4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b136ab4e54d8ff38f6ba7f49e1209be14dd18b0b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: change the plugin to an ESM-only package
+
 ## 3.0.0-next.3
 
 ### Major Changes
