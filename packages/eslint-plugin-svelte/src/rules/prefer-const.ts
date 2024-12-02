@@ -1,7 +1,7 @@
 import { createRule } from '../utils';
 import type { TSESTree } from '@typescript-eslint/types';
 
-import { defineWrapperListener, getCoreRule } from '../utils/eslint-core';
+import { defineWrapperListener, getCoreRule } from '../utils/eslint-core.js';
 
 const coreRule = getCoreRule('prefer-const');
 
