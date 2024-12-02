@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.3
+
+### Major Changes
+
+- [#937](https://github.com/sveltejs/eslint-plugin-svelte/pull/937) [`729394e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/729394e34d2d6f51e00c89b67a40d0f9192260b4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old eslint
+
+### Minor Changes
+
+- [#945](https://github.com/sveltejs/eslint-plugin-svelte/pull/945) [`19f682b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/19f682b73ce6bcccae52da0e59d5ab32a9d2c3c2) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: Support `<svelte:boundary>`
+
 ## 3.0.0-next.2
 
 ### Patch Changes
