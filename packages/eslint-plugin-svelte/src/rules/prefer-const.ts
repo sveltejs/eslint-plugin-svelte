@@ -1,6 +1,6 @@
-import { createRule } from '../utils';
 import type { TSESTree } from '@typescript-eslint/types';
 
+import { createRule } from '../utils/index.js';
 import { defineWrapperListener, getCoreRule } from '../utils/eslint-core.js';
 
 const coreRule = getCoreRule('prefer-const');
@@ -31,7 +31,7 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 		return false;
 	}
 
-	if (callee.type === 'Identifier' && ['$state', '$props', '$derived'].includes(callee.name)) {
+	if (callee.type === 'Identifier' && ['$props', '$derived'].includes(callee.name)) {
 		return true;
 	}
 
