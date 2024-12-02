@@ -63,7 +63,7 @@
     "known-css-properties": "^0.35.0",
     "postcss": "^8.4.49",
     "postcss-load-config": "^3.1.4",
-    "postcss-safe-parser": "^6.0.0",
+    "postcss-safe-parser": "^7.0.0",
     "postcss-selector-parser": "^7.0.0",
     "semver": "^7.6.3",
     "svelte-eslint-parser": "^1.0.0-next.3"
