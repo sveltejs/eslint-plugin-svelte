@@ -183,7 +183,7 @@ Example **eslint.config.js**:
 import eslintPluginSvelte from 'eslint-plugin-svelte';
 import svelteConfig from './svelte.config.js';
 export default [
-  ...eslintPluginSvelte.configs['flat/recommended'],
+  ...eslintPluginSvelte.configs.recommended,
   {
     files: [
       '**/*.svelte',
