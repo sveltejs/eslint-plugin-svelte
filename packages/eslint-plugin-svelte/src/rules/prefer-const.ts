@@ -5,24 +5,13 @@ import { defineWrapperListener, getCoreRule } from '../utils/eslint-core';
 
 const coreRule = getCoreRule('prefer-const');
 
-type Declaration = TSESTree.Expression;
-
 /**
  * Finds and returns the callee of a declaration node within variable declarations or object patterns.
  */
-function findDeclarationCallee(node: Declaration) {
+function findDeclarationCallee(node: TSESTree.Expression) {
 	const { parent } = node;
 	if (parent.type === 'VariableDeclarator' && parent.init?.type === 'CallExpression') {
 		return parent.init.callee;
-	}
-
-	if (
-		parent.type === 'Property' &&
-		parent.parent.type === 'ObjectPattern' &&
-		parent.parent.parent.type === 'VariableDeclarator' &&
-		parent.parent.parent.init?.type === 'CallExpression'
-	) {
-		return parent.parent.parent.init.callee;
 	}
 
 	return null;
@@ -32,8 +21,8 @@ function findDeclarationCallee(node: Declaration) {
  * Determines if a declaration should be skipped in the const preference analysis.
  * Specifically checks for Svelte's state management utilities ($state, $props, $derived).
  */
-function shouldSkipDeclaration(declaration: Declaration | null) {
-	if (!declaration || !declaration.parent) {
+function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
+	if (!declaration) {
 		return false;
 	}
 
@@ -60,7 +49,7 @@ function shouldSkipDeclaration(declaration: Declaration | null) {
 	if (
 		callee.object.name === '$state' &&
 		callee.property.type === 'Identifier' &&
-		callee.property.name === 'frozen'
+		callee.property.name === 'raw'
 	) {
 		return true;
 	}
