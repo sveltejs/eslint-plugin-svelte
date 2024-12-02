@@ -1,0 +1,8 @@
+- message: Found a pushState() call with a url that isn't prefixed with the base path.
+  line: 5
+  column: 12
+  suggestions: null
+- message: Found a pushState() call with a url that isn't prefixed with the base path.
+  line: 6
+  column: 12
+  suggestions: null
