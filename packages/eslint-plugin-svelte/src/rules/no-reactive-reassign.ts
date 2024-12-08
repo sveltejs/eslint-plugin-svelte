@@ -9,7 +9,6 @@ export default createRule('no-reactive-reassign', {
 		docs: {
 			description: 'disallow reassigning reactive values',
 			category: 'Possible Errors',
-			// TODO Switch to recommended in the major version.
 			recommended: false
 		},
 		schema: [
