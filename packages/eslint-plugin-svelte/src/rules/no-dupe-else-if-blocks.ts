@@ -72,7 +72,7 @@ export default createRule('no-dupe-else-if-blocks', {
 		docs: {
 			description: 'disallow duplicate conditions in `{#if}` / `{:else if}` chains',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [],
 		messages: {

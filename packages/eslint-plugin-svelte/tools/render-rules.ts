@@ -48,7 +48,7 @@ export default function renderRulesTableContent(
 	// -----------------------------------------------------------------------------
 
 	function toRuleRow(rule: RuleModule) {
-		const mark = `${rule.meta.docs.recommended ? ':star:' : ''}${
+		const mark = `${rule.meta.docs.configNames.includes('recommended') ? ':star:' : ''}${
 			rule.meta.fixable ? ':wrench:' : ''
 		}${rule.meta.hasSuggestions ? ':bulb:' : ''}${rule.meta.deprecated ? ':warning:' : ''}`;
 		const link = `[${rule.meta.docs.ruleId}](${buildRulePath(rule.meta.docs.ruleName || '')})`;

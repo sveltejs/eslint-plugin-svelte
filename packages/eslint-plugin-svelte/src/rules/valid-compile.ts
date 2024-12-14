@@ -8,7 +8,7 @@ export default createRule('valid-compile', {
 		docs: {
 			description: 'disallow warnings when compiling.',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [
 			{

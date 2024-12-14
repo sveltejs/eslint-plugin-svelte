@@ -32,7 +32,7 @@ export default createRule('comment-directive', {
 		docs: {
 			description: 'support comment-directives in HTML template',
 			category: 'System',
-			recommended: 'base'
+			configNames: ['base']
 		},
 		schema: [
 			{

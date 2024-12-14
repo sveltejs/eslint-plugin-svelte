@@ -8,7 +8,7 @@ export default createRule('shorthand-directive', {
 		docs: {
 			description: 'enforce use of shorthand syntax in directives',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'code',

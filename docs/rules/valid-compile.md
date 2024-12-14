@@ -10,7 +10,7 @@ since: 'v0.7.0'
 
 > disallow warnings when compiling.
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

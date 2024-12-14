@@ -9,7 +9,7 @@ export default createRule('no-dupe-on-directives', {
 		docs: {
 			description: 'disallow duplicate `on:` directives',
 			category: 'Possible Errors',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

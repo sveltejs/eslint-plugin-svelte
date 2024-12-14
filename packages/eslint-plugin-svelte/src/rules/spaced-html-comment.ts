@@ -6,7 +6,7 @@ export default createRule('spaced-html-comment', {
 			description:
 				'enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: false
 		},
 		fixable: 'whitespace',

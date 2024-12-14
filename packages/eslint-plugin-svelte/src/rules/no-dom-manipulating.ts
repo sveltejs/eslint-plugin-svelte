@@ -35,7 +35,7 @@ export default createRule('no-dom-manipulating', {
 		docs: {
 			description: 'disallow DOM manipulating',
 			category: 'Possible Errors',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

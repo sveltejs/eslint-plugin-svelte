@@ -9,7 +9,7 @@ export default createRule('require-event-dispatcher-types', {
 		docs: {
 			description: 'require type parameters for `createEventDispatcher`',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

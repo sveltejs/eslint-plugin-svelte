@@ -8,7 +8,7 @@ export default createRule('no-unknown-style-directive-property', {
 		docs: {
 			description: 'disallow unknown `style:property`',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [
 			{

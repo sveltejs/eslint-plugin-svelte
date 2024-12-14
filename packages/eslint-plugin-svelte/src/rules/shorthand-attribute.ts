@@ -7,7 +7,7 @@ export default createRule('shorthand-attribute', {
 		docs: {
 			description: 'enforce use of shorthand syntax in attribute',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'code',

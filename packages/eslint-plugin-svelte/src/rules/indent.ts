@@ -6,7 +6,7 @@ export default createRule('indent', {
 		docs: {
 			description: 'enforce consistent indentation',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'whitespace',

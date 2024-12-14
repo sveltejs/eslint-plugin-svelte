@@ -14,7 +14,7 @@ export default createRule('no-inner-declarations', {
 		docs: {
 			description: 'disallow variable or `function` declarations in nested blocks',
 			category: 'Extension Rules',
-			recommended: true,
+			configNames: ['recommended'],
 			extensionRule: 'no-inner-declarations'
 		},
 		fixable: coreRule.meta.fixable,

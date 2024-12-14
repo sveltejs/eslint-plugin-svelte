@@ -21,7 +21,7 @@ export default createRule('prefer-style-directive', {
 		docs: {
 			description: 'require style directives instead of style attribute',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: false
 		},
 		fixable: 'code',

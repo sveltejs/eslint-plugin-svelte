@@ -10,7 +10,7 @@ since: 'v0.31.0'
 
 > disallow unknown `style:property`
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

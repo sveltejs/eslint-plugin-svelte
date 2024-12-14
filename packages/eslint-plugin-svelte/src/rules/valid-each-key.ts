@@ -8,7 +8,7 @@ export default createRule('valid-each-key', {
 			description: 'enforce keys to use variables defined in the `{#each}` block',
 			category: 'Best Practices',
 			// TODO Switch to recommended in the major version.
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

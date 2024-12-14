@@ -9,7 +9,6 @@ void main();
 async function main() {
 	const { pluginsToRulesDTS } = await import('eslint-typegen/core');
 
-	// @ts-expect-error - types are a bit strict here
 	const ruleTypes = await pluginsToRulesDTS({ svelte: plugin });
 
 	void fs.writeFileSync(

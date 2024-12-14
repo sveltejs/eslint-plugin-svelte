@@ -13,7 +13,7 @@ export default createRule('no-object-in-text-mustaches', {
 		docs: {
 			description: 'disallow objects in text mustache interpolation',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [],
 		messages: {

@@ -18,7 +18,7 @@ export default createRule('no-unused-class-name', {
 		docs: {
 			description: 'disallow the use of a class in the template without a corresponding style',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		schema: [
 			{

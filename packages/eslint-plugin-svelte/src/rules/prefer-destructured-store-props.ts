@@ -17,7 +17,7 @@ export default createRule('prefer-destructured-store-props', {
 			description:
 				'destructure values from object stores for better change tracking & fewer redraws',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		hasSuggestions: true,
 		schema: [],

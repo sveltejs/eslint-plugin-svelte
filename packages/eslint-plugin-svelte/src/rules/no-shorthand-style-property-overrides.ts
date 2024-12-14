@@ -13,7 +13,7 @@ export default createRule('no-shorthand-style-property-overrides', {
 		docs: {
 			description: 'disallow shorthand style properties that override related longhand properties',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [],
 		messages: {

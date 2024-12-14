@@ -20,7 +20,7 @@ export default createRule('html-quotes', {
 		docs: {
 			description: 'enforce quotes style of HTML attributes',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'code',

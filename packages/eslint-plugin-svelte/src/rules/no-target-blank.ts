@@ -53,7 +53,7 @@ export default createRule('no-target-blank', {
 		docs: {
 			description: 'disallow `target="_blank"` attribute without `rel="noopener noreferrer"`',
 			category: 'Security Vulnerability',
-			recommended: false
+			configNames: []
 		},
 		schema: [
 			{

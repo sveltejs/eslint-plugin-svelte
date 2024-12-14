@@ -10,7 +10,7 @@ export default createRule('no-deprecated-raw-special-elements', {
 			description: 'Recommends not using raw special elements in Svelte versions previous to 5.',
 			category: 'Possible Errors',
 			// TODO: Switch to recommended in the major version
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

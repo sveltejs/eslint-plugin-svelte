@@ -8,8 +8,8 @@ export default createRule('no-store-async', {
 				'disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features',
 			category: 'Possible Errors',
 			// TODO Switch to recommended in the major version.
-			// recommended: true,
-			recommended: false,
+			// configNames: ['recommended'],
+			configNames: [],
 			default: 'error'
 		},
 		schema: [],

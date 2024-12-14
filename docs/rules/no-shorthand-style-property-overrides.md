@@ -10,7 +10,7 @@ since: 'v0.31.0'
 
 > disallow shorthand style properties that override related longhand properties
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

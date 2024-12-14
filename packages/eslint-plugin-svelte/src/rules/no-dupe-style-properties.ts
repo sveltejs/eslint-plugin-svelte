@@ -8,7 +8,7 @@ export default createRule('no-dupe-style-properties', {
 		docs: {
 			description: 'disallow duplicate style properties',
 			category: 'Possible Errors',
-			recommended: true
+			configNames: ['recommended']
 		},
 		schema: [],
 		messages: {

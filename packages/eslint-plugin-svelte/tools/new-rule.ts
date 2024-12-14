@@ -55,14 +55,13 @@ export default createRule('${ruleId}', {
         docs: {
             description: '',
             category: '',
-            recommended: false,
+            configNames: [],
         },
         schema: [],
         messages: {},
         type: 'suggestion', // 'problem', or 'layout',
     },
     create(context) {
-        
         return {}
     },
 });

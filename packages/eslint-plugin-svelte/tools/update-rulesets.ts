@@ -1,6 +1,7 @@
 import path from 'path';
 import { rules } from './lib/load-rules.js';
 import { writeAndFormat } from './lib/write.js';
+import type { ConfigName } from '../src/types.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -8,7 +9,8 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Flat Config
 // ------------------
 
-const baseContent = `/*
+const baseContent = `\
+/*
  * IMPORTANT!
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
@@ -43,7 +45,7 @@ const config: Linter.Config[] = [
 
       // eslint-plugin-svelte rules
       ${rules
-				.filter((rule) => rule.meta.docs.recommended === 'base' && !rule.meta.deprecated)
+				.filter((rule) => rule.meta.docs.configNames.includes('base') && !rule.meta.deprecated)
 				.map((rule) => {
 					const conf = rule.meta.docs.default || 'error';
 					return `"${rule.meta.docs.ruleId}": "${conf}"`;
@@ -61,7 +63,21 @@ const baseFilePath = path.resolve(__dirname, '../src/configs/flat/base.ts');
 // Update file.
 void writeAndFormat(baseFilePath, baseContent);
 
-const recommendedContent = `/*
+const configNames: ConfigName[] = [
+	'recommended',
+	'recommended-svelte3-4',
+	'recommended-svelte5-without-legacy'
+];
+
+for (const configName of configNames) {
+	const filteredRules = rules.filter(
+		(rule) => rule.meta.docs.configNames.includes(configName) && !rule.meta.deprecated
+	);
+	if (filteredRules.length === 0) {
+		continue;
+	}
+
+	const content = `/*
  * IMPORTANT!
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
@@ -71,11 +87,10 @@ import base from "./base.js"
 const config: Linter.Config[] = [
   ...base,
   {
-    name: 'svelte:recommended:rules',
+    name: 'svelte:${configName}:rules',
     rules: {
       // eslint-plugin-svelte rules
-      ${rules
-				.filter((rule) => rule.meta.docs.recommended && !rule.meta.deprecated)
+      ${filteredRules
 				.map((rule) => {
 					const conf = rule.meta.docs.default || 'error';
 					return `"${rule.meta.docs.ruleId}": "${conf}"`;
@@ -87,10 +102,11 @@ const config: Linter.Config[] = [
 export default config
 `;
 
-const recommendedFilePath = path.resolve(__dirname, '../src/configs/flat/recommended.ts');
+	const recommendedFilePath = path.resolve(__dirname, `../src/configs/flat/${configName}.ts`);
 
-// Update file.
-void writeAndFormat(recommendedFilePath, recommendedContent);
+	// Update file.
+	void writeAndFormat(recommendedFilePath, content);
+}
 
 const prettierContent = `/*
  * IMPORTANT!

@@ -6,7 +6,7 @@ export default createRule('require-optimized-style-attribute', {
 		docs: {
 			description: 'require style attributes that can be optimized',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

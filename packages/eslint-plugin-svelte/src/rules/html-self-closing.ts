@@ -18,7 +18,7 @@ export default createRule('html-self-closing', {
 		docs: {
 			description: 'enforce self-closing style',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		type: 'layout',

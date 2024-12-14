@@ -10,7 +10,7 @@ since: 'v0.0.13'
 
 > support comment-directives in HTML template
 
-- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/base"` configuration.
 
 Sole purpose of this rule is to provide `eslint-disable` functionality in the template HTML.
 It supports usage of the following comments:

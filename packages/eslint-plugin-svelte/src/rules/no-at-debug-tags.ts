@@ -5,7 +5,7 @@ export default createRule('no-at-debug-tags', {
 		docs: {
 			description: 'disallow the use of `{@debug}`',
 			category: 'Best Practices',
-			recommended: true,
+			configNames: ['recommended'],
 			default: 'warn'
 		},
 		schema: [],

@@ -8,7 +8,7 @@ export default createRule('no-trailing-spaces', {
 		docs: {
 			description: 'disallow trailing whitespace at the end of lines',
 			category: 'Extension Rules',
-			recommended: false,
+			configNames: [],
 			extensionRule: 'no-trailing-spaces',
 			conflictWithPrettier: true
 		},

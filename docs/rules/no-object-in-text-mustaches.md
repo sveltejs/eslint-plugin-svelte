@@ -10,7 +10,7 @@ since: 'v0.5.0'
 
 > disallow objects in text mustache interpolation
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

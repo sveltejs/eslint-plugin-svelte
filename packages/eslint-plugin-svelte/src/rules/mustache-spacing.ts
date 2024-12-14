@@ -39,7 +39,7 @@ export default createRule('mustache-spacing', {
 		docs: {
 			description: 'enforce unified spacing in mustache',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'code',

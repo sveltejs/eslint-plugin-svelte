@@ -10,7 +10,7 @@ since: 'v0.0.8'
 
 > disallow variable or `function` declarations in nested blocks
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

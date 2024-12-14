@@ -10,7 +10,7 @@ since: 'v0.19.0'
 
 > disallow unused svelte-ignore comments
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/recommended"` configuration.
 
 ## :book: Rule Details
 

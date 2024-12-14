@@ -8,7 +8,7 @@ export default createRule('no-inspect', {
 			description: 'Warns against the use of `$inspect` directive',
 			category: 'Best Practices',
 			// TODO: Enable recommended in major version
-			recommended: false,
+			configNames: [],
 			default: 'warn'
 		},
 		schema: [],

@@ -5,7 +5,7 @@ export default createRule('no-inline-styles', {
 		docs: {
 			description: 'disallow attributes and directives that produce inline styles',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		schema: [
 			{

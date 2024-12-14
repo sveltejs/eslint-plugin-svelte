@@ -10,7 +10,7 @@ since: 'v0.0.13'
 
 > system rule for working this plugin
 
-- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.
+- :gear: This rule is included in `"plugin:svelte/base"` configuration.
 
 ## :book: Rule Details
 

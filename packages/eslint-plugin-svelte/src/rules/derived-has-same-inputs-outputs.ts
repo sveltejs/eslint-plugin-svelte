@@ -8,7 +8,7 @@ export default createRule('derived-has-same-inputs-outputs', {
 		docs: {
 			description: 'derived store should use same variable names between values and callback',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: false
 		},
 		schema: [],

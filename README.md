@@ -426,8 +426,8 @@ These rules relate to this plugin works:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/comment-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :star: |
-| [svelte/system](https://sveltejs.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :star: |
+| [svelte/comment-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template |  |
+| [svelte/system](https://sveltejs.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin |  |
 
 ## Deprecated
 

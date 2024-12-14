@@ -10,7 +10,7 @@ export default createRule('experimental-require-strict-events', {
 		docs: {
 			description: 'require the strictEvents attribute on `<script>` tags',
 			category: 'Experimental',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

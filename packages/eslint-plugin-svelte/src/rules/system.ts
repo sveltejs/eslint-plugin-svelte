@@ -8,7 +8,7 @@ export default createRule('system', {
 		docs: {
 			description: 'system rule for working this plugin',
 			category: 'System',
-			recommended: 'base'
+			configNames: ['base']
 		},
 		schema: [],
 		messages: {},

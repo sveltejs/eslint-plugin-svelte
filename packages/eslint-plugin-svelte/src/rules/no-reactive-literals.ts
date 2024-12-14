@@ -7,7 +7,7 @@ export default createRule('no-reactive-literals', {
 		docs: {
 			description: "don't assign literal values in reactive statements",
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		hasSuggestions: true,
 		schema: [],
