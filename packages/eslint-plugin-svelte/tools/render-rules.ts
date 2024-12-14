@@ -1,5 +1,6 @@
 import type { RuleModule } from '../src/types.js';
 import { rules } from '../src/utils/rules.js';
+import type { ConfigName } from '../src/types.js';
 
 const categories = [
 	'Possible Errors',
@@ -42,13 +43,34 @@ const categoryRules = categories.map((cat) => {
 	};
 });
 
+function configNamesToEmoji(configNames: ConfigName[]) {
+	return configNames
+		.map((name) => {
+			switch (name) {
+				case 'base':
+					return undefined;
+				case 'recommended':
+					return ':check_mark_button:';
+				case 'recommended-svelte5-without-legacy':
+					return ':star:';
+				case 'recommended-svelte3-4':
+					return ':classical_building:';
+				default: {
+					const _: never = name;
+					return _;
+				}
+			}
+		})
+		.filter((emoji) => emoji !== undefined);
+}
+
 export default function renderRulesTableContent(
 	buildRulePath = (ruleName: string) => `./rules/${ruleName}.md`
 ): string {
 	// -----------------------------------------------------------------------------
 
 	function toRuleRow(rule: RuleModule) {
-		const mark = `${rule.meta.docs.configNames.includes('recommended') ? ':star:' : ''}${
+		const mark = `${configNamesToEmoji(rule.meta.docs.configNames).join(' ')}${
 			rule.meta.fixable ? ':wrench:' : ''
 		}${rule.meta.hasSuggestions ? ':bulb:' : ''}${rule.meta.deprecated ? ':warning:' : ''}`;
 		const link = `[${rule.meta.docs.ruleId}](${buildRulePath(rule.meta.docs.ruleName || '')})`;
