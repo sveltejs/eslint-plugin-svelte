@@ -70,9 +70,12 @@ const configNames: ConfigName[] = [
 ];
 
 for (const configName of configNames) {
-	const filteredRules = rules.filter(
-		(rule) => rule.meta.docs.configNames.includes(configName) && !rule.meta.deprecated
-	);
+	const filteredRules = rules.filter((rule) => {
+		const { configNames } = rule.meta.docs;
+		return (
+			(configNames.includes('base') || configNames.includes(configName)) && !rule.meta.deprecated
+		);
+	});
 	if (filteredRules.length === 0) {
 		continue;
 	}

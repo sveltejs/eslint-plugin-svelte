@@ -9,6 +9,7 @@ const config: Linter.Config[] = [
 		name: 'svelte:recommended:rules',
 		rules: {
 			// eslint-plugin-svelte rules
+			'svelte/comment-directive': 'error',
 			'svelte/no-at-debug-tags': 'warn',
 			'svelte/no-at-html-tags': 'error',
 			'svelte/no-dupe-else-if-blocks': 'error',
@@ -20,6 +21,7 @@ const config: Linter.Config[] = [
 			'svelte/no-shorthand-style-property-overrides': 'error',
 			'svelte/no-unknown-style-directive-property': 'error',
 			'svelte/no-unused-svelte-ignore': 'error',
+			'svelte/system': 'error',
 			'svelte/valid-compile': 'error'
 		}
 	}
