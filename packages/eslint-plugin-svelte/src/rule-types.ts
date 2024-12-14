@@ -395,7 +395,7 @@ type SvelteCommentDirective = []|[{
 // ----- svelte/consistent-selector-style -----
 type SvelteConsistentSelectorStyle = []|[{
   
-  style?: [("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
+  style?: []|[("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
 }]
 // ----- svelte/first-attribute-linebreak -----
 type SvelteFirstAttributeLinebreak = []|[{
