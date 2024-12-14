@@ -5,7 +5,7 @@ export default createRule('no-at-debug-tags', {
 		docs: {
 			description: 'disallow the use of `{@debug}`',
 			category: 'Best Practices',
-			configNames: ['recommended'],
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4'],
 			default: 'warn'
 		},
 		schema: [],

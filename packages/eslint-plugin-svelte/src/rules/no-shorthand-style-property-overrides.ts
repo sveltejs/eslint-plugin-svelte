@@ -13,7 +13,7 @@ export default createRule('no-shorthand-style-property-overrides', {
 		docs: {
 			description: 'disallow shorthand style properties that override related longhand properties',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

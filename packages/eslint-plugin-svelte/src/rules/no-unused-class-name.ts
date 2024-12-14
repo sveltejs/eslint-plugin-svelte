@@ -18,7 +18,7 @@ export default createRule('no-unused-class-name', {
 		docs: {
 			description: 'disallow the use of a class in the template without a corresponding style',
 			category: 'Best Practices',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [
 			{

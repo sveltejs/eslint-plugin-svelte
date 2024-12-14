@@ -7,7 +7,7 @@ export default createRule('no-ignored-unsubscribe', {
 			description:
 				'disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.',
 			category: 'Best Practices',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		fixable: undefined,
 		hasSuggestions: false,

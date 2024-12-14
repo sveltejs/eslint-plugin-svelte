@@ -8,7 +8,7 @@ export default createRule('no-dupe-style-properties', {
 		docs: {
 			description: 'disallow duplicate style properties',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

@@ -8,7 +8,7 @@ export default createRule('no-unknown-style-directive-property', {
 		docs: {
 			description: 'disallow unknown `style:property`',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [
 			{

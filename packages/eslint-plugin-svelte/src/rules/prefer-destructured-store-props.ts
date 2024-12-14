@@ -17,7 +17,7 @@ export default createRule('prefer-destructured-store-props', {
 			description:
 				'destructure values from object stores for better change tracking & fewer redraws',
 			category: 'Best Practices',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		hasSuggestions: true,
 		schema: [],

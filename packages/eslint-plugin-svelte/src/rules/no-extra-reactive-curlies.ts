@@ -7,7 +7,7 @@ export default createRule('no-extra-reactive-curlies', {
 		docs: {
 			description: 'disallow wrapping single reactive statements in curly braces',
 			category: 'Stylistic Issues',
-			configNames: [],
+			configNames: ['recommended', 'recommended_svelte3_4'],
 			conflictWithPrettier: false
 		},
 		hasSuggestions: true,

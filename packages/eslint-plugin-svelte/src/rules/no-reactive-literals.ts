@@ -7,7 +7,8 @@ export default createRule('no-reactive-literals', {
 		docs: {
 			description: "don't assign literal values in reactive statements",
 			category: 'Best Practices',
-			configNames: []
+			// MEMO: This rule doesn't support Svelte5 runes.
+			configNames: ['recommended', 'recommended_svelte3_4']
 		},
 		hasSuggestions: true,
 		schema: [],

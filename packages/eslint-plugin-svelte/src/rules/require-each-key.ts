@@ -6,7 +6,7 @@ export default createRule('require-each-key', {
 		docs: {
 			description: 'require keyed `{#each}` block',
 			category: 'Best Practices',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: { expectedKey: 'Each block should have a key' },
@@ -15,7 +15,9 @@ export default createRule('require-each-key', {
 	create(context) {
 		return {
 			SvelteEachBlock(node: AST.SvelteEachBlock) {
-				if (node.key == null) {
+				// NO need a `key` if an each blocks without an item
+				// see: https://svelte.dev/docs/svelte/each#Each-blocks-without-an-item
+				if (node.context != null && node.key == null) {
 					context.report({
 						node,
 						messageId: 'expectedKey'

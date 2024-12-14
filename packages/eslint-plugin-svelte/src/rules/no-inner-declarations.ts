@@ -14,7 +14,7 @@ export default createRule('no-inner-declarations', {
 		docs: {
 			description: 'disallow variable or `function` declarations in nested blocks',
 			category: 'Extension Rules',
-			configNames: ['recommended'],
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4'],
 			extensionRule: 'no-inner-declarations'
 		},
 		fixable: coreRule.meta.fixable,

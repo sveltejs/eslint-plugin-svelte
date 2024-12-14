@@ -10,7 +10,7 @@ export default createRule('prefer-class-directive', {
 		docs: {
 			description: 'require class directives instead of ternary expressions',
 			category: 'Stylistic Issues',
-			configNames: [],
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4'],
 			conflictWithPrettier: false
 		},
 		fixable: 'code',

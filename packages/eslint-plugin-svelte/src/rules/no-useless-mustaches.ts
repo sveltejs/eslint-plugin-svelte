@@ -20,7 +20,7 @@ export default createRule('no-useless-mustaches', {
 		docs: {
 			description: 'disallow unnecessary mustache interpolations',
 			category: 'Best Practices',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		fixable: 'code',
 		schema: [

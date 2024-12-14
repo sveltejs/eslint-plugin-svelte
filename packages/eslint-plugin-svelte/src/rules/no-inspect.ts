@@ -7,8 +7,7 @@ export default createRule('no-inspect', {
 		docs: {
 			description: 'Warns against the use of `$inspect` directive',
 			category: 'Best Practices',
-			// TODO: Enable recommended in major version
-			configNames: [],
+			configNames: ['recommended', 'recommended_svelte5_without_legacy'],
 			default: 'warn'
 		},
 		schema: [],

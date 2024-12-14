@@ -9,7 +9,8 @@ export default createRule('no-dupe-on-directives', {
 		docs: {
 			description: 'disallow duplicate `on:` directives',
 			category: 'Possible Errors',
-			configNames: []
+			// MEMO: Svelte5 compiler throws `attribute_duplicate` error for duplicate `on` directives.
+			configNames: ['recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

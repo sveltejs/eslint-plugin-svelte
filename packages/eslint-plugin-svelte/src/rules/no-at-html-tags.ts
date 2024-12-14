@@ -6,7 +6,7 @@ export default createRule('no-at-html-tags', {
 		docs: {
 			description: 'disallow use of `{@html}` to prevent XSS attack',
 			category: 'Security Vulnerability',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

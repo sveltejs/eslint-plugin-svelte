@@ -8,7 +8,8 @@ export default createRule('no-reactive-functions', {
 		docs: {
 			description: "it's not necessary to define functions in reactive statements",
 			category: 'Best Practices',
-			configNames: []
+			// MEMO: This rule doesn't support Svelte5 runes.
+			configNames: ['recommended', 'recommended_svelte3_4']
 		},
 		hasSuggestions: true,
 		schema: [],

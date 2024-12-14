@@ -26,7 +26,8 @@ export default createRule('no-not-function-handler', {
 		docs: {
 			description: 'disallow use of not function in event handler',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			// MEMO: Svelte 5 can check this by type checking.
+			configNames: ['recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

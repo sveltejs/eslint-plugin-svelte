@@ -9,7 +9,7 @@ export default createRule('no-dupe-use-directives', {
 		docs: {
 			description: 'disallow duplicate `use:` directives',
 			category: 'Possible Errors',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

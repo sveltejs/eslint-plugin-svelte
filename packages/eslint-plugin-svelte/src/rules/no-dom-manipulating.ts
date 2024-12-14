@@ -35,7 +35,7 @@ export default createRule('no-dom-manipulating', {
 		docs: {
 			description: 'disallow DOM manipulating',
 			category: 'Possible Errors',
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

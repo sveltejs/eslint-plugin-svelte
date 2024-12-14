@@ -9,8 +9,7 @@ export default createRule('no-deprecated-raw-special-elements', {
 		docs: {
 			description: 'Recommends not using raw special elements in Svelte versions previous to 5.',
 			category: 'Possible Errors',
-			// TODO: Switch to recommended in the major version
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy']
 		},
 		schema: [],
 		messages: {

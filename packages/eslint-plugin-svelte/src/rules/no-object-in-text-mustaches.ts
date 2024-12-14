@@ -13,7 +13,7 @@ export default createRule('no-object-in-text-mustaches', {
 		docs: {
 			description: 'disallow objects in text mustache interpolation',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {

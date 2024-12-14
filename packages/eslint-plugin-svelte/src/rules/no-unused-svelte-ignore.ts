@@ -9,7 +9,7 @@ export default createRule('no-unused-svelte-ignore', {
 		docs: {
 			description: 'disallow unused svelte-ignore comments',
 			category: 'Best Practices',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {
