@@ -126,10 +126,10 @@ These rules relate to SvelteKit and its best Practices.
 
 These rules relate to this plugin works:
 
-| Rule ID                                                  | Description                                 |     |
-| :------------------------------------------------------- | :------------------------------------------ | :-- |
-| [svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template |     |
-| [svelte/system](./rules/system.md)                       | system rule for working this plugin         |     |
+| Rule ID                                                  | Description                                 |        |
+| :------------------------------------------------------- | :------------------------------------------ | :----- |
+| [svelte/comment-directive](./rules/comment-directive.md) | support comment-directives in HTML template | :star: |
+| [svelte/system](./rules/system.md)                       | system rule for working this plugin         | :star: |
 
 ## Deprecated
 
