@@ -30,7 +30,7 @@
     "cover": "c8 --reporter=lcov pnpm run test",
     "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "lint": "run-p lint:*",
-    "lint-fix": "pnpm run lint:es --fix && pnpm run lint:style --fix",
+    "lint-fix": "pnpm run lint:es --fix",
     "lint:es": "eslint --cache .",
     "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
     "new": "pnpm run ts ./tools/new-rule.ts",
