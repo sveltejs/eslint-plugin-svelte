@@ -86,7 +86,9 @@ export interface PartialRuleModule {
 export interface PartialRuleMetaData {
 	docs: {
 		description: string;
-		configNames: Exclude<ConfigName, 'base'>[] | ['base'];
+		configNames:
+			| Exclude<ConfigName, 'base'>[]
+			| ['base', 'recommended', 'recommended-svelte5-without-legacy', 'recommended-svelte3-4'];
 		extensionRule?:
 			| string
 			| {

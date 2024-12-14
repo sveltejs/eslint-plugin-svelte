@@ -32,7 +32,12 @@ export default createRule('comment-directive', {
 		docs: {
 			description: 'support comment-directives in HTML template',
 			category: 'System',
-			configNames: ['base']
+			configNames: [
+				'base',
+				'recommended',
+				'recommended-svelte5-without-legacy',
+				'recommended-svelte3-4'
+			]
 		},
 		schema: [
 			{

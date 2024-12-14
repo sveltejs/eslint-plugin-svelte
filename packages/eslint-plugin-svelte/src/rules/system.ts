@@ -8,7 +8,12 @@ export default createRule('system', {
 		docs: {
 			description: 'system rule for working this plugin',
 			category: 'System',
-			configNames: ['base']
+			configNames: [
+				'base',
+				'recommended',
+				'recommended-svelte5-without-legacy',
+				'recommended-svelte3-4'
+			]
 		},
 		schema: [],
 		messages: {},
