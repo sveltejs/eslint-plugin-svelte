@@ -1,8 +1,12 @@
-- message: '`<img>` element should have an alt attribute(foo)'
+- message: |-
+    `<img>` element should have an alt attribute
+    https://svelte.dev/e/a11y_missing_attribute(foo)
   line: 5
   column: 1
   suggestions: null
-- message: Avoid using autofocus(foo)
+- message: |-
+    Avoid using autofocus
+    https://svelte.dev/e/a11y_autofocus(foo)
   line: 5
   column: 12
   suggestions: null

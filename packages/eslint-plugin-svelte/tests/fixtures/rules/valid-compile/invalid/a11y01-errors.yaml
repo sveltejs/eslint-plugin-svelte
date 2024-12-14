@@ -1,4 +1,6 @@
-- message: '`<img>` element should have an alt attribute(a11y_missing_attribute)'
+- message: |-
+    `<img>` element should have an alt attribute
+    https://svelte.dev/e/a11y_missing_attribute(a11y_missing_attribute)
   line: 5
   column: 1
   suggestions: null
