@@ -12,6 +12,7 @@ import { createRule } from '../utils/index.js';
 import type { RuleContext, SourceCode } from '../types.js';
 
 interface RuleGlobals {
+	checkGlobal: boolean;
 	style: string[];
 	classSelections: Map<string, AST.SvelteHTMLElement[]>;
 	idSelections: Map<string, AST.SvelteHTMLElement[]>;
@@ -33,7 +34,9 @@ export default createRule('consistent-selector-style', {
 			{
 				type: 'object',
 				properties: {
-					// TODO: Add option to include global selectors
+					checkGlobal: {
+						type: 'boolean'
+					},
 					style: {
 						type: 'array',
 						items: {
@@ -62,6 +65,7 @@ export default createRule('consistent-selector-style', {
 			return {};
 		}
 
+		const checkGlobal = context.options[0]?.checkGlobal ?? false;
 		const style = context.options[0]?.style ?? ['type', 'id', 'class'];
 
 		const classSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
@@ -99,6 +103,7 @@ export default createRule('consistent-selector-style', {
 					return;
 				}
 				checkSelectorsInPostCSSNode(styleContext.sourceAst, {
+					checkGlobal,
 					style,
 					classSelections,
 					idSelections,
@@ -132,7 +137,7 @@ function checkSelectorsInPostCSSNode(node: AnyNode, ruleGlobals: RuleGlobals): v
 	}
 	if (
 		(node.type === 'root' ||
-			(node.type === 'rule' && node.selector !== ':global') ||
+			(node.type === 'rule' && (node.selector !== ':global' || ruleGlobals.checkGlobal)) ||
 			node.type === 'atrule') &&
 		node.nodes !== undefined
 	) {
@@ -154,7 +159,7 @@ function checkSelector(node: SelectorNode, ruleGlobals: RuleGlobals): void {
 		checkTypeSelector(node, ruleGlobals);
 	}
 	if (
-		(node.type === 'pseudo' && node.value !== ':global') ||
+		(node.type === 'pseudo' && (node.value !== ':global' || ruleGlobals.checkGlobal)) ||
 		node.type === 'root' ||
 		node.type === 'selector'
 	) {
