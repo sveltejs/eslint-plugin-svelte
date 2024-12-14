@@ -10,8 +10,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 		docs: {
 			description: 'disallow props other than data or errors in SvelteKit page components.',
 			category: 'SvelteKit',
-			// TODO Switch to recommended in the major version.
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {
