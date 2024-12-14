@@ -1,16 +1,8 @@
 import { createRule } from '../utils/index.js';
-import type {
-	SourceLocation,
-	SvelteAttribute,
-	SvelteDirective,
-	SvelteGenericsDirective,
-	SvelteShorthandAttribute,
-	SvelteSpecialDirective,
-	SvelteSpreadAttribute,
-	SvelteStyleDirective
-} from 'svelte-eslint-parser/lib/ast';
+import type { AST } from 'svelte-eslint-parser';
 import type { AnyNode } from 'postcss';
 import type { Node as SelectorNode } from 'postcss-selector-parser';
+import { findClassesInAttribute } from '../utils/ast-utils.js';
 import { getSourceCode } from '../utils/compat.js';
 import type { SourceCode } from '../types.js';
 
@@ -44,7 +36,7 @@ export default createRule('no-unused-class-name', {
 			return {};
 		}
 		const allowedClassNames = context.options[0]?.allowedClassNames ?? [];
-		const classesUsedInTemplate: Record<string, SourceLocation> = {};
+		const classesUsedInTemplate: Record<string, AST.SourceLocation> = {};
 
 		return {
 			SvelteElement(node) {
@@ -77,30 +69,6 @@ export default createRule('no-unused-class-name', {
 		};
 	}
 });
-
-/**
- * Extract all class names used in a HTML element attribute.
- */
-function findClassesInAttribute(
-	attribute:
-		| SvelteAttribute
-		| SvelteShorthandAttribute
-		| SvelteSpreadAttribute
-		| SvelteDirective
-		| SvelteStyleDirective
-		| SvelteSpecialDirective
-		| SvelteGenericsDirective
-): string[] {
-	if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'class') {
-		return attribute.value.flatMap((value) =>
-			value.type === 'SvelteLiteral' ? value.value.trim().split(/\s+/u) : []
-		);
-	}
-	if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
-		return [attribute.key.name.name];
-	}
-	return [];
-}
 
 /**
  * Extract all class names used in a PostCSS node.
