@@ -4,8 +4,9 @@
   line: 6
   column: 3
   suggestions: null
-- message: A form label must be associated with a
-    control(a11y_label_has_associated_control)
+- message: |-
+    A form label must be associated with a control
+    https://svelte.dev/e/a11y_label_has_associated_control(a11y_label_has_associated_control)
   line: 6
   column: 3
   suggestions: null
