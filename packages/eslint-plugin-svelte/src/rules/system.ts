@@ -11,8 +11,8 @@ export default createRule('system', {
 			configNames: [
 				'base',
 				'recommended',
-				'recommended-svelte5-without-legacy',
-				'recommended-svelte3-4'
+				'recommended_svelte5_without_legacy',
+				'recommended_svelte3_4'
 			]
 		},
 		schema: [],

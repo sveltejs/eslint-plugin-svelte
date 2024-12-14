@@ -65,8 +65,8 @@ void writeAndFormat(baseFilePath, baseContent);
 
 const configNames: ConfigName[] = [
 	'recommended',
-	'recommended-svelte3-4',
-	'recommended-svelte5-without-legacy'
+	'recommended_svelte3_4',
+	'recommended_svelte5_without_legacy'
 ];
 
 for (const configName of configNames) {

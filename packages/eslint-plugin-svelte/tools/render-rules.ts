@@ -51,9 +51,9 @@ function configNamesToEmoji(configNames: ConfigName[]) {
 					return undefined;
 				case 'recommended':
 					return ':white_check_mark:';
-				case 'recommended-svelte5-without-legacy':
+				case 'recommended_svelte5_without_legacy':
 					return ':star:';
-				case 'recommended-svelte3-4':
+				case 'recommended_svelte3_4':
 					return ':classical_building:';
 				default: {
 					const _: never = name;

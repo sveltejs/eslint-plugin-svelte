@@ -49,8 +49,8 @@ export type RuleCategory =
 export type ConfigName =
 	| 'base'
 	| 'recommended'
-	| 'recommended-svelte5-without-legacy'
-	| 'recommended-svelte3-4';
+	| 'recommended_svelte5_without_legacy'
+	| 'recommended_svelte3_4';
 
 export interface RuleMetaData {
 	docs: {
@@ -88,7 +88,7 @@ export interface PartialRuleMetaData {
 		description: string;
 		configNames:
 			| Exclude<ConfigName, 'base'>[]
-			| ['base', 'recommended', 'recommended-svelte5-without-legacy', 'recommended-svelte3-4'];
+			| ['base', 'recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4'];
 		extensionRule?:
 			| string
 			| {

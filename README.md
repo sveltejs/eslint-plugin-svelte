@@ -96,7 +96,9 @@ export default [
 This plugin provides configs:
 
 - `eslintPluginSvelte.configs.base` ... Configuration to enable correct Svelte parsing.
-- `eslintPluginSvelte.configs.recommended` ... Above, plus rules to prevent errors or unintended behavior.
+- `eslintPluginSvelte.configs.recommended` ... Base configuration recommended with rules for Svelte 5.
+- `eslintPluginSvelte.configs.recommended_svelte5_without_legacy` ... Base configuration with recommended rules for Svelte 5, excluding legacy compatibility (e.g. `$:` label).
+- `eslintPluginSvelte.configs.recommended_svelte3_4` ... Base configuration with recommended rules for Svelte 3 and 4.
 - `eslintPluginSvelte.configs.prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
 - `eslintPluginSvelte.configs.all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
 
@@ -305,8 +307,8 @@ Example **.vscode/settings.json**:
 :wrench: Indicates that the rule is fixable, and using `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the reported problems.  
 :bulb: Indicates that some problems reported by the rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).  
 :white_check_mark: Indicates that the rule is included in the `plugin:svelte/recommended` config.  
-:star: Indicates that the rule is included in the `plugin:svelte/recommended-svelte5-without-legacy` config.  
-:classical_building: Indicates that the rule is included in the `plugin:svelte/recommended-svelte3-4` config.  
+:star: Indicates that the rule is included in the `plugin:svelte/recommended_svelte5_without_legacy` config.  
+:classical_building: Indicates that the rule is included in the `plugin:svelte/recommended_svelte3_4` config.  
 
 <!--RULES_TABLE_START-->
 
