@@ -272,7 +272,7 @@ export default createRule('mustache-spacing', {
 			SvelteEachBlock(node: AST.SvelteEachBlock) {
 				const openBlockOpeningToken = sourceCode.getFirstToken(node);
 				const openBlockClosingToken = sourceCode.getTokenAfter(
-					node.key || node.index || node.context,
+					node.key || node.index || node.context || node.expression,
 					{
 						includeComments: false,
 						filter: isClosingBraceToken

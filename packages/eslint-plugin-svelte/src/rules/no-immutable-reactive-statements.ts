@@ -135,7 +135,9 @@ export default createRule('no-immutable-reactive-statements', {
 				return parent.kind === 'Binding' && parent.expression === expr;
 			}
 			if (parent.type === 'SvelteEachBlock') {
-				return parent.expression === expr && hasWriteReference(parent.context);
+				return (
+					parent.context !== null && parent.expression === expr && hasWriteReference(parent.context)
+				);
 			}
 
 			return false;
