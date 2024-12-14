@@ -109,11 +109,11 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                                                                        | Description                                                                          |     |
-| :------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- | :-- |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |     |
-| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                                 | disallow using goto() without the base path                                          |     |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.               |     |
+| Rule ID                                                                                                        | Description                                                                          |                                                |
+| :------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- | :--------------------------------------------- |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |                                                |
+| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                                 | disallow using goto() without the base path                                          |                                                |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.               | :white_check_mark: :star: :classical_building: |
 
 ## Experimental
 
