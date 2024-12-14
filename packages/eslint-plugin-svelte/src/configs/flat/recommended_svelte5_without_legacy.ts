@@ -33,7 +33,10 @@ const config: Linter.Config[] = [
 			'svelte/prefer-destructured-store-props': 'error',
 			'svelte/prefer-style-directive': 'error',
 			'svelte/require-each-key': 'error',
-			'svelte/system': 'error'
+			'svelte/require-store-reactive-access': 'error',
+			'svelte/system': 'error',
+			'svelte/valid-compile': 'error',
+			'svelte/valid-each-key': 'error'
 		}
 	}
 ];

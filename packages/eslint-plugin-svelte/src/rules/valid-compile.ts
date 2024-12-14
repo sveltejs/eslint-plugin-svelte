@@ -8,7 +8,7 @@ export default createRule('valid-compile', {
 		docs: {
 			description: 'disallow warnings when compiling.',
 			category: 'Possible Errors',
-			configNames: ['recommended']
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [
 			{

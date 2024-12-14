@@ -10,11 +10,13 @@ since: 'v0.32.0'
 
 > require style attributes that can be optimized
 
+- :gear: This rule is included in `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule reports `style` attributes written in a format that cannot be optimized.
 
-Svelte parses the content written in the style attribute and tries to optimize it. (See [https://github.com/sveltejs/svelte/pull/810](https://github.com/sveltejs/svelte/pull/810))  
+Up until Svelte 4, Svelte parses the content written in the style attribute and tries to optimize it. (See [https://github.com/sveltejs/svelte/pull/810](https://github.com/sveltejs/svelte/pull/810))  
 If Svelte can be successfully optimized, Svelte can minimize the number of re-renders.
 
 e.g.

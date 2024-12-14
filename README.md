@@ -333,9 +333,8 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-store-async](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features | :white_check_mark: :star: :classical_building: |
 | [svelte/no-unknown-style-directive-property](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :white_check_mark: :star: :classical_building: |
 | [svelte/require-store-callbacks-use-set-param](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param |  |
-| [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :wrench: |
-| [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :white_check_mark: |
-| [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. |  |
+| [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :white_check_mark: :star: :classical_building::wrench: |
+| [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :white_check_mark: :star: :classical_building: |
 
 ## Security Vulnerability
 
@@ -367,10 +366,10 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :white_check_mark: :star: :classical_building::wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :white_check_mark: :star: :classical_building::bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block | :white_check_mark: :star: :classical_building: |
-| [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` |  |
-| [svelte/require-optimized-style-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
+| [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` | :white_check_mark: :classical_building: |
+| [svelte/require-optimized-style-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized | :classical_building: |
 | [svelte/require-stores-init](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
-| [svelte/valid-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/) | enforce keys to use variables defined in the `{#each}` block |  |
+| [svelte/valid-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/) | enforce keys to use variables defined in the `{#each}` block | :white_check_mark: :star: :classical_building: |
 
 ## Stylistic Issues
 
@@ -414,6 +413,7 @@ These rules relate to SvelteKit and its best Practices.
 |:--------|:------------|:---|
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |  |
 | [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | disallow using goto() without the base path |  |
+| [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. |  |
 
 ## Experimental
 

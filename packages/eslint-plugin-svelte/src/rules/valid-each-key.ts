@@ -7,8 +7,7 @@ export default createRule('valid-each-key', {
 		docs: {
 			description: 'enforce keys to use variables defined in the `{#each}` block',
 			category: 'Best Practices',
-			// TODO Switch to recommended in the major version.
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		schema: [],
 		messages: {
@@ -32,10 +31,7 @@ export default createRule('valid-each-key', {
 									def.name.range[1] <= node.context.range[1]) ||
 								(node.index &&
 									node.index.range[0] <= def.name.range[0] &&
-									def.name.range[1] <= node.index.range[1]) ||
-								(node.expression &&
-									node.expression.range[0] <= def.name.range[0] &&
-									def.name.range[1] <= node.expression.range[1])
+									def.name.range[1] <= node.index.range[1])
 						)
 					) {
 						// It's not an iteration variable.

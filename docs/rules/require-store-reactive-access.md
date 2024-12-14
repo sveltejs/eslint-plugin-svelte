@@ -10,6 +10,7 @@ since: 'v2.12.0'
 
 > disallow to use of the store itself as an operand. Need to use $ prefix or get function.
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details

@@ -8,6 +8,7 @@ export default createRule('shorthand-directive', {
 		docs: {
 			description: 'enforce use of shorthand syntax in directives',
 			category: 'Stylistic Issues',
+			// MEMO: Prettier has the same format rule. So we don't set it as recommended.
 			configNames: [],
 			conflictWithPrettier: true
 		},

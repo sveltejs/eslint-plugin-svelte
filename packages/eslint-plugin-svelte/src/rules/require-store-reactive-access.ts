@@ -10,9 +10,7 @@ export default createRule('require-store-reactive-access', {
 			description:
 				'disallow to use of the store itself as an operand. Need to use $ prefix or get function.',
 			category: 'Possible Errors',
-			// TODO Switch to recommended in the major version.
-			// configNames: ['recommended'],
-			configNames: []
+			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
 		},
 		fixable: 'code',
 		schema: [],

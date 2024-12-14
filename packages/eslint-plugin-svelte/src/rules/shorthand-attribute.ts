@@ -7,6 +7,7 @@ export default createRule('shorthand-attribute', {
 		docs: {
 			description: 'enforce use of shorthand syntax in attribute',
 			category: 'Stylistic Issues',
+			// MEMO: Prettier has the same format rule. So we don't set it as recommended.
 			configNames: [],
 			conflictWithPrettier: true
 		},
