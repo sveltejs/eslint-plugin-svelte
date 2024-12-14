@@ -50,7 +50,7 @@ function configNamesToEmoji(configNames: ConfigName[]) {
 				case 'base':
 					return undefined;
 				case 'recommended':
-					return ':check_mark_button:';
+					return ':heavy_check_mark:';
 				case 'recommended-svelte5-without-legacy':
 					return ':star:';
 				case 'recommended-svelte3-4':

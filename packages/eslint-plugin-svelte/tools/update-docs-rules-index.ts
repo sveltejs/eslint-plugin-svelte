@@ -16,7 +16,7 @@ sidebarDepth: 0
 
 :wrench: Indicates that the rule is fixable, and using \`--fix\` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the reported problems.  
 :bulb: Indicates that some problems reported by the rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).  
-:check_mark_button: Indicates that the rule is included in the \`plugin:svelte/recommended\` config.
+:heavy_check_mark: Indicates that the rule is included in the \`plugin:svelte/recommended\` config.
 :star: Indicates that the rule is included in the \`plugin:svelte/recommended-svelte5-without-legacy\` config.
 :classical_building: Indicates that the rule is included in the \`plugin:svelte/recommended-svelte3-4\` config.
 

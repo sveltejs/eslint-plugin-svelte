@@ -317,21 +317,21 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |  |
 | [svelte/no-deprecated-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/) | Recommends not using raw special elements in Svelte versions previous to 5. | :wrench: |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating |  |
-| [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :check_mark_button: |
+| [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :heavy_check_mark: |
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives |  |
-| [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :check_mark_button: |
+| [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :heavy_check_mark: |
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives |  |
-| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :check_mark_button::wrench: |
+| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :heavy_check_mark::wrench: |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. |  |
-| [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :check_mark_button: |
-| [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :check_mark_button: |
+| [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :heavy_check_mark: |
+| [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :heavy_check_mark: |
 | [svelte/no-reactive-reassign](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/) | disallow reassigning reactive values |  |
-| [svelte/no-shorthand-style-property-overrides](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :check_mark_button: |
+| [svelte/no-shorthand-style-property-overrides](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/) | disallow shorthand style properties that override related longhand properties | :heavy_check_mark: |
 | [svelte/no-store-async](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features |  |
-| [svelte/no-unknown-style-directive-property](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :check_mark_button: |
+| [svelte/no-unknown-style-directive-property](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :heavy_check_mark: |
 | [svelte/require-store-callbacks-use-set-param](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param |  |
 | [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :wrench: |
-| [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :check_mark_button: |
+| [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. | :heavy_check_mark: |
 | [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. |  |
 
 ## Security Vulnerability
@@ -340,7 +340,7 @@ These rules relate to security vulnerabilities in Svelte code:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/no-at-html-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/) | disallow use of `{@html}` to prevent XSS attack | :check_mark_button: |
+| [svelte/no-at-html-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/) | disallow use of `{@html}` to prevent XSS attack | :heavy_check_mark: |
 | [svelte/no-target-blank](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank/) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |  |
 
 ## Best Practices
@@ -351,7 +351,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 |:--------|:------------|:---|
 | [svelte/block-lang](https://sveltejs.github.io/eslint-plugin-svelte/rules/block-lang/) | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. |  |
 | [svelte/button-has-type](https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
-| [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :check_mark_button: |
+| [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :heavy_check_mark: |
 | [svelte/no-ignored-unsubscribe](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/) | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores. |  |
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. |  |
 | [svelte/no-inline-styles](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/) | disallow attributes and directives that produce inline styles |  |
@@ -360,7 +360,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-svelte-internal](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/) | svelte/internal will be removed in Svelte 6. |  |
 | [svelte/no-unused-class-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/) | disallow the use of a class in the template without a corresponding style |  |
-| [svelte/no-unused-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :check_mark_button: |
+| [svelte/no-unused-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :heavy_check_mark: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block |  |
@@ -400,7 +400,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/no-inner-declarations](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :check_mark_button: |
+| [svelte/no-inner-declarations](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :heavy_check_mark: |
 | [svelte/no-trailing-spaces](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
 
 ## SvelteKit
@@ -426,8 +426,8 @@ These rules relate to this plugin works:
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/comment-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :check_mark_button: :star: :classical_building: |
-| [svelte/system](https://sveltejs.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :check_mark_button: :star: :classical_building: |
+| [svelte/comment-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/) | support comment-directives in HTML template | :heavy_check_mark: :star: :classical_building: |
+| [svelte/system](https://sveltejs.github.io/eslint-plugin-svelte/rules/system/) | system rule for working this plugin | :heavy_check_mark: :star: :classical_building: |
 
 ## Deprecated
 
