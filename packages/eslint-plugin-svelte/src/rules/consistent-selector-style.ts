@@ -38,7 +38,6 @@ export default createRule('consistent-selector-style', {
 						items: {
 							enum: ['class', 'id', 'type']
 						},
-						minItems: 3, // TODO: Allow fewer items
 						maxItems: 3,
 						uniqueItems: true
 					}
