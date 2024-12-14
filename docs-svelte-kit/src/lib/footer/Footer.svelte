@@ -6,6 +6,9 @@
 	export let frontmatter = {};
 
 	let prev, next;
+	$: ({
+		url: { pathname }
+	} = $page);
 	$: {
 		let prevItem, currItem;
 		for (const item of iterateMenuItem($menuItems)) {
@@ -39,10 +42,10 @@
 
 <footer class:hidden-menu={frontmatter.hiddenMenu}>
 	<div class="footer-tools">
-		<div class="edit-link">
+		<div>
 			<a
 				href="https://github.com/sveltejs/eslint-plugin-svelte/edit/main/docs/{markdownPath(
-					$page.url.pathname
+					pathname
 				)}"
 				target="_blank"
 				rel="noopener noreferrer">Edit this page</a
@@ -57,7 +60,6 @@
 					viewBox="0 0 100 100"
 					width="15"
 					height="15"
-					class="icon outbound"
 					><path
 						fill="currentColor"
 						d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"
@@ -71,14 +73,14 @@
 		</div>
 		{#if fileInfo.lastUpdated}
 			<div class="last-updated">
-				<span class="prefix">Last Updated:</span>
-				<span class="time">{fileInfo.lastUpdated}</span>
+				<span>Last Updated:</span>
+				<span>{fileInfo.lastUpdated}</span>
 			</div>
 		{/if}
 	</div>
 	<div class="footer-move">
 		{#if prev}
-			<span class="prev">←<a href="{baseUrl}{prev.path}">{prev.title}</a></span>
+			<span>←<a href="{baseUrl}{prev.path}">{prev.title}</a></span>
 		{/if}
 		{#if next}
 			<span class="next"><a href="{baseUrl}{next.path}">{next.title}</a>→ </span>

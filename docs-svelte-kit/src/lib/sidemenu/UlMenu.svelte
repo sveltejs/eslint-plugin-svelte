@@ -4,10 +4,16 @@
 	import { base as baseUrl } from '$app/paths';
 	export let children;
 	export let level = 1;
+
+	$: sidebarMenuLevelClass = `sidebar-menu--level${level}`;
+
+	$: ({
+		url: { pathname }
+	} = $page);
 </script>
 
-<ul class="sidebar-menu sidebar-menu--level{level}">
-	{#each children as item}
+<ul class={sidebarMenuLevelClass}>
+	{#each children as item (item)}
 		<li
 			class="sidebar-menu-item"
 			class:active={item.active || (item.path && isActive(item.path, $page))}
@@ -16,9 +22,10 @@
 				<a
 					class="sidebar-menu-item-title"
 					class:active={item.active || (item.path && isActive(item.path, $page))}
-					href="{baseUrl}{item.path || `${stripBaseUrl($page.url.pathname)}#${item.id}`}"
-					>{item.title}</a
+					href="{baseUrl}{item.path || `${stripBaseUrl(pathname)}#${item.id}`}"
 				>
+					{item.title}
+				</a>
 			{:else}
 				<span class="sidebar-menu-item-title">{item.title}</span>
 			{/if}

@@ -21,13 +21,7 @@
 			on:click={handleToggleSidebar}
 			on:keydown={(e) => (e.code === 'Enter' || e.code === 'Space') && handleToggleSidebar()}
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				aria-hidden="true"
-				role="img"
-				viewBox="0 0 448 512"
-				class="icon"
-			>
+			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512">
 				<path
 					fill="currentColor"
 					d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"
@@ -79,13 +73,7 @@
 			rel="noopener noreferrer"
 			aria-label="GitHub"
 		>
-			<svg
-				version="1.1"
-				width="16"
-				height="16"
-				viewBox="0 0 16 16"
-				class="octicon octicon-mark-github"
-				aria-hidden="true"
+			<svg version="1.1" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"
 				><path
 					style:fill="#2c3e50"
 					fill-rule="evenodd"
