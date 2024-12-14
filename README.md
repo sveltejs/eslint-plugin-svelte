@@ -10,8 +10,6 @@ You can check on the [Online DEMO](https://eslint-online-playground.netlify.app/
 > For example, <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/README.md>
 > and <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/docs>
 
-**_We are working on experimental support for Svelte v5, but may break with new versions of Svelte v5._**
-
 [![NPM license](https://img.shields.io/npm/l/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
 [![NPM version](https://img.shields.io/npm/v/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
 [![NPM downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&colorB=green&suffix=/day&query=$.downloads&uri=https://api.npmjs.org//downloads/point/last-day/eslint-plugin-svelte&maxAge=3600)](http://www.npmtrends.com/eslint-plugin-svelte)
@@ -45,6 +43,13 @@ The [svelte-eslint-parser] and the `eslint-plugin-svelte` can not be used with t
 We are working on support for Svelte v5, but it is still an experimental feature. Please note that rules and features related to Svelte v5 may be changed or removed in minor versions without notice.
 
 <!--DOCS_IGNORE_START-->
+
+## Versioning policy
+
+This plugin follows [Semantic Versioning](https://semver.org/).  
+However, unlike [ESLint’s Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy), this plugin adds new rules to its configs even in minor releases. For example, if you are using the recommended config, a minor update may add new rules, which could cause new lint errors in your project.  
+While [ESLint’s Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy) only adds new rules to configs in major releases, most users (myself included) don’t regularly monitor new rules. This makes it challenging to manually add them to projects whenever they are introduced.  
+By adding new rules to configs in minor releases, this plugin ensures users can adopt them more easily. If any new rules cause issues, you can simply disable them. I believe this approach helps maintain and improve code quality with minimal effort.
 
 ## Migration Guide
 
