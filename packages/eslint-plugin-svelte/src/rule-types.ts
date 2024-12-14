@@ -378,6 +378,7 @@ type SvelteCommentDirective = []|[{
 }]
 // ----- svelte/consistent-selector-style -----
 type SvelteConsistentSelectorStyle = []|[{
+  checkGlobal?: boolean
   
   style?: []|[("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
 }]
