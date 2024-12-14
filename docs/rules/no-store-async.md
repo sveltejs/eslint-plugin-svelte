@@ -10,6 +10,8 @@ since: 'v2.7.0'
 
 > disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule reports all uses of async/await inside svelte stores.

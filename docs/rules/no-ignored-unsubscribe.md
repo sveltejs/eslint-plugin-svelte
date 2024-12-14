@@ -10,6 +10,8 @@ since: 'v2.34.0'
 
 > disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule fails if an "unsubscriber" returned by call to `subscribe()` is neither assigned to a variable or property or passed to a function.

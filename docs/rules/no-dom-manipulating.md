@@ -10,6 +10,8 @@ since: 'v2.13.0'
 
 > disallow DOM manipulating
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 In general, DOM manipulating should delegate to Svelte runtime. If you manipulate the DOM directly, the Svelte runtime may confuse because there is a difference between the actual DOM and the Svelte runtime's expected DOM.

@@ -10,6 +10,8 @@ since: 'v2.27.0'
 
 > disallow reassigning reactive values
 
+- :gear: This rule is included in `"plugin:svelte/recommended"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule aims to prevent unintended behavior caused by modification or reassignment of reactive values.

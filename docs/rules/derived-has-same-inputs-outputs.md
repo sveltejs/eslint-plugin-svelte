@@ -10,6 +10,8 @@ since: 'v2.8.0'
 
 > derived store should use same variable names between values and callback
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule reports where variable names and callback function's argument names are different.

@@ -10,6 +10,8 @@ since: 'v2.31.0'
 
 > disallow the use of a class in the template without a corresponding style
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 This rule is aimed at reducing unused classes in the HTML template. While `svelte-check` will produce the `css-unused-selector` if your `<style>` block includes any classes that aren't used in the template, this rule works the other way around - it reports cases wehre the template contains classes that aren't referred to in the `<style>` block.

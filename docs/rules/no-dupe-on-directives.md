@@ -10,6 +10,8 @@ since: 'v2.14.0'
 
 > disallow duplicate `on:` directives
 
+- :gear: This rule is included in `"plugin:svelte/recommended_svelte3_4"` configuration.
+
 ## :book: Rule Details
 
 We can define any number of `on:` directive with the same event name, but duplicate directives with the exact same event name and expression are probably a mistake.
