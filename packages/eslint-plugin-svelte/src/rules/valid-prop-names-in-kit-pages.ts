@@ -39,6 +39,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 				isScript = false;
 			},
 
+			// Svelte3,4
 			'ExportNamedDeclaration > VariableDeclaration > VariableDeclarator': (
 				node: TSESTree.VariableDeclarator
 			) => {
@@ -57,6 +58,34 @@ export default createRule('valid-prop-names-in-kit-pages', {
 				}
 
 				// export let { xxx, yyy } = zzz
+				if (node.id.type !== 'ObjectPattern') return;
+				for (const p of node.id.properties) {
+					if (
+						p.type === 'Property' &&
+						p.value.type === 'Identifier' &&
+						!EXPECTED_PROP_NAMES.includes(p.value.name)
+					) {
+						context.report({
+							node: p.value,
+							loc: p.value.loc,
+							messageId: 'unexpected'
+						});
+					}
+				}
+			},
+
+			// Svelte5
+			// let { foo, bar } = $props();
+			'VariableDeclaration > VariableDeclarator': (node: TSESTree.VariableDeclarator) => {
+				if (!isScript) return;
+				if (
+					node.init?.type !== 'CallExpression' ||
+					node.init.callee?.type !== 'Identifier' ||
+					node.init.callee?.name !== '$props'
+				) {
+					return;
+				}
+
 				if (node.id.type !== 'ObjectPattern') return;
 				for (const p of node.id.properties) {
 					if (
