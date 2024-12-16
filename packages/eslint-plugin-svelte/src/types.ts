@@ -3,8 +3,11 @@ import type { Linter, Rule, SourceCode as ESLintSourceCode } from 'eslint';
 import type { AST, StyleContext, SvelteConfig } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { ScopeManager, Scope, Variable } from '@typescript-eslint/scope-manager';
+import type { Rule as StyleRule, Node } from 'postcss';
+import type { Root as SelectorRoot, Node as SelectorNode } from 'postcss-selector-parser';
 import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node.js';
 import type * as TS from 'typescript';
+import type { SourceLocation } from 'svelte-eslint-parser/lib/ast/common.js';
 
 export type { ASTNode, ASTNodeWithParent, ASTNodeListener };
 export interface RuleListener extends ASTNodeListener {
@@ -207,6 +210,10 @@ export interface SourceCode {
 		isSvelteScript?: boolean;
 		getSvelteHtmlAst?: () => unknown;
 		getStyleContext?: () => StyleContext;
+		getStyleSelectorAST: (rule: StyleRule) => SelectorRoot;
+		styleNodeLoc: (node: Node) => Partial<SourceLocation>;
+		styleNodeRange: (node: Node) => [number | undefined, number | undefined];
+		styleSelectorNodeLoc: (node: SelectorNode) => Partial<SourceLocation>;
 		svelteParseContext?: {
 			/**
 			 * Whether to use Runes mode.
