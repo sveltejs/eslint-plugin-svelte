@@ -10,6 +10,7 @@ since: 'v3.0.0-next.1'
 
 > Recommends not using raw special elements in Svelte versions previous to 5.
 
+- :gear: This rule is included in `"plugin:svelte/recommended"` and `"plugin:svelte/recommended_svelte5_without_legacy"` configuration.
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details

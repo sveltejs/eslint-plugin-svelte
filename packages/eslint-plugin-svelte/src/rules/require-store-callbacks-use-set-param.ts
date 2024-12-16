@@ -6,7 +6,7 @@ export default createRule('require-store-callbacks-use-set-param', {
 		docs: {
 			description: 'store callbacks must use `set` param',
 			category: 'Possible Errors',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

@@ -5,7 +5,7 @@ export default createRule('no-restricted-html-elements', {
 		docs: {
 			description: 'disallow specific HTML elements',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: false
 		},
 		schema: {

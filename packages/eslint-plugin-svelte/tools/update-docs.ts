@@ -70,7 +70,7 @@ class DocFile {
 				hasSuggestions,
 				deprecated,
 				replacedBy,
-				docs: { ruleId, description, recommended }
+				docs: { ruleId, description, configNames }
 			}
 		} = this.rule;
 		const title = `# ${ruleId}\n\n> ${description}`;
@@ -91,14 +91,11 @@ class DocFile {
 			} else {
 				notes.push('- :warning: This rule was **deprecated**.');
 			}
-		} else if (recommended) {
-			if (recommended === 'base') {
-				notes.push(
-					'- :gear: This rule is included in `"plugin:svelte/base"` and `"plugin:svelte/recommended"`.'
-				);
-			} else {
-				notes.push('- :gear: This rule is included in `"plugin:svelte/recommended"`.');
-			}
+		} else if (configNames.length > 0) {
+			const fullConfigNames = configNames.map((name) => `\`"plugin:svelte/${name}"\``);
+			notes.push(
+				`- :gear: This rule is included in ${formatItems(fullConfigNames)} configuration.`
+			);
 		}
 		if (fixable) {
 			notes.push(

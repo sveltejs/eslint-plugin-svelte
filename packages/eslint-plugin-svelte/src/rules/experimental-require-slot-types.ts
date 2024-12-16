@@ -8,7 +8,7 @@ export default createRule('experimental-require-slot-types', {
 		docs: {
 			description: 'require slot type declaration using the `$$Slots` interface',
 			category: 'Experimental',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

@@ -89,7 +89,7 @@ export default createRule('html-closing-bracket-new-line', {
 		docs: {
 			description: "Require or disallow a line break before tag's closing brackets",
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		schema: [

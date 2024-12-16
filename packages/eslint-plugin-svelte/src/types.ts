@@ -46,11 +46,17 @@ export type RuleCategory =
 	| 'Experimental'
 	| 'System';
 
+export type ConfigName =
+	| 'base'
+	| 'recommended'
+	| 'recommended_svelte5_without_legacy'
+	| 'recommended_svelte3_4';
+
 export interface RuleMetaData {
 	docs: {
 		description: string;
 		category: RuleCategory;
-		recommended: boolean | 'base';
+		configNames: ConfigName[];
 		extensionRule?:
 			| string
 			| {
@@ -80,7 +86,9 @@ export interface PartialRuleModule {
 export interface PartialRuleMetaData {
 	docs: {
 		description: string;
-		recommended: boolean | 'base';
+		configNames:
+			| Exclude<ConfigName, 'base'>[]
+			| ['base', 'recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4'];
 		extensionRule?:
 			| string
 			| {

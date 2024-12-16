@@ -10,6 +10,8 @@ since: 'v2.45.0'
 
 > Warns against the use of `$inspect` directive
 
+- :gear: This rule is included in `"plugin:svelte/recommended"` and `"plugin:svelte/recommended_svelte5_without_legacy"` configuration.
+
 ## :book: Rule Details
 
 This rule reports usages of `$inspect`.

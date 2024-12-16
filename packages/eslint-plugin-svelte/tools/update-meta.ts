@@ -1,5 +1,5 @@
 import path from 'path';
-import { name, version } from '../package.json';
+import packageJson from '../package.json' assert { type: 'json' };
 import { getNewVersion } from './lib/changesets-util.js';
 import { writeAndFormat } from './lib/write.js';
 
@@ -17,7 +17,7 @@ async function main() {
  * This file has been automatically generated,
  * in order to update its content execute "pnpm run update"
  */
-export const name = ${JSON.stringify(name)} as const;
+export const name = ${JSON.stringify(packageJson.name)} as const;
 export const version = ${JSON.stringify(await getVersion())} as const;
 `
 	);
@@ -29,5 +29,5 @@ function getVersion() {
 	if (process.env.IN_VERSION_CI_SCRIPT) {
 		return getNewVersion();
 	}
-	return version;
+	return packageJson.version;
 }

@@ -7,7 +7,7 @@ export default createRule('html-closing-bracket-spacing', {
 			description: "require or disallow a space before tag's closing brackets",
 			category: 'Stylistic Issues',
 			conflictWithPrettier: true,
-			recommended: false
+			configNames: []
 		},
 		schema: [
 			{

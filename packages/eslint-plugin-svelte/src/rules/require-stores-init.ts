@@ -6,7 +6,7 @@ export default createRule('require-stores-init', {
 		docs: {
 			description: 'require initial value in store',
 			category: 'Best Practices',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {
