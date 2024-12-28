@@ -6,6 +6,10 @@
   line: 4
   column: 6
   suggestions: null
+- message: "'raw' is never reassigned. Use 'const' instead."
+  line: 5
+  column: 6
+  suggestions: null
 - message: "'doubled' is never reassigned. Use 'const' instead."
   line: 6
   column: 6

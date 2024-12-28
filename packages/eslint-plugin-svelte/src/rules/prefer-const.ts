@@ -46,13 +46,6 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 	) {
 		return true;
 	}
-	if (
-		callee.object.name === '$state' &&
-		callee.property.type === 'Identifier' &&
-		callee.property.name === 'raw'
-	) {
-		return true;
-	}
 
 	return false;
 }
