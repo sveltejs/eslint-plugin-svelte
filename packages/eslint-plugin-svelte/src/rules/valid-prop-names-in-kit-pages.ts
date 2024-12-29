@@ -2,8 +2,26 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { isKitPageComponent } from '../utils/svelte-kit.js';
+import type { RuleContext } from '../types.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
+
+function checkProp(node: TSESTree.VariableDeclarator, context: RuleContext) {
+	if (node.id.type !== 'ObjectPattern') return;
+	for (const p of node.id.properties) {
+		if (
+			p.type === 'Property' &&
+			p.value.type === 'Identifier' &&
+			!EXPECTED_PROP_NAMES.includes(p.value.name)
+		) {
+			context.report({
+				node: p.value,
+				loc: p.value.loc,
+				messageId: 'unexpected'
+			});
+		}
+	}
+}
 
 export default createRule('valid-prop-names-in-kit-pages', {
 	meta: {
@@ -58,20 +76,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 				}
 
 				// export let { xxx, yyy } = zzz
-				if (node.id.type !== 'ObjectPattern') return;
-				for (const p of node.id.properties) {
-					if (
-						p.type === 'Property' &&
-						p.value.type === 'Identifier' &&
-						!EXPECTED_PROP_NAMES.includes(p.value.name)
-					) {
-						context.report({
-							node: p.value,
-							loc: p.value.loc,
-							messageId: 'unexpected'
-						});
-					}
-				}
+				checkProp(node, context);
 			},
 
 			// Svelte5
@@ -86,20 +91,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 					return;
 				}
 
-				if (node.id.type !== 'ObjectPattern') return;
-				for (const p of node.id.properties) {
-					if (
-						p.type === 'Property' &&
-						p.value.type === 'Identifier' &&
-						!EXPECTED_PROP_NAMES.includes(p.value.name)
-					) {
-						context.report({
-							node: p.value,
-							loc: p.value.loc,
-							messageId: 'unexpected'
-						});
-					}
-				}
+				checkProp(node, context);
 			}
 		};
 	}
