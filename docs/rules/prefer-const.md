@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/prefer-const'
 description: 'Require `const` declarations for variables that are never reassigned after declared'
+since: 'v3.0.0-next.6'
 ---
 
 # svelte/prefer-const
 
 > Require `const` declarations for variables that are never reassigned after declared
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -60,6 +60,10 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
 ## :books: Further Reading
 
 - See [ESLint `prefer-const` rule](https://eslint.org/docs/latest/rules/prefer-const) for more information about the base rule.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.0.0-next.6
 
 ## :mag: Implementation
 

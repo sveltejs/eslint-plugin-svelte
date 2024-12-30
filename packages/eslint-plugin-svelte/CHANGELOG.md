@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.6
+
+### Minor Changes
+
+- [#933](https://github.com/sveltejs/eslint-plugin-svelte/pull/933) [`71eca84`](https://github.com/sveltejs/eslint-plugin-svelte/commit/71eca843c43250591ec6fa2dd1dc547b1074d6ad) Thanks [@mikededo](https://github.com/mikededo)! - Add `prefer-const` rule
+
+- [#963](https://github.com/sveltejs/eslint-plugin-svelte/pull/963) [`2c551b2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2c551b20557bcd53e35479336bf0c25e88a7643b) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support Svelte5 of `valid-prop-names-in-kit-pages` rule
+
+### Patch Changes
+
+- [#961](https://github.com/sveltejs/eslint-plugin-svelte/pull/961) [`117e60d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/117e60d4290966911450c7e0db8566279e4511bb) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: support each blocks without an item
+
 ## 3.0.0-next.5
 
 ### Patch Changes
