@@ -1,4 +1,9 @@
 - message: The lang attribute of the <style> block should be omitted.
   line: 1
   column: 1
-  suggestions: null
+  suggestions:
+    - desc: Replace a <style> block with the lang attribute omitted.
+      output: |
+        <style>
+
+        </style>

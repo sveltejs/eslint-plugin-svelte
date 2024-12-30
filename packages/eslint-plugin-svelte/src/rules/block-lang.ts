@@ -2,6 +2,7 @@ import { createRule } from '../utils/index.js';
 import { findAttribute, getLangValue } from '../utils/ast-utils.js';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
 import { getSourceCode } from '../utils/compat.js';
+import type { SuggestionReportDescriptor } from '../types.js';
 
 export default createRule('block-lang', {
 	meta: {
@@ -108,34 +109,12 @@ export default createRule('block-lang', {
 				}
 				for (const scriptNode of scriptNodes) {
 					if (!allowedScriptLangs.includes(getLangValue(scriptNode)?.toLowerCase() ?? null)) {
-						const langAttribute = findAttribute(scriptNode, 'lang');
 						context.report({
 							node: scriptNode,
 							message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
 								allowedScriptLangs
 							)}.`,
-							suggest: allowedScriptLangs
-								.filter((lang) => lang != null && lang !== '')
-								.map((lang) => {
-									const langAttributeText = getLangAttributeText(lang ?? '', true);
-									if (langAttribute) {
-										return {
-											desc: `Add a <script> block with the lang attribute set to "${lang}".`,
-											fix: (fixer) => {
-												return fixer.replaceText(langAttribute, langAttributeText.trim());
-											}
-										};
-									}
-									return {
-										desc: `Add a <script> block with the lang attribute set to "${lang}".`,
-										fix: (fixer) => {
-											return fixer.insertTextBeforeRange(
-												[scriptNode.startTag.range[0] + 7, 0],
-												langAttributeText
-											);
-										}
-									};
-								})
+							suggest: buildSuggestions(allowedScriptLangs, scriptNode)
 						});
 					}
 				}
@@ -164,34 +143,12 @@ export default createRule('block-lang', {
 				}
 				for (const styleNode of styleNodes) {
 					if (!allowedStyleLangs.includes(getLangValue(styleNode)?.toLowerCase() ?? null)) {
-						const langAttribute = findAttribute(styleNode, 'lang');
 						context.report({
 							node: styleNode,
 							message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
 								allowedStyleLangs
 							)}.`,
-							suggest: allowedStyleLangs
-								.filter((lang) => lang != null && lang !== '')
-								.map((lang) => {
-									const langAttributeText = getLangAttributeText(lang ?? '', true);
-									if (langAttribute) {
-										return {
-											desc: `Add a <style> block with the lang attribute set to "${lang}".`,
-											fix: (fixer) => {
-												return fixer.replaceText(langAttribute, langAttributeText.trim());
-											}
-										};
-									}
-									return {
-										desc: `Add a <style> block with the lang attribute set to "${lang}".`,
-										fix: (fixer) => {
-											return fixer.insertTextBeforeRange(
-												[styleNode.startTag.range[0] + 6, 0],
-												langAttributeText
-											);
-										}
-									};
-								})
+							suggest: buildSuggestions(allowedStyleLangs, styleNode)
 						});
 					}
 				}
@@ -199,6 +156,49 @@ export default createRule('block-lang', {
 		};
 	}
 });
+
+function buildSuggestions(
+	langs: (string | null)[],
+	node: SvelteScriptElement | SvelteStyleElement
+): SuggestionReportDescriptor[] {
+	const tagName = node.name.name;
+	const langAttribute = findAttribute(node, 'lang');
+	const filteredLangs = langs.filter((lang) => lang != null && lang !== '');
+
+	if (filteredLangs.length === 0 && langs.includes(null) && langAttribute !== null) {
+		return [
+			{
+				desc: `Replace a <${tagName}> block with the lang attribute omitted.`,
+				fix: (fixer) => {
+					return fixer.remove({
+						type: langAttribute.type,
+						range: [langAttribute.range[0] - 1, langAttribute.range[1]]
+					});
+				}
+			}
+		];
+	}
+	return filteredLangs.map((lang) => {
+		const langAttributeText = getLangAttributeText(lang ?? '', true);
+		if (langAttribute) {
+			return {
+				desc: `Replace a <${tagName}> block with the lang attribute set to "${lang}".`,
+				fix: (fixer) => {
+					return fixer.replaceText(langAttribute, langAttributeText.trim());
+				}
+			};
+		}
+		return {
+			desc: `Add a <${tagName}> block with the lang attribute set to "${lang}".`,
+			fix: (fixer) => {
+				return fixer.insertTextBeforeRange(
+					[node.startTag.range[0] + tagName.length + 1, 0],
+					langAttributeText
+				);
+			}
+		};
+	});
+}
 
 /**
  * Prints the list of allowed languages, with special handling of the `null` option.

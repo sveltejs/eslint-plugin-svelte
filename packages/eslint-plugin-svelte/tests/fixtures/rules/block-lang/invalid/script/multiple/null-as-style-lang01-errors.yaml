@@ -3,12 +3,12 @@
   line: 1
   column: 1
   suggestions:
-    - desc: Add a <script> block with the lang attribute set to "ts".
+    - desc: Replace a <script> block with the lang attribute set to "ts".
       output: |
         <script lang="ts"></script>
 
         <style></style>
-    - desc: Add a <script> block with the lang attribute set to "typescript".
+    - desc: Replace a <script> block with the lang attribute set to "typescript".
       output: |
         <script lang="typescript"></script>
 
