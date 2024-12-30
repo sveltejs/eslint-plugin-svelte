@@ -7,12 +7,3 @@
         <script lang="javascript"></script>
 
         <style lang="javascript"></style>
-- message: The lang attribute of the <style> block should be either omitted or "scss".
-  line: 3
-  column: 1
-  suggestions:
-    - desc: Add a <style> block with the lang attribute set to "scss".
-      output: |
-        <script></script>
-
-        <style lang="scss"></style>
