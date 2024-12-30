@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.8
+
+### Minor Changes
+
+- [#844](https://github.com/sveltejs/eslint-plugin-svelte/pull/844) [`2bbd049`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2bbd0497ab7e05db0aab3c8958db08e3fdf4b9b2) Thanks [@Winter](https://github.com/Winter)! - feat: Added suggestion to the `block-lang` rule.
+
 ## 3.0.0-next.7
 
 ### Major Changes
