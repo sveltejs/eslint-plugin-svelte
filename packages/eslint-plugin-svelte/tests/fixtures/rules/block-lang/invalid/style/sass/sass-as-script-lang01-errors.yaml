@@ -1,4 +1,11 @@
 - message: The lang attribute of the <style> block should be "sass".
   line: 5
   column: 1
-  suggestions: null
+  suggestions:
+    - desc: Add lang attribute to a <style> block with the value "sass".
+      output: |
+        <script lang="sass">
+
+        </script>
+
+        <style lang="sass"></style>
