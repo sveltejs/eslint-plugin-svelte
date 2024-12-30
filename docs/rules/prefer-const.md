@@ -14,7 +14,7 @@ description: 'Require `const` declarations for variables that are never reassign
 
 ## :book: Rule Details
 
-This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$state`, `$derived` and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
+This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$derived` and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
 
 <!--eslint-skip-->
 
@@ -24,12 +24,18 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
 
   // ✓ GOOD
   const { a, b } = $props();
-  let { a, b } = $state();
+  let c = $state('');
+  let d = $derived(a * 2);
+  let e = $derived.by(() => b * 2);
 
   // ✗ BAD
-  // Imagine obj is not re-assigned, therefore it should be constant
   let obj = { a, b };
+  let g = $state(0);
+  let h = $state({ count: 1 });
 </script>
+
+<input bind:value={c} />
+<input bind:value={h.count} />
 ```
 
 ## :wrench: Options

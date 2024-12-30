@@ -19,7 +19,7 @@ function findDeclarationCallee(node: TSESTree.Expression) {
 
 /**
  * Determines if a declaration should be skipped in the const preference analysis.
- * Specifically checks for Svelte's state management utilities ($state, $props, $derived).
+ * Specifically checks for Svelte's state management utilities ($props, $derived).
  */
 function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 	if (!declaration) {
