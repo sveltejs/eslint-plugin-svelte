@@ -9,6 +9,6 @@
 	"svelte.plugin.typescript.diagnostics.enable": false,
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"[typescript]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}
 }
