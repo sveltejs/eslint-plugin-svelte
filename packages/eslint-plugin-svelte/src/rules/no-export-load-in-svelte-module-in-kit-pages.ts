@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { isKitPageComponent } from '../utils/svelte-kit.js';
+import { getSvelteContext } from '../utils/svelte-context.js';
 
 export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	meta: {
@@ -19,9 +19,8 @@ export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 		type: 'problem'
 	},
 	create(context) {
-		if (!isKitPageComponent(context)) {
-			return {};
-		}
+		const svelteContext = getSvelteContext(context);
+		if (svelteContext == null || svelteContext.svelteKitFileType == null) return {};
 		let isModule = false;
 		return {
 			// <script context="module">

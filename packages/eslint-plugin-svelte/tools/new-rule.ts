@@ -54,6 +54,7 @@ void (async ([ruleId, ...args]) => {
 		ruleFile,
 		`import { AST } from 'svelte-eslint-parser';
 import { createRule } from '${getModulePath(ruleFile, utilsPath)}';
+import { getSvelteContext } from '../utils/svelte.js';
 
 export default createRule('${ruleId}', {
     meta: {
@@ -67,7 +68,8 @@ export default createRule('${ruleId}', {
         type: 'suggestion', // 'problem', or 'layout',
     },
     create(context) {
-        
+				// TODO: Please refer to the context regarding Svelte and SvelteKit, and return early if run the rule is unnecessary.
+				const svelteContext = getSvelteContext(context);
         return {}
     },
 });
