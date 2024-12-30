@@ -1,0 +1,5 @@
+- message: Found a replaceState() call with a url that isn't prefixed with the
+    base path.
+  line: 4
+  column: 8
+  suggestions: null

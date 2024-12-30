@@ -110,9 +110,9 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                        | Description                                 |     |
-| :------------------------------------------------------------- | :------------------------------------------ | :-- |
-| [svelte/no-goto-without-base](./rules/no-goto-without-base.md) | disallow using goto() without the base path |     |
+| Rule ID                                                                    | Description                                                                            |     |
+| :------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- | :-- |
+| [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md) | disallow using navigation (links, goto, pushState, replaceState) without the base path |     |
 
 ## Experimental
 
@@ -137,6 +137,7 @@ These rules relate to this plugin works:
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID                                                                                                      | Replaced by                                                             |
-| :----------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| Rule ID                                                                                                      | Replaced by                                                                |
+| :----------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.    |
+| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                               | [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md) |

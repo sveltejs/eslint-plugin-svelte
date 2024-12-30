@@ -35,6 +35,7 @@ import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statem
 import noInlineStyles from '../rules/no-inline-styles.js';
 import noInnerDeclarations from '../rules/no-inner-declarations.js';
 import noInspect from '../rules/no-inspect.js';
+import noNavigationWithoutBase from '../rules/no-navigation-without-base.js';
 import noNotFunctionHandler from '../rules/no-not-function-handler.js';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches.js';
 import noReactiveFunctions from '../rules/no-reactive-functions.js';
@@ -104,6 +105,7 @@ export const rules = [
 	noInlineStyles,
 	noInnerDeclarations,
 	noInspect,
+	noNavigationWithoutBase,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noReactiveFunctions,
