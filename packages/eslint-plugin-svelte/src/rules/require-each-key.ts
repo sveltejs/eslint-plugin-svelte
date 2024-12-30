@@ -15,11 +15,7 @@ export default createRule('require-each-key', {
 	create(context) {
 		return {
 			SvelteEachBlock(node: AST.SvelteEachBlock) {
-<<<<<<< HEAD
 				// NO need a `key` if an each blocks without an item
-=======
-				// No need a `key` if an each blocks without an item
->>>>>>> origin/main
 				// see: https://svelte.dev/docs/svelte/each#Each-blocks-without-an-item
 				if (node.context != null && node.key == null) {
 					context.report({
