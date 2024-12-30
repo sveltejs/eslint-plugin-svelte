@@ -2,7 +2,7 @@
   line: 3
   column: 1
   suggestions:
-    - desc: Add a <style> block with the lang attribute set to "scss".
+    - desc: Add lang attribute to a <style> block with the value "scss".
       output: |
         <script lang="scss"></script>
 

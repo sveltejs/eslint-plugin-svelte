@@ -184,7 +184,7 @@ function buildReplaceLangSuggestions(
 			};
 		}
 		return {
-			desc: `Add a <${tagName}> block with the lang attribute set to "${lang}".`,
+			desc: `Add lang attribute to a <${tagName}> block with the value "${lang}".`,
 			fix: (fixer) => {
 				return fixer.insertTextBeforeRange(
 					[node.startTag.range[0] + tagName.length + 1, 0],
