@@ -6,7 +6,7 @@ export default createRule('require-each-key', {
 		docs: {
 			description: 'require keyed `{#each}` block',
 			category: 'Best Practices',
-			configNames: ['recommended', 'recommended_svelte5_without_legacy', 'recommended_svelte3_4']
+			configNames: ['recommended']
 		},
 		schema: [],
 		messages: { expectedKey: 'Each block should have a key' },
