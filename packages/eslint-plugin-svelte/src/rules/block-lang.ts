@@ -11,7 +11,6 @@ export default createRule('block-lang', {
 			category: 'Best Practices',
 			recommended: false
 		},
-		fixable: 'code',
 		schema: [
 			{
 				type: 'object',
@@ -55,7 +54,7 @@ export default createRule('block-lang', {
 			}
 		],
 		messages: {},
-		type: 'suggestion'
+		hasSuggestions: true
 	},
 	create(context) {
 		if (!getSourceCode(context).parserServices.isSvelte) {
