@@ -66,7 +66,7 @@ export default createRule('block-lang', {
 
 		const scriptOption: string | null | (string | null)[] = context.options[0]?.script ?? null;
 		const allowedScriptLangs: (string | null)[] = Array.isArray(scriptOption)
-			? scriptOption.filter((lang) => lang != null && lang !== '')
+			? scriptOption
 			: [scriptOption];
 		const scriptNodes: SvelteScriptElement[] = [];
 
