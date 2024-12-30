@@ -152,6 +152,7 @@ export interface RuleOptions {
   /**
    * disallow using goto() without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/
+   * @deprecated
    */
   'svelte/no-goto-without-base'?: Linter.RuleEntry<[]>
   /**
@@ -179,6 +180,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>
+  /**
+   * disallow using navigation (links, goto, pushState, replaceState) without the base path
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
+   */
+  'svelte/no-navigation-without-base'?: Linter.RuleEntry<SvelteNoNavigationWithoutBase>
   /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
@@ -264,6 +270,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/
    */
   'svelte/prefer-class-directive'?: Linter.RuleEntry<SveltePreferClassDirective>
+  /**
+   * Require `const` declarations for variables that are never reassigned after declared
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/
+   */
+  'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
   /**
    * destructure values from object stores for better change tracking & fewer redraws
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/
@@ -442,6 +453,13 @@ type SvelteNoInlineStyles = []|[{
 type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "both"), {
   blockScopedFunctions?: ("allow" | "disallow")
 }]
+// ----- svelte/no-navigation-without-base -----
+type SvelteNoNavigationWithoutBase = []|[{
+  ignoreGoto?: boolean
+  ignoreLinks?: boolean
+  ignorePushState?: boolean
+  ignoreReplaceState?: boolean
+}]
 // ----- svelte/no-reactive-reassign -----
 type SvelteNoReactiveReassign = []|[{
   props?: boolean
@@ -484,6 +502,11 @@ type SvelteNoUselessMustaches = []|[{
 // ----- svelte/prefer-class-directive -----
 type SveltePreferClassDirective = []|[{
   prefer?: ("always" | "empty")
+}]
+// ----- svelte/prefer-const -----
+type SveltePreferConst = []|[{
+  destructuring?: ("any" | "all")
+  ignoreReadBeforeAssign?: boolean
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

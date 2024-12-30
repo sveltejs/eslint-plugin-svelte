@@ -7,6 +7,8 @@ import type { RuleContext } from '../types.js';
 
 export default createRule('no-goto-without-base', {
 	meta: {
+		deprecated: true,
+		replacedBy: ['no-navigation-without-base'],
 		docs: {
 			description: 'disallow using goto() without the base path',
 			category: 'SvelteKit',

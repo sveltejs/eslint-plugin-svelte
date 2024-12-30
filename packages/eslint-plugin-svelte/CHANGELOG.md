@@ -1,5 +1,39 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.8
+
+### Minor Changes
+
+- [#844](https://github.com/sveltejs/eslint-plugin-svelte/pull/844) [`2bbd049`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2bbd0497ab7e05db0aab3c8958db08e3fdf4b9b2) Thanks [@Winter](https://github.com/Winter)! - feat: Added suggestion to the `block-lang` rule.
+
+## 3.0.0-next.7
+
+### Major Changes
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - breaking: deprecated the no-goto-without-base rule
+
+### Minor Changes
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-navigation-without-base rule
+
+## 3.0.0-next.6
+
+### Minor Changes
+
+- [#933](https://github.com/sveltejs/eslint-plugin-svelte/pull/933) [`71eca84`](https://github.com/sveltejs/eslint-plugin-svelte/commit/71eca843c43250591ec6fa2dd1dc547b1074d6ad) Thanks [@mikededo](https://github.com/mikededo)! - Add `prefer-const` rule
+
+- [#963](https://github.com/sveltejs/eslint-plugin-svelte/pull/963) [`2c551b2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2c551b20557bcd53e35479336bf0c25e88a7643b) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support Svelte5 of `valid-prop-names-in-kit-pages` rule
+
+### Patch Changes
+
+- [#961](https://github.com/sveltejs/eslint-plugin-svelte/pull/961) [`117e60d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/117e60d4290966911450c7e0db8566279e4511bb) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: support each blocks without an item
+
+## 3.0.0-next.5
+
+### Patch Changes
+
+- [#956](https://github.com/sveltejs/eslint-plugin-svelte/pull/956) [`157ee1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/157ee1fade79aab88f01d125b0b01cf375da4cd1) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to v1.0.0-next.4
+
 ## 3.0.0-next.4
 
 ### Major Changes

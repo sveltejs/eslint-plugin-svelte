@@ -1,0 +1,20 @@
+- message: "'zero' is never reassigned. Use 'const' instead."
+  line: 3
+  column: 6
+  suggestions: null
+- message: "'state' is never reassigned. Use 'const' instead."
+  line: 4
+  column: 6
+  suggestions: null
+- message: "'raw' is never reassigned. Use 'const' instead."
+  line: 5
+  column: 6
+  suggestions: null
+- message: "'doubled' is never reassigned. Use 'const' instead."
+  line: 6
+  column: 6
+  suggestions: null
+- message: "'calculated' is never reassigned. Use 'const' instead."
+  line: 8
+  column: 6
+  suggestions: null

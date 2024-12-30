@@ -1,0 +1,16 @@
+name: Publish to pkg.pr.new
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+      - name: Install Packages
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      - run: pnpx pkg-pr-new publish --compact './packages/eslint-plugin-svelte'

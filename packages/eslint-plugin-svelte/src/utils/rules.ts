@@ -35,6 +35,7 @@ import noImmutableReactiveStatements from '../rules/no-immutable-reactive-statem
 import noInlineStyles from '../rules/no-inline-styles.js';
 import noInnerDeclarations from '../rules/no-inner-declarations.js';
 import noInspect from '../rules/no-inspect.js';
+import noNavigationWithoutBase from '../rules/no-navigation-without-base.js';
 import noNotFunctionHandler from '../rules/no-not-function-handler.js';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches.js';
 import noReactiveFunctions from '../rules/no-reactive-functions.js';
@@ -52,6 +53,7 @@ import noUnusedClassName from '../rules/no-unused-class-name.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
 import preferClassDirective from '../rules/prefer-class-directive.js';
+import preferConst from '../rules/prefer-const.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import requireEachKey from '../rules/require-each-key.js';
@@ -103,6 +105,7 @@ export const rules = [
 	noInlineStyles,
 	noInnerDeclarations,
 	noInspect,
+	noNavigationWithoutBase,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noReactiveFunctions,
@@ -120,6 +123,7 @@ export const rules = [
 	noUnusedSvelteIgnore,
 	noUselessMustaches,
 	preferClassDirective,
+	preferConst,
 	preferDestructuredStoreProps,
 	preferStyleDirective,
 	requireEachKey,
