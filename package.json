@@ -1,6 +1,7 @@
 {
   "name": "eslint-plugin-svelte-monorepo",
   "description": "eslint-plugin-svelte monorepo",
+  "private": true,
   "license": "MIT",
   "funding": "https://github.com/sponsors/ota-meshi",
   "packageManager": "pnpm@9.15.2",
