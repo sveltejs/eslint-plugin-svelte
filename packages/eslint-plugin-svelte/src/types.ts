@@ -232,6 +232,8 @@ export interface SourceCode {
 
 	getLines(): string[];
 
+	getDeclaredVariables(node: TSESTree.Node): Variable[];
+
 	getAllComments(): AST.Comment[];
 
 	getComments(node: NodeOrToken): {
