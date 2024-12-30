@@ -20,7 +20,7 @@ export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	},
 	create(context) {
 		const svelteContext = getSvelteContext(context);
-		if (svelteContext == null || svelteContext.svelteKitFileType == null) return {};
+		if (svelteContext?.svelteKitFileType == null) return {};
 		let isModule = false;
 		return {
 			// <script context="module">

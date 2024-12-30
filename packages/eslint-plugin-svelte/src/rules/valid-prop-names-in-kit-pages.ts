@@ -39,7 +39,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 	},
 	create(context) {
 		const svelteContext = getSvelteContext(context);
-		if (svelteContext == null || svelteContext.svelteKitFileType == null) return {};
+		if (svelteContext?.svelteKitFileType == null) return {};
 		let isScript = false;
 		return {
 			// <script>
