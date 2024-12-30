@@ -10,6 +10,8 @@ since: 'v2.18.0'
 
 > disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks.
 
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
+
 ## :book: Rule Details
 
 This rule enforces all svelte components to use the same set of languages for their scripts and styles.
