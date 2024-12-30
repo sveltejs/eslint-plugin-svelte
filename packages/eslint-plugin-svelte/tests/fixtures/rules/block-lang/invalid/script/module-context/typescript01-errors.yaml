@@ -1,4 +1,9 @@
 - message: The lang attribute of the <script> block should be "ts".
   line: 1
   column: 1
-  suggestions: null
+  suggestions:
+    - desc: Add a <script> block with the lang attribute set to "ts".
+      output: |
+        <script context="module" lang="ts"></script>
+
+        <script lang="ts"></script>

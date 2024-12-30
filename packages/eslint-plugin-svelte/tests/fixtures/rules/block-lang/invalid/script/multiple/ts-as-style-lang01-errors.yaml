@@ -2,4 +2,14 @@
     one of "ts", "typescript".
   line: 1
   column: 1
-  suggestions: null
+  suggestions:
+    - desc: Add a <script> block with the lang attribute set to "ts".
+      output: |
+        <script lang="ts"></script>
+
+        <style lang="ts"></style>
+    - desc: Add a <script> block with the lang attribute set to "typescript".
+      output: |
+        <script lang="typescript"></script>
+
+        <style lang="ts"></style>
