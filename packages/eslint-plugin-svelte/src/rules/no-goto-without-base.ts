@@ -12,7 +12,7 @@ export default createRule('no-goto-without-base', {
 		docs: {
 			description: 'disallow using goto() without the base path',
 			category: 'SvelteKit',
-			recommended: false
+			configNames: []
 		},
 		schema: [],
 		messages: {

@@ -56,7 +56,7 @@ export default createRule('prefer-const', {
 		docs: {
 			description: coreRule.meta.docs.description,
 			category: 'Best Practices',
-			recommended: false,
+			configNames: [],
 			extensionRule: 'prefer-const'
 		}
 	},

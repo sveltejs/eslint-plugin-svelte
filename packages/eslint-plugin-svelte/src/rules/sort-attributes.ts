@@ -160,7 +160,7 @@ export default createRule('sort-attributes', {
 		docs: {
 			description: 'enforce order of attributes',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: false
 		},
 		schema: [

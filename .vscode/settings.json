@@ -4,6 +4,7 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit",
+		"source.fixAll.eslint": "explicit",
 		"source.fixAll.stylelint": "explicit"
 	},
 	"svelte.plugin.typescript.diagnostics.enable": false,

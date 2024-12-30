@@ -7,7 +7,7 @@ export default createRule('first-attribute-linebreak', {
 		docs: {
 			description: 'enforce the location of first attribute',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		fixable: 'whitespace',

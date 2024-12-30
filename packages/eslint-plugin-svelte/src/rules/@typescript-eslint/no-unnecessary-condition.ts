@@ -95,7 +95,7 @@ export default createRule('@typescript-eslint/no-unnecessary-condition', {
 		docs: {
 			description: 'disallow conditionals where the type is always truthy or always falsy',
 			category: 'Extension Rules',
-			recommended: false,
+			configNames: [],
 			extensionRule: {
 				plugin: '@typescript-eslint/eslint-plugin',
 				url: 'https://typescript-eslint.io/rules/no-unnecessary-condition/'

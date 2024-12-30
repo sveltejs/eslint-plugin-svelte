@@ -6,7 +6,7 @@ export default createRule('no-spaces-around-equal-signs-in-attribute', {
 		docs: {
 			description: 'disallow spaces around equal signs in attribute',
 			category: 'Stylistic Issues',
-			recommended: false,
+			configNames: [],
 			conflictWithPrettier: true
 		},
 		schema: [],

@@ -6,7 +6,7 @@ import base from './base.js';
 const config: Linter.Config[] = [
 	...base,
 	{
-		name: 'svelte:recommended:rules',
+		name: 'svelte:recommended_svelte3_4:rules',
 		rules: {
 			// eslint-plugin-svelte rules
 			'svelte/comment-directive': 'error',
@@ -14,9 +14,9 @@ const config: Linter.Config[] = [
 			'svelte/infinite-reactive-loop': 'error',
 			'svelte/no-at-debug-tags': 'warn',
 			'svelte/no-at-html-tags': 'error',
-			'svelte/no-deprecated-raw-special-elements': 'error',
 			'svelte/no-dom-manipulating': 'error',
 			'svelte/no-dupe-else-if-blocks': 'error',
+			'svelte/no-dupe-on-directives': 'error',
 			'svelte/no-dupe-style-properties': 'error',
 			'svelte/no-dupe-use-directives': 'error',
 			'svelte/no-dynamic-slot-name': 'error',
@@ -24,7 +24,7 @@ const config: Linter.Config[] = [
 			'svelte/no-ignored-unsubscribe': 'error',
 			'svelte/no-immutable-reactive-statements': 'error',
 			'svelte/no-inner-declarations': 'error',
-			'svelte/no-inspect': 'warn',
+			'svelte/no-not-function-handler': 'error',
 			'svelte/no-object-in-text-mustaches': 'error',
 			'svelte/no-reactive-functions': 'error',
 			'svelte/no-reactive-literals': 'error',
@@ -39,8 +39,8 @@ const config: Linter.Config[] = [
 			'svelte/prefer-class-directive': 'error',
 			'svelte/prefer-destructured-store-props': 'error',
 			'svelte/prefer-style-directive': 'error',
-			'svelte/require-each-key': 'error',
 			'svelte/require-event-dispatcher-types': 'error',
+			'svelte/require-optimized-style-attribute': 'error',
 			'svelte/require-store-reactive-access': 'error',
 			'svelte/system': 'error',
 			'svelte/valid-compile': 'error',

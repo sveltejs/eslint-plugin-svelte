@@ -10,6 +10,7 @@ since: 'v2.10.0'
 
 > destructure values from object stores for better change tracking & fewer redraws
 
+- :gear: This rule is included in all of `"plugin:svelte/recommended"`, `"plugin:svelte/recommended_svelte5_without_legacy"` and `"plugin:svelte/recommended_svelte3_4"` configuration.
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
