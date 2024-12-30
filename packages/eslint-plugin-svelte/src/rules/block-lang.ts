@@ -66,7 +66,7 @@ export default createRule('block-lang', {
 
 		const scriptOption: string | null | (string | null)[] = context.options[0]?.script ?? null;
 		const allowedScriptLangs: (string | null)[] = Array.isArray(scriptOption)
-			? scriptOption
+			? scriptOption.filter((lang) => lang != null && lang !== '')
 			: [scriptOption];
 		const scriptNodes: SvelteScriptElement[] = [];
 
@@ -90,76 +90,108 @@ export default createRule('block-lang', {
 						message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedScriptLangs
 						)}.`,
-						*fix(fixer) {
-							const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
-
-							yield fixer.insertTextAfterRange(
-								[0, 0],
-								`<script${langAttributeText}>\n</script>\n\n`
-							);
-						}
+						suggest: allowedScriptLangs
+							.filter((lang) => lang != null && lang !== '')
+							.map((lang) => {
+								return {
+									desc: `Add a <script> block with the lang attribute set to "${lang}".`,
+									fix: (fixer) => {
+										const langAttributeText = getLangAttributeText(lang ?? '', true);
+										return fixer.insertTextAfterRange(
+											[0, 0],
+											`<script${langAttributeText}>\n</script>\n\n`
+										);
+									}
+								};
+							})
 					});
 				}
 				for (const scriptNode of scriptNodes) {
 					if (!allowedScriptLangs.includes(getLangValue(scriptNode)?.toLowerCase() ?? null)) {
+						const langAttribute = findAttribute(scriptNode, 'lang');
 						context.report({
 							node: scriptNode,
 							message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
 								allowedScriptLangs
 							)}.`,
-							*fix(fixer) {
-								const langAttribute = findAttribute(scriptNode, 'lang');
-								const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
-
-								if (langAttribute) {
-									yield fixer.replaceText(langAttribute, langAttributeText.trim());
-								} else {
-									yield fixer.insertTextBeforeRange(
-										[scriptNode.startTag.range[0] + 7, 0],
-										langAttributeText
-									);
-								}
-							}
+							suggest: allowedScriptLangs
+								.filter((lang) => lang != null && lang !== '')
+								.map((lang) => {
+									const langAttributeText = getLangAttributeText(lang ?? '', true);
+									if (langAttribute) {
+										return {
+											desc: `Add a <script> block with the lang attribute set to "${lang}".`,
+											fix: (fixer) => {
+												return fixer.replaceText(langAttribute, langAttributeText.trim());
+											}
+										};
+									}
+									return {
+										desc: `Add a <script> block with the lang attribute set to "${lang}".`,
+										fix: (fixer) => {
+											return fixer.insertTextBeforeRange(
+												[scriptNode.startTag.range[0] + 7, 0],
+												langAttributeText
+											);
+										}
+									};
+								})
 						});
 					}
 				}
 				if (styleNodes.length === 0 && enforceStylePresent) {
+					const sourceCode = getSourceCode(context);
 					context.report({
 						loc: { line: 1, column: 1 },
 						message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedStyleLangs
 						)}.`,
-						*fix(fixer) {
-							const sourceCode = getSourceCode(context);
-							const langAttributeText = getLangAttributeText(allowedScriptLangs, true);
-
-							yield fixer.insertTextAfterRange(
-								[sourceCode.text.length, sourceCode.text.length],
-								`\n\n<style${langAttributeText}>\n</style>`
-							);
-						}
+						suggest: allowedStyleLangs
+							.filter((lang) => lang != null && lang !== '')
+							.map((lang) => {
+								return {
+									desc: `Add a <style> block with the lang attribute set to "${lang}".`,
+									fix: (fixer) => {
+										const langAttributeText = getLangAttributeText(lang ?? '', true);
+										return fixer.insertTextAfterRange(
+											[sourceCode.text.length, sourceCode.text.length],
+											`<style${langAttributeText}>\n</style>\n\n`
+										);
+									}
+								};
+							})
 					});
 				}
 				for (const styleNode of styleNodes) {
 					if (!allowedStyleLangs.includes(getLangValue(styleNode)?.toLowerCase() ?? null)) {
+						const langAttribute = findAttribute(styleNode, 'lang');
 						context.report({
 							node: styleNode,
 							message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
 								allowedStyleLangs
 							)}.`,
-							*fix(fixer) {
-								const langAttribute = findAttribute(styleNode, 'lang');
-								const langAttributeText = getLangAttributeText(allowedStyleLangs, true);
-
-								if (langAttribute) {
-									yield fixer.replaceText(langAttribute, langAttributeText.trim());
-								} else {
-									yield fixer.insertTextBeforeRange(
-										[styleNode.startTag.range[0] + 6, 0],
-										langAttributeText
-									);
-								}
-							}
+							suggest: allowedStyleLangs
+								.filter((lang) => lang != null && lang !== '')
+								.map((lang) => {
+									const langAttributeText = getLangAttributeText(lang ?? '', true);
+									if (langAttribute) {
+										return {
+											desc: `Add a <style> block with the lang attribute set to "${lang}".`,
+											fix: (fixer) => {
+												return fixer.replaceText(langAttribute, langAttributeText.trim());
+											}
+										};
+									}
+									return {
+										desc: `Add a <style> block with the lang attribute set to "${lang}".`,
+										fix: (fixer) => {
+											return fixer.insertTextBeforeRange(
+												[styleNode.startTag.range[0] + 6, 0],
+												langAttributeText
+											);
+										}
+									};
+								})
 						});
 					}
 				}
@@ -175,7 +207,7 @@ function prettyPrintLangs(langs: (string | null)[]): string {
 	const hasNull = langs.includes(null);
 	const nonNullLangs = langs.filter((lang) => lang !== null).map((lang) => `"${lang}"`);
 	if (nonNullLangs.length === 0) {
-		// No special behaviour for `hasNull`, because that can never happen.
+		// No special behavior for `hasNull`, because that can never happen.
 		return 'omitted';
 	}
 	const hasNullText = hasNull ? 'either omitted or ' : '';
@@ -187,11 +219,6 @@ function prettyPrintLangs(langs: (string | null)[]): string {
 /**
  * Returns the lang attribute text, with special handling of the `null` lang option with respect to the `prependWhitespace` argument.
  */
-function getLangAttributeText(langs: (string | null)[], prependWhitespace: boolean): string {
-	if (!langs.length || langs.includes(null)) return '';
-	const [firstLang] = langs;
-	if (langs.length === 1 && firstLang) {
-		return `${prependWhitespace ? ' ' : ''}lang="${firstLang}"`;
-	}
-	return '';
+function getLangAttributeText(lang: string, prependWhitespace: boolean): string {
+	return `${prependWhitespace ? ' ' : ''}lang="${lang}"`;
 }
