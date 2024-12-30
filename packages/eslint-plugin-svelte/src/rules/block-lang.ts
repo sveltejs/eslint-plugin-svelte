@@ -2,7 +2,7 @@ import { createRule } from '../utils/index.js';
 import { findAttribute, getLangValue } from '../utils/ast-utils.js';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
 import { getSourceCode } from '../utils/compat.js';
-import type { SuggestionReportDescriptor } from '../types.js';
+import type { SuggestionReportDescriptor, SourceCode } from '../types.js';
 
 export default createRule('block-lang', {
 	meta: {
@@ -91,20 +91,7 @@ export default createRule('block-lang', {
 						message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedScriptLangs
 						)}.`,
-						suggest: allowedScriptLangs
-							.filter((lang) => lang != null && lang !== '')
-							.map((lang) => {
-								return {
-									desc: `Add a <script> block with the lang attribute set to "${lang}".`,
-									fix: (fixer) => {
-										const langAttributeText = getLangAttributeText(lang ?? '', true);
-										return fixer.insertTextAfterRange(
-											[0, 0],
-											`<script${langAttributeText}>\n</script>\n\n`
-										);
-									}
-								};
-							})
+						suggest: buildAddLangSuggestions(allowedScriptLangs, 'script', getSourceCode(context))
 					});
 				}
 				for (const scriptNode of scriptNodes) {
@@ -114,7 +101,7 @@ export default createRule('block-lang', {
 							message: `The lang attribute of the <script> block should be ${prettyPrintLangs(
 								allowedScriptLangs
 							)}.`,
-							suggest: buildSuggestions(allowedScriptLangs, scriptNode)
+							suggest: buildReplaceLangSuggestions(allowedScriptLangs, scriptNode)
 						});
 					}
 				}
@@ -125,20 +112,7 @@ export default createRule('block-lang', {
 						message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedStyleLangs
 						)}.`,
-						suggest: allowedStyleLangs
-							.filter((lang) => lang != null && lang !== '')
-							.map((lang) => {
-								return {
-									desc: `Add a <style> block with the lang attribute set to "${lang}".`,
-									fix: (fixer) => {
-										const langAttributeText = getLangAttributeText(lang ?? '', true);
-										return fixer.insertTextAfterRange(
-											[sourceCode.text.length, sourceCode.text.length],
-											`<style${langAttributeText}>\n</style>\n\n`
-										);
-									}
-								};
-							})
+						suggest: buildAddLangSuggestions(allowedStyleLangs, 'style', sourceCode)
 					});
 				}
 				for (const styleNode of styleNodes) {
@@ -148,7 +122,7 @@ export default createRule('block-lang', {
 							message: `The lang attribute of the <style> block should be ${prettyPrintLangs(
 								allowedStyleLangs
 							)}.`,
-							suggest: buildSuggestions(allowedStyleLangs, styleNode)
+							suggest: buildReplaceLangSuggestions(allowedStyleLangs, styleNode)
 						});
 					}
 				}
@@ -157,7 +131,28 @@ export default createRule('block-lang', {
 	}
 });
 
-function buildSuggestions(
+function buildAddLangSuggestions(
+	langs: (string | null)[],
+	tagName: 'script' | 'style',
+	sourceCode: SourceCode
+): SuggestionReportDescriptor[] {
+	return langs
+		.filter((lang) => lang != null && lang !== '')
+		.map((lang) => {
+			return {
+				desc: `Add a lang attribute to a <${tagName}> block with the value "${lang}".`,
+				fix: (fixer) => {
+					const langAttributeText = getLangAttributeText(lang ?? '', true);
+					return fixer.insertTextAfterRange(
+						tagName === 'script' ? [0, 0] : [sourceCode.text.length, sourceCode.text.length],
+						`<${tagName}${langAttributeText}>\n</${tagName}>\n\n`
+					);
+				}
+			};
+		});
+}
+
+function buildReplaceLangSuggestions(
 	langs: (string | null)[],
 	node: SvelteScriptElement | SvelteStyleElement
 ): SuggestionReportDescriptor[] {
