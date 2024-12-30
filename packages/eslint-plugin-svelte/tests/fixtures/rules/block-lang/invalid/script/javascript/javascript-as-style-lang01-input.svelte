@@ -1,3 +1,3 @@
 <script></script>
 
-<style lang="javascript"></style>
+<style lang="scss"></style>

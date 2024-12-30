@@ -6,4 +6,4 @@
       output: |
         <script lang="javascript"></script>
 
-        <style lang="javascript"></style>
+        <style lang="scss"></style>
