@@ -54,6 +54,7 @@ export default createRule('block-lang', {
 			}
 		],
 		messages: {},
+		type: 'suggestion',
 		hasSuggestions: true
 	},
 	create(context) {
