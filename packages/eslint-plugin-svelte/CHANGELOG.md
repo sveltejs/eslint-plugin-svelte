@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.7
+
+### Major Changes
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - breaking: deprecated the no-goto-without-base rule
+
+### Minor Changes
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-navigation-without-base rule
+
 ## 3.0.0-next.6
 
 ### Minor Changes
