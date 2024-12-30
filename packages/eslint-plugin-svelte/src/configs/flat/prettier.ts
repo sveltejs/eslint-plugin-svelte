@@ -2,14 +2,15 @@
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
 import type { Linter } from 'eslint';
-import base from './base';
-const config: Linter.FlatConfig[] = [
+import base from './base.js';
+const config: Linter.Config[] = [
 	...base,
 	{
 		name: 'svelte:prettier:turn-off-rules',
 		rules: {
 			// eslint-plugin-svelte rules
 			'svelte/first-attribute-linebreak': 'off',
+			'svelte/html-closing-bracket-new-line': 'off',
 			'svelte/html-closing-bracket-spacing': 'off',
 			'svelte/html-quotes': 'off',
 			'svelte/html-self-closing': 'off',

@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
-import { isKitPageComponent } from '../utils/svelte-kit';
+import { createRule } from '../utils/index.js';
+import { isKitPageComponent } from '../utils/svelte-kit.js';
 
 export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	meta: {

@@ -2,11 +2,11 @@
  * refer: https://github.com/mysticatea/eslint-plugin-node/blob/f45c6149be7235c0f7422d1179c25726afeecd83/lib/util/get-package-json.js
  */
 
-import type { RuleContext } from '../types';
+import type { RuleContext } from '../types.js';
 import fs from 'fs';
 import path from 'path';
-import { getPackageJson } from './get-package-json';
-import { getFilename, getSourceCode } from './compat';
+import { getPackageJson } from './get-package-json.js';
+import { getFilename, getSourceCode } from './compat.js';
 
 const isRunOnBrowser = !fs.readFileSync;
 
@@ -55,7 +55,7 @@ function hasSvelteKit(filePath: string): boolean {
 		return Boolean(
 			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit']
 		);
-	} catch (_e) {
+	} catch {
 		return false;
 	}
 }

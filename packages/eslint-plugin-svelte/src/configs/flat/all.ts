@@ -1,7 +1,7 @@
 import type { Linter } from 'eslint';
-import { rules } from '../../utils/rules';
-import base from './base';
-const config: Linter.FlatConfig[] = [
+import { rules } from '../../utils/rules.js';
+import base from './base.js';
+const config: Linter.Config[] = [
 	...base,
 	{
 		name: 'svelte:all:rules',

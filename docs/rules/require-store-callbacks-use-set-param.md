@@ -15,8 +15,6 @@ since: 'v2.12.0'
 This rule disallows if `readable` / `writable` store's setter function doesn't use `set` parameter.<br>
 This rule doesn't check `derived` store. Therefore if you set a updated value asynchronously, please don't forget to use `set` function.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -62,8 +60,6 @@ This rule doesn't check `derived` store. Therefore if you set a updated value as
   writable(false, (foo) => true);
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

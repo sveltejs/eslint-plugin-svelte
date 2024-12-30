@@ -17,8 +17,6 @@ since: 'v2.12.0'
 This rule disallow to use of the store itself as an operand.  
 You should access the store value using the `$` prefix or the `get` function.
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -58,8 +56,6 @@ You should access the store value using the `$` prefix or the `get` function.
 <MyComponent --style-props={storeValue} />
 <MyComponent {...storeValue} />
 ```
-
-</ESLintCodeBlock>
 
 This rule checks the usage of store variables only if the store can be determined within a single file.  
 However, when using `@typescript-eslint/parser` and full type information, this rule uses the type information to determine if the expression is a store.

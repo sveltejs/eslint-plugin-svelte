@@ -10,11 +10,11 @@ since: 'v2.36.0-next.9'
 
 > disallow using goto() without the base path
 
+- :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-base](no-navigation-without-base.md) rule.
+
 ## :book: Rule Details
 
 This rule reports navigation using SvelteKit's `goto()` function without prefixing a relative URL with the base path. If a non-prefixed relative URL is used for navigation, the `goto` function navigates away from the base path, which is usually not what you wanted to do (for external URLs, `window.location = url` should be used instead).
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -42,8 +42,6 @@ This rule reports navigation using SvelteKit's `goto()` function without prefixi
   goto(`/foo/${base}`);
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

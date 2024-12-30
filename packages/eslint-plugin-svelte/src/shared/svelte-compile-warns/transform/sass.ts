@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
 import type sass from 'sass';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { loadModule } from '../../../utils/load-module';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { loadModule } from '../../../utils/load-module.js';
 
 type Sass = typeof sass;
 /**
@@ -39,7 +39,7 @@ export function transform(
 			output: output.css,
 			mappings: output.sourceMap!.mappings
 		};
-	} catch (_e) {
+	} catch {
 		return null;
 	}
 }

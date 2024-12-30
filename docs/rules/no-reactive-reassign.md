@@ -14,8 +14,6 @@ since: 'v2.27.0'
 
 This rule aims to prevent unintended behavior caused by modification or reassignment of reactive values.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -39,8 +37,6 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 <input type="number" bind:value={reactiveValue} />
 ```
 
-</ESLintCodeBlock>
-
 ## :wrench: Options
 
 ```json
@@ -57,8 +53,6 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 - `props` ... If set to `true`, this rule warns against the modification of reactive value properties. Default is `true`.
 
 ### `{ "props": true }`
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -84,11 +78,7 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 <MyComponent bind:objectValue={reactiveValue} />
 ```
 
-</ESLintCodeBlock>
-
 ### `{ "props": false }`
-
-<ESLintCodeBlock>
 
 <!--eslint-skip-->
 
@@ -115,8 +105,6 @@ This rule aims to prevent unintended behavior caused by modification or reassign
 <!-- ✗ BAD -->
 <MyComponent bind:objectValue={reactiveValue} />
 ```
-
-</ESLintCodeBlock>
 
 ## :rocket: Version
 

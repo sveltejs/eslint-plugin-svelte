@@ -1,15 +1,15 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import type {
 	SvelteStyleDeclaration,
 	SvelteStyleInline,
 	SvelteStyleRoot
-} from '../utils/css-utils';
-import { parseStyleAttributeValue } from '../utils/css-utils';
-import type { RuleFixer } from '../types';
-import { isHTMLElementLike } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+} from '../utils/css-utils/index.js';
+import { parseStyleAttributeValue } from '../utils/css-utils/index.js';
+import type { RuleFixer } from '../types.js';
+import { isHTMLElementLike } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(node: TSESTree.Expression): node is TSESTree.StringLiteral {

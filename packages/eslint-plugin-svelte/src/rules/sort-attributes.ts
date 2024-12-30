@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getAttributeKeyText } from '../utils/ast-utils';
-import { toRegExp } from '../utils/regexp';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import { getAttributeKeyText } from '../utils/ast-utils.js';
+import { toRegExp } from '../utils/regexp.js';
+import { getSourceCode } from '../utils/compat.js';
 
 type UserOrderObjectOption = {
 	match: string | string[];

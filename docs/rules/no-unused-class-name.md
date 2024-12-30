@@ -14,8 +14,6 @@ since: 'v2.31.0'
 
 This rule is aimed at reducing unused classes in the HTML template. While `svelte-check` will produce the `css-unused-selector` if your `<style>` block includes any classes that aren't used in the template, this rule works the other way around - it reports cases wehre the template contains classes that aren't referred to in the `<style>` block.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -47,8 +45,6 @@ This rule is aimed at reducing unused classes in the HTML template. While `svelt
   }
 </style>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

@@ -1,0 +1,3 @@
+{
+	"options": [{ "selfClosingTag": { "singleline": "never", "multiline": "never" } }]
+}

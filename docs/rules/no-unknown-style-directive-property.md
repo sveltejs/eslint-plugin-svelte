@@ -20,8 +20,6 @@ This rule was inspired by [Stylelint's property-no-unknown rule](https://styleli
 
 Note that this rule only checks the `style:property` directive. If you want to check inside the `style` attribute and `style` element, consider introducing [Stylelint](https://stylelint.io/).
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -39,8 +37,6 @@ Note that this rule only checks the `style:property` directive. If you want to c
 <div style:unknown-color={red}>...</div>
 <div style:red>...</div>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

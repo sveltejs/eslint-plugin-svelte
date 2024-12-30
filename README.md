@@ -4,7 +4,11 @@
 It provides many unique check rules by using the template AST.  
 You can check on the [Online DEMO](https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript).
 
-**_We are working on experimental support for Svelte v5, but may break with new versions of Svelte v5._**
+> [!NOTE]
+> This document is in development.\
+> Please refer to the document for the version you are using.\
+> For example, <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/README.md>
+> and <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/docs>
 
 [![NPM license](https://img.shields.io/npm/l/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
 [![NPM version](https://img.shields.io/npm/v/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
@@ -40,6 +44,13 @@ We are working on support for Svelte v5, but it is still an experimental feature
 
 <!--DOCS_IGNORE_START-->
 
+## Versioning policy
+
+This plugin follows [Semantic Versioning](https://semver.org/).  
+However, unlike [ESLint’s Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy), this plugin adds new rules to its configs even in minor releases. For example, if you are using the recommended config, a minor update may add new rules, which could cause new lint errors in your project.  
+While [ESLint’s Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy) only adds new rules to configs in major releases, most users (myself included) don’t regularly monitor new rules. This makes it challenging to manually add them to projects whenever they are introduced.  
+By adding new rules to configs in minor releases, this plugin ensures users can adopt them more easily. If any new rules cause issues, you can simply disable them. I believe this approach helps maintain and improve code quality with minimal effort.
+
 ## Migration Guide
 
 To migrate from `eslint-plugin-svelte` v1, or [`@ota-meshi/eslint-plugin-svelte`](https://www.npmjs.com/package/@ota-meshi/eslint-plugin-svelte), please refer to the [migration guide](https://sveltejs.github.io/eslint-plugin-svelte/migration/).
@@ -56,8 +67,8 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 > **Requirements**
 >
-> - ESLint v7.0.0 and above
-> - Node.js v14.17.x, v16.x and above
+> - ESLint v8.57.1, v9.0.0 and above
+> - Node.js v18.20.4, v20.18.0, v22.10.0 and above
 
 <!--DOCS_IGNORE_END-->
 
@@ -68,8 +79,6 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 ### Configuration
 
-#### New Config (`eslint.config.js`)
-
 Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
 
 Example **eslint.config.js**:
@@ -79,7 +88,7 @@ import eslintPluginSvelte from 'eslint-plugin-svelte';
 export default [
   // add more generic rule sets here, such as:
   // js.configs.recommended,
-  ...eslintPluginSvelte.configs['flat/recommended'],
+  ...eslintPluginSvelte.configs.recommended,
   {
     rules: {
       // override/add rules settings here, such as:
@@ -91,129 +100,67 @@ export default [
 
 This plugin provides configs:
 
-- `eslintPluginSvelte.configs['flat/base']` ... Configuration to enable correct Svelte parsing.
-- `eslintPluginSvelte.configs['flat/recommended']` ... Above, plus rules to prevent errors or unintended behavior.
-- `eslintPluginSvelte.configs['flat/prettier']` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
-- `eslintPluginSvelte.configs['flat/all']` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
+- `eslintPluginSvelte.configs.base` ... Configuration to enable correct Svelte parsing.
+- `eslintPluginSvelte.configs.recommended` ... Above, plus rules to prevent errors or unintended behavior.
+- `eslintPluginSvelte.configs.prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
+- `eslintPluginSvelte.configs.all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
 
 See [the rule list](https://sveltejs.github.io/eslint-plugin-svelte/rules/) to get the `rules` that this plugin provides.
-
-#### Legacy Config (`.eslintrc`)
-
-Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/user-guide/configuring>.
-
-Example **.eslintrc.js**:
-
-```js
-module.exports = {
-  extends: [
-    // add more generic rule sets here, such as:
-    // 'eslint:recommended',
-    'plugin:svelte/recommended'
-  ],
-  rules: {
-    // override/add rules settings here, such as:
-    // 'svelte/rule-name': 'error'
-  }
-};
-```
-
-This plugin provides configs:
-
-- `plugin:svelte/base` ... Configuration to enable correct Svelte parsing.
-- `plugin:svelte/recommended` ... Above, plus rules to prevent errors or unintended behavior.
-- `plugin:svelte/prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
-- `plugin:svelte/all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
-
-See [the rule list](https://sveltejs.github.io/eslint-plugin-svelte/rules/) to get the `rules` that this plugin provides.
-
-::: warning ❗ Attention
-
-The `eslint-plugin-svelte` can not be used with the [eslint-plugin-svelte3].
-If you are using [eslint-plugin-svelte3] you need to remove it.
-
-```diff
-  "plugins": [
--   "svelte3"
-  ]
-```
-
-:::
 
 #### Parser Configuration
 
 If you have specified a parser, you need to configure a parser for `.svelte`.
 
-For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
-
-```js
-module.exports = {
-  // ...
-  extends: ['plugin:svelte/recommended'],
-  // ...
-  parser: '@babel/eslint-parser',
-  // Add an `overrides` section to add a parser configuration for svelte.
-  overrides: [
-    {
-      files: ['*.svelte'],
-      parser: 'svelte-eslint-parser'
-    }
-    // ...
-  ]
-  // ...
-};
-```
-
 For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `<script>` of `.svelte`, you need to add more `parserOptions` configuration.
 
 ```js
-module.exports = {
-  // ...
-  extends: ['plugin:svelte/recommended'],
-  // ...
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    // ...
-    project: 'path/to/your/tsconfig.json',
-    extraFileExtensions: ['.svelte'] // This is a required setting in `@typescript-eslint/parser` v4.24.0.
-  },
-  overrides: [
-    {
-      files: ['*.svelte'],
-      parser: 'svelte-eslint-parser',
-      // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
+import eslintPluginSvelte from 'eslint-plugin-svelte';
+import * as svelteParser from 'svelte-eslint-parser';
+import * as typescriptParser from '@typescript-eslint/parser';
+export default [
+  ...js.configs.recommended,
+  ...eslintPluginSvelte.configs.recommended,
+  {
+    files: ['**/*.svelte'],
+    languageOptions: {
+      parser: svelteParser,
       parserOptions: {
-        parser: '@typescript-eslint/parser'
+        parser: typescriptParser,
+        project: './path/to/your/tsconfig.json',
+        extraFileExtensions: ['.svelte']
       }
     }
-    // ...
-  ]
-  // ...
-};
+  }
+];
 ```
 
 If you have a mix of TypeScript and JavaScript in your project, use a multiple parser configuration.
 
 ```js
-module.exports = {
-  // ...
-  overrides: [
-    {
-      files: ['*.svelte'],
-      parser: 'svelte-eslint-parser',
+import eslintPluginSvelte from 'eslint-plugin-svelte';
+import * as svelteParser from 'svelte-eslint-parser';
+import * as typescriptParser from '@typescript-eslint/parser';
+import espree from 'espree';
+export default [
+  ...js.configs.recommended,
+  ...eslintPluginSvelte.configs.recommended,
+  {
+    files: ['**/*.svelte'],
+    languageOptions: {
+      parser: svelteParser,
       parserOptions: {
         parser: {
           // Specify a parser for each lang.
-          ts: '@typescript-eslint/parser',
-          js: 'espree',
-          typescript: '@typescript-eslint/parser'
-        }
+          ts: typescriptParser,
+          js: espree,
+          typescript: typescriptParser
+        },
+        project: './path/to/your/tsconfig.json',
+        extraFileExtensions: ['.svelte']
       }
     }
-    // ...
-  ]
-  // ...
-};
+  }
+];
 ```
 
 See also <https://github.com/sveltejs/svelte-eslint-parser#readme>.
@@ -241,7 +188,7 @@ Example **eslint.config.js**:
 import eslintPluginSvelte from 'eslint-plugin-svelte';
 import svelteConfig from './svelte.config.js';
 export default [
-  ...eslintPluginSvelte.configs['flat/recommended'],
+  ...eslintPluginSvelte.configs.recommended,
   {
     files: [
       '**/*.svelte',
@@ -266,28 +213,30 @@ You can change the behavior of this plugin with some settings.
 e.g.
 
 ```js
-module.exports = {
+export default [
   // ...
-  settings: {
-    svelte: {
-      ignoreWarnings: [
-        '@typescript-eslint/no-unsafe-assignment',
-        '@typescript-eslint/no-unsafe-member-access'
-      ],
-      compileOptions: {
-        postcss: {
-          configFilePath: './path/to/my/postcss.config.js'
-        }
-      },
-      kit: {
-        files: {
-          routes: 'src/routes'
+  {
+    settings: {
+      svelte: {
+        ignoreWarnings: [
+          '@typescript-eslint/no-unsafe-assignment',
+          '@typescript-eslint/no-unsafe-member-access'
+        ],
+        compileOptions: {
+          postcss: {
+            configFilePath: './path/to/my/postcss.config.js'
+          }
+        },
+        kit: {
+          files: {
+            routes: 'src/routes'
+          }
         }
       }
     }
   }
   // ...
-};
+];
 ```
 
 #### settings.svelte.ignoreWarnings
@@ -317,30 +266,21 @@ Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuratio
 e.g.
 
 ```js
-module.exports = {
+export default [
   // ...
-  settings: {
-    svelte: {
-      kit: {
-        files: {
-          routes: 'src/routes'
+  {
+    settings: {
+      svelte: {
+        kit: {
+          files: {
+            routes: 'src/routes'
+          }
         }
       }
     }
   }
   // ...
-};
-```
-
-### Running ESLint from the command line
-
-If you want to run `eslint` from the command line, make sure you include the `.svelte` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
-
-Examples:
-
-```bash
-eslint --ext .js,.svelte src
-eslint "src/**/*.{js,svelte}"
+];
 ```
 
 ## :computer: Editor Integrations
@@ -380,6 +320,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |  |
+| [svelte/no-deprecated-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/) | Recommends not using raw special elements in Svelte versions previous to 5. | :wrench: |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives |  |
@@ -419,12 +360,14 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-ignored-unsubscribe](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/) | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores. |  |
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. |  |
 | [svelte/no-inline-styles](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/) | disallow attributes and directives that produce inline styles |  |
+| [svelte/no-inspect](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/) | Warns against the use of `$inspect` directive |  |
 | [svelte/no-reactive-functions](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :bulb: |
 | [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :bulb: |
 | [svelte/no-svelte-internal](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/) | svelte/internal will be removed in Svelte 6. |  |
 | [svelte/no-unused-class-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/) | disallow the use of a class in the template without a corresponding style |  |
 | [svelte/no-unused-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
+| [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block |  |
 | [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` |  |
@@ -440,6 +383,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 |:--------|:------------|:---|
 | [svelte/derived-has-same-inputs-outputs](https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/) | derived store should use same variable names between values and callback |  |
 | [svelte/first-attribute-linebreak](https://sveltejs.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/) | enforce the location of first attribute | :wrench: |
+| [svelte/html-closing-bracket-new-line](https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/) | Require or disallow a line break before tag's closing brackets | :wrench: |
 | [svelte/html-closing-bracket-spacing](https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/) | require or disallow a space before tag's closing brackets | :wrench: |
 | [svelte/html-quotes](https://sveltejs.github.io/eslint-plugin-svelte/rules/html-quotes/) | enforce quotes style of HTML attributes | :wrench: |
 | [svelte/html-self-closing](https://sveltejs.github.io/eslint-plugin-svelte/rules/html-self-closing/) | enforce self-closing style | :wrench: |
@@ -471,7 +415,7 @@ These rules relate to SvelteKit and its best Practices.
 
 | Rule ID | Description |    |
 |:--------|:------------|:---|
-| [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | disallow using goto() without the base path |  |
+| [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) | disallow using navigation (links, goto, pushState, replaceState) without the base path |  |
 
 ## Experimental
 
@@ -499,6 +443,7 @@ These rules relate to this plugin works:
 | Rule ID | Replaced by |
 |:--------|:------------|
 | [svelte/@typescript-eslint/no-unnecessary-condition](https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

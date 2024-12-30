@@ -2,10 +2,13 @@
 // https://github.com/typescript-eslint/typescript-eslint/blob/78467fc1bde9bd2db1e08b3d19f151f4adaff8a9/packages/eslint-plugin/tests/rules/no-unnecessary-condition.test.ts
 /* eslint func-style: off, eslint-plugin/consistent-output: off -- respect original  */
 import * as path from 'path';
-import { RuleTester } from '../../../../utils/eslint-compat';
+import { RuleTester } from '../../../../utils/eslint-compat.js';
 import type * as eslint from 'eslint';
+import * as typescriptParser from '@typescript-eslint/parser';
 
-import rule from '../../../../../src/rules/@typescript-eslint/no-unnecessary-condition';
+import rule from '../../../../../src/rules/@typescript-eslint/no-unnecessary-condition.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function getFixturesRootDir(): string {
 	return path.join(__dirname, 'fixtures');
@@ -15,10 +18,11 @@ const rootPath = getFixturesRootDir();
 
 const ruleTester = new RuleTester({
 	languageOptions: {
-		parser: require('@typescript-eslint/parser'),
+		parser: typescriptParser,
 		parserOptions: {
 			tsconfigRootDir: rootPath,
-			project: './tsconfig.json'
+			project: './tsconfig.json',
+			disallowAutomaticSingleRunInference: true
 		}
 	}
 });

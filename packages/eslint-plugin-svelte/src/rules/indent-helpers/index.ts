@@ -1,15 +1,15 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import type { ASTNode, RuleContext, RuleListener } from '../../types';
-import * as SV from './svelte';
-import * as ES from './es';
-import * as TS from './ts';
-import { isNotWhitespace } from './ast';
+import type { ASTNode, RuleContext, RuleListener } from '../../types.js';
+import * as SV from './svelte.js';
+import * as ES from './es.js';
+import * as TS from './ts.js';
+import { isNotWhitespace } from './ast.js';
 import { isCommentToken } from '@eslint-community/eslint-utils';
-import type { AnyToken, IndentOptions } from './commons';
-import type { OffsetCalculator } from './offset-context';
-import { OffsetContext } from './offset-context';
-import { getFilename, getSourceCode } from '../../utils/compat';
+import type { AnyToken, IndentOptions } from './commons.js';
+import type { OffsetCalculator } from './offset-context.js';
+import { OffsetContext } from './offset-context.js';
+import { getFilename, getSourceCode } from '../../utils/compat.js';
 
 type IndentUserOptions = {
 	indent?: number | 'tab';

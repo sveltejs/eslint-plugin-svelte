@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
 import type babelCore from '@babel/core';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { loadModule } from '../../../utils/load-module';
-import { getCwd } from '../../../utils/compat';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { loadModule } from '../../../utils/load-module.js';
+import { getCwd } from '../../../utils/compat.js';
 
 type BabelCore = typeof babelCore;
 /**
@@ -43,7 +43,7 @@ export function transform(
 			output: output.code!,
 			mappings: output.map!.mappings
 		};
-	} catch (_e) {
+	} catch {
 		return null;
 	}
 }

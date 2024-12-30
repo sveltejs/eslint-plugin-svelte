@@ -1,53 +1,66 @@
-- message: Empty block(block_empty)
+- message: |-
+    Empty block
+    https://svelte.dev/e/block_empty(block_empty)
   line: 2
   column: 30
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 5
   column: 3
   suggestions: null
-- message: A form label must be associated with a
-    control(a11y_label_has_associated_control)
+- message: |-
+    A form label must be associated with a control
+    https://svelte.dev/e/a11y_label_has_associated_control(a11y_label_has_associated_control)
   line: 5
   column: 3
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 6
   column: 3
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 9
   column: 3
   suggestions: null
-- message: A form label must be associated with a
-    control(a11y_label_has_associated_control)
+- message: |-
+    A form label must be associated with a control
+    https://svelte.dev/e/a11y_label_has_associated_control(a11y_label_has_associated_control)
   line: 9
   column: 3
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 10
   column: 3
   suggestions: null
-- message: Empty block(block_empty)
+- message: |-
+    Empty block
+    https://svelte.dev/e/block_empty(block_empty)
   line: 14
   column: 30
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 17
   column: 3
   suggestions: null
-- message: A form label must be associated with a
-    control(a11y_label_has_associated_control)
+- message: |-
+    A form label must be associated with a control
+    https://svelte.dev/e/a11y_label_has_associated_control(a11y_label_has_associated_control)
   line: 17
   column: 3
   suggestions: null
-- message: noninteractive element cannot have nonnegative tabIndex
-    value(a11y_no_noninteractive_tabindex)
+- message: |-
+    noninteractive element cannot have nonnegative tabIndex value
+    https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 18
   column: 3
   suggestions: null

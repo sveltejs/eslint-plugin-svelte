@@ -1,8 +1,8 @@
-import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns';
-import { createRule } from '../utils';
-import type { IgnoreItem } from '../shared/svelte-compile-warns/ignore-comment';
-import { getSvelteIgnoreItems } from '../shared/svelte-compile-warns/ignore-comment';
-import { getSourceCode } from '../utils/compat';
+import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns/index.js';
+import { createRule } from '../utils/index.js';
+import type { IgnoreItem } from '../shared/svelte-compile-warns/ignore-comment.js';
+import { getSvelteIgnoreItems } from '../shared/svelte-compile-warns/ignore-comment.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-unused-svelte-ignore', {
 	meta: {

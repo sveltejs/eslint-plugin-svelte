@@ -1,13 +1,15 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/types';
 import { parseForESLint } from 'svelte-eslint-parser';
 import path from 'path';
-import { writeAndFormat } from './lib/write';
+import { writeAndFormat } from './lib/write.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // import { fileURLToPath } from "url"
 // const filename = fileURLToPath(import.meta.url)
 const dirname = __dirname; // path.dirname(filename)
 const typesForNodeFilename = path.join(dirname, '../src/types-for-node.ts');
-const estreeFilename = path.join(dirname, '../typings/estree/index.d.ts');
+const estreeFilename = path.join(dirname, '../src/type-defs/estree.d.ts');
 const { visitorKeys } = parseForESLint('');
 
 const esNextNodeNames = ['Decorator', 'ImportAttribute', 'StaticBlock'];
@@ -30,7 +32,7 @@ const estreeCode = [
 //
 // Replace type information to use "@typescript-eslint/types" instead of "estree".
 //
-
+declare module 'estree' {
 import type { TSESTree } from "@typescript-eslint/types"
 
 export type Node = TSESTree.Node
@@ -110,5 +112,6 @@ for (const nodeType of svelteNodeNames.filter((k) => !esSvelteNodeNames.includes
 }
 typesForNodeCode.push(`}`);
 
+estreeCode.push(`}`);
 void writeAndFormat(typesForNodeFilename, typesForNodeCode.join('\n'));
 void writeAndFormat(estreeFilename, estreeCode.join('\n'));

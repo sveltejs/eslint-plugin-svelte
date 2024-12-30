@@ -1,0 +1,16 @@
+- message: Found a link with a url that isn't prefixed with the base path.
+  line: 4
+  column: 10
+  suggestions: null
+- message: Found a link with a url that isn't prefixed with the base path.
+  line: 5
+  column: 9
+  suggestions: null
+- message: Found a link with a url that isn't prefixed with the base path.
+  line: 6
+  column: 9
+  suggestions: null
+- message: Found a link with a url that isn't prefixed with the base path.
+  line: 7
+  column: 9
+  suggestions: null

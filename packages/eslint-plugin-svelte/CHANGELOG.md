@@ -1,5 +1,107 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.6
+
+### Minor Changes
+
+- [#933](https://github.com/sveltejs/eslint-plugin-svelte/pull/933) [`71eca84`](https://github.com/sveltejs/eslint-plugin-svelte/commit/71eca843c43250591ec6fa2dd1dc547b1074d6ad) Thanks [@mikededo](https://github.com/mikededo)! - Add `prefer-const` rule
+
+- [#963](https://github.com/sveltejs/eslint-plugin-svelte/pull/963) [`2c551b2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2c551b20557bcd53e35479336bf0c25e88a7643b) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support Svelte5 of `valid-prop-names-in-kit-pages` rule
+
+### Patch Changes
+
+- [#961](https://github.com/sveltejs/eslint-plugin-svelte/pull/961) [`117e60d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/117e60d4290966911450c7e0db8566279e4511bb) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: support each blocks without an item
+
+## 3.0.0-next.5
+
+### Patch Changes
+
+- [#956](https://github.com/sveltejs/eslint-plugin-svelte/pull/956) [`157ee1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/157ee1fade79aab88f01d125b0b01cf375da4cd1) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to v1.0.0-next.4
+
+## 3.0.0-next.4
+
+### Major Changes
+
+- [#932](https://github.com/sveltejs/eslint-plugin-svelte/pull/932) [`b136ab4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b136ab4e54d8ff38f6ba7f49e1209be14dd18b0b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: change the plugin to an ESM-only package
+
+## 3.0.0-next.3
+
+### Major Changes
+
+- [#937](https://github.com/sveltejs/eslint-plugin-svelte/pull/937) [`729394e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/729394e34d2d6f51e00c89b67a40d0f9192260b4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old eslint
+
+### Minor Changes
+
+- [#945](https://github.com/sveltejs/eslint-plugin-svelte/pull/945) [`19f682b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/19f682b73ce6bcccae52da0e59d5ab32a9d2c3c2) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: Support `<svelte:boundary>`
+
+## 3.0.0-next.2
+
+### Patch Changes
+
+- [#941](https://github.com/sveltejs/eslint-plugin-svelte/pull/941) [`fce2f74`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fce2f74b4b2fe8185742f0411739103301f8ea9f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with eslint v9.16.0 in `svelte/no-inner-declarations`
+
+## 3.0.0-next.1
+
+### Minor Changes
+
+- [#918](https://github.com/sveltejs/eslint-plugin-svelte/pull/918) [`5da98c9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5da98c94f452c8436f26af4172e095fd91f66e1a) Thanks [@mikededo](https://github.com/mikededo)! - Added new `no-deprecated-raw-special-elements` rule
+
+- [#836](https://github.com/sveltejs/eslint-plugin-svelte/pull/836) [`3fa90aa`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3fa90aa57a15ad18105b0d80b1ed975f1f782a11) Thanks [@renovate](https://github.com/apps/renovate)! - feat: support for typescript-eslint v8 to `svelte/indent` rule
+
+## 3.0.0-next.0
+
+### Major Changes
+
+- [#885](https://github.com/sveltejs/eslint-plugin-svelte/pull/885) [`ce2ffad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ce2ffad105b1c6ed2df02a9c2b84f3b654d99ad5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old node versions (<18, 19, 21)
+
+- [#930](https://github.com/sveltejs/eslint-plugin-svelte/pull/930) [`eae1b4f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eae1b4fcbfbaec926cfa63a5d08eafcb2238bf82) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: upgrade svelte-eslint-parser to v1
+
+### Minor Changes
+
+- [#911](https://github.com/sveltejs/eslint-plugin-svelte/pull/911) [`452ffed`](https://github.com/sveltejs/eslint-plugin-svelte/commit/452ffed53791cb9e158636bcd80a221d2840cc4a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-inline-styles): allowing transitions by default
+
+## 2.46.0
+
+### Minor Changes
+
+- [#881](https://github.com/sveltejs/eslint-plugin-svelte/pull/881) [`051925c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/051925c742e1cae98cc8e7f637a6a510e472128f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: update svelte to v5.0.0
+
+- [#884](https://github.com/sveltejs/eslint-plugin-svelte/pull/884) [`bbc3e07`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bbc3e07931da8f4aff2044a4792064200b63ab60) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency svelte-eslint-parser to ^0.43.0
+
+## 2.45.1
+
+### Patch Changes
+
+- [#874](https://github.com/sveltejs/eslint-plugin-svelte/pull/874) [`457521a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/457521aef18ba95b99eb5e9c79a81d0a4fb3552e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to v0.42
+
+## 2.45.0
+
+### Minor Changes
+
+- [#870](https://github.com/sveltejs/eslint-plugin-svelte/pull/870) [`b0373be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b0373bef49e4225751c98c3c46c6099cb7d1ca72) Thanks [@mikededo](https://github.com/mikededo)! - feat(html-closing-bracket-new-line): add `html-closing-bracket-new-line` rule
+
+- [#868](https://github.com/sveltejs/eslint-plugin-svelte/pull/868) [`edf99d3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/edf99d3d7b7bf47def460efce4aabe59c2ce446d) Thanks [@mikededo](https://github.com/mikededo)! - feat(no-inspect): add `no-inspect` rule
+
+### Patch Changes
+
+- [#856](https://github.com/sveltejs/eslint-plugin-svelte/pull/856) [`cf6c842`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cf6c842abc8730ef3841686a52273eec3906abcf) Thanks [@KuSh](https://github.com/KuSh)! - chore: Avoid using deprecated FlatConfig eslint type
+
+## 2.44.1
+
+### Patch Changes
+
+- [#864](https://github.com/sveltejs/eslint-plugin-svelte/pull/864) [`580e48a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/580e48ae0edcfd2cb5dd51863130a9c08b24829e) Thanks [@mikededo](https://github.com/mikededo)! - fix(svelte/indent): ensure proper snippet indent
+
+## 2.44.0
+
+### Minor Changes
+
+- [#841](https://github.com/sveltejs/eslint-plugin-svelte/pull/841) [`85053a1`](https://github.com/sveltejs/eslint-plugin-svelte/commit/85053a1af237b78548a0a52f9d73ed5af695c354) Thanks [@jrmajor](https://github.com/jrmajor)! - feat: add config option for foreign elements in `svelte/html-self-closing` rule
+
+### Patch Changes
+
+- [#853](https://github.com/sveltejs/eslint-plugin-svelte/pull/853) [`690c04e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/690c04e5ce61999cb3846881cd8bd0b571fe2874) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update svelte-eslint-parser to 0.41.1
+
 ## 2.43.0
 
 ### Minor Changes

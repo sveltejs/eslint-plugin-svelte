@@ -4,7 +4,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { createCache } from './cache';
+import { createCache } from './cache.js';
 
 type PackageJson = {
 	name?: unknown;
@@ -35,7 +35,7 @@ function readPackageJson(dir: string): PackageJson | null {
 			data.filePath = filePath;
 			return data;
 		}
-	} catch (_err) {
+	} catch {
 		// do nothing.
 	}
 

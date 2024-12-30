@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import type {
 	SourceLocation,
 	SvelteAttribute,
@@ -11,7 +11,7 @@ import type {
 } from 'svelte-eslint-parser/lib/ast';
 import type { AnyNode } from 'postcss';
 import { default as selectorParser, type Node as SelectorNode } from 'postcss-selector-parser';
-import { getSourceCode } from '../utils/compat';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {

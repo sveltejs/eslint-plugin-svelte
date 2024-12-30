@@ -14,8 +14,6 @@ since: 'v2.39.0'
 
 This rule reports the use of the deprecated API `svelte/internal` and `svelte/internal/xxx`. `svelte/internal` is deprecated in Svelte 5. And it will be deleted in Svelte 6. These APIs can change in breaking ways at any time without notice.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -35,8 +33,6 @@ This rule reports the use of the deprecated API `svelte/internal` and `svelte/in
   export * from 'svelte/internal/server';
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

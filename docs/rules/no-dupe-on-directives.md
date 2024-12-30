@@ -15,8 +15,6 @@ since: 'v2.14.0'
 We can define any number of `on:` directive with the same event name, but duplicate directives with the exact same event name and expression are probably a mistake.
 This rule reports reports `on:` directives with exactly the same event name and expression.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -39,8 +37,6 @@ This rule reports reports `on:` directives with exactly the same event name and 
   on:keydown={() => console.log('foo')}
 />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

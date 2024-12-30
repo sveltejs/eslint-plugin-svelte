@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import plugin from '../src/index';
+import plugin from '../src/index.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 void main();
 

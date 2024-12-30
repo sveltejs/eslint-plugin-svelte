@@ -1,10 +1,10 @@
 import type { AST } from 'svelte-eslint-parser';
 import type stylus from 'stylus';
 import type { RawSourceMap } from 'source-map-js';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { loadModule } from '../../../utils/load-module';
-import { getFilename } from '../../../utils/compat';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { loadModule } from '../../../utils/load-module.js';
+import { getFilename } from '../../../utils/compat.js';
 
 type Stylus = typeof stylus;
 /**
@@ -45,7 +45,7 @@ export function transform(
 			output,
 			mappings: (style as unknown as { sourcemap: RawSourceMap }).sourcemap.mappings
 		};
-	} catch (_e) {
+	} catch {
 		return null;
 	}
 }

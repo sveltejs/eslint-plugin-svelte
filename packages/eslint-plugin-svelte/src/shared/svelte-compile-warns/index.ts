@@ -2,23 +2,23 @@ import type { AST } from 'svelte-eslint-parser';
 import * as compiler from 'svelte/compiler';
 import type { SourceMapMappings } from '@jridgewell/sourcemap-codec';
 import { decode } from '@jridgewell/sourcemap-codec';
-import type { ASTNodeWithParent, RuleContext } from '../../types';
-import { LinesAndColumns } from '../../utils/lines-and-columns';
-import type { TransformResult } from './transform/types';
-import { hasTypeScript, transform as transformWithTypescript } from './transform/typescript';
-import { transform as transformWithBabel } from './transform/babel';
-import { transform as transformWithPostCSS } from './transform/postcss';
-import { transform as transformWithSass } from './transform/sass';
-import { transform as transformWithLess } from './transform/less';
-import { transform as transformWithStylus } from './transform/stylus';
-import type { IgnoreItem } from './ignore-comment';
-import { getSvelteIgnoreItems } from './ignore-comment';
-import { extractLeadingComments } from './extract-leading-comments';
-import { findAttribute, getLangValue } from '../../utils/ast-utils';
+import type { ASTNodeWithParent, RuleContext } from '../../types.js';
+import { LinesAndColumns } from '../../utils/lines-and-columns.js';
+import type { TransformResult } from './transform/types.js';
+import { hasTypeScript, transform as transformWithTypescript } from './transform/typescript.js';
+import { transform as transformWithBabel } from './transform/babel.js';
+import { transform as transformWithPostCSS } from './transform/postcss.js';
+import { transform as transformWithSass } from './transform/sass.js';
+import { transform as transformWithLess } from './transform/less.js';
+import { transform as transformWithStylus } from './transform/stylus.js';
+import type { IgnoreItem } from './ignore-comment.js';
+import { getSvelteIgnoreItems } from './ignore-comment.js';
+import { extractLeadingComments } from './extract-leading-comments.js';
+import { findAttribute, getLangValue } from '../../utils/ast-utils.js';
 import path from 'path';
 import fs from 'fs';
 import semver from 'semver';
-import { getSourceCode } from '../../utils/compat';
+import { getSourceCode } from '../../utils/compat.js';
 
 type WarningTargetNode =
 	| (AST.SvelteProgram & ASTNodeWithParent)

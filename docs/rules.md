@@ -17,6 +17,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID                                                                                                        | Description                                                                                                                            |                |
 | :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
 | [svelte/infinite-reactive-loop](./rules/infinite-reactive-loop.md)                                             | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |                |
+| [svelte/no-deprecated-raw-special-elements](./rules/no-deprecated-raw-special-elements.md)                     | Recommends not using raw special elements in Svelte versions previous to 5.                                                            | :wrench:       |
 | [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md)                                                   | disallow DOM manipulating                                                                                                              |                |
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md)                                             | disallow duplicate conditions in `{#if}` / `{:else if}` chains                                                                         | :star:         |
 | [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md)                                               | disallow duplicate `on:` directives                                                                                                    |                |
@@ -56,12 +57,14 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-ignored-unsubscribe](./rules/no-ignored-unsubscribe.md)                       | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.                                                  |          |
 | [svelte/no-immutable-reactive-statements](./rules/no-immutable-reactive-statements.md)   | disallow reactive statements that don't reference reactive values.                                                                        |          |
 | [svelte/no-inline-styles](./rules/no-inline-styles.md)                                   | disallow attributes and directives that produce inline styles                                                                             |          |
+| [svelte/no-inspect](./rules/no-inspect.md)                                               | Warns against the use of `$inspect` directive                                                                                             |          |
 | [svelte/no-reactive-functions](./rules/no-reactive-functions.md)                         | it's not necessary to define functions in reactive statements                                                                             | :bulb:   |
 | [svelte/no-reactive-literals](./rules/no-reactive-literals.md)                           | don't assign literal values in reactive statements                                                                                        | :bulb:   |
 | [svelte/no-svelte-internal](./rules/no-svelte-internal.md)                               | svelte/internal will be removed in Svelte 6.                                                                                              |          |
 | [svelte/no-unused-class-name](./rules/no-unused-class-name.md)                           | disallow the use of a class in the template without a corresponding style                                                                 |          |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md)                     | disallow unused svelte-ignore comments                                                                                                    | :star:   |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md)                           | disallow unnecessary mustache interpolations                                                                                              | :wrench: |
+| [svelte/prefer-const](./rules/prefer-const.md)                                           | Require `const` declarations for variables that are never reassigned after declared                                                       | :wrench: |
 | [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md)     | destructure values from object stores for better change tracking & fewer redraws                                                          | :bulb:   |
 | [svelte/require-each-key](./rules/require-each-key.md)                                   | require keyed `{#each}` block                                                                                                             |          |
 | [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)       | require type parameters for `createEventDispatcher`                                                                                       |          |
@@ -77,6 +80,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | :------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
 | [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md)                     | derived store should use same variable names between values and callback           |          |
 | [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md)                                 | enforce the location of first attribute                                            | :wrench: |
+| [svelte/html-closing-bracket-new-line](./rules/html-closing-bracket-new-line.md)                         | Require or disallow a line break before tag's closing brackets                     | :wrench: |
 | [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md)                           | require or disallow a space before tag's closing brackets                          | :wrench: |
 | [svelte/html-quotes](./rules/html-quotes.md)                                                             | enforce quotes style of HTML attributes                                            | :wrench: |
 | [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                         | :wrench: |
@@ -106,9 +110,9 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                        | Description                                 |     |
-| :------------------------------------------------------------- | :------------------------------------------ | :-- |
-| [svelte/no-goto-without-base](./rules/no-goto-without-base.md) | disallow using goto() without the base path |     |
+| Rule ID                                                                    | Description                                                                            |     |
+| :------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- | :-- |
+| [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md) | disallow using navigation (links, goto, pushState, replaceState) without the base path |     |
 
 ## Experimental
 
@@ -133,6 +137,7 @@ These rules relate to this plugin works:
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID                                                                                                      | Replaced by                                                             |
-| :----------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| Rule ID                                                                                                      | Replaced by                                                                |
+| :----------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.    |
+| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                               | [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md) |

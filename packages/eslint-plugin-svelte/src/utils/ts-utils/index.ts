@@ -1,7 +1,7 @@
-import type { RuleContext, ASTNode } from '../../types';
+import type { RuleContext, ASTNode } from '../../types.js';
 import type * as TS from 'typescript';
-import { loadModule } from '../load-module';
-import { getSourceCode } from '../compat';
+import { loadModule } from '../load-module.js';
+import { getSourceCode } from '../compat.js';
 export type TypeScript = typeof TS;
 export type { TS };
 

@@ -2,7 +2,7 @@ import * as myPlugin from '@ota-meshi/eslint-plugin';
 import globals from 'globals';
 
 /**
- * @type {import('eslint').Linter.FlatConfig[]}
+ * @type {import('eslint').Linter.Config[]}
  */
 const config = [
 	{

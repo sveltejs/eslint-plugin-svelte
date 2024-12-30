@@ -16,8 +16,6 @@ since: 'v2.5.0'
 
 This rule reports whenever a function is defined in a reactive statement. This isn't necessary, as each time the function is executed it'll already have access to the latest values necessary. Redefining the function in the reactive statement is just a waste of CPU cycles.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -41,8 +39,6 @@ This rule reports whenever a function is defined in a reactive statement. This i
   };
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

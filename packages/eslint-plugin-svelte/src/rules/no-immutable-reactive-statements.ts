@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import type { Scope, Variable, Reference, Definition } from '@typescript-eslint/scope-manager';
 import type { TSESTree } from '@typescript-eslint/types';
-import { findVariable, iterateIdentifiers } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+import { findVariable, iterateIdentifiers } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
@@ -135,7 +135,9 @@ export default createRule('no-immutable-reactive-statements', {
 				return parent.kind === 'Binding' && parent.expression === expr;
 			}
 			if (parent.type === 'SvelteEachBlock') {
-				return parent.expression === expr && hasWriteReference(parent.context);
+				return (
+					parent.context !== null && parent.expression === expr && hasWriteReference(parent.context)
+				);
 			}
 
 			return false;

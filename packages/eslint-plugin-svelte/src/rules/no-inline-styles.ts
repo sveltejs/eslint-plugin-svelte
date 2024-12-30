@@ -1,4 +1,4 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 export default createRule('no-inline-styles', {
 	meta: {
@@ -26,7 +26,7 @@ export default createRule('no-inline-styles', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const allowTransitions: boolean = context.options[0]?.allowTransitions ?? false;
+		const allowTransitions: boolean = context.options[0]?.allowTransitions ?? true;
 		return {
 			SvelteElement(node) {
 				if (node.kind !== 'html') {

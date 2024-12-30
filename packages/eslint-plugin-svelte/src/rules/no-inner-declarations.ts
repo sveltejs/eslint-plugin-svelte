@@ -1,15 +1,16 @@
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 import {
 	buildProxyListener,
 	defineWrapperListener,
 	getCoreRule,
 	getProxyNode
-} from '../utils/eslint-core';
+} from '../utils/eslint-core.js';
 
 const coreRule = getCoreRule('no-inner-declarations');
 
 export default createRule('no-inner-declarations', {
 	meta: {
+		...coreRule.meta,
 		docs: {
 			description: 'disallow variable or `function` declarations in nested blocks',
 			category: 'Extension Rules',

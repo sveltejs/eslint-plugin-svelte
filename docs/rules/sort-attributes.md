@@ -35,8 +35,6 @@ The default order is:
 - `animate:` directive.
 - `let:` directives. (Alphabetical order within the same group.)
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -101,11 +99,7 @@ The default order is:
 
 <!-- prettier-ignore-end -->
 
-</ESLintCodeBlock>
-
 If there is a spread attribute between the attributes, it will not be reported as changing the order can change the behavior.
-
-<ESLintCodeBlock fix>
 
 <!--eslint-skip-->
 
@@ -120,8 +114,6 @@ If there is a spread attribute between the attributes, it will not be reported a
 <!-- ✗ BAD -->
 <div d c {...attrs} b a />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 
@@ -198,8 +190,6 @@ You can use the following formats for names or patterns:
 
 ### `{ order: [ /*See below*/ ] }`
 
-<ESLintCodeBlock fix>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -266,8 +256,6 @@ You can use the following formats for names or patterns:
 />
 <img alt="bar" {src} id="bar" />
 ```
-
-</ESLintCodeBlock>
 
 ## :rocket: Version
 

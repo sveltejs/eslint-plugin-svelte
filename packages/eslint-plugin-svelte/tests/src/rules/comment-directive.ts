@@ -1,6 +1,7 @@
 import assert from 'assert';
-import plugin from '../../../src/index';
-import { ESLint } from '../../utils/eslint-compat';
+import plugin from '../../../src/index.js';
+import { ESLint } from '../../utils/eslint-compat.js';
+import * as svelteParser from 'svelte-eslint-parser';
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -8,13 +9,13 @@ import { ESLint } from '../../utils/eslint-compat';
 
 // Initialize linter.
 const linter = new ESLint({
+	// @ts-expect-error -- Type error?
 	baseConfig: {
 		languageOptions: {
-			parser: require('svelte-eslint-parser'),
+			parser: svelteParser,
 			ecmaVersion: 2020
 		},
 		plugins: {
-			// @ts-expect-error -- Type error for eslint v9
 			svelte: plugin
 		},
 		rules: {
@@ -26,7 +27,6 @@ const linter = new ESLint({
 		processor: 'svelte/svelte',
 		files: ['**']
 	},
-	// @ts-expect-error -- Type error for eslint v9
 	overrideConfigFile: true
 });
 
@@ -352,13 +352,13 @@ describe('comment-directive', () => {
 
 	describe('reportUnusedDisableDirectives', () => {
 		const linter = new ESLint({
+			// @ts-expect-error -- Type error?
 			baseConfig: {
 				languageOptions: {
-					parser: require('svelte-eslint-parser'),
+					parser: svelteParser,
 					ecmaVersion: 2020
 				},
 				plugins: {
-					// @ts-expect-error -- Type error for eslint v9
 					svelte: plugin
 				},
 				rules: {
@@ -370,7 +370,6 @@ describe('comment-directive', () => {
 				files: ['**'],
 				processor: 'svelte/svelte'
 			},
-			// @ts-expect-error -- Type error for eslint v9
 			overrideConfigFile: true
 		});
 		it('report unused <!-- eslint-disable -->', async () => {

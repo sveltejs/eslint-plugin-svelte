@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import type { IndentContext } from './commons';
-import { getFirstAndLastTokens } from './commons';
+import type { IndentContext } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
 import {
 	isArrowToken,
 	isClosingBraceToken,
@@ -15,8 +15,8 @@ import {
 	isOpeningParenToken,
 	isSemicolonToken
 } from '@eslint-community/eslint-utils';
-import type { ESNodeListener } from '../../types-for-node';
-import { getParent } from '../../utils/ast-utils';
+import type { ESNodeListener } from '../../types-for-node.js';
+import { getParent } from '../../utils/ast-utils.js';
 
 type NodeListener = ESNodeListener;
 
@@ -195,7 +195,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.BreakStatement(node);
 		},
 		CallExpression(node: TSESTree.CallExpression) {
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			const firstToken = sourceCode.getFirstToken(node);
 			const leftParenToken = sourceCode.getTokenAfter(typeArguments || node.callee, {
 				filter: isOpeningParenToken,
@@ -706,7 +709,10 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			visitor.MethodDefinition(node);
 		},
 		NewExpression(node: TSESTree.NewExpression) {
-			const typeArguments = node.typeArguments ?? node.typeParameters;
+			const typeArguments =
+				node.typeArguments ??
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+				(node as any).typeParameters;
 			const newToken = sourceCode.getFirstToken(node);
 			const calleeTokens = getFirstAndLastTokens(sourceCode, node.callee);
 			offsets.setOffsetToken(calleeTokens.firstToken, 1, newToken);

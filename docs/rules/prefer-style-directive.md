@@ -18,8 +18,6 @@ This rule aims to replace a style attribute with the style directive.
 
 Style directive were added in Svelte v3.46.
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 
 <!--eslint-skip-->
@@ -50,8 +48,6 @@ Style directive were added in Svelte v3.46.
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 You cannot enforce this style by using [prettier-plugin-svelte]. That is, this rule does not conflict with [prettier-plugin-svelte] and can be used with [prettier-plugin-svelte].
 

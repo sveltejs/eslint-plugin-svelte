@@ -77,6 +77,7 @@
 			target="_blank"
 			class="github-link"
 			rel="noopener noreferrer"
+			aria-label="GitHub"
 		>
 			<svg
 				version="1.1"

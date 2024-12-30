@@ -8,7 +8,11 @@ title: 'eslint-plugin-svelte'
 It provides many unique check rules by using the template AST.  
 You can check on the [Online DEMO](https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript).
 
-**_We are working on experimental support for Svelte v5, but may break with new versions of Svelte v5._**
+> [!NOTE]
+> This document is in development.\
+> Please refer to the document for the version you are using.\
+> For example, <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/README.md>
+> and <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/docs>
 
 [![NPM license](https://img.shields.io/npm/l/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)
 [![NPM version](https://img.shields.io/npm/v/eslint-plugin-svelte.svg)](https://www.npmjs.com/package/eslint-plugin-svelte)

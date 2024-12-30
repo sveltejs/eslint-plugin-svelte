@@ -26,8 +26,6 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
   }
 </script>
 
-<ESLintCodeBlock config="{config}">
-
 <!--eslint-skip-->
 
 ```svelte
@@ -49,8 +47,6 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
 
 {foo}, {bar}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

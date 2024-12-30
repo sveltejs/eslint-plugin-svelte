@@ -52,8 +52,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        eslint: [7, 8, 9]
-        node: [20]
+        eslint: [8, 9]
+        node: [18.x, 20.x, 22.x, latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -87,14 +87,6 @@ jobs:
         os: [ubuntu-latest]
         eslint: [9]
         node: [18, 20, 22]
-        include:
-          # On old Node.js version
-          - eslint: 8
-            node: 16
-            os: ubuntu-latest
-          - eslint: 8
-            node: 17
-            os: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -124,7 +116,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14]
+        node: [18]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -134,13 +126,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@3
-        # Remove @sveltejs/kit because postinstall fails on old node.
         run: |
-          cd docs-svelte-kit
-          pnpm rm @sveltejs/kit
-          cd ..
-          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 eslint@8
-          cd packages/eslint-plugin-svelte
+          cd ./packages/eslint-plugin-svelte
           pnpm install -D svelte@3
           cd ../..
           rm -rf packages/eslint-plugin-svelte/node_modules
@@ -183,8 +170,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
-        with:
-          node-version: 18
       - name: Install Packages
         run: pnpm install
       - name: Update resources

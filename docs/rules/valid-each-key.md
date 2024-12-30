@@ -14,8 +14,6 @@ since: 'v2.28.0'
 
 This rule reports that `{#each}` block keys does not use the variables which are defined by the `{#each}` block.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -42,8 +40,6 @@ This rule reports that `{#each}` block keys does not use the variables which are
   <Thing name={thing.name} />
 {/each}
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

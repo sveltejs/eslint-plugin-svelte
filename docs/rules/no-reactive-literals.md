@@ -16,8 +16,6 @@ since: 'v2.4.0'
 
 This rule reports on any assignment of a static, unchanging value within a reactive statement because it's not necessary.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -30,8 +28,6 @@ This rule reports on any assignment of a static, unchanging value within a react
   $: foo = 'bar';
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

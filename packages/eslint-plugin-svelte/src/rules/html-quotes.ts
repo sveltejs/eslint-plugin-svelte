@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import type { QuoteAndRange } from '../utils/ast-utils';
-import { getMustacheTokens } from '../utils/ast-utils';
-import { getAttributeValueQuoteAndRange } from '../utils/ast-utils';
-import { getSourceCode } from '../utils/compat';
+import { createRule } from '../utils/index.js';
+import type { QuoteAndRange } from '../utils/ast-utils.js';
+import { getMustacheTokens } from '../utils/ast-utils.js';
+import { getAttributeValueQuoteAndRange } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 
 const QUOTE_CHARS = {
 	double: '"',

@@ -1,9 +1,11 @@
 import path from 'path';
 import fs from 'fs';
-import { rules } from '../src/utils/rules';
-import type { RuleModule } from '../src/types';
-import { getNewVersion } from './lib/changesets-util';
-import { writeAndFormat } from './lib/write';
+import { rules } from '../src/utils/rules.js';
+import type { RuleModule } from '../src/types.js';
+import { getNewVersion } from './lib/changesets-util.js';
+import { writeAndFormat } from './lib/write.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function formatItems(items: string[]) {
 	if (items.length <= 2) {
@@ -185,8 +187,8 @@ ${
 
 	public adjustCodeBlocks() {
 		// Adjust the necessary blank lines before and after the code block so that GitHub can recognize `.md`.
-		this.content = this.content.replace(/(<ESLintCodeBlock[\s\S]*?>)\n+```/gu, '$1\n\n```');
-		this.content = this.content.replace(/```\n+<\/ESLintCodeBlock>/gu, '```\n\n</ESLintCodeBlock>');
+		this.content = this.content.replace(/\n+```svelte/gu, '\n\n```svelte');
+		this.content = this.content.replace(/\n+```\n+/gu, '\n```\n\n');
 		return this;
 	}
 

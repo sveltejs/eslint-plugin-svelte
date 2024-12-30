@@ -16,8 +16,6 @@ since: 'v2.3.0'
 
 This rule disallows spaces around equal signs in attributes
 
-<ESLintCodeBlock fix>
-
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
 
@@ -40,8 +38,6 @@ This rule disallows spaces around equal signs in attributes
 ```
 
 <!-- prettier-ignore-end -->
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

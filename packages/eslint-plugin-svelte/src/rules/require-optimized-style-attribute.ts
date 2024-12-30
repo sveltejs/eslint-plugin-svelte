@@ -1,5 +1,5 @@
-import { createRule } from '../utils';
-import { parseStyleAttributeValue } from '../utils/css-utils';
+import { createRule } from '../utils/index.js';
+import { parseStyleAttributeValue } from '../utils/css-utils/index.js';
 
 export default createRule('require-optimized-style-attribute', {
 	meta: {

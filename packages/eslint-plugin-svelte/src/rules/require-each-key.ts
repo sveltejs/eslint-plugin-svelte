@@ -1,5 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
+import { createRule } from '../utils/index.js';
 
 export default createRule('require-each-key', {
 	meta: {
@@ -15,7 +15,9 @@ export default createRule('require-each-key', {
 	create(context) {
 		return {
 			SvelteEachBlock(node: AST.SvelteEachBlock) {
-				if (node.key == null) {
+				// No need a `key` if an each blocks without an item
+				// see: https://svelte.dev/docs/svelte/each#Each-blocks-without-an-item
+				if (node.context != null && node.key == null) {
 					context.report({
 						node,
 						messageId: 'expectedKey'

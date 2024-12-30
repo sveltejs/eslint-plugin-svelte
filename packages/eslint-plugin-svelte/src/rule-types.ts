@@ -55,6 +55,11 @@ export interface RuleOptions {
    */
   'svelte/first-attribute-linebreak'?: Linter.RuleEntry<SvelteFirstAttributeLinebreak>
   /**
+   * Require or disallow a line break before tag's closing brackets
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/
+   */
+  'svelte/html-closing-bracket-new-line'?: Linter.RuleEntry<SvelteHtmlClosingBracketNewLine>
+  /**
    * require or disallow a space before tag's closing brackets
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/
    */
@@ -100,6 +105,11 @@ export interface RuleOptions {
    */
   'svelte/no-at-html-tags'?: Linter.RuleEntry<[]>
   /**
+   * Recommends not using raw special elements in Svelte versions previous to 5.
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/
+   */
+  'svelte/no-deprecated-raw-special-elements'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
@@ -142,6 +152,7 @@ export interface RuleOptions {
   /**
    * disallow using goto() without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/
+   * @deprecated
    */
   'svelte/no-goto-without-base'?: Linter.RuleEntry<[]>
   /**
@@ -164,6 +175,16 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/
    */
   'svelte/no-inner-declarations'?: Linter.RuleEntry<SvelteNoInnerDeclarations>
+  /**
+   * Warns against the use of `$inspect` directive
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/
+   */
+  'svelte/no-inspect'?: Linter.RuleEntry<[]>
+  /**
+   * disallow using navigation (links, goto, pushState, replaceState) without the base path
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
+   */
+  'svelte/no-navigation-without-base'?: Linter.RuleEntry<SvelteNoNavigationWithoutBase>
   /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
@@ -249,6 +270,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/
    */
   'svelte/prefer-class-directive'?: Linter.RuleEntry<SveltePreferClassDirective>
+  /**
+   * Require `const` declarations for variables that are never reassigned after declared
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/
+   */
+  'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
   /**
    * destructure values from object stores for better change tracking & fewer redraws
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/
@@ -361,6 +387,15 @@ type SvelteFirstAttributeLinebreak = []|[{
   multiline?: ("below" | "beside")
   singleline?: ("below" | "beside")
 }]
+// ----- svelte/html-closing-bracket-new-line -----
+type SvelteHtmlClosingBracketNewLine = []|[{
+  singleline?: ("always" | "never")
+  multiline?: ("always" | "never")
+  selfClosingTag?: {
+    singleline?: ("always" | "never")
+    multiline?: ("always" | "never")
+  }
+}]
 // ----- svelte/html-closing-bracket-spacing -----
 type SvelteHtmlClosingBracketSpacing = []|[{
   startTag?: ("always" | "never" | "ignore")
@@ -379,6 +414,7 @@ type SvelteHtmlQuotes = []|[{
 type SvelteHtmlSelfClosing = []|[({
   void?: ("never" | "always" | "ignore")
   normal?: ("never" | "always" | "ignore")
+  foreign?: ("never" | "always" | "ignore")
   component?: ("never" | "always" | "ignore")
   svelte?: ("never" | "always" | "ignore")
 } | ("all" | "html" | "none"))]
@@ -416,6 +452,13 @@ type SvelteNoInlineStyles = []|[{
 // ----- svelte/no-inner-declarations -----
 type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "both"), {
   blockScopedFunctions?: ("allow" | "disallow")
+}]
+// ----- svelte/no-navigation-without-base -----
+type SvelteNoNavigationWithoutBase = []|[{
+  ignoreGoto?: boolean
+  ignoreLinks?: boolean
+  ignorePushState?: boolean
+  ignoreReplaceState?: boolean
 }]
 // ----- svelte/no-reactive-reassign -----
 type SvelteNoReactiveReassign = []|[{
@@ -459,6 +502,11 @@ type SvelteNoUselessMustaches = []|[{
 // ----- svelte/prefer-class-directive -----
 type SveltePreferClassDirective = []|[{
   prefer?: ("always" | "empty")
+}]
+// ----- svelte/prefer-const -----
+type SveltePreferConst = []|[{
+  destructuring?: ("any" | "all")
+  ignoreReadBeforeAssign?: boolean
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

@@ -1,11 +1,11 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { ASTNode } from '../../types';
-import type { SvelteNodeListener } from '../../types-for-node';
-import { isNotWhitespace } from './ast';
-import type { IndentContext } from './commons';
-import { isBeginningOfElement } from './commons';
-import { isBeginningOfLine } from './commons';
-import { getFirstAndLastTokens } from './commons';
+import type { ASTNode } from '../../types.js';
+import type { SvelteNodeListener } from '../../types-for-node.js';
+import { isNotWhitespace } from './ast.js';
+import type { IndentContext } from './commons.js';
+import { isBeginningOfElement } from './commons.js';
+import { isBeginningOfLine } from './commons.js';
+import { getFirstAndLastTokens } from './commons.js';
 import { isClosingParenToken, isOpeningParenToken } from '@eslint-community/eslint-utils';
 
 type NodeListener = SvelteNodeListener;
@@ -289,7 +289,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				const closeOpenTagToken = sourceCode.getTokenAfter(key.lastToken);
 				offsets.setOffsetToken(closeOpenTagToken, 0, openToken);
 			} else {
-				const closeOpenTagToken = sourceCode.getTokenAfter(node.index || node.context);
+				const closeOpenTagToken = sourceCode.getTokenAfter(
+					node.index || node.context || node.expression
+				);
 				offsets.setOffsetToken(closeOpenTagToken, 0, openToken);
 			}
 
@@ -457,15 +459,12 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				offsets.setOffsetToken(token, 1, openToken);
 			}
 
-			const [openCloseTagToken, endAwaitToken, closeCloseTagToken] = sourceCode.getLastTokens(
-				node,
-				{
-					count: 3,
-					includeComments: false
-				}
-			);
+			const [openCloseTagToken, endKeyToken, closeCloseTagToken] = sourceCode.getLastTokens(node, {
+				count: 3,
+				includeComments: false
+			});
 			offsets.setOffsetToken(openCloseTagToken, 0, openToken);
-			offsets.setOffsetToken(endAwaitToken, 1, openCloseTagToken);
+			offsets.setOffsetToken(endKeyToken, 1, openCloseTagToken);
 			offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken);
 		},
 		SvelteSnippetBlock(node: AST.SvelteSnippetBlock) {
@@ -474,8 +473,8 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				includeComments: false
 			});
 			offsets.setOffsetToken(snippetToken, 1, openToken);
-			const id = getFirstAndLastTokens(sourceCode, node.id);
-			offsets.setOffsetToken(id.firstToken, 1, snippetToken);
+			const snippetName = sourceCode.getTokenAfter(snippetToken)!;
+			offsets.setOffsetToken(snippetName, 1, snippetToken);
 
 			const leftParenToken = sourceCode.getTokenBefore(
 				node.params[0] || sourceCode.getLastToken(node),
@@ -492,8 +491,27 @@ export function defineVisitor(context: IndentContext): NodeListener {
 					includeComments: false
 				}
 			)!;
-			offsets.setOffsetToken(leftParenToken, 1, id.firstToken);
+			offsets.setOffsetToken(leftParenToken, 1, snippetName);
 			offsets.setOffsetElementList(node.params, leftParenToken, rightParenToken, 1);
+
+			const closeOpenTagToken = sourceCode.getTokenAfter(rightParenToken)!;
+			offsets.setOffsetToken(closeOpenTagToken, 0, openToken);
+
+			for (const child of node.children) {
+				const token = sourceCode.getFirstToken(child, {
+					includeComments: false,
+					filter: isNotWhitespace
+				});
+				offsets.setOffsetToken(token, 1, openToken);
+			}
+
+			const [openCloseTagToken, endSnippetToken, closeCloseTagToken] = sourceCode.getLastTokens(
+				node,
+				{ count: 3, includeComments: false }
+			);
+			offsets.setOffsetToken(openCloseTagToken, 0, openToken);
+			offsets.setOffsetToken(endSnippetToken, 1, openCloseTagToken);
+			offsets.setOffsetToken(closeCloseTagToken, 0, openCloseTagToken);
 		},
 		// ----------------------------------------------------------------------
 		// COMMENTS

@@ -17,8 +17,6 @@ This rule fails if an "unsubscriber" returned by call to `subscribe()` is neithe
 One should always unsubscribe from a store when it is no longer needed. Otherwise, the subscription will remain active and constitute a **memory leak**.
 This rule helps to find such cases by ensuring that the unsubscriber (the return value from the store's `subscribe` method) is not ignored.
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -34,8 +32,6 @@ This rule helps to find such cases by ensuring that the unsubscriber (the return
   myStore.subscribe(() => {});
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

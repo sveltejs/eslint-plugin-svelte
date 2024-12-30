@@ -1,6 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
-import { createRule } from '../utils';
-import { getScope } from '../utils/ast-utils';
+import { createRule } from '../utils/index.js';
+import { getScope } from '../utils/ast-utils.js';
 
 export default createRule('valid-each-key', {
 	meta: {
@@ -27,11 +27,15 @@ export default createRule('valid-each-key', {
 					if (
 						!variable.defs.some(
 							(def) =>
-								(node.context.range[0] <= def.name.range[0] &&
+								(node.context &&
+									node.context.range[0] <= def.name.range[0] &&
 									def.name.range[1] <= node.context.range[1]) ||
 								(node.index &&
 									node.index.range[0] <= def.name.range[0] &&
-									def.name.range[1] <= node.index.range[1])
+									def.name.range[1] <= node.index.range[1]) ||
+								(node.expression &&
+									node.expression.range[0] <= def.name.range[0] &&
+									def.name.range[1] <= node.expression.range[1])
 						)
 					) {
 						// It's not an iteration variable.

@@ -15,8 +15,6 @@ since: 'v2.7.0'
 This rule reports all uses of async/await inside svelte stores.
 Because it causes issues with the auto-unsubscribing features.
 
-<ESLintCodeBlock language="javascript">
-
 <!--eslint-skip-->
 
 ```js
@@ -34,8 +32,6 @@ const w2 = writable(false, async () => {});
 const r2 = readable(false, async () => {});
 const d2 = derived(a1, async ($a1) => {});
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

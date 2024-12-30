@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
-import { getShared } from '../shared';
-import type { CommentDirectives } from '../shared/comment-directives';
-import { createRule } from '../utils';
-import { getFilename, getSourceCode } from '../utils/compat';
+import { getShared } from '../shared/index.js';
+import type { CommentDirectives } from '../shared/comment-directives.js';
+import { createRule } from '../utils/index.js';
+import { getFilename, getSourceCode } from '../utils/compat.js';
 
 type RuleAndLocation = {
 	ruleId: string;

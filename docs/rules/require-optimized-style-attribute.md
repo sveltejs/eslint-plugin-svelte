@@ -68,8 +68,6 @@ div.setAttribute('style', `font-size: 12px; color: ${color}; ${/* transformStyle
 
 Examples:
 
-<ESLintCodeBlock>
-
 <!--eslint-skip-->
 
 ```svelte
@@ -91,8 +89,6 @@ Examples:
 <div style="font-size: 12px; /* comment */ color: {color};" />
 <div style="font-size: 12px; {key}: red;" />
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

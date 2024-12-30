@@ -1,4 +1,4 @@
-import { CommentDirectives } from './comment-directives';
+import { CommentDirectives } from './comment-directives.js';
 
 export class Shared {
 	public readonly commentDirectives: CommentDirectives[] = [];

@@ -30,8 +30,6 @@ And the API has changed.
   }
 </script>
 
-<ESLintCodeBlock config="{config}">
-
 <!--eslint-skip-->
 
 ```svelte
@@ -45,8 +43,6 @@ And the API has changed.
   // export const load = () => {}
 </script>
 ```
-
-</ESLintCodeBlock>
 
 ## :wrench: Options
 

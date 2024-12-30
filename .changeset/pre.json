@@ -1,0 +1,23 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "eslint-plugin-svelte": "2.46.0",
+    "docs": "0.0.0"
+  },
+  "changesets": [
+    "blue-panthers-run",
+    "cool-rockets-allow",
+    "fast-coins-fly",
+    "green-squids-compete",
+    "hungry-grapes-shave",
+    "lazy-eyes-wait",
+    "olive-wolves-travel",
+    "quiet-toys-burn",
+    "sixty-news-look",
+    "small-days-agree",
+    "small-donuts-end",
+    "thick-items-retire",
+    "twenty-nails-end"
+  ]
+}

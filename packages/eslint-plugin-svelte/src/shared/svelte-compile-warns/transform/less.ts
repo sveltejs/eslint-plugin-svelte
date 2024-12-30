@@ -1,9 +1,9 @@
 import type { AST } from 'svelte-eslint-parser';
 import type less from 'less';
-import type { RuleContext } from '../../../types';
-import type { TransformResult } from './types';
-import { loadModule } from '../../../utils/load-module';
-import { getFilename } from '../../../utils/compat';
+import type { RuleContext } from '../../../types.js';
+import type { TransformResult } from './types.js';
+import { loadModule } from '../../../utils/load-module.js';
+import { getFilename } from '../../../utils/compat.js';
 
 type Less = typeof less;
 /**
@@ -50,7 +50,7 @@ export function transform(
 			output: output.css,
 			mappings: JSON.parse(output.map).mappings
 		};
-	} catch (_e) {
+	} catch {
 		return null;
 	}
 }

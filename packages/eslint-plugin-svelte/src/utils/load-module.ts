@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
 import Module from 'module';
 import path from 'path';
-import type { RuleContext } from '../types';
-import { getCwd, getFilename, getPhysicalFilename, getSourceCode } from './compat';
+import type { RuleContext } from '../types.js';
+import { getCwd, getFilename, getPhysicalFilename, getSourceCode } from './compat.js';
 const cache = new WeakMap<AST.SvelteProgram, Record<string, unknown>>();
 const cache4b = new Map<string, unknown>();
 /**
@@ -42,11 +42,4 @@ export function loadModule<R>(context: RuleContext, name: string): R | null {
 		}
 	}
 	return null;
-}
-
-/**  Load modules for browser */
-export async function loadModulesForBrowser(): Promise<void> {
-	const [sass, typescript] = await Promise.all([import('sass'), import('typescript')]);
-	cache4b.set('sass', sass);
-	cache4b.set('typescript', typescript);
 }

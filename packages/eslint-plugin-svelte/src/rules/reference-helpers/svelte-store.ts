@@ -1,11 +1,11 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { Variable } from '@typescript-eslint/scope-manager';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import type { RuleContext } from '../../types';
-import type { TS, TSTools } from '../../utils/ts-utils';
-import { getTypeScriptTools } from '../../utils/ts-utils';
-import { findVariable, getParent } from '../../utils/ast-utils';
-import { getSourceCode } from '../../utils/compat';
+import type { RuleContext } from '../../types.js';
+import type { TS, TSTools } from '../../utils/ts-utils/index.js';
+import { getTypeScriptTools } from '../../utils/ts-utils/index.js';
+import { findVariable, getParent } from '../../utils/ast-utils.js';
+import { getSourceCode } from '../../utils/compat.js';
 
 type StoreName = 'writable' | 'readable' | 'derived';
 
