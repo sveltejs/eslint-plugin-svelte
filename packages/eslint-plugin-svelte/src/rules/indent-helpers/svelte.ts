@@ -289,7 +289,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				const closeOpenTagToken = sourceCode.getTokenAfter(key.lastToken);
 				offsets.setOffsetToken(closeOpenTagToken, 0, openToken);
 			} else {
-				const closeOpenTagToken = sourceCode.getTokenAfter(node.index || node.context);
+				const closeOpenTagToken = sourceCode.getTokenAfter(
+					node.index || node.context || node.expression
+				);
 				offsets.setOffsetToken(closeOpenTagToken, 0, openToken);
 			}
 

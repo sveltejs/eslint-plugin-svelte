@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "3.0.0-next.4",
+  "version": "3.0.0-next.5",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
   "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
@@ -30,7 +30,7 @@
     "cover": "c8 --reporter=lcov pnpm run test",
     "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "lint": "run-p lint:*",
-    "lint-fix": "pnpm run lint:es --fix && pnpm run lint:style --fix",
+    "lint-fix": "pnpm run lint:es --fix",
     "lint:es": "eslint --cache .",
     "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
     "new": "pnpm run ts ./tools/new-rule.ts",
@@ -63,10 +63,10 @@
     "known-css-properties": "^0.35.0",
     "postcss": "^8.4.49",
     "postcss-load-config": "^3.1.4",
-    "postcss-safe-parser": "^6.0.0",
+    "postcss-safe-parser": "^7.0.0",
     "postcss-selector-parser": "^7.0.0",
     "semver": "^7.6.3",
-    "svelte-eslint-parser": "^1.0.0-next.3"
+    "svelte-eslint-parser": "^1.0.0-next.4"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -91,7 +91,7 @@
     "eslint-visitor-keys": "^4.2.0",
     "espree": "^10.3.0",
     "less": "^4.2.1",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.0",
     "postcss-nested": "^7.0.2",
     "sass": "^1.81.0",
     "source-map-js": "^1.2.1",
