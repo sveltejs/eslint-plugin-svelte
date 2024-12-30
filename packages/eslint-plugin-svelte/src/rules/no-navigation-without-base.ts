@@ -12,7 +12,7 @@ export default createRule('no-navigation-without-base', {
 			description:
 				'disallow using navigation (links, goto, pushState, replaceState) without the base path',
 			category: 'SvelteKit',
-			recommended: false
+			configNames: []
 		},
 		schema: [
 			{

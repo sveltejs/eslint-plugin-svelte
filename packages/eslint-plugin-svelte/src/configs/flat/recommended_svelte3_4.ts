@@ -39,7 +39,6 @@ const config: Linter.Config[] = [
 			'svelte/prefer-class-directive': 'error',
 			'svelte/prefer-destructured-store-props': 'error',
 			'svelte/prefer-style-directive': 'error',
-			'svelte/require-each-key': 'error',
 			'svelte/require-event-dispatcher-types': 'error',
 			'svelte/require-optimized-style-attribute': 'error',
 			'svelte/require-store-reactive-access': 'error',

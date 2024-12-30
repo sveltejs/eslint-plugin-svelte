@@ -46,9 +46,7 @@ export default [
 This plugin provides configs:
 
 - `eslintPluginSvelte.configs.base` ... Configuration to enable correct Svelte parsing.
-- `eslintPluginSvelte.configs.recommended` ... Base configuration recommended with rules for Svelte 5.
-- `eslintPluginSvelte.configs.recommended_svelte5_without_legacy` ... Base configuration with recommended rules for Svelte 5, excluding legacy compatibility (e.g. `$:` label).
-- `eslintPluginSvelte.configs.recommended_svelte3_4` ... Base configuration with recommended rules for Svelte 3 and 4.
+- `eslintPluginSvelte.configs.recommended` ... Above, plus rules to prevent errors or unintended behavior.
 - `eslintPluginSvelte.configs.prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
 - `eslintPluginSvelte.configs.all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
 
