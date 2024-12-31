@@ -1,7 +1,3 @@
-- message: Require self-closing on HTML elements.
-  line: 3
-  column: 7
-  suggestions: null
 - message: Require self-closing on Svelte custom components.
   line: 4
   column: 17

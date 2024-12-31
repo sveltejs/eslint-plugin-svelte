@@ -1,0 +1,8 @@
+- message: Disallow self-closing on SVG elements.
+  line: 2
+  column: 12
+  suggestions: null
+- message: Disallow self-closing on MathML elements.
+  line: 3
+  column: 13
+  suggestions: null

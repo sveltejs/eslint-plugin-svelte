@@ -1,9 +1,9 @@
 <div class="hello">
-	<div />
+	<div></div>
 	<div>hello</div>
 	<img />
 	<svg><path /></svg>
-	<math><msup /></math>
+	<math><msup></msup></math>
 	{#if true}
 		<svelte:self />
 	{/if}
