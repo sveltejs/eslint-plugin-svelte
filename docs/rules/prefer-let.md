@@ -50,7 +50,7 @@ they are reassigned by Svelte.
 ```
 
 - `exclude`: The reactive assignments that you want to exclude from being
-reported..
+  reported.
 
 ## :mag: Implementation
 
