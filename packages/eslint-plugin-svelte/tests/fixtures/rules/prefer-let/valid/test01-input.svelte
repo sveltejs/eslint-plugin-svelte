@@ -1,7 +1,7 @@
 <script>
-	const { prop } = $props();
-	const state = $state();
-	const raw = $state.raw();
-	const derived = $derived(state + 1);
-	const derivedBy = $derived.by(() => prop + state);
+	let { prop } = $props();
+	let state = $state();
+	let raw = $state.raw();
+	let derived = $derived(state + 1);
+	let derivedBy = $derived.by(() => prop + state);
 </script>
