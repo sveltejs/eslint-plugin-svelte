@@ -1,8 +1,7 @@
 {
 	"options": [
 		{
-			"svg": "never",
-			"math": "never"
+			"svg": "never"
 		}
 	]
 }
