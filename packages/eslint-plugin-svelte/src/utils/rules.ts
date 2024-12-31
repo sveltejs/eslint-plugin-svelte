@@ -56,6 +56,7 @@ import noUselessMustaches from '../rules/no-useless-mustaches.js';
 import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
+import preferLet from '../rules/prefer-let.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import requireEachKey from '../rules/require-each-key.js';
 import requireEventDispatcherTypes from '../rules/require-event-dispatcher-types.js';
@@ -127,6 +128,7 @@ export const rules = [
 	preferClassDirective,
 	preferConst,
 	preferDestructuredStoreProps,
+	preferLet,
 	preferStyleDirective,
 	requireEachKey,
 	requireEventDispatcherTypes,

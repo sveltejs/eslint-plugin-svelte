@@ -1,0 +1,4 @@
+- message: "'const' is used for a reactive declaration from $state. Use 'let' instead."
+  line: 2
+  column: 2
+  suggestions: null

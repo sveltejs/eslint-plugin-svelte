@@ -1,5 +1,5 @@
 import { RuleTester } from '../../utils/eslint-compat.js';
-import rule from '../../../src/rules/prefer-const.js';
+import rule from '../../../src/rules/prefer-let.js';
 import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
@@ -9,4 +9,4 @@ const tester = new RuleTester({
 	},
 });
 
-tester.run('prefer-const', rule as any, loadTestCases('prefer-const'));
+tester.run('prefer-let', rule as any, loadTestCases('prefer-let'));

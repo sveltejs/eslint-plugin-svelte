@@ -370,6 +370,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :wrench: |
 | [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
+| [svelte/prefer-let](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-let/) | Prefer `let` over `const` for Svelte 5 reactive variable declarations. | :wrench: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block |  |
 | [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` |  |
 | [svelte/require-optimized-style-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
