@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.9
+
+### Minor Changes
+
+- [#922](https://github.com/sveltejs/eslint-plugin-svelte/pull/922) [`f4a0fa7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f4a0fa78e06091348d985b5442a390eae47b0f4f) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-useless-children-snippet rule
+
 ## 3.0.0-next.8
 
 ### Minor Changes

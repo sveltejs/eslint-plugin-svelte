@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-useless-children-snippet'
 description: "disallow explicit children snippet where it's not needed"
+since: 'v3.0.0-next.9'
 ---
 
 # svelte/no-useless-children-snippet
 
 > disallow explicit children snippet where it's not needed
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -50,6 +49,10 @@ Any content inside component tags that is not a snippet declaration implicitly b
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.0.0-next.9
 
 ## :mag: Implementation
 
