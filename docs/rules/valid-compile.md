@@ -35,7 +35,7 @@ Note that we exclude reports for some checks, such as `missing-declaration`, and
 
 ### Using `svelte.config.js`
 
-If you want to suppress messages using [`onwarn` like `vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#onwarn), Use `eslint.config.js` and specify the information in `svelte.config.js` in your parser configuration.
+If you want to suppress messages using `warningFilter` or `onwarn` like [`vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#onwarn), Use `eslint.config.js` and specify the information in `svelte.config.js` in your parser configuration.
 
 ```js
 import svelteConfig from './svelte.config.js';
