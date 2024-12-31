@@ -16,8 +16,8 @@ since: 'v2.5.0'
 
 You can choose either two styles for elements without content.
 
-- always: `<div />`
-- never: `<div></div>`
+- always: `<SomeComponent />`
+- never: `<SomeComponent></SomeComponent>`
 
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
@@ -32,11 +32,17 @@ You can choose either two styles for elements without content.
 <div></div>
 <img />
 <svelte:head />
+<svg><path /></svg>
+<math><msup></msup></math>
+<SomeComponent />
 
 <!-- ✗ BAD -->
 <div />
 <div><div /></div>
 <svelte:body></svelte:body>
+<svg><path></path></svg>
+<math><msup /></math>
+<SomeComponent></SomeComponent>
 ```
 
 <!-- prettier-ignore-end -->
@@ -98,9 +104,9 @@ config object:
 
 Every config object option can be set to
 
-- "always" (`<div />`)
-- "never" (`<div></div>`)
-- "ignore" (either `<div />` or `<div></div>`)
+- "always" (`<SomeComponent />`)
+- "never" (`<SomeComponent></SomeComponent>`)
+- "ignore" (either `<SomeComponent />` or `<SomeComponent></SomeComponent>`)
 
 ## :rocket: Version
 
