@@ -16,8 +16,8 @@ since: 'v2.3.0'
 
 You can choose either two styles for spacing before closing bracket
 
-- always: `<div />`
-- never: `<div/>`
+- always: `<SomeComponent />`
+- never: `<SomeComponent />`
 
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
