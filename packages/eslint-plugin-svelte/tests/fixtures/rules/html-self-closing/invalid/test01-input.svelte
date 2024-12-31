@@ -1,6 +1,6 @@
 <!-- prettier-ignore -->
 <div>
-  <div></div>
+  <div/>
   <CustomElement> </CustomElement>
   <img>
 </div>
