@@ -1,0 +1,4 @@
+- message: Disallow self-closing on MathML elements.
+  line: 3
+  column: 13
+  suggestions: null

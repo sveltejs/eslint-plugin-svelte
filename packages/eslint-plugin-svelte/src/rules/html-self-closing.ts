@@ -1,17 +1,23 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { getNodeName, isVoidHtmlElement, isForeignElement } from '../utils/ast-utils.js';
+import {
+	getNodeName,
+	isVoidHtmlElement,
+	isSvgElement,
+	isMathMLElement
+} from '../utils/ast-utils.js';
 import { getSourceCode } from '../utils/compat.js';
 
 const TYPE_MESSAGES = {
 	normal: 'HTML elements',
 	void: 'HTML void elements',
-	foreign: 'foreign (SVG or MathML) elements',
+	svg: 'SVG elements',
+	math: 'MathML elements',
 	component: 'Svelte custom components',
 	svelte: 'Svelte special elements'
 };
 
-type ElementTypes = 'normal' | 'void' | 'foreign' | 'component' | 'svelte';
+type ElementTypes = 'normal' | 'void' | 'svg' | 'math' | 'component' | 'svelte';
 
 export default createRule('html-self-closing', {
 	meta: {
@@ -38,7 +44,10 @@ export default createRule('html-self-closing', {
 							normal: {
 								enum: ['never', 'always', 'ignore']
 							},
-							foreign: {
+							svg: {
+								enum: ['never', 'always', 'ignore']
+							},
+							math: {
 								enum: ['never', 'always', 'ignore']
 							},
 							component: {
@@ -58,34 +67,49 @@ export default createRule('html-self-closing', {
 		]
 	},
 	create(context) {
+		// default
 		let options = {
 			void: 'always',
-			normal: 'always',
-			foreign: 'always',
+			normal: 'never',
+			svg: 'always',
+			math: 'never',
 			component: 'always',
 			svelte: 'always'
 		};
 
 		const option = context.options?.[0];
 		switch (option) {
-			case 'none':
+			case 'all':
 				options = {
-					void: 'never',
-					normal: 'never',
-					foreign: 'never',
-					component: 'never',
-					svelte: 'never'
+					void: 'always',
+					normal: 'always',
+					svg: 'always',
+					math: 'always',
+					component: 'always',
+					svelte: 'always'
 				};
 				break;
 			case 'html':
 				options = {
 					void: 'always',
 					normal: 'never',
-					foreign: 'always',
+					svg: 'always',
+					math: 'never',
 					component: 'never',
 					svelte: 'always'
 				};
 				break;
+			case 'none':
+				options = {
+					void: 'never',
+					normal: 'never',
+					svg: 'never',
+					math: 'never',
+					component: 'never',
+					svelte: 'never'
+				};
+				break;
+
 			default:
 				if (typeof option !== 'object' || option === null) break;
 
@@ -108,7 +132,8 @@ export default createRule('html-self-closing', {
 			if (node.kind === 'component') return 'component';
 			if (node.kind === 'special') return 'svelte';
 			if (isVoidHtmlElement(node)) return 'void';
-			if (isForeignElement(node)) return 'foreign';
+			if (isSvgElement(node)) return 'svg';
+			if (isMathMLElement(node)) return 'math';
 			return 'normal';
 		}
 
