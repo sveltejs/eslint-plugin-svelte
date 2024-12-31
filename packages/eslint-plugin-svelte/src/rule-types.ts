@@ -261,6 +261,11 @@ export interface RuleOptions {
    */
   'svelte/no-unused-svelte-ignore'?: Linter.RuleEntry<[]>
   /**
+   * disallow explicit children snippet where it's not needed
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/
+   */
+  'svelte/no-useless-children-snippet'?: Linter.RuleEntry<[]>
+  /**
    * disallow unnecessary mustache interpolations
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/
    */
