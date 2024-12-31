@@ -1,0 +1,6 @@
+- message: |-
+    Avoid using autofocus
+    https://svelte.dev/e/a11y_autofocus(a11y_autofocus)
+  line: 5
+  column: 12
+  suggestions: null
