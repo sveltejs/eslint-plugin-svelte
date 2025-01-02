@@ -1,7 +1,12 @@
-import path from 'path';
-import fs from 'fs';
-import cp from 'child_process';
+import path from 'node:path';
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import url from 'node:url';
 import { writeAndFormat } from './lib/write.js';
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const logger = console;
 
 // main
