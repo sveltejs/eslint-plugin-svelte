@@ -64,7 +64,6 @@
     "postcss": "^8.4.49",
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^7.0.0",
-    "postcss-selector-parser": "^7.0.0",
     "semver": "^7.6.3",
     "svelte-eslint-parser": "^1.0.0-next.6"
   },
@@ -93,6 +92,7 @@
     "less": "^4.2.1",
     "mocha": "^11.0.0",
     "postcss-nested": "^7.0.2",
+    "postcss-selector-parser": "^7.0.0",
     "sass": "^1.81.0",
     "source-map-js": "^1.2.1",
     "stylus": "^0.64.0",

@@ -10,8 +10,9 @@ import type {
 	SvelteStyleDirective
 } from 'svelte-eslint-parser/lib/ast';
 import type { AnyNode } from 'postcss';
-import { default as selectorParser, type Node as SelectorNode } from 'postcss-selector-parser';
+import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { getSourceCode } from '../utils/compat.js';
+import type { SourceCode } from '../types.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {
@@ -61,7 +62,9 @@ export default createRule('no-unused-class-name', {
 					return;
 				}
 				const classesUsedInStyle =
-					styleContext.status === 'success' ? findClassesInPostCSSNode(styleContext.sourceAst) : [];
+					styleContext.status === 'success'
+						? findClassesInPostCSSNode(styleContext.sourceAst, sourceCode.parserServices)
+						: [];
 				for (const className in classesUsedInTemplate) {
 					if (!allowedClassNames.includes(className) && !classesUsedInStyle.includes(className)) {
 						context.report({
@@ -102,15 +105,17 @@ function findClassesInAttribute(
 /**
  * Extract all class names used in a PostCSS node.
  */
-function findClassesInPostCSSNode(node: AnyNode): string[] {
+function findClassesInPostCSSNode(
+	node: AnyNode,
+	parserServices: SourceCode['parserServices']
+): string[] {
 	if (node.type === 'rule') {
-		let classes = node.nodes.flatMap(findClassesInPostCSSNode);
-		const processor = selectorParser();
-		classes = classes.concat(findClassesInSelector(processor.astSync(node.selector)));
+		let classes = node.nodes.flatMap((node) => findClassesInPostCSSNode(node, parserServices));
+		classes = classes.concat(findClassesInSelector(parserServices.getStyleSelectorAST(node)));
 		return classes;
 	}
 	if ((node.type === 'root' || node.type === 'atrule') && node.nodes !== undefined) {
-		return node.nodes.flatMap(findClassesInPostCSSNode);
+		return node.nodes.flatMap((node) => findClassesInPostCSSNode(node, parserServices));
 	}
 	return [];
 }
