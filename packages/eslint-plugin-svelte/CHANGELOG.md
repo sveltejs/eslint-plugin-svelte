@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.10
+
+### Patch Changes
+
+- [#965](https://github.com/sveltejs/eslint-plugin-svelte/pull/965) [`47760ad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/47760ad1b7f6b83d4c29380b3ef3cf09cde42dc8) Thanks [@marekdedic](https://github.com/marekdedic)! - chore: using svelte-eslint-parser for style selector parsing
+
 ## 3.0.0-next.9
 
 ### Minor Changes
