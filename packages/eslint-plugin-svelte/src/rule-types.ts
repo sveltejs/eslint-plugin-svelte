@@ -286,6 +286,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-destructured-store-props'?: Linter.RuleEntry<[]>
   /**
+   * Prefer `let` over `const` for Svelte 5 reactive variable declarations.
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-let/
+   */
+  'svelte/prefer-let'?: Linter.RuleEntry<SveltePreferLet>
+  /**
    * require style directives instead of style attribute
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/
    */
@@ -512,6 +517,10 @@ type SveltePreferClassDirective = []|[{
 type SveltePreferConst = []|[{
   destructuring?: ("any" | "all")
   ignoreReadBeforeAssign?: boolean
+}]
+// ----- svelte/prefer-let -----
+type SveltePreferLet = []|[{
+  exclude?: ("$props" | "$derived" | "$derived.by" | "$state" | "$state.raw")[]
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{
