@@ -1,7 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { getSvelteContext } from '../utils/svelte-context.js';
 import type { RuleContext } from '../types.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
@@ -35,11 +34,14 @@ export default createRule('valid-prop-names-in-kit-pages', {
 		messages: {
 			unexpected: 'disallow props other than data or errors in SvelteKit page components.'
 		},
-		type: 'problem'
+		type: 'problem',
+		conditions: [
+			{
+				svelteKitFileTypes: ['+page.svelte', '+error.svelte', '+layout.svelte']
+			}
+		]
 	},
 	create(context) {
-		const svelteContext = getSvelteContext(context);
-		if (svelteContext?.svelteKitFileType == null) return {};
 		let isScript = false;
 		return {
 			// <script>

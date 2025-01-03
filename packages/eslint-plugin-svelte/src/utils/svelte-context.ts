@@ -6,8 +6,11 @@ import { getFilename, getSourceCode } from './compat.js';
 
 const isRunOnBrowser = !fs.readFileSync;
 
-type FileType = '.svelte' | '.svelte.[js|ts]';
 export type SvelteContext = {
+	svelteVersion: string;
+	fileType: '.svelte' | '.svelte.[js|ts]';
+	runes: boolean;
+	svelteKitVersion: string | null;
 	svelteKitFileType:
 		| '+page.svelte'
 		| '+page.js'
@@ -18,18 +21,9 @@ export type SvelteContext = {
 		| '+layout.server.js'
 		| '+server.js'
 		| null;
-} & (
-	| {
-			version: 3 | 4;
-	  }
-	| {
-			version: 5;
-			runes: boolean;
-			fileType: FileType;
-	  }
-);
+};
 
-function getFileType(filePath: string): FileType | null {
+function getFileType(filePath: string): SvelteContext['fileType'] | null {
 	if (filePath.endsWith('.svelte')) {
 		return '.svelte';
 	}
@@ -79,16 +73,23 @@ function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svel
 	}
 }
 
-function getSvelteKitFileType(context: RuleContext): SvelteContext['svelteKitFileType'] {
+function getSvelteKitContext(
+	context: RuleContext
+): Pick<SvelteContext, 'svelteKitFileType' | 'svelteKitVersion'> {
 	const filePath = getFilename(context);
-
-	// Hack: if it runs on browser, it regards as SvelteKit project.
-	if (isRunOnBrowser) {
-		return getSvelteKitFileTypeFromFilePath(filePath);
+	const svelteKitVersion = gteSvelteKitVersion(filePath);
+	if (svelteKitVersion == null) {
+		return {
+			svelteKitFileType: null,
+			svelteKitVersion: null
+		};
 	}
-
-	if (!hasSvelteKit(getFilename(context))) {
-		return null;
+	if (isRunOnBrowser) {
+		return {
+			svelteKitVersion,
+			// Judge by only file path if it runs on browser.
+			svelteKitFileType: getSvelteKitFileTypeFromFilePath(filePath)
+		};
 	}
 
 	const routes =
@@ -99,10 +100,16 @@ function getSvelteKitFileType(context: RuleContext): SvelteContext['svelteKitFil
 	const projectRootDir = getProjectRootDir(getFilename(context)) ?? '';
 
 	if (!filePath.startsWith(path.join(projectRootDir, routes))) {
-		return null;
+		return {
+			svelteKitVersion,
+			svelteKitFileType: null
+		};
 	}
 
-	return getSvelteKitFileTypeFromFilePath(filePath);
+	return {
+		svelteKitVersion,
+		svelteKitFileType: getSvelteKitFileTypeFromFilePath(filePath)
+	};
 }
 
 /**
@@ -113,21 +120,22 @@ function getSvelteKitFileType(context: RuleContext): SvelteContext['svelteKitFil
  * @param filePath A file path.
  * @returns
  */
-function hasSvelteKit(filePath: string): boolean {
+function gteSvelteKitVersion(filePath: string): string | null {
 	// Hack: if it runs on browser, it regards as SvelteKit project.
-	if (isRunOnBrowser) return true;
+	if (isRunOnBrowser) return '2.15.1';
 	try {
 		const packageJson = getPackageJson(filePath);
-		if (!packageJson) return false;
+		if (!packageJson) return null;
 		if (packageJson.name === 'eslint-plugin-svelte')
 			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
 			// So always it returns true if it runs on the package.
-			return true;
-		return Boolean(
-			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit']
-		);
+			return '2.15.1';
+
+		const version =
+			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit'];
+		return typeof version === 'string' ? version : null;
 	} catch {
-		return false;
+		return null;
 	}
 }
 
@@ -156,21 +164,7 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	}
 
 	const filePath = getFilename(context);
-	const svelteKitFileType = getSvelteKitFileType(context);
-
-	if (compilerVersion.startsWith('3')) {
-		return {
-			version: 3,
-			svelteKitFileType
-		};
-	}
-
-	if (compilerVersion.startsWith('4')) {
-		return {
-			version: 4,
-			svelteKitFileType
-		};
-	}
+	const svelteKitContext = getSvelteKitContext(context);
 
 	const runes = svelteParseContext.runes === true;
 	const fileType = getFileType(filePath);
@@ -179,9 +173,10 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	}
 
 	return {
-		version: 5,
+		svelteVersion: compilerVersion,
 		runes,
 		fileType,
-		svelteKitFileType
+		svelteKitVersion: svelteKitContext.svelteKitVersion,
+		svelteKitFileType: svelteKitContext.svelteKitFileType
 	};
 }
