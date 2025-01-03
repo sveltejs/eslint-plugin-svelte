@@ -119,14 +119,14 @@ export function loadTestCases(
 		.filter(filter)
 		.map((inputFile) => getConfig(ruleName, inputFile));
 
-	const fixable = plugin.rules[ruleName].meta.fixable != null;
+	const fixable = plugin.rules[ruleName].meta?.fixable != null;
 
 	const invalid = listupInput(invalidFixtureRoot)
 		.filter(filter)
 		.map((inputFile) => {
 			const config = getConfig(ruleName, inputFile);
-			const errorFile = inputFile.replace(/input\.[a-z]+$/u, 'errors.yaml');
-			const outputFile = inputFile.replace(/input\.[a-z]+$/u, 'output.svelte');
+			const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
+			const outputFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'output.svelte');
 
 			if (!fs.existsSync(errorFile)) {
 				writeFixtures(ruleName, inputFile);
@@ -196,7 +196,8 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
 			continue;
 		}
 		const abs = path.join(rootDir, filename);
-		if (path.basename(filename, path.extname(filename)).endsWith('input')) {
+		const baseFileName = path.basename(filename, path.extname(filename));
+		if (baseFileName.endsWith('input') || baseFileName.startsWith('+')) {
 			yield abs;
 		} else if (fs.statSync(abs).isDirectory()) {
 			yield* itrListupInput(abs);
@@ -214,8 +215,8 @@ function applySuggestion(code: string, suggestion: LinterType.LintSuggestion) {
 
 function writeFixtures(ruleName: string, inputFile: string, { force }: { force?: boolean } = {}) {
 	const linter = new Linter();
-	const errorFile = inputFile.replace(/input\.[a-z]+$/u, 'errors.yaml');
-	const outputFile = inputFile.replace(/input\.[a-z]+$/u, 'output.svelte');
+	const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
+	const outputFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'output.svelte');
 
 	const config = getConfig(ruleName, inputFile);
 
@@ -285,7 +286,7 @@ function writeFixtures(ruleName: string, inputFile: string, { force }: { force?:
 	if (force || !fs.existsSync(outputFile)) {
 		const output = applyFixes(config.code, result).output;
 
-		if (plugin.rules[ruleName].meta.fixable != null) {
+		if (plugin.rules[ruleName].meta?.fixable != null) {
 			fs.writeFileSync(outputFile, output, 'utf8');
 		}
 	}
@@ -296,11 +297,11 @@ function getConfig(ruleName: string, inputFile: string) {
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
 	let configFile = [
-		inputFile.replace(/input\.[a-z]+$/u, 'config.json'),
+		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.json'),
 		path.join(path.dirname(inputFile), '_config.json'),
-		inputFile.replace(/input\.[a-z]+$/u, 'config.js'),
+		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.js'),
 		path.join(path.dirname(inputFile), '_config.js'),
-		inputFile.replace(/input\.[a-z]+$/u, 'config.cjs'),
+		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.cjs'),
 		path.join(path.dirname(inputFile), '_config.cjs')
 	].find((f) => fs.existsSync(f));
 	if (configFile) {
@@ -348,7 +349,7 @@ function getConfig(ruleName: string, inputFile: string) {
 }
 
 function getRequirements(inputFile: string): Record<string, string> {
-	let requirementsFile: string = inputFile.replace(/input\.[a-z]+$/u, 'requirements.json');
+	let requirementsFile: string = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'requirements.json');
 	if (!fs.existsSync(requirementsFile)) {
 		requirementsFile = path.join(path.dirname(inputFile), '_requirements.json');
 	}

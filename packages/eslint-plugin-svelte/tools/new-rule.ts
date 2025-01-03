@@ -65,9 +65,9 @@ export default createRule('${ruleId}', {
         schema: [],
         messages: {},
         type: 'suggestion', // 'problem', or 'layout',
+				conditions: [], // Conditions for applying this rule. Leave empty to always execute.
     },
     create(context) {
-        
         return {}
     },
 });
