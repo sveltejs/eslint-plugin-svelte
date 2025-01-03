@@ -63,6 +63,7 @@ import requireOptimizedStyleAttribute from '../rules/require-optimized-style-att
 import requireStoreCallbacksUseSetParam from '../rules/require-store-callbacks-use-set-param.js';
 import requireStoreReactiveAccess from '../rules/require-store-reactive-access.js';
 import requireStoresInit from '../rules/require-stores-init.js';
+import requireTargetBlankExternalLink from '../rules/require-target-blank-external-link.js';
 import shorthandAttribute from '../rules/shorthand-attribute.js';
 import shorthandDirective from '../rules/shorthand-directive.js';
 import sortAttributes from '../rules/sort-attributes.js';
@@ -134,6 +135,7 @@ export const rules = [
 	requireStoreCallbacksUseSetParam,
 	requireStoreReactiveAccess,
 	requireStoresInit,
+	requireTargetBlankExternalLink,
 	shorthandAttribute,
 	shorthandDirective,
 	sortAttributes,
