@@ -1,0 +1,88 @@
+- message: Selector should select by element type instead of class
+  line: 12
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 16
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 20
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 24
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 24
+  column: 28
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 28
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 32
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 36
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 40
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 44
+  column: 15
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 48
+  column: 11
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 53
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 57
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 61
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 65
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 65
+  column: 13
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 69
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of class
+  line: 73
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 77
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 81
+  column: 5
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 85
+  column: 9
+  suggestions: null
+- message: Selector should select by element type instead of ID
+  line: 89
+  column: 5
+  suggestions: null
