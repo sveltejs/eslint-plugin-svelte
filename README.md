@@ -347,6 +347,7 @@ These rules relate to security vulnerabilities in Svelte code:
 |:--------|:------------|:---|
 | [svelte/no-at-html-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/) | disallow use of `{@html}` to prevent XSS attack | :star: |
 | [svelte/no-target-blank](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank/) | disallow `target="_blank"` attribute without `rel="noopener noreferrer"` |  |
+| [svelte/require-target-blank-external-link](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-target-blank-external-link/) | require `target="_blank"` attribute for external links |  |
 
 ## Best Practices
 

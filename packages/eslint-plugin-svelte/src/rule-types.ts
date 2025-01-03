@@ -321,6 +321,11 @@ export interface RuleOptions {
    */
   'svelte/require-stores-init'?: Linter.RuleEntry<[]>
   /**
+   * require `target="_blank"` attribute for external links
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-target-blank-external-link/
+   */
+  'svelte/require-target-blank-external-link'?: Linter.RuleEntry<SvelteRequireTargetBlankExternalLink>
+  /**
    * enforce use of shorthand syntax in attribute
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/
    */
@@ -512,6 +517,11 @@ type SveltePreferClassDirective = []|[{
 type SveltePreferConst = []|[{
   destructuring?: ("any" | "all")
   ignoreReadBeforeAssign?: boolean
+}]
+// ----- svelte/require-target-blank-external-link -----
+type SvelteRequireTargetBlankExternalLink = []|[{
+  allowReferrer?: boolean
+  enforceDynamicLinks?: ("always" | "never")
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-svelte",
+  "name": "@secureship/eslint-plugin-svelte",
   "version": "3.0.0-next.10",
   "description": "ESLint plugin for Svelte using AST",
   "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
