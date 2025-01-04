@@ -115,10 +115,10 @@ export interface PartialRuleMetaData {
 	 * If not specified, the rule will be applied to all files.
 	 */
 	conditions?: {
-		svelteVersion?: string; // e.g.: '>= 5.0.0'
+		svelteVersions?: SvelteContext['svelteVersion'][];
 		fileTypes?: SvelteContext['fileType'][];
 		runes?: SvelteContext['runes'];
-		svelteKitVersion?: string; // e.g.: '>= 1.0.0'
+		svelteKitVersions?: NonNullable<SvelteContext['svelteKitVersion']>[];
 		svelteKitFileTypes?: NonNullable<SvelteContext['svelteKitFileType']>[];
 	}[];
 }

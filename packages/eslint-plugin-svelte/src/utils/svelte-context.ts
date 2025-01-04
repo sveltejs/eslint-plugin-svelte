@@ -4,13 +4,13 @@ import path from 'path';
 import { getPackageJson } from './get-package-json.js';
 import { getFilename, getSourceCode } from './compat.js';
 
-const isRunOnBrowser = !fs.readFileSync;
+const isRunInBrowser = !fs.readFileSync;
 
 export type SvelteContext = {
-	svelteVersion: string;
+	svelteVersion: '3/4' | 5;
 	fileType: '.svelte' | '.svelte.[js|ts]';
 	runes: boolean;
-	svelteKitVersion: string | null;
+	svelteKitVersion: '1-next' | 1 | 2 | null;
 	svelteKitFileType:
 		| '+page.svelte'
 		| '+page.js'
@@ -77,14 +77,14 @@ function getSvelteKitContext(
 	context: RuleContext
 ): Pick<SvelteContext, 'svelteKitFileType' | 'svelteKitVersion'> {
 	const filePath = getFilename(context);
-	const svelteKitVersion = gteSvelteKitVersion(filePath);
+	const svelteKitVersion = getSvelteKitVersion(filePath);
 	if (svelteKitVersion == null) {
 		return {
 			svelteKitFileType: null,
 			svelteKitVersion: null
 		};
 	}
-	if (isRunOnBrowser) {
+	if (isRunInBrowser) {
 		return {
 			svelteKitVersion,
 			// Judge by only file path if it runs on browser.
@@ -120,23 +120,42 @@ function getSvelteKitContext(
  * @param filePath A file path.
  * @returns
  */
-function gteSvelteKitVersion(filePath: string): string | null {
+function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'] {
 	// Hack: if it runs on browser, it regards as SvelteKit project.
-	if (isRunOnBrowser) return '2.15.1';
+	if (isRunInBrowser) return 2;
 	try {
 		const packageJson = getPackageJson(filePath);
 		if (!packageJson) return null;
 		if (packageJson.name === 'eslint-plugin-svelte')
 			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
 			// So always it returns true if it runs on the package.
-			return '2.15.1';
+			return 2;
 
 		const version =
 			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit'];
-		return typeof version === 'string' ? version : null;
+		if (typeof version !== 'string') {
+			return null;
+		}
+		if (version.startsWith('1.0.0-next.')) {
+			return '1-next';
+		} else if (version.startsWith('1.')) {
+			return 1;
+		} else if (version.startsWith('2.')) {
+			return 2;
+		}
+		// If unknown version, it recognize as v2.
+		return 2;
 	} catch {
 		return null;
 	}
+}
+
+function getSvelteVersion(compilerVersion: string): SvelteContext['svelteVersion'] {
+	const version = parseInt(compilerVersion.split('.')[0], 10);
+	if (version === 3 || version === 4) {
+		return '3/4';
+	}
+	return 5;
 }
 
 /**
@@ -145,7 +164,7 @@ function gteSvelteKitVersion(filePath: string): string | null {
  * @returns A found project root folder path or null.
  */
 function getProjectRootDir(filePath: string): string | null {
-	if (isRunOnBrowser) return null;
+	if (isRunInBrowser) return null;
 	const packageJsonFilePath = getPackageJson(filePath)?.filePath;
 	if (!packageJsonFilePath) return null;
 	return path.dirname(path.resolve(packageJsonFilePath));
@@ -173,7 +192,7 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	}
 
 	return {
-		svelteVersion: compilerVersion,
+		svelteVersion: getSvelteVersion(compilerVersion),
 		runes,
 		fileType,
 		svelteKitVersion: svelteKitContext.svelteKitVersion,

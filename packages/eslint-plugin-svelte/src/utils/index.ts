@@ -1,14 +1,14 @@
 import type { RuleModule, PartialRuleModule, PartialRuleMetaData, RuleContext } from '../types.js';
 import { getSvelteContext, type SvelteContext } from '../utils/svelte-context.js';
-import semver from 'semver';
 
 function satisfiesCondition(
 	condition: NonNullable<PartialRuleMetaData['conditions']>[number],
 	svelteContext: SvelteContext
 ): boolean {
 	if (
-		condition.svelteVersion != null &&
-		!semver.satisfies(svelteContext.svelteVersion, condition.svelteVersion)
+		condition.svelteVersions != null &&
+		condition.svelteVersions.length > 0 &&
+		!condition.svelteVersions.includes(svelteContext.svelteVersion)
 	) {
 		return false;
 	}
@@ -25,10 +25,10 @@ function satisfiesCondition(
 		return false;
 	}
 
-	if (condition.svelteKitVersion != null) {
+	if (condition.svelteKitVersions != null && condition.svelteKitVersions.length > 0) {
 		if (
 			svelteContext.svelteKitVersion == null ||
-			!semver.satisfies(svelteContext.svelteKitVersion, condition.svelteKitVersion)
+			!condition.svelteKitVersions.includes(svelteContext.svelteKitVersion)
 		) {
 			return false;
 		}
