@@ -216,6 +216,11 @@ export interface RuleOptions {
    */
   'svelte/no-restricted-html-elements'?: Linter.RuleEntry<SvelteNoRestrictedHtmlElements>
   /**
+   * Disallow variable declarations from shadowing variables declared in the outer scope
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shadow/
+   */
+  'svelte/no-shadow'?: Linter.RuleEntry<SvelteNoShadow>
+  /**
    * disallow shorthand style properties that override related longhand properties
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/
    */
@@ -479,6 +484,13 @@ type SvelteNoRestrictedHtmlElements = [(string | {
   elements?: [string, ...(string)[]]
   message?: string
 }))[]]
+// ----- svelte/no-shadow -----
+type SvelteNoShadow = []|[{
+  builtinGlobals?: boolean
+  hoist?: ("all" | "functions" | "never")
+  allow?: string[]
+  ignoreOnInitialization?: boolean
+}]
 // ----- svelte/no-target-blank -----
 type SvelteNoTargetBlank = []|[{
   allowReferrer?: boolean

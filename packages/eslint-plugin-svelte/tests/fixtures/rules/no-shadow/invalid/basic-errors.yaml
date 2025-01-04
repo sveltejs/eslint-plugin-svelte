@@ -1,0 +1,4 @@
+- message: "'x' is already declared in the upper scope on line 2 column 13."
+  line: 4
+  column: 8
+  suggestions: null

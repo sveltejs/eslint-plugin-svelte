@@ -6,6 +6,22 @@ import { Linter } from 'eslint';
 import Module from 'module';
 
 const require = Module.createRequire(import.meta.url);
+
+export function getProxyContent(context: RuleContext, overrides: any): RuleContext {
+	const cache: any = {};
+	return new Proxy(context, {
+		get(_t, key) {
+			if (key in cache) {
+				return cache[key];
+			}
+			if (key in overrides) {
+				return (cache[key] = overrides[key]);
+			}
+			return (context as any)[key];
+		}
+	});
+}
+
 /**
  * Define the wrapped core rule.
  */
@@ -17,10 +33,7 @@ export function defineWrapperListener(
 	}
 ): RuleListener {
 	const listener = coreRule.create(context as any);
-
-	const svelteListener = proxyOptions.createListenerProxy?.(listener) ?? listener;
-
-	return svelteListener;
+	return proxyOptions.createListenerProxy?.(listener) ?? listener;
 }
 
 /**

@@ -42,6 +42,7 @@ import noReactiveFunctions from '../rules/no-reactive-functions.js';
 import noReactiveLiterals from '../rules/no-reactive-literals.js';
 import noReactiveReassign from '../rules/no-reactive-reassign.js';
 import noRestrictedHtmlElements from '../rules/no-restricted-html-elements.js';
+import noShadow from '../rules/no-shadow.js';
 import noShorthandStylePropertyOverrides from '../rules/no-shorthand-style-property-overrides.js';
 import noSpacesAroundEqualSignsInAttribute from '../rules/no-spaces-around-equal-signs-in-attribute.js';
 import noStoreAsync from '../rules/no-store-async.js';
@@ -113,6 +114,7 @@ export const rules = [
 	noReactiveLiterals,
 	noReactiveReassign,
 	noRestrictedHtmlElements,
+	noShadow,
 	noShorthandStylePropertyOverrides,
 	noSpacesAroundEqualSignsInAttribute,
 	noStoreAsync,
