@@ -70,6 +70,7 @@ for (const nodeType of tsEsNodeNames) {
 		argType = `TSESTree.Node & { type: AST_NODE_TYPES.${nodeType}}`;
 	}
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 }
 for (const nodeType of svelteNodeNames) {
 	let argType = `AST.${nodeType}`;
@@ -77,6 +78,7 @@ for (const nodeType of svelteNodeNames) {
 		argType = `AST.SvelteProgram`;
 	}
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 }
 typesForNodeCode.push(`}`);
 typesForNodeCode.push(``);
@@ -84,6 +86,7 @@ typesForNodeCode.push(`export type ESNodeListener = {`);
 for (const nodeType of esNodeNames) {
 	const argType = `TSESTree.${nodeType}`;
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 	estreeCode.push(`export type ${nodeType} = TSESTree.${nodeType}`);
 }
 for (const nodeType of esSvelteNodeNames) {
@@ -92,6 +95,7 @@ for (const nodeType of esSvelteNodeNames) {
 		argType = `AST.SvelteProgram`;
 	}
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 }
 typesForNodeCode.push(`}`);
 typesForNodeCode.push(``);
@@ -102,6 +106,7 @@ for (const nodeType of tsNodeNames) {
 		argType = `TSESTree.Node & { type: AST_NODE_TYPES.${nodeType}}`;
 	}
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 }
 typesForNodeCode.push(`}`);
 typesForNodeCode.push(``);
@@ -109,6 +114,7 @@ typesForNodeCode.push(`export type SvelteNodeListener = {`);
 for (const nodeType of svelteNodeNames.filter((k) => !esSvelteNodeNames.includes(k))) {
 	const argType = `AST.${nodeType}`;
 	typesForNodeCode.push(`  ${nodeType}?: (node: ${argType} & ASTNodeWithParent) => void`);
+	typesForNodeCode.push(`  '${nodeType}:exit'?: (node: ${argType} & ASTNodeWithParent) => void`);
 }
 typesForNodeCode.push(`}`);
 
