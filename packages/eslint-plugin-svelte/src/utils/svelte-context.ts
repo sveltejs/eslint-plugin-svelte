@@ -87,7 +87,7 @@ function getSvelteKitContext(
 	if (isRunInBrowser) {
 		return {
 			svelteKitVersion,
-			// Judge by only file path if it runs on browser.
+			// Judge by only file path if it runs in browser.
 			svelteKitFileType: getSvelteKitFileTypeFromFilePath(filePath)
 		};
 	}
@@ -121,7 +121,7 @@ function getSvelteKitContext(
  * @returns
  */
 function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'] {
-	// Hack: if it runs on browser, it regards as SvelteKit project.
+	// Hack: if it runs in browser, it regards as SvelteKit project.
 	if (isRunInBrowser) return 2;
 	try {
 		const packageJson = getPackageJson(filePath);
