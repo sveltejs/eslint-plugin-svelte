@@ -1,5 +1,4 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { TSESTree } from '@typescript-eslint/types';
 import type { ASTNode, RuleContext, RuleListener } from '../../types.js';
 import * as SV from './svelte.js';
 import * as ES from './es.js';
@@ -244,7 +243,7 @@ export function defineVisitor(
 				offsets.ignore(node);
 			}
 		},
-		'Program:exit'(node: TSESTree.Program) {
+		'Program:exit'(node: AST.SvelteProgram) {
 			const calculator = offsets.getOffsetCalculator();
 
 			let prevToken: AnyToken | null = null;
