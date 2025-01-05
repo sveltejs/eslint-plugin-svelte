@@ -6,6 +6,22 @@ import { Linter } from 'eslint';
 import Module from 'module';
 
 const require = Module.createRequire(import.meta.url);
+
+export function getProxyContent(context: RuleContext, overrides: any): RuleContext {
+	const cache: any = {};
+	return new Proxy(context, {
+		get(_t, key) {
+			if (key in cache) {
+				return cache[key];
+			}
+			if (key in overrides) {
+				return (cache[key] = overrides[key]);
+			}
+			return (context as any)[key];
+		}
+	});
+}
+
 /**
  * Define the wrapped core rule.
  */
@@ -73,11 +89,24 @@ export function buildProxyListener(
 }
 
 let ruleMap: Map<string, RuleModule> | null = null;
+let tsRuleMap: Map<string, RuleModule> | null = null;
 
 /**
  * Get the core rule implementation from the rule name
  */
 export function getCoreRule(ruleName: string): RuleModule {
+	if (ruleName.startsWith('@typescript-eslint/')) {
+		if (tsRuleMap == null) {
+			const rules = require('@typescript-eslint/eslint-plugin').rules;
+			for (const [name, rule] of Object.entries(rules)) {
+				if (tsRuleMap == null) {
+					tsRuleMap = new Map();
+				}
+				tsRuleMap.set(`@typescript-eslint/${name}`, rule as RuleModule);
+			}
+		}
+		return tsRuleMap!.get(ruleName)!;
+	}
 	try {
 		const map: Map<string, RuleModule> = ruleMap
 			? ruleMap

@@ -51,6 +51,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 
 | Rule ID                                                                                  | Description                                                                                                                               |          |
 | :--------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- | :------- |
+| [svelte/@typescript-eslint/no-shadow](./rules/@typescript-eslint/no-shadow.md)           | Disallow variable declarations from shadowing variables declared in the outer scope                                                       |          |
 | [svelte/block-lang](./rules/block-lang.md)                                               | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. | :bulb:   |
 | [svelte/button-has-type](./rules/button-has-type.md)                                     | disallow usage of button without an explicit type attribute                                                                               |          |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md)                                   | disallow the use of `{@debug}`                                                                                                            | :star:   |

@@ -14,6 +14,11 @@ declare module 'eslint' {
 
 export interface RuleOptions {
   /**
+   * Disallow variable declarations from shadowing variables declared in the outer scope
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-shadow/
+   */
+  'svelte/@typescript-eslint/no-shadow'?: Linter.RuleEntry<SvelteTypescriptEslintNoShadow>
+  /**
    * disallow conditionals where the type is always truthy or always falsy
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/
    * @deprecated
@@ -363,6 +368,21 @@ export interface RuleOptions {
 }
 
 /* ======= Declarations ======= */
+// ----- svelte/@typescript-eslint/no-shadow -----
+type SvelteTypescriptEslintNoShadow = []|[{
+  
+  allow?: string[]
+  
+  builtinGlobals?: boolean
+  
+  hoist?: ("all" | "functions" | "never")
+  
+  ignoreFunctionTypeParameterNameValueShadow?: boolean
+  
+  ignoreOnInitialization?: boolean
+  
+  ignoreTypeValueShadow?: boolean
+}]
 // ----- svelte/@typescript-eslint/no-unnecessary-condition -----
 type SvelteTypescriptEslintNoUnnecessaryCondition = []|[{
   

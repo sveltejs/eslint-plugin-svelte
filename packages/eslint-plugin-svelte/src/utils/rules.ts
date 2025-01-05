@@ -2,6 +2,7 @@
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
 import type { RuleModule } from '../types.js';
+import typescriptEslintNoShadow from '../rules/@typescript-eslint/no-shadow.js';
 import typescriptEslintNoUnnecessaryCondition from '../rules/@typescript-eslint/no-unnecessary-condition.js';
 import blockLang from '../rules/block-lang.js';
 import buttonHasType from '../rules/button-has-type.js';
@@ -73,6 +74,7 @@ import validEachKey from '../rules/valid-each-key.js';
 import validPropNamesInKitPages from '../rules/valid-prop-names-in-kit-pages.js';
 
 export const rules = [
+	typescriptEslintNoShadow,
 	typescriptEslintNoUnnecessaryCondition,
 	blockLang,
 	buttonHasType,
