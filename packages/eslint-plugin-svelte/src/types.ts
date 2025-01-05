@@ -117,9 +117,9 @@ export interface PartialRuleMetaData {
 	conditions?: {
 		svelteVersions?: SvelteContext['svelteVersion'][];
 		fileTypes?: SvelteContext['fileType'][];
-		runes?: SvelteContext['runes'];
-		svelteKitVersions?: NonNullable<SvelteContext['svelteKitVersion']>[];
-		svelteKitFileTypes?: NonNullable<SvelteContext['svelteKitFileType']>[];
+		runes?: SvelteContext['runes'][];
+		svelteKitVersions?: SvelteContext['svelteKitVersion'][];
+		svelteKitFileTypes?: SvelteContext['svelteKitFileType'][];
 	}[];
 }
 

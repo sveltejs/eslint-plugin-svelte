@@ -1,58 +1,39 @@
 import type { RuleModule, PartialRuleModule, PartialRuleMetaData, RuleContext } from '../types.js';
 import { getSvelteContext, type SvelteContext } from '../utils/svelte-context.js';
 
+function isNotSatisfies<T>(actual: T, expected?: T[]): boolean {
+	if (expected == null || expected.length === 0) {
+		return false;
+	}
+
+	return !expected.includes(actual);
+}
+
 function satisfiesCondition(
 	condition: NonNullable<PartialRuleMetaData['conditions']>[number],
 	svelteContext: SvelteContext
 ): boolean {
 	if (
-		condition.svelteVersions != null &&
-		condition.svelteVersions.length > 0 &&
-		!condition.svelteVersions.includes(svelteContext.svelteVersion)
+		isNotSatisfies(svelteContext.svelteVersion, condition.svelteVersions) ||
+		isNotSatisfies(svelteContext.fileType, condition.fileTypes) ||
+		isNotSatisfies(svelteContext.runes, condition.runes) ||
+		isNotSatisfies(svelteContext.svelteKitVersion, condition.svelteKitVersions) ||
+		isNotSatisfies(svelteContext.svelteKitFileType, condition.svelteKitFileTypes)
 	) {
 		return false;
-	}
-
-	if (
-		condition.fileTypes != null &&
-		condition.fileTypes.length > 0 &&
-		!condition.fileTypes.includes(svelteContext.fileType)
-	) {
-		return false;
-	}
-
-	if (condition.runes != null && condition.runes !== svelteContext.runes) {
-		return false;
-	}
-
-	if (condition.svelteKitVersions != null && condition.svelteKitVersions.length > 0) {
-		if (
-			svelteContext.svelteKitVersion == null ||
-			!condition.svelteKitVersions.includes(svelteContext.svelteKitVersion)
-		) {
-			return false;
-		}
-	}
-
-	if (condition.svelteKitFileTypes != null && condition.svelteKitFileTypes.length > 0) {
-		if (
-			svelteContext.svelteKitFileType == null ||
-			!condition.svelteKitFileTypes.includes(svelteContext.svelteKitFileType)
-		) {
-			return false;
-		}
 	}
 
 	return true;
 }
 
-function shouldRun(
+// export for testing
+export function shouldRun(
 	svelteContext: SvelteContext | null,
 	conditions: PartialRuleMetaData['conditions']
 ): boolean {
 	// If svelteContext is null, it means the rule might be executed based on the analysis result of a different parser.
 	// In this case, always execute the rule.
-	if (svelteContext == null || conditions == null) {
+	if (svelteContext == null || conditions == null || conditions.length === 0) {
 		return true;
 	}
 
