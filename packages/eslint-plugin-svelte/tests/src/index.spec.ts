@@ -10,7 +10,7 @@ const actualSvelte3: Parameters<typeof shouldRun>[0] = {
 };
 
 const actualSvelte5: Parameters<typeof shouldRun>[0] = {
-	svelteVersion: 5,
+	svelteVersion: '5',
 	fileType: '.svelte',
 	runes: true,
 	svelteKitVersion: null,
@@ -18,7 +18,7 @@ const actualSvelte5: Parameters<typeof shouldRun>[0] = {
 };
 
 const actualSvelte5Script: Parameters<typeof shouldRun>[0] = {
-	svelteVersion: 5,
+	svelteVersion: '5',
 	fileType: '.svelte.[js|ts]',
 	runes: true,
 	svelteKitVersion: null,
@@ -26,18 +26,18 @@ const actualSvelte5Script: Parameters<typeof shouldRun>[0] = {
 };
 
 const actualSvelteKit: Parameters<typeof shouldRun>[0] = {
-	svelteVersion: 5,
+	svelteVersion: '5',
 	fileType: '.svelte',
 	runes: true,
-	svelteKitVersion: 2,
+	svelteKitVersion: '2',
 	svelteKitFileType: '+page.svelte'
 };
 
 const actualSvelteKitNotRoute: Parameters<typeof shouldRun>[0] = {
-	svelteVersion: 5,
+	svelteVersion: '5',
 	fileType: '.svelte',
 	runes: true,
-	svelteKitVersion: 2,
+	svelteKitVersion: '2',
 	svelteKitFileType: null
 };
 
@@ -84,7 +84,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte3, [
 				{
-					svelteVersions: [5]
+					svelteVersions: ['5']
 				}
 			]),
 			false
@@ -98,7 +98,7 @@ describe('shouldRun', () => {
 					svelteVersions: ['3/4']
 				},
 				{
-					svelteVersions: [5]
+					svelteVersions: ['5']
 				}
 			]),
 			true
@@ -123,7 +123,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte5, [
 				{
-					svelteVersions: [5],
+					svelteVersions: ['5'],
 					runes: [true]
 				}
 			]),
@@ -135,7 +135,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte5, [
 				{
-					svelteVersions: [5],
+					svelteVersions: ['5'],
 					runes: [false]
 				}
 			]),
@@ -158,7 +158,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte5, [
 				{
-					svelteVersions: [5],
+					svelteVersions: ['5'],
 					fileTypes: ['.svelte'],
 					runes: [true]
 				}
@@ -171,7 +171,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte5, [
 				{
-					svelteVersions: [5],
+					svelteVersions: ['5'],
 					fileTypes: ['.svelte'],
 					runes: [false]
 				}
@@ -184,7 +184,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelte5Script, [
 				{
-					svelteVersions: [5],
+					svelteVersions: ['5'],
 					fileTypes: ['.svelte.[js|ts]'],
 					runes: [true]
 				}
@@ -197,7 +197,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelteKit, [
 				{
-					svelteKitVersions: [2],
+					svelteKitVersions: ['2'],
 					svelteKitFileTypes: ['+page.svelte']
 				}
 			]),
@@ -220,7 +220,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelteKit, [
 				{
-					svelteKitVersions: [2],
+					svelteKitVersions: ['2'],
 					svelteKitFileTypes: [null]
 				}
 			]),
@@ -232,7 +232,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelteKitNotRoute, [
 				{
-					svelteKitVersions: [2],
+					svelteKitVersions: ['2'],
 					svelteKitFileTypes: [null]
 				}
 			]),
@@ -244,7 +244,7 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelteKitNotRoute, [
 				{
-					svelteKitVersions: [2],
+					svelteKitVersions: ['2'],
 					svelteKitFileTypes: ['+page.svelte']
 				}
 			]),

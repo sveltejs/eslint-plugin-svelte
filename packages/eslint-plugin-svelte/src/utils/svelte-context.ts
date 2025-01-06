@@ -7,10 +7,10 @@ import { getFilename, getSourceCode } from './compat.js';
 const isRunInBrowser = !fs.readFileSync;
 
 export type SvelteContext = {
-	svelteVersion: '3/4' | 5;
+	svelteVersion: '3/4' | '5';
 	fileType: '.svelte' | '.svelte.[js|ts]';
 	runes: boolean;
-	svelteKitVersion: '1-next' | 1 | 2 | null;
+	svelteKitVersion: '1-next' | '1' | '2' | null;
 	svelteKitFileType:
 		| '+page.svelte'
 		| '+page.js'
@@ -122,14 +122,14 @@ function getSvelteKitContext(
  */
 function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'] {
 	// Hack: if it runs in browser, it regards as SvelteKit project.
-	if (isRunInBrowser) return 2;
+	if (isRunInBrowser) return '2';
 	try {
 		const packageJson = getPackageJson(filePath);
 		if (!packageJson) return null;
 		if (packageJson.name === 'eslint-plugin-svelte')
 			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
 			// So always it returns true if it runs on the package.
-			return 2;
+			return '2';
 
 		const version =
 			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit'];
@@ -139,12 +139,12 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 		if (version.startsWith('1.0.0-next.')) {
 			return '1-next';
 		} else if (version.startsWith('1.')) {
-			return 1;
+			return '1';
 		} else if (version.startsWith('2.')) {
-			return 2;
+			return '2';
 		}
 		// If unknown version, it recognize as v2.
-		return 2;
+		return '2';
 	} catch {
 		return null;
 	}
@@ -155,7 +155,7 @@ function getSvelteVersion(compilerVersion: string): SvelteContext['svelteVersion
 	if (version === 3 || version === 4) {
 		return '3/4';
 	}
-	return 5;
+	return '5';
 }
 
 /**
