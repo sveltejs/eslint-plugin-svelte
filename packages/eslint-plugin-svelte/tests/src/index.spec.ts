@@ -159,7 +159,7 @@ describe('shouldRun', () => {
 			shouldRun(actualSvelte5, [
 				{
 					svelteVersions: ['5'],
-					fileTypes: ['.svelte'],
+					svelteFileTypes: ['.svelte'],
 					runes: [true]
 				}
 			]),
@@ -172,7 +172,7 @@ describe('shouldRun', () => {
 			shouldRun(actualSvelte5, [
 				{
 					svelteVersions: ['5'],
-					fileTypes: ['.svelte'],
+					svelteFileTypes: ['.svelte'],
 					runes: [false]
 				}
 			]),
@@ -185,7 +185,7 @@ describe('shouldRun', () => {
 			shouldRun(actualSvelte5Script, [
 				{
 					svelteVersions: ['5'],
-					fileTypes: ['.svelte.[js|ts]'],
+					svelteFileTypes: ['.svelte.[js|ts]'],
 					runes: [true]
 				}
 			]),
