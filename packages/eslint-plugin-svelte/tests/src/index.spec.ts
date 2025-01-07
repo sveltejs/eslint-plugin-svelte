@@ -3,7 +3,7 @@ import { shouldRun } from '../../src/utils/index.js';
 
 const actualSvelte3: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '3/4',
-	fileType: '.svelte',
+	svelteFileType: '.svelte',
 	runes: false,
 	svelteKitVersion: null,
 	svelteKitFileType: null
@@ -11,7 +11,7 @@ const actualSvelte3: Parameters<typeof shouldRun>[0] = {
 
 const actualSvelte5: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '5',
-	fileType: '.svelte',
+	svelteFileType: '.svelte',
 	runes: true,
 	svelteKitVersion: null,
 	svelteKitFileType: null
@@ -19,7 +19,7 @@ const actualSvelte5: Parameters<typeof shouldRun>[0] = {
 
 const actualSvelte5Script: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '5',
-	fileType: '.svelte.[js|ts]',
+	svelteFileType: '.svelte.[js|ts]',
 	runes: true,
 	svelteKitVersion: null,
 	svelteKitFileType: null
@@ -27,7 +27,7 @@ const actualSvelte5Script: Parameters<typeof shouldRun>[0] = {
 
 const actualSvelteKit: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '5',
-	fileType: '.svelte',
+	svelteFileType: '.svelte',
 	runes: true,
 	svelteKitVersion: '2',
 	svelteKitFileType: '+page.svelte'
@@ -35,7 +35,7 @@ const actualSvelteKit: Parameters<typeof shouldRun>[0] = {
 
 const actualSvelteKitNotRoute: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '5',
-	fileType: '.svelte',
+	svelteFileType: '.svelte',
 	runes: true,
 	svelteKitVersion: '2',
 	svelteKitFileType: null

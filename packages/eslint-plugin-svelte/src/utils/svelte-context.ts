@@ -8,7 +8,7 @@ const isRunInBrowser = !fs.readFileSync;
 
 export type SvelteContext = {
 	svelteVersion: '3/4' | '5';
-	fileType: '.svelte' | '.svelte.[js|ts]';
+	svelteFileType: '.svelte' | '.svelte.[js|ts]';
 	runes: boolean;
 	svelteKitVersion: '1-next' | '1' | '2' | null;
 	svelteKitFileType:
@@ -23,7 +23,7 @@ export type SvelteContext = {
 		| null;
 };
 
-function getFileType(filePath: string): SvelteContext['fileType'] | null {
+function getFileType(filePath: string): SvelteContext['svelteFileType'] | null {
 	if (filePath.endsWith('.svelte')) {
 		return '.svelte';
 	}
@@ -194,7 +194,7 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	return {
 		svelteVersion: getSvelteVersion(compilerVersion),
 		runes,
-		fileType,
+		svelteFileType: fileType,
 		svelteKitVersion: svelteKitContext.svelteKitVersion,
 		svelteKitFileType: svelteKitContext.svelteKitFileType
 	};

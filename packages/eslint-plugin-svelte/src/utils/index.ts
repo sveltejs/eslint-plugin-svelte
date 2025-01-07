@@ -15,7 +15,7 @@ function satisfiesCondition(
 ): boolean {
 	if (
 		doesNotSatisfy(svelteContext.svelteVersion, condition.svelteVersions) ||
-		doesNotSatisfy(svelteContext.fileType, condition.fileTypes) ||
+		doesNotSatisfy(svelteContext.svelteFileType, condition.fileTypes) ||
 		doesNotSatisfy(svelteContext.runes, condition.runes) ||
 		doesNotSatisfy(svelteContext.svelteKitVersion, condition.svelteKitVersions) ||
 		doesNotSatisfy(svelteContext.svelteKitFileType, condition.svelteKitFileTypes)
