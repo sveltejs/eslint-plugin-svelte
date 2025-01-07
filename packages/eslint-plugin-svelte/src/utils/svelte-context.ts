@@ -185,13 +185,10 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	const filePath = getFilename(context);
 	const svelteKitContext = getSvelteKitContext(context);
 
-	const runes = svelteParseContext.runes === true;
-	const svelteFileType = getSvelteFileType(filePath);
-
 	return {
 		svelteVersion: getSvelteVersion(compilerVersion),
-		runes,
-		svelteFileType,
+		runes: svelteParseContext.runes === true,
+		svelteFileType: getSvelteFileType(filePath),
 		svelteKitVersion: svelteKitContext.svelteKitVersion,
 		svelteKitFileType: svelteKitContext.svelteKitFileType
 	};
