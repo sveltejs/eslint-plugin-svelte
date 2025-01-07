@@ -1,7 +1,7 @@
 import type { RuleModule, PartialRuleModule, PartialRuleMetaData, RuleContext } from '../types.js';
 import { getSvelteContext, type SvelteContext } from '../utils/svelte-context.js';
 
-function isNotSatisfies<T>(actual: T, expected?: T[]): boolean {
+function doesNotSatisfy<T>(actual: T, expected?: T[]): boolean {
 	if (expected == null || expected.length === 0) {
 		return false;
 	}
@@ -14,11 +14,11 @@ function satisfiesCondition(
 	svelteContext: SvelteContext
 ): boolean {
 	if (
-		isNotSatisfies(svelteContext.svelteVersion, condition.svelteVersions) ||
-		isNotSatisfies(svelteContext.fileType, condition.fileTypes) ||
-		isNotSatisfies(svelteContext.runes, condition.runes) ||
-		isNotSatisfies(svelteContext.svelteKitVersion, condition.svelteKitVersions) ||
-		isNotSatisfies(svelteContext.svelteKitFileType, condition.svelteKitFileTypes)
+		doesNotSatisfy(svelteContext.svelteVersion, condition.svelteVersions) ||
+		doesNotSatisfy(svelteContext.fileType, condition.fileTypes) ||
+		doesNotSatisfy(svelteContext.runes, condition.runes) ||
+		doesNotSatisfy(svelteContext.svelteKitVersion, condition.svelteKitVersions) ||
+		doesNotSatisfy(svelteContext.svelteKitFileType, condition.svelteKitFileTypes)
 	) {
 		return false;
 	}
