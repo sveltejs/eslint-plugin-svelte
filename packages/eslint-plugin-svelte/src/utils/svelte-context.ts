@@ -1,16 +1,40 @@
 import type { RuleContext } from '../types.js';
 import fs from 'fs';
 import path from 'path';
-import { getPackageJson } from './get-package-json.js';
+import { getPackageJsons } from './get-package-json.js';
 import { getFilename, getSourceCode } from './compat.js';
 
 const isRunInBrowser = !fs.readFileSync;
 
-export type SvelteContext = {
-	svelteVersion: '3/4' | '5' | 'undetermined';
-	svelteFileType: '.svelte' | '.svelte.[js|ts]' | null;
-	runes: boolean | 'undetermined';
-	svelteKitVersion: '1-next' | '1' | '2' | null;
+export type SvelteContext = (
+	| ({
+			svelteVersion: '3/4';
+	  } & {
+			svelteFileType: '.svelte' | 'other';
+			runes: null;
+	  })
+	| ({
+			svelteVersion: '5';
+	  } & (
+			| {
+					svelteFileType: '.svelte' | '.svelte.[js|ts]';
+					/** If a user uses a parser other than `svelte-eslint-parser`, `undetermined` will be set. */
+					runes: boolean | 'undetermined';
+			  }
+			| {
+					/** e.g. `foo.js` / `package.json` */
+					svelteFileType: 'other';
+					runes: null;
+			  }
+	  ))
+	| {
+			/** For projects that do not use Svelte. */
+			svelteVersion: null;
+			svelteFileType: null;
+			runes: null;
+	  }
+) & {
+	svelteKitVersion: '1.0.0-next' | '1' | '2' | null;
 	svelteKitFileType:
 		| '+page.svelte'
 		| '+page.js'
@@ -23,7 +47,7 @@ export type SvelteContext = {
 		| null;
 };
 
-function getSvelteFileType(filePath: string): SvelteContext['svelteFileType'] | null {
+function getSvelteFileType(filePath: string): NonNullable<SvelteContext['svelteFileType']> {
 	if (filePath.endsWith('.svelte')) {
 		return '.svelte';
 	}
@@ -32,7 +56,7 @@ function getSvelteFileType(filePath: string): SvelteContext['svelteFileType'] | 
 		return '.svelte.[js|ts]';
 	}
 
-	return null;
+	return 'other';
 }
 
 function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svelteKitFileType'] {
@@ -112,6 +136,29 @@ function getSvelteKitContext(
 	};
 }
 
+function getSvelteVersion(filePath: string): SvelteContext['svelteVersion'] {
+	// Hack: if it runs in browser, it regards as Svelte project.
+	if (isRunInBrowser) return '5';
+	try {
+		const packageJsons = getPackageJsons(filePath);
+		for (const packageJson of packageJsons) {
+			const version = packageJson.dependencies?.svelte ?? packageJson.devDependencies?.svelte;
+			if (typeof version !== 'string') {
+				continue;
+			}
+			const major = version.split('.')[0];
+			if (major === '3' || major === '4') {
+				return '3/4';
+			}
+			return major as SvelteContext['svelteVersion'];
+		}
+	} catch {
+		/** do nothing */
+	}
+
+	return null;
+}
+
 /**
  * Check givin file is under SvelteKit project.
  *
@@ -124,41 +171,28 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 	// Hack: if it runs in browser, it regards as SvelteKit project.
 	if (isRunInBrowser) return '2';
 	try {
-		const packageJson = getPackageJson(filePath);
-		if (!packageJson) return null;
-		if (packageJson.name === 'eslint-plugin-svelte')
+		const packageJsons = getPackageJsons(filePath);
+		if (packageJsons.length === 0) return null;
+		if (packageJsons[0].name === 'eslint-plugin-svelte') {
 			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
-			// So always it returns true if it runs on the package.
+			// So always it returns 2 if it runs on the package.
 			return '2';
+		}
 
-		const version =
-			packageJson.dependencies?.['@sveltejs/kit'] ?? packageJson.devDependencies?.['@sveltejs/kit'];
-		if (typeof version !== 'string') {
-			return null;
+		for (const packageJson of packageJsons) {
+			const version =
+				packageJson.dependencies?.['@sveltejs/kit'] ??
+				packageJson.devDependencies?.['@sveltejs/kit'];
+			if (typeof version !== 'string') {
+				return null;
+			}
+			return version.split('.')[0] as SvelteContext['svelteKitVersion'];
 		}
-		if (version.startsWith('1.0.0-next.')) {
-			return '1-next';
-		} else if (version.startsWith('1.')) {
-			return '1';
-		} else if (version.startsWith('2.')) {
-			return '2';
-		}
-		// If unknown version, it recognize as v2.
-		return '2';
 	} catch {
-		return null;
+		/** do nothing */
 	}
-}
 
-function getSvelteVersion(compilerVersion: string | undefined): SvelteContext['svelteVersion'] {
-	if (compilerVersion == null) {
-		return 'undetermined';
-	}
-	const version = parseInt(compilerVersion.split('.')[0], 10);
-	if (version === 3 || version === 4) {
-		return '3/4';
-	}
-	return String(version) as '5';
+	return null;
 }
 
 /**
@@ -168,7 +202,11 @@ function getSvelteVersion(compilerVersion: string | undefined): SvelteContext['s
  */
 function getProjectRootDir(filePath: string): string | null {
 	if (isRunInBrowser) return null;
-	const packageJsonFilePath = getPackageJson(filePath)?.filePath;
+	const packageJsons = getPackageJsons(filePath);
+	if (packageJsons.length === 0) {
+		return null;
+	}
+	const packageJsonFilePath = packageJsons[0].filePath;
 	if (!packageJsonFilePath) return null;
 	return path.dirname(path.resolve(packageJsonFilePath));
 }
@@ -176,14 +214,45 @@ function getProjectRootDir(filePath: string): string | null {
 export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	const { parserServices } = getSourceCode(context);
 	const { svelteParseContext } = parserServices;
-	const compilerVersion = svelteParseContext?.compilerVersion;
 	const filePath = getFilename(context);
 	const svelteKitContext = getSvelteKitContext(context);
+	const svelteVersion = getSvelteVersion(filePath);
+	const svelteFileType = getSvelteFileType(filePath);
+
+	if (svelteVersion == null) {
+		return {
+			svelteVersion: null,
+			svelteFileType: null,
+			runes: null,
+			svelteKitVersion: svelteKitContext.svelteKitVersion,
+			svelteKitFileType: svelteKitContext.svelteKitFileType
+		};
+	}
+
+	if (svelteFileType === 'other') {
+		return {
+			svelteVersion,
+			svelteFileType,
+			runes: null,
+			svelteKitVersion: svelteKitContext.svelteKitVersion,
+			svelteKitFileType: svelteKitContext.svelteKitFileType
+		};
+	}
+
+	if (svelteVersion === '3/4') {
+		return {
+			svelteVersion,
+			svelteFileType: svelteFileType === '.svelte' ? '.svelte' : 'other',
+			runes: null,
+			svelteKitVersion: svelteKitContext.svelteKitVersion,
+			svelteKitFileType: svelteKitContext.svelteKitFileType
+		};
+	}
 
 	return {
-		svelteVersion: getSvelteVersion(compilerVersion),
+		svelteVersion,
 		runes: svelteParseContext?.runes ?? 'undetermined',
-		svelteFileType: getSvelteFileType(filePath),
+		svelteFileType,
 		svelteKitVersion: svelteKitContext.svelteKitVersion,
 		svelteKitFileType: svelteKitContext.svelteKitFileType
 	};

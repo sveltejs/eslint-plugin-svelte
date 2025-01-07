@@ -4,7 +4,7 @@ import { shouldRun } from '../../src/utils/index.js';
 const actualSvelte3: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '3/4',
 	svelteFileType: '.svelte',
-	runes: false,
+	runes: null,
 	svelteKitVersion: null,
 	svelteKitFileType: null
 };
