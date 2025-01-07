@@ -17,6 +17,14 @@ const actualSvelte5: Parameters<typeof shouldRun>[0] = {
 	svelteKitFileType: null
 };
 
+const actualUndetermined: Parameters<typeof shouldRun>[0] = {
+	svelteVersion: '5',
+	svelteFileType: '.svelte',
+	runes: 'undetermined',
+	svelteKitVersion: null,
+	svelteKitFileType: null
+};
+
 const actualSvelte5Script: Parameters<typeof shouldRun>[0] = {
 	svelteVersion: '5',
 	svelteFileType: '.svelte.[js|ts]',
@@ -140,6 +148,18 @@ describe('shouldRun', () => {
 				}
 			]),
 			false
+		);
+	});
+
+	it('undetermined true', () => {
+		assert.strictEqual(
+			shouldRun(actualUndetermined, [
+				{
+					svelteVersions: ['5'],
+					runes: ['undetermined']
+				}
+			]),
+			true
 		);
 	});
 

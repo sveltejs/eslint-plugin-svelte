@@ -7,9 +7,9 @@ import { getFilename, getSourceCode } from './compat.js';
 const isRunInBrowser = !fs.readFileSync;
 
 export type SvelteContext = {
-	svelteVersion: '3/4' | '5';
+	svelteVersion: '3/4' | '5' | 'undetermined';
 	svelteFileType: '.svelte' | '.svelte.[js|ts]' | null;
-	runes: boolean;
+	runes: boolean | 'undetermined';
 	svelteKitVersion: '1-next' | '1' | '2' | null;
 	svelteKitFileType:
 		| '+page.svelte'
@@ -150,12 +150,15 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 	}
 }
 
-function getSvelteVersion(compilerVersion: string): SvelteContext['svelteVersion'] {
+function getSvelteVersion(compilerVersion: string | undefined): SvelteContext['svelteVersion'] {
+	if (compilerVersion == null) {
+		return 'undetermined';
+	}
 	const version = parseInt(compilerVersion.split('.')[0], 10);
 	if (version === 3 || version === 4) {
 		return '3/4';
 	}
-	return '5';
+	return String(version) as '5';
 }
 
 /**
@@ -173,21 +176,13 @@ function getProjectRootDir(filePath: string): string | null {
 export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	const { parserServices } = getSourceCode(context);
 	const { svelteParseContext } = parserServices;
-	if (svelteParseContext === undefined) {
-		return null;
-	}
-
-	const { compilerVersion } = svelteParseContext;
-	if (compilerVersion === undefined) {
-		return null;
-	}
-
+	const compilerVersion = svelteParseContext?.compilerVersion;
 	const filePath = getFilename(context);
 	const svelteKitContext = getSvelteKitContext(context);
 
 	return {
 		svelteVersion: getSvelteVersion(compilerVersion),
-		runes: svelteParseContext.runes === true,
+		runes: svelteParseContext?.runes ?? 'undetermined',
 		svelteFileType: getSvelteFileType(filePath),
 		svelteKitVersion: svelteKitContext.svelteKitVersion,
 		svelteKitFileType: svelteKitContext.svelteKitFileType
