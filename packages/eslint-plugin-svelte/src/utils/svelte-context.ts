@@ -10,7 +10,7 @@ export type SvelteContext = (
 	| ({
 			svelteVersion: '3/4';
 	  } & {
-			svelteFileType: '.svelte' | 'other';
+			svelteFileType: '.svelte' | null;
 			runes: null;
 	  })
 	| ({
@@ -23,7 +23,7 @@ export type SvelteContext = (
 			  }
 			| {
 					/** e.g. `foo.js` / `package.json` */
-					svelteFileType: 'other';
+					svelteFileType: null;
 					runes: null;
 			  }
 	  ))
@@ -47,7 +47,7 @@ export type SvelteContext = (
 		| null;
 };
 
-function getSvelteFileType(filePath: string): NonNullable<SvelteContext['svelteFileType']> {
+function getSvelteFileType(filePath: string): SvelteContext['svelteFileType'] {
 	if (filePath.endsWith('.svelte')) {
 		return '.svelte';
 	}
@@ -56,7 +56,7 @@ function getSvelteFileType(filePath: string): NonNullable<SvelteContext['svelteF
 		return '.svelte.[js|ts]';
 	}
 
-	return 'other';
+	return null;
 }
 
 function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svelteKitFileType'] {
@@ -229,20 +229,20 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 		};
 	}
 
-	if (svelteFileType === 'other') {
+	if (svelteVersion === '3/4') {
 		return {
 			svelteVersion,
-			svelteFileType,
+			svelteFileType: svelteFileType === '.svelte' ? '.svelte' : null,
 			runes: null,
 			svelteKitVersion: svelteKitContext.svelteKitVersion,
 			svelteKitFileType: svelteKitContext.svelteKitFileType
 		};
 	}
 
-	if (svelteVersion === '3/4') {
+	if (svelteFileType == null) {
 		return {
 			svelteVersion,
-			svelteFileType: svelteFileType === '.svelte' ? '.svelte' : 'other',
+			svelteFileType: null,
 			runes: null,
 			svelteKitVersion: svelteKitContext.svelteKitVersion,
 			svelteKitFileType: svelteKitContext.svelteKitFileType
