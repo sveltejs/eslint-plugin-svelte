@@ -117,10 +117,10 @@ describe('shouldRun', () => {
 		assert.strictEqual(
 			shouldRun(actualSvelteKit, [
 				{
-					svelteKitFileTypes: ['+page.js']
+					svelteKitFileTypes: ['+page.[js|ts]']
 				},
 				{
-					svelteKitFileTypes: ['+page.server.js']
+					svelteKitFileTypes: ['+page.server.[js|ts]']
 				}
 			]),
 			false

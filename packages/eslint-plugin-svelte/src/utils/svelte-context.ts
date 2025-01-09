@@ -37,13 +37,13 @@ export type SvelteContext = (
 	svelteKitVersion: '1.0.0-next' | '1' | '2' | null;
 	svelteKitFileType:
 		| '+page.svelte'
-		| '+page.js'
-		| '+page.server.js'
+		| '+page.[js|ts]'
+		| '+page.server.[js|ts]'
 		| '+error.svelte'
 		| '+layout.svelte'
-		| '+layout.js'
-		| '+layout.server.js'
-		| '+server.js'
+		| '+layout.[js|ts]'
+		| '+layout.server.[js|ts]'
+		| '+server.[js|ts]'
 		| null;
 };
 
@@ -67,11 +67,11 @@ function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svel
 		}
 		case '+page.js':
 		case '+page.ts': {
-			return '+page.js';
+			return '+page.[js|ts]';
 		}
 		case '+page.server.js':
 		case '+page.server.ts': {
-			return '+page.server.js';
+			return '+page.server.[js|ts]';
 		}
 		case '+error.svelte': {
 			return '+error.svelte';
@@ -81,15 +81,15 @@ function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svel
 		}
 		case '+layout.js':
 		case '+layout.ts': {
-			return '+layout.js';
+			return '+layout.[js|ts]';
 		}
 		case '+layout.server.js':
 		case '+layout.server.ts': {
-			return '+layout.server.js';
+			return '+layout.server.[js|ts]';
 		}
 		case '+server.js':
 		case '+server.ts': {
-			return '+server.js';
+			return '+server.[js|ts]';
 		}
 		default: {
 			return null;
