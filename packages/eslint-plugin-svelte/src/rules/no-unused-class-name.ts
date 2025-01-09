@@ -111,7 +111,7 @@ function findClassesInPostCSSNode(
 ): string[] {
 	if (node.type === 'rule') {
 		let classes = node.nodes.flatMap((node) => findClassesInPostCSSNode(node, parserServices));
-		classes = classes.concat(findClassesInSelector(parserServices.getStyleSelectorAST(node)));
+		classes = classes.concat(findClassesInSelector(parserServices.getStyleSelectorAST!(node)));
 		return classes;
 	}
 	if ((node.type === 'root' || node.type === 'atrule') && node.nodes !== undefined) {
