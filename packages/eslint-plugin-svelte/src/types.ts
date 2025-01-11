@@ -8,6 +8,7 @@ import type { Root as SelectorRoot, Node as SelectorNode } from 'postcss-selecto
 import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node.js';
 import type * as TS from 'typescript';
 import type { SourceLocation } from 'svelte-eslint-parser/lib/ast/common.js';
+import type { SvelteContext } from './utils/svelte-context.js';
 
 export type { ASTNode, ASTNodeWithParent, ASTNodeListener };
 export interface RuleListener extends ASTNodeListener {
@@ -108,6 +109,18 @@ export interface PartialRuleMetaData {
 	deprecated?: boolean;
 	replacedBy?: string[] | { note: string };
 	type: 'problem' | 'suggestion' | 'layout';
+	/**
+	 * Conditions to determine whether this rule should be applied.
+	 * Multiple conditions can be specified as array, and the rule will be applied if any one of them matches (logical OR).
+	 * If not specified, the rule will be applied to all files.
+	 */
+	conditions?: {
+		svelteVersions?: SvelteContext['svelteVersion'][];
+		svelteFileTypes?: SvelteContext['svelteFileType'][];
+		runes?: SvelteContext['runes'][];
+		svelteKitVersions?: SvelteContext['svelteKitVersion'][];
+		svelteKitFileTypes?: SvelteContext['svelteKitFileType'][];
+	}[];
 }
 
 export type RuleContext = {

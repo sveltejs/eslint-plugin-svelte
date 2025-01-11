@@ -14,7 +14,8 @@ type PackageJson = {
 };
 
 const isRunOnBrowser = !fs.readFileSync;
-const cache = createCache<PackageJson | null>();
+const packageJsonCache = createCache<PackageJson | null>();
+const packageJsonsCache = createCache<PackageJson[]>();
 
 /**
  * Reads the `package.json` data in a given path.
@@ -49,27 +50,30 @@ function readPackageJson(dir: string): PackageJson | null {
  * @returns A found `package.json` data or `null`.
  *      This object have additional property `filePath`.
  */
-export function getPackageJson(startPath = 'a.js'): PackageJson | null {
-	if (isRunOnBrowser) return null;
+export function getPackageJsons(startPath = 'a.js'): PackageJson[] {
+	if (isRunOnBrowser) return [];
+
+	const cached = packageJsonsCache.get(startPath);
+	if (cached) {
+		return cached;
+	}
+
+	const packageJsons: PackageJson[] = [];
 	const startDir = path.dirname(path.resolve(startPath));
 	let dir = startDir;
 	let prevDir = '';
 	let data = null;
 
 	do {
-		data = cache.get(dir);
+		data = packageJsonCache.get(dir);
 		if (data) {
-			if (dir !== startDir) {
-				cache.set(startDir, data);
-			}
-			return data;
+			packageJsons.push(data);
 		}
 
 		data = readPackageJson(dir);
 		if (data) {
-			cache.set(dir, data);
-			cache.set(startDir, data);
-			return data;
+			packageJsonCache.set(dir, data);
+			packageJsons.push(data);
 		}
 
 		// Go to next.
@@ -77,6 +81,6 @@ export function getPackageJson(startPath = 'a.js'): PackageJson | null {
 		dir = path.resolve(dir, '..');
 	} while (dir !== prevDir);
 
-	cache.set(startDir, null);
-	return null;
+	packageJsonsCache.set(startDir, packageJsons);
+	return packageJsons;
 }
