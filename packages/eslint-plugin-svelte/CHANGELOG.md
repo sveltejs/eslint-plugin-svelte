@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.12
+
+### Patch Changes
+
+- [#990](https://github.com/sveltejs/eslint-plugin-svelte/pull/990) [`12049c0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/12049c026f529feff6056e679ba62f07de948aa5) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: ignore `css_unused_selector` compile error if `<style>` tag has `global` attribute
+
 ## 3.0.0-next.11
 
 ### Minor Changes
