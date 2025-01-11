@@ -14,7 +14,12 @@ export default createRule('experimental-require-slot-types', {
 		messages: {
 			missingSlotsInterface: `The component must define the $$Slots interface.`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			}
+		]
 	},
 	create(context) {
 		let isTs = false;
