@@ -139,31 +139,6 @@ jobs:
         run: pnpm run test
         working-directory: ${{ env.project_root_path }}
 
-  test-for-typescript-eslint-v5:
-    name: Test for typescript-eslint v5
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [18]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-      - name: Install typescript-eslint v5
-        run: |
-          pnpm install -D -w @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5
-          rm -rf node_modules
-      - name: Install Packages
-        run: pnpm install
-      - name: Test
-        run: pnpm run test
-        working-directory: ${{ env.project_root_path }}
-
   update-resources:
     runs-on: ubuntu-latest
     steps:

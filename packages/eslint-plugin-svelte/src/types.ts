@@ -223,10 +223,10 @@ export interface SourceCode {
 		isSvelteScript?: boolean;
 		getSvelteHtmlAst?: () => unknown;
 		getStyleContext?: () => StyleContext;
-		getStyleSelectorAST: (rule: StyleRule) => SelectorRoot;
-		styleNodeLoc: (node: Node) => Partial<SourceLocation>;
-		styleNodeRange: (node: Node) => [number | undefined, number | undefined];
-		styleSelectorNodeLoc: (node: SelectorNode) => Partial<SourceLocation>;
+		getStyleSelectorAST?: (rule: StyleRule) => SelectorRoot;
+		styleNodeLoc?: (node: Node) => Partial<SourceLocation>;
+		styleNodeRange?: (node: Node) => [number | undefined, number | undefined];
+		styleSelectorNodeLoc?: (node: SelectorNode) => Partial<SourceLocation>;
 		svelteParseContext?: {
 			/**
 			 * Whether to use Runes mode.

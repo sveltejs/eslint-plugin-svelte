@@ -1,5 +1,7 @@
 # These are supported funding model platforms
 
+open_collective: svelte
 github: [ota-meshi, JounQin]
-open_collective: rxts
 patreon: 1stG
+custom:
+  - https://opencollective.com/rxts
