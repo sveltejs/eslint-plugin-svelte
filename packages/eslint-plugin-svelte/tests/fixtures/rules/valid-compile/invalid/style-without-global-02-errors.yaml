@@ -1,0 +1,6 @@
+- message: |-
+    Unused CSS selector "input"
+    https://svelte.dev/e/css_unused_selector(css_unused_selector)
+  line: 2
+  column: 2
+  suggestions: null
