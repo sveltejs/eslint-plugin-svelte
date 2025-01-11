@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.11
+
+### Minor Changes
+
+- [#980](https://github.com/sveltejs/eslint-plugin-svelte/pull/980) [`0b28198`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0b28198edd78513e5efc4cfb45e8f1120148435e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: Implement util to conditionally run lint based on Svelte version and SvelteKit routes etc
+
+### Patch Changes
+
+- [#993](https://github.com/sveltejs/eslint-plugin-svelte/pull/993) [`b97a13e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b97a13eb02f9c72346f29e64734f0a304890a197) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: add `:exit` for each node listener
+
 ## 3.0.0-next.10
 
 ### Patch Changes
