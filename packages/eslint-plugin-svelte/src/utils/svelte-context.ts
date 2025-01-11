@@ -7,12 +7,11 @@ import { getFilename, getSourceCode } from './compat.js';
 const isRunInBrowser = !fs.readFileSync;
 
 export type SvelteContext = (
-	| ({
+	| {
 			svelteVersion: '3/4';
-	  } & {
 			svelteFileType: '.svelte' | null;
 			runes: null;
-	  })
+	  }
 	| ({
 			svelteVersion: '5';
 	  } & (
