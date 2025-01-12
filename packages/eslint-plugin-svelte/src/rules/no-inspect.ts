@@ -15,7 +15,13 @@ export default createRule('no-inspect', {
 		messages: {
 			unexpected: 'Do not use $inspect directive'
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['5'],
+				runes: [true, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		return {
