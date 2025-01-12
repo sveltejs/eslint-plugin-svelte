@@ -27,7 +27,16 @@ export default createRule('no-reactive-reassign', {
 			assignmentToReactiveValue: "Assignment to reactive value '{{name}}'.",
 			assignmentToReactiveValueProp: "Assignment to property of reactive value '{{name}}'."
 		},
-		type: 'problem'
+		type: 'problem',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		const props = context.options[0]?.props !== false; // default true
