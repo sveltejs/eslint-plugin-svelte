@@ -1,12 +1,12 @@
 ---
 pageClass: 'rule-details'
 sidebarDepth: 0
-title: 'svelte/no-deprecated-raw-special-elements'
+title: 'svelte/no-raw-special-elements'
 description: 'Recommends not using raw special elements in Svelte versions previous to 5.'
 since: 'v3.0.0-next.1'
 ---
 
-# svelte/no-deprecated-raw-special-elements
+# svelte/no-raw-special-elements
 
 > Recommends not using raw special elements in Svelte versions previous to 5.
 
@@ -20,7 +20,7 @@ This rule reports the usage of `head`, `body`, `window`, `document`, `element` a
 
 ```svelte
 <script>
-  /* eslint svelte/no-deprecated-raw-special-elements: "error" */
+  /* eslint svelte/no-raw-special-elements: "error" */
 </script>
 
 <!-- ✓ GOOD -->
@@ -48,5 +48,5 @@ This rule was introduced in eslint-plugin-svelte v3.0.0-next.1
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-deprecated-raw-special-elements.ts)
-- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-deprecated-raw-special-elements.ts)
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-raw-special-elements.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-raw-special-elements.ts)

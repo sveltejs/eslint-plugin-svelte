@@ -320,7 +320,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. |  |
-| [svelte/no-deprecated-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-deprecated-raw-special-elements/) | Recommends not using raw special elements in Svelte versions previous to 5. | :wrench: |
+| [svelte/no-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/) | Recommends not using raw special elements in Svelte versions previous to 5. | :wrench: |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating |  |
 | [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives |  |

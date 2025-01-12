@@ -20,7 +20,6 @@ import maxAttributesPerLine from '../rules/max-attributes-per-line.js';
 import mustacheSpacing from '../rules/mustache-spacing.js';
 import noAtDebugTags from '../rules/no-at-debug-tags.js';
 import noAtHtmlTags from '../rules/no-at-html-tags.js';
-import noDeprecatedRawSpecialElements from '../rules/no-deprecated-raw-special-elements.js';
 import noDomManipulating from '../rules/no-dom-manipulating.js';
 import noDupeElseIfBlocks from '../rules/no-dupe-else-if-blocks.js';
 import noDupeOnDirectives from '../rules/no-dupe-on-directives.js';
@@ -38,6 +37,7 @@ import noInspect from '../rules/no-inspect.js';
 import noNavigationWithoutBase from '../rules/no-navigation-without-base.js';
 import noNotFunctionHandler from '../rules/no-not-function-handler.js';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches.js';
+import noRawSpecialElements from '../rules/no-raw-special-elements.js';
 import noReactiveFunctions from '../rules/no-reactive-functions.js';
 import noReactiveLiterals from '../rules/no-reactive-literals.js';
 import noReactiveReassign from '../rules/no-reactive-reassign.js';
@@ -91,7 +91,6 @@ export const rules = [
 	mustacheSpacing,
 	noAtDebugTags,
 	noAtHtmlTags,
-	noDeprecatedRawSpecialElements,
 	noDomManipulating,
 	noDupeElseIfBlocks,
 	noDupeOnDirectives,
@@ -109,6 +108,7 @@ export const rules = [
 	noNavigationWithoutBase,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
+	noRawSpecialElements,
 	noReactiveFunctions,
 	noReactiveLiterals,
 	noReactiveReassign,
