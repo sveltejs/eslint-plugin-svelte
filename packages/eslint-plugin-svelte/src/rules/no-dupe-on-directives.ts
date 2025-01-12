@@ -16,7 +16,16 @@ export default createRule('no-dupe-on-directives', {
 			duplication:
 				'This `on:{{type}}` directive is the same and duplicate directives in L{{lineNo}}.'
 		},
-		type: 'problem'
+		type: 'problem',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);
