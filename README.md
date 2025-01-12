@@ -325,7 +325,6 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives |  |
 | [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives |  |
-| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | disallow dynamic slot name | :star::wrench: |
 | [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/) | Checks for invalid raw HTML elements | :wrench: |
@@ -445,6 +444,7 @@ These rules relate to this plugin works:
 | Rule ID | Replaced by |
 |:--------|:------------|
 | [svelte/@typescript-eslint/no-unnecessary-condition](https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
+| [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | Now Svelte compiler itself throws an compile error. |
 | [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) |
 
 <!--RULES_TABLE_END-->

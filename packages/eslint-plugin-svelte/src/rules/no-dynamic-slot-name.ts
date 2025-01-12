@@ -13,15 +13,19 @@ export default createRule('no-dynamic-slot-name', {
 		docs: {
 			description: 'disallow dynamic slot name',
 			category: 'Possible Errors',
-			recommended: true
+			recommended: false
 		},
 		fixable: 'code',
+		deprecated: true,
 		schema: [],
 		messages: {
 			unexpected: '`<slot>` name cannot be dynamic.',
 			requireValue: '`<slot>` name requires a value.'
 		},
-		type: 'problem'
+		type: 'problem',
+		replacedBy: {
+			note: 'Now Svelte compiler itself throws an compile error.'
+		}
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);
