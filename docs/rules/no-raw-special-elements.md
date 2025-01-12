@@ -2,19 +2,19 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-raw-special-elements'
-description: 'Recommends not using raw special elements in Svelte versions previous to 5.'
+description: 'Checks for invalid raw HTML elements'
 since: 'v3.0.0-next.1'
 ---
 
 # svelte/no-raw-special-elements
 
-> Recommends not using raw special elements in Svelte versions previous to 5.
+> Checks for invalid raw HTML elements
 
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
-This rule reports the usage of `head`, `body`, `window`, `document`, `element` and `options` HTML elements. These elements were valid in in versions proior to 5, but since Svelte 5 they must be used with `svelte:`.
+This rule reports the usage of `head`, `body`, `window`, `document`, `element` and `options` HTML elements. These elements are not valid in Svelte, despite them working in versions previous to v5. Such elements must be prefixed with `svelte:`.
 
 <!--eslint-skip-->
 

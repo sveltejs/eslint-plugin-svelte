@@ -191,7 +191,7 @@ export interface RuleOptions {
    */
   'svelte/no-object-in-text-mustaches'?: Linter.RuleEntry<[]>
   /**
-   * Recommends not using raw special elements in Svelte versions previous to 5.
+   * Checks for invalid raw HTML elements
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/
    */
   'svelte/no-raw-special-elements'?: Linter.RuleEntry<[]>

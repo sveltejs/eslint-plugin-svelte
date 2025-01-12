@@ -7,7 +7,7 @@ const VALID_PREFIX = 'svelte:';
 export default createRule('no-raw-special-elements', {
 	meta: {
 		docs: {
-			description: 'Recommends not using raw special elements in Svelte versions previous to 5.',
+			description: 'Checks for invalid raw HTML elements',
 			category: 'Possible Errors',
 			// TODO: Switch to recommended in the major version
 			recommended: false
