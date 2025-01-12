@@ -95,6 +95,18 @@ export default createRule('no-not-function-handler', {
 					return;
 				}
 				verify(node.expression);
+			},
+			SvelteAttribute(node) {
+				if (node.key.type === 'SvelteName' && node.key.name.startsWith('on')) {
+					const { value } = node;
+					if (Array.isArray(value)) {
+						for (const v of value) {
+							if (v.type === 'SvelteMustacheTag') {
+								verify(v.expression);
+							}
+						}
+					}
+				}
 			}
 		};
 	}

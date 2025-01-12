@@ -1,0 +1,12 @@
+- message: Unexpected number value in event handler.
+  line: 7
+  column: 18
+  suggestions: null
+- message: Unexpected bigint value in event handler.
+  line: 8
+  column: 18
+  suggestions: null
+- message: Unexpected regex value in event handler.
+  line: 9
+  column: 18
+  suggestions: null
