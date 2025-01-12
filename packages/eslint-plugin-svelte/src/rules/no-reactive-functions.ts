@@ -16,7 +16,16 @@ export default createRule('no-reactive-functions', {
 			noReactiveFns: `Do not create functions inside reactive statements unless absolutely necessary.`,
 			fixReactiveFns: `Move the function out of the reactive statement`
 		},
-		type: 'suggestion' // "problem", or "layout",
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		return {
