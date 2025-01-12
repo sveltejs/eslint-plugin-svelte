@@ -378,7 +378,17 @@ export default createRule('infinite-reactive-loop', {
 			unexpectedCall:
 				'Possibly it may occur an infinite reactive loop because this function may update `{{variableName}}`.'
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		// Do not run this rule on Svelte 5 with runes.
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		return {
