@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': minor
 ---
 
-Renamed `no-deprecated-raw-special-elements` in favor of `no-raw-special-elements`
+fix!: rename `no-deprecated-raw-special-elements` to `no-raw-special-elements`
