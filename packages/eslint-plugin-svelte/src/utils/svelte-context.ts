@@ -145,7 +145,7 @@ function getSvelteVersion(filePath: string): SvelteContext['svelteVersion'] {
 			if (typeof version !== 'string') {
 				continue;
 			}
-			const major = version.split('.')[0];
+			const major = extractMajorVersion(version);
 			if (major === '3' || major === '4') {
 				return '3/4';
 			}
@@ -185,12 +185,24 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 			if (typeof version !== 'string') {
 				return null;
 			}
-			return version.split('.')[0] as SvelteContext['svelteKitVersion'];
+
+			if (version.includes('1.0.0-next')) {
+				return '1.0.0-next';
+			}
+			return extractMajorVersion(version) as SvelteContext['svelteKitVersion'];
 		}
 	} catch {
 		/** do nothing */
 	}
 
+	return null;
+}
+
+function extractMajorVersion(version: string): string | null {
+	const match = /^(?:\^|~)?(\d+)\./.exec(version);
+	if (match && match[1]) {
+		return match[1];
+	}
 	return null;
 }
 
