@@ -4,7 +4,7 @@
   <img>
   <TestComponent />
   <svg><path></path></svg>
-  <math><msup></msup></math>
+  <math><msup/></math>
 </div>
 <!-- prettier-ignore -->
 <svelte:head></svelte:head>
