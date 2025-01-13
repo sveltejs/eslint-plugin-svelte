@@ -1,5 +1,23 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.13
+
+### Major Changes
+
+- [#982](https://github.com/sveltejs/eslint-plugin-svelte/pull/982) [`04fc429`](https://github.com/sveltejs/eslint-plugin-svelte/commit/04fc4292ef68134691ac1808fd92688bd9982d37) Thanks [@baseballyama](https://github.com/baseballyama)! - feat!: Updated the `html-self-closing` rule to follow Svelte5
+
+### Minor Changes
+
+- [#1015](https://github.com/sveltejs/eslint-plugin-svelte/pull/1015) [`8369eaf`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8369eaf5d2e77fccf0ac9fb3f663d94a2b323a4f) Thanks [@mikededo](https://github.com/mikededo)! - fix!: rename `no-deprecated-raw-special-elements` to `no-raw-special-elements`
+
+### Patch Changes
+
+- [#1009](https://github.com/sveltejs/eslint-plugin-svelte/pull/1009) [`a003664`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a0036643b5451f0423cd61dafd092c39bd6f4bcb) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: upgrade `svelte-eslint-parser` to `1.0.0-next.8`
+
+- [#1020](https://github.com/sveltejs/eslint-plugin-svelte/pull/1020) [`eae0e2e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eae0e2e52c2812ea630eea45e5be4f439191c806) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to `1.0.0-next.9`
+
+- [#1007](https://github.com/sveltejs/eslint-plugin-svelte/pull/1007) [`8e9199a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8e9199ae326110778e4b0557616d394c6ac5e847) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: update method for extracting major version
+
 ## 3.0.0-next.12
 
 ### Patch Changes
