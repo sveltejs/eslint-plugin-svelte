@@ -9,18 +9,6 @@ import type {
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import { getSourceCode } from '../utils/compat.js';
 import { createRule } from '../utils/index.js';
-import type { RuleContext, SourceCode } from '../types.js';
-
-interface RuleGlobals {
-	checkGlobal: boolean;
-	style: string[];
-	classSelections: Map<string, AST.SvelteHTMLElement[]>;
-	idSelections: Map<string, AST.SvelteHTMLElement[]>;
-	typeSelections: Map<string, AST.SvelteHTMLElement[]>;
-	context: RuleContext;
-	getStyleSelectorAST: NonNullable<SourceCode['parserServices']['getStyleSelectorAST']>;
-	styleSelectorNodeLoc: NonNullable<SourceCode['parserServices']['styleSelectorNodeLoc']>;
-}
 
 export default createRule('consistent-selector-style', {
 	meta: {
@@ -61,9 +49,15 @@ export default createRule('consistent-selector-style', {
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);
-		if (!sourceCode.parserServices.isSvelte) {
+		if (
+			!sourceCode.parserServices.isSvelte ||
+			sourceCode.parserServices.getStyleSelectorAST === undefined ||
+			sourceCode.parserServices.styleSelectorNodeLoc === undefined
+		) {
 			return {};
 		}
+		const getStyleSelectorAST = sourceCode.parserServices.getStyleSelectorAST;
+		const styleSelectorNodeLoc = sourceCode.parserServices.styleSelectorNodeLoc;
 
 		const checkGlobal = context.options[0]?.checkGlobal ?? false;
 		const style = context.options[0]?.style ?? ['type', 'id', 'class'];
@@ -71,6 +65,123 @@ export default createRule('consistent-selector-style', {
 		const classSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
 		const idSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
 		const typeSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
+
+		/**
+		 * Checks selectors in a given PostCSS node
+		 */
+		function checkSelectorsInPostCSSNode(node: AnyNode): void {
+			if (node.type === 'rule') {
+				checkSelector(getStyleSelectorAST(node));
+			}
+			if (
+				(node.type === 'root' ||
+					(node.type === 'rule' && (node.selector !== ':global' || checkGlobal)) ||
+					node.type === 'atrule') &&
+				node.nodes !== undefined
+			) {
+				node.nodes.flatMap((node) => checkSelectorsInPostCSSNode(node));
+			}
+		}
+
+		/**
+		 * Checks an individual selector
+		 */
+		function checkSelector(node: SelectorNode): void {
+			if (node.type === 'class') {
+				checkClassSelector(node);
+			}
+			if (node.type === 'id') {
+				checkIdSelector(node);
+			}
+			if (node.type === 'tag') {
+				checkTypeSelector(node);
+			}
+			if (
+				(node.type === 'pseudo' && (node.value !== ':global' || checkGlobal)) ||
+				node.type === 'root' ||
+				node.type === 'selector'
+			) {
+				node.nodes.flatMap((node) => checkSelector(node));
+			}
+		}
+
+		/**
+		 * Checks a class selector
+		 */
+		function checkClassSelector(node: SelectorClass): void {
+			const selection = classSelections.get(node.value) ?? [];
+			for (const styleValue of style) {
+				if (styleValue === 'class') {
+					return;
+				}
+				if (styleValue === 'id' && canUseIdSelector(selection)) {
+					context.report({
+						messageId: 'classShouldBeId',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+					context.report({
+						messageId: 'classShouldBeType',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+			}
+		}
+
+		/**
+		 * Checks an ID selector
+		 */
+		function checkIdSelector(node: SelectorIdentifier): void {
+			const selection = idSelections.get(node.value) ?? [];
+			for (const styleValue of style) {
+				if (styleValue === 'class') {
+					context.report({
+						messageId: 'idShouldBeClass',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+				if (styleValue === 'id') {
+					return;
+				}
+				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+					context.report({
+						messageId: 'idShouldBeType',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+			}
+		}
+
+		/**
+		 * Checks a type selector
+		 */
+		function checkTypeSelector(node: SelectorTag): void {
+			const selection = typeSelections.get(node.value) ?? [];
+			for (const styleValue of style) {
+				if (styleValue === 'class') {
+					context.report({
+						messageId: 'typeShouldBeClass',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+				if (styleValue === 'id' && canUseIdSelector(selection)) {
+					context.report({
+						messageId: 'typeShouldBeId',
+						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
+					});
+					return;
+				}
+				if (styleValue === 'type') {
+					return;
+				}
+			}
+		}
 
 		return {
 			SvelteElement(node) {
@@ -97,21 +208,11 @@ export default createRule('consistent-selector-style', {
 				const styleContext = sourceCode.parserServices.getStyleContext!();
 				if (
 					styleContext.status !== 'success' ||
-					sourceCode.parserServices.getStyleSelectorAST === undefined ||
-					sourceCode.parserServices.styleSelectorNodeLoc === undefined
+					sourceCode.parserServices.getStyleSelectorAST === undefined
 				) {
 					return;
 				}
-				checkSelectorsInPostCSSNode(styleContext.sourceAst, {
-					checkGlobal,
-					style,
-					classSelections,
-					idSelections,
-					typeSelections,
-					context,
-					getStyleSelectorAST: sourceCode.parserServices.getStyleSelectorAST,
-					styleSelectorNodeLoc: sourceCode.parserServices.styleSelectorNodeLoc
-				});
+				checkSelectorsInPostCSSNode(styleContext.sourceAst);
 			}
 		};
 	}
@@ -129,133 +230,16 @@ function addToArrayMap(
 }
 
 /**
- * Checks selectors in a given PostCSS node
- */
-function checkSelectorsInPostCSSNode(node: AnyNode, ruleGlobals: RuleGlobals): void {
-	if (node.type === 'rule') {
-		checkSelector(ruleGlobals.getStyleSelectorAST(node), ruleGlobals);
-	}
-	if (
-		(node.type === 'root' ||
-			(node.type === 'rule' && (node.selector !== ':global' || ruleGlobals.checkGlobal)) ||
-			node.type === 'atrule') &&
-		node.nodes !== undefined
-	) {
-		node.nodes.flatMap((node) => checkSelectorsInPostCSSNode(node, ruleGlobals));
-	}
-}
-
-/**
- * Checks an individual selector
- */
-function checkSelector(node: SelectorNode, ruleGlobals: RuleGlobals): void {
-	if (node.type === 'class') {
-		checkClassSelector(node, ruleGlobals);
-	}
-	if (node.type === 'id') {
-		checkIdSelector(node, ruleGlobals);
-	}
-	if (node.type === 'tag') {
-		checkTypeSelector(node, ruleGlobals);
-	}
-	if (
-		(node.type === 'pseudo' && (node.value !== ':global' || ruleGlobals.checkGlobal)) ||
-		node.type === 'root' ||
-		node.type === 'selector'
-	) {
-		node.nodes.flatMap((node) => checkSelector(node, ruleGlobals));
-	}
-}
-
-/**
- * Checks a class selector
- */
-function checkClassSelector(node: SelectorClass, ruleGlobals: RuleGlobals): void {
-	const selection = ruleGlobals.classSelections.get(node.value) ?? [];
-	for (const styleValue of ruleGlobals.style) {
-		if (styleValue === 'class') {
-			return;
-		}
-		if (styleValue === 'id' && couldBeId(selection)) {
-			ruleGlobals.context.report({
-				messageId: 'classShouldBeId',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-		if (styleValue === 'type' && couldBeType(selection, ruleGlobals.typeSelections)) {
-			ruleGlobals.context.report({
-				messageId: 'classShouldBeType',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-	}
-}
-
-/**
- * Checks an ID selector
- */
-function checkIdSelector(node: SelectorIdentifier, ruleGlobals: RuleGlobals): void {
-	const selection = ruleGlobals.idSelections.get(node.value) ?? [];
-	for (const styleValue of ruleGlobals.style) {
-		if (styleValue === 'class') {
-			ruleGlobals.context.report({
-				messageId: 'idShouldBeClass',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-		if (styleValue === 'id') {
-			return;
-		}
-		if (styleValue === 'type' && couldBeType(selection, ruleGlobals.typeSelections)) {
-			ruleGlobals.context.report({
-				messageId: 'idShouldBeType',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-	}
-}
-
-/**
- * Checks a type selector
- */
-function checkTypeSelector(node: SelectorTag, ruleGlobals: RuleGlobals): void {
-	const selection = ruleGlobals.typeSelections.get(node.value) ?? [];
-	for (const styleValue of ruleGlobals.style) {
-		if (styleValue === 'class') {
-			ruleGlobals.context.report({
-				messageId: 'typeShouldBeClass',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-		if (styleValue === 'id' && couldBeId(selection)) {
-			ruleGlobals.context.report({
-				messageId: 'typeShouldBeId',
-				loc: ruleGlobals.styleSelectorNodeLoc(node) as AST.SourceLocation
-			});
-			return;
-		}
-		if (styleValue === 'type') {
-			return;
-		}
-	}
-}
-
-/**
  * Checks whether a given selection could be obtained using an ID selector
  */
-function couldBeId(selection: AST.SvelteHTMLElement[]): boolean {
+function canUseIdSelector(selection: AST.SvelteHTMLElement[]): boolean {
 	return selection.length <= 1;
 }
 
 /**
  * Checks whether a given selection could be obtained using a type selector
  */
-function couldBeType(
+function canUseTypeSelector(
 	selection: AST.SvelteHTMLElement[],
 	typeSelections: Map<string, AST.SvelteHTMLElement[]>
 ): boolean {
