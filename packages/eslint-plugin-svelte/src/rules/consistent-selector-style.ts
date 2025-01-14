@@ -275,18 +275,5 @@ function couldBeType(
  * Compares two arrays for item equality
  */
 function arrayEquals(array1: AST.SvelteHTMLElement[], array2: AST.SvelteHTMLElement[]): boolean {
-	function comparator(a: AST.SvelteHTMLElement, b: AST.SvelteHTMLElement): number {
-		return a.range[0] - b.range[0];
-	}
-
-	const array2Sorted = array2.slice().sort(comparator);
-	return (
-		array1.length === array2.length &&
-		array1
-			.slice()
-			.sort(comparator)
-			.every(function (value, index) {
-				return value === array2Sorted[index];
-			})
-	);
+	return array1.length === array2.length && array1.every((e) => array2.includes(e));
 }
