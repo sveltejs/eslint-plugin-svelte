@@ -33,7 +33,6 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param                                                                                                   |                |
 | [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                 | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                                               | :wrench:       |
 | [svelte/valid-compile](./rules/valid-compile.md)                                                 | disallow warnings when compiling.                                                                                                      | :star:         |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                 | disallow props other than data or errors in SvelteKit page components.                                                                 |                |
 
 ## Security Vulnerability
 
@@ -114,6 +113,7 @@ These rules relate to SvelteKit and its best Practices.
 | :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- | :-- |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.   |     |
 | [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md)                                     | disallow using navigation (links, goto, pushState, replaceState) without the base path |     |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                 |     |
 
 ## Experimental
 
