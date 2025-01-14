@@ -13,7 +13,12 @@ description: 'enforce a consistent style for CSS selectors'
 
 ## :book: Rule Details
 
-This rule allows you to set a preferred style for your CSS (& other style language) selectors. In CSS, there is a wide list of options for selecting elements, however, the three most basic types select by element type (i.e. tag name), ID or class. This rule allows you to set a preference for some of these three styles over others. Not all selectors can be used in all situations, however. While class selectors can be used in any situation, ID selectors can only be used to select a single element and type selectors are only applicable when the list of selected elements is the list of all elements of the particular type. To help with this, the rule accepts a list of selector style preferences and reports situations when the given selector can be rewritten using a more preferred style.
+This rule allows you to set a preferred style for your CSS (& other style language) selectors. In CSS, there is a wide list of options for selecting elements, however, the three most basic types are:
+
+- Selecting by element type (i.e. tag name), such as `a {}`
+- Selecting by element ID, such as `#link {}`
+- Selecting by element class, such as `.link {}`
+  This rule allows you to set a preference for some of these three styles over others. Not all selectors can be used in all situations, however. While class selectors can be used in any situation, ID selectors can only be used to select a single element and type selectors are only applicable when the list of selected elements is the list of all elements of the particular type. To help with this, the rule accepts a list of selector style preferences and reports situations when the given selector can be rewritten using a more preferred style.
 
 <!--eslint-skip-->
 
