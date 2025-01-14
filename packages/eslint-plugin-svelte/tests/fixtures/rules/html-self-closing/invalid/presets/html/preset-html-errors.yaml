@@ -10,11 +10,11 @@
   line: 5
   column: 18
   suggestions: null
-- message: Require self-closing on foreign (SVG or MathML) elements.
+- message: Require self-closing on SVG elements.
   line: 6
   column: 13
   suggestions: null
-- message: Require self-closing on foreign (SVG or MathML) elements.
+- message: Disallow self-closing on MathML elements.
   line: 7
   column: 14
   suggestions: null

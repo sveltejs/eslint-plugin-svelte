@@ -1,7 +1,7 @@
 {
 	"options": [
 		{
-			"foreign": "never"
+			"normal": "always"
 		}
 	]
 }
