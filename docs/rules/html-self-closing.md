@@ -14,10 +14,10 @@ since: 'v2.5.0'
 
 ## :book: Rule Details
 
-You can choose either two styles for elements without content
+You can choose either two styles for elements without content.
 
-- always: `<div />`
-- never: `<div></div>`
+- always: `<SomeComponent />`
+- never: `<SomeComponent></SomeComponent>`
 
 <!-- prettier-ignore-start -->
 <!--eslint-skip-->
@@ -28,18 +28,21 @@ You can choose either two styles for elements without content
 </script>
 
 <!-- ✓ GOOD -->
-<div />
 <p>Hello</p>
-<div><div /></div>
+<div></div>
 <img />
 <svelte:head />
+<svg><path /></svg>
+<math><msup></msup></math>
+<SomeComponent />
 
 <!-- ✗ BAD -->
-<div></div>
-<p> </p>
-<div><div></div></div>
-<img>
+<div />
+<div><div /></div>
 <svelte:body></svelte:body>
+<svg><path></path></svg>
+<math><msup /></math>
+<SomeComponent></SomeComponent>
 ```
 
 <!-- prettier-ignore-end -->
@@ -52,7 +55,7 @@ presets:
 {
   "svelte/html-self-closing": [
     "error",
-    "all" // or "html" or "none"
+    "default" // or "all" or "html" or "none"
   ]
 }
 ```
@@ -65,8 +68,9 @@ config object:
     "error",
     {
       "void": "always", // or "never" or "ignore"
-      "normal": "always", // or "never" or "ignore"
-      "foreign": "always", // or "never" or "ignore"
+      "normal": "never", // or "always" or "ignore"
+      "svg": "always", // or "never" or "ignore"
+      "never": "never", // or "always" or "ignore"
       "component": "always", // or "never" or "ignore"
       "svelte": "always" // or "never" or "ignore"
     }
@@ -76,23 +80,33 @@ config object:
 
 presets:
 
-- `all` - all elements should be self closing (unless they have children)
-- `html` - html-compliant - only void elements and svelte special elements should be self closing
-- `none` - no elements should be self closing
+- `default` - MathML and non-void HTML elements should have a closing tag; otherwise, they should be self-closing.
+- `all` - all elements should be self-closing (unless they have children)
+- `html` - html-compliant - only void elements and svelte special elements should be self-closing
+- `none` - no elements should be self-closing
+
+::: warning Note
+We recommend selecting `default` as the preset. Choosing any other option may result in settings that are inconsistent with the compiler when using Svelte5.
+:::
 
 config object:
 
 - `void` (`"always"` in default preset)... Style of HTML void elements
-- `foreign` (`"always"` in default preset)... Style of foreign elements (SVG and MathML)
+- `normal` (`"never"` in default preset)... Style of other elements
+- `svg` (`"always"` in default preset)... Style of SVG
+- `math` (`never` in default preset)... Style of MathML
 - `component` (`"always"` in default preset)... Style of svelte components
 - `svelte` (`"always"` in default preset)... Style of svelte special elements (`<svelte:head>`, `<svelte:self>`)
-- `normal` (`"always"` in default preset)... Style of other elements
 
-Every config oject option can be set to
+::: warning
+`foreign` is removed in `eslint-plugin-svelte` v3.
+:::
 
-- "always" (`<div />`)
-- "never" (`<div></div>`)
-- "ignore" (either `<div />` or `<div></div>`)
+Every config object option can be set to
+
+- "always" (`<SomeComponent />`)
+- "never" (`<SomeComponent></SomeComponent>`)
+- "ignore" (either `<SomeComponent />` or `<SomeComponent></SomeComponent>`)
 
 ## :rocket: Version
 

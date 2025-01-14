@@ -567,6 +567,14 @@ export function isForeignElement(node: SvAST.SvelteElement): boolean {
 	return svgElements.includes(getNodeName(node)) || mathmlElements.includes(getNodeName(node));
 }
 
+export function isSvgElement(node: SvAST.SvelteElement): boolean {
+	return svgElements.includes(getNodeName(node));
+}
+
+export function isMathMLElement(node: SvAST.SvelteElement): boolean {
+	return mathmlElements.includes(getNodeName(node));
+}
+
 /** Checks whether the given identifier node is used as an expression. */
 export function isExpressionIdentifier(node: TSESTree.Identifier): boolean {
 	const parent = node.parent;

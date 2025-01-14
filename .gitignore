@@ -113,3 +113,5 @@ docs-svelte-kit/build
 /docs-svelte-kit/src/routes/*.md
 /docs-svelte-kit/src/routes/**/*.md
 packages/eslint-plugin-svelte/README.md
+
+**/.DS_Store
