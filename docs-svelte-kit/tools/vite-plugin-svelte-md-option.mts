@@ -9,9 +9,12 @@ import containerPluginOption from './markdown-it-container-option.mjs';
 import slugify from '@sindresorhus/slugify';
 import type { Options } from 'vite-plugin-svelte-md';
 import { createTwoslasher as createTwoslasherESLint } from 'twoslash-eslint';
+import { type TwoslashGenericFunction } from 'twoslash-protocol';
 import Shiki from '@shikijs/markdown-it';
 import plugin from 'eslint-plugin-svelte';
 import { transformerTwoslash } from '@shikijs/twoslash';
+import tsParser from '@typescript-eslint/parser';
+import path from 'path';
 
 const shikiPlugin = await Shiki({
 	theme: 'dark-plus',
@@ -27,16 +30,47 @@ const shikiPlugin = await Shiki({
 			},
 			explicitTrigger: false,
 			// Pass the custom twoslasher
-			twoslasher: createTwoslasherESLint({
-				eslintConfig: [...plugin.configs['flat/base']],
-				includeDocs: false
-			}),
+			twoslasher: adjustTwoslasherESLint(
+				createTwoslasherESLint({
+					eslintConfig: [
+						...plugin.configs['flat/base'],
+						{
+							files: ['**/*.svelte'],
+							languageOptions: {
+								parserOptions: {
+									parser: {
+										ts: tsParser
+									}
+								}
+							},
+							settings: {
+								svelte: {
+									kit: {
+										files: {
+											routes: ''
+										}
+									}
+								}
+							}
+						}
+					],
+					includeDocs: false
+				})
+			),
 			rendererRich: {
 				errorRendering: 'hover'
 			}
 		})
 	]
 });
+
+function adjustTwoslasherESLint(base: TwoslashGenericFunction): TwoslashGenericFunction {
+	// Change the file name to `+page` to make the rules for Svelte Kit work.
+	return (code, file, options) => {
+		const filename = file?.includes('.') ? file : `+page.${file ?? 'ts'}`;
+		return base(code, path.join(process.cwd(), filename), options);
+	};
+}
 
 export default (options: { baseUrl: string; root: string }): Options => ({
 	wrapperClasses: [],

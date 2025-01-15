@@ -15,17 +15,6 @@ since: 'v2.12.0'
 This rule reports unexpected exported variables at `<script>`.<br>
 At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to the props returned from a load function, page components now have a single data prop.
 
-<script>
-  const config = {settings: {
-    kit: {
-      files: {
-        routes: "",
-      },
-    },
-  },
-  }
-</script>
-
 <!--eslint-skip-->
 
 ```svelte
