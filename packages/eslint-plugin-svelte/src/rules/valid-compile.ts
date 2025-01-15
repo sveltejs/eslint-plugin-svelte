@@ -55,16 +55,22 @@ export default createRule('valid-compile', {
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
-		const onwarn = sourceCode.parserServices.svelteParseContext?.svelteConfig?.onwarn;
+		const { onwarn, warningFilter } =
+			sourceCode.parserServices.svelteParseContext?.svelteConfig ?? {};
 
-		const transform: (warning: Warning) => Warning | null = onwarn
+		const transform: (warning: Warning) => Warning | null = warningFilter
 			? (warning) => {
 					if (!warning.code) return warning;
-					let result: Warning | null = null;
-					onwarn(warning, (reportWarn) => (result = reportWarn));
-					return result;
+					return warningFilter(warning) ? warning : null;
 				}
-			: (warning) => warning;
+			: onwarn
+				? (warning) => {
+						if (!warning.code) return warning;
+						let result: Warning | null = null;
+						onwarn(warning, (reportWarn) => (result = reportWarn));
+						return result;
+					}
+				: (warning) => warning;
 
 		const ignoreWarnings = Boolean(context.options[0]?.ignoreWarnings);
 		const globalStyleRanges: [Position, Position][] = [];
