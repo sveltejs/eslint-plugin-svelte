@@ -1,0 +1,48 @@
+- message: Selector should select by ID instead of class
+  line: 12
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 13
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 14
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 15
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 15
+  column: 11
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 16
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 17
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of element type
+  line: 18
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of element type
+  line: 19
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 20
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of element type
+  line: 20
+  column: 11
+  suggestions: null
+- message: Selector should select by ID instead of element type
+  line: 21
+  column: 3
+  suggestions: null

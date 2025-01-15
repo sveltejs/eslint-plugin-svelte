@@ -35,6 +35,11 @@ export interface RuleOptions {
    */
   'svelte/comment-directive'?: Linter.RuleEntry<SvelteCommentDirective>
   /**
+   * enforce a consistent style for CSS selectors
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/consistent-selector-style/
+   */
+  'svelte/consistent-selector-style'?: Linter.RuleEntry<SvelteConsistentSelectorStyle>
+  /**
    * derived store should use same variable names between values and callback
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/
    */
@@ -386,6 +391,12 @@ type SvelteButtonHasType = []|[{
 // ----- svelte/comment-directive -----
 type SvelteCommentDirective = []|[{
   reportUnusedDisableDirectives?: boolean
+}]
+// ----- svelte/consistent-selector-style -----
+type SvelteConsistentSelectorStyle = []|[{
+  checkGlobal?: boolean
+  
+  style?: []|[("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
 }]
 // ----- svelte/first-attribute-linebreak -----
 type SvelteFirstAttributeLinebreak = []|[{

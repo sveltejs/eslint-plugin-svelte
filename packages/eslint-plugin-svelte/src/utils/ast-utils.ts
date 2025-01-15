@@ -546,6 +546,30 @@ function getAttributeValueRangeTokens(
 }
 
 /**
+ * Extract all class names used in a HTML element attribute.
+ */
+export function findClassesInAttribute(
+	attribute:
+		| SvAST.SvelteAttribute
+		| SvAST.SvelteShorthandAttribute
+		| SvAST.SvelteSpreadAttribute
+		| SvAST.SvelteDirective
+		| SvAST.SvelteStyleDirective
+		| SvAST.SvelteSpecialDirective
+		| SvAST.SvelteGenericsDirective
+): string[] {
+	if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'class') {
+		return attribute.value.flatMap((value) =>
+			value.type === 'SvelteLiteral' ? value.value.trim().split(/\s+/u) : []
+		);
+	}
+	if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
+		return [attribute.key.name.name];
+	}
+	return [];
+}
+
+/**
  * Returns name of SvelteElement
  */
 export function getNodeName(node: SvAST.SvelteElement): string {
