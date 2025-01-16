@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/consistent-selector-style'
 description: 'enforce a consistent style for CSS selectors'
+since: 'v3.0.0-next.15'
 ---
 
 # svelte/consistent-selector-style
 
 > enforce a consistent style for CSS selectors
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -91,6 +90,10 @@ This rule allows you to set a preferred style for your CSS (& other style langua
 ## :books: Further Reading
 
 - [CSS selector documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.0.0-next.15
 
 ## :mag: Implementation
 
