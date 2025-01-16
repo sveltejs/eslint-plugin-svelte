@@ -2,6 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { findVariable } from '../utils/ast-utils.js';
+import { EVENT_NAMES } from '../utils/events.js';
 
 const PHRASES = {
 	ObjectExpression: 'object',
@@ -97,7 +98,7 @@ export default createRule('no-not-function-handler', {
 				verify(node.expression);
 			},
 			SvelteAttribute(node) {
-				if (node.key.type === 'SvelteName' && node.key.name.startsWith('on')) {
+				if (node.key.type === 'SvelteName' && EVENT_NAMES.includes(node.key.name)) {
 					const { value } = node;
 					if (Array.isArray(value)) {
 						for (const v of value) {
