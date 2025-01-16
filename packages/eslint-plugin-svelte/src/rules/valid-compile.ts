@@ -4,13 +4,7 @@ import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns/index.j
 import { getSourceCode } from '../utils/compat.js';
 import type { Position } from 'svelte-eslint-parser/lib/ast/common.js';
 
-const ignores: string[] = [
-	'missing-declaration',
-	// Svelte v4
-	'dynamic-slot-name',
-	// Svelte v5
-	'invalid-slot-name'
-] as const;
+const ignores: string[] = ['missing-declaration'] as const;
 
 const unusedSelectorWarnings: string[] = ['css_unused_selector', 'css-unused-selector'] as const;
 
