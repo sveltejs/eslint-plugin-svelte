@@ -76,6 +76,7 @@ export default createRule('require-store-reactive-access', {
 					if (node.key.name.name !== 'this' && canAcceptStoreAttributeElement(node.parent.parent)) {
 						return;
 					}
+					// Check for <input bind:value={ () => {}, (v) => {} } />
 					if (node.expression?.type === 'SvelteFunctionBindingsExpression') {
 						for (const expr of node.expression.expressions) {
 							verifyExpression(expr, {
