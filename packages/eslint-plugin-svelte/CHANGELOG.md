@@ -1,5 +1,29 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.15
+
+### Minor Changes
+
+- [#925](https://github.com/sveltejs/eslint-plugin-svelte/pull/925) [`faf90ef`](https://github.com/sveltejs/eslint-plugin-svelte/commit/faf90ef9a6aab3ec647c30df67a54a25d8322324) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `consistent-selector-style` rule
+
+- [#984](https://github.com/sveltejs/eslint-plugin-svelte/pull/984) [`35d80a5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/35d80a50f1053666153bfc7221b945055bfb76d1) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support `warningFilter` in `valid-compile` rule
+
+### Patch Changes
+
+- [#1016](https://github.com/sveltejs/eslint-plugin-svelte/pull/1016) [`91999e3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/91999e3520afe42b3cc51f0823f7c912b97176b4) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: change the rule category of `valid-prop-names-in-kit-pages` to `SvelteKit`
+
+- [#1012](https://github.com/sveltejs/eslint-plugin-svelte/pull/1012) [`763cf7a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/763cf7ace209dfb90cf7d1d7e6699a6c0fe240d6) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: change the rule category of `no-export-load-in-svelte-module-in-kit-pages` to `SvelteKit`
+
+- [#1017](https://github.com/sveltejs/eslint-plugin-svelte/pull/1017) [`806d72a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/806d72ad55908fb967252ea0514672b026a6bd09) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-functions` rule on Svelte 5 with runes
+
+- [#1014](https://github.com/sveltejs/eslint-plugin-svelte/pull/1014) [`74373ec`](https://github.com/sveltejs/eslint-plugin-svelte/commit/74373ec77aa9063c64657faefc01ca331e27b599) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-reassign` rule on Svelte 5 with runes
+
+- [#1026](https://github.com/sveltejs/eslint-plugin-svelte/pull/1026) [`1bed311`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1bed311084c58a9893e2b578f8b34c2fcb2e8d8b) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to `v1.0.0-next.12`
+
+- [#1018](https://github.com/sveltejs/eslint-plugin-svelte/pull/1018) [`5bdc906`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5bdc906fc1e32835ab3b75dfd2a6a08b4cbb968b) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run the `no-inspect` rule only in Svelte 5’s runes mode
+
+- [#1006](https://github.com/sveltejs/eslint-plugin-svelte/pull/1006) [`5fd91ba`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5fd91baa1835cbffc58a8c473ccf70f3f02a34e6) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `infinite-reactive-loop` rule on Svelte 5 with runes
+
 ## 3.0.0-next.14
 
 ### Patch Changes
