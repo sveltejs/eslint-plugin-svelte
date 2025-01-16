@@ -25,7 +25,7 @@ This rule supports [svelte-eslint-parser]'s AST.
 
 ```svelte
 <script>
-  /* eslint svelte/no-inner-declarations: "error" */
+  /* eslint svelte/no-inner-declarations: ["error", "functions", { blockScopedFunctions: "disallow" }] */
 
   /* ✓ GOOD */
   function doSomething() {}
@@ -47,7 +47,8 @@ This rule supports [svelte-eslint-parser]'s AST.
 {
   "svelte/no-inner-declarations": [
     "error",
-    "functions" // or "both"
+    "functions", // or "both"
+    { "blockScopedFunctions": "allow" }
   ]
 }
 ```
