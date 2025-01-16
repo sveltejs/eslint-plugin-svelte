@@ -137,6 +137,7 @@ export interface RuleOptions {
   /**
    * disallow dynamic slot name
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/
+   * @deprecated
    */
   'svelte/no-dynamic-slot-name'?: Linter.RuleEntry<[]>
   /**

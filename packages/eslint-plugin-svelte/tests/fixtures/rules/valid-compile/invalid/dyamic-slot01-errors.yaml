@@ -1,0 +1,4 @@
+- message: <slot> name cannot be dynamic(dynamic-slot-name)
+  line: 5
+  column: 7
+  suggestions: null
