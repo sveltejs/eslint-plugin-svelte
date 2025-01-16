@@ -1,0 +1,8 @@
+- message: Unexpected string value in event handler.
+  line: 6
+  column: 18
+  suggestions: null
+- message: Unexpected string value in event handler.
+  line: 7
+  column: 18
+  suggestions: null

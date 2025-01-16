@@ -29,16 +29,16 @@ If you use a non-function value for the event handler, it event handler will not
 </script>
 
 <!-- ✓ GOOD -->
-<button on:click={foo} />
+<button onclick={foo} />
 <button
-  on:click={() => {
+  onclick={() => {
     /*  */
   }}
 />
 
 <!-- ✗ BAD -->
-<button on:click={{ foo }} />
-<button on:click={bar} />
+<button onclick={{ foo }} />
+<button onclick={bar} />
 ```
 
 ## :wrench: Options
