@@ -495,6 +495,12 @@ export type ASTNodeListener = {
 	'SvelteHTMLComment:exit'?: (node: AST.SvelteHTMLComment & ASTNodeWithParent) => void;
 	SvelteReactiveStatement?: (node: AST.SvelteReactiveStatement & ASTNodeWithParent) => void;
 	'SvelteReactiveStatement:exit'?: (node: AST.SvelteReactiveStatement & ASTNodeWithParent) => void;
+	SvelteFunctionBindingsExpression?: (
+		node: AST.SvelteFunctionBindingsExpression & ASTNodeWithParent
+	) => void;
+	'SvelteFunctionBindingsExpression:exit'?: (
+		node: AST.SvelteFunctionBindingsExpression & ASTNodeWithParent
+	) => void;
 };
 
 export type ESNodeListener = {
@@ -950,4 +956,10 @@ export type SvelteNodeListener = {
 	'SvelteText:exit'?: (node: AST.SvelteText & ASTNodeWithParent) => void;
 	SvelteHTMLComment?: (node: AST.SvelteHTMLComment & ASTNodeWithParent) => void;
 	'SvelteHTMLComment:exit'?: (node: AST.SvelteHTMLComment & ASTNodeWithParent) => void;
+	SvelteFunctionBindingsExpression?: (
+		node: AST.SvelteFunctionBindingsExpression & ASTNodeWithParent
+	) => void;
+	'SvelteFunctionBindingsExpression:exit'?: (
+		node: AST.SvelteFunctionBindingsExpression & ASTNodeWithParent
+	) => void;
 };
