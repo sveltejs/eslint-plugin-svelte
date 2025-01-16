@@ -76,10 +76,19 @@ export default createRule('require-store-reactive-access', {
 					if (node.key.name.name !== 'this' && canAcceptStoreAttributeElement(node.parent.parent)) {
 						return;
 					}
-					// Check for <input bind:value={store} />
-					verifyExpression(node.expression, {
-						disableFix: node.shorthand
-					});
+					// Check for <input bind:value={ () => {}, (v) => {} } />
+					if (node.expression?.type === 'SvelteFunctionBindingsExpression') {
+						for (const expr of node.expression.expressions) {
+							verifyExpression(expr, {
+								disableFix: node.shorthand
+							});
+						}
+					} else {
+						// Check for <input bind:value={store} />
+						verifyExpression(node.expression, {
+							disableFix: node.shorthand
+						});
+					}
 				} else if (node.kind === 'Class') {
 					// Check for <div class:foo={store} />
 					verifyExpression(node.expression, {
