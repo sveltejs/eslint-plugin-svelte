@@ -15,7 +15,12 @@ export default createRule('require-event-dispatcher-types', {
 		messages: {
 			missingTypeParameter: `Type parameters missing for the \`createEventDispatcher\` function call.`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			}
+		]
 	},
 	create(context) {
 		let isTs = false;
