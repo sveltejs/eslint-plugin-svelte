@@ -11,7 +11,12 @@ export default createRule('no-useless-children-snippet', {
 		messages: {
 			uselessSnippet: 'Found an unnecessary children snippet.'
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['5']
+			}
+		]
 	},
 	create(context) {
 		return {
