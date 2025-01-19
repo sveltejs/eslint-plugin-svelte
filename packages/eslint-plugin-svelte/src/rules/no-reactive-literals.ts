@@ -15,7 +15,16 @@ export default createRule('no-reactive-literals', {
 			noReactiveLiterals: `Do not assign literal values inside reactive statements unless absolutely necessary.`,
 			fixReactiveLiteral: `Move the literal out of the reactive statement into an assignment`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		return {
