@@ -6,9 +6,7 @@ export default createRule('no-svelte-internal', {
 		docs: {
 			description: 'svelte/internal will be removed in Svelte 6.',
 			category: 'Best Practices',
-			// TODO Switch to recommended in the major version.
-			// recommended: true,
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

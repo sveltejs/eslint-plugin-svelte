@@ -10,6 +10,8 @@ since: 'v2.12.0'
 
 > disallow exporting load functions in `*.svelte` module in SvelteKit page components.
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 This rule reports unexpected exported `load` function at `<script context="module">`.

@@ -10,9 +10,7 @@ export default createRule('require-store-reactive-access', {
 			description:
 				'disallow to use of the store itself as an operand. Need to use $ prefix or get function.',
 			category: 'Possible Errors',
-			// TODO Switch to recommended in the major version.
-			// recommended: true,
-			recommended: false
+			recommended: true
 		},
 		fixable: 'code',
 		schema: [],

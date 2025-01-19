@@ -9,7 +9,7 @@ export default createRule('no-dupe-use-directives', {
 		docs: {
 			description: 'disallow duplicate `use:` directives',
 			category: 'Possible Errors',
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

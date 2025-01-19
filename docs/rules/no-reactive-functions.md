@@ -10,6 +10,7 @@ since: 'v2.5.0'
 
 > it's not necessary to define functions in reactive statements
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details

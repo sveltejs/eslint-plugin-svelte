@@ -8,7 +8,7 @@ export default createRule('no-reactive-functions', {
 		docs: {
 			description: "it's not necessary to define functions in reactive statements",
 			category: 'Best Practices',
-			recommended: false
+			recommended: true
 		},
 		hasSuggestions: true,
 		schema: [],

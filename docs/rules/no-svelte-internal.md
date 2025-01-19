@@ -10,6 +10,8 @@ since: 'v2.39.0'
 
 > svelte/internal will be removed in Svelte 6.
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 This rule reports the use of the deprecated API `svelte/internal` and `svelte/internal/xxx`. `svelte/internal` is deprecated in Svelte 5. And it will be deleted in Svelte 6. These APIs can change in breaking ways at any time without notice.

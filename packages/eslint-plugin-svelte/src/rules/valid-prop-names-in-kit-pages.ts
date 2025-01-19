@@ -27,8 +27,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 		docs: {
 			description: 'disallow props other than data or errors in SvelteKit page components.',
 			category: 'SvelteKit',
-			// TODO Switch to recommended in the major version.
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

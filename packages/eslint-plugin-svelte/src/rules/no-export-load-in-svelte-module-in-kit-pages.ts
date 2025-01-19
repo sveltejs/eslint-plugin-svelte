@@ -7,8 +7,7 @@ export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 			description:
 				'disallow exporting load functions in `*.svelte` module in SvelteKit page components.',
 			category: 'SvelteKit',
-			// TODO Switch to recommended in the major version.
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

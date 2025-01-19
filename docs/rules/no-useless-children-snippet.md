@@ -10,6 +10,8 @@ since: 'v3.0.0-next.9'
 
 > disallow explicit children snippet where it's not needed
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 Any content inside component tags that is not a snippet declaration implicitly becomes part of the children snippet. Thus, declaring the children snippet explicitly is only necessary when the snippet has parameters.

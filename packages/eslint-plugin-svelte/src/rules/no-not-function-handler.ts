@@ -33,7 +33,7 @@ export default createRule('no-not-function-handler', {
 		messages: {
 			unexpected: 'Unexpected {{phrase}} in event handler.'
 		},
-		type: 'problem' // "problem", or "layout",
+		type: 'problem'
 	},
 	create(context) {
 		/** Find data expression */

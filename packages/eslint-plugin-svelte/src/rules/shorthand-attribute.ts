@@ -24,7 +24,7 @@ export default createRule('shorthand-attribute', {
 			expectedShorthand: 'Expected shorthand attribute.',
 			expectedRegular: 'Expected regular attribute syntax.'
 		},
-		type: 'layout' // "problem", or "layout",
+		type: 'layout'
 	},
 	create(context) {
 		const sourceCode = getSourceCode(context);

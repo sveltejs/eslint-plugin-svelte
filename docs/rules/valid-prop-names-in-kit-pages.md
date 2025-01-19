@@ -10,6 +10,8 @@ since: 'v2.12.0'
 
 > disallow props other than data or errors in SvelteKit page components.
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 This rule reports unexpected exported variables at `<script>`.<br>
