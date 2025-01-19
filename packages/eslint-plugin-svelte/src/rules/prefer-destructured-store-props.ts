@@ -26,7 +26,16 @@ export default createRule('prefer-destructured-store-props', {
 			fixUseDestructuring: `Using destructuring like $: ({ {{property}} } = {{store}}); will run faster`,
 			fixUseVariable: `Using the predefined reactive variable {{variable}}`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		let mainScript: AST.SvelteScriptElement | null = null;
