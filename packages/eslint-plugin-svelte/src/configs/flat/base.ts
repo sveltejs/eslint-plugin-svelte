@@ -2,6 +2,7 @@
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"
 import type { ESLint, Linter } from 'eslint';
+import globals from 'globals';
 import * as parser from 'svelte-eslint-parser';
 let pluginObject: ESLint.Plugin | null = null;
 export function setPluginObject(plugin: ESLint.Plugin): void {
@@ -14,13 +15,21 @@ const config: Linter.Config[] = [
 			get svelte(): ESLint.Plugin {
 				return pluginObject!;
 			}
+		},
+		languageOptions: {
+			globals: {
+				...globals.browser
+			}
 		}
 	},
 	{
 		name: 'svelte:base:setup-for-svelte',
 		files: ['*.svelte', '**/*.svelte'],
 		languageOptions: {
-			parser
+			parser,
+			globals: {
+				...globals.browser
+			}
 		},
 		rules: {
 			// ESLint core rules known to cause problems with `.svelte`.
