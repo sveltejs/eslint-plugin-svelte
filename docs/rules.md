@@ -31,7 +31,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-unknown-style-directive-property](./rules/no-unknown-style-directive-property.md)     | disallow unknown `style:property`                                                                                                      | :star:         |
 | [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param                                                                                                   |                |
 | [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                 | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                                               | :star::wrench: |
-| [svelte/valid-compile](./rules/valid-compile.md)                                                 | disallow warnings when compiling.                                                                                                      | :star:         |
+| [svelte/valid-compile](./rules/valid-compile.md)                                                 | disallow warnings when compiling.                                                                                                      |                |
 
 ## Security Vulnerability
 

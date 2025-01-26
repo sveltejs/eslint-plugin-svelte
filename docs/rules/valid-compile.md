@@ -10,8 +10,6 @@ since: 'v0.7.0'
 
 > disallow warnings when compiling.
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
-
 ## :book: Rule Details
 
 This rule uses Svelte compiler to check the source code.
