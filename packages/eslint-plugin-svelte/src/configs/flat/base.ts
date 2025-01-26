@@ -34,6 +34,16 @@ const config: Linter.Config[] = [
 			'svelte/system': 'error'
 		},
 		processor: 'svelte/svelte'
+	},
+	{
+		name: 'svelte:base:setup-for-svelte-script',
+		files: ['*.svelte.js', '*.svelte.ts', '**/*.svelte.js', '**/*.svelte.ts'],
+		languageOptions: {
+			parser
+		},
+		rules: {
+			// eslint-plugin-svelte rules
+		}
 	}
 ];
 export default config;
