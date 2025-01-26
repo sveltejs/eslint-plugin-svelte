@@ -1,30 +1,27 @@
 # User Guide
 
-> [!NOTE]
-> This document is in development.\
-> Please refer to the document for the version you are using.\
-> For example, <https://github.com/sveltejs/eslint-plugin-svelte/blob/eslint-plugin-svelte%402.46.0/docs/user-guide.md>
+<!--USAGE_GUIDE_START-->
 
-## :cd: Installation
+## Installation
 
 ```bash
-npm install --save-dev eslint eslint-plugin-svelte svelte
+npm install --save-dev svelte eslint eslint-plugin-svelte globals
 ```
 
-::: tip Requirements
+> [!NOTE]
+>
+> **Requirements:**
+>
+> - ESLint v8.57.1, v9.0.0, and above
+> - Node.js v18.20.4, v20.18.0, v22.10.0, and above
 
-- ESLint v8.57.1, v9.0.0 and above
-- Node.js v18.20.4, v20.18.0, v22.10.0 and above
-
-:::
-
-## :book: Usage
-
-<!--USAGE_GUIDE_START-->
+## Usage
 
 Use the `eslint.config.js` file to configure rules. For more details, see the [ESLint documentation](https://eslint.org/docs/latest/use/configure/configuration-files-new).
 
-### JavaScript project
+### Configuration
+
+#### JavaScript project
 
 ```js
 // eslint.config.js
@@ -73,7 +70,7 @@ export default [
 ];
 ```
 
-### TypeScript project
+#### TypeScript project
 
 ```shell
 npm install --save-dev typescript-eslint
@@ -153,19 +150,10 @@ export default ts.config(
 
 This plugin provides the following configurations:
 
-- **`eslintPluginSvelte.configs.base`**  
-  Enables correct Svelte parsing.
-
-- **`eslintPluginSvelte.configs.recommended`**  
-  Includes `base` configuration, plus rules to prevent errors or unintended behavior.
-
-- **`eslintPluginSvelte.configs.prettier`**  
-  Disables rules that may conflict with [Prettier](https://prettier.io/).  
-  You still need to configure Prettier to work with Svelte manually, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
-
-- **`eslintPluginSvelte.configs.all`**  
-  Includes all available rules.  
-  **Note:** This configuration is not recommended for production use, as it changes with every minor and major version of `eslint-plugin-svelte`. Use at your own risk.
+- **`eslintPluginSvelte.configs.base`** ... Enables correct Svelte parsing.
+- **`eslintPluginSvelte.configs.recommended`** ... Includes `base` configuration, plus rules to prevent errors or unintended behavior.
+- **`eslintPluginSvelte.configs.prettier`** ... Disables rules that may conflict with [Prettier](https://prettier.io/). You still need to configure Prettier to work with Svelte manually, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
+- **`eslintPluginSvelte.configs.all`** ... Includes all available rules. **Note:** This configuration is not recommended for production use, as it changes with every minor and major version of `eslint-plugin-svelte`. Use at your own risk.
 
 For more details, see [the rule list](./rules.md) to explore the rules provided by this plugin.
 
@@ -228,7 +216,7 @@ Configure `.svelte` files in `.vscode/settings.json`:
 
 <!--USAGE_GUIDE_END-->
 
-## :question: FAQ
+## FAQ
 
 ### You're using TypeScript and the imported `*.svelte` component types cannot be resolved or appear to be
 

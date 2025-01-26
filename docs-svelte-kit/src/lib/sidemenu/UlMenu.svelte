@@ -17,8 +17,9 @@
 					class="sidebar-menu-item-title"
 					class:active={item.active || (item.path && isActive(item.path, $page))}
 					href="{baseUrl}{item.path || `${stripBaseUrl($page.url.pathname)}#${item.id}`}"
-					>{item.title}</a
 				>
+					{item.title}
+				</a>
 			{:else}
 				<span class="sidebar-menu-item-title">{item.title}</span>
 			{/if}

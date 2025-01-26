@@ -103,9 +103,9 @@
 		padding: 0.5em 2em;
 		position: fixed;
 		top: 0;
-		width: calc(100% - 4em);
+		width: 100vw;
 		z-index: 100;
-		background-color: white;
+		background-color: var(--primary-color);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 

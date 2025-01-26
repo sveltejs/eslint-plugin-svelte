@@ -34,7 +34,7 @@ And the API has changed.
 
 ## :wrench: Options
 
-Nothing. But if you are not using the default routes folder, please set configuration according to the [user guide](../user-guide.md).
+Nothing. But if you are not using the default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte).
 
 ## :books: Further Reading
 
