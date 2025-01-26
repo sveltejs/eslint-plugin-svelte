@@ -50,7 +50,7 @@ export default [
 ];
 ```
 
-See also [User Guide > Specify `svelte.config.js`](../user-guide.md#specify-svelte-config-js)
+See also [User Guide > Configuration](../user-guide.md#configuration)
 
 #### warningFilter
 

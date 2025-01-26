@@ -22,156 +22,186 @@ npm install --save-dev eslint eslint-plugin-svelte svelte
 
 <!--USAGE_GUIDE_START-->
 
-### Configuration
+Use the `eslint.config.js` file to configure rules. For more details, see the [ESLint documentation](https://eslint.org/docs/latest/use/configure/configuration-files-new).
 
-Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
-
-Example **eslint.config.js**:
+### JavaScript project
 
 ```js
-import eslintPluginSvelte from 'eslint-plugin-svelte';
+// eslint.config.js
+import js from '@eslint/js';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+import svelteConfig from './svelte.config.js';
+
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-  // add more generic rule sets here, such as:
-  // js.configs.recommended,
-  ...eslintPluginSvelte.configs.recommended,
+  js.configs.recommended,
+  ...svelte.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node // Add this if you are using SvelteKit in non-SPA mode
+      }
+    }
+  },
+  {
+    files: [
+      '*.svelte',
+      '**/*.svelte',
+      '*.svelte.ts',
+      '**/*.svelte.ts',
+      '*.svelte.js',
+      '**/*.svelte.js'
+    ],
+    languageOptions: {
+      parserOptions: {
+        // We recommend importing and specifying svelte.config.js.
+        // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
+        // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
+        // explicitly specifying it ensures better compatibility and functionality.
+        svelteConfig
+      }
+    }
+  },
   {
     rules: {
-      // override/add rules settings here, such as:
+      // Override or add rule settings here, such as:
       // 'svelte/rule-name': 'error'
     }
   }
 ];
 ```
 
-This plugin provides configs:
+### TypeScript project
 
-- `eslintPluginSvelte.configs.base` ... Configuration to enable correct Svelte parsing.
-- `eslintPluginSvelte.configs.recommended` ... Above, plus rules to prevent errors or unintended behavior.
-- `eslintPluginSvelte.configs.prettier` ... Turns off rules that may conflict with [Prettier](https://prettier.io/) (You still need to configure prettier to work with svelte yourself, for example by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).).
-- `eslintPluginSvelte.configs.all` ... All rules. This configuration is not recommended for production use because it changes with every minor and major version of `eslint-plugin-svelte`. Use it at your own risk.
-
-See [the rule list](./rules.md) to get the `rules` that this plugin provides.
-
-#### Parser Configuration
-
-If you have specified a parser, you need to configure a parser for `.svelte`.
-
-For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `<script>` of `.svelte`, you need to add more `parserOptions` configuration.
-
-```js
-import eslintPluginSvelte from 'eslint-plugin-svelte';
-import * as svelteParser from 'svelte-eslint-parser';
-import * as typescriptParser from '@typescript-eslint/parser';
-export default [
-  ...js.configs.recommended,
-  ...eslintPluginSvelte.configs.recommended,
-  {
-    files: ['**/*.svelte'],
-    languageOptions: {
-      parser: svelteParser,
-      parserOptions: {
-        parser: typescriptParser,
-        project: './path/to/your/tsconfig.json',
-        extraFileExtensions: ['.svelte']
-      }
-    }
-  }
-];
+```shell
+npm install --save-dev typescript-eslint
 ```
 
-If you have a mix of TypeScript and JavaScript in your project, use a multiple parser configuration.
-
 ```js
-import eslintPluginSvelte from 'eslint-plugin-svelte';
-import * as svelteParser from 'svelte-eslint-parser';
-import * as typescriptParser from '@typescript-eslint/parser';
-import espree from 'espree';
-export default [
-  ...js.configs.recommended,
-  ...eslintPluginSvelte.configs.recommended,
-  {
-    files: ['**/*.svelte'],
-    languageOptions: {
-      parser: svelteParser,
-      parserOptions: {
-        parser: {
-          // Specify a parser for each lang.
-          ts: typescriptParser,
-          js: espree,
-          typescript: typescriptParser
-        },
-        project: './path/to/your/tsconfig.json',
-        extraFileExtensions: ['.svelte']
-      }
-    }
-  }
-];
-```
-
-See also <https://github.com/sveltejs/svelte-eslint-parser#readme>.
-
-::: warning ❗ Attention
-
-The TypeScript parser uses a singleton internally and it will only use the
-options given to it when it was first initialized. If trying to change the
-options for a different file or override, the parser will simply ignore the new
-options (which may result in an error). See
-[typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778)
-for some context.
-
-:::
-
-#### Specify `svelte.config.js`
-
-If you are using `eslint.config.js`, we recommend that you import and specify `svelte.config.js`.
-By specifying it, some rules of `eslint-plugin-svelte` will read it and try to behave well for you by default.
-Some Svelte configurations will be statically loaded from `svelte.config.js` even if you don't specify it, but you need to specify it to make it work better.
-
-Example **eslint.config.js**:
-
-```js
-import eslintPluginSvelte from 'eslint-plugin-svelte';
+// eslint.config.js
+import js from '@eslint/js';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
-export default [
-  ...eslintPluginSvelte.configs.recommended,
+
+export default ts.config(
+  js.configs.recommended,
+  ...ts.configs.recommended,
+  ...svelte.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    }
+  },
+  {
+    files: ['*.svelte', '**/*.svelte'],
+    // See more details at: https://typescript-eslint.io/packages/parser/
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: ['.svelte'], // Add support for additional file extensions, such as .svelte
+        parser: ts.parser
+        // Specify a parser for each language, if needed:
+        // parser: {
+        //   ts: ts.parser,
+        //   js: espree,    // Use espree for .js files (add: import espree from 'espree')
+        //   typescript: ts.parser
+        // },
+      }
+    }
+  },
   {
     files: [
+      '*.svelte',
       '**/*.svelte',
-      '*.svelte'
-      // Add more files if you need.
-      // '**/*.svelte.ts', '*.svelte.ts', '**/*.svelte.js', '*.svelte.js',
+      '*.svelte.ts',
+      '**/*.svelte.ts',
+      '*.svelte.js',
+      '**/*.svelte.js'
     ],
     languageOptions: {
       parserOptions: {
-        // Specify the `svelte.config.js`.
+        // We recommend importing and specifying svelte.config.js.
+        // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
+        // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
+        // explicitly specifying it ensures better compatibility and functionality.
         svelteConfig
       }
     }
+  },
+  {
+    rules: {
+      // Override or add rule settings here, such as:
+      // 'svelte/rule-name': 'error'
+    }
   }
-];
+);
 ```
 
-#### settings.svelte
+> [!WARNING]
+> The TypeScript parser uses a singleton internally, meaning it only respects the options provided during its initial initialization.
+> If you try to change the options for a different file or override them later, the parser will ignore the new options, which may lead to errors.
+> For more context, see [typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778).
 
-You can change the behavior of this plugin with some settings.
+### Available Configurations
 
-e.g.
+This plugin provides the following configurations:
+
+- **`eslintPluginSvelte.configs.base`**  
+  Enables correct Svelte parsing.
+
+- **`eslintPluginSvelte.configs.recommended`**  
+  Includes `base` configuration, plus rules to prevent errors or unintended behavior.
+
+- **`eslintPluginSvelte.configs.prettier`**  
+  Disables rules that may conflict with [Prettier](https://prettier.io/).  
+  You still need to configure Prettier to work with Svelte manually, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
+
+- **`eslintPluginSvelte.configs.all`**  
+  Includes all available rules.  
+  **Note:** This configuration is not recommended for production use, as it changes with every minor and major version of `eslint-plugin-svelte`. Use at your own risk.
+
+For more details, see [the rule list](./rules.md) to explore the rules provided by this plugin.
+
+### settings.svelte
+
+You can customize the behavior of this plugin using specific settings.
 
 ```js
+// eslint.config.js
 export default [
   // ...
   {
     settings: {
       svelte: {
+        // Specifies an array of rules to ignore reports within the template.
+        // For example, use this to disable rules in the template that may produce unavoidable false positives.
         ignoreWarnings: [
           '@typescript-eslint/no-unsafe-assignment',
           '@typescript-eslint/no-unsafe-member-access'
         ],
+        // Specifies options for Svelte compilation.
+        // This affects rules that rely on Svelte compilation,
+        // such as svelte/valid-compile and svelte/no-unused-svelte-ignore.
+        // Note that this setting does not impact ESLint’s custom parser.
         compileOptions: {
+          // Specifies options related to PostCSS. You can disable the PostCSS processing by setting it to false.
           postcss: {
+            // Specifies the path to the directory that contains the PostCSS configuration.
             configFilePath: './path/to/my/postcss.config.js'
           }
         },
+        // Even if settings.svelte.kit is not specified, the rules will attempt to load information from svelte.config.js.
+        // However, if the default behavior does not work as expected, you should specify settings.svelte.kit explicitly.
+        // If you are using SvelteKit with a non-default configuration, you need to set the following options.
+        // The schema is a subset of SvelteKit’s configuration, so refer to the SvelteKit documentation for more details.
+        // https://svelte.dev/docs/kit/configuration
         kit: {
           files: {
             routes: 'src/routes'
@@ -184,59 +214,11 @@ export default [
 ];
 ```
 
-#### settings.svelte.ignoreWarnings
+## Editor Integrations
 
-Specifies an array of rules that ignore reports in the template.  
-For example, set rules on the template that cannot avoid false positives.
-
-#### settings.svelte.compileOptions
-
-Specifies options for Svelte compile. Effects rules that use Svelte compile. The target rules are [svelte/valid-compile](./rules/valid-compile.md) and [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md). **Note that it has no effect on ESLint's custom parser**.
-
-- `postcss` ... Specifies options related to PostCSS. You can disable the PostCSS process by specifying `false`.
-  - `configFilePath` ... Specifies the path of the directory containing the PostCSS configuration.
-
-#### settings.svelte.kit
-
-::: warning
-
-Even if you don't specify `settings.svelte.kit`, the rules will try to load information from `svelte.config.js`, so specify `settings.svelte.kit` if the default doesn't work.
-
-:::
-
-If you use SvelteKit with not default configuration, you need to set below configurations.
-The schema is subset of SvelteKit's configuration.
-Therefore please check [SvelteKit docs](https://kit.svelte.dev/docs/configuration) for more details.
-
-e.g.
-
-```js
-export default [
-  // ...
-  {
-    settings: {
-      svelte: {
-        kit: {
-          files: {
-            routes: 'src/routes'
-          }
-        }
-      }
-    }
-  }
-  // ...
-];
-```
-
-## :computer: Editor Integrations
-
-### Visual Studio Code
-
-Use the [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension that Microsoft provides officially.
-
-You have to configure the `eslint.validate` option of the extension to check `.svelte` files, because the extension targets only `*.js` or `*.jsx` files by default.
-
-Example **.vscode/settings.json**:
+**Visual Studio Code**  
+Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).  
+Configure `.svelte` files in `.vscode/settings.json`:
 
 ```json
 {
@@ -247,10 +229,6 @@ Example **.vscode/settings.json**:
 <!--USAGE_GUIDE_END-->
 
 ## :question: FAQ
-
-### Parsing the `.svelte` file fails
-
-You should check the [parser configuration](#parser-configuration).
 
 ### You're using TypeScript and the imported `*.svelte` component types cannot be resolved or appear to be
 
