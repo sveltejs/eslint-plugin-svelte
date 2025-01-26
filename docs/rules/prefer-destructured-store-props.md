@@ -24,7 +24,10 @@ An example of the improvements can be see in this [REPL](https://svelte.dev/repl
 <script>
   /* eslint svelte/prefer-destructured-store-props: "error" */
   import store from './store.js';
+  // Svelte3/4
   $: ({ foo } = $store);
+  // Svelte5 with Runes
+  let foo = $derived($store.foo);
 </script>
 
 <!-- ✓ GOOD -->
