@@ -10,6 +10,7 @@ since: 'v3.0.0-next.1'
 
 > Checks for invalid raw HTML elements
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details

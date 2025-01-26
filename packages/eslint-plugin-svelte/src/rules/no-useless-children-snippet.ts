@@ -5,7 +5,7 @@ export default createRule('no-useless-children-snippet', {
 		docs: {
 			description: "disallow explicit children snippet where it's not needed",
 			category: 'Best Practices',
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

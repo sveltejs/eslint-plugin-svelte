@@ -10,6 +10,8 @@ since: 'v2.14.0'
 
 > disallow duplicate `use:` directives
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 We can define any number of `use:` directive with the same action, but duplicate directives with the exact same action and expression are probably a mistake.

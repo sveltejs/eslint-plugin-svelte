@@ -6,7 +6,7 @@ export default createRule('require-each-key', {
 		docs: {
 			description: 'require keyed `{#each}` block',
 			category: 'Best Practices',
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: { expectedKey: 'Each block should have a key' },

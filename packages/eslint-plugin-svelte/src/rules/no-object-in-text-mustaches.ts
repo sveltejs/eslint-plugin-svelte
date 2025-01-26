@@ -19,7 +19,7 @@ export default createRule('no-object-in-text-mustaches', {
 		messages: {
 			unexpected: 'Unexpected {{phrase}} in text mustache interpolation.'
 		},
-		type: 'problem' // "problem", or "layout",
+		type: 'problem'
 	},
 	create(context) {
 		return {

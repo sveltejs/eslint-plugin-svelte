@@ -136,7 +136,7 @@ export default createRule('@typescript-eslint/no-unnecessary-condition', {
 			noStrictNullCheck:
 				'This rule requires the `strictNullChecks` compiler option to be turned on to function correctly.'
 		},
-		type: 'suggestion', // "problem", or "layout",
+		type: 'suggestion',
 		deprecated: true,
 		replacedBy: {
 			note: 'This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.'

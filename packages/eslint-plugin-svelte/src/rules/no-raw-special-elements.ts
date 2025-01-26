@@ -9,8 +9,7 @@ export default createRule('no-raw-special-elements', {
 		docs: {
 			description: 'Checks for invalid raw HTML elements',
 			category: 'Possible Errors',
-			// TODO: Switch to recommended in the major version
-			recommended: false
+			recommended: true
 		},
 		schema: [],
 		messages: {

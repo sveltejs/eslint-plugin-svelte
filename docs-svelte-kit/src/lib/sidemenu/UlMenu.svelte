@@ -7,7 +7,7 @@
 </script>
 
 <ul class="sidebar-menu sidebar-menu--level{level}">
-	{#each children as item}
+	{#each children as item (item.id)}
 		<li
 			class="sidebar-menu-item"
 			class:active={item.active || (item.path && isActive(item.path, $page))}

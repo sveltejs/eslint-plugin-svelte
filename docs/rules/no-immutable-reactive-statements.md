@@ -10,6 +10,8 @@ since: 'v2.27.0'
 
 > disallow reactive statements that don't reference reactive values.
 
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
+
 ## :book: Rule Details
 
 This rule reports if all variables referenced in reactive statements are immutable. That reactive statement is immutable and not reactive.
