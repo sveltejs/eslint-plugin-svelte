@@ -1,5 +1,55 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.16
+
+### Major Changes
+
+- [#1033](https://github.com/sveltejs/eslint-plugin-svelte/pull/1033) [`3bfcc31`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3bfcc31e0f2d127c7a1cb838c4c57125c30109ea) Thanks [@baseballyama](https://github.com/baseballyama)! - **Enabled in recommended config**:
+
+  - `svelte/infinite-reactive-loop`
+  - `svelte/no-dom-manipulating`
+  - `svelte/no-dupe-on-directives`
+  - `svelte/no-dupe-use-directives`
+  - `svelte/no-export-load-in-svelte-module-in-kit-pages`
+  - `svelte/no-immutable-reactive-statements`
+  - `svelte/no-inspect`
+  - `svelte/no-raw-special-elements`
+  - `svelte/no-reactive-functions`
+  - `svelte/no-reactive-literals`
+  - `svelte/no-reactive-reassign`
+  - `svelte/no-store-async`
+  - `svelte/no-svelte-internal`
+  - `svelte/no-useless-children-snippet`
+  - `svelte/no-useless-mustaches`
+  - `svelte/require-each-key`
+  - `svelte/require-event-dispatcher-types`
+  - `svelte/require-store-reactive-access`
+  - `svelte/require-stores-init`
+  - `svelte/valid-each-key`
+  - `svelte/valid-prop-names-in-kit-pages`
+
+  **Removed from recommended config**:
+
+  - `svelte/valid-compile`
+
+  This update introduces breaking changes due to newly enabled rules.
+
+- [#1011](https://github.com/sveltejs/eslint-plugin-svelte/pull/1011) [`7596287`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7596287c9d1a0a31c90e23875f6b7beab20747f1) Thanks [@baseballyama](https://github.com/baseballyama)! - breaking: deprecate the `svelte/no-dynamic-slot-name` rule
+
+### Minor Changes
+
+- [#1013](https://github.com/sveltejs/eslint-plugin-svelte/pull/1013) [`0ef0f99`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0ef0f99e1781e0453598393b846e63bd159c215d) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add Svelte 5 support to `no-not-function-handler`
+
+### Patch Changes
+
+- [#1035](https://github.com/sveltejs/eslint-plugin-svelte/pull/1035) [`f16729f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f16729f55877b1768ec8d240fd8e416f141781ce) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run `require-event-dispatcher-types` rule on Svelte 3/4 only
+
+- [#1040](https://github.com/sveltejs/eslint-plugin-svelte/pull/1040) [`ac7115c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ac7115c74b3f1e82ef15be81d9ef2026da76bb11) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: account for \n and \r in `TemplateLiteral` handling for the `no-useless-mustaches` rule
+
+- [#1031](https://github.com/sveltejs/eslint-plugin-svelte/pull/1031) [`e50d2d4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e50d2d4a8820c222696c049e0b01988626845584) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-literals` rule on Svelte 5 with runes
+
+- [#1032](https://github.com/sveltejs/eslint-plugin-svelte/pull/1032) [`722b36c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/722b36ce3b8a16b965f61701dead22b95c7e8b3d) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run `no-useless-children-snippet` rule on Svelte 5 only
+
 ## 3.0.0-next.15
 
 ### Minor Changes
