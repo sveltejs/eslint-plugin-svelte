@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.17
+
+### Major Changes
+
+- [#1043](https://github.com/sveltejs/eslint-plugin-svelte/pull/1043) [`778427e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/778427e8bd1a015247dd7f19642e2c6ced0891a8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `*.svelte.{js,ts}` config to base config
+
 ## 3.0.0-next.16
 
 ### Major Changes
