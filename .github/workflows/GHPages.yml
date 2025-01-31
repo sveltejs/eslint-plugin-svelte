@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.repository == 'sveltejs/eslint-plugin-svelte'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
