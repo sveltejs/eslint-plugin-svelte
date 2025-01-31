@@ -6,6 +6,9 @@ on:
     branches: [main]
     tags: ['!**']
 
+permissions:
+  pull-requests: write
+
 jobs:
   build:
     if: github.repository == 'sveltejs/eslint-plugin-svelte'
