@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'sveltejs/eslint-plugin-svelte'
     runs-on: ubuntu-latest
 
     steps:
