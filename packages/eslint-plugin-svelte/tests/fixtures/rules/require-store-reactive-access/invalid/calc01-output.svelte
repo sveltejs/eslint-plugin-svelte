@@ -11,7 +11,7 @@
 
 	// UnaryExpression
 	console.log(-$store);
-	// eslint-disable-next-line no-implicit-coercion -- test
+	 
 	console.log(+$store);
 	console.log(!store);
 	console.log(~$store);

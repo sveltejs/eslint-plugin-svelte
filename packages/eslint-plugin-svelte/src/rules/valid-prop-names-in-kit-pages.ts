@@ -2,16 +2,23 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
+import { getSvelteVersion } from '../utils/svelte-context.js';
+import { getFilename } from '../utils/compat.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
+const EXPECTED_PROP_NAMES_SVELTE5 = [...EXPECTED_PROP_NAMES, 'children'];
 
-function checkProp(node: TSESTree.VariableDeclarator, context: RuleContext) {
+function checkProp(
+	node: TSESTree.VariableDeclarator,
+	context: RuleContext,
+	expectedPropNames: string[]
+) {
 	if (node.id.type !== 'ObjectPattern') return;
 	for (const p of node.id.properties) {
 		if (
 			p.type === 'Property' &&
 			p.value.type === 'Identifier' &&
-			!EXPECTED_PROP_NAMES.includes(p.value.name)
+			!expectedPropNames.includes(p.value.name)
 		) {
 			context.report({
 				node: p.value,
@@ -42,6 +49,8 @@ export default createRule('valid-prop-names-in-kit-pages', {
 	},
 	create(context) {
 		let isScript = false;
+		const isSvelte5 = getSvelteVersion(getFilename(context)) === '5';
+		const expectedPropNames = isSvelte5 ? EXPECTED_PROP_NAMES_SVELTE5 : EXPECTED_PROP_NAMES;
 		return {
 			// <script>
 			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {
@@ -67,7 +76,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 
 				// export let foo
 				if (node.id.type === 'Identifier') {
-					if (!EXPECTED_PROP_NAMES.includes(node.id.name)) {
+					if (!expectedPropNames.includes(node.id.name)) {
 						context.report({
 							node,
 							loc: node.loc,
@@ -78,7 +87,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 				}
 
 				// export let { xxx, yyy } = zzz
-				checkProp(node, context);
+				checkProp(node, context, expectedPropNames);
 			},
 
 			// Svelte5
@@ -93,7 +102,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 					return;
 				}
 
-				checkProp(node, context);
+				checkProp(node, context, expectedPropNames);
 			}
 		};
 	}

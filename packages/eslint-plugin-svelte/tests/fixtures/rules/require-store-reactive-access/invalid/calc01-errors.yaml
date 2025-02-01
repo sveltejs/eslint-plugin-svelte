@@ -23,6 +23,11 @@
   line: 13
   column: 15
   suggestions: null
+- message: Unused eslint-disable directive (no problems were reported from
+    'no-implicit-coercion').
+  line: 14
+  column: 2
+  suggestions: null
 - message: Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
   line: 15
