@@ -1,0 +1,8 @@
+- message: "'metadata' is an unused Props property."
+  line: 12
+  column: 8
+  suggestions: null
+- message: "'description' is an unused Props property."
+  line: 12
+  column: 8
+  suggestions: null

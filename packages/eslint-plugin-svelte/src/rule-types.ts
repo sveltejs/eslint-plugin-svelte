@@ -262,6 +262,11 @@ export interface RuleOptions {
    */
   'svelte/no-unused-class-name'?: Linter.RuleEntry<SvelteNoUnusedClassName>
   /**
+   * Warns about defined Props properties that are unused
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props/
+   */
+  'svelte/no-unused-props'?: Linter.RuleEntry<SvelteNoUnusedProps>
+  /**
    * disallow unused svelte-ignore comments
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/
    */
@@ -511,6 +516,11 @@ type SvelteNoUnknownStyleDirectiveProperty = []|[{
 // ----- svelte/no-unused-class-name -----
 type SvelteNoUnusedClassName = []|[{
   allowedClassNames?: string[]
+}]
+// ----- svelte/no-unused-props -----
+type SvelteNoUnusedProps = []|[{
+  checkImportedTypes?: boolean
+  ignorePatterns?: string[]
 }]
 // ----- svelte/no-useless-mustaches -----
 type SvelteNoUselessMustaches = []|[{

@@ -362,6 +362,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :star::bulb: |
 | [svelte/no-svelte-internal](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/) | svelte/internal will be removed in Svelte 6. | :star: |
 | [svelte/no-unused-class-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/) | disallow the use of a class in the template without a corresponding style |  |
+| [svelte/no-unused-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props/) | Warns about defined Props properties that are unused | :star: |
 | [svelte/no-unused-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/) | disallow unused svelte-ignore comments | :star: |
 | [svelte/no-useless-children-snippet](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/) | disallow explicit children snippet where it's not needed | :star: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :star::wrench: |

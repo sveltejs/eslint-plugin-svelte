@@ -1,0 +1,5 @@
+- message: Index signature is unused. Consider using rest operator (...) to
+    capture remaining properties.
+  line: 7
+  column: 6
+  suggestions: null
