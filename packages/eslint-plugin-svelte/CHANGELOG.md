@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.0-next.18
+
+### Patch Changes
+
+- [#1048](https://github.com/sveltejs/eslint-plugin-svelte/pull/1048) [`513806c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/513806cafe221487afd32bdcaa33ba8852dc881f) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: allow `children` in `valid-prop-names-in-kit-pages` rule
+
 ## 3.0.0-next.17
 
 ### Major Changes
