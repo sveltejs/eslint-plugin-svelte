@@ -1,5 +1,8 @@
 <script>
-	let { data, errors, form, children } = $props();
+	export let data;
+	export let errors;
+	export let form;
+	export let children;
 
 	let comment = '';
 
@@ -18,5 +21,4 @@
 <form method="POST">
 	<textarea bind:value={comment} />
 	<button>Post comment</button>
-	{@render children()}
 </form>
