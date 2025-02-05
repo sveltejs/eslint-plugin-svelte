@@ -1,0 +1,31 @@
+name: Update pkg.pr.new comment
+
+on:
+  workflow_run:
+    workflows: ['Publish to pkg.pr.new']
+    types:
+      - completed
+
+jobs:
+  build:
+    if: github.repository == 'sveltejs/eslint-plugin-svelte'
+    name: 'Update comment'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: output
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - run: ls -R .
+      - name: 'Post or update comment'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
+            const { default: process } = await import('${{ github.workspace }}/tools/pkg.pr.new-comment.mjs')
+
+            await process({github, context, core, output})
