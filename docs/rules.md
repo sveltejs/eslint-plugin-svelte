@@ -32,6 +32,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param                                                                                                   |                |
 | [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                 | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                                               | :star::wrench: |
 | [svelte/valid-compile](./rules/valid-compile.md)                                                 | disallow warnings when compiling.                                                                                                      |                |
+| [svelte/valid-style-parse](./rules/valid-style-parse.md)                                         | require valid style element parsing                                                                                                    |                |
 
 ## Security Vulnerability
 

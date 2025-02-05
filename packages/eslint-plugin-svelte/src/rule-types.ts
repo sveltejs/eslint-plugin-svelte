@@ -366,6 +366,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/
    */
   'svelte/valid-prop-names-in-kit-pages'?: Linter.RuleEntry<[]>
+  /**
+   * require valid style element parsing
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse/
+   */
+  'svelte/valid-style-parse'?: Linter.RuleEntry<[]>
 }
 
 /* ======= Declarations ======= */
