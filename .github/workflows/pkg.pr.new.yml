@@ -1,4 +1,4 @@
-name: Publish Any Commit
+name: Publish to pkg.pr.new
 on:
   pull_request:
     branches: [main]
