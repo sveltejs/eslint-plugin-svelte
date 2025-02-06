@@ -30,6 +30,9 @@ jobs:
             output.number = context.issue.number;
             output.event_name = context.eventName;
             output.ref = context.ref;
+            output.sha = context.eventName === 'pull_request'
+              ? context.payload.pull_request.head.sha
+              : context.payload.after;
             fs.writeFileSync('output.json', JSON.stringify(output), 'utf8');
       - name: Upload output
         uses: actions/upload-artifact@v4
