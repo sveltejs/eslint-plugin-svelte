@@ -31,7 +31,7 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 		return false;
 	}
 
-	if (callee.type === 'Identifier' && ['$props', '$derived'].includes(callee.name)) {
+	if (callee.type === 'Identifier' && ['$props', '$state', '$derived'].includes(callee.name)) {
 		return true;
 	}
 
@@ -39,11 +39,7 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 		return false;
 	}
 
-	if (
-		callee.object.name === '$derived' &&
-		callee.property.type === 'Identifier' &&
-		callee.property.name === 'by'
-	) {
+	if (callee.object.name === '$state' || callee.object.name === '$derived') {
 		return true;
 	}
 
