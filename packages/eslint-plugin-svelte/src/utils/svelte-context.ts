@@ -2,6 +2,7 @@ import type { RuleContext } from '../types.js';
 import fs from 'fs';
 import path from 'path';
 import { getPackageJsons } from './get-package-json.js';
+import { getNodeModule } from './get-node-module.js';
 import { getFilename, getSourceCode } from './compat.js';
 import { createCache } from './cache.js';
 
@@ -170,6 +171,23 @@ function getSvelteKitContext(
 
 const svelteVersionCache = createCache<SvelteContext['svelteVersion']>();
 
+function checkAndSetSvelteVersion(
+	version: string,
+	filePath: string
+): SvelteContext['svelteVersion'] | null {
+	const major = extractMajorVersion(version, false);
+	if (major == null) {
+		svelteVersionCache.set(filePath, null);
+		return null;
+	}
+	if (major === '3' || major === '4') {
+		svelteVersionCache.set(filePath, '3/4');
+		return '3/4';
+	}
+	svelteVersionCache.set(filePath, major as SvelteContext['svelteVersion']);
+	return major as SvelteContext['svelteVersion'];
+}
+
 export function getSvelteVersion(filePath: string): SvelteContext['svelteVersion'] {
 	const cached = svelteVersionCache.get(filePath);
 	if (cached) return cached;
@@ -180,6 +198,21 @@ export function getSvelteVersion(filePath: string): SvelteContext['svelteVersion
 		return '5';
 	}
 
+	const nodeModule = getNodeModule('svelte', filePath);
+	if (nodeModule) {
+		try {
+			const packageJson = JSON.parse(
+				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
+			);
+			const result = checkAndSetSvelteVersion(packageJson.version, filePath);
+			if (result != null) {
+				return result;
+			}
+		} catch {
+			/** do nothing */
+		}
+	}
+
 	try {
 		const packageJsons = getPackageJsons(filePath);
 		for (const packageJson of packageJsons) {
@@ -187,13 +220,10 @@ export function getSvelteVersion(filePath: string): SvelteContext['svelteVersion
 			if (typeof version !== 'string') {
 				continue;
 			}
-			const major = extractMajorVersion(version, false);
-			if (major === '3' || major === '4') {
-				svelteVersionCache.set(filePath, '3/4');
-				return '3/4';
+			const result = checkAndSetSvelteVersion(version, filePath);
+			if (result != null) {
+				return result;
 			}
-			svelteVersionCache.set(filePath, major as SvelteContext['svelteVersion']);
-			return major as SvelteContext['svelteVersion'];
 		}
 	} catch {
 		/** do nothing */
@@ -205,14 +235,15 @@ export function getSvelteVersion(filePath: string): SvelteContext['svelteVersion
 
 const svelteKitVersionCache = createCache<SvelteContext['svelteKitVersion']>();
 
-/**
- * Check givin file is under SvelteKit project.
- *
- * If it runs on browser, it always returns true.
- *
- * @param filePath A file path.
- * @returns
- */
+function checkAndSetSvelteKitVersion(
+	version: string,
+	filePath: string
+): SvelteContext['svelteKitVersion'] {
+	const major = extractMajorVersion(version, true) as SvelteContext['svelteKitVersion'];
+	svelteKitVersionCache.set(filePath, major);
+	return major;
+}
+
 function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'] {
 	const cached = svelteKitVersionCache.get(filePath);
 	if (cached) return cached;
@@ -223,27 +254,42 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 		return '2';
 	}
 
+	const nodeModule = getNodeModule('@sveltejs/kit', filePath);
+	if (nodeModule) {
+		try {
+			const packageJson = JSON.parse(
+				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
+			);
+			const result = checkAndSetSvelteKitVersion(packageJson.version, filePath);
+			if (result != null) {
+				return result;
+			}
+		} catch {
+			/** do nothing */
+		}
+	}
+
 	try {
 		const packageJsons = getPackageJsons(filePath);
-		if (packageJsons.length === 0) return null;
-		if (packageJsons[0].name === 'eslint-plugin-svelte') {
-			// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
-			// So always it returns 2 if it runs on the package.
-			svelteKitVersionCache.set(filePath, '2');
-			return '2';
-		}
-
-		for (const packageJson of packageJsons) {
-			const version =
-				packageJson.dependencies?.['@sveltejs/kit'] ??
-				packageJson.devDependencies?.['@sveltejs/kit'];
-			if (typeof version !== 'string') {
-				svelteKitVersionCache.set(filePath, null);
-				return null;
+		if (packageJsons.length > 0) {
+			if (packageJsons[0].name === 'eslint-plugin-svelte') {
+				// Hack: CI removes `@sveltejs/kit` and it returns false and test failed.
+				// So always it returns 2 if it runs on the package.
+				svelteKitVersionCache.set(filePath, '2');
+				return '2';
 			}
-			const major = extractMajorVersion(version, true) as SvelteContext['svelteKitVersion'];
-			svelteKitVersionCache.set(filePath, major);
-			return major;
+
+			for (const packageJson of packageJsons) {
+				const version =
+					packageJson.dependencies?.['@sveltejs/kit'] ??
+					packageJson.devDependencies?.['@sveltejs/kit'];
+				if (typeof version === 'string') {
+					const result = checkAndSetSvelteKitVersion(version, filePath);
+					if (result != null) {
+						return result;
+					}
+				}
+			}
 		}
 	} catch {
 		/** do nothing */
