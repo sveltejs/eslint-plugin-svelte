@@ -50,6 +50,7 @@ import noSvelteInternal from '../rules/no-svelte-internal.js';
 import noTargetBlank from '../rules/no-target-blank.js';
 import noTrailingSpaces from '../rules/no-trailing-spaces.js';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property.js';
+import noUnnecessaryStateWrap from '../rules/no-unnecessary-state-wrap.js';
 import noUnusedClassName from '../rules/no-unused-class-name.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
@@ -122,6 +123,7 @@ export const rules = [
 	noTargetBlank,
 	noTrailingSpaces,
 	noUnknownStyleDirectiveProperty,
+	noUnnecessaryStateWrap,
 	noUnusedClassName,
 	noUnusedSvelteIgnore,
 	noUselessChildrenSnippet,

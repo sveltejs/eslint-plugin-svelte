@@ -1,0 +1,174 @@
+- message: SvelteSet is already reactive, $state wrapping is unnecessary.
+  line: 12
+  column: 21
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = new SvelteSet();
+        	const map = $state(new SvelteMap());
+        	const url = $state(new SvelteURL('https://example.com'));
+        	const params = $state(new SvelteURLSearchParams('key=value'));
+        	const date = $state(new SvelteDate());
+        	const mediaQuery = $state(new MediaQuery('(min-width: 800px)'));
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>
+- message: SvelteMap is already reactive, $state wrapping is unnecessary.
+  line: 13
+  column: 21
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new SvelteSet());
+        	const map = new SvelteMap();
+        	const url = $state(new SvelteURL('https://example.com'));
+        	const params = $state(new SvelteURLSearchParams('key=value'));
+        	const date = $state(new SvelteDate());
+        	const mediaQuery = $state(new MediaQuery('(min-width: 800px)'));
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>
+- message: SvelteURL is already reactive, $state wrapping is unnecessary.
+  line: 14
+  column: 21
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new SvelteSet());
+        	const map = $state(new SvelteMap());
+        	const url = new SvelteURL('https://example.com');
+        	const params = $state(new SvelteURLSearchParams('key=value'));
+        	const date = $state(new SvelteDate());
+        	const mediaQuery = $state(new MediaQuery('(min-width: 800px)'));
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>
+- message: SvelteURLSearchParams is already reactive, $state wrapping is unnecessary.
+  line: 15
+  column: 24
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new SvelteSet());
+        	const map = $state(new SvelteMap());
+        	const url = $state(new SvelteURL('https://example.com'));
+        	const params = new SvelteURLSearchParams('key=value');
+        	const date = $state(new SvelteDate());
+        	const mediaQuery = $state(new MediaQuery('(min-width: 800px)'));
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>
+- message: SvelteDate is already reactive, $state wrapping is unnecessary.
+  line: 16
+  column: 22
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new SvelteSet());
+        	const map = $state(new SvelteMap());
+        	const url = $state(new SvelteURL('https://example.com'));
+        	const params = $state(new SvelteURLSearchParams('key=value'));
+        	const date = new SvelteDate();
+        	const mediaQuery = $state(new MediaQuery('(min-width: 800px)'));
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>
+- message: MediaQuery is already reactive, $state wrapping is unnecessary.
+  line: 17
+  column: 28
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import {
+        		SvelteSet,
+        		SvelteMap,
+        		SvelteURL,
+        		SvelteURLSearchParams,
+        		SvelteDate,
+        		MediaQuery
+        	} from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new SvelteSet());
+        	const map = $state(new SvelteMap());
+        	const url = $state(new SvelteURL('https://example.com'));
+        	const params = $state(new SvelteURLSearchParams('key=value'));
+        	const date = $state(new SvelteDate());
+        	const mediaQuery = new MediaQuery('(min-width: 800px)');
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        	const stateObject = $state({ foo: 'bar' });
+        </script>

@@ -257,6 +257,11 @@ export interface RuleOptions {
    */
   'svelte/no-unknown-style-directive-property'?: Linter.RuleEntry<SvelteNoUnknownStyleDirectiveProperty>
   /**
+   * Disallow unnecessary $state wrapping of reactive classes
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unnecessary-state-wrap/
+   */
+  'svelte/no-unnecessary-state-wrap'?: Linter.RuleEntry<SvelteNoUnnecessaryStateWrap>
+  /**
    * disallow the use of a class in the template without a corresponding style
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/
    */
@@ -507,6 +512,10 @@ type SvelteNoUnknownStyleDirectiveProperty = []|[{
   
   ignoreProperties?: [string, ...(string)[]]
   ignorePrefixed?: boolean
+}]
+// ----- svelte/no-unnecessary-state-wrap -----
+type SvelteNoUnnecessaryStateWrap = []|[{
+  additionalReactiveClasses?: string[]
 }]
 // ----- svelte/no-unused-class-name -----
 type SvelteNoUnusedClassName = []|[{

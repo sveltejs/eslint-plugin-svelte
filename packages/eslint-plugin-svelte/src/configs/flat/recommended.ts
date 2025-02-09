@@ -32,6 +32,7 @@ const config: Linter.Config[] = [
 			'svelte/no-store-async': 'error',
 			'svelte/no-svelte-internal': 'error',
 			'svelte/no-unknown-style-directive-property': 'error',
+			'svelte/no-unnecessary-state-wrap': 'error',
 			'svelte/no-unused-svelte-ignore': 'error',
 			'svelte/no-useless-children-snippet': 'error',
 			'svelte/no-useless-mustaches': 'error',

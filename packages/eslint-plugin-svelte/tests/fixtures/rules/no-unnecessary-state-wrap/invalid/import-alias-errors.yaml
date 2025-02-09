@@ -1,0 +1,28 @@
+- message: SvelteSet is already reactive, $state wrapping is unnecessary.
+  line: 5
+  column: 21
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: >
+        <script>
+        	import { SvelteSet as CustomSet, SvelteMap as CustomMap } from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = new CustomSet();
+        	const map = $state(new CustomMap());
+        </script>
+- message: SvelteMap is already reactive, $state wrapping is unnecessary.
+  line: 6
+  column: 21
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: >
+        <script>
+        	import { SvelteSet as CustomSet, SvelteMap as CustomMap } from 'svelte/reactivity';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const set = $state(new CustomSet());
+        	const map = new CustomMap();
+        </script>
