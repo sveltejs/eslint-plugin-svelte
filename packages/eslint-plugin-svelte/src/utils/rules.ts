@@ -72,6 +72,7 @@ import system from '../rules/system.js';
 import validCompile from '../rules/valid-compile.js';
 import validEachKey from '../rules/valid-each-key.js';
 import validPropNamesInKitPages from '../rules/valid-prop-names-in-kit-pages.js';
+import validStyleParse from '../rules/valid-style-parse.js';
 
 export const rules = [
 	typescriptEslintNoUnnecessaryCondition,
@@ -143,5 +144,6 @@ export const rules = [
 	system,
 	validCompile,
 	validEachKey,
-	validPropNamesInKitPages
+	validPropNamesInKitPages,
+	validStyleParse
 ] as RuleModule[];
