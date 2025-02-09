@@ -1,0 +1,4 @@
+- message: "'toString' is an unused Props property."
+  line: 5
+  column: 6
+  suggestions: null
