@@ -5,6 +5,7 @@ import { getPackageJsons } from './get-package-json.js';
 import { getNodeModule } from './get-node-module.js';
 import { getFilename, getSourceCode } from './compat.js';
 import { createCache } from './cache.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 const isRunInBrowser = !fs.readFileSync;
 
@@ -169,68 +170,24 @@ function getSvelteKitContext(
 	return result;
 }
 
-const svelteVersionCache = createCache<SvelteContext['svelteVersion']>();
-
-function checkAndSetSvelteVersion(
-	version: string,
-	filePath: string
-): SvelteContext['svelteVersion'] | null {
+function checkAndSetSvelteVersion(version: string): SvelteContext['svelteVersion'] | null {
 	const major = extractMajorVersion(version, false);
 	if (major == null) {
-		svelteVersionCache.set(filePath, null);
 		return null;
 	}
 	if (major === '3' || major === '4') {
-		svelteVersionCache.set(filePath, '3/4');
 		return '3/4';
 	}
-	svelteVersionCache.set(filePath, major as SvelteContext['svelteVersion']);
 	return major as SvelteContext['svelteVersion'];
 }
 
-export function getSvelteVersion(filePath: string): SvelteContext['svelteVersion'] {
-	const cached = svelteVersionCache.get(filePath);
-	if (cached) return cached;
-
+export function getSvelteVersion(): SvelteContext['svelteVersion'] {
 	// Hack: if it runs in browser, it regards as Svelte project.
 	if (isRunInBrowser) {
-		svelteVersionCache.set(filePath, '5');
 		return '5';
 	}
 
-	const nodeModule = getNodeModule('svelte', filePath);
-	if (nodeModule) {
-		try {
-			const packageJson = JSON.parse(
-				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
-			);
-			const result = checkAndSetSvelteVersion(packageJson.version, filePath);
-			if (result != null) {
-				return result;
-			}
-		} catch {
-			/** do nothing */
-		}
-	}
-
-	try {
-		const packageJsons = getPackageJsons(filePath);
-		for (const packageJson of packageJsons) {
-			const version = packageJson.dependencies?.svelte ?? packageJson.devDependencies?.svelte;
-			if (typeof version !== 'string') {
-				continue;
-			}
-			const result = checkAndSetSvelteVersion(version, filePath);
-			if (result != null) {
-				return result;
-			}
-		}
-	} catch {
-		/** do nothing */
-	}
-
-	svelteVersionCache.set(filePath, null);
-	return null;
+	return checkAndSetSvelteVersion(SVELTE_VERSION);
 }
 
 const svelteKitVersionCache = createCache<SvelteContext['svelteKitVersion']>();
@@ -337,7 +294,7 @@ export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	if (cached) return cached;
 
 	const svelteKitContext = getSvelteKitContext(context);
-	const svelteVersion = getSvelteVersion(filePath);
+	const svelteVersion = getSvelteVersion();
 	const svelteFileType = getSvelteFileType(filePath);
 
 	if (svelteVersion == null) {
