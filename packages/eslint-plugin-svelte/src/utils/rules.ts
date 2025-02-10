@@ -60,6 +60,7 @@ import preferDestructuredStoreProps from '../rules/prefer-destructured-store-pro
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import requireEachKey from '../rules/require-each-key.js';
 import requireEventDispatcherTypes from '../rules/require-event-dispatcher-types.js';
+import requireEventPrefix from '../rules/require-event-prefix.js';
 import requireOptimizedStyleAttribute from '../rules/require-optimized-style-attribute.js';
 import requireStoreCallbacksUseSetParam from '../rules/require-store-callbacks-use-set-param.js';
 import requireStoreReactiveAccess from '../rules/require-store-reactive-access.js';
@@ -133,6 +134,7 @@ export const rules = [
 	preferStyleDirective,
 	requireEachKey,
 	requireEventDispatcherTypes,
+	requireEventPrefix,
 	requireOptimizedStyleAttribute,
 	requireStoreCallbacksUseSetParam,
 	requireStoreReactiveAccess,
