@@ -94,6 +94,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
 | [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
 | [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
+| [svelte/require-event-prefix](./rules/require-event-prefix.md)                                           | require component event names to start with "on"                                   |          |
 | [svelte/shorthand-attribute](./rules/shorthand-attribute.md)                                             | enforce use of shorthand syntax in attribute                                       | :wrench: |
 | [svelte/shorthand-directive](./rules/shorthand-directive.md)                                             | enforce use of shorthand syntax in directives                                      | :wrench: |
 | [svelte/sort-attributes](./rules/sort-attributes.md)                                                     | enforce order of attributes                                                        | :wrench: |
