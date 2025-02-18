@@ -1,5 +1,133 @@
 # eslint-plugin-svelte
 
+## 3.0.0
+
+### Major Changes
+
+- [#937](https://github.com/sveltejs/eslint-plugin-svelte/pull/937) [`729394e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/729394e34d2d6f51e00c89b67a40d0f9192260b4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old eslint
+
+- [#1033](https://github.com/sveltejs/eslint-plugin-svelte/pull/1033) [`3bfcc31`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3bfcc31e0f2d127c7a1cb838c4c57125c30109ea) Thanks [@baseballyama](https://github.com/baseballyama)! - **Enabled in recommended config**:
+
+  - `svelte/infinite-reactive-loop`
+  - `svelte/no-dom-manipulating`
+  - `svelte/no-dupe-on-directives`
+  - `svelte/no-dupe-use-directives`
+  - `svelte/no-export-load-in-svelte-module-in-kit-pages`
+  - `svelte/no-immutable-reactive-statements`
+  - `svelte/no-inspect`
+  - `svelte/no-raw-special-elements`
+  - `svelte/no-reactive-functions`
+  - `svelte/no-reactive-literals`
+  - `svelte/no-reactive-reassign`
+  - `svelte/no-store-async`
+  - `svelte/no-svelte-internal`
+  - `svelte/no-useless-children-snippet`
+  - `svelte/no-useless-mustaches`
+  - `svelte/require-each-key`
+  - `svelte/require-event-dispatcher-types`
+  - `svelte/require-store-reactive-access`
+  - `svelte/require-stores-init`
+  - `svelte/valid-each-key`
+  - `svelte/valid-prop-names-in-kit-pages`
+
+  **Removed from recommended config**:
+
+  - `svelte/valid-compile`
+
+  This update introduces breaking changes due to newly enabled rules.
+
+- [#1043](https://github.com/sveltejs/eslint-plugin-svelte/pull/1043) [`778427e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/778427e8bd1a015247dd7f19642e2c6ced0891a8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `*.svelte.{js,ts}` config to base config
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - breaking: deprecated the no-goto-without-base rule
+
+- [#885](https://github.com/sveltejs/eslint-plugin-svelte/pull/885) [`ce2ffad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ce2ffad105b1c6ed2df02a9c2b84f3b654d99ad5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old node versions (<18, 19, 21)
+
+- [#1011](https://github.com/sveltejs/eslint-plugin-svelte/pull/1011) [`7596287`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7596287c9d1a0a31c90e23875f6b7beab20747f1) Thanks [@baseballyama](https://github.com/baseballyama)! - breaking: deprecate the `svelte/no-dynamic-slot-name` rule
+
+- [#930](https://github.com/sveltejs/eslint-plugin-svelte/pull/930) [`eae1b4f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eae1b4fcbfbaec926cfa63a5d08eafcb2238bf82) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: upgrade svelte-eslint-parser to v1
+
+- [#982](https://github.com/sveltejs/eslint-plugin-svelte/pull/982) [`04fc429`](https://github.com/sveltejs/eslint-plugin-svelte/commit/04fc4292ef68134691ac1808fd92688bd9982d37) Thanks [@baseballyama](https://github.com/baseballyama)! - feat!: Updated the `html-self-closing` rule to follow Svelte5
+
+- [#932](https://github.com/sveltejs/eslint-plugin-svelte/pull/932) [`b136ab4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b136ab4e54d8ff38f6ba7f49e1209be14dd18b0b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: change the plugin to an ESM-only package
+
+### Minor Changes
+
+- [#980](https://github.com/sveltejs/eslint-plugin-svelte/pull/980) [`0b28198`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0b28198edd78513e5efc4cfb45e8f1120148435e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: Implement util to conditionally run lint based on Svelte version and SvelteKit routes etc
+
+- [#1013](https://github.com/sveltejs/eslint-plugin-svelte/pull/1013) [`0ef0f99`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0ef0f99e1781e0453598393b846e63bd159c215d) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add Svelte 5 support to `no-not-function-handler`
+
+- [#900](https://github.com/sveltejs/eslint-plugin-svelte/pull/900) [`4759b47`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4759b47b195abee605a0597360fc9fc4c6d95f68) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-navigation-without-base rule
+
+- [#925](https://github.com/sveltejs/eslint-plugin-svelte/pull/925) [`faf90ef`](https://github.com/sveltejs/eslint-plugin-svelte/commit/faf90ef9a6aab3ec647c30df67a54a25d8322324) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `consistent-selector-style` rule
+
+- [#945](https://github.com/sveltejs/eslint-plugin-svelte/pull/945) [`19f682b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/19f682b73ce6bcccae52da0e59d5ab32a9d2c3c2) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: Support `<svelte:boundary>`
+
+- [#844](https://github.com/sveltejs/eslint-plugin-svelte/pull/844) [`2bbd049`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2bbd0497ab7e05db0aab3c8958db08e3fdf4b9b2) Thanks [@Winter](https://github.com/Winter)! - feat: Added suggestion to the `block-lang` rule.
+
+- [#984](https://github.com/sveltejs/eslint-plugin-svelte/pull/984) [`35d80a5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/35d80a50f1053666153bfc7221b945055bfb76d1) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support `warningFilter` in `valid-compile` rule
+
+- [#933](https://github.com/sveltejs/eslint-plugin-svelte/pull/933) [`71eca84`](https://github.com/sveltejs/eslint-plugin-svelte/commit/71eca843c43250591ec6fa2dd1dc547b1074d6ad) Thanks [@mikededo](https://github.com/mikededo)! - Add `prefer-const` rule
+
+- [#918](https://github.com/sveltejs/eslint-plugin-svelte/pull/918) [`5da98c9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5da98c94f452c8436f26af4172e095fd91f66e1a) Thanks [@mikededo](https://github.com/mikededo)! - Added new `no-deprecated-raw-special-elements` rule
+
+- [#922](https://github.com/sveltejs/eslint-plugin-svelte/pull/922) [`f4a0fa7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f4a0fa78e06091348d985b5442a390eae47b0f4f) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-useless-children-snippet rule
+
+- [#836](https://github.com/sveltejs/eslint-plugin-svelte/pull/836) [`3fa90aa`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3fa90aa57a15ad18105b0d80b1ed975f1f782a11) Thanks [@renovate](https://github.com/apps/renovate)! - feat: support for typescript-eslint v8 to `svelte/indent` rule
+
+- [#963](https://github.com/sveltejs/eslint-plugin-svelte/pull/963) [`2c551b2`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2c551b20557bcd53e35479336bf0c25e88a7643b) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support Svelte5 of `valid-prop-names-in-kit-pages` rule
+
+- [#1054](https://github.com/sveltejs/eslint-plugin-svelte/pull/1054) [`c587629`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c587629ba2a7d7742965367eb3ad797a9075ef8a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the valid-style-parse rule
+
+- [#1015](https://github.com/sveltejs/eslint-plugin-svelte/pull/1015) [`8369eaf`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8369eaf5d2e77fccf0ac9fb3f663d94a2b323a4f) Thanks [@mikededo](https://github.com/mikededo)! - fix!: rename `no-deprecated-raw-special-elements` to `no-raw-special-elements`
+
+- [#911](https://github.com/sveltejs/eslint-plugin-svelte/pull/911) [`452ffed`](https://github.com/sveltejs/eslint-plugin-svelte/commit/452ffed53791cb9e158636bcd80a221d2840cc4a) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-inline-styles): allowing transitions by default
+
+### Patch Changes
+
+- [#961](https://github.com/sveltejs/eslint-plugin-svelte/pull/961) [`117e60d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/117e60d4290966911450c7e0db8566279e4511bb) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: support each blocks without an item
+
+- [#1009](https://github.com/sveltejs/eslint-plugin-svelte/pull/1009) [`a003664`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a0036643b5451f0423cd61dafd092c39bd6f4bcb) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: upgrade `svelte-eslint-parser` to `1.0.0-next.8`
+
+- [#1016](https://github.com/sveltejs/eslint-plugin-svelte/pull/1016) [`91999e3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/91999e3520afe42b3cc51f0823f7c912b97176b4) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: change the rule category of `valid-prop-names-in-kit-pages` to `SvelteKit`
+
+- [#993](https://github.com/sveltejs/eslint-plugin-svelte/pull/993) [`b97a13e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b97a13eb02f9c72346f29e64734f0a304890a197) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: add `:exit` for each node listener
+
+- [#1048](https://github.com/sveltejs/eslint-plugin-svelte/pull/1048) [`513806c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/513806cafe221487afd32bdcaa33ba8852dc881f) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: allow `children` in `valid-prop-names-in-kit-pages` rule
+
+- [#1012](https://github.com/sveltejs/eslint-plugin-svelte/pull/1012) [`763cf7a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/763cf7ace209dfb90cf7d1d7e6699a6c0fe240d6) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: change the rule category of `no-export-load-in-svelte-module-in-kit-pages` to `SvelteKit`
+
+- [#1021](https://github.com/sveltejs/eslint-plugin-svelte/pull/1021) [`6557c69`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6557c69d7f3595cdf226e681cadf3d0df4c5d972) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to `1.0.0-next.10`
+
+- [#956](https://github.com/sveltejs/eslint-plugin-svelte/pull/956) [`157ee1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/157ee1fade79aab88f01d125b0b01cf375da4cd1) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to v1.0.0-next.4
+
+- [#965](https://github.com/sveltejs/eslint-plugin-svelte/pull/965) [`47760ad`](https://github.com/sveltejs/eslint-plugin-svelte/commit/47760ad1b7f6b83d4c29380b3ef3cf09cde42dc8) Thanks [@marekdedic](https://github.com/marekdedic)! - chore: using svelte-eslint-parser for style selector parsing
+
+- [#990](https://github.com/sveltejs/eslint-plugin-svelte/pull/990) [`12049c0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/12049c026f529feff6056e679ba62f07de948aa5) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: ignore `css_unused_selector` compile error if `<style>` tag has `global` attribute
+
+- [#1035](https://github.com/sveltejs/eslint-plugin-svelte/pull/1035) [`f16729f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f16729f55877b1768ec8d240fd8e416f141781ce) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run `require-event-dispatcher-types` rule on Svelte 3/4 only
+
+- [#1040](https://github.com/sveltejs/eslint-plugin-svelte/pull/1040) [`ac7115c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ac7115c74b3f1e82ef15be81d9ef2026da76bb11) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: account for \n and \r in `TemplateLiteral` handling for the `no-useless-mustaches` rule
+
+- [#1020](https://github.com/sveltejs/eslint-plugin-svelte/pull/1020) [`eae0e2e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eae0e2e52c2812ea630eea45e5be4f439191c806) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to `1.0.0-next.9`
+
+- [#1017](https://github.com/sveltejs/eslint-plugin-svelte/pull/1017) [`806d72a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/806d72ad55908fb967252ea0514672b026a6bd09) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-functions` rule on Svelte 5 with runes
+
+- [#1014](https://github.com/sveltejs/eslint-plugin-svelte/pull/1014) [`74373ec`](https://github.com/sveltejs/eslint-plugin-svelte/commit/74373ec77aa9063c64657faefc01ca331e27b599) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-reassign` rule on Svelte 5 with runes
+
+- [#1026](https://github.com/sveltejs/eslint-plugin-svelte/pull/1026) [`1bed311`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1bed311084c58a9893e2b578f8b34c2fcb2e8d8b) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to `v1.0.0-next.12`
+
+- [#941](https://github.com/sveltejs/eslint-plugin-svelte/pull/941) [`fce2f74`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fce2f74b4b2fe8185742f0411739103301f8ea9f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with eslint v9.16.0 in `svelte/no-inner-declarations`
+
+- [#1018](https://github.com/sveltejs/eslint-plugin-svelte/pull/1018) [`5bdc906`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5bdc906fc1e32835ab3b75dfd2a6a08b4cbb968b) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run the `no-inspect` rule only in Svelte 5’s runes mode
+
+- [#1006](https://github.com/sveltejs/eslint-plugin-svelte/pull/1006) [`5fd91ba`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5fd91baa1835cbffc58a8c473ccf70f3f02a34e6) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `infinite-reactive-loop` rule on Svelte 5 with runes
+
+- [#1031](https://github.com/sveltejs/eslint-plugin-svelte/pull/1031) [`e50d2d4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e50d2d4a8820c222696c049e0b01988626845584) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: do not run `no-reactive-literals` rule on Svelte 5 with runes
+
+- [#1032](https://github.com/sveltejs/eslint-plugin-svelte/pull/1032) [`722b36c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/722b36ce3b8a16b965f61701dead22b95c7e8b3d) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: run `no-useless-children-snippet` rule on Svelte 5 only
+
+- [#1007](https://github.com/sveltejs/eslint-plugin-svelte/pull/1007) [`8e9199a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8e9199ae326110778e4b0557616d394c6ac5e847) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: update method for extracting major version
+
 ## 3.0.0-next.18
 
 ### Patch Changes
