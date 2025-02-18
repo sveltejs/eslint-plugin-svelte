@@ -41,7 +41,7 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
 
 ## :wrench: Options
 
-Nothing. But if use are using not default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte-kit).
+Nothing. But if use are using not default routes folder, please set configuration according to the [user guide](../user-guide.md#settings-svelte).
 
 ## :books: Further Reading
 
