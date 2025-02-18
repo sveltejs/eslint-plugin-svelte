@@ -86,7 +86,7 @@
     "assert": "^2.1.0",
     "esbuild": "^0.25.0",
     "eslint-scope": "^8.2.0",
-    "eslint-typegen": "^1.0.0",
+    "eslint-typegen": "^2.0.0",
     "eslint-visitor-keys": "^4.2.0",
     "espree": "^10.3.0",
     "less": "^4.2.1",
