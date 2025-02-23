@@ -29,6 +29,9 @@ export default createRule('no-unnecessary-state-wrap', {
 							type: 'string'
 						},
 						uniqueItems: true
+					},
+					allowReassign: {
+						type: 'boolean'
 					}
 				},
 				additionalProperties: false
@@ -50,6 +53,7 @@ export default createRule('no-unnecessary-state-wrap', {
 	create(context) {
 		const options = context.options[0] ?? {};
 		const additionalReactiveClasses = options.additionalReactiveClasses ?? [];
+		const allowReassign = options.allowReassign ?? false;
 
 		const referenceTracker = new ReferenceTracker(getSourceCode(context).scopeManager.globalScope!);
 		const traceMap: Record<string, Record<string, boolean>> = {};
@@ -75,11 +79,25 @@ export default createRule('no-unnecessary-state-wrap', {
 			};
 		});
 
+		function isReassigned(identifier: TSESTree.Identifier): boolean {
+			const variable = getSourceCode(context).scopeManager.getDeclaredVariables(
+				identifier.parent
+			)[0];
+			return variable.references.some((ref) => {
+				return ref.isWrite() && ref.identifier !== identifier;
+			});
+		}
+
 		function reportUnnecessaryStateWrap(
 			stateNode: TSESTree.Node,
 			targetNode: TSESTree.Node,
-			className: string
+			className: string,
+			identifier?: TSESTree.Identifier
 		) {
+			if (allowReassign && identifier && isReassigned(identifier)) {
+				return;
+			}
+
 			context.report({
 				node: targetNode,
 				messageId: 'unnecessaryStateWrap',
@@ -112,7 +130,7 @@ export default createRule('no-unnecessary-state-wrap', {
 						if (additionalReactiveClasses.includes(name)) {
 							const parent = node.parent;
 							if (parent?.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
-								reportUnnecessaryStateWrap(node, arg, name);
+								reportUnnecessaryStateWrap(node, arg, name, parent.id);
 							}
 						}
 					}
@@ -128,7 +146,7 @@ export default createRule('no-unnecessary-state-wrap', {
 					) {
 						const parent = node.parent.parent;
 						if (parent?.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
-							reportUnnecessaryStateWrap(node.parent, node, name);
+							reportUnnecessaryStateWrap(node.parent, node, name, parent.id);
 						}
 					}
 				}

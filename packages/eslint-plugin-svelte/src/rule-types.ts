@@ -516,6 +516,7 @@ type SvelteNoUnknownStyleDirectiveProperty = []|[{
 // ----- svelte/no-unnecessary-state-wrap -----
 type SvelteNoUnnecessaryStateWrap = []|[{
   additionalReactiveClasses?: string[]
+  allowReassign?: boolean
 }]
 // ----- svelte/no-unused-class-name -----
 type SvelteNoUnusedClassName = []|[{

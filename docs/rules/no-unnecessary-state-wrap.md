@@ -65,13 +65,15 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
   "svelte/no-unnecessary-state-wrap": [
     "error",
     {
-      "additionalReactiveClasses": []
+      "additionalReactiveClasses": [],
+      "allowReassign": false
     }
   ]
 }
 ```
 
 - `additionalReactiveClasses` ... An array of class names that should also be considered reactive. This is useful when you have custom classes that are inherently reactive. Default is `[]`.
+- `allowReassign` ... If `true`, allows `$state` wrapping of reactive classes when the variable is reassigned. Default is `false`.
 
 ### Examples with Options
 
@@ -87,6 +89,23 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
 
   // ✗ BAD
   const myState2 = $state(new MyReactiveClass());
+</script>
+```
+
+#### `allowReassign`
+
+```svelte
+<script>
+  /* eslint svelte/no-unnecessary-state-wrap: ["error", { "allowReassign": true }] */
+  import { SvelteSet } from 'svelte/reactivity';
+
+  // ✓ GOOD
+  let set1 = $state(new SvelteSet());
+  set1 = new SvelteSet([1, 2, 3]); // Variable is reassigned
+
+  // ✗ BAD
+  const set2 = $state(new SvelteSet()); // const cannot be reassigned
+  let set3 = $state(new SvelteSet()); // Variable is never reassigned
 </script>
 ```
 
