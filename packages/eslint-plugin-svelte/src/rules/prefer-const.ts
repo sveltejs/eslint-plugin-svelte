@@ -61,14 +61,14 @@ export default createRule('prefer-const', {
 				properties: {
 					destructuring: { enum: ['any', 'all'] },
 					ignoreReadBeforeAssign: { type: 'boolean' },
-					additionalProperties: false,
 					excludedRunes: {
 						type: 'array',
 						items: {
 							type: 'string'
 						}
 					}
-				}
+				},
+				additionalProperties: false
 			}
 		]
 	},
