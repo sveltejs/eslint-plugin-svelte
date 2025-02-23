@@ -21,7 +21,7 @@ function findDeclarationCallee(node: TSESTree.Expression) {
  * Determines if a declaration should be skipped in the const preference analysis.
  * Specifically checks for Svelte's state management utilities ($props, $derived).
  */
-function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
+function shouldSkipDeclaration(declaration: TSESTree.Expression | null, excludedRunes: string[]) {
 	if (!declaration) {
 		return false;
 	}
@@ -31,7 +31,7 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 		return false;
 	}
 
-	if (callee.type === 'Identifier' && ['$props', '$state', '$derived'].includes(callee.name)) {
+	if (callee.type === 'Identifier' && excludedRunes.includes(callee.name)) {
 		return true;
 	}
 
@@ -39,7 +39,7 @@ function shouldSkipDeclaration(declaration: TSESTree.Expression | null) {
 		return false;
 	}
 
-	if (callee.object.name === '$state' || callee.object.name === '$derived') {
+	if (excludedRunes.includes(callee.object.name)) {
 		return true;
 	}
 
@@ -54,16 +54,32 @@ export default createRule('prefer-const', {
 			category: 'Best Practices',
 			recommended: false,
 			extensionRule: 'prefer-const'
-		}
+		},
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					excludedRunes: {
+						type: 'array',
+						items: {
+							type: 'string'
+						}
+					}
+				}
+			}
+		]
 	},
 	create(context) {
+		const config = context.options[0] ?? {};
+		const excludedRunes = config.excludedRunes ?? ['$props', '$derived'];
+
 		return defineWrapperListener(coreRule, context, {
 			createListenerProxy(coreListener) {
 				return {
 					...coreListener,
 					VariableDeclaration(node) {
 						for (const decl of node.declarations) {
-							if (shouldSkipDeclaration(decl.init)) {
+							if (shouldSkipDeclaration(decl.init, excludedRunes)) {
 								return;
 							}
 						}
