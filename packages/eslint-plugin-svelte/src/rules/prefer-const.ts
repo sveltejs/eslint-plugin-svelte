@@ -59,6 +59,9 @@ export default createRule('prefer-const', {
 			{
 				type: 'object',
 				properties: {
+					destructuring: { enum: ['any', 'all'] },
+					ignoreReadBeforeAssign: { type: 'boolean' },
+					additionalProperties: false,
 					excludedRunes: {
 						type: 'array',
 						items: {
