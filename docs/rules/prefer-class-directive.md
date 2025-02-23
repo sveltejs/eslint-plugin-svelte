@@ -41,7 +41,7 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 ```json
 {
-  "svelte/html-quotes": [
+  "svelte/prefer-class-directive": [
     "error",
     {
       "prefer": "empty" // or "always"
