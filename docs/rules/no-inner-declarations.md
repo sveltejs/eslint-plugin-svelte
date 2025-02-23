@@ -48,7 +48,9 @@ This rule supports [svelte-eslint-parser]'s AST.
   "svelte/no-inner-declarations": [
     "error",
     "functions", // or "both"
-    { "blockScopedFunctions": "allow" }
+    {
+      "blockScopedFunctions": "allow" // or "disallow"
+    }
   ]
 }
 ```
