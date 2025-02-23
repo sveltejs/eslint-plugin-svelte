@@ -1,5 +1,5 @@
 ---
-'eslint-plugin-svelte': patch
+'eslint-plugin-svelte': minor
 ---
 
-fix: ignore `$state` in the `prefer-const` rule
+feat: add `excludedRunes` option to the `prefer-const` rule
