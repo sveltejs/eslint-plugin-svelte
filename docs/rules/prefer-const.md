@@ -14,7 +14,7 @@ since: 'v3.0.0-next.6'
 
 ## :book: Rule Details
 
-This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$derived`, `$state`, and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
+This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$derived` and `$props` as default. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
 
 <!--eslint-skip-->
 
