@@ -1,6 +1,6 @@
 - message: 'Error parsing style element. Error message:
     "tests/fixtures/rules/valid-style-parse/invalid/invalid-scss01-input.svelte:4:11:
-    Unknown word"'
+    Unknown word .div-class/35"'
   line: 7
   column: 1
   suggestions: null
