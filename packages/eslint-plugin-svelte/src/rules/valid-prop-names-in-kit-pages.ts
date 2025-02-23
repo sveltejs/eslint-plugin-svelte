@@ -3,7 +3,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { getSvelteVersion } from '../utils/svelte-context.js';
-import { getFilename } from '../utils/compat.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
 const EXPECTED_PROP_NAMES_SVELTE5 = [...EXPECTED_PROP_NAMES, 'children'];
@@ -49,7 +48,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 	},
 	create(context) {
 		let isScript = false;
-		const isSvelte5 = getSvelteVersion(getFilename(context)) === '5';
+		const isSvelte5 = getSvelteVersion() === '5';
 		const expectedPropNames = isSvelte5 ? EXPECTED_PROP_NAMES_SVELTE5 : EXPECTED_PROP_NAMES;
 		return {
 			// <script>
