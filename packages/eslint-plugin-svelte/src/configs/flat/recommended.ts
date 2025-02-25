@@ -38,7 +38,6 @@ const config: Linter.Config[] = [
 			'svelte/require-each-key': 'error',
 			'svelte/require-event-dispatcher-types': 'error',
 			'svelte/require-store-reactive-access': 'error',
-			'svelte/require-stores-init': 'error',
 			'svelte/system': 'error',
 			'svelte/valid-each-key': 'error',
 			'svelte/valid-prop-names-in-kit-pages': 'error'

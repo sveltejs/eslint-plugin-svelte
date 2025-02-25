@@ -68,7 +68,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/require-each-key](./rules/require-each-key.md)                                   | require keyed `{#each}` block                                                                                                             | :star:         |
 | [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)       | require type parameters for `createEventDispatcher`                                                                                       | :star:         |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized                                                                                            |                |
-| [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            | :star:         |
+| [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            |                |
 | [svelte/valid-each-key](./rules/valid-each-key.md)                                       | enforce keys to use variables defined in the `{#each}` block                                                                              | :star:         |
 
 ## Stylistic Issues
