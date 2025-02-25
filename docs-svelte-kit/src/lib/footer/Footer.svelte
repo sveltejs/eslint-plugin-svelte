@@ -47,27 +47,25 @@
 				target="_blank"
 				rel="noopener noreferrer">Edit this page</a
 			>
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					aria-hidden="true"
-					focusable="false"
-					x="0px"
-					y="0px"
-					viewBox="0 0 100 100"
-					width="15"
-					height="15"
-					class="icon outbound"
-					><path
-						fill="currentColor"
-						d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"
-					/>
-					<polygon
-						fill="currentColor"
-						points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"
-					/>
-				</svg>
-			</span>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				aria-hidden="true"
+				focusable="false"
+				x="0px"
+				y="0px"
+				viewBox="0 0 100 100"
+				width="15"
+				height="15"
+				class="icon outbound"
+				><path
+					fill="currentColor"
+					d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"
+				/>
+				<polygon
+					fill="currentColor"
+					points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"
+				/>
+			</svg>
 		</div>
 		{#if fileInfo.lastUpdated}
 			<div class="last-updated">
@@ -85,29 +83,34 @@
 		{/if}
 	</div>
 	<div class="footer-text">
-		<span
-			>This site was built with <a href="https://kit.svelte.dev/" target="_brank">SvelteKit</a
-			>.</span
-		>
+		<span>
+			This site was built with <a href="https://kit.svelte.dev/" target="_brank">SvelteKit</a>.
+		</span>
 	</div>
 </footer>
 
 <style>
 	.footer-tools {
 		width: 100%;
-		padding: 1rem;
+		padding: 0 1rem;
 		box-sizing: border-box;
 		display: flex;
 	}
+
+	.edit-link {
+		display: flex;
+		gap: 4px;
+	}
+
 	.footer-move {
 		border-top: 1px solid var(--background-without-opacity);
 		width: 100%;
-		padding: 1rem;
+		padding: 0 1rem;
 		box-sizing: border-box;
 		display: flex;
 	}
 	.footer-text {
-		padding: 1rem;
+		padding: 0 1rem 1rem 1rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -139,7 +142,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 40px;
+		padding: 16px 0 0 0;
 	}
 
 	footer a {
@@ -148,7 +151,7 @@
 
 	@media (min-width: 480px) {
 		footer {
-			padding: 40px 0;
+			padding: 24px 0 0 0;
 		}
 	}
 </style>

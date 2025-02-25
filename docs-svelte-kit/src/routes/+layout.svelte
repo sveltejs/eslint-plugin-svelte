@@ -3,9 +3,9 @@
 	import SideMenu from '$lib/sidemenu/SideMenu.svelte';
 	import Footer from '$lib/footer/Footer.svelte';
 
+	import '../reset.css';
 	import '../app.css';
-	import '../site.css';
-	import { tocStore } from '$lib/utils';
+	import { tocStore } from '$lib/utils.js';
 
 	/** @type {import('./$types').PageData */
 	export let data;
@@ -49,6 +49,7 @@
 <style>
 	main {
 		margin-top: 64px;
+		min-height: calc(100vh - 180px);
 	}
 	main:not(.hidden-menu) {
 		padding-left: 20rem;
@@ -69,7 +70,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 1rem calc(1rem + 16px);
 		width: 100%;
 		max-width: 1024px;
 		margin: 0 auto;

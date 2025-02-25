@@ -1,0 +1,104 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+:where([hidden]:not([hidden='until-found'])) {
+	display: none !important;
+}
+:where(html) {
+	-webkit-text-size-adjust: none;
+	color-scheme: dark light;
+	tab-size: 2;
+	scrollbar-gutter: stable;
+}
+:where(html:has(dialog:modal[open])) {
+	overflow: clip;
+}
+@media (prefers-reduced-motion: no-preference) {
+	:where(html:focus-within) {
+		scroll-behavior: smooth;
+	}
+}
+:where(body) {
+	line-height: 1.5;
+	font-family: system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+:where(button) {
+	all: unset;
+}
+:where(input, button, textarea, select) {
+	font: inherit;
+	color: inherit;
+}
+:where(textarea) {
+	resize: vertical;
+	resize: block;
+}
+:where(button, label, select, summary, [role='button'], [role='option']) {
+	cursor: pointer;
+}
+:where(:disabled) {
+	cursor: not-allowed;
+}
+:where(label:has(> input:disabled), label:has(+ input:disabled)) {
+	cursor: not-allowed;
+}
+:where(a) {
+	color: inherit;
+	text-underline-offset: 0.2ex;
+}
+:where(ul, ol) {
+	list-style: none;
+}
+:where(img, svg, video, canvas, audio, iframe, embed, object) {
+	display: block;
+}
+:where(img, picture, svg, video) {
+	max-inline-size: 100%;
+	block-size: auto;
+}
+:where(p, h1, h2, h3, h4, h5, h6) {
+	overflow-wrap: break-word;
+}
+:where(h1, h2, h3) {
+	line-height: calc(1em + 0.5rem);
+	text-wrap: balance;
+}
+:where(hr) {
+	border: none;
+	border-block-start: 1px solid;
+	color: inherit;
+	block-size: 0;
+	overflow: visible;
+}
+:where(dialog) {
+	border: none;
+	background: none;
+	inset: unset;
+	max-width: unset;
+	max-height: unset;
+}
+:where(dialog:not([open])) {
+	display: none !important;
+}
+:where(:focus-visible) {
+	outline: 3px solid CanvasText;
+	box-shadow: 0 0 0 5px Canvas;
+	outline-offset: 1px;
+}
+:where(:focus-visible, :target) {
+	scroll-margin-block: 8vh;
+}
+:where(.visually-hidden:not(:focus-within, :active)) {
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden !important;
+	position: absolute !important;
+	white-space: nowrap !important;
+	border: 0 !important;
+}
