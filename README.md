@@ -371,7 +371,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block | :star: |
 | [svelte/require-event-dispatcher-types](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/) | require type parameters for `createEventDispatcher` | :star: |
 | [svelte/require-optimized-style-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/) | require style attributes that can be optimized |  |
-| [svelte/require-stores-init](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store | :star: |
+| [svelte/require-stores-init](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/) | require initial value in store |  |
 | [svelte/valid-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/) | enforce keys to use variables defined in the `{#each}` block | :star: |
 
 ## Stylistic Issues

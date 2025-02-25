@@ -10,8 +10,6 @@ since: 'v2.5.0'
 
 > require initial value in store
 
-- :gear: This rule is included in `"plugin:svelte/recommended"`.
-
 ## :book: Rule Details
 
 This rule is aimed to enforce initial values when initializing the Svelte stores.
