@@ -1,8 +1,8 @@
 ---
-pageClass: "rule-details"
+pageClass: 'rule-details'
 sidebarDepth: 0
-title: "svelte/valid-style-parse"
-description: "require valid style element parsing"
+title: 'svelte/valid-style-parse'
+description: 'require valid style element parsing'
 ---
 
 # svelte/valid-style-parse
