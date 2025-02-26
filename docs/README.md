@@ -16,7 +16,7 @@ If you’re migrating from `eslint-plugin-svelte` v1 or [`@ota-meshi/eslint-plug
 
 ## Versioning Policy
 
-This project follows [Semantic Versioning](https://semver.org/). Unlike [ESLint’s versioning policy](https://github.com/eslint/eslint#semantic-versioning-policy), new rules may be added in minor releases. If these new rules cause unwanted warnings, you can disable them.
+This project follows [Semantic Versioning](https://semver.org/). Unlike [ESLint’s versioning policy](https://github.com/eslint/eslint#semantic-versioning-policy), new rules may be added to the recommended config in minor releases. If these rules cause unwanted warnings, you can disable them.
 
 <!--DOCS_IGNORE_END-->
 
