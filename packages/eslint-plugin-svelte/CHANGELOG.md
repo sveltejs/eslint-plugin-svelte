@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1091](https://github.com/sveltejs/eslint-plugin-svelte/pull/1091) [`83da078`](https://github.com/sveltejs/eslint-plugin-svelte/commit/83da0784e93fe148579de6fcd665ed94da76411d) Thanks [@ottomated](https://github.com/ottomated)! - fix: Don't remove mustache'd string literals if they contain curly braces
+
 ## 3.0.0
 
 ### Major Changes
