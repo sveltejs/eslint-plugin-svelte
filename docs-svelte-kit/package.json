@@ -59,7 +59,7 @@
     "svelte": "^5.2.10",
     "svelte-adapter-ghpages": "0.2.2",
     "twoslash-eslint": "^0.3.0",
-    "twoslash-protocol": "^0.2.12",
+    "twoslash-protocol": "^0.3.0",
     "util": "^0.12.5",
     "vite": "^6.0.1",
     "vite-plugin-svelte-md": "^0.1.7"
