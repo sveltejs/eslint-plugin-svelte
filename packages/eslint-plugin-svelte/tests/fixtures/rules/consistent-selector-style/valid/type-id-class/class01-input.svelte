@@ -10,6 +10,12 @@
 
 <b data-key="val">Text 3</b>
 
+<b class:conditional={true}>Text 4</b>
+
+<b class="conditional-two">Text 5</b>
+
+<b class:conditional-two={true}>Text 6</b>
+
 <style>
   .link {
     color: red;
@@ -32,6 +38,14 @@
   }
 
   .bold::before {
+    color: red;
+  }
+
+  .conditional {
+    color: red;
+  }
+
+  .conditional-two {
     color: red;
   }
 </style>
