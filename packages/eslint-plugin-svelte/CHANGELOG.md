@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.2
+
+### Patch Changes
+
+- [#1100](https://github.com/sveltejs/eslint-plugin-svelte/pull/1100) [`1358d89`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1358d89206e9cf57faf5789d246ed99489f1685b) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: handle `<script module>` in `valid-prop-names-in-kit-pages` rule
+
 ## 3.0.1
 
 ### Patch Changes
