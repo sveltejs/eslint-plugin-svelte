@@ -28,6 +28,23 @@ function checkProp(
 	}
 }
 
+function isModuleScript(node: AST.SvelteAttribute) {
+	// <script context="module">
+	if (
+		node.key.name === 'context' &&
+		node.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')
+	) {
+		return true;
+	}
+
+	// <script module>
+	if (node.key.name === 'module' && node.value.length === 0) {
+		return true;
+	}
+
+	return false;
+}
+
 export default createRule('valid-prop-names-in-kit-pages', {
 	meta: {
 		docs: {
@@ -54,12 +71,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 			// <script>
 			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {
 				// except for <script context="module">
-				isScript = !node.attributes.some(
-					(a) =>
-						a.type === 'SvelteAttribute' &&
-						a.key.name === 'context' &&
-						a.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')
-				);
+				isScript = !node.attributes.some((a) => a.type === 'SvelteAttribute' && isModuleScript(a));
 			},
 
 			// </script>
