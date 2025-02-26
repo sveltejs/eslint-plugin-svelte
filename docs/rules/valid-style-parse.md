@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/valid-style-parse'
 description: 'require valid style element parsing'
+since: 'v3.0.0'
 ---
 
 # svelte/valid-style-parse
 
 > require valid style element parsing
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -71,6 +70,10 @@ This rule reports issues with parsing of the `<style>` element by the svelte-esl
 ## :wrench: Options
 
 Nothing.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.0.0
 
 ## :mag: Implementation
 
