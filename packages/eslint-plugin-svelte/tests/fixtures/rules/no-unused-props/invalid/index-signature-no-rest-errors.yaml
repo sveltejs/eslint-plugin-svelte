@@ -1,0 +1,9 @@
+- message: "'role' is an unused Props property."
+  line: 8
+  column: 6
+  suggestions: null
+- message: Index signature is unused. Consider using rest operator (...) to
+    capture remaining properties.
+  line: 8
+  column: 6
+  suggestions: null
