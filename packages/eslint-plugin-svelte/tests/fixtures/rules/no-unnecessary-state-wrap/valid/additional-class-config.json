@@ -1,0 +1,7 @@
+{
+	"options": [
+		{
+			"additionalReactiveClasses": ["CustomReactiveClass1", "CustomReactiveClass2"]
+		}
+	]
+}
