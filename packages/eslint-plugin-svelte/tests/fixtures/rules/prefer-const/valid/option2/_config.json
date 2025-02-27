@@ -1,0 +1,3 @@
+{
+	"options": [{ "excludedRunes": ["$props", "$derived", "$state"] }]
+}

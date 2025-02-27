@@ -530,6 +530,7 @@ type SveltePreferClassDirective = []|[{
 type SveltePreferConst = []|[{
   destructuring?: ("any" | "all")
   ignoreReadBeforeAssign?: boolean
+  excludedRunes?: string[]
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

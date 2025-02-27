@@ -1,0 +1,20 @@
+- message: "'prop1' is never reassigned. Use 'const' instead."
+  line: 2
+  column: 8
+  suggestions: null
+- message: "'prop2' is never reassigned. Use 'const' instead."
+  line: 2
+  column: 15
+  suggestions: null
+- message: "'zero' is never reassigned. Use 'const' instead."
+  line: 3
+  column: 6
+  suggestions: null
+- message: "'derived' is never reassigned. Use 'const' instead."
+  line: 4
+  column: 6
+  suggestions: null
+- message: "'derivedBy' is never reassigned. Use 'const' instead."
+  line: 5
+  column: 6
+  suggestions: null
