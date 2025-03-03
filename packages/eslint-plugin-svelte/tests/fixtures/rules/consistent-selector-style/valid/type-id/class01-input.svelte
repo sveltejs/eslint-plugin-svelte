@@ -10,6 +10,8 @@
 
 <b data-key="val">Text 3</b>
 
+<b class:conditinal={true}>Text 4</b>
+
 <style>
   .link {
     color: red;
@@ -32,6 +34,10 @@
   }
 
   .bold::before {
+    color: red;
+  }
+
+  .conditinal {
     color: red;
   }
 </style>
