@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.0.3
+
+### Patch Changes
+
+- [#1115](https://github.com/sveltejs/eslint-plugin-svelte/pull/1115) [`7f756b8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7f756b8535818008742eead569ebf03065db776b) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: align required Node version with ESLint
+
 ## 3.0.2
 
 ### Patch Changes
