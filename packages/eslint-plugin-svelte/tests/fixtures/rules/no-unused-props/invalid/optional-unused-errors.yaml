@@ -1,0 +1,8 @@
+- message: "'optionalCallback' is an unused Props property."
+  line: 9
+  column: 8
+  suggestions: null
+- message: "'optionalData' is an unused Props property."
+  line: 9
+  column: 8
+  suggestions: null

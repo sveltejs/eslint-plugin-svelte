@@ -1,0 +1,8 @@
+- message: "'email' is an unused Props property."
+  line: 17
+  column: 6
+  suggestions: null
+- message: "'permissions' is an unused Props property."
+  line: 17
+  column: 6
+  suggestions: null
