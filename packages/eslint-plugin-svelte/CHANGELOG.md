@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1064](https://github.com/sveltejs/eslint-plugin-svelte/pull/1064) [`df1647f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/df1647f64c3abeffc46523a85ea8ea08cc5b4c85) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `excludedRunes` option to the `prefer-const` rule
+
 ## 3.0.3
 
 ### Patch Changes
