@@ -1,0 +1,8 @@
+- message: "'version' is an unused Props property."
+  line: 17
+  column: 8
+  suggestions: null
+- message: "'updatedAt' is an unused Props property."
+  line: 17
+  column: 8
+  suggestions: null

@@ -1,0 +1,16 @@
+- message: "'regexp' is an unused Props property."
+  line: 10
+  column: 8
+  suggestions: null
+- message: "'promise' is an unused Props property."
+  line: 10
+  column: 8
+  suggestions: null
+- message: "'map' is an unused Props property."
+  line: 10
+  column: 8
+  suggestions: null
+- message: "'set' is an unused Props property."
+  line: 10
+  column: 8
+  suggestions: null

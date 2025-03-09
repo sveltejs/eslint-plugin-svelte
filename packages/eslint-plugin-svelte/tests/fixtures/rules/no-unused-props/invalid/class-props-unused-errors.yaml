@@ -1,0 +1,4 @@
+- message: "'data' is an unused Props property."
+  line: 16
+  column: 8
+  suggestions: null
