@@ -8,6 +8,8 @@
 
 <b data-key="val">Text 2</b>
 
+<b class:conditional={true}>Text 3</b>
+
 <style>
   .link {
     color: red;
@@ -30,6 +32,10 @@
   }
 
   .bold::before {
+    color: red;
+  }
+
+  .conditional {
     color: red;
   }
 </style>
