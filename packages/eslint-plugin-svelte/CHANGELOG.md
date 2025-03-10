@@ -1,5 +1,21 @@
 # eslint-plugin-svelte
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1064](https://github.com/sveltejs/eslint-plugin-svelte/pull/1064) [`df1647f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/df1647f64c3abeffc46523a85ea8ea08cc5b4c85) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `excludedRunes` option to the `prefer-const` rule
+
+### Patch Changes
+
+- [#1126](https://github.com/sveltejs/eslint-plugin-svelte/pull/1126) [`9b76b46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9b76b46e8637baff1bda0039edeacd647637993c) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: check property key instead of value in `valid-prop-names-in-kit-pages` rule
+
+- [#1125](https://github.com/sveltejs/eslint-plugin-svelte/pull/1125) [`0a03362`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0a0336267a41885871a181ed00454929bc2d79da) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: support windows path delimiter
+
+- [#1108](https://github.com/sveltejs/eslint-plugin-svelte/pull/1108) [`976e4f0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/976e4f0b5047f70b737e898743187afff88fea56) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(consistent-selector-style): not reporting class selectors used in class directives
+
+- [#1107](https://github.com/sveltejs/eslint-plugin-svelte/pull/1107) [`3b01537`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3b015374eb80d08a914321b36da36ccc9eac730f) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-base): ignoring fragment links
+
 ## 3.0.3
 
 ### Patch Changes
