@@ -14,11 +14,3 @@
   line: 4
   column: 20
   suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
-  line: 5
-  column: 21
-  suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
-  line: 5
-  column: 36
-  suggestions: null
