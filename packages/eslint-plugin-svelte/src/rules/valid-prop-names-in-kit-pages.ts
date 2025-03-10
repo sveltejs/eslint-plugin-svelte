@@ -16,12 +16,12 @@ function checkProp(
 	for (const p of node.id.properties) {
 		if (
 			p.type === 'Property' &&
-			p.value.type === 'Identifier' &&
-			!expectedPropNames.includes(p.value.name)
+			p.key.type === 'Identifier' &&
+			!expectedPropNames.includes(p.key.name)
 		) {
 			context.report({
-				node: p.value,
-				loc: p.value.loc,
+				node: p.key,
+				loc: p.key.loc,
 				messageId: 'unexpected'
 			});
 		}
