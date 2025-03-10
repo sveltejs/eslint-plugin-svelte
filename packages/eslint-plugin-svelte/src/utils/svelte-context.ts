@@ -62,7 +62,7 @@ function getSvelteFileType(filePath: string): SvelteContext['svelteFileType'] {
 }
 
 function getSvelteKitFileTypeFromFilePath(filePath: string): SvelteContext['svelteKitFileType'] {
-	const fileName = filePath.split('/').pop();
+	const fileName = filePath.split(/[/\\]/).pop();
 	switch (fileName) {
 		case '+page.svelte': {
 			return '+page.svelte';
