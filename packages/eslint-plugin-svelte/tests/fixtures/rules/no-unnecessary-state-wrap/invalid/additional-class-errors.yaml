@@ -1,0 +1,34 @@
+- message: CustomReactiveClass1 is already reactive, $state wrapping is unnecessary.
+  line: 5
+  column: 25
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import { CustomReactiveClass1, CustomReactiveClass2 } from 'foo';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const custom1 = new CustomReactiveClass1();
+        	const custom2 = $state(new CustomReactiveClass2());
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        </script>
+- message: CustomReactiveClass2 is already reactive, $state wrapping is unnecessary.
+  line: 6
+  column: 25
+  suggestions:
+    - desc: Remove unnecessary $state wrapping
+      messageId: suggestRemoveStateWrap
+      output: |
+        <script>
+        	import { CustomReactiveClass1, CustomReactiveClass2 } from 'foo';
+
+        	// These should be reported as unnecessary $state wrapping
+        	const custom1 = $state(new CustomReactiveClass1());
+        	const custom2 = new CustomReactiveClass2();
+
+        	// Regular state usage is still valid
+        	const regularState = $state(42);
+        </script>
