@@ -85,6 +85,10 @@ export default createRule('no-useless-mustaches', {
 				return;
 			}
 
+			if (rawValue.includes('{')) {
+				return;
+			}
+
 			let hasEscape = false;
 			if (rawValue !== strValue) {
 				// check escapes

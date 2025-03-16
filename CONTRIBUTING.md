@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing!
+Thank you for contributing!
 
 ## Installation
 
@@ -10,62 +10,60 @@ cd eslint-plugin-svelte
 pnpm install
 ```
 
-## Running the tests
+## Running Tests
 
 ```sh
+cd packages/eslint-plugin-svelte
 pnpm run test
 ```
 
-To run the tests with debugging log, you can use `pnpm run test:debug`.
+This is an [ESLint](http://eslint.org) plugin. See ESLint's [Working with Plugins](http://eslint.org/docs/developer-guide/working-with-plugins) for API details.
 
-This is an [ESLint](http://eslint.org) plugin. Documentation for the APIs that it uses can be found on ESLint's [Working with Plugins](http://eslint.org/docs/developer-guide/working-with-plugins) page.
-
-This plugin is used to lint itself. The style is checked when `pnpm run lint` is run, and the build will fail if there are any linting errors. You can use `pnpm run lint-fix` to fix some linting errors.
+The plugin lints itself. Running `pnpm run lint` checks the style and will fail the build if there are lint errors. Use `pnpm run lint-fix` to automatically fix some issues.
 
 ## Other Development Tools
 
-- `pnpm run test` runs tests.
-- `pnpm run cover` runs tests and measures coverage.
-- `pnpm run new -- [new-rule-name]` generate the files needed to implement the new rule.
-- `pnpm run update` runs in order to update readme and recommended configuration.
-- `pnpm run docs:watch` launch the document site in development mode.
+- `pnpm run test` – runs tests.
+- `pnpm run new -- [new-rule-name]` – generates files for a new rule.
+- `pnpm run update` – updates the README and recommended configuration.
 
-## Test the Rule
+## Rule Testing
 
-Rule testing almost always uses fixtures.  
-For example, for an `indent` rule, the `.ts` file that runs the test is `tests/src/rules/indent.ts` and the fixture is in `tests/fixtures/rules/indent`.  
-The fixture directory has an `invalid` directory and a `valid` directory.
+Rule tests typically use fixtures. For example, for the `indent` rule, the test file is `tests/src/rules/indent.ts` and the fixtures are in `tests/fixtures/rules/indent`, which contains `invalid` and `valid` directories.
 
-- The `invalid` directory contains test cases where the rule reports problems.
-- The `valid` directory contains test cases where the rule does not report a problem.
+- The `invalid` directory contains test cases where the rule should report errors.
+- The `valid` directory contains test cases where no errors are reported.
 
-The fixture input file should be named `*-input.svelte`. It is automatically collected and tested.  
-If your test requires configuration, you need to add a json file with the configuration.
+Fixture input files should be named `*-input.svelte` and are automatically collected.  
+If configuration is needed, include a JSON file:
 
-- If you want to apply a configuration to `my-test-input.svelte`, add `my-test-config.json`.
-- If you want to apply the same configuration to all the fixtures in that directory, add `_config.json`.
+- For a specific test file (e.g., `my-test-input.svelte`), add `my-test-config.json`.
+- For all fixtures in a directory, add `_config.json`.
 
-To verify the output of invalid test cases requires `*-errors.json`, and `*-output.svelte` (for auto-fix). However, you don't have to add them yourself. If they do not exist, they will be automatically generated when you run the test. In other words, delete them manually when you want to recreate them.
+Verifying output for invalid tests requires `*-errors.json` and `*-output.svelte` (for auto-fix). These files are auto-generated if missing—delete them to recreate.
 
 **Tips**:
 
-If you want to test only one rule, run the following command (for `indent` rule):
+To test only one rule (e.g., `indent`), run:
 
 ```sh
 pnpm run test -- -g indent
 ```
 
-Take <https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha> as reference for details.
+Refer to [this Stack Overflow post](https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha) for details.
 
-If you want to test only `my-test-input.svelte`, add `my-test-config.json` and save `{"only": true}`.  
-(Note that `{"only": true}` must be removed before making a pull request.)
+To test a single file (e.g., `my-test-input.svelte`), add a `my-test-config.json` with `{"only": true}`.  
+(Remember to remove `{"only": true}` before submitting a pull request.)
 
-## Commit messages
+## Preview Docs
 
-Please view [commitlint](https://commitlint.js.org) and [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) for more details.
+```sh
+cd docs-svelte-kit
+pnpm run build && pnpm run preview
+```
 
 ## Publishing
 
-We're using [changesets](https://github.com/changesets/changesets) for version management, CHANGELOG and releasing automatically.
+We use [changesets](https://github.com/changesets/changesets) for version management, changelog generation, and automated releases.
 
-Please view [changesets-bot](https://github.com/apps/changeset-bot) and its [action](https://github.com/changesets/action) for more details.
+For more details, see [changesets-bot](https://github.com/apps/changeset-bot) and its [action](https://github.com/changesets/action).

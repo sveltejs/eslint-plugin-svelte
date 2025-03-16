@@ -52,6 +52,7 @@ import noTrailingSpaces from '../rules/no-trailing-spaces.js';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property.js';
 import noUnnecessaryStateWrap from '../rules/no-unnecessary-state-wrap.js';
 import noUnusedClassName from '../rules/no-unused-class-name.js';
+import noUnusedProps from '../rules/no-unused-props.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
@@ -73,6 +74,7 @@ import system from '../rules/system.js';
 import validCompile from '../rules/valid-compile.js';
 import validEachKey from '../rules/valid-each-key.js';
 import validPropNamesInKitPages from '../rules/valid-prop-names-in-kit-pages.js';
+import validStyleParse from '../rules/valid-style-parse.js';
 
 export const rules = [
 	typescriptEslintNoUnnecessaryCondition,
@@ -125,6 +127,7 @@ export const rules = [
 	noUnknownStyleDirectiveProperty,
 	noUnnecessaryStateWrap,
 	noUnusedClassName,
+	noUnusedProps,
 	noUnusedSvelteIgnore,
 	noUselessChildrenSnippet,
 	noUselessMustaches,
@@ -145,5 +148,6 @@ export const rules = [
 	system,
 	validCompile,
 	validEachKey,
-	validPropNamesInKitPages
+	validPropNamesInKitPages,
+	validStyleParse
 ] as RuleModule[];

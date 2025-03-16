@@ -14,7 +14,7 @@ since: 'v3.0.0-next.6'
 
 ## :book: Rule Details
 
-This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$derived` and `$props`. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
+This rule reports the same as the base ESLint `prefer-const` rule, except that ignores Svelte reactive values such as `$derived` and `$props` as default. If this rule is active, make sure to disable the base `prefer-const` rule, as it will conflict with this rule.
 
 <!--eslint-skip-->
 
@@ -46,7 +46,8 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
     "error",
     {
       "destructuring": "any",
-      "ignoreReadonly": true
+      "ignoreReadonly": true,
+      "excludedRunes": ["$props", "$derived"]
     }
   ]
 }
@@ -56,6 +57,7 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
   - `any` (default): if any variables in destructuring should be const, this rule warns for those variables.
   - `all`: if all variables in destructuring should be const, this rule warns the variables. Otherwise, ignores them.
 - `ignoreReadonly`: If `true`, this rule will ignore variables that are read between the declaration and the _first_ assignment.
+- `excludedRunes`: An array of rune names that should be ignored. Even if a rune is declared with `let`, it will still be ignored.
 
 ## :books: Further Reading
 

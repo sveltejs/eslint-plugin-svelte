@@ -6,7 +6,9 @@ export default createRule('require-stores-init', {
 		docs: {
 			description: 'require initial value in store',
 			category: 'Best Practices',
-			recommended: true
+			// Please refer to the following before setting recommended to true.
+			// https://github.com/sveltejs/eslint-plugin-svelte/issues/1073
+			recommended: false
 		},
 		schema: [],
 		messages: {

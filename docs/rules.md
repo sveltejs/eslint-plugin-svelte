@@ -32,6 +32,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/require-store-callbacks-use-set-param](./rules/require-store-callbacks-use-set-param.md) | store callbacks must use `set` param                                                                                                   |                |
 | [svelte/require-store-reactive-access](./rules/require-store-reactive-access.md)                 | disallow to use of the store itself as an operand. Need to use $ prefix or get function.                                               | :star::wrench: |
 | [svelte/valid-compile](./rules/valid-compile.md)                                                 | disallow warnings when compiling.                                                                                                      |                |
+| [svelte/valid-style-parse](./rules/valid-style-parse.md)                                         | require valid style element parsing                                                                                                    |                |
 
 ## Security Vulnerability
 
@@ -60,6 +61,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-svelte-internal](./rules/no-svelte-internal.md)                               | svelte/internal will be removed in Svelte 6.                                                                                              | :star:         |
 | [svelte/no-unnecessary-state-wrap](./rules/no-unnecessary-state-wrap.md)                 | Disallow unnecessary $state wrapping of reactive classes                                                                                  | :star::bulb:   |
 | [svelte/no-unused-class-name](./rules/no-unused-class-name.md)                           | disallow the use of a class in the template without a corresponding style                                                                 |                |
+| [svelte/no-unused-props](./rules/no-unused-props.md)                                     | Warns about defined Props properties that are unused                                                                                      | :star:         |
 | [svelte/no-unused-svelte-ignore](./rules/no-unused-svelte-ignore.md)                     | disallow unused svelte-ignore comments                                                                                                    | :star:         |
 | [svelte/no-useless-children-snippet](./rules/no-useless-children-snippet.md)             | disallow explicit children snippet where it's not needed                                                                                  | :star:         |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md)                           | disallow unnecessary mustache interpolations                                                                                              | :star::wrench: |
@@ -68,7 +70,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/require-each-key](./rules/require-each-key.md)                                   | require keyed `{#each}` block                                                                                                             | :star:         |
 | [svelte/require-event-dispatcher-types](./rules/require-event-dispatcher-types.md)       | require type parameters for `createEventDispatcher`                                                                                       | :star:         |
 | [svelte/require-optimized-style-attribute](./rules/require-optimized-style-attribute.md) | require style attributes that can be optimized                                                                                            |                |
-| [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            | :star:         |
+| [svelte/require-stores-init](./rules/require-stores-init.md)                             | require initial value in store                                                                                                            |                |
 | [svelte/valid-each-key](./rules/valid-each-key.md)                                       | enforce keys to use variables defined in the `{#each}` block                                                                              | :star:         |
 
 ## Stylistic Issues

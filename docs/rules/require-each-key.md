@@ -44,7 +44,7 @@ Nothing.
 
 ## :books: Further Reading
 
-- [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/keyed-each-blocks)
+- [Svelte - Tutorial > 4. Logic / Keyed each blocks](https://svelte.dev/tutorial/svelte/keyed-each-blocks)
 
 ## :rocket: Version
 

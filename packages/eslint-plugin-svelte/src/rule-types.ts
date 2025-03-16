@@ -267,6 +267,11 @@ export interface RuleOptions {
    */
   'svelte/no-unused-class-name'?: Linter.RuleEntry<SvelteNoUnusedClassName>
   /**
+   * Warns about defined Props properties that are unused
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props/
+   */
+  'svelte/no-unused-props'?: Linter.RuleEntry<SvelteNoUnusedProps>
+  /**
    * disallow unused svelte-ignore comments
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/
    */
@@ -371,6 +376,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/
    */
   'svelte/valid-prop-names-in-kit-pages'?: Linter.RuleEntry<[]>
+  /**
+   * require valid style element parsing
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse/
+   */
+  'svelte/valid-style-parse'?: Linter.RuleEntry<[]>
 }
 
 /* ======= Declarations ======= */
@@ -522,6 +532,11 @@ type SvelteNoUnnecessaryStateWrap = []|[{
 type SvelteNoUnusedClassName = []|[{
   allowedClassNames?: string[]
 }]
+// ----- svelte/no-unused-props -----
+type SvelteNoUnusedProps = []|[{
+  checkImportedTypes?: boolean
+  ignorePatterns?: string[]
+}]
 // ----- svelte/no-useless-mustaches -----
 type SvelteNoUselessMustaches = []|[{
   ignoreIncludesComment?: boolean
@@ -535,6 +550,7 @@ type SveltePreferClassDirective = []|[{
 type SveltePreferConst = []|[{
   destructuring?: ("any" | "all")
   ignoreReadBeforeAssign?: boolean
+  excludedRunes?: string[]
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{

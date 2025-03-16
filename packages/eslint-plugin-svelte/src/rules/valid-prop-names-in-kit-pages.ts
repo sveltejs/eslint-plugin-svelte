@@ -3,7 +3,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { getSvelteVersion } from '../utils/svelte-context.js';
-import { getFilename } from '../utils/compat.js';
 
 const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
 const EXPECTED_PROP_NAMES_SVELTE5 = [...EXPECTED_PROP_NAMES, 'children'];
@@ -17,16 +16,33 @@ function checkProp(
 	for (const p of node.id.properties) {
 		if (
 			p.type === 'Property' &&
-			p.value.type === 'Identifier' &&
-			!expectedPropNames.includes(p.value.name)
+			p.key.type === 'Identifier' &&
+			!expectedPropNames.includes(p.key.name)
 		) {
 			context.report({
-				node: p.value,
-				loc: p.value.loc,
+				node: p.key,
+				loc: p.key.loc,
 				messageId: 'unexpected'
 			});
 		}
 	}
+}
+
+function isModuleScript(node: AST.SvelteAttribute) {
+	// <script context="module">
+	if (
+		node.key.name === 'context' &&
+		node.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')
+	) {
+		return true;
+	}
+
+	// <script module>
+	if (node.key.name === 'module' && node.value.length === 0) {
+		return true;
+	}
+
+	return false;
 }
 
 export default createRule('valid-prop-names-in-kit-pages', {
@@ -49,18 +65,13 @@ export default createRule('valid-prop-names-in-kit-pages', {
 	},
 	create(context) {
 		let isScript = false;
-		const isSvelte5 = getSvelteVersion(getFilename(context)) === '5';
+		const isSvelte5 = getSvelteVersion() === '5';
 		const expectedPropNames = isSvelte5 ? EXPECTED_PROP_NAMES_SVELTE5 : EXPECTED_PROP_NAMES;
 		return {
 			// <script>
 			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {
 				// except for <script context="module">
-				isScript = !node.attributes.some(
-					(a) =>
-						a.type === 'SvelteAttribute' &&
-						a.key.name === 'context' &&
-						a.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')
-				);
+				isScript = !node.attributes.some((a) => a.type === 'SvelteAttribute' && isModuleScript(a));
 			},
 
 			// </script>

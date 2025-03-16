@@ -62,6 +62,7 @@ export default createRule('consistent-selector-style', {
 		const checkGlobal = context.options[0]?.checkGlobal ?? false;
 		const style = context.options[0]?.style ?? ['type', 'id', 'class'];
 
+		const whitelistedClasses: string[] = [];
 		const classSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
 		const idSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
 		const typeSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
@@ -109,6 +110,9 @@ export default createRule('consistent-selector-style', {
 		 * Checks a class selector
 		 */
 		function checkClassSelector(node: SelectorClass): void {
+			if (whitelistedClasses.includes(node.value)) {
+				return;
+			}
 			const selection = classSelections.get(node.value) ?? [];
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
@@ -194,6 +198,9 @@ export default createRule('consistent-selector-style', {
 					addToArrayMap(classSelections, className, node);
 				}
 				for (const attribute of node.startTag.attributes) {
+					if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
+						whitelistedClasses.push(attribute.key.name.name);
+					}
 					if (attribute.type !== 'SvelteAttribute' || attribute.key.name !== 'id') {
 						continue;
 					}
