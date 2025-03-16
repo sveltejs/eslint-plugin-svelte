@@ -1,0 +1,6 @@
+- message: "'name' is an unused Props property."
+  line: 6
+  column: 6
+  endLine: 6
+  endColumn: 20
+  suggestions: null

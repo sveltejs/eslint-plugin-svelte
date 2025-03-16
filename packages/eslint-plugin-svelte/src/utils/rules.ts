@@ -51,6 +51,7 @@ import noTargetBlank from '../rules/no-target-blank.js';
 import noTrailingSpaces from '../rules/no-trailing-spaces.js';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property.js';
 import noUnusedClassName from '../rules/no-unused-class-name.js';
+import noUnusedProps from '../rules/no-unused-props.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
@@ -124,6 +125,7 @@ export const rules = [
 	noTrailingSpaces,
 	noUnknownStyleDirectiveProperty,
 	noUnusedClassName,
+	noUnusedProps,
 	noUnusedSvelteIgnore,
 	noUselessChildrenSnippet,
 	noUselessMustaches,
