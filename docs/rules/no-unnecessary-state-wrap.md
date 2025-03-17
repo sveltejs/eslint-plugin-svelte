@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-unnecessary-state-wrap'
 description: 'Disallow unnecessary $state wrapping of reactive classes'
+since: 'v3.2.0'
 ---
 
 # svelte/no-unnecessary-state-wrap
 
 > Disallow unnecessary $state wrapping of reactive classes
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
@@ -108,6 +108,10 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
   let set3 = $state(new SvelteSet()); // Variable is never reassigned
 </script>
 ```
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.2.0
 
 ## :mag: Implementation
 
