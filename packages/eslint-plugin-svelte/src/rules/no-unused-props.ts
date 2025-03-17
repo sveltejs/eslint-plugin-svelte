@@ -80,15 +80,11 @@ export default createRule('no-unused-props', {
 			return shouldIgnore(typeStr) || (symbolName ? shouldIgnore(symbolName) : false);
 		}
 
-		function isExternalType(type: ts.Type): boolean {
-			const symbol = type.getSymbol();
-			if (!symbol) return false;
-
+		function isInternalProperty(symbol: ts.Symbol): boolean {
 			const declarations = symbol.getDeclarations();
 			if (!declarations || declarations.length === 0) return false;
 
-			const sourceFile = declarations[0].getSourceFile();
-			return sourceFile.fileName !== fileName;
+			return declarations.every((decl) => decl.getSourceFile().fileName === fileName);
 		}
 
 		/**
@@ -200,7 +196,6 @@ export default createRule('no-unused-props', {
 			if (checkedTypes.has(typeStr)) return;
 			checkedTypes.add(typeStr);
 			if (shouldIgnoreType(type)) return;
-			if (!checkImportedTypes && isExternalType(type)) return;
 
 			const properties = typeChecker.getPropertiesOfType(type);
 			const baseTypes = type.getBaseTypes();
@@ -225,6 +220,7 @@ export default createRule('no-unused-props', {
 
 			for (const prop of properties) {
 				if (isBuiltInProperty(prop)) continue;
+				if (!checkImportedTypes && !isInternalProperty(prop)) continue;
 
 				const propName = prop.getName();
 				const currentPath = [...parentPath, propName];
