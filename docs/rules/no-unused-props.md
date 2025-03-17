@@ -168,8 +168,8 @@ Note: Properties of class types are not checked for usage, as they might be used
 ```
 
 - `checkImportedTypes` ... Controls whether to check properties from imported types. Default is `false`.
-- `ignoreTypePatterns` ... Patterns to ignore when checking property types. Default is `[]`.
-- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `[]`, which ignores properties starting with special characters often used for internal or framework-specific identifiers.
+- `ignoreTypePatterns` ... Patterns to ignore when checking property types. Default is `[]` (no types are ignored by default). This option can be used to exclude certain types from being checked for unused properties, which is useful for utility or internal types.
+- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `[]` (no properties are ignored by default). This option can be used to ignore properties starting with special characters often used for internal or framework-specific identifiers.
 
 Examples:
 
