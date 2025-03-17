@@ -1,4 +1,4 @@
 - message: "'child2' is an unused Props property."
-  line: 10
+  line: 9
   column: 6
   suggestions: null
