@@ -1,7 +1,0 @@
-{
-	"options": [
-		{
-			"ignorePatterns": [".*DTO$"]
-		}
-	]
-}

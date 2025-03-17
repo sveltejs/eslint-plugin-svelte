@@ -159,14 +159,17 @@ Note: Properties of class types are not checked for usage, as they might be used
   "svelte/no-unused-props": ["error", {
     // Whether to check properties from imported types
     "checkImportedTypes": false,
+    // Patterns to ignore when checking property types
+    "ignoreTypePatterns": [],
     // Patterns to ignore when checking for unused props
-    "ignorePatterns": []
+    "ignorePropertyPatterns": ["/^[#$@_~]/"],
   }]
 }
 ```
 
 - `checkImportedTypes` ... Controls whether to check properties from imported types. Default is `false`.
-- `ignorePatterns` ... Patterns to ignore when checking for unused props. Default is an empty array.
+- `ignoreTypePatterns` ... Patterns to ignore when checking property types. Default is `[]`.
+- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `/["^[#$@_~]"]/`, which ignores properties starting with special characters often used for internal or framework-specific identifiers.
 
 Examples:
 
@@ -187,10 +190,28 @@ Examples:
 ```svelte
 <!-- ✓ Good Examples -->
 <script lang="ts">
-  /* eslint svelte/no-unused-props: ["error", { "ignorePatterns": ["^_"] }] */
-  // Ignore properties starting with underscore
+  /* eslint svelte/no-unused-props: ["error", { "ignoreTypePatterns": ["/^Internal/"] }] */
+  // Ignore properties from types matching the pattern
+  interface InternalConfig {
+    secretKey: string;
+    debugMode: boolean;
+  }
   interface Props {
-    _internal: string;
+    config: InternalConfig; // Properties of InternalConfig won't be checked
+    value: number;
+  }
+  let { config, value }: Props = $props();
+  console.log(value, config);
+</script>
+```
+
+```svelte
+<!-- ✓ Good Examples -->
+<script lang="ts">
+  /* eslint svelte/no-unused-props: ["error", { "ignorePropertyPatterns": ["/^_/"] }] */
+  // Ignore properties with names matching the pattern
+  interface Props {
+    _internal: string; // This prop won't be reported even if unused
     value: number;
   }
   let { value }: Props = $props();
