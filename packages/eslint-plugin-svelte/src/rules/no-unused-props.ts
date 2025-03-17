@@ -76,38 +76,28 @@ export default createRule('no-unused-props', {
 		// From v3.3.0, it was replaced with `ignorePropertyPatterns` and `ignoreTypePatterns`.
 		if (options.ignorePatterns != null && !isDeprecationWarningShown) {
 			console.warn(
-				'eslint-plugin-svelte: The `ignorePatterns` option in the `no-unused-props` rule has been deprecated. Please use `ignorePropertyPatterns` and `ignoreTypePatterns` instead.'
+				'eslint-plugin-svelte: The `ignorePatterns` option in the `no-unused-props` rule has been removed. Please use `ignorePropertyPatterns` or/and `ignoreTypePatterns` instead.'
 			);
 			isDeprecationWarningShown = true;
 		}
 
 		const checkImportedTypes = options.checkImportedTypes ?? false;
-		const ignorePatterns = (options.ignorePatterns ?? []).map((p: string | RegExp) => {
+
+		const ignoreTypePatterns = (options.ignoreTypePatterns ?? []).map((p: string | RegExp) => {
 			if (typeof p === 'string') {
 				return toRegExp(p);
 			}
 			return p;
 		});
 
-		const ignoreTypePatterns = [
-			...ignorePatterns,
-			...(options.ignoreTypePatterns ?? []).map((p: string | RegExp) => {
+		const ignorePropertyPatterns = (options.ignorePropertyPatterns ?? []).map(
+			(p: string | RegExp) => {
 				if (typeof p === 'string') {
 					return toRegExp(p);
 				}
 				return p;
-			})
-		];
-
-		const ignorePropertyPatterns = [
-			...ignorePatterns,
-			...(options.ignorePropertyPatterns ?? []).map((p: string | RegExp) => {
-				if (typeof p === 'string') {
-					return toRegExp(p);
-				}
-				return p;
-			})
-		];
+			}
+		);
 
 		function shouldIgnoreProperty(name: string): boolean {
 			return ignorePropertyPatterns.some((pattern: RegExp) => pattern.test(name));

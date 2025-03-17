@@ -211,7 +211,7 @@ Examples:
   /* eslint svelte/no-unused-props: ["error", { "ignorePropertyPatterns": ["/^_/"] }] */
   // Ignore properties with names matching the pattern
   interface Props {
-    _internal: string; // This prop won't be reported even if unused
+    _internal: string;
     value: number;
   }
   let { value }: Props = $props();
