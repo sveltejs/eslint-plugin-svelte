@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.2.2
+
+### Patch Changes
+
+- [#1135](https://github.com/sveltejs/eslint-plugin-svelte/pull/1135) [`1ff148a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1ff148a0bb24954aef59ce93b05a35913d83f2ee) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: correct detection of externally defined types in `no-unused-props` rule
+
 ## 3.2.1
 
 ### Patch Changes
