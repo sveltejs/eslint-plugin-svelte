@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 3.2.0
+
+### Minor Changes
+
+- [#1062](https://github.com/sveltejs/eslint-plugin-svelte/pull/1062) [`a4d3b29`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a4d3b295583309bd8fcde846d1a1daa612d4d56a) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `no-unnecessary-state-wrap` rule
+
+- [#1061](https://github.com/sveltejs/eslint-plugin-svelte/pull/1061) [`268a372`](https://github.com/sveltejs/eslint-plugin-svelte/commit/268a3727e17c4bcb1906cc6901667a1272d2a191) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `no-unused-props` rule
+
 ## 3.1.0
 
 ### Minor Changes

@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-unused-props'
 description: 'Warns about defined Props properties that are unused'
+since: 'v3.2.0'
 ---
 
 # svelte/no-unused-props
 
 > Warns about defined Props properties that are unused
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
@@ -201,6 +201,10 @@ Examples:
 ## :gear: Required Configuration
 
 This rule requires `@typescript-eslint/parser` to work. Please refer to the [User Guide](../user-guide.md) for more information.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.2.0
 
 ## :mag: Implementation
 
