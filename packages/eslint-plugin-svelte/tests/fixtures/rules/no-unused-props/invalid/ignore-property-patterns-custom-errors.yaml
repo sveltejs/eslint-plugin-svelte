@@ -1,0 +1,8 @@
+- message: "'foo' is an unused Props property."
+  line: 8
+  column: 8
+  suggestions: null
+- message: "'_foo' is an unused Props property."
+  line: 8
+  column: 8
+  suggestions: null

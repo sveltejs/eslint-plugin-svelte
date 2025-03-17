@@ -159,14 +159,17 @@ Note: Properties of class types are not checked for usage, as they might be used
   "svelte/no-unused-props": ["error", {
     // Whether to check properties from imported types
     "checkImportedTypes": false,
+    // Patterns to ignore when checking property types
+    "ignoreTypePatterns": [],
     // Patterns to ignore when checking for unused props
-    "ignorePatterns": []
+    "ignorePropertyPatterns": [],
   }]
 }
 ```
 
-- `checkImportedTypes` ... Controls whether to check properties from imported types. Default is `false`.
-- `ignorePatterns` ... Patterns to ignore when checking for unused props. Default is an empty array.
+- `checkImportedTypes` ... Controls whether to check properties from types defined in external files. Default is `false`, meaning the rule only checks types defined within the component file itself. When set to `true`, the rule will also check properties from imported and extended types.
+- `ignoreTypePatterns` ... Regular expression patterns for type names to exclude from checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to exclude specific imported types (like utility types or third-party types) from being checked.
+- `ignorePropertyPatterns` ... Regular expression patterns for property names to exclude from unused checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to ignore specific properties from external types that shouldn't trigger warnings.
 
 Examples:
 
@@ -187,8 +190,26 @@ Examples:
 ```svelte
 <!-- ✓ Good Examples -->
 <script lang="ts">
-  /* eslint svelte/no-unused-props: ["error", { "ignorePatterns": ["^_"] }] */
-  // Ignore properties starting with underscore
+  /* eslint svelte/no-unused-props: ["error", { "ignoreTypePatterns": ["/^Internal/"] }] */
+  // Ignore properties from types matching the pattern
+  interface InternalConfig {
+    secretKey: string;
+    debugMode: boolean;
+  }
+  interface Props {
+    config: InternalConfig;
+    value: number;
+  }
+  let { config, value }: Props = $props();
+  console.log(value, config.secretKey);
+</script>
+```
+
+```svelte
+<!-- ✓ Good Examples -->
+<script lang="ts">
+  /* eslint svelte/no-unused-props: ["error", { "ignorePropertyPatterns": ["/^_/"] }] */
+  // Ignore properties with names matching the pattern
   interface Props {
     _internal: string;
     value: number;

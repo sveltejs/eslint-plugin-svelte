@@ -535,7 +535,8 @@ type SvelteNoUnusedClassName = []|[{
 // ----- svelte/no-unused-props -----
 type SvelteNoUnusedProps = []|[{
   checkImportedTypes?: boolean
-  ignorePatterns?: string[]
+  ignoreTypePatterns?: string[]
+  ignorePropertyPatterns?: string[]
 }]
 // ----- svelte/no-useless-mustaches -----
 type SvelteNoUselessMustaches = []|[{

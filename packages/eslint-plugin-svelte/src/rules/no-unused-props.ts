@@ -8,6 +8,8 @@ import { getFilename } from '../utils/compat.js';
 
 type PropertyPath = string[];
 
+let isRemovedWarningShown = false;
+
 export default createRule('no-unused-props', {
 	meta: {
 		docs: {
@@ -23,7 +25,14 @@ export default createRule('no-unused-props', {
 						type: 'boolean',
 						default: false
 					},
-					ignorePatterns: {
+					ignoreTypePatterns: {
+						type: 'array',
+						items: {
+							type: 'string'
+						},
+						default: []
+					},
+					ignorePropertyPatterns: {
 						type: 'array',
 						items: {
 							type: 'string'
@@ -61,23 +70,48 @@ export default createRule('no-unused-props', {
 		}
 
 		const options = context.options[0] ?? {};
+
+		// TODO: Remove in v4
+		// MEMO: `ignorePatterns` was a property that only existed from v3.2.0 to v3.2.2.
+		// From v3.3.0, it was replaced with `ignorePropertyPatterns` and `ignoreTypePatterns`.
+		if (options.ignorePatterns != null && !isRemovedWarningShown) {
+			console.warn(
+				'eslint-plugin-svelte: The `ignorePatterns` option in the `no-unused-props` rule has been removed. Please use `ignorePropertyPatterns` or/and `ignoreTypePatterns` instead.'
+			);
+			isRemovedWarningShown = true;
+		}
+
 		const checkImportedTypes = options.checkImportedTypes ?? false;
-		const ignorePatterns = (options.ignorePatterns ?? []).map((p: string | RegExp) => {
+
+		const ignoreTypePatterns = (options.ignoreTypePatterns ?? []).map((p: string | RegExp) => {
 			if (typeof p === 'string') {
 				return toRegExp(p);
 			}
 			return p;
 		});
 
-		function shouldIgnore(name: string): boolean {
-			return ignorePatterns.some((pattern: RegExp) => pattern.test(name));
+		const ignorePropertyPatterns = (options.ignorePropertyPatterns ?? []).map(
+			(p: string | RegExp) => {
+				if (typeof p === 'string') {
+					return toRegExp(p);
+				}
+				return p;
+			}
+		);
+
+		function shouldIgnoreProperty(name: string): boolean {
+			return ignorePropertyPatterns.some((pattern: RegExp) => pattern.test(name));
 		}
 
 		function shouldIgnoreType(type: ts.Type): boolean {
+			function isMatched(name: string): boolean {
+				return ignoreTypePatterns.some((pattern: RegExp) => pattern.test(name));
+			}
+
 			const typeStr = typeChecker.typeToString(type);
 			const symbol = type.getSymbol();
 			const symbolName = symbol?.getName();
-			return shouldIgnore(typeStr) || (symbolName ? shouldIgnore(symbolName) : false);
+			return isMatched(typeStr) || (symbolName ? isMatched(symbolName) : false);
 		}
 
 		function isInternalProperty(symbol: ts.Symbol): boolean {
@@ -223,6 +257,8 @@ export default createRule('no-unused-props', {
 				if (!checkImportedTypes && !isInternalProperty(prop)) continue;
 
 				const propName = prop.getName();
+				if (shouldIgnoreProperty(propName)) continue;
+
 				const currentPath = [...parentPath, propName];
 				const currentPathStr = [...parentPath, propName].join('.');
 
