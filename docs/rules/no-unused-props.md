@@ -167,9 +167,9 @@ Note: Properties of class types are not checked for usage, as they might be used
 }
 ```
 
-- `checkImportedTypes` ... Controls whether to check properties from imported types. Default is `false`.
-- `ignoreTypePatterns` ... Patterns to ignore when checking property types. Default is `[]` (no types are ignored by default). This option can be used to exclude certain types from being checked for unused properties, which is useful for utility or internal types.
-- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `[]` (no properties are ignored by default). This option can be used to ignore properties starting with special characters often used for internal or framework-specific identifiers.
+- `checkImportedTypes` ... Controls whether to check properties from types defined in external files. Default is `false`, meaning the rule only checks types defined within the component file itself. When set to `true`, the rule will also check properties from imported and extended types.
+- `ignoreTypePatterns` ... Regular expression patterns for type names to exclude from checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to exclude specific imported types (like utility types or third-party types) from being checked.
+- `ignorePropertyPatterns` ... Regular expression patterns for property names to exclude from unused checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to ignore specific properties from external types that shouldn't trigger warnings.
 
 Examples:
 
