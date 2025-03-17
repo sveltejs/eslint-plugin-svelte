@@ -13,7 +13,7 @@ npm install --save-dev svelte eslint eslint-plugin-svelte globals
 > **Requirements:**
 >
 > - ESLint v8.57.1, v9.0.0, and above
-> - Node.js v18.20.4, v20.18.0, v22.10.0, and above
+> - Node.js v18.18.0, v20.9.0, v21.1.0 and above
 
 ## Usage
 
