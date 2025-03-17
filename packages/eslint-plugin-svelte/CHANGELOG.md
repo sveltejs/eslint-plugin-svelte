@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.2.1
+
+### Patch Changes
+
+- [#1128](https://github.com/sveltejs/eslint-plugin-svelte/pull/1128) [`e94b59a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e94b59a35c914d868f89dd300b8d6b8090054976) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: resolve false positives on nested objects in `no-unused-props` rule
+
 ## 3.2.0
 
 ### Minor Changes
