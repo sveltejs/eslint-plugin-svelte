@@ -319,7 +319,7 @@ export default createRule('no-unused-props', {
 						.filter((v): v is TSESTree.Identifier => v.type === 'Identifier');
 					for (const identifier of identifiers) {
 						const paths = getUsedNestedPropertyNames(identifier);
-						usedPaths.push(...paths);
+						usedPaths.push(...paths.map((path) => [identifier.name, ...path]));
 					}
 				} else if (node.id.type === 'Identifier') {
 					usedPaths = getUsedNestedPropertyNames(node.id);
