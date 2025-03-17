@@ -162,14 +162,14 @@ Note: Properties of class types are not checked for usage, as they might be used
     // Patterns to ignore when checking property types
     "ignoreTypePatterns": [],
     // Patterns to ignore when checking for unused props
-    "ignorePropertyPatterns": ["/^[#$@_~]/"],
+    "ignorePropertyPatterns": [],
   }]
 }
 ```
 
 - `checkImportedTypes` ... Controls whether to check properties from imported types. Default is `false`.
 - `ignoreTypePatterns` ... Patterns to ignore when checking property types. Default is `[]`.
-- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `/["^[#$@_~]"]/`, which ignores properties starting with special characters often used for internal or framework-specific identifiers.
+- `ignorePropertyPatterns` ... Patterns to ignore when checking for unused props. Default is `[]`, which ignores properties starting with special characters often used for internal or framework-specific identifiers.
 
 Examples:
 

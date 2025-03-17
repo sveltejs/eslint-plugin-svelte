@@ -37,9 +37,7 @@ export default createRule('no-unused-props', {
 						items: {
 							type: 'string'
 						},
-						// For example, valibot generates symbol like `__@BrandSymbol@1167`.
-						// So, we ignore properties starting with special characters often used for internal or framework-specific identifiers.
-						default: ['^[#$@_~]']
+						default: []
 					}
 				},
 				additionalProperties: false
@@ -103,7 +101,7 @@ export default createRule('no-unused-props', {
 
 		const ignorePropertyPatterns = [
 			...ignorePatterns,
-			...(options.ignorePropertyPatterns ?? [/^[#$@_~]/]).map((p: string | RegExp) => {
+			...(options.ignorePropertyPatterns ?? []).map((p: string | RegExp) => {
 				if (typeof p === 'string') {
 					return toRegExp(p);
 				}

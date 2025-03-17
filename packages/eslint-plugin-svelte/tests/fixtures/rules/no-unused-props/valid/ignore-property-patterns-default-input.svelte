@@ -1,13 +1,8 @@
 <script lang="ts">
 	interface Props {
-		_internal: string;
-		$store: boolean;
-		'@decorator': string;
-		'#private': number;
-		'~tilde': boolean;
-		normalUsed: string;
+		foo: string;
+		bar: string;
 	}
 
-	const { normalUsed }: Props = $props();
-	console.log(normalUsed);
+	const { foo, bar }: Props = $props();
 </script>
