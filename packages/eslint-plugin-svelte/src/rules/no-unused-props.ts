@@ -8,7 +8,7 @@ import { getFilename } from '../utils/compat.js';
 
 type PropertyPath = string[];
 
-let isDeprecationWarningShown = false;
+let isRemovedWarningShown = false;
 
 export default createRule('no-unused-props', {
 	meta: {
@@ -74,11 +74,11 @@ export default createRule('no-unused-props', {
 		// TODO: Remove in v4
 		// MEMO: `ignorePatterns` was a property that only existed from v3.2.0 to v3.2.1.
 		// From v3.3.0, it was replaced with `ignorePropertyPatterns` and `ignoreTypePatterns`.
-		if (options.ignorePatterns != null && !isDeprecationWarningShown) {
+		if (options.ignorePatterns != null && !isRemovedWarningShown) {
 			console.warn(
 				'eslint-plugin-svelte: The `ignorePatterns` option in the `no-unused-props` rule has been removed. Please use `ignorePropertyPatterns` or/and `ignoreTypePatterns` instead.'
 			);
-			isDeprecationWarningShown = true;
+			isRemovedWarningShown = true;
 		}
 
 		const checkImportedTypes = options.checkImportedTypes ?? false;
