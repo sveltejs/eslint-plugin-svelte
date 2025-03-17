@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.3.0
+
+### Minor Changes
+
+- [#1132](https://github.com/sveltejs/eslint-plugin-svelte/pull/1132) [`30c1e5f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/30c1e5fc6517cec7171ca42327699c3ad9ab6580) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `ignorePropertyPatterns` property and rename `ignorePatterns` to `ignoreTypePatterns` in `no-unused-props` rule. The `ignorePatterns` option existed only for a few hours and is removed by this PR. Technically, this is a breaking change, but we’ll handle it as a minor release since very few users are likely affected.
+
 ## 3.2.2
 
 ### Patch Changes
