@@ -8,5 +8,5 @@
 		value: number;
 	}
 	let { config, value }: Props = $props();
-	console.log(value, config);
+	console.log(value, config.secretKey);
 </script>

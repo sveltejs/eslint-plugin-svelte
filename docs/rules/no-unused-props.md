@@ -197,11 +197,11 @@ Examples:
     debugMode: boolean;
   }
   interface Props {
-    config: InternalConfig; // Properties of InternalConfig won't be checked
+    config: InternalConfig;
     value: number;
   }
   let { config, value }: Props = $props();
-  console.log(value, config);
+  console.log(value, config.secretKey);
 </script>
 ```
 
