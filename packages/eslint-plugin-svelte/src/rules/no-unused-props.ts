@@ -72,7 +72,7 @@ export default createRule('no-unused-props', {
 		const options = context.options[0] ?? {};
 
 		// TODO: Remove in v4
-		// MEMO: `ignorePatterns` was a property that only existed from v3.2.0 to v3.2.1.
+		// MEMO: `ignorePatterns` was a property that only existed from v3.2.0 to v3.2.2.
 		// From v3.3.0, it was replaced with `ignorePropertyPatterns` and `ignoreTypePatterns`.
 		if (options.ignorePatterns != null && !isRemovedWarningShown) {
 			console.warn(
