@@ -63,9 +63,16 @@ export default createRule('consistent-selector-style', {
 		const style = context.options[0]?.style ?? ['type', 'id', 'class'];
 
 		const whitelistedClasses: string[] = [];
-		const classSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
-		const idSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
-		const typeSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
+
+		const selections: {
+			class: Map<string, AST.SvelteHTMLElement[]>;
+			id: Map<string, AST.SvelteHTMLElement[]>;
+			type: Map<string, AST.SvelteHTMLElement[]>;
+		} = {
+			class: new Map(),
+			id: new Map(),
+			type: new Map()
+		};
 
 		/**
 		 * Checks selectors in a given PostCSS node
@@ -113,7 +120,7 @@ export default createRule('consistent-selector-style', {
 			if (whitelistedClasses.includes(node.value)) {
 				return;
 			}
-			const selection = classSelections.get(node.value) ?? [];
+			const selection = selections.class.get(node.value) ?? [];
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					return;
@@ -125,7 +132,7 @@ export default createRule('consistent-selector-style', {
 					});
 					return;
 				}
-				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+				if (styleValue === 'type' && canUseTypeSelector(selection, selections.type)) {
 					context.report({
 						messageId: 'classShouldBeType',
 						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
@@ -139,7 +146,7 @@ export default createRule('consistent-selector-style', {
 		 * Checks an ID selector
 		 */
 		function checkIdSelector(node: SelectorIdentifier): void {
-			const selection = idSelections.get(node.value) ?? [];
+			const selection = selections.id.get(node.value) ?? [];
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					context.report({
@@ -151,7 +158,7 @@ export default createRule('consistent-selector-style', {
 				if (styleValue === 'id') {
 					return;
 				}
-				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+				if (styleValue === 'type' && canUseTypeSelector(selection, selections.type)) {
 					context.report({
 						messageId: 'idShouldBeType',
 						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
@@ -165,7 +172,7 @@ export default createRule('consistent-selector-style', {
 		 * Checks a type selector
 		 */
 		function checkTypeSelector(node: SelectorTag): void {
-			const selection = typeSelections.get(node.value) ?? [];
+			const selection = selections.type.get(node.value) ?? [];
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					context.report({
@@ -192,10 +199,10 @@ export default createRule('consistent-selector-style', {
 				if (node.kind !== 'html') {
 					return;
 				}
-				addToArrayMap(typeSelections, node.name.name, node);
+				addToArrayMap(selections.type, node.name.name, node);
 				const classes = node.startTag.attributes.flatMap(findClassesInAttribute);
 				for (const className of classes) {
-					addToArrayMap(classSelections, className, node);
+					addToArrayMap(selections.class, className, node);
 				}
 				for (const attribute of node.startTag.attributes) {
 					if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
@@ -206,7 +213,7 @@ export default createRule('consistent-selector-style', {
 					}
 					for (const value of attribute.value) {
 						if (value.type === 'SvelteLiteral') {
-							addToArrayMap(idSelections, value.value, node);
+							addToArrayMap(selections.id, value.value, node);
 						}
 					}
 				}
