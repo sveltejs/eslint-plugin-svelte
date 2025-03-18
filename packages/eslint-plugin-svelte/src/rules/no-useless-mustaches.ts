@@ -142,14 +142,21 @@ export default createRule('no-useless-mustaches', {
 							node.parent.key.range[1],
 							node.parent.value[0].range[0]
 						);
-						if (!div.endsWith('"') && !div.endsWith("'")) {
+						const quote = div.endsWith('"') ? 'quot' : div.endsWith("'") ? 'apos' : null;
+						if (!quote) {
 							return [
 								fixer.insertTextBefore(node.parent.value[0], '"'),
 								fixer.replaceText(node, unescaped.replace(/"/gu, '&quot;')),
 								fixer.insertTextAfter(node.parent.value[node.parent.value.length - 1], '"')
 							];
 						}
-						return fixer.replaceText(node, unescaped);
+
+						return fixer.replaceText(
+							node,
+							quote === 'quot'
+								? unescaped.replace(/"/gu, '&quot;')
+								: unescaped.replace(/'/gu, '&apos;')
+						);
 					}
 					return fixer.replaceText(node, unescaped.replace(/</gu, '&lt;').replace(/>/gu, '&gt;'));
 				}
