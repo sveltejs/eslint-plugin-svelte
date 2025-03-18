@@ -314,3 +314,41 @@ export function getTypeOfPropertyOfType(
 export function isMethodSymbol(type: TS.Symbol, ts: TypeScript): boolean {
 	return (type.getFlags() & ts.SymbolFlags.Method) !== 0;
 }
+
+/**
+ * Check whether the given node is a property signature kind or not.
+ */
+export function isPropertySignatureKind(
+	node: TS.Node,
+	ts: TypeScript
+): node is TS.PropertySignature {
+	return node.kind === ts.SyntaxKind.PropertySignature;
+}
+
+/**
+ * Check whether the given node is a function type kind or not.
+ */
+export function isFunctionTypeKind(node: TS.Node, ts: TypeScript): node is TS.FunctionTypeNode {
+	return node.kind === ts.SyntaxKind.FunctionType;
+}
+
+/**
+ * Check whether the given node is a method signature kind or not.
+ */
+export function isMethodSignatureKind(node: TS.Node, ts: TypeScript): node is TS.MethodSignature {
+	return node.kind === ts.SyntaxKind.MethodSignature;
+}
+
+/**
+ * Check whether the given node is a type reference kind or not.
+ */
+export function isTypeReferenceKind(node: TS.Node, ts: TypeScript): node is TS.TypeReferenceNode {
+	return node.kind === ts.SyntaxKind.TypeReference;
+}
+
+/**
+ * Check whether the given node is an identifier kind or not.
+ */
+export function isIdentifierKind(node: TS.Node, ts: TypeScript): node is TS.Identifier {
+	return node.kind === ts.SyntaxKind.Identifier;
+}

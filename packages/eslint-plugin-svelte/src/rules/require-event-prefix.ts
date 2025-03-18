@@ -1,13 +1,15 @@
 import { createRule } from '../utils/index.js';
-import { type TSTools, getTypeScriptTools, isMethodSymbol } from '../utils/ts-utils/index.js';
 import {
-	type MethodSignature,
-	type Symbol,
-	SyntaxKind,
-	type Type,
-	type TypeReferenceNode,
-	type PropertySignature
-} from 'typescript';
+	type TSTools,
+	getTypeScriptTools,
+	isMethodSymbol,
+	isPropertySignatureKind,
+	isFunctionTypeKind,
+	isMethodSignatureKind,
+	isTypeReferenceKind,
+	isIdentifierKind
+} from '../utils/ts-utils/index.js';
+import type { Symbol, Type } from 'typescript';
 import type { CallExpression } from 'estree';
 
 export default createRule('require-event-prefix', {
@@ -58,7 +60,7 @@ export default createRule('require-event-prefix', {
 					if (
 						isFunctionLike(property, tsTools) &&
 						!property.getName().startsWith('on') &&
-						(checkAsyncFunctions || !isFunctionAsync(property))
+						(checkAsyncFunctions || !isFunctionAsync(property, tsTools))
 					) {
 						const declarationTsNode = property.getDeclarations()?.[0];
 						const declarationEstreeNode =
@@ -96,25 +98,25 @@ function getPropsType(node: CallExpression, tsTools: TSTools): Type | undefined 
 function isFunctionLike(functionSymbol: Symbol, tsTools: TSTools): boolean {
 	return (
 		isMethodSymbol(functionSymbol, tsTools.ts) ||
-		(functionSymbol.valueDeclaration?.kind === SyntaxKind.PropertySignature &&
-			(functionSymbol.valueDeclaration as PropertySignature).type?.kind === SyntaxKind.FunctionType)
+		(functionSymbol.valueDeclaration !== undefined &&
+			isPropertySignatureKind(functionSymbol.valueDeclaration, tsTools.ts) &&
+			functionSymbol.valueDeclaration.type !== undefined &&
+			isFunctionTypeKind(functionSymbol.valueDeclaration.type, tsTools.ts))
 	);
 }
 
-function isFunctionAsync(functionSymbol: Symbol): boolean {
+function isFunctionAsync(functionSymbol: Symbol, tsTools: TSTools): boolean {
 	return (
 		functionSymbol.getDeclarations()?.some((declaration) => {
-			if (declaration.kind !== SyntaxKind.MethodSignature) {
+			if (!isMethodSignatureKind(declaration, tsTools.ts)) {
 				return false;
 			}
-			const declarationType = (declaration as MethodSignature).type;
-			if (declarationType?.kind !== SyntaxKind.TypeReference) {
+			if (declaration.type === undefined || !isTypeReferenceKind(declaration.type, tsTools.ts)) {
 				return false;
 			}
-			const declarationTypeName = (declarationType as TypeReferenceNode).typeName;
 			return (
-				declarationTypeName.kind === SyntaxKind.Identifier &&
-				declarationTypeName.escapedText === 'Promise'
+				isIdentifierKind(declaration.type.typeName, tsTools.ts) &&
+				declaration.type.typeName.escapedText === 'Promise'
 			);
 		}) ?? false
 	);
