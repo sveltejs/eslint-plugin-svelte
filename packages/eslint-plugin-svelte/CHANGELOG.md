@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.3.1
+
+### Patch Changes
+
+- [#1140](https://github.com/sveltejs/eslint-plugin-svelte/pull/1140) [`40806a4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/40806a4b6342a7f2d1bd40d65df8dec5af666e1a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-useless-mustaches): Wrong auto-fix for quoted mustaches
+
 ## 3.3.0
 
 ### Minor Changes
