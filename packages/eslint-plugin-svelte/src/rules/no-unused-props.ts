@@ -156,7 +156,12 @@ export default createRule('no-unused-props', {
 
 			const paths: PropertyPath[] = [];
 			for (const reference of variable.references) {
-				if ('identifier' in reference && reference.identifier.type === 'Identifier') {
+				if (
+					'identifier' in reference &&
+					reference.identifier.type === 'Identifier' &&
+					(reference.identifier.range[0] !== node.range[0] ||
+						reference.identifier.range[1] !== node.range[1])
+				) {
 					const referencePath = getPropertyPath(reference.identifier);
 					paths.push(referencePath);
 				}
@@ -265,10 +270,16 @@ export default createRule('no-unused-props', {
 				if (reportedProps.has(currentPathStr)) continue;
 
 				const propType = typeChecker.getTypeOfSymbol(prop);
-				const isUsedInPath = usedPaths.some((path) => {
-					const usedPath = path.join('.');
-					return usedPath === currentPathStr || usedPath.startsWith(`${currentPathStr}.`);
+
+				const joinedUsedPaths = usedPaths.map((path) => path.join('.'));
+				const isUsedThisInPath = joinedUsedPaths.includes(currentPathStr);
+				const isUsedInPath = joinedUsedPaths.some((path) => {
+					return path.startsWith(`${currentPathStr}.`);
 				});
+
+				if (isUsedThisInPath && !isUsedInPath) {
+					continue;
+				}
 
 				const isUsedInProps = usedProps.has(propName);
 
@@ -282,10 +293,11 @@ export default createRule('no-unused-props', {
 							parent: parentPath.join('.')
 						}
 					});
+					continue;
 				}
 
-				const isUsedNested = usedPaths.some((path) => {
-					return path.join('.').startsWith(`${currentPathStr}.`);
+				const isUsedNested = joinedUsedPaths.some((path) => {
+					return path.startsWith(`${currentPathStr}.`);
 				});
 
 				if (isUsedNested || isUsedInProps) {
@@ -324,6 +336,18 @@ export default createRule('no-unused-props', {
 			return usedProps.size === 0;
 		}
 
+		function normalizeUsedPaths(paths: PropertyPath[]): PropertyPath[] {
+			const normalized: PropertyPath[] = [];
+			for (const path of paths.sort((a, b) => a.length - b.length)) {
+				if (path.length === 0) continue;
+				if (normalized.some((p) => p.every((part, idx) => part === path[idx]))) {
+					continue;
+				}
+				normalized.push(path);
+			}
+			return normalized;
+		}
+
 		return {
 			'VariableDeclaration > VariableDeclarator': (node: TSESTree.VariableDeclarator) => {
 				// Only check $props declarations
@@ -359,7 +383,7 @@ export default createRule('no-unused-props', {
 
 				checkUnusedProperties(
 					propType,
-					usedPaths,
+					normalizeUsedPaths(usedPaths),
 					usedProps,
 					node.id,
 					[],
