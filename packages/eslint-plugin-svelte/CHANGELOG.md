@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.3.2
+
+### Patch Changes
+
+- [#1143](https://github.com/sveltejs/eslint-plugin-svelte/pull/1143) [`138380d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/138380deeec2ccd0189b70abf7d9a2cd6b608338) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: stop reporting child properties in `no-unused-props` when the parent object itself is used
+
 ## 3.3.1
 
 ### Patch Changes
