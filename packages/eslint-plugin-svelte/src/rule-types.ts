@@ -317,6 +317,11 @@ export interface RuleOptions {
    */
   'svelte/require-event-dispatcher-types'?: Linter.RuleEntry<[]>
   /**
+   * require component event names to start with "on"
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix/
+   */
+  'svelte/require-event-prefix'?: Linter.RuleEntry<SvelteRequireEventPrefix>
+  /**
    * require style attributes that can be optimized
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/
    */
@@ -552,6 +557,10 @@ type SveltePreferConst = []|[{
   destructuring?: ("any" | "all")
   ignoreReadBeforeAssign?: boolean
   excludedRunes?: string[]
+}]
+// ----- svelte/require-event-prefix -----
+type SvelteRequireEventPrefix = []|[{
+  checkAsyncFunctions?: boolean
 }]
 // ----- svelte/shorthand-attribute -----
 type SvelteShorthandAttribute = []|[{
