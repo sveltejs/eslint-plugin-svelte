@@ -1,9 +1,8 @@
 import { createRule } from '../utils/index.js';
-import { type TSTools, getTypeScriptTools } from '../utils/ts-utils/index.js';
+import { type TSTools, getTypeScriptTools, isMethodSymbol } from '../utils/ts-utils/index.js';
 import {
 	type MethodSignature,
 	type Symbol,
-	SymbolFlags,
 	SyntaxKind,
 	type Type,
 	type TypeReferenceNode,
@@ -57,7 +56,7 @@ export default createRule('require-event-prefix', {
 				}
 				for (const property of propsType.getProperties()) {
 					if (
-						isFunctionLike(property) &&
+						isFunctionLike(property, tsTools) &&
 						!property.getName().startsWith('on') &&
 						(checkAsyncFunctions || !isFunctionAsync(property))
 					) {
@@ -94,9 +93,9 @@ function getPropsType(node: CallExpression, tsTools: TSTools): Type | undefined 
 	return tsTools.service.program.getTypeChecker().getTypeAtLocation(tsNode);
 }
 
-function isFunctionLike(functionSymbol: Symbol): boolean {
+function isFunctionLike(functionSymbol: Symbol, tsTools: TSTools): boolean {
 	return (
-		(functionSymbol.getFlags() & SymbolFlags.Method) !== 0 ||
+		isMethodSymbol(functionSymbol, tsTools.ts) ||
 		(functionSymbol.valueDeclaration?.kind === SyntaxKind.PropertySignature &&
 			(functionSymbol.valueDeclaration as PropertySignature).type?.kind === SyntaxKind.FunctionType)
 	);

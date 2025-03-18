@@ -307,3 +307,10 @@ export function getTypeOfPropertyOfType(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- getTypeOfPropertyOfType is an internal API of TS.
 	return (checker as any).getTypeOfPropertyOfType(type, name);
 }
+
+/**
+ * Check whether the given symbol is a method type or not.
+ */
+export function isMethodSymbol(type: TS.Symbol, ts: TypeScript): boolean {
+	return (type.getFlags() & ts.SymbolFlags.Method) !== 0;
+}
