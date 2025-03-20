@@ -133,12 +133,77 @@ function extractTemplateLiteralPrefixLiteral(
 	for (const part of literalParts) {
 		if (part.type === 'TemplateElement') {
 			if (part.value.raw === '') {
-				// Skip empty quasi in the begining
+				// Skip empty quasi
 				continue;
 			}
 			return part.value.raw;
 		}
 		return extractExpressionPrefixLiteral(context, part);
+	}
+	return null;
+}
+
+// Literal suffix extraction
+
+export function extractExpressionSuffixLiteral(
+	context: RuleContext,
+	expression: SvelteLiteral | TSESTree.Node
+): string | null {
+	switch (expression.type) {
+		case 'BinaryExpression':
+			return extractBinaryExpressionSuffixLiteral(context, expression);
+		case 'Identifier':
+			return extractVariableSuffixLiteral(context, expression);
+		case 'Literal':
+			return typeof expression.value === 'string' ? expression.value : null;
+		case 'SvelteLiteral':
+			return expression.value;
+		case 'TemplateLiteral':
+			return extractTemplateLiteralSuffixLiteral(context, expression);
+		default:
+			return null;
+	}
+}
+
+function extractBinaryExpressionSuffixLiteral(
+	context: RuleContext,
+	expression: TSESTree.BinaryExpression
+): string | null {
+	return extractExpressionSuffixLiteral(context, expression.right);
+}
+
+function extractVariableSuffixLiteral(
+	context: RuleContext,
+	expression: TSESTree.Identifier
+): string | null {
+	const variable = findVariable(context, expression);
+	if (
+		variable === null ||
+		variable.identifiers.length !== 1 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return null;
+	}
+	return extractExpressionSuffixLiteral(context, variable.identifiers[0].parent.init);
+}
+
+function extractTemplateLiteralSuffixLiteral(
+	context: RuleContext,
+	expression: TSESTree.TemplateLiteral
+): string | null {
+	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
+		a.range[0] < b.range[0] ? -1 : 1
+	);
+	for (const part of literalParts.reverse()) {
+		if (part.type === 'TemplateElement') {
+			if (part.value.raw === '') {
+				// Skip empty quasi
+				continue;
+			}
+			return part.value.raw;
+		}
+		return extractExpressionSuffixLiteral(context, part);
 	}
 	return null;
 }

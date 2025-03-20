@@ -9,12 +9,16 @@ import type {
 import type { SvelteHTMLElement } from 'svelte-eslint-parser/lib/ast';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import { getSourceCode } from '../utils/compat.js';
-import { extractExpressionPrefixLiteral } from '../utils/expression-affixes.js';
+import {
+	extractExpressionPrefixLiteral,
+	extractExpressionSuffixLiteral
+} from '../utils/expression-affixes.js';
 import { createRule } from '../utils/index.js';
 
 interface Selections {
 	exact: Map<string, AST.SvelteHTMLElement[]>;
-	prefixes: Map<string, AST.SvelteHTMLElement[]>;
+	// [prefix, suffix]
+	affixes: Map<[string | null, string | null], AST.SvelteHTMLElement[]>;
 	universalSelector: boolean;
 }
 
@@ -79,12 +83,12 @@ export default createRule('consistent-selector-style', {
 		} = {
 			class: {
 				exact: new Map(),
-				prefixes: new Map(),
+				affixes: new Map(),
 				universalSelector: false
 			},
 			id: {
 				exact: new Map(),
-				prefixes: new Map(),
+				affixes: new Map(),
 				universalSelector: false
 			},
 			type: new Map()
@@ -232,10 +236,11 @@ export default createRule('consistent-selector-style', {
 					for (const value of attribute.value) {
 						if (attribute.key.name === 'class' && value.type === 'SvelteMustacheTag') {
 							const prefix = extractExpressionPrefixLiteral(context, value.expression);
-							if (prefix !== null) {
-								addToArrayMap(selections.class.prefixes, prefix, node);
-							} else {
+							const suffix = extractExpressionSuffixLiteral(context, value.expression);
+							if (prefix === null && suffix === null) {
 								selections.class.universalSelector = true;
+							} else {
+								addToArrayMap(selections.class.affixes, [prefix, suffix], node);
 							}
 						}
 						if (attribute.key.name === 'id') {
@@ -243,10 +248,11 @@ export default createRule('consistent-selector-style', {
 								addToArrayMap(selections.id.exact, value.value, node);
 							} else if (value.type === 'SvelteMustacheTag') {
 								const prefix = extractExpressionPrefixLiteral(context, value.expression);
-								if (prefix !== null) {
-									addToArrayMap(selections.id.prefixes, prefix, node);
-								} else {
+								const suffix = extractExpressionSuffixLiteral(context, value.expression);
+								if (prefix === null && suffix === null) {
 									selections.id.universalSelector = true;
+								} else {
+									addToArrayMap(selections.id.affixes, [prefix, suffix], node);
 								}
 							}
 						}
@@ -270,9 +276,9 @@ export default createRule('consistent-selector-style', {
 /**
  * Helper function to add a value to a Map of arrays
  */
-function addToArrayMap(
-	map: Map<string, AST.SvelteHTMLElement[]>,
-	key: string,
+function addToArrayMap<T>(
+	map: Map<T, AST.SvelteHTMLElement[]>,
+	key: T,
 	value: AST.SvelteHTMLElement
 ): void {
 	map.set(key, (map.get(key) ?? []).concat(value));
@@ -283,8 +289,8 @@ function addToArrayMap(
  */
 function matchSelection(selections: Selections, key: string): SvelteHTMLElement[] {
 	const selection = selections.exact.get(key) ?? [];
-	selections.prefixes.forEach((nodes, prefix) => {
-		if (key.startsWith(prefix)) {
+	selections.affixes.forEach((nodes, [prefix, suffix]) => {
+		if ((prefix === null || key.startsWith(prefix)) && (suffix === null || key.endsWith(suffix))) {
 			selection.push(...nodes);
 		}
 	});
