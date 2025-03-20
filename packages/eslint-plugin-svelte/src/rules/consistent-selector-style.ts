@@ -73,14 +73,17 @@ export default createRule('consistent-selector-style', {
 
 		const selections: {
 			class: Selections;
-			id: Map<string, AST.SvelteHTMLElement[]>;
+			id: Selections;
 			type: Map<string, AST.SvelteHTMLElement[]>;
 		} = {
 			class: {
 				exact: new Map(),
 				prefixes: new Map()
 			},
-			id: new Map(),
+			id: {
+				exact: new Map(),
+				prefixes: new Map()
+			},
 			type: new Map()
 		};
 
@@ -156,7 +159,7 @@ export default createRule('consistent-selector-style', {
 		 * Checks an ID selector
 		 */
 		function checkIdSelector(node: SelectorIdentifier): void {
-			const selection = selections.id.get(node.value) ?? [];
+			const selection = matchSelection(selections.id, node.value);
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					context.report({
@@ -227,8 +230,15 @@ export default createRule('consistent-selector-style', {
 								addToArrayMap(selections.class.prefixes, prefix, node);
 							}
 						}
-						if (attribute.key.name === 'id' && value.type === 'SvelteLiteral') {
-							addToArrayMap(selections.id, value.value, node);
+						if (attribute.key.name === 'id') {
+							if (value.type === 'SvelteLiteral') {
+								addToArrayMap(selections.id.exact, value.value, node);
+							} else if (value.type === 'SvelteMustacheTag') {
+								const prefix = extractExpressionPrefixLiteral(context, value.expression);
+								if (prefix !== null) {
+									addToArrayMap(selections.id.prefixes, prefix, node);
+								}
+							}
 						}
 					}
 				}
