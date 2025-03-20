@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.3.3
+
+### Patch Changes
+
+- [#1146](https://github.com/sveltejs/eslint-plugin-svelte/pull/1146) [`1233e46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1233e46413132c1e81dc69981be1533c5e6c6a4d) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-unused-props): resolve false positives on props with default values or $bindable usage
+
 ## 3.3.2
 
 ### Patch Changes
