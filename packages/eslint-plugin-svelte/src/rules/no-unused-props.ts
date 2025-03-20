@@ -369,10 +369,17 @@ export default createRule('no-unused-props', {
 				if (node.id.type === 'ObjectPattern') {
 					usedProps = getUsedPropertiesFromPattern(node.id);
 					if (usedProps.size === 0) return;
-					const identifiers = node.id.properties
-						.filter((p): p is TSESTree.Property => p.type === 'Property')
-						.map((p) => p.value)
-						.filter((v): v is TSESTree.Identifier => v.type === 'Identifier');
+					const identifiers: TSESTree.Identifier[] = [];
+					for (const p of node.id.properties) {
+						if (p.type !== 'Property') {
+							continue;
+						}
+						if (p.value.type === 'Identifier') {
+							identifiers.push(p.value);
+						} else if (p.value.type === 'AssignmentPattern' && p.value.left.type === 'Identifier') {
+							identifiers.push(p.value.left);
+						}
+					}
 					for (const identifier of identifiers) {
 						const paths = getUsedNestedPropertyNames(identifier);
 						usedPaths.push(...paths.map((path) => [identifier.name, ...path]));
