@@ -6,9 +6,16 @@ import type {
 	Node as SelectorNode,
 	Tag as SelectorTag
 } from 'postcss-selector-parser';
+import type { SvelteHTMLElement } from 'svelte-eslint-parser/lib/ast';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import { getSourceCode } from '../utils/compat.js';
+import { extractExpressionPrefixLiteral } from '../utils/expression-affixes.js';
 import { createRule } from '../utils/index.js';
+
+interface Selections {
+	exact: Map<string, AST.SvelteHTMLElement[]>;
+	prefixes: Map<string, AST.SvelteHTMLElement[]>;
+}
 
 export default createRule('consistent-selector-style', {
 	meta: {
@@ -65,11 +72,14 @@ export default createRule('consistent-selector-style', {
 		const whitelistedClasses: string[] = [];
 
 		const selections: {
-			class: Map<string, AST.SvelteHTMLElement[]>;
+			class: Selections;
 			id: Map<string, AST.SvelteHTMLElement[]>;
 			type: Map<string, AST.SvelteHTMLElement[]>;
 		} = {
-			class: new Map(),
+			class: {
+				exact: new Map(),
+				prefixes: new Map()
+			},
 			id: new Map(),
 			type: new Map()
 		};
@@ -120,7 +130,7 @@ export default createRule('consistent-selector-style', {
 			if (whitelistedClasses.includes(node.value)) {
 				return;
 			}
-			const selection = selections.class.get(node.value) ?? [];
+			const selection = matchSelection(selections.class, node.value);
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					return;
@@ -200,19 +210,24 @@ export default createRule('consistent-selector-style', {
 					return;
 				}
 				addToArrayMap(selections.type, node.name.name, node);
-				const classes = node.startTag.attributes.flatMap(findClassesInAttribute);
-				for (const className of classes) {
-					addToArrayMap(selections.class, className, node);
-				}
 				for (const attribute of node.startTag.attributes) {
 					if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
 						whitelistedClasses.push(attribute.key.name.name);
 					}
-					if (attribute.type !== 'SvelteAttribute' || attribute.key.name !== 'id') {
+					for (const className of findClassesInAttribute(attribute)) {
+						addToArrayMap(selections.class.exact, className, node);
+					}
+					if (attribute.type !== 'SvelteAttribute') {
 						continue;
 					}
 					for (const value of attribute.value) {
-						if (value.type === 'SvelteLiteral') {
+						if (attribute.key.name === 'class' && value.type === 'SvelteMustacheTag') {
+							const prefix = extractExpressionPrefixLiteral(context, value.expression);
+							if (prefix !== null) {
+								addToArrayMap(selections.class.prefixes, prefix, node);
+							}
+						}
+						if (attribute.key.name === 'id' && value.type === 'SvelteLiteral') {
 							addToArrayMap(selections.id, value.value, node);
 						}
 					}
@@ -241,6 +256,19 @@ function addToArrayMap(
 	value: AST.SvelteHTMLElement
 ): void {
 	map.set(key, (map.get(key) ?? []).concat(value));
+}
+
+/**
+ * Finds all nodes in selections that could be matched by key
+ */
+function matchSelection(selections: Selections, key: string): SvelteHTMLElement[] {
+	const selection = selections.exact.get(key) ?? [];
+	selections.prefixes.forEach((nodes, prefix) => {
+		if (key.startsWith(prefix)) {
+			selection.push(...nodes);
+		}
+	});
+	return selection;
 }
 
 /**
