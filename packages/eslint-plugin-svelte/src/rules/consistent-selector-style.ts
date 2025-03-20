@@ -15,6 +15,7 @@ import { createRule } from '../utils/index.js';
 interface Selections {
 	exact: Map<string, AST.SvelteHTMLElement[]>;
 	prefixes: Map<string, AST.SvelteHTMLElement[]>;
+	universalSelector: boolean;
 }
 
 export default createRule('consistent-selector-style', {
@@ -78,11 +79,13 @@ export default createRule('consistent-selector-style', {
 		} = {
 			class: {
 				exact: new Map(),
-				prefixes: new Map()
+				prefixes: new Map(),
+				universalSelector: false
 			},
 			id: {
 				exact: new Map(),
-				prefixes: new Map()
+				prefixes: new Map(),
+				universalSelector: false
 			},
 			type: new Map()
 		};
@@ -130,7 +133,7 @@ export default createRule('consistent-selector-style', {
 		 * Checks a class selector
 		 */
 		function checkClassSelector(node: SelectorClass): void {
-			if (whitelistedClasses.includes(node.value)) {
+			if (selections.class.universalSelector || whitelistedClasses.includes(node.value)) {
 				return;
 			}
 			const selection = matchSelection(selections.class, node.value);
@@ -159,6 +162,9 @@ export default createRule('consistent-selector-style', {
 		 * Checks an ID selector
 		 */
 		function checkIdSelector(node: SelectorIdentifier): void {
+			if (selections.id.universalSelector) {
+				return;
+			}
 			const selection = matchSelection(selections.id, node.value);
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
@@ -228,6 +234,8 @@ export default createRule('consistent-selector-style', {
 							const prefix = extractExpressionPrefixLiteral(context, value.expression);
 							if (prefix !== null) {
 								addToArrayMap(selections.class.prefixes, prefix, node);
+							} else {
+								selections.class.universalSelector = true;
 							}
 						}
 						if (attribute.key.name === 'id') {
@@ -237,6 +245,8 @@ export default createRule('consistent-selector-style', {
 								const prefix = extractExpressionPrefixLiteral(context, value.expression);
 								if (prefix !== null) {
 									addToArrayMap(selections.id.prefixes, prefix, node);
+								} else {
+									selections.id.universalSelector = true;
 								}
 							}
 						}
