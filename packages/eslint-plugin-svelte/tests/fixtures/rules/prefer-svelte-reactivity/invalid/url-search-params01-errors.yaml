@@ -1,0 +1,5 @@
+- message: Found a usage of the built-in URLSearchParams class. Use a
+    SvelteURLSearchParams instead.
+  line: 2
+  column: 20
+  suggestions: null
