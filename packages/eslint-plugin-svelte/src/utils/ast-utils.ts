@@ -722,3 +722,16 @@ export function findVariableForReplacement(
 
 	return { hasConflict: false, variable };
 }
+
+/**
+ * Check if one node is contained withing the subtree of another node.
+ */
+export function isIn(needle: TSESTree.Node, haystack: TSESTree.Node): boolean {
+	if (needle === haystack) {
+		return true;
+	}
+	if (needle.parent == null) {
+		return false;
+	}
+	return isIn(needle.parent, haystack);
+}

@@ -273,6 +273,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-store-async](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/) | disallow using async/await inside svelte stores because it causes issues with the auto-unsubscribing features | :star: |
 | [svelte/no-top-level-browser-globals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-top-level-browser-globals/) | disallow using top-level browser global variables |  |
 | [svelte/no-unknown-style-directive-property](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/) | disallow unknown `style:property` | :star: |
+| [svelte/prefer-svelte-reactivity](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/) | disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity | :star: |
 | [svelte/require-store-callbacks-use-set-param](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param | :bulb: |
 | [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :star::wrench: |
 | [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. |  |
