@@ -5,6 +5,10 @@ import { loadTestCases } from '../../utils/utils.js';
 const tester = new RuleTester({
 	languageOptions: {
 		ecmaVersion: 2020,
+		globals: {
+			URL: "readonly",
+			URLSearchParams: "readonly",
+		},
 		sourceType: 'module'
 	}
 });
