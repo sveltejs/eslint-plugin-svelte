@@ -307,6 +307,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-style-directive'?: Linter.RuleEntry<[]>
   /**
+   * disallow using built-in classes where a reactive alternative is provided by svelte/reactivity
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/
+   */
+  'svelte/prefer-svelte-reactivity'?: Linter.RuleEntry<[]>
+  /**
    * require keyed `{#each}` block
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/
    */
