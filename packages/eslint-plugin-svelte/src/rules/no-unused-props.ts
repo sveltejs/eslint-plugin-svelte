@@ -6,7 +6,7 @@ import { findVariable } from '../utils/ast-utils.js';
 import { toRegExp } from '../utils/regexp.js';
 import { getFilename } from '../utils/compat.js';
 
-type PropertyPath = string[];
+type PropertyPathArray = string[];
 
 let isRemovedWarningShown = false;
 
@@ -124,8 +124,8 @@ export default createRule('no-unused-props', {
 		/**
 		 * Extracts property paths from member expressions.
 		 */
-		function getPropertyPath(node: TSESTree.Identifier): PropertyPath {
-			const paths: PropertyPath = [];
+		function getPropertyPath(node: TSESTree.Identifier): PropertyPathArray {
+			const paths: PropertyPathArray = [];
 			let currentNode: TSESTree.Node = node;
 			let parentNode: TSESTree.Node | null = currentNode.parent ?? null;
 
@@ -150,11 +150,11 @@ export default createRule('no-unused-props', {
 		/**
 		 * Finds all property access paths for a given variable.
 		 */
-		function getUsedNestedPropertyNames(node: TSESTree.Identifier): PropertyPath[] {
+		function getUsedNestedPropertyPathsArray(node: TSESTree.Identifier): PropertyPathArray[] {
 			const variable = findVariable(context, node);
 			if (!variable) return [];
 
-			const paths: PropertyPath[] = [];
+			const pathsArray: PropertyPathArray[] = [];
 			for (const reference of variable.references) {
 				if (
 					'identifier' in reference &&
@@ -163,10 +163,10 @@ export default createRule('no-unused-props', {
 						reference.identifier.range[1] !== node.range[1])
 				) {
 					const referencePath = getPropertyPath(reference.identifier);
-					paths.push(referencePath);
+					pathsArray.push(referencePath);
 				}
 			}
-			return paths;
+			return pathsArray;
 		}
 
 		/**
@@ -183,7 +183,7 @@ export default createRule('no-unused-props', {
 			return sourceFile.fileName.includes('node_modules/typescript/lib/');
 		}
 
-		function getUsedPropertiesFromPattern(pattern: TSESTree.ObjectPattern): Set<string> {
+		function getUsedPropertyNamesFromPattern(pattern: TSESTree.ObjectPattern): Set<string> {
 			const usedProps = new Set<string>();
 			for (const prop of pattern.properties) {
 				if (prop.type === 'Property' && prop.key.type === 'Identifier') {
@@ -219,41 +219,49 @@ export default createRule('no-unused-props', {
 		/**
 		 * Recursively checks for unused properties in a type.
 		 */
-		function checkUnusedProperties(
-			type: ts.Type,
-			usedPaths: PropertyPath[],
-			usedProps: Set<string>,
-			reportNode: TSESTree.Node,
-			parentPath: string[],
-			checkedTypes: Set<string>,
-			reportedProps: Set<string>
-		) {
+		function checkUnusedProperties({
+			propsType,
+			usedPropertyPaths,
+			declaredPropertyNames,
+			reportNode,
+			parentPath,
+			checkedPropsTypes,
+			reportedPropertyPaths
+		}: {
+			propsType: ts.Type;
+			usedPropertyPaths: string[];
+			declaredPropertyNames: Set<string>;
+			reportNode: TSESTree.Node;
+			parentPath: string[];
+			checkedPropsTypes: Set<string>;
+			reportedPropertyPaths: Set<string>;
+		}) {
 			// Skip checking if the type itself is a class
-			if (isClassType(type)) return;
+			if (isClassType(propsType)) return;
 
-			const typeStr = typeChecker.typeToString(type);
-			if (checkedTypes.has(typeStr)) return;
-			checkedTypes.add(typeStr);
-			if (shouldIgnoreType(type)) return;
+			const typeStr = typeChecker.typeToString(propsType);
+			if (checkedPropsTypes.has(typeStr)) return;
+			checkedPropsTypes.add(typeStr);
+			if (shouldIgnoreType(propsType)) return;
 
-			const properties = typeChecker.getPropertiesOfType(type);
-			const baseTypes = type.getBaseTypes();
+			const properties = typeChecker.getPropertiesOfType(propsType);
+			const propsBaseTypes = propsType.getBaseTypes();
 
-			if (!properties.length && (!baseTypes || baseTypes.length === 0)) {
+			if (!properties.length && (!propsBaseTypes || propsBaseTypes.length === 0)) {
 				return;
 			}
 
-			if (baseTypes) {
-				for (const baseType of baseTypes) {
-					checkUnusedProperties(
-						baseType,
-						usedPaths,
-						usedProps,
+			if (propsBaseTypes) {
+				for (const propsBaseType of propsBaseTypes) {
+					checkUnusedProperties({
+						propsType: propsBaseType,
+						usedPropertyPaths,
+						declaredPropertyNames,
 						reportNode,
 						parentPath,
-						checkedTypes,
-						reportedProps
-					);
+						checkedPropsTypes,
+						reportedPropertyPaths
+					});
 				}
 			}
 
@@ -267,13 +275,12 @@ export default createRule('no-unused-props', {
 				const currentPath = [...parentPath, propName];
 				const currentPathStr = [...parentPath, propName].join('.');
 
-				if (reportedProps.has(currentPathStr)) continue;
+				if (reportedPropertyPaths.has(currentPathStr)) continue;
 
 				const propType = typeChecker.getTypeOfSymbol(prop);
 
-				const joinedUsedPaths = usedPaths.map((path) => path.join('.'));
-				const isUsedThisInPath = joinedUsedPaths.includes(currentPathStr);
-				const isUsedInPath = joinedUsedPaths.some((path) => {
+				const isUsedThisInPath = usedPropertyPaths.includes(currentPathStr);
+				const isUsedInPath = usedPropertyPaths.some((path) => {
 					return path.startsWith(`${currentPathStr}.`);
 				});
 
@@ -281,10 +288,10 @@ export default createRule('no-unused-props', {
 					continue;
 				}
 
-				const isUsedInProps = usedProps.has(propName);
+				const isUsedInProps = declaredPropertyNames.has(propName);
 
 				if (!isUsedInPath && !isUsedInProps) {
-					reportedProps.add(currentPathStr);
+					reportedPropertyPaths.add(currentPathStr);
 					context.report({
 						node: reportNode,
 						messageId: parentPath.length ? 'unusedNestedProp' : 'unusedProp',
@@ -296,30 +303,30 @@ export default createRule('no-unused-props', {
 					continue;
 				}
 
-				const isUsedNested = joinedUsedPaths.some((path) => {
+				const isUsedNested = usedPropertyPaths.some((path) => {
 					return path.startsWith(`${currentPathStr}.`);
 				});
 
 				if (isUsedNested || isUsedInProps) {
-					checkUnusedProperties(
-						propType,
-						usedPaths,
-						usedProps,
+					checkUnusedProperties({
+						propsType: propType,
+						usedPropertyPaths,
+						declaredPropertyNames,
 						reportNode,
-						currentPath,
-						checkedTypes,
-						reportedProps
-					);
+						parentPath: currentPath,
+						checkedPropsTypes,
+						reportedPropertyPaths
+					});
 				}
 			}
 
 			// Check for unused index signatures only at the root level
 			if (parentPath.length === 0) {
-				const indexType = type.getStringIndexType();
-				const numberIndexType = type.getNumberIndexType();
+				const indexType = propsType.getStringIndexType();
+				const numberIndexType = propsType.getNumberIndexType();
 				const hasIndexSignature = Boolean(indexType) || Boolean(numberIndexType);
 
-				if (hasIndexSignature && !hasRestElement(usedProps)) {
+				if (hasIndexSignature && !hasRestElement(declaredPropertyNames)) {
 					context.report({
 						node: reportNode,
 						messageId: 'unusedIndexSignature'
@@ -336,8 +343,8 @@ export default createRule('no-unused-props', {
 			return usedProps.size === 0;
 		}
 
-		function normalizeUsedPaths(paths: PropertyPath[]): PropertyPath[] {
-			const normalized: PropertyPath[] = [];
+		function normalizeUsedPaths(paths: PropertyPathArray[]): PropertyPathArray[] {
+			const normalized: PropertyPathArray[] = [];
 			for (const path of paths.sort((a, b) => a.length - b.length)) {
 				if (path.length === 0) continue;
 				if (normalized.some((p) => p.every((part, idx) => part === path[idx]))) {
@@ -362,13 +369,13 @@ export default createRule('no-unused-props', {
 				const tsNode = tools.service.esTreeNodeToTSNodeMap.get(node) as ts.VariableDeclaration;
 				if (!tsNode || !tsNode.type) return;
 
-				const propType = typeChecker.getTypeFromTypeNode(tsNode.type);
-				let usedPaths: PropertyPath[] = [];
-				let usedProps = new Set<string>();
+				const propsType = typeChecker.getTypeFromTypeNode(tsNode.type);
+				let usedPropertyPathsArray: PropertyPathArray[] = [];
+				let declaredPropertyNames = new Set<string>();
 
 				if (node.id.type === 'ObjectPattern') {
-					usedProps = getUsedPropertiesFromPattern(node.id);
-					if (usedProps.size === 0) return;
+					declaredPropertyNames = getUsedPropertyNamesFromPattern(node.id);
+					if (declaredPropertyNames.size === 0) return;
 					const identifiers: TSESTree.Identifier[] = [];
 					for (const p of node.id.properties) {
 						if (p.type !== 'Property') {
@@ -381,22 +388,24 @@ export default createRule('no-unused-props', {
 						}
 					}
 					for (const identifier of identifiers) {
-						const paths = getUsedNestedPropertyNames(identifier);
-						usedPaths.push(...paths.map((path) => [identifier.name, ...path]));
+						const paths = getUsedNestedPropertyPathsArray(identifier);
+						usedPropertyPathsArray.push(...paths.map((path) => [identifier.name, ...path]));
 					}
 				} else if (node.id.type === 'Identifier') {
-					usedPaths = getUsedNestedPropertyNames(node.id);
+					usedPropertyPathsArray = getUsedNestedPropertyPathsArray(node.id);
 				}
 
-				checkUnusedProperties(
-					propType,
-					normalizeUsedPaths(usedPaths),
-					usedProps,
-					node.id,
-					[],
-					new Set<string>(),
-					new Set<string>()
-				);
+				checkUnusedProperties({
+					propsType,
+					usedPropertyPaths: normalizeUsedPaths(usedPropertyPathsArray).map((pathArray) => {
+						return pathArray.join('.');
+					}),
+					declaredPropertyNames,
+					reportNode: node.id,
+					parentPath: [],
+					checkedPropsTypes: new Set<string>(),
+					reportedPropertyPaths: new Set<string>()
+				});
 			}
 		};
 	}
