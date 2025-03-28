@@ -11,6 +11,7 @@ export default createRule('derived-has-same-inputs-outputs', {
 			recommended: false,
 			conflictWithPrettier: false
 		},
+		fixable: 'code',
 		schema: [],
 		messages: {
 			unexpected: "The argument name should be '{{name}}'."
@@ -53,7 +54,8 @@ export default createRule('derived-has-same-inputs-outputs', {
 					node: fn,
 					loc: fnParam.loc,
 					messageId: 'unexpected',
-					data: { name: expectedName }
+					data: { name: expectedName },
+					fix: (fixer) => fixer.replaceText(fnParam, expectedName)
 				});
 			}
 		}
@@ -81,7 +83,8 @@ export default createRule('derived-has-same-inputs-outputs', {
 							node: fn,
 							loc: element.loc,
 							messageId: 'unexpected',
-							data: { name: expectedName }
+							data: { name: expectedName },
+							fix: (fixer) => fixer.replaceText(element, expectedName)
 						});
 					}
 				}
