@@ -8,6 +8,7 @@ export default createRule('no-at-debug-tags', {
 			recommended: true,
 			default: 'warn'
 		},
+		fixable: 'code',
 		schema: [],
 		messages: {
 			unexpected: 'Unexpected `{@debug}`.'
@@ -19,7 +20,8 @@ export default createRule('no-at-debug-tags', {
 			SvelteDebugTag(node) {
 				context.report({
 					node,
-					messageId: 'unexpected'
+					messageId: 'unexpected',
+					fix: (fixer) => fixer.remove(node)
 				});
 			}
 		};
