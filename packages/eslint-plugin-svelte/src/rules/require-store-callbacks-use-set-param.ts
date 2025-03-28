@@ -8,6 +8,7 @@ export default createRule('require-store-callbacks-use-set-param', {
 			category: 'Possible Errors',
 			recommended: false
 		},
+		fixable: 'code',
 		schema: [],
 		messages: {
 			unexpected: 'Store callbacks must use `set` param.'
@@ -27,7 +28,20 @@ export default createRule('require-store-callbacks-use-set-param', {
 						context.report({
 							node: fn,
 							loc: fn.loc,
-							messageId: 'unexpected'
+							messageId: 'unexpected',
+							fix: (fixer) => {
+								if (param) {
+									return fixer.replaceText(param, 'set');
+								}
+								const token = context.getSourceCode().getTokenBefore(fn.body, {
+									filter: (token) => token.type === 'Punctuator' && token.value === '(',
+									includeComments: false
+								});
+								if (token) {
+									return fixer.insertTextAfter(token, 'set');
+								}
+								return [];
+							}
 						});
 					}
 				}
