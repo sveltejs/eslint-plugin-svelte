@@ -3,7 +3,7 @@ import type { Variable } from '@typescript-eslint/scope-manager';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
-import { getSourceCode } from '../utils/compat.js';
+import { getScope } from '../utils/ast-utils.js';
 
 function findVariableForName(
 	context: RuleContext,
@@ -11,7 +11,7 @@ function findVariableForName(
 	name: string,
 	expectedName: string
 ): { hasConflict: boolean; variable: Variable | null } {
-	const scope = getSourceCode(context).getScope(node);
+	const scope = getScope(context, node);
 	let hasConflict = false;
 	let variable: Variable | null = null;
 
