@@ -10,6 +10,8 @@ since: 'v2.12.0'
 
 > store callbacks must use `set` param
 
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
+
 ## :book: Rule Details
 
 This rule disallows if `readable` / `writable` store's setter function doesn't use `set` parameter.<br>
