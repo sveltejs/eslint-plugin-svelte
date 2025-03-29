@@ -1,36 +1,8 @@
-import { getScope } from '../utils/ast-utils.js';
-import type { RuleContext, SuggestionReportDescriptor } from '../types.js';
+import { findVariableForReplacement } from '../utils/ast-utils.js';
+import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
-import type { TSESTree } from '@typescript-eslint/types';
-import type { Variable } from '@typescript-eslint/scope-manager';
 import { getSourceCode } from '../utils/compat.js';
-
-function findVariableForName(
-	context: RuleContext,
-	node: TSESTree.Node,
-	name: string | null,
-	expectedName: string
-): { hasConflict: boolean; variable: Variable | null } {
-	const scope = getScope(context, node);
-	let hasConflict = false;
-	let variable: Variable | null = null;
-
-	for (const v of scope.variables) {
-		if (hasConflict && (variable || name === null)) {
-			break;
-		}
-		if (v.name === expectedName) {
-			hasConflict = true;
-			continue;
-		}
-		if (name !== null && v.name === name) {
-			variable = v;
-		}
-	}
-
-	return { hasConflict, variable };
-}
 
 export default createRule('require-store-callbacks-use-set-param', {
 	meta: {
@@ -58,7 +30,7 @@ export default createRule('require-store-callbacks-use-set-param', {
 					}
 					const param = fn.params[0];
 					if (!param || (param.type === 'Identifier' && param.name !== 'set')) {
-						const { hasConflict, variable } = findVariableForName(
+						const { hasConflict, variable } = findVariableForReplacement(
 							context,
 							fn.body,
 							param ? param.name : null,

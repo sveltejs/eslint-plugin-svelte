@@ -21,4 +21,11 @@
 	readable(false, () => {
 		const set = 303;
 	});
+
+	insideACallback(() => {
+		const set = 303;
+		readable(false, () => {
+			set;
+		});
+	});
 </script>

@@ -14,20 +14,27 @@
         	writable(false, () => true);
         	writable(false, (foo) => true);
 
-          readable(false, (foo) => {
-            foo;
-            insideACallback(() => {
-              foo;
-            });
-            conflictingName(() => {
-              const foo = 303;
-              foo;
-            });
-          });
+        	readable(false, (foo) => {
+        		foo;
+        		insideACallback(() => {
+        			foo;
+        		});
+        		conflictingName(() => {
+        			const foo = 303;
+        			foo;
+        		});
+        	});
 
-          readable(false, () => {
-            const set = 303;
-          });
+        	readable(false, () => {
+        		const set = 303;
+        	});
+
+        	insideACallback(() => {
+        		const set = 303;
+        		readable(false, () => {
+        			set;
+        		});
+        	});
         </script>
 - message: Store callbacks must use `set` param.
   line: 5
@@ -45,20 +52,27 @@
         	writable(false, () => true);
         	writable(false, (foo) => true);
 
-          readable(false, (foo) => {
-            foo;
-            insideACallback(() => {
-              foo;
-            });
-            conflictingName(() => {
-              const foo = 303;
-              foo;
-            });
-          });
+        	readable(false, (foo) => {
+        		foo;
+        		insideACallback(() => {
+        			foo;
+        		});
+        		conflictingName(() => {
+        			const foo = 303;
+        			foo;
+        		});
+        	});
 
-          readable(false, () => {
-            const set = 303;
-          });
+        	readable(false, () => {
+        		const set = 303;
+        	});
+
+        	insideACallback(() => {
+        		const set = 303;
+        		readable(false, () => {
+        			set;
+        		});
+        	});
         </script>
 - message: Store callbacks must use `set` param.
   line: 7
@@ -76,20 +90,27 @@
         	writable(false, (set) => true);
         	writable(false, (foo) => true);
 
-          readable(false, (foo) => {
-            foo;
-            insideACallback(() => {
-              foo;
-            });
-            conflictingName(() => {
-              const foo = 303;
-              foo;
-            });
-          });
+        	readable(false, (foo) => {
+        		foo;
+        		insideACallback(() => {
+        			foo;
+        		});
+        		conflictingName(() => {
+        			const foo = 303;
+        			foo;
+        		});
+        	});
 
-          readable(false, () => {
-            const set = 303;
-          });
+        	readable(false, () => {
+        		const set = 303;
+        	});
+
+        	insideACallback(() => {
+        		const set = 303;
+        		readable(false, () => {
+        			set;
+        		});
+        	});
         </script>
 - message: Store callbacks must use `set` param.
   line: 8
@@ -107,24 +128,31 @@
         	writable(false, () => true);
         	writable(false, (set) => true);
 
-          readable(false, (foo) => {
-            foo;
-            insideACallback(() => {
-              foo;
-            });
-            conflictingName(() => {
-              const foo = 303;
-              foo;
-            });
-          });
+        	readable(false, (foo) => {
+        		foo;
+        		insideACallback(() => {
+        			foo;
+        		});
+        		conflictingName(() => {
+        			const foo = 303;
+        			foo;
+        		});
+        	});
 
-          readable(false, () => {
-            const set = 303;
-          });
+        	readable(false, () => {
+        		const set = 303;
+        	});
+
+        	insideACallback(() => {
+        		const set = 303;
+        		readable(false, () => {
+        			set;
+        		});
+        	});
         </script>
 - message: Store callbacks must use `set` param.
   line: 10
-  column: 19
+  column: 18
   suggestions:
     - desc: Rename parameter from foo to `set`.
       messageId: updateParam
@@ -138,22 +166,33 @@
         	writable(false, () => true);
         	writable(false, (foo) => true);
 
-          readable(false, (set) => {
-            set;
-            insideACallback(() => {
-              set;
-            });
-            conflictingName(() => {
-              const foo = 303;
-              foo;
-            });
-          });
+        	readable(false, (set) => {
+        		set;
+        		insideACallback(() => {
+        			set;
+        		});
+        		conflictingName(() => {
+        			const foo = 303;
+        			foo;
+        		});
+        	});
 
-          readable(false, () => {
-            const set = 303;
-          });
+        	readable(false, () => {
+        		const set = 303;
+        	});
+
+        	insideACallback(() => {
+        		const set = 303;
+        		readable(false, () => {
+        			set;
+        		});
+        	});
         </script>
 - message: Store callbacks must use `set` param.
   line: 21
+  column: 18
+  suggestions: null
+- message: Store callbacks must use `set` param.
+  line: 27
   column: 19
   suggestions: null
