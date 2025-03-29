@@ -12,32 +12,24 @@ function findVariableForName(
 	expectedName: string
 ): { hasConflict: boolean; variable: Variable | null } {
 	const scope = getScope(context, node);
-	let hasConflict = false;
 	let variable: Variable | null = null;
 
 	for (const ref of scope.references) {
 		if (ref.identifier.name === expectedName) {
-			hasConflict = true;
-			break;
+			return { hasConflict: true, variable: null };
 		}
 	}
 
-	if (!hasConflict) {
-		for (const v of scope.variables) {
-			if (hasConflict && variable) {
-				break;
-			}
-			if (v.name === expectedName) {
-				hasConflict = true;
-				continue;
-			}
-			if (v.name === name) {
-				variable = v;
-			}
+	for (const v of scope.variables) {
+		if (v.name === expectedName) {
+			return { hasConflict: true, variable: null };
+		}
+		if (v.name === name) {
+			variable = v;
 		}
 	}
 
-	return { hasConflict, variable };
+	return { hasConflict: false, variable };
 }
 
 function createFixer(node: TSESTree.Node, variable: Variable | null, name: string) {
