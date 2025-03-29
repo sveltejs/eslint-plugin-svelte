@@ -59,3 +59,9 @@ derived(a, (b) => {
 	const $a = 303;
 	$a;
 });
+somethingWithACallback(() => {
+	const $a = 303;
+	derived(a, (b) => {
+		$a;
+	});
+});

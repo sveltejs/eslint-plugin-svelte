@@ -66,6 +66,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$c'.
   line: 6
   column: 13
@@ -133,6 +139,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$e'.
   line: 9
@@ -202,6 +214,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$f'.
   line: 9
   column: 22
@@ -269,6 +287,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$i'.
   line: 12
@@ -338,6 +362,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$j'.
   line: 12
   column: 22
@@ -405,6 +435,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$l'.
   line: 15
@@ -474,6 +510,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$o'.
   line: 18
   column: 22
@@ -541,6 +583,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$a'.
   line: 21
@@ -610,6 +658,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$a'.
   line: 28
   column: 13
@@ -677,6 +731,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$e'.
   line: 37
@@ -746,6 +806,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$f'.
   line: 37
   column: 22
@@ -813,6 +879,12 @@
         	// cause a conflict in names so the suggestion can't work
         	const $a = 303;
         	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
         });
 - message: The argument name should be '$e'.
   line: 46
@@ -882,6 +954,12 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$f'.
   line: 46
   column: 22
@@ -950,7 +1028,17 @@
         	const $a = 303;
         	$a;
         });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$a'.
   line: 57
   column: 13
+  suggestions: null
+- message: The argument name should be '$a'.
+  line: 64
+  column: 14
   suggestions: null

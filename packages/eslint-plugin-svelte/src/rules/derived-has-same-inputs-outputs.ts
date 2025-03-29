@@ -15,16 +15,25 @@ function findVariableForName(
 	let hasConflict = false;
 	let variable: Variable | null = null;
 
-	for (const v of scope.variables) {
-		if (hasConflict && variable) {
+	for (const ref of scope.references) {
+		if (ref.identifier.name === expectedName) {
+			hasConflict = true;
 			break;
 		}
-		if (v.name === expectedName) {
-			hasConflict = true;
-			continue;
-		}
-		if (v.name === name) {
-			variable = v;
+	}
+
+	if (!hasConflict) {
+		for (const v of scope.variables) {
+			if (hasConflict && variable) {
+				break;
+			}
+			if (v.name === expectedName) {
+				hasConflict = true;
+				continue;
+			}
+			if (v.name === name) {
+				variable = v;
+			}
 		}
 	}
 
