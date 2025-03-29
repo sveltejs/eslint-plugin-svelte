@@ -1,5 +1,19 @@
 # eslint-plugin-svelte
 
+## 3.4.0
+
+### Minor Changes
+
+- [#1165](https://github.com/sveltejs/eslint-plugin-svelte/pull/1165) [`2b7e164`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2b7e1640d29477f07f16e5f5b318be34eae9031c) Thanks [@43081j](https://github.com/43081j)! - Adds a suggestion to the `require-store-callbacks-use-set-param` rule to automatically rename or add function parameters.
+
+- [#1163](https://github.com/sveltejs/eslint-plugin-svelte/pull/1163) [`d9b8604`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d9b8604f1dc1c83797d4e853c5a805ffd49ce58d) Thanks [@43081j](https://github.com/43081j)! - Adds a suggestion to the `derived-has-same-inputs-outputs` rule which renames the outputs.
+
+- [#1164](https://github.com/sveltejs/eslint-plugin-svelte/pull/1164) [`29b1315`](https://github.com/sveltejs/eslint-plugin-svelte/commit/29b13152063f2250d33651b1e99991607a443352) Thanks [@43081j](https://github.com/43081j)! - Added a suggestion for `no-at-debug-tags` rule which removes the tags
+
+### Patch Changes
+
+- [#1167](https://github.com/sveltejs/eslint-plugin-svelte/pull/1167) [`db9202d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/db9202de81463d20b1a17d1a0d94e3fd6fe62023) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to 1.1.1
+
 ## 3.3.3
 
 ### Patch Changes
