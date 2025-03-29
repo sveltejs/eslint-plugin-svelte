@@ -8,10 +8,11 @@ export default createRule('no-at-debug-tags', {
 			recommended: true,
 			default: 'warn'
 		},
-		fixable: 'code',
+		hasSuggestions: true,
 		schema: [],
 		messages: {
-			unexpected: 'Unexpected `{@debug}`.'
+			unexpected: 'Unexpected `{@debug}`.',
+			suggestRemove: 'Remove `{@debug}` from the source'
 		},
 		type: 'problem'
 	},
@@ -21,7 +22,12 @@ export default createRule('no-at-debug-tags', {
 				context.report({
 					node,
 					messageId: 'unexpected',
-					fix: (fixer) => fixer.remove(node)
+					suggest: [
+						{
+							messageId: 'suggestRemove',
+							fix: (fixer) => fixer.remove(node)
+						}
+					]
 				});
 			}
 		};
