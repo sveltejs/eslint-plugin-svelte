@@ -1,32 +1,1044 @@
 - message: The argument name should be '$a'.
   line: 3
   column: 13
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from b to $a.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, ($a) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$c'.
   line: 6
   column: 13
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from d to $c.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, ($c, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$e'.
   line: 9
   column: 19
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from g to $e.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([$e, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$f'.
   line: 9
   column: 22
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from h to $f.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, $f]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$i'.
   line: 12
   column: 19
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from k to $i.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([$i, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$j'.
   line: 12
   column: 22
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from l to $j.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, $j], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$l'.
   line: 15
   column: 26
-  suggestions: null
+  suggestions:
+    - desc: Rename the parameter from $n to $l.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $l]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
 - message: The argument name should be '$o'.
   line: 18
   column: 22
+  suggestions:
+    - desc: Rename the parameter from $p to $o.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$o, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$a'.
+  line: 21
+  column: 13
+  suggestions:
+    - desc: Rename the parameter from b to $a.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, ($a) => {
+        	doSomethingWith($a);
+
+        	somethingWithACallback(() => {
+        		$a;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$a'.
+  line: 28
+  column: 13
+  suggestions:
+    - desc: Rename the parameter from b to $a.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, ($a) => {
+        	$a;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$e'.
+  line: 37
+  column: 19
+  suggestions:
+    - desc: Rename the parameter from g to $e.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([$e, h]) => {
+        	$e;
+        	h;
+
+        	somethingWithACallback(() => {
+        		$e;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$f'.
+  line: 37
+  column: 22
+  suggestions:
+    - desc: Rename the parameter from h to $f.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, $f]) => {
+        	g;
+        	$f;
+
+        	somethingWithACallback(() => {
+        		g;
+        		$f;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$e'.
+  line: 46
+  column: 19
+  suggestions:
+    - desc: Rename the parameter from g to $e.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([$e, h]) => {
+        	$e;
+        	h;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$f'.
+  line: 46
+  column: 22
+  suggestions:
+    - desc: Rename the parameter from h to $f.
+      messageId: renameParam
+      output: |
+        import { derived } from 'svelte/store';
+
+        derived(a, (b) => {
+        	/** do nothing */
+        });
+        derived(c, (d, set) => {
+        	/** do nothing */
+        });
+        derived([e, f], ([g, h]) => {
+        	/** do nothing */
+        });
+        derived([i, j], ([k, l], set) => {
+        	/** do nothing */
+        });
+        derived([null, l], ([$m, $n]) => {
+        	/** do nothing */
+        });
+        derived([o, null], ([$p, $q]) => {
+        	/** do nothing */
+        });
+        derived(a, (b) => {
+        	doSomethingWith(b);
+
+        	somethingWithACallback(() => {
+        		b;
+        	});
+        });
+        derived(a, (b) => {
+        	b;
+
+        	somethingWithACallback(() => {
+        		// purposely shadow the var, this should not be updated
+        		const b = 303;
+        		b;
+        	});
+        });
+        derived([e, f], ([g, h]) => {
+        	g;
+        	h;
+
+        	somethingWithACallback(() => {
+        		g;
+        		h;
+        	});
+        });
+        derived([e, f], ([g, $f]) => {
+        	g;
+        	$f;
+
+        	somethingWithACallback(() => {
+        		const g = 303;
+        		const h = 808;
+        		g;
+        		h;
+        	});
+        });
+        derived(a, (b) => {
+        	// cause a conflict in names so the suggestion can't work
+        	const $a = 303;
+        	$a;
+        });
+        somethingWithACallback(() => {
+        	const $a = 303;
+        	derived(a, (b) => {
+        		$a;
+        	});
+        });
+- message: The argument name should be '$a'.
+  line: 57
+  column: 13
+  suggestions: null
+- message: The argument name should be '$a'.
+  line: 64
+  column: 14
   suggestions: null

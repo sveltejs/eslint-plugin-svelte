@@ -1,7 +1,48 @@
 import type { TSESTree } from '@typescript-eslint/types';
+import type { Variable } from '@typescript-eslint/scope-manager';
 import { createRule } from '../utils/index.js';
-import type { RuleContext } from '../types.js';
+import type { RuleContext, RuleFixer } from '../types.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
+import { getScope } from '../utils/ast-utils.js';
+
+function findVariableForName(
+	context: RuleContext,
+	node: TSESTree.Node,
+	name: string,
+	expectedName: string
+): { hasConflict: boolean; variable: Variable | null } {
+	const scope = getScope(context, node);
+	let variable: Variable | null = null;
+
+	for (const ref of scope.references) {
+		if (ref.identifier.name === expectedName) {
+			return { hasConflict: true, variable: null };
+		}
+	}
+
+	for (const v of scope.variables) {
+		if (v.name === expectedName) {
+			return { hasConflict: true, variable: null };
+		}
+		if (v.name === name) {
+			variable = v;
+		}
+	}
+
+	return { hasConflict: false, variable };
+}
+
+function createFixer(node: TSESTree.Node, variable: Variable | null, name: string) {
+	return function* fix(fixer: RuleFixer) {
+		yield fixer.replaceText(node, name);
+
+		if (variable) {
+			for (const ref of variable.references) {
+				yield fixer.replaceText(ref.identifier, name);
+			}
+		}
+	};
+}
 
 export default createRule('derived-has-same-inputs-outputs', {
 	meta: {
@@ -11,9 +52,11 @@ export default createRule('derived-has-same-inputs-outputs', {
 			recommended: false,
 			conflictWithPrettier: false
 		},
+		hasSuggestions: true,
 		schema: [],
 		messages: {
-			unexpected: "The argument name should be '{{name}}'."
+			unexpected: "The argument name should be '{{name}}'.",
+			renameParam: 'Rename the parameter from {{oldName}} to {{newName}}.'
 		},
 		type: 'suggestion'
 	},
@@ -49,11 +92,27 @@ export default createRule('derived-has-same-inputs-outputs', {
 			if (fnParam.type !== 'Identifier') return;
 			const expectedName = `$${args.name}`;
 			if (expectedName !== fnParam.name) {
+				const { hasConflict, variable } = findVariableForName(
+					context,
+					fn.body,
+					fnParam.name,
+					expectedName
+				);
+
 				context.report({
 					node: fn,
 					loc: fnParam.loc,
 					messageId: 'unexpected',
-					data: { name: expectedName }
+					data: { name: expectedName },
+					suggest: hasConflict
+						? undefined
+						: [
+								{
+									messageId: 'renameParam',
+									data: { oldName: fnParam.name, newName: expectedName },
+									fix: createFixer(fnParam, variable, expectedName)
+								}
+							]
 				});
 			}
 		}
@@ -77,11 +136,27 @@ export default createRule('derived-has-same-inputs-outputs', {
 				if (element && element.type === 'Identifier' && argName) {
 					const expectedName = `$${argName}`;
 					if (expectedName !== element.name) {
+						const { hasConflict, variable } = findVariableForName(
+							context,
+							fn.body,
+							element.name,
+							expectedName
+						);
+
 						context.report({
 							node: fn,
 							loc: element.loc,
 							messageId: 'unexpected',
-							data: { name: expectedName }
+							data: { name: expectedName },
+							suggest: hasConflict
+								? undefined
+								: [
+										{
+											messageId: 'renameParam',
+											data: { oldName: element.name, newName: expectedName },
+											fix: createFixer(element, variable, expectedName)
+										}
+									]
 						});
 					}
 				}
