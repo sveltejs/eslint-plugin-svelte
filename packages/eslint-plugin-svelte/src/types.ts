@@ -366,4 +366,6 @@ export interface SourceCode {
 	getCommentsAfter(nodeOrToken: NodeOrToken | AST.Token): AST.Comment[];
 
 	getCommentsInside(node: NodeOrToken): AST.Comment[];
+
+	getScope(node: NodeOrToken): Scope;
 }

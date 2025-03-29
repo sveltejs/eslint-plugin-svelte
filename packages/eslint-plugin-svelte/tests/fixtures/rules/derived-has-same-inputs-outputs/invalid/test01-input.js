@@ -18,3 +18,39 @@ derived([null, l], ([$m, $n]) => {
 derived([o, null], ([$p, $q]) => {
 	/** do nothing */
 });
+derived(a, (b) => {
+	doSomethingWith(b);
+
+	somethingWithACallback(() => {
+		b;
+	});
+});
+derived(a, (b) => {
+	b;
+
+	somethingWithACallback(() => {
+		// purposely shadow the var, this should not be updated
+		const b = 303;
+		b;
+	});
+});
+derived([e, f], ([g, h]) => {
+	g;
+	h;
+
+	somethingWithACallback(() => {
+		g;
+		h;
+	});
+});
+derived([e, f], ([g, h]) => {
+	g;
+	h;
+
+	somethingWithACallback(() => {
+		const g = 303;
+		const h = 808;
+		g;
+		h;
+	});
+});

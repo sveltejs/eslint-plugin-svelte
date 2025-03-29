@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
+import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('derived-has-same-inputs-outputs', {
 	meta: {
@@ -55,7 +56,19 @@ export default createRule('derived-has-same-inputs-outputs', {
 					loc: fnParam.loc,
 					messageId: 'unexpected',
 					data: { name: expectedName },
-					fix: (fixer) => fixer.replaceText(fnParam, expectedName)
+					fix: (fixer) => {
+						const scope = getSourceCode(context).getScope(fn.body);
+						const variable = scope.variables.find((variable) => variable.name === fnParam.name);
+
+						if (!variable) {
+							return fixer.replaceText(fnParam, expectedName);
+						}
+
+						return [
+							fixer.replaceText(fnParam, expectedName),
+							...variable.references.map((ref) => fixer.replaceText(ref.identifier, expectedName))
+						];
+					}
 				});
 			}
 		}
@@ -84,7 +97,21 @@ export default createRule('derived-has-same-inputs-outputs', {
 							loc: element.loc,
 							messageId: 'unexpected',
 							data: { name: expectedName },
-							fix: (fixer) => fixer.replaceText(element, expectedName)
+							fix: (fixer) => {
+								const scope = getSourceCode(context).getScope(fn.body);
+								const variable = scope.variables.find((variable) => variable.name === element.name);
+
+								if (!variable) {
+									return fixer.replaceText(element, expectedName);
+								}
+
+								return [
+									fixer.replaceText(element, expectedName),
+									...variable.references.map((ref) =>
+										fixer.replaceText(ref.identifier, expectedName)
+									)
+								];
+							}
 						});
 					}
 				}

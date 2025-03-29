@@ -30,3 +30,27 @@
   line: 18
   column: 22
   suggestions: null
+- message: The argument name should be '$a'.
+  line: 21
+  column: 13
+  suggestions: null
+- message: The argument name should be '$a'.
+  line: 28
+  column: 13
+  suggestions: null
+- message: The argument name should be '$e'.
+  line: 37
+  column: 19
+  suggestions: null
+- message: The argument name should be '$f'.
+  line: 37
+  column: 22
+  suggestions: null
+- message: The argument name should be '$e'.
+  line: 46
+  column: 19
+  suggestions: null
+- message: The argument name should be '$f'.
+  line: 46
+  column: 22
+  suggestions: null
