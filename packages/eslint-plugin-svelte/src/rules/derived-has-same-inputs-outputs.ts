@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { Variable } from '@typescript-eslint/scope-manager';
 import { createRule } from '../utils/index.js';
-import type { RuleContext } from '../types.js';
+import type { RuleContext, RuleFixer } from '../types.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
 import { getScope } from '../utils/ast-utils.js';
 
@@ -29,6 +29,18 @@ function findVariableForName(
 	}
 
 	return { hasConflict, variable };
+}
+
+function createFixer(node: TSESTree.Node, variable: Variable | null, name: string) {
+	return function* fix(fixer: RuleFixer) {
+		yield fixer.replaceText(node, name);
+
+		if (variable) {
+			for (const ref of variable.references) {
+				yield fixer.replaceText(ref.identifier, name);
+			}
+		}
+	};
 }
 
 export default createRule('derived-has-same-inputs-outputs', {
@@ -97,15 +109,7 @@ export default createRule('derived-has-same-inputs-outputs', {
 								{
 									messageId: 'renameParam',
 									data: { oldName: fnParam.name, newName: expectedName },
-									*fix(fixer) {
-										yield fixer.replaceText(fnParam, expectedName);
-
-										if (variable) {
-											for (const ref of variable.references) {
-												yield fixer.replaceText(ref.identifier, expectedName);
-											}
-										}
-									}
+									fix: createFixer(fnParam, variable, expectedName)
 								}
 							]
 				});
@@ -149,15 +153,7 @@ export default createRule('derived-has-same-inputs-outputs', {
 										{
 											messageId: 'renameParam',
 											data: { oldName: element.name, newName: expectedName },
-											*fix(fixer) {
-												yield fixer.replaceText(element, expectedName);
-
-												if (variable) {
-													for (const ref of variable.references) {
-														yield fixer.replaceText(ref.identifier, expectedName);
-													}
-												}
-											}
+											fix: createFixer(element, variable, expectedName)
 										}
 									]
 						});
