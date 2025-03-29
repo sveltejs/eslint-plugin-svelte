@@ -10,6 +10,8 @@ since: 'v2.8.0'
 
 > derived store should use same variable names between values and callback
 
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
+
 ## :book: Rule Details
 
 This rule reports where variable names and callback function's argument names are different.
