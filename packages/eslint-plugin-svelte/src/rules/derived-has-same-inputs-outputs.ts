@@ -97,20 +97,17 @@ export default createRule('derived-has-same-inputs-outputs', {
 							loc: element.loc,
 							messageId: 'unexpected',
 							data: { name: expectedName },
-							fix: (fixer) => {
+							*fix(fixer) {
 								const scope = getSourceCode(context).getScope(fn.body);
 								const variable = scope.variables.find((variable) => variable.name === element.name);
 
-								if (!variable) {
-									return fixer.replaceText(element, expectedName);
-								}
+								yield fixer.replaceText(element, expectedName);
 
-								return [
-									fixer.replaceText(element, expectedName),
-									...variable.references.map((ref) =>
-										fixer.replaceText(ref.identifier, expectedName)
-									)
-								];
+								if (variable) {
+									for (const ref of variable.references) {
+										yield fixer.replaceText(ref.identifier, expectedName);
+									}
+								}
 							}
 						});
 					}
