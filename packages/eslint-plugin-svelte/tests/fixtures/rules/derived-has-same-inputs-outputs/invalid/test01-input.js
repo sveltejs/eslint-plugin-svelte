@@ -54,3 +54,8 @@ derived([e, f], ([g, h]) => {
 		h;
 	});
 });
+derived(a, (b) => {
+	// cause a conflict in names so the suggestion can't work
+	const $a = 303;
+	$a;
+});

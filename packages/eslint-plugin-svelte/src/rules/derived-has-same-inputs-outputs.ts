@@ -1,8 +1,35 @@
 import type { TSESTree } from '@typescript-eslint/types';
+import type { Variable } from '@typescript-eslint/scope-manager';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
 import { getSourceCode } from '../utils/compat.js';
+
+function findVariableForName(
+	context: RuleContext,
+	node: TSESTree.Node,
+	name: string,
+	expectedName: string
+): { hasConflict: boolean; variable: Variable | null } {
+	const scope = getSourceCode(context).getScope(node);
+	let hasConflict = false;
+	let variable: Variable | null = null;
+
+	for (const v of scope.variables) {
+		if (hasConflict && variable) {
+			break;
+		}
+		if (v.name === expectedName) {
+			hasConflict = true;
+			continue;
+		}
+		if (v.name === name) {
+			variable = v;
+		}
+	}
+
+	return { hasConflict, variable };
+}
 
 export default createRule('derived-has-same-inputs-outputs', {
 	meta: {
@@ -12,10 +39,11 @@ export default createRule('derived-has-same-inputs-outputs', {
 			recommended: false,
 			conflictWithPrettier: false
 		},
-		fixable: 'code',
+		hasSuggestions: true,
 		schema: [],
 		messages: {
-			unexpected: "The argument name should be '{{name}}'."
+			unexpected: "The argument name should be '{{name}}'.",
+			renameParam: 'Rename the parameter from {{oldName}} to {{newName}}.'
 		},
 		type: 'suggestion'
 	},
@@ -51,24 +79,35 @@ export default createRule('derived-has-same-inputs-outputs', {
 			if (fnParam.type !== 'Identifier') return;
 			const expectedName = `$${args.name}`;
 			if (expectedName !== fnParam.name) {
+				const { hasConflict, variable } = findVariableForName(
+					context,
+					fn.body,
+					fnParam.name,
+					expectedName
+				);
+
 				context.report({
 					node: fn,
 					loc: fnParam.loc,
 					messageId: 'unexpected',
 					data: { name: expectedName },
-					fix: (fixer) => {
-						const scope = getSourceCode(context).getScope(fn.body);
-						const variable = scope.variables.find((variable) => variable.name === fnParam.name);
+					suggest: hasConflict
+						? undefined
+						: [
+								{
+									messageId: 'renameParam',
+									data: { oldName: fnParam.name, newName: expectedName },
+									*fix(fixer) {
+										yield fixer.replaceText(fnParam, expectedName);
 
-						if (!variable) {
-							return fixer.replaceText(fnParam, expectedName);
-						}
-
-						return [
-							fixer.replaceText(fnParam, expectedName),
-							...variable.references.map((ref) => fixer.replaceText(ref.identifier, expectedName))
-						];
-					}
+										if (variable) {
+											for (const ref of variable.references) {
+												yield fixer.replaceText(ref.identifier, expectedName);
+											}
+										}
+									}
+								}
+							]
 				});
 			}
 		}
@@ -92,23 +131,35 @@ export default createRule('derived-has-same-inputs-outputs', {
 				if (element && element.type === 'Identifier' && argName) {
 					const expectedName = `$${argName}`;
 					if (expectedName !== element.name) {
+						const { hasConflict, variable } = findVariableForName(
+							context,
+							fn.body,
+							element.name,
+							expectedName
+						);
+
 						context.report({
 							node: fn,
 							loc: element.loc,
 							messageId: 'unexpected',
 							data: { name: expectedName },
-							*fix(fixer) {
-								const scope = getSourceCode(context).getScope(fn.body);
-								const variable = scope.variables.find((variable) => variable.name === element.name);
+							suggest: hasConflict
+								? undefined
+								: [
+										{
+											messageId: 'renameParam',
+											data: { oldName: element.name, newName: expectedName },
+											*fix(fixer) {
+												yield fixer.replaceText(element, expectedName);
 
-								yield fixer.replaceText(element, expectedName);
-
-								if (variable) {
-									for (const ref of variable.references) {
-										yield fixer.replaceText(ref.identifier, expectedName);
-									}
-								}
-							}
+												if (variable) {
+													for (const ref of variable.references) {
+														yield fixer.replaceText(ref.identifier, expectedName);
+													}
+												}
+											}
+										}
+									]
 						});
 					}
 				}
