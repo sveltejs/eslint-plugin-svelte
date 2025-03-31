@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import { getPackageJsons } from './get-package-json.js';
 import { getNodeModule } from './get-node-module.js';
-import { getFilename } from './compat.js';
 import { createCache } from './cache.js';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
@@ -122,7 +121,7 @@ const svelteKitContextCache = createCache<Pick<
 function getSvelteKitContext(
 	context: RuleContext
 ): Pick<SvelteContext, 'svelteKitFileType' | 'svelteKitVersion'> {
-	const filePath = getFilename(context);
+	const filePath = context.filename;
 
 	const cached = svelteKitContextCache.get(filePath);
 	if (cached) return cached;
@@ -151,7 +150,7 @@ function getSvelteKitContext(
 			context.settings?.svelte?.kit?.files?.routes ??
 			context.sourceCode.parserServices.svelteParseContext?.svelteConfig?.kit?.files?.routes
 		)?.replace(/^\//, '') ?? 'src/routes';
-	const projectRootDir = getProjectRootDir(getFilename(context)) ?? '';
+	const projectRootDir = getProjectRootDir(context.filename) ?? '';
 
 	if (!filePath.startsWith(path.join(projectRootDir, routes))) {
 		const result: Pick<SvelteContext, 'svelteKitFileType' | 'svelteKitVersion'> = {
@@ -288,7 +287,7 @@ const svelteContextCache = createCache<SvelteContext | null>();
 export function getSvelteContext(context: RuleContext): SvelteContext | null {
 	const { parserServices } = context.sourceCode;
 	const { svelteParseContext } = parserServices;
-	const filePath = getFilename(context);
+	const filePath = context.filename;
 
 	const cached = svelteContextCache.get(filePath);
 	if (cached) return cached;

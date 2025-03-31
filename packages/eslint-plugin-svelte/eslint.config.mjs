@@ -71,11 +71,11 @@ const config = [
 			'no-restricted-properties': [
 				'error',
 				{ object: 'context', property: 'getSourceCode', message: 'Use `context.sourceCode`' },
-				{ object: 'context', property: 'getFilename', message: 'Use src/utils/compat.ts' },
+				{ object: 'context', property: 'getFilename', message: 'Use `context.filename`' },
 				{
 					object: 'context',
 					property: 'getPhysicalFilename',
-					message: 'Use src/utils/compat.ts'
+					message: 'Use `context.physicalFilename`'
 				},
 				{ object: 'context', property: 'getCwd', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },

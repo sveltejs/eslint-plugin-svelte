@@ -2,7 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import Module from 'module';
 import path from 'path';
 import type { RuleContext } from '../types.js';
-import { getCwd, getFilename, getPhysicalFilename } from './compat.js';
+import { getCwd } from './compat.js';
 const cache = new WeakMap<AST.SvelteProgram, Record<string, unknown>>();
 const cache4b = new Map<string, unknown>();
 /**
@@ -27,9 +27,9 @@ export function loadModule<R>(context: RuleContext, name: string): R | null {
 	}
 	for (const relativeTo of [
 		// load from lint file name
-		getFilename(context),
+		context.filename,
 		// load from lint file name (physical)
-		getPhysicalFilename(context),
+		context.physicalFilename,
 		// load from this plugin module
 		typeof __filename !== 'undefined' ? __filename : ''
 	]) {
