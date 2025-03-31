@@ -1,36 +1,40 @@
 import assert from 'assert';
 import plugin from '../../../src/index.js';
-import { ESLint } from '../../utils/eslint-compat.js';
+import { loadESLint, type ESLint as ESLintClass } from 'eslint';
 import * as svelteParser from 'svelte-eslint-parser';
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
-// Initialize linter.
-const linter = new ESLint({
-	// @ts-expect-error -- Type error?
-	baseConfig: {
-		languageOptions: {
-			parser: svelteParser,
-			ecmaVersion: 2020
-		},
-		plugins: {
-			svelte: plugin
-		},
-		rules: {
-			'no-undef': 'error',
-			'space-infix-ops': 'error',
-			'svelte/no-at-html-tags': 'error',
-			'svelte/comment-directive': 'error'
-		},
-		processor: 'svelte/svelte',
-		files: ['**']
-	},
-	overrideConfigFile: true
-});
-
 describe('comment-directive', () => {
+	let ESLint: typeof ESLintClass;
+	let linter: InstanceType<typeof ESLintClass>;
+
+	before(async () => {
+		ESLint = await loadESLint({ useFlatConfig: true });
+		linter = new ESLint({
+			baseConfig: {
+				languageOptions: {
+					parser: svelteParser,
+					ecmaVersion: 2020
+				},
+				plugins: {
+					svelte: plugin
+				},
+				rules: {
+					'no-undef': 'error',
+					'space-infix-ops': 'error',
+					'svelte/no-at-html-tags': 'error',
+					'svelte/comment-directive': 'error'
+				},
+				processor: 'svelte/svelte',
+				files: ['**']
+			},
+			overrideConfigFile: true
+		});
+	});
+
 	describe('eslint-disable/eslint-enable', () => {
 		it('disable all rules if <!-- eslint-disable -->', async () => {
 			const code = `
@@ -351,27 +355,29 @@ describe('comment-directive', () => {
 	});
 
 	describe('reportUnusedDisableDirectives', () => {
-		const linter = new ESLint({
-			// @ts-expect-error -- Type error?
-			baseConfig: {
-				languageOptions: {
-					parser: svelteParser,
-					ecmaVersion: 2020
+		before(() => {
+			linter = new ESLint({
+				baseConfig: {
+					languageOptions: {
+						parser: svelteParser,
+						ecmaVersion: 2020
+					},
+					plugins: {
+						svelte: plugin
+					},
+					rules: {
+						'no-unused-vars': 'error',
+						'svelte/comment-directive': ['error', { reportUnusedDisableDirectives: true }],
+						'svelte/no-at-html-tags': 'error',
+						'svelte/no-at-debug-tags': 'error'
+					},
+					files: ['**'],
+					processor: 'svelte/svelte'
 				},
-				plugins: {
-					svelte: plugin
-				},
-				rules: {
-					'no-unused-vars': 'error',
-					'svelte/comment-directive': ['error', { reportUnusedDisableDirectives: true }],
-					'svelte/no-at-html-tags': 'error',
-					'svelte/no-at-debug-tags': 'error'
-				},
-				files: ['**'],
-				processor: 'svelte/svelte'
-			},
-			overrideConfigFile: true
+				overrideConfigFile: true
+			});
 		});
+
 		it('report unused <!-- eslint-disable -->', async () => {
 			const code = `
         <!-- eslint-disable -->

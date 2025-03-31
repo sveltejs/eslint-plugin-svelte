@@ -1,9 +1,15 @@
 import assert from 'assert';
 import plugin from '../../../src/index.js';
-import { ESLint } from '../../utils/eslint-compat.js';
+import { loadESLint, type ESLint as ESLintClass } from 'eslint';
 import * as svelteParser from 'svelte-eslint-parser';
 
 describe('ignore-warnings', () => {
+	let ESLint: typeof ESLintClass;
+
+	before(async () => {
+		ESLint = await loadESLint({ useFlatConfig: true });
+	});
+
 	it('disable rules if ignoreWarnings: [ruleName]', async () => {
 		const code = `
       {@html a+b}

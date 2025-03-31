@@ -7,7 +7,7 @@ import { applyFixes } from './source-code-fixer.js';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import semver from 'semver';
 import { writeAndFormat } from '../../tools/lib/write.js';
-import { Linter } from './eslint-compat.js';
+import { Linter } from 'eslint';
 import * as svelteParser from 'svelte-eslint-parser';
 import * as typescriptParser from '@typescript-eslint/parser';
 import Module from 'module';
