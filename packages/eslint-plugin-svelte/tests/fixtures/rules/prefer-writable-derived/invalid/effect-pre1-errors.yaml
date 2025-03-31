@@ -1,4 +1,15 @@
 - message: Prefer using writable $derived instead of $state and $effect
   line: 4
   column: 6
-  suggestions: null
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	const { albumName } = $props();
+
+        	let newAlbumName = $derived(albumName);
+        	;
+        </script>
+
+        <input bind:value={newAlbumName} />

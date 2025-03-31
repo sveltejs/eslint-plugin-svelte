@@ -32,7 +32,8 @@ export default createRule('prefer-writable-derived', {
 		},
 		schema: [],
 		messages: {
-			unexpected: 'Prefer using writable $derived instead of $state and $effect'
+			unexpected: 'Prefer using writable $derived instead of $state and $effect',
+			suggestRewrite: 'Rewrite $state and $effect to $derived'
 		},
 		type: 'suggestion',
 		conditions: [
@@ -41,7 +42,7 @@ export default createRule('prefer-writable-derived', {
 				runes: [true, 'undetermined']
 			}
 		],
-		fixable: 'code'
+		hasSuggestions: true
 	},
 	create(context) {
 		if (!shouldRun) {
@@ -118,10 +119,15 @@ export default createRule('prefer-writable-derived', {
 				context.report({
 					node: def.node,
 					messageId: 'unexpected',
-					fix: (fixer) => {
-						const rightCode = context.sourceCode.getText(right);
-						return [fixer.replaceText(init, `$derived(${rightCode})`), fixer.remove(node)];
-					}
+					suggest: [
+						{
+							messageId: 'suggestRewrite',
+							fix: (fixer) => {
+								const rightCode = context.sourceCode.getText(right);
+								return [fixer.replaceText(init, `$derived(${rightCode})`), fixer.remove(node)];
+							}
+						}
+					]
 				});
 			}
 		};
