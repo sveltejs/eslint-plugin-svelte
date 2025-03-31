@@ -3,7 +3,6 @@ import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import type { RuleContext } from '../../../types.js';
 import type { TransformResult } from './types.js';
-import { getCwd } from '../../../utils/compat.js';
 
 /**
  * Transform with postcss
@@ -31,7 +30,7 @@ export function transform(
 
 		const config = postcssLoadConfig.sync(
 			{
-				cwd: getCwd(context),
+				cwd: context.cwd ?? process.cwd(),
 				from: filename
 			},
 			typeof configFilePath === 'string' ? configFilePath : undefined

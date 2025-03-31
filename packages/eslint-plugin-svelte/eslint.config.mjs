@@ -77,7 +77,7 @@ const config = [
 					property: 'getPhysicalFilename',
 					message: 'Use `context.physicalFilename`'
 				},
-				{ object: 'context', property: 'getCwd', message: 'Use src/utils/compat.ts' },
+				{ object: 'context', property: 'getCwd', message: 'Use `context.cwd`' },
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'parserServices', message: 'Use src/utils/compat.ts' }
 			]

@@ -159,8 +159,7 @@ export type RuleContext = {
 
 	report(descriptor: ReportDescriptor): void;
 
-	// eslint@6 does not have this method.
-	getCwd?: () => string;
+	cwd?: string;
 
 	physicalFilename: string;
 };

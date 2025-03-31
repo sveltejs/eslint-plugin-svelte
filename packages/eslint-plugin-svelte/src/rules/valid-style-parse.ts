@@ -1,5 +1,4 @@
 import { createRule } from '../utils/index.js';
-import { getCwd } from '../utils/compat.js';
 
 export default createRule('valid-style-parse', {
 	meta: {
@@ -17,7 +16,7 @@ export default createRule('valid-style-parse', {
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
-		const cwd = `${getCwd(context)}/`;
+		const cwd = `${context.cwd ?? process.cwd()}/`;
 
 		return {
 			SvelteStyleElement(node) {
