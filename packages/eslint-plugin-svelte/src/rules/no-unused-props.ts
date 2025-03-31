@@ -359,6 +359,7 @@ export default createRule('no-unused-props', {
 				normalized.push(path);
 			}
 			return normalized.map((path) => {
+				// If we allow unused nested properties, only return first level properties
 				if (allowUnusedNestedProperties) return [path[0]];
 				return path;
 			});
