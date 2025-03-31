@@ -8,7 +8,6 @@ import { isCommentToken } from '@eslint-community/eslint-utils';
 import type { AnyToken, IndentOptions } from './commons.js';
 import type { OffsetCalculator } from './offset-context.js';
 import { OffsetContext } from './offset-context.js';
-import { getFilename } from '../../utils/compat.js';
 
 type IndentUserOptions = {
 	indent?: number | 'tab';
@@ -78,7 +77,7 @@ export function defineVisitor(
 	context: RuleContext,
 	defaultOptions: Partial<IndentOptions>
 ): RuleListener {
-	if (!getFilename(context).endsWith('.svelte')) return {};
+	if (!context.filename.endsWith('.svelte')) return {};
 
 	const options = parseOptions(context.options[0] || {}, defaultOptions);
 	const sourceCode = context.sourceCode;

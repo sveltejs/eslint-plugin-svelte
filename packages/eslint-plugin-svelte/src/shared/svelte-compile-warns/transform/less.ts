@@ -3,7 +3,6 @@ import type less from 'less';
 import type { RuleContext } from '../../../types.js';
 import type { TransformResult } from './types.js';
 import { loadModule } from '../../../utils/load-module.js';
-import { getFilename } from '../../../utils/compat.js';
 
 type Less = typeof less;
 /**
@@ -26,7 +25,7 @@ export function transform(
 	}
 	const code = text.slice(...inputRange);
 
-	const filename = `${getFilename(context)}.less`;
+	const filename = `${context.filename}.less`;
 	try {
 		let output: Awaited<ReturnType<Less['render']>> | undefined;
 

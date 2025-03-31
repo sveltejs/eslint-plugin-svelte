@@ -4,7 +4,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type ts from 'typescript';
 import { findVariable } from '../utils/ast-utils.js';
 import { toRegExp } from '../utils/regexp.js';
-import { getFilename } from '../utils/compat.js';
 
 type PropertyPathArray = string[];
 
@@ -58,7 +57,7 @@ export default createRule('no-unused-props', {
 		]
 	},
 	create(context) {
-		const fileName = getFilename(context);
+		const fileName = context.filename;
 		const tools = getTypeScriptTools(context);
 		if (!tools) {
 			return {};

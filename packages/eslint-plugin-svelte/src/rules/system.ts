@@ -1,6 +1,5 @@
 import { getShared } from '../shared/index.js';
 import { createRule } from '../utils/index.js';
-import { getFilename } from '../utils/compat.js';
 import { isRegExp, toRegExp } from '../utils/regexp.js';
 
 export default createRule('system', {
@@ -15,7 +14,7 @@ export default createRule('system', {
 		type: 'problem'
 	},
 	create(context) {
-		const shared = getShared(getFilename(context));
+		const shared = getShared(context.filename);
 		if (!shared) return {};
 
 		const directives = shared.newCommentDirectives({
