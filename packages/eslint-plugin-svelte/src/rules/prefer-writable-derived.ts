@@ -7,6 +7,20 @@ import semver from 'semver';
 // Writable derived were introduced in Svelte 5.25.0
 const shouldRun = semver.satisfies(SVELTE_VERSION, '>=5.25.0');
 
+type ValidFunctionType = TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression;
+type ValidFunction = ValidFunctionType & {
+	body: TSESTree.BlockStatement;
+};
+
+type ValidAssignmentExpression = TSESTree.AssignmentExpression & {
+	operator: '=';
+	left: TSESTree.Identifier;
+};
+
+type ValidExpressionStatement = TSESTree.ExpressionStatement & {
+	expression: ValidAssignmentExpression;
+};
+
 function isEffectOrEffectPre(node: TSESTree.CallExpression) {
 	if (node.callee.type === 'Identifier') {
 		return node.callee.name === '$effect';
@@ -21,6 +35,40 @@ function isEffectOrEffectPre(node: TSESTree.CallExpression) {
 	}
 
 	return false;
+}
+
+function isValidFunctionArgument(argument: TSESTree.Node): argument is ValidFunction {
+	if (
+		(argument.type !== 'FunctionExpression' && argument.type !== 'ArrowFunctionExpression') ||
+		argument.params.length !== 0
+	) {
+		return false;
+	}
+
+	if (argument.body.type !== 'BlockStatement') {
+		return false;
+	}
+
+	return argument.body.body.length === 1;
+}
+
+function isValidAssignment(statement: TSESTree.Statement): statement is ValidExpressionStatement {
+	if (statement.type !== 'ExpressionStatement') return false;
+
+	const { expression } = statement;
+	return (
+		expression.type === 'AssignmentExpression' &&
+		expression.operator === '=' &&
+		expression.left.type === 'Identifier'
+	);
+}
+
+function isStateVariable(init: TSESTree.Expression | null): init is TSESTree.CallExpression {
+	return (
+		init?.type === 'CallExpression' &&
+		init.callee.type === 'Identifier' &&
+		init.callee.name === '$state'
+	);
 }
 
 export default createRule('prefer-writable-derived', {
@@ -50,69 +98,33 @@ export default createRule('prefer-writable-derived', {
 		}
 		return {
 			CallExpression: (node: TSESTree.CallExpression) => {
-				if (!isEffectOrEffectPre(node)) {
-					return;
-				}
-
-				if (node.arguments.length !== 1) {
+				if (!isEffectOrEffectPre(node) || node.arguments.length !== 1) {
 					return;
 				}
 
 				const argument = node.arguments[0];
-				if (argument.type !== 'FunctionExpression' && argument.type !== 'ArrowFunctionExpression') {
+				if (!isValidFunctionArgument(argument)) {
 					return;
 				}
 
-				if (argument.params.length !== 0) {
+				const statement = argument.body.body[0];
+				if (!isValidAssignment(statement)) {
 					return;
 				}
 
-				if (argument.body.type !== 'BlockStatement') {
-					return;
-				}
-
-				const body = argument.body.body;
-				if (body.length !== 1) {
-					return;
-				}
-
-				const statement = body[0];
-				if (statement.type !== 'ExpressionStatement') {
-					return;
-				}
-
-				const expression = statement.expression;
-				if (expression.type !== 'AssignmentExpression') {
-					return;
-				}
-
-				const { left, right, operator } = expression;
-				if (operator !== '=' || left.type !== 'Identifier') {
-					return;
-				}
-
+				const { left, right } = statement.expression;
 				const scope = getScope(context, statement);
-				const reference = scope.references.find((reference) => {
-					return (
-						reference.identifier.type === 'Identifier' && reference.identifier.name === left.name
-					);
-				});
-				const defs = reference?.resolved?.defs;
-				if (defs == null || defs.length !== 1) {
+				const reference = scope.references.find(
+					(ref) => ref.identifier.type === 'Identifier' && ref.identifier.name === left.name
+				);
+
+				const def = reference?.resolved?.defs?.[0];
+				if (!def || def.type !== 'Variable' || def.node.type !== 'VariableDeclarator') {
 					return;
 				}
 
-				const def = defs[0];
-				if (def.type !== 'Variable' || def.node.type !== 'VariableDeclarator') {
-					return;
-				}
-
-				const init = def.node.init;
-				if (init == null || init.type !== 'CallExpression') {
-					return;
-				}
-
-				if (init.callee.type !== 'Identifier' || init.callee.name !== '$state') {
+				const { init } = def.node;
+				if (!isStateVariable(init)) {
 					return;
 				}
 
