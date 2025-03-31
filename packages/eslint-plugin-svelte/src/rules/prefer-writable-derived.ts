@@ -1,7 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { getScope } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import semver from 'semver';
 
@@ -120,7 +119,7 @@ export default createRule('prefer-writable-derived', {
 					node: def.node,
 					messageId: 'unexpected',
 					fix: (fixer) => {
-						const rightCode = getSourceCode(context).getText(right);
+						const rightCode = context.sourceCode.getText(right);
 						return [fixer.replaceText(init, `$derived(${rightCode})`), fixer.remove(node)];
 					}
 				});
