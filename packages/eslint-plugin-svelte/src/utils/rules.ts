@@ -60,6 +60,7 @@ import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
+import preferWritableDerived from 'src/rules/prefer-writable-derived.js';
 import requireEachKey from '../rules/require-each-key.js';
 import requireEventDispatcherTypes from '../rules/require-event-dispatcher-types.js';
 import requireOptimizedStyleAttribute from '../rules/require-optimized-style-attribute.js';
@@ -135,6 +136,7 @@ export const rules = [
 	preferConst,
 	preferDestructuredStoreProps,
 	preferStyleDirective,
+	preferWritableDerived,
 	requireEachKey,
 	requireEventDispatcherTypes,
 	requireOptimizedStyleAttribute,
