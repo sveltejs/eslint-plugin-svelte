@@ -1,6 +1,8 @@
-// IMPORTANT!
-// This file has been automatically generated,
-// in order to update its content execute "pnpm run update"
+/*
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "pnpm run update"
+ */
 //
 // Replace type information to use "@typescript-eslint/types" instead of "estree".
 //

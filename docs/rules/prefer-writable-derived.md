@@ -45,11 +45,7 @@ When this pattern is detected, the rule suggests refactoring to use `$derived()`
 
 ## :wrench: Options
 
-```json
-{
-  "svelte/prefer-writable-derived": ["error", {}]
-}
-```
+Nothing.
 
 - This rule has no options.
 

@@ -488,9 +488,7 @@ type SvelteNoInlineStyles = []|[{
   allowTransitions?: boolean
 }]
 // ----- svelte/no-inner-declarations -----
-type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "both"), {
-  blockScopedFunctions?: ("allow" | "disallow")
-}]
+type SvelteNoInnerDeclarations = []|[("functions" | "both")]
 // ----- svelte/no-navigation-without-base -----
 type SvelteNoNavigationWithoutBase = []|[{
   ignoreGoto?: boolean
