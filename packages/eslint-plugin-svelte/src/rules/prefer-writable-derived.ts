@@ -36,7 +36,12 @@ export default createRule('prefer-writable-derived', {
 			unexpected: 'Prefer using writable $derived instead of $state and $effect'
 		},
 		type: 'suggestion',
-		conditions: [],
+		conditions: [
+			{
+				svelteVersions: ['5'],
+				runes: [true, 'undetermined']
+			}
+		],
 		fixable: 'code'
 	},
 	create(context) {
