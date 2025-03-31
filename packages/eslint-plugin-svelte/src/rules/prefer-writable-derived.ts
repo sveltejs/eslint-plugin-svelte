@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { getScope } from 'src/utils/ast-utils.js';
-import { getSourceCode } from 'src/utils/compat.js';
+import { getScope } from '../utils/ast-utils.js';
+import { getSourceCode } from '../utils/compat.js';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import semver from 'semver';
 
