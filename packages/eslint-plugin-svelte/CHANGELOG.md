@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.4.1
+
+### Patch Changes
+
+- [#1173](https://github.com/sveltejs/eslint-plugin-svelte/pull/1173) [`8e53e58`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8e53e58411eba530324a8c223f5a2b00080b0cec) Thanks [@43081j](https://github.com/43081j)! - chore: use `context.sourceCode` directly rather than a compatibility helper.
+
+- [#1177](https://github.com/sveltejs/eslint-plugin-svelte/pull/1177) [`ec22fb4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ec22fb41d6ecc3a49cde882556bc4df1d7b681a5) Thanks [@43081j](https://github.com/43081j)! - test: use ESLint and Linter directly from eslint in tests
+
+- [#1174](https://github.com/sveltejs/eslint-plugin-svelte/pull/1174) [`b696ef3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b696ef350846ceb23f7c1078a4e32f8cb8d33681) Thanks [@43081j](https://github.com/43081j)! - chore: use `context.filename` and `context.physicalFilename` instead of compat functions.
+
+- [#1176](https://github.com/sveltejs/eslint-plugin-svelte/pull/1176) [`bafbf5f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bafbf5f7fc48602f3ede8ec3a7c829e7c4d6e9a4) Thanks [@43081j](https://github.com/43081j)! - chore: switch to `context.cwd` rather than using a compat helper.
+
 ## 3.4.0
 
 ### Minor Changes
