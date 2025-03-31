@@ -40,7 +40,7 @@ export default createRule('html-closing-bracket-spacing', {
 			selfClosingTag: 'always',
 			...ctx.options[0]
 		};
-		const src = ctx.getSourceCode();
+		const src = ctx.sourceCode;
 
 		/**
 		 * Returns true if string contains newline characters

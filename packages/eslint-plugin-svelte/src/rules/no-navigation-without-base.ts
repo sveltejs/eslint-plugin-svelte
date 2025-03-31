@@ -1,7 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { getSourceCode } from '../utils/compat.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { SvelteLiteral } from 'svelte-eslint-parser/lib/ast';
@@ -49,7 +48,7 @@ export default createRule('no-navigation-without-base', {
 		return {
 			Program() {
 				const referenceTracker = new ReferenceTracker(
-					getSourceCode(context).scopeManager.globalScope!
+					context.sourceCode.scopeManager.globalScope!
 				);
 				basePathNames = extractBasePathReferences(referenceTracker, context);
 				const {

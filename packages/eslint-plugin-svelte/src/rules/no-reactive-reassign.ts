@@ -2,7 +2,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import { getPropertyName } from '@eslint-community/eslint-utils';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-reactive-reassign', {
 	meta: {
@@ -39,7 +38,7 @@ export default createRule('no-reactive-reassign', {
 	},
 	create(context) {
 		const props = context.options[0]?.props !== false; // default true
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		const scopeManager = sourceCode.scopeManager;
 		const globalScope = scopeManager.globalScope;
 		const toplevelScope =

@@ -1,7 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-reactive-functions', {
 	meta: {
@@ -40,7 +39,7 @@ export default createRule('no-reactive-functions', {
 					return false;
 				}
 
-				const source = getSourceCode(context);
+				const source = context.sourceCode;
 
 				return context.report({
 					node: parent,

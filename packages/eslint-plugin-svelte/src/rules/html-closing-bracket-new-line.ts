@@ -1,6 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 import type { SourceCode } from '../types.js';
 
 type ExpectedNode = AST.SvelteStartTag | AST.SvelteEndTag;
@@ -123,7 +122,7 @@ export default createRule('html-closing-bracket-new-line', {
 		options.singleline ??= 'never';
 		options.multiline ??= 'always';
 
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 
 		return {
 			'SvelteStartTag, SvelteEndTag'(node: ExpectedNode) {

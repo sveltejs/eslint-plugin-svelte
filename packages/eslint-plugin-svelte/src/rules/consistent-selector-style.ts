@@ -7,7 +7,6 @@ import type {
 	Tag as SelectorTag
 } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 import { createRule } from '../utils/index.js';
 
 export default createRule('consistent-selector-style', {
@@ -48,7 +47,7 @@ export default createRule('consistent-selector-style', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		if (
 			!sourceCode.parserServices.isSvelte ||
 			sourceCode.parserServices.getStyleSelectorAST === undefined ||

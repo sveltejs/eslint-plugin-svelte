@@ -6,7 +6,6 @@ import {
 	isSvgElement,
 	isMathMLElement
 } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 
 const TYPE_MESSAGES = {
 	normal: 'HTML elements',
@@ -160,7 +159,7 @@ export default createRule('html-self-closing', {
 			context.report({
 				node,
 				loc: {
-					start: getSourceCode(context).getLocFromIndex(
+					start: context.sourceCode.getLocFromIndex(
 						node.startTag.range[1] - (node.startTag.selfClosing ? 2 : 1)
 					),
 					end: node.loc.end

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getPackageJsons } from './get-package-json.js';
 import { getNodeModule } from './get-node-module.js';
-import { getFilename, getSourceCode } from './compat.js';
+import { getFilename } from './compat.js';
 import { createCache } from './cache.js';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
@@ -149,7 +149,7 @@ function getSvelteKitContext(
 	const routes =
 		(
 			context.settings?.svelte?.kit?.files?.routes ??
-			getSourceCode(context).parserServices.svelteParseContext?.svelteConfig?.kit?.files?.routes
+			context.sourceCode.parserServices.svelteParseContext?.svelteConfig?.kit?.files?.routes
 		)?.replace(/^\//, '') ?? 'src/routes';
 	const projectRootDir = getProjectRootDir(getFilename(context)) ?? '';
 
@@ -286,7 +286,7 @@ function getProjectRootDir(filePath: string): string | null {
 const svelteContextCache = createCache<SvelteContext | null>();
 
 export function getSvelteContext(context: RuleContext): SvelteContext | null {
-	const { parserServices } = getSourceCode(context);
+	const { parserServices } = context.sourceCode;
 	const { svelteParseContext } = parserServices;
 	const filePath = getFilename(context);
 

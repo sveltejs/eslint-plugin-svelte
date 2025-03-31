@@ -153,7 +153,7 @@ export type RuleContext = {
 
 	getScope(): Scope;
 
-	getSourceCode(): SourceCode;
+	sourceCode: SourceCode;
 
 	markVariableAsUsed(name: string): boolean;
 

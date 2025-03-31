@@ -5,7 +5,6 @@ import { keyword } from 'esutils';
 import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
 import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 
 type StoreMemberExpression = TSESTree.MemberExpression & {
 	object: TSESTree.Identifier & { name: string };
@@ -115,7 +114,7 @@ export default createRule('prefer-destructured-store-props', {
 
 		/** Checks whether the given name is already defined as a variable. */
 		function hasTopLevelVariable(name: string) {
-			const scopeManager = getSourceCode(context).scopeManager;
+			const scopeManager = context.sourceCode.scopeManager;
 			if (scopeManager.globalScope?.set.has(name)) {
 				return true;
 			}
@@ -252,7 +251,7 @@ export default createRule('prefer-destructured-store-props', {
 							store,
 							property: !node.computed
 								? node.property.name
-								: getSourceCode(context).getText(node.property).replace(/\s+/g, ' ')
+								: context.sourceCode.getText(node.property).replace(/\s+/g, ' ')
 						},
 
 						suggest

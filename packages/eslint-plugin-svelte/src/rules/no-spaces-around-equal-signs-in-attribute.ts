@@ -17,7 +17,7 @@ export default createRule('no-spaces-around-equal-signs-in-attribute', {
 		type: 'layout'
 	},
 	create(ctx) {
-		const source = ctx.getSourceCode();
+		const source = ctx.sourceCode;
 
 		/**
 		 * Returns source text between attribute key and value, and range of that source

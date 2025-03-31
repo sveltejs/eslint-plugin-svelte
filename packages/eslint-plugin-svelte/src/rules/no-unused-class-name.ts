@@ -3,7 +3,6 @@ import type { AST } from 'svelte-eslint-parser';
 import type { AnyNode } from 'postcss';
 import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 import type { SourceCode } from '../types.js';
 
 export default createRule('no-unused-class-name', {
@@ -31,7 +30,7 @@ export default createRule('no-unused-class-name', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}

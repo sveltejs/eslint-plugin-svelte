@@ -1,7 +1,6 @@
 import type { RuleContext, ASTNode } from '../../types.js';
 import type * as TS from 'typescript';
 import { loadModule } from '../load-module.js';
-import { getSourceCode } from '../compat.js';
 export type TypeScript = typeof TS;
 export type { TS };
 
@@ -23,7 +22,7 @@ export function getTypeScriptTools(context: RuleContext): TSTools | null {
 	if (!ts) {
 		return null;
 	}
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const { program, esTreeNodeToTSNodeMap, tsNodeToESTreeNodeMap } = sourceCode.parserServices;
 	if (!program || !esTreeNodeToTSNodeMap || !tsNodeToESTreeNodeMap) {
 		return null;

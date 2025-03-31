@@ -2,7 +2,6 @@ import { findVariableForReplacement } from '../utils/ast-utils.js';
 import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
 import { extractStoreReferences } from './reference-helpers/svelte-store.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('require-store-callbacks-use-set-param', {
 	meta: {
@@ -53,7 +52,7 @@ export default createRule('require-store-callbacks-use-set-param', {
 									}
 								});
 							} else {
-								const token = getSourceCode(context).getTokenBefore(fn.body, {
+								const token = context.sourceCode.getTokenBefore(fn.body, {
 									filter: (token) => token.type === 'Punctuator' && token.value === '(',
 									includeComments: false
 								});
