@@ -37,6 +37,10 @@ export default createRule('no-unused-props', {
 							type: 'string'
 						},
 						default: []
+					},
+					allowUnusedNestedProperties: {
+						type: 'boolean',
+						default: false
 					}
 				},
 				additionalProperties: false
@@ -342,7 +346,10 @@ export default createRule('no-unused-props', {
 			return usedProps.size === 0;
 		}
 
-		function normalizeUsedPaths(paths: PropertyPathArray[]): PropertyPathArray[] {
+		function normalizeUsedPaths(
+			paths: PropertyPathArray[],
+			allowUnusedNestedProperties: boolean
+		): PropertyPathArray[] {
 			const normalized: PropertyPathArray[] = [];
 			for (const path of paths.sort((a, b) => a.length - b.length)) {
 				if (path.length === 0) continue;
@@ -351,7 +358,10 @@ export default createRule('no-unused-props', {
 				}
 				normalized.push(path);
 			}
-			return normalized;
+			return normalized.map((path) => {
+				if (allowUnusedNestedProperties) return [path[0]];
+				return path;
+			});
 		}
 
 		return {
@@ -396,7 +406,10 @@ export default createRule('no-unused-props', {
 
 				checkUnusedProperties({
 					propsType,
-					usedPropertyPaths: normalizeUsedPaths(usedPropertyPathsArray).map((pathArray) => {
+					usedPropertyPaths: normalizeUsedPaths(
+						usedPropertyPathsArray,
+						options.allowUnusedNestedProperties
+					).map((pathArray) => {
 						return pathArray.join('.');
 					}),
 					declaredPropertyNames,
