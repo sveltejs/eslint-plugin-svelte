@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-Use `context.sourceCode` directly rather than a compatibility helper.
+chore: use `context.sourceCode` directly rather than a compatibility helper.
