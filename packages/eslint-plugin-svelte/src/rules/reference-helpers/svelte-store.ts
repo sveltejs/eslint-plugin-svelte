@@ -5,7 +5,6 @@ import type { RuleContext } from '../../types.js';
 import type { TS, TSTools } from '../../utils/ts-utils/index.js';
 import { getTypeScriptTools } from '../../utils/ts-utils/index.js';
 import { findVariable, getParent } from '../../utils/ast-utils.js';
-import { getSourceCode } from '../../utils/compat.js';
 
 type StoreName = 'writable' | 'readable' | 'derived';
 
@@ -14,7 +13,7 @@ export function* extractStoreReferences(
 	context: RuleContext,
 	storeNames: StoreName[] = ['writable', 'readable', 'derived']
 ): Generator<{ node: TSESTree.CallExpression; name: string }, void> {
-	const referenceTracker = new ReferenceTracker(getSourceCode(context).scopeManager.globalScope!);
+	const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 	for (const { node, path } of referenceTracker.iterateEsmReferences({
 		'svelte/store': {
 			[ReferenceTracker.ESM]: true,

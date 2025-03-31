@@ -1,6 +1,5 @@
 import { createRule } from '../utils/index.js';
 import { getAttributeValueQuoteAndRange } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('shorthand-attribute', {
 	meta: {
@@ -27,7 +26,7 @@ export default createRule('shorthand-attribute', {
 		type: 'layout'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		const always: boolean = context.options[0]?.prefer !== 'never';
 
 		return always

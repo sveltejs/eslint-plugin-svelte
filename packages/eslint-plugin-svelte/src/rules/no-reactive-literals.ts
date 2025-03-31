@@ -1,6 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-reactive-literals', {
 	meta: {
@@ -46,7 +45,7 @@ export default createRule('no-reactive-literals', {
 					return false;
 				}
 
-				const source = getSourceCode(context);
+				const source = context.sourceCode;
 
 				return context.report({
 					node: parent,

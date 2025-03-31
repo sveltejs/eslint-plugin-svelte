@@ -4,7 +4,6 @@ import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import * as eslintUtils from '@eslint-community/eslint-utils';
 import { voidElements, svgElements, mathmlElements } from './element-types.js';
-import { getSourceCode } from './compat.js';
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -270,7 +269,7 @@ export function* iterateIdentifiers(
  * Gets the scope for the current node
  */
 export function getScope(context: RuleContext, currentNode: TSESTree.Node): Scope {
-	const scopeManager = getSourceCode(context).scopeManager;
+	const scopeManager = context.sourceCode.scopeManager;
 
 	let node: TSESTree.Node | null = currentNode;
 	for (; node; node = node.parent || null) {
@@ -683,7 +682,7 @@ function getSimpleNameFromNode(
 		throw new Error('Rule context is required');
 	}
 
-	return getSourceCode(context).getText(node);
+	return context.sourceCode.getText(node);
 }
 
 /**

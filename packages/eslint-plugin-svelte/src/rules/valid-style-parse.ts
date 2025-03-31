@@ -1,5 +1,5 @@
 import { createRule } from '../utils/index.js';
-import { getCwd, getSourceCode } from '../utils/compat.js';
+import { getCwd } from '../utils/compat.js';
 
 export default createRule('valid-style-parse', {
 	meta: {
@@ -13,7 +13,7 @@ export default createRule('valid-style-parse', {
 		type: 'problem'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}

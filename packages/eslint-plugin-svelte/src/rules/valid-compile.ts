@@ -1,7 +1,6 @@
 import { createRule } from '../utils/index.js';
 import type { SvelteCompileWarnings, Warning } from '../shared/svelte-compile-warns/index.js';
 import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns/index.js';
-import { getSourceCode } from '../utils/compat.js';
 import type { Position } from 'svelte-eslint-parser/lib/ast/common.js';
 
 const ignores: string[] = ['missing-declaration'] as const;
@@ -45,7 +44,7 @@ export default createRule('valid-compile', {
 		type: 'problem'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}

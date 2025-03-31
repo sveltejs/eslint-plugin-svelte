@@ -1,6 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('no-trailing-spaces', {
 	meta: {
@@ -33,7 +32,7 @@ export default createRule('no-trailing-spaces', {
 		const skipBlankLines = options?.skipBlankLines || false;
 		const ignoreComments = options?.ignoreComments || false;
 
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 
 		const ignoreLineNumbers = new Set<number>();
 		if (ignoreComments) {

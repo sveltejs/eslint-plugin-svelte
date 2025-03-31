@@ -4,7 +4,6 @@ import Parser from './template-safe-parser.js';
 import type { Root, ChildNode, AnyNode } from 'postcss';
 import { Input } from 'postcss';
 import type { TSESTree } from '@typescript-eslint/types';
-import { getSourceCode } from '../compat.js';
 
 /** Parse for CSS */
 function safeParseCss(css: string): Root | null {
@@ -35,7 +34,7 @@ export function parseStyleAttributeValue(
 		return null;
 	}
 	const startOffset = node.value[0].range[0];
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const cssCode = node.value.map((value) => sourceCode.getText(value)).join('');
 	const root = safeParseCss(cssCode);
 	if (!root) {
@@ -213,7 +212,7 @@ function convertRoot<E extends SvelteStyleInterpolation>(
 			if (inlineStyles.has(node)) {
 				return inlineStyles.get(node) || null;
 			}
-			const sourceCode = getSourceCode(ctx.context);
+			const sourceCode = ctx.context.sourceCode;
 			inlineStyles.set(node, null);
 
 			let converted: SvelteStyleRoot<TSESTree.Expression> | null;
@@ -357,7 +356,7 @@ function convertRange(node: AnyNode, ctx: Ctx): AST.Range {
 /** convert range */
 function toLoc(range: AST.Range, ctx: Ctx): AST.SourceLocation {
 	return {
-		start: getSourceCode(ctx.context).getLocFromIndex(range[0]),
-		end: getSourceCode(ctx.context).getLocFromIndex(range[1])
+		start: ctx.context.sourceCode.getLocFromIndex(range[0]),
+		end: ctx.context.sourceCode.getLocFromIndex(range[1])
 	};
 }
