@@ -23,9 +23,7 @@ export default createRule('no-goto-without-base', {
 	create(context) {
 		return {
 			Program() {
-				const referenceTracker = new ReferenceTracker(
-					context.sourceCode.scopeManager.globalScope!
-				);
+				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				const basePathNames = extractBasePathReferences(referenceTracker, context);
 				for (const gotoCall of extractGotoReferences(referenceTracker)) {
 					if (gotoCall.arguments.length < 1) {

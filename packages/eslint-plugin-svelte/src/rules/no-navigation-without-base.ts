@@ -47,9 +47,7 @@ export default createRule('no-navigation-without-base', {
 		let basePathNames: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
-				const referenceTracker = new ReferenceTracker(
-					context.sourceCode.scopeManager.globalScope!
-				);
+				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				basePathNames = extractBasePathReferences(referenceTracker, context);
 				const {
 					goto: gotoCalls,

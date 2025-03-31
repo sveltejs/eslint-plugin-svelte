@@ -79,9 +79,7 @@ export default createRule('no-unnecessary-state-wrap', {
 		});
 
 		function isReassigned(identifier: TSESTree.Identifier): boolean {
-			const variable = context.sourceCode.scopeManager.getDeclaredVariables(
-				identifier.parent
-			)[0];
+			const variable = context.sourceCode.scopeManager.getDeclaredVariables(identifier.parent)[0];
 			return variable.references.some((ref) => {
 				return ref.isWrite() && ref.identifier !== identifier;
 			});
