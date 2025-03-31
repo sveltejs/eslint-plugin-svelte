@@ -3,7 +3,6 @@ import type babelCore from '@babel/core';
 import type { RuleContext } from '../../../types.js';
 import type { TransformResult } from './types.js';
 import { loadModule } from '../../../utils/load-module.js';
-import { getCwd } from '../../../utils/compat.js';
 
 type BabelCore = typeof babelCore;
 /**
@@ -33,7 +32,7 @@ export function transform(
 			minified: false,
 			ast: false,
 			code: true,
-			cwd: getCwd(context)
+			cwd: context.cwd ?? process.cwd()
 		});
 		if (!output) {
 			return null;
