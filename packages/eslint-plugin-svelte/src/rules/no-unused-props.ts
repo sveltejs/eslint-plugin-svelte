@@ -6,6 +6,7 @@ import { findVariable } from '../utils/ast-utils.js';
 import { toRegExp } from '../utils/regexp.js';
 
 type PropertyPathArray = string[];
+type DeclaredPropertyNames = Set<{ originalName: string; aliasName: string }>;
 
 let isRemovedWarningShown = false;
 
@@ -182,16 +183,27 @@ export default createRule('no-unused-props', {
 			return sourceFile.fileName.includes('node_modules/typescript/lib/');
 		}
 
-		function getUsedPropertyNamesFromPattern(pattern: TSESTree.ObjectPattern): Set<string> {
-			const usedProps = new Set<string>();
+		function getUsedPropertyNamesFromPattern(
+			pattern: TSESTree.ObjectPattern
+		): DeclaredPropertyNames {
+			const usedProps: DeclaredPropertyNames = new Set();
 			for (const prop of pattern.properties) {
-				if (prop.type === 'Property' && prop.key.type === 'Identifier') {
-					usedProps.add(prop.key.name);
+				if (prop.type === 'Property') {
+					if (prop.key.type === 'Identifier') {
+						usedProps.add({ originalName: prop.key.name, aliasName: prop.key.name });
+					} else if (
+						prop.key.type === 'Literal' &&
+						typeof prop.key.value === 'string' &&
+						prop.value.type === 'Identifier'
+					) {
+						usedProps.add({ originalName: prop.key.value, aliasName: prop.value.name });
+					}
 				} else if (prop.type === 'RestElement') {
 					// If there's a rest element, all properties are potentially used
 					return new Set();
 				}
 			}
+
 			return usedProps;
 		}
 
@@ -229,7 +241,7 @@ export default createRule('no-unused-props', {
 		}: {
 			propsType: ts.Type;
 			usedPropertyPaths: string[];
-			declaredPropertyNames: Set<string>;
+			declaredPropertyNames: DeclaredPropertyNames;
 			reportNode: TSESTree.Node;
 			parentPath: string[];
 			checkedPropsTypes: Set<string>;
@@ -287,7 +299,9 @@ export default createRule('no-unused-props', {
 					continue;
 				}
 
-				const isUsedInProps = declaredPropertyNames.has(propName);
+				const isUsedInProps = Array.from(declaredPropertyNames).some((p) => {
+					return p.originalName === propName;
+				});
 
 				if (!isUsedInPath && !isUsedInProps) {
 					reportedPropertyPaths.add(currentPathStr);
@@ -338,8 +352,8 @@ export default createRule('no-unused-props', {
 		 * Returns true if the destructuring pattern includes a rest element,
 		 * which means all remaining properties are potentially used.
 		 */
-		function hasRestElement(usedProps: Set<string>): boolean {
-			return usedProps.size === 0;
+		function hasRestElement(declaredPropertyNames: DeclaredPropertyNames): boolean {
+			return declaredPropertyNames.size === 0;
 		}
 
 		function normalizeUsedPaths(paths: PropertyPathArray[]): PropertyPathArray[] {
@@ -370,7 +384,7 @@ export default createRule('no-unused-props', {
 
 				const propsType = typeChecker.getTypeFromTypeNode(tsNode.type);
 				let usedPropertyPathsArray: PropertyPathArray[] = [];
-				let declaredPropertyNames = new Set<string>();
+				let declaredPropertyNames: DeclaredPropertyNames = new Set();
 
 				if (node.id.type === 'ObjectPattern') {
 					declaredPropertyNames = getUsedPropertyNamesFromPattern(node.id);
