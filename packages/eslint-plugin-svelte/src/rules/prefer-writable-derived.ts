@@ -2,6 +2,11 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { getScope } from 'src/utils/ast-utils.js';
 import { getSourceCode } from 'src/utils/compat.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
+import semver from 'semver';
+
+// Writable derived were introduced in Svelte 5.25.0
+const shouldRun = semver.satisfies(SVELTE_VERSION, '>=5.25.0');
 
 function isEffectOrEffectPre(node: TSESTree.CallExpression) {
 	if (node.callee.type === 'Identifier') {
@@ -35,6 +40,9 @@ export default createRule('prefer-writable-derived', {
 		fixable: 'code'
 	},
 	create(context) {
+		if (!shouldRun) {
+			return {};
+		}
 		return {
 			CallExpression: (node: TSESTree.CallExpression) => {
 				if (!isEffectOrEffectPre(node)) {
