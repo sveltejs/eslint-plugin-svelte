@@ -1,0 +1,4 @@
+- message: "'test' is an unused Props property."
+  line: 7
+  column: 8
+  suggestions: null
