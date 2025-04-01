@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.5.0
+
+### Minor Changes
+
+- [#1171](https://github.com/sveltejs/eslint-plugin-svelte/pull/1171) [`842757f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/842757fe45dd2433e801acdce5f66127e2216d7e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat(no-unused-props): add `allowUnusedNestedProperties` option
+
+### Patch Changes
+
+- [#1178](https://github.com/sveltejs/eslint-plugin-svelte/pull/1178) [`7892f4c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7892f4c56a569ebdf80fa791d39c02754bfebe25) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-unused-props): handle alias props name properly
+
 ## 3.4.1
 
 ### Patch Changes
