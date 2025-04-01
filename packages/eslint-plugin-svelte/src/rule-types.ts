@@ -537,6 +537,7 @@ type SvelteNoUnusedProps = []|[{
   checkImportedTypes?: boolean
   ignoreTypePatterns?: string[]
   ignorePropertyPatterns?: string[]
+  allowUnusedNestedProperties?: boolean
 }]
 // ----- svelte/no-useless-mustaches -----
 type SvelteNoUselessMustaches = []|[{
