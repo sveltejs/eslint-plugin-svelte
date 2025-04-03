@@ -58,7 +58,6 @@
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.4.1",
     "@jridgewell/sourcemap-codec": "^1.5.0",
-    "eslint-compat-utils": "^0.6.4",
     "esutils": "^2.0.3",
     "known-css-properties": "^0.35.0",
     "postcss": "^8.4.49",
@@ -85,6 +84,7 @@
     "acorn": "^8.14.0",
     "assert": "^2.1.0",
     "esbuild": "^0.25.0",
+    "eslint-compat-utils": "^0.6.4",
     "eslint-scope": "^8.2.0",
     "eslint-typegen": "^2.0.0",
     "eslint-visitor-keys": "^4.2.0",
