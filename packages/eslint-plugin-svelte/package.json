@@ -84,7 +84,6 @@
     "acorn": "^8.14.0",
     "assert": "^2.1.0",
     "esbuild": "^0.25.0",
-    "eslint-compat-utils": "^0.6.4",
     "eslint-scope": "^8.2.0",
     "eslint-typegen": "^2.0.0",
     "eslint-visitor-keys": "^4.2.0",
