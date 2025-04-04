@@ -1,3 +1,9 @@
-import { getRuleTester } from 'eslint-compat-utils/rule-tester';
+import * as eslint from 'eslint';
+import * as experimental from 'eslint/use-at-your-own-risk';
 
-export const RuleTester = getRuleTester();
+type MaybeHasRuleTester = {
+	FlatRuleTester?: typeof eslint.RuleTester;
+};
+
+export const RuleTester =
+	(experimental as never as MaybeHasRuleTester).FlatRuleTester ?? eslint.RuleTester;
