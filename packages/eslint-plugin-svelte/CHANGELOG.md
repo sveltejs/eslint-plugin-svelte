@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [#1188](https://github.com/sveltejs/eslint-plugin-svelte/pull/1188) [`9126f1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9126f1f017ff990704498570d77fd2d3ff528efe) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Removed eslint-compat-utils from dependencies
+- [#1188](https://github.com/sveltejs/eslint-plugin-svelte/pull/1188) [`9126f1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9126f1f017ff990704498570d77fd2d3ff528efe) Thanks [@43081j](https://github.com/43081j)! - Removed eslint-compat-utils from dependencies
 
 ## 3.5.0
 
