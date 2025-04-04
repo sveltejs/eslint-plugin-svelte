@@ -62,7 +62,7 @@ You cannot enforce this style by using [prettier-plugin-svelte]. That is, this r
 
 ## :books: Further Reading
 
-- [Svelte - Tutorial > 13. Classes / The class directive](https://svelte.dev/tutorial/classes)
+- [Svelte - Tutorial > Basic Svelte / Classes and styles / The class atribute](https://svelte.dev/tutorial/svelte/classes)
 
 ## :rocket: Version
 
