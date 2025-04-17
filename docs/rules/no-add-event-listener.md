@@ -1,0 +1,31 @@
+---
+pageClass: 'rule-details'
+sidebarDepth: 0
+title: 'svelte/no-add-event-listener'
+description: 'Warns against the use of `addEventListener`'
+---
+
+# svelte/no-add-event-listener
+
+> Warns against the use of `addEventListener`
+
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
+
+## :book: Rule Details
+
+This rule reports usages of `addEventListener`:
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/no-add-event-listener: "error" */
+  addEventListener(window, 'resize', handler);
+</script>
+```
+
+## :mag: Implementation
+
+- [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-add-event-listener.ts)
+- [Test source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/tests/src/rules/no-add-event-listener.ts)
