@@ -100,6 +100,11 @@ export interface RuleOptions {
    */
   'svelte/mustache-spacing'?: Linter.RuleEntry<SvelteMustacheSpacing>
   /**
+   * Warns against the use of `addEventListener`
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener/
+   */
+  'svelte/no-add-event-listener'?: Linter.RuleEntry<[]>
+  /**
    * disallow the use of `{@debug}`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/
    */

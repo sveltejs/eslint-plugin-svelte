@@ -19,6 +19,7 @@ import indent from '../rules/indent.js';
 import infiniteReactiveLoop from '../rules/infinite-reactive-loop.js';
 import maxAttributesPerLine from '../rules/max-attributes-per-line.js';
 import mustacheSpacing from '../rules/mustache-spacing.js';
+import noAddEventListener from '../rules/no-add-event-listener.js';
 import noAtDebugTags from '../rules/no-at-debug-tags.js';
 import noAtHtmlTags from '../rules/no-at-html-tags.js';
 import noDomManipulating from '../rules/no-dom-manipulating.js';
@@ -96,6 +97,7 @@ export const rules = [
 	infiniteReactiveLoop,
 	maxAttributesPerLine,
 	mustacheSpacing,
+	noAddEventListener,
 	noAtDebugTags,
 	noAtHtmlTags,
 	noDomManipulating,
