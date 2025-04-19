@@ -307,6 +307,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-style-directive'?: Linter.RuleEntry<[]>
   /**
+   * Prefer using writable $derived instead of $state and $effect
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/
+   */
+  'svelte/prefer-writable-derived'?: Linter.RuleEntry<[]>
+  /**
    * require keyed `{#each}` block
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/
    */
