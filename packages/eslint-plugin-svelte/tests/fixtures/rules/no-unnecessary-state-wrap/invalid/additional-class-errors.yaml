@@ -1,8 +1,8 @@
-- message: CustomReactiveClass1 is already reactive, $state wrapping is unnecessary.
+- message: CustomReactiveClass1 is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 5
   column: 25
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -15,11 +15,11 @@
         	// Regular state usage is still valid
         	const regularState = $state(42);
         </script>
-- message: CustomReactiveClass2 is already reactive, $state wrapping is unnecessary.
+- message: CustomReactiveClass2 is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 6
   column: 25
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
