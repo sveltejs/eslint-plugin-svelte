@@ -30,7 +30,7 @@ export default createRule('no-add-event-listener', {
 				const { callee, arguments: args } = node;
 				let target: string | null = null;
 
-				if (args.length !== 2) {
+				if (args.length < 2 || args.length > 3) {
 					return;
 				}
 

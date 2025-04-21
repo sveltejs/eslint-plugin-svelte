@@ -26,6 +26,9 @@
 	window.addEventListener    ('message', handler);
 	// with a comment
 	window.addEventListener/* foo */('message', handler);
+
+	// with options
+	window.addEventListener('message', handler, { once: true });
 </script>
 
 <button onclick={onClick}>Hello</button>

@@ -1,0 +1,17 @@
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 6
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script lang="ts">
+        	const handler = (ev: Event) => {
+        		console.log(ev);
+        	};
+
+        	on(window as any, 'message', handler);
+        	(window.addEventListener as any)('message', handler);
+        </script>
+
+        <div>Hello</div>

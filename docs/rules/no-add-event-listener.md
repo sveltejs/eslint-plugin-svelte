@@ -19,9 +19,20 @@ This rule reports usages of `addEventListener`:
 <!--eslint-skip-->
 
 ```svelte
+<!-- ✓ GOOD -->
 <script>
   /* eslint svelte/no-add-event-listener: "error" */
-  addEventListener(window, 'resize', handler);
+  on(window, 'resize', handler);
+</script>
+```
+
+<!--eslint-skip-->
+
+```svelte
+<!-- ✗ BAD -->
+<script>
+  /* eslint svelte/no-add-event-listener: "error" */
+  window.addEventListener('resize', handler);
 </script>
 ```
 
