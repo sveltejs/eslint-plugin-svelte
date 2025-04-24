@@ -14,7 +14,7 @@ description: 'Warns against the use of `addEventListener`'
 
 ## :book: Rule Details
 
-This rule reports usages of `addEventListener`:
+Svelte relies on event delegation for performance and predictable handler order. Calling `addEventListener` inside a component skips this mechanism. This rule reports any call to `addEventListener` suggests converting to the `on()` helper from `svelte/events`.
 
 <!--eslint-skip-->
 
