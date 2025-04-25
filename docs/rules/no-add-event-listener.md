@@ -36,6 +36,14 @@ Svelte relies on event delegation for performance and predictable handler order.
 </script>
 ```
 
+## :books: Further reading
+
+- [svelte - event delegation]
+- [svelte/events `on` documentation]
+
+[svelte - event delegation]: https://svelte.dev/docs/svelte/basic-markup#Events-Event-delegation
+[svelte/events `on` documentation]: https://svelte.dev/docs/svelte/svelte-events#on
+
 ## :mag: Implementation
 
 - [Rule source](https://github.com/sveltejs/eslint-plugin-svelte/blob/main/packages/eslint-plugin-svelte/src/rules/no-add-event-listener.ts)
