@@ -8,8 +8,7 @@ export default createRule('no-add-event-listener', {
 		docs: {
 			description: 'Warns against the use of `addEventListener`',
 			category: 'Best Practices',
-			recommended: false,
-			default: 'warn'
+			recommended: false
 		},
 		hasSuggestions: true,
 		schema: [],
