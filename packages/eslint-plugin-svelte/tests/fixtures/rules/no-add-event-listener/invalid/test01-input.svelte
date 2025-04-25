@@ -29,6 +29,9 @@
 
 	// with options
 	window.addEventListener('message', handler, { once: true });
+
+	// using spread
+	window.addEventListener(...params);
 </script>
 
 <button onclick={onClick}>Hello</button>

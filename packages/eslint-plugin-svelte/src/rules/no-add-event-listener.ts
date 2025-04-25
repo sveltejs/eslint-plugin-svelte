@@ -29,10 +29,6 @@ export default createRule('no-add-event-listener', {
 				const { callee, arguments: args } = node;
 				let target: string | null = null;
 
-				if (args.length < 2 || args.length > 3) {
-					return;
-				}
-
 				if (
 					callee.type === 'MemberExpression' &&
 					callee.property.type === 'Identifier' &&
