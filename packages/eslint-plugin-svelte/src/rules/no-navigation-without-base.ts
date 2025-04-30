@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
+import { extractExpressionPrefixVariable } from '../utils/expression-affixes.js';
 import type { RuleContext } from '../types.js';
 import type { SvelteLiteral } from 'svelte-eslint-parser/lib/ast';
 
@@ -221,87 +222,8 @@ function expressionStartsWithBase(
 	url: TSESTree.Expression,
 	basePathNames: Set<TSESTree.Identifier>
 ): boolean {
-	switch (url.type) {
-		case 'BinaryExpression':
-			return binaryExpressionStartsWithBase(context, url, basePathNames);
-		case 'Identifier':
-			return variableStartsWithBase(context, url, basePathNames);
-		case 'MemberExpression':
-			return memberExpressionStartsWithBase(url, basePathNames);
-		case 'TemplateLiteral':
-			return templateLiteralStartsWithBase(context, url, basePathNames);
-		default:
-			return false;
-	}
-}
-
-function binaryExpressionStartsWithBase(
-	context: RuleContext,
-	url: TSESTree.BinaryExpression,
-	basePathNames: Set<TSESTree.Identifier>
-): boolean {
-	return (
-		url.left.type !== 'PrivateIdentifier' &&
-		expressionStartsWithBase(context, url.left, basePathNames)
-	);
-}
-
-function memberExpressionStartsWithBase(
-	url: TSESTree.MemberExpression,
-	basePathNames: Set<TSESTree.Identifier>
-): boolean {
-	return url.property.type === 'Identifier' && basePathNames.has(url.property);
-}
-
-function variableStartsWithBase(
-	context: RuleContext,
-	url: TSESTree.Identifier,
-	basePathNames: Set<TSESTree.Identifier>
-): boolean {
-	if (basePathNames.has(url)) {
-		return true;
-	}
-	const variable = findVariable(context, url);
-	if (
-		variable === null ||
-		variable.identifiers.length !== 1 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionStartsWithBase(context, variable.identifiers[0].parent.init, basePathNames);
-}
-
-function templateLiteralStartsWithBase(
-	context: RuleContext,
-	url: TSESTree.TemplateLiteral,
-	basePathNames: Set<TSESTree.Identifier>
-): boolean {
-	const startingIdentifier = extractLiteralStartingExpression(url);
-	return (
-		startingIdentifier !== undefined &&
-		expressionStartsWithBase(context, startingIdentifier, basePathNames)
-	);
-}
-
-function extractLiteralStartingExpression(
-	templateLiteral: TSESTree.TemplateLiteral
-): TSESTree.Expression | undefined {
-	const literalParts = [...templateLiteral.expressions, ...templateLiteral.quasis].sort((a, b) =>
-		a.range[0] < b.range[0] ? -1 : 1
-	);
-	for (const part of literalParts) {
-		if (part.type === 'TemplateElement' && part.value.raw === '') {
-			// Skip empty quasi in the begining
-			continue;
-		}
-		if (part.type !== 'TemplateElement') {
-			return part;
-		}
-		return undefined;
-	}
-	return undefined;
+	const prefixVariable = extractExpressionPrefixVariable(context, url);
+	return prefixVariable !== null && basePathNames.has(prefixVariable);
 }
 
 function expressionIsEmpty(url: TSESTree.Expression): boolean {

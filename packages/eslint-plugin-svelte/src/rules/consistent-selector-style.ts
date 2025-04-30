@@ -6,8 +6,20 @@ import type {
 	Node as SelectorNode,
 	Tag as SelectorTag
 } from 'postcss-selector-parser';
+import type { SvelteHTMLElement } from 'svelte-eslint-parser/lib/ast';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
+import {
+	extractExpressionPrefixLiteral,
+	extractExpressionSuffixLiteral
+} from '../utils/expression-affixes.js';
 import { createRule } from '../utils/index.js';
+
+interface Selections {
+	exact: Map<string, AST.SvelteHTMLElement[]>;
+	// [prefix, suffix]
+	affixes: Map<[string | null, string | null], AST.SvelteHTMLElement[]>;
+	universalSelector: boolean;
+}
 
 export default createRule('consistent-selector-style', {
 	meta: {
@@ -62,9 +74,24 @@ export default createRule('consistent-selector-style', {
 		const style = context.options[0]?.style ?? ['type', 'id', 'class'];
 
 		const whitelistedClasses: string[] = [];
-		const classSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
-		const idSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
-		const typeSelections: Map<string, AST.SvelteHTMLElement[]> = new Map();
+
+		const selections: {
+			class: Selections;
+			id: Selections;
+			type: Map<string, AST.SvelteHTMLElement[]>;
+		} = {
+			class: {
+				exact: new Map(),
+				affixes: new Map(),
+				universalSelector: false
+			},
+			id: {
+				exact: new Map(),
+				affixes: new Map(),
+				universalSelector: false
+			},
+			type: new Map()
+		};
 
 		/**
 		 * Checks selectors in a given PostCSS node
@@ -109,10 +136,10 @@ export default createRule('consistent-selector-style', {
 		 * Checks a class selector
 		 */
 		function checkClassSelector(node: SelectorClass): void {
-			if (whitelistedClasses.includes(node.value)) {
+			if (selections.class.universalSelector || whitelistedClasses.includes(node.value)) {
 				return;
 			}
-			const selection = classSelections.get(node.value) ?? [];
+			const selection = matchSelection(selections.class, node.value);
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					return;
@@ -124,7 +151,7 @@ export default createRule('consistent-selector-style', {
 					});
 					return;
 				}
-				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+				if (styleValue === 'type' && canUseTypeSelector(selection, selections.type)) {
 					context.report({
 						messageId: 'classShouldBeType',
 						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
@@ -138,7 +165,10 @@ export default createRule('consistent-selector-style', {
 		 * Checks an ID selector
 		 */
 		function checkIdSelector(node: SelectorIdentifier): void {
-			const selection = idSelections.get(node.value) ?? [];
+			if (selections.id.universalSelector) {
+				return;
+			}
+			const selection = matchSelection(selections.id, node.value);
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					context.report({
@@ -150,7 +180,7 @@ export default createRule('consistent-selector-style', {
 				if (styleValue === 'id') {
 					return;
 				}
-				if (styleValue === 'type' && canUseTypeSelector(selection, typeSelections)) {
+				if (styleValue === 'type' && canUseTypeSelector(selection, selections.type)) {
 					context.report({
 						messageId: 'idShouldBeType',
 						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
@@ -164,7 +194,7 @@ export default createRule('consistent-selector-style', {
 		 * Checks a type selector
 		 */
 		function checkTypeSelector(node: SelectorTag): void {
-			const selection = typeSelections.get(node.value) ?? [];
+			const selection = selections.type.get(node.value) ?? [];
 			for (const styleValue of style) {
 				if (styleValue === 'class') {
 					context.report({
@@ -191,21 +221,39 @@ export default createRule('consistent-selector-style', {
 				if (node.kind !== 'html') {
 					return;
 				}
-				addToArrayMap(typeSelections, node.name.name, node);
-				const classes = node.startTag.attributes.flatMap(findClassesInAttribute);
-				for (const className of classes) {
-					addToArrayMap(classSelections, className, node);
-				}
+				addToArrayMap(selections.type, node.name.name, node);
 				for (const attribute of node.startTag.attributes) {
 					if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
 						whitelistedClasses.push(attribute.key.name.name);
 					}
-					if (attribute.type !== 'SvelteAttribute' || attribute.key.name !== 'id') {
+					for (const className of findClassesInAttribute(attribute)) {
+						addToArrayMap(selections.class.exact, className, node);
+					}
+					if (attribute.type !== 'SvelteAttribute') {
 						continue;
 					}
 					for (const value of attribute.value) {
-						if (value.type === 'SvelteLiteral') {
-							addToArrayMap(idSelections, value.value, node);
+						if (attribute.key.name === 'class' && value.type === 'SvelteMustacheTag') {
+							const prefix = extractExpressionPrefixLiteral(context, value.expression);
+							const suffix = extractExpressionSuffixLiteral(context, value.expression);
+							if (prefix === null && suffix === null) {
+								selections.class.universalSelector = true;
+							} else {
+								addToArrayMap(selections.class.affixes, [prefix, suffix], node);
+							}
+						}
+						if (attribute.key.name === 'id') {
+							if (value.type === 'SvelteLiteral') {
+								addToArrayMap(selections.id.exact, value.value, node);
+							} else if (value.type === 'SvelteMustacheTag') {
+								const prefix = extractExpressionPrefixLiteral(context, value.expression);
+								const suffix = extractExpressionSuffixLiteral(context, value.expression);
+								if (prefix === null && suffix === null) {
+									selections.id.universalSelector = true;
+								} else {
+									addToArrayMap(selections.id.affixes, [prefix, suffix], node);
+								}
+							}
 						}
 					}
 				}
@@ -227,12 +275,25 @@ export default createRule('consistent-selector-style', {
 /**
  * Helper function to add a value to a Map of arrays
  */
-function addToArrayMap(
-	map: Map<string, AST.SvelteHTMLElement[]>,
-	key: string,
+function addToArrayMap<T>(
+	map: Map<T, AST.SvelteHTMLElement[]>,
+	key: T,
 	value: AST.SvelteHTMLElement
 ): void {
 	map.set(key, (map.get(key) ?? []).concat(value));
+}
+
+/**
+ * Finds all nodes in selections that could be matched by key
+ */
+function matchSelection(selections: Selections, key: string): SvelteHTMLElement[] {
+	const selection = selections.exact.get(key) ?? [];
+	selections.affixes.forEach((nodes, [prefix, suffix]) => {
+		if ((prefix === null || key.startsWith(prefix)) && (suffix === null || key.endsWith(suffix))) {
+			selection.push(...nodes);
+		}
+	});
+	return selection;
 }
 
 /**
