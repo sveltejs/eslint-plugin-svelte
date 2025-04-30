@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable } from './ast-utils.js';
 import type { RuleContext } from '../types.js';
-import type { SvelteLiteral } from 'svelte-eslint-parser/lib/ast';
+import type { AST } from 'svelte-eslint-parser';
 
 // Variable prefix extraction
 
@@ -80,7 +80,7 @@ function extractTemplateLiteralPrefixVariable(
 
 export function extractExpressionPrefixLiteral(
 	context: RuleContext,
-	expression: SvelteLiteral | TSESTree.Node
+	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
 	switch (expression.type) {
 		case 'BinaryExpression':
@@ -147,7 +147,7 @@ function extractTemplateLiteralPrefixLiteral(
 
 export function extractExpressionSuffixLiteral(
 	context: RuleContext,
-	expression: SvelteLiteral | TSESTree.Node
+	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
 	switch (expression.type) {
 		case 'BinaryExpression':
