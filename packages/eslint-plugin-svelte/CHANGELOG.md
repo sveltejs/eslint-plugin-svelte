@@ -1,5 +1,53 @@
 # eslint-plugin-svelte
 
+## 3.5.1
+
+### Patch Changes
+
+- [#1188](https://github.com/sveltejs/eslint-plugin-svelte/pull/1188) [`9126f1f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9126f1f017ff990704498570d77fd2d3ff528efe) Thanks [@43081j](https://github.com/43081j)! - Removed eslint-compat-utils from dependencies
+
+## 3.5.0
+
+### Minor Changes
+
+- [#1171](https://github.com/sveltejs/eslint-plugin-svelte/pull/1171) [`842757f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/842757fe45dd2433e801acdce5f66127e2216d7e) Thanks [@baseballyama](https://github.com/baseballyama)! - feat(no-unused-props): add `allowUnusedNestedProperties` option
+
+### Patch Changes
+
+- [#1178](https://github.com/sveltejs/eslint-plugin-svelte/pull/1178) [`7892f4c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7892f4c56a569ebdf80fa791d39c02754bfebe25) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-unused-props): handle alias props name properly
+
+## 3.4.1
+
+### Patch Changes
+
+- [#1173](https://github.com/sveltejs/eslint-plugin-svelte/pull/1173) [`8e53e58`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8e53e58411eba530324a8c223f5a2b00080b0cec) Thanks [@43081j](https://github.com/43081j)! - chore: use `context.sourceCode` directly rather than a compatibility helper.
+
+- [#1177](https://github.com/sveltejs/eslint-plugin-svelte/pull/1177) [`ec22fb4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ec22fb41d6ecc3a49cde882556bc4df1d7b681a5) Thanks [@43081j](https://github.com/43081j)! - test: use ESLint and Linter directly from eslint in tests
+
+- [#1174](https://github.com/sveltejs/eslint-plugin-svelte/pull/1174) [`b696ef3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b696ef350846ceb23f7c1078a4e32f8cb8d33681) Thanks [@43081j](https://github.com/43081j)! - chore: use `context.filename` and `context.physicalFilename` instead of compat functions.
+
+- [#1176](https://github.com/sveltejs/eslint-plugin-svelte/pull/1176) [`bafbf5f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/bafbf5f7fc48602f3ede8ec3a7c829e7c4d6e9a4) Thanks [@43081j](https://github.com/43081j)! - chore: switch to `context.cwd` rather than using a compat helper.
+
+## 3.4.0
+
+### Minor Changes
+
+- [#1165](https://github.com/sveltejs/eslint-plugin-svelte/pull/1165) [`2b7e164`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2b7e1640d29477f07f16e5f5b318be34eae9031c) Thanks [@43081j](https://github.com/43081j)! - Adds a suggestion to the `require-store-callbacks-use-set-param` rule to automatically rename or add function parameters.
+
+- [#1163](https://github.com/sveltejs/eslint-plugin-svelte/pull/1163) [`d9b8604`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d9b8604f1dc1c83797d4e853c5a805ffd49ce58d) Thanks [@43081j](https://github.com/43081j)! - Adds a suggestion to the `derived-has-same-inputs-outputs` rule which renames the outputs.
+
+- [#1164](https://github.com/sveltejs/eslint-plugin-svelte/pull/1164) [`29b1315`](https://github.com/sveltejs/eslint-plugin-svelte/commit/29b13152063f2250d33651b1e99991607a443352) Thanks [@43081j](https://github.com/43081j)! - Added a suggestion for `no-at-debug-tags` rule which removes the tags
+
+### Patch Changes
+
+- [#1167](https://github.com/sveltejs/eslint-plugin-svelte/pull/1167) [`db9202d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/db9202de81463d20b1a17d1a0d94e3fd6fe62023) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to 1.1.1
+
+## 3.3.3
+
+### Patch Changes
+
+- [#1146](https://github.com/sveltejs/eslint-plugin-svelte/pull/1146) [`1233e46`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1233e46413132c1e81dc69981be1533c5e6c6a4d) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-unused-props): resolve false positives on props with default values or $bindable usage
+
 ## 3.3.2
 
 ### Patch Changes

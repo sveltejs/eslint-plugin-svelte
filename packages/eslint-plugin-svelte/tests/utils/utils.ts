@@ -7,7 +7,7 @@ import { applyFixes } from './source-code-fixer.js';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import semver from 'semver';
 import { writeAndFormat } from '../../tools/lib/write.js';
-import { Linter } from './eslint-compat.js';
+import { Linter } from 'eslint';
 import * as svelteParser from 'svelte-eslint-parser';
 import * as typescriptParser from '@typescript-eslint/parser';
 import Module from 'module';
@@ -126,15 +126,19 @@ export function loadTestCases(
 		.map((inputFile) => {
 			const config = getConfig(ruleName, inputFile);
 			const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
-			const outputFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'output.svelte');
+			const outputExt = path.extname(inputFile);
+			const outputFile = inputFile.replace(
+				/(input|\+.+)\.[a-z]+$/u,
+				`output.${outputExt.slice(1)}`
+			);
 
 			if (!fs.existsSync(errorFile)) {
-				writeFixtures(ruleName, inputFile);
+				writeFixtures(ruleName, inputFile, outputFile);
 			} else if (
 				// eslint-disable-next-line no-process-env -- tool
 				process.env.UPDATE_FIXTURES
 			) {
-				writeFixtures(ruleName, inputFile, { force: true });
+				writeFixtures(ruleName, inputFile, outputFile, { force: true });
 			}
 			const errors = fs.readFileSync(errorFile, 'utf8');
 			config.errors = parseYaml(errors);
@@ -151,7 +155,7 @@ export function loadTestCases(
 				try {
 					output = fs.readFileSync(outputFile, 'utf8');
 				} catch (_e) {
-					writeFixtures(ruleName, inputFile);
+					writeFixtures(ruleName, inputFile, outputFile);
 					output = fs.readFileSync(outputFile, 'utf8');
 				}
 				config.output = output === config.code ? null : output;
@@ -213,10 +217,14 @@ function applySuggestion(code: string, suggestion: LinterType.LintSuggestion) {
 	return `${code.slice(0, fix.range[0])}${fix.text}${code.slice(fix.range[1])}`;
 }
 
-function writeFixtures(ruleName: string, inputFile: string, { force }: { force?: boolean } = {}) {
+function writeFixtures(
+	ruleName: string,
+	inputFile: string,
+	outputFile: string,
+	{ force }: { force?: boolean } = {}
+) {
 	const linter = new Linter();
 	const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
-	const outputFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'output.svelte');
 
 	const config = getConfig(ruleName, inputFile);
 

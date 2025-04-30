@@ -1,6 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('first-attribute-linebreak', {
 	meta: {
@@ -30,7 +29,7 @@ export default createRule('first-attribute-linebreak', {
 	create(context) {
 		const multiline: 'below' | 'beside' = context.options[0]?.multiline || 'below';
 		const singleline: 'below' | 'beside' = context.options[0]?.singleline || 'beside';
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 
 		/**
 		 * Report attribute

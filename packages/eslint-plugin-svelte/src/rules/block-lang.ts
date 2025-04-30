@@ -1,7 +1,6 @@
 import { createRule } from '../utils/index.js';
 import { findAttribute, getLangValue } from '../utils/ast-utils.js';
 import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
-import { getSourceCode } from '../utils/compat.js';
 import type { SuggestionReportDescriptor, SourceCode } from '../types.js';
 
 export default createRule('block-lang', {
@@ -59,7 +58,7 @@ export default createRule('block-lang', {
 		hasSuggestions: true
 	},
 	create(context) {
-		if (!getSourceCode(context).parserServices.isSvelte) {
+		if (!context.sourceCode.parserServices.isSvelte) {
 			return {};
 		}
 		const enforceScriptPresent: boolean = context.options[0]?.enforceScriptPresent ?? false;
@@ -91,7 +90,7 @@ export default createRule('block-lang', {
 						message: `The <script> block should be present and its lang attribute should be ${prettyPrintLangs(
 							allowedScriptLangs
 						)}.`,
-						suggest: buildAddLangSuggestions(allowedScriptLangs, 'script', getSourceCode(context))
+						suggest: buildAddLangSuggestions(allowedScriptLangs, 'script', context.sourceCode)
 					});
 				}
 				for (const scriptNode of scriptNodes) {
@@ -106,7 +105,7 @@ export default createRule('block-lang', {
 					}
 				}
 				if (styleNodes.length === 0 && enforceStylePresent) {
-					const sourceCode = getSourceCode(context);
+					const sourceCode = context.sourceCode;
 					context.report({
 						loc: { line: 1, column: 1 },
 						message: `The <style> block should be present and its lang attribute should be ${prettyPrintLangs(

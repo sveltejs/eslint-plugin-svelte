@@ -1,7 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { getSourceCode } from '../utils/compat.js';
 import { findVariable } from '../utils/ast-utils.js';
 import { extractExpressionPrefixVariable } from '../utils/expression-affixes.js';
 import type { RuleContext } from '../types.js';
@@ -49,9 +48,7 @@ export default createRule('no-navigation-without-base', {
 		let basePathNames: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
-				const referenceTracker = new ReferenceTracker(
-					getSourceCode(context).scopeManager.globalScope!
-				);
+				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				basePathNames = extractBasePathReferences(referenceTracker, context);
 				const {
 					goto: gotoCalls,

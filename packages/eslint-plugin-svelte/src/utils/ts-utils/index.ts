@@ -1,7 +1,6 @@
 import type { RuleContext, ASTNode } from '../../types.js';
 import type * as TS from 'typescript';
 import { loadModule } from '../load-module.js';
-import { getSourceCode } from '../compat.js';
 export type TypeScript = typeof TS;
 export type { TS };
 
@@ -23,7 +22,7 @@ export function getTypeScriptTools(context: RuleContext): TSTools | null {
 	if (!ts) {
 		return null;
 	}
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const { program, esTreeNodeToTSNodeMap, tsNodeToESTreeNodeMap } = sourceCode.parserServices;
 	if (!program || !esTreeNodeToTSNodeMap || !tsNodeToESTreeNodeMap) {
 		return null;
@@ -306,4 +305,49 @@ export function getTypeOfPropertyOfType(
 ): TS.Type | undefined {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- getTypeOfPropertyOfType is an internal API of TS.
 	return (checker as any).getTypeOfPropertyOfType(type, name);
+}
+
+/**
+ * Check whether the given symbol is a method type or not.
+ */
+export function isMethodSymbol(type: TS.Symbol, ts: TypeScript): boolean {
+	return (type.getFlags() & ts.SymbolFlags.Method) !== 0;
+}
+
+/**
+ * Check whether the given node is a property signature kind or not.
+ */
+export function isPropertySignatureKind(
+	node: TS.Node,
+	ts: TypeScript
+): node is TS.PropertySignature {
+	return node.kind === ts.SyntaxKind.PropertySignature;
+}
+
+/**
+ * Check whether the given node is a function type kind or not.
+ */
+export function isFunctionTypeKind(node: TS.Node, ts: TypeScript): node is TS.FunctionTypeNode {
+	return node.kind === ts.SyntaxKind.FunctionType;
+}
+
+/**
+ * Check whether the given node is a method signature kind or not.
+ */
+export function isMethodSignatureKind(node: TS.Node, ts: TypeScript): node is TS.MethodSignature {
+	return node.kind === ts.SyntaxKind.MethodSignature;
+}
+
+/**
+ * Check whether the given node is a type reference kind or not.
+ */
+export function isTypeReferenceKind(node: TS.Node, ts: TypeScript): node is TS.TypeReferenceNode {
+	return node.kind === ts.SyntaxKind.TypeReference;
+}
+
+/**
+ * Check whether the given node is an identifier kind or not.
+ */
+export function isIdentifierKind(node: TS.Node, ts: TypeScript): node is TS.Identifier {
+	return node.kind === ts.SyntaxKind.Identifier;
 }

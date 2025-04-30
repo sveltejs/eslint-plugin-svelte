@@ -4,7 +4,6 @@ import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import * as eslintUtils from '@eslint-community/eslint-utils';
 import { voidElements, svgElements, mathmlElements } from './element-types.js';
-import { getSourceCode } from './compat.js';
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -270,7 +269,7 @@ export function* iterateIdentifiers(
  * Gets the scope for the current node
  */
 export function getScope(context: RuleContext, currentNode: TSESTree.Node): Scope {
-	const scopeManager = getSourceCode(context).scopeManager;
+	const scopeManager = context.sourceCode.scopeManager;
 
 	let node: TSESTree.Node | null = currentNode;
 	for (; node; node = node.parent || null) {
@@ -683,5 +682,39 @@ function getSimpleNameFromNode(
 		throw new Error('Rule context is required');
 	}
 
-	return getSourceCode(context).getText(node);
+	return context.sourceCode.getText(node);
+}
+
+/**
+ * Finds the variable for a given name in the specified node's scope.
+ * Also determines if the replacement name is already in use.
+ *
+ * If the `name` is set to null, this assumes you're adding a new variable
+ * and reports if it is already in use.
+ */
+export function findVariableForReplacement(
+	context: RuleContext,
+	node: TSESTree.Node,
+	name: string | null,
+	replacementName: string
+): { hasConflict: boolean; variable: Variable | null } {
+	const scope = getScope(context, node);
+	let variable: Variable | null = null;
+
+	for (const ref of scope.references) {
+		if (ref.identifier.name === replacementName) {
+			return { hasConflict: true, variable: null };
+		}
+	}
+
+	for (const v of scope.variables) {
+		if (v.name === replacementName) {
+			return { hasConflict: true, variable: null };
+		}
+		if (v.name === name) {
+			variable = v;
+		}
+	}
+
+	return { hasConflict: false, variable };
 }

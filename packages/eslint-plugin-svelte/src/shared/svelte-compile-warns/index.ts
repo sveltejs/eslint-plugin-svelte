@@ -18,7 +18,6 @@ import { findAttribute, getLangValue } from '../../utils/ast-utils.js';
 import path from 'path';
 import fs from 'fs';
 import semver from 'semver';
-import { getSourceCode } from '../../utils/compat.js';
 
 type WarningTargetNode =
 	| (AST.SvelteProgram & ASTNodeWithParent)
@@ -83,7 +82,7 @@ export type Warning = (
  * Get svelte compile warnings
  */
 export function getSvelteCompileWarnings(context: RuleContext): SvelteCompileWarnings {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const cache = cacheAll.get(sourceCode.ast);
 	if (cache) {
 		return cache;
@@ -97,7 +96,7 @@ export function getSvelteCompileWarnings(context: RuleContext): SvelteCompileWar
  * Get svelte compile warnings
  */
 function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompileWarnings {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 
 	// Process for styles
 	const styleElementsWithNotCSS = [...extractStyleElementsWithLangOtherThanCSS(context)];
@@ -106,7 +105,7 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	for (const style of styleElementsWithNotCSS) {
 		const transform = STYLE_TRANSFORMS[style.lang];
 		if (transform) {
-			const result = transform(style.node, getSourceCode(context).text, context);
+			const result = transform(style.node, context.sourceCode.text, context);
 			if (result) {
 				transformResults.push(result);
 				continue;
@@ -320,7 +319,7 @@ function* extractStyleElementsWithLangOtherThanCSS(context: RuleContext): Iterab
 	node: AST.SvelteStyleElement;
 	readonly lang: string;
 }> {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const root = sourceCode.ast;
 	for (const node of root.body) {
 		if (node.type === 'SvelteStyleElement') {
@@ -340,7 +339,7 @@ function buildStrippedText(
 	ignoreComments: IgnoreItem[],
 	stripStyleTokens: AST.SvelteText[]
 ) {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const baseText = sourceCode.text;
 
 	const stripTokens = new Set([...ignoreComments.map((item) => item.token), ...stripStyleTokens]);
@@ -370,7 +369,7 @@ function* transformScripts(context: RuleContext, text: string) {
 			? transformWithBabel
 			: null;
 
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	if (transform) {
 		const root = sourceCode.ast;
 		for (const node of root.body) {
@@ -412,7 +411,7 @@ function getWarningsFromCode(
 			generate: false,
 			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0')
 				? { customElement: true }
-				: hasTagOption(getSourceCode(context).ast)
+				: hasTagOption(context.sourceCode.ast)
 					? { customElement: true }
 					: {})
 		});
@@ -451,7 +450,7 @@ function processIgnore(
 			unusedIgnores: ignoreComments
 		};
 	}
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const unusedIgnores = new Set(ignoreComments);
 	const remainingWarning = new Set(warnings);
 
@@ -586,7 +585,7 @@ function processIgnore(
  * Check if using TypeScript.
  */
 function isUseTypeScript(context: RuleContext) {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	if (sourceCode.parserServices.esTreeNodeToTSNodeMap) return true;
 	const root = sourceCode.ast;
 
@@ -609,7 +608,7 @@ function isUseBabel(context: RuleContext) {
 	if (!parser) {
 		return false;
 	}
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 	const root = sourceCode.ast;
 
 	let scriptLang = 'js';

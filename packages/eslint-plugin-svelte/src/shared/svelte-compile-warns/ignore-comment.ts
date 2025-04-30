@@ -1,6 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { RuleContext } from '../../types.js';
-import { getSourceCode } from '../../utils/compat.js';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m;
 
@@ -34,7 +33,7 @@ export type IgnoreItem = {
 
 /** Extract all svelte-ignore comment items */
 export function getSvelteIgnoreItems(context: RuleContext): (IgnoreItem | IgnoreItemWithoutCode)[] {
-	const sourceCode = getSourceCode(context);
+	const sourceCode = context.sourceCode;
 
 	const ignoreComments: (IgnoreItem | IgnoreItemWithoutCode)[] = [];
 	for (const comment of sourceCode.getAllComments()) {

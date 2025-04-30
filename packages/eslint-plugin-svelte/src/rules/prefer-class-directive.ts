@@ -3,7 +3,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { getStringIfConstant, isHTMLElementLike, needParentheses } from '../utils/ast-utils.js';
 import type { Rule } from 'eslint';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('prefer-class-directive', {
 	meta: {
@@ -29,7 +28,7 @@ export default createRule('prefer-class-directive', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		const preferEmpty = context.options[0]?.prefer !== 'always';
 
 		type Expr = {

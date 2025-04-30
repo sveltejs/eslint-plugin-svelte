@@ -163,6 +163,8 @@ Note: Properties of class types are not checked for usage, as they might be used
     "ignoreTypePatterns": [],
     // Patterns to ignore when checking for unused props
     "ignorePropertyPatterns": [],
+    // Whether to allow unused nested properties
+    "allowUnusedNestedProperties": false
   }]
 }
 ```
@@ -170,6 +172,7 @@ Note: Properties of class types are not checked for usage, as they might be used
 - `checkImportedTypes` ... Controls whether to check properties from types defined in external files. Default is `false`, meaning the rule only checks types defined within the component file itself. When set to `true`, the rule will also check properties from imported and extended types.
 - `ignoreTypePatterns` ... Regular expression patterns for type names to exclude from checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to exclude specific imported types (like utility types or third-party types) from being checked.
 - `ignorePropertyPatterns` ... Regular expression patterns for property names to exclude from unused checks. Default is `[]` (no exclusions). Most useful when `checkImportedTypes` is `true`, allowing you to ignore specific properties from external types that shouldn't trigger warnings.
+- `allowUnusedNestedProperties` ... Controls whether to allow unused nested properties. Default is `false`, meaning the rule will report unused properties from nested objects.
 
 Examples:
 
@@ -216,6 +219,21 @@ Examples:
   }
   let { value }: Props = $props();
   console.log(value);
+</script>
+```
+
+```svelte
+<!-- ✓ Good Example with allowUnusedNestedProperties: true -->
+<script lang="ts">
+  /* eslint svelte/no-unused-props: ["error", { "allowUnusedNestedProperties": true }] */
+  interface Props {
+    user: {
+      name: string;
+      age: number; // Won't be reported as unused
+    };
+  }
+  let { user }: Props = $props();
+  console.log(user.name);
 </script>
 ```
 

@@ -8,7 +8,6 @@ import type {
 } from 'postcss-selector-parser';
 import type { SvelteHTMLElement } from 'svelte-eslint-parser/lib/ast';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
-import { getSourceCode } from '../utils/compat.js';
 import {
 	extractExpressionPrefixLiteral,
 	extractExpressionSuffixLiteral
@@ -60,7 +59,7 @@ export default createRule('consistent-selector-style', {
 		type: 'suggestion'
 	},
 	create(context) {
-		const sourceCode = getSourceCode(context);
+		const sourceCode = context.sourceCode;
 		if (
 			!sourceCode.parserServices.isSvelte ||
 			sourceCode.parserServices.getStyleSelectorAST === undefined ||

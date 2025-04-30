@@ -149,20 +149,19 @@ export type RuleContext = {
 
 	getDeclaredVariables(node: TSESTree.Node): Variable[];
 
-	getFilename(): string;
+	filename: string;
 
 	getScope(): Scope;
 
-	getSourceCode(): SourceCode;
+	sourceCode: SourceCode;
 
 	markVariableAsUsed(name: string): boolean;
 
 	report(descriptor: ReportDescriptor): void;
 
-	// eslint@6 does not have this method.
-	getCwd?: () => string;
-	// eslint@<7.11.0 does not have this method.
-	getPhysicalFilename?: () => string;
+	cwd?: string;
+
+	physicalFilename: string;
 };
 
 export type NodeOrToken = {

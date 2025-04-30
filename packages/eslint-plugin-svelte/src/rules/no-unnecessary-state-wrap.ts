@@ -1,5 +1,4 @@
 import { createRule } from '../utils/index.js';
-import { getSourceCode } from '../utils/compat.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import type { TSESTree } from '@typescript-eslint/types';
 
@@ -54,8 +53,12 @@ export default createRule('no-unnecessary-state-wrap', {
 		const options = context.options[0] ?? {};
 		const additionalReactiveClasses = options.additionalReactiveClasses ?? [];
 		const allowReassign = options.allowReassign ?? false;
+		const { globalScope } = context.sourceCode.scopeManager;
+		if (globalScope == null) {
+			return {};
+		}
 
-		const referenceTracker = new ReferenceTracker(getSourceCode(context).scopeManager.globalScope!);
+		const referenceTracker = new ReferenceTracker(globalScope);
 		const traceMap: Record<string, Record<string, boolean>> = {};
 		for (const reactiveClass of REACTIVE_CLASSES) {
 			traceMap[reactiveClass] = {
@@ -80,10 +83,10 @@ export default createRule('no-unnecessary-state-wrap', {
 		});
 
 		function isReassigned(identifier: TSESTree.Identifier): boolean {
-			const variable = getSourceCode(context).scopeManager.getDeclaredVariables(
-				identifier.parent
-			)[0];
-			return variable.references.some((ref) => {
+			const references = context.sourceCode.scopeManager
+				.getDeclaredVariables(identifier.parent)
+				.flatMap((v) => v.references);
+			return references.some((ref) => {
 				return ref.isWrite() && ref.identifier !== identifier;
 			});
 		}
@@ -108,7 +111,7 @@ export default createRule('no-unnecessary-state-wrap', {
 					{
 						messageId: 'suggestRemoveStateWrap',
 						fix(fixer) {
-							return fixer.replaceText(stateNode, getSourceCode(context).getText(targetNode));
+							return fixer.replaceText(stateNode, context.sourceCode.getText(targetNode));
 						}
 					}
 				]

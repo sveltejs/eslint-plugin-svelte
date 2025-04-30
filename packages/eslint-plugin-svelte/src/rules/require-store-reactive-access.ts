@@ -2,7 +2,6 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import { createStoreChecker } from './reference-helpers/svelte-store.js';
-import { getSourceCode } from '../utils/compat.js';
 
 export default createRule('require-store-reactive-access', {
 	meta: {
@@ -21,7 +20,7 @@ export default createRule('require-store-reactive-access', {
 		type: 'problem'
 	},
 	create(context) {
-		if (!getSourceCode(context).parserServices.isSvelte) {
+		if (!context.sourceCode.parserServices.isSvelte) {
 			return {};
 		}
 		const isStore = createStoreChecker(context);

@@ -1,16 +1,64 @@
 - message: Store callbacks must use `set` param.
   line: 4
   column: 18
-  suggestions: null
+  suggestions:
+    - desc: Add a `set` parameter.
+      messageId: addParam
+      output: |
+        <script>
+        	import { readable, writable } from 'svelte/store';
+
+        	readable(false, function (set) {});
+        	readable(false, (foo) => function () {});
+
+        	writable(false, () => function () {});
+        	writable(false, (foo) => function () {});
+        </script>
 - message: Store callbacks must use `set` param.
   line: 5
   column: 18
-  suggestions: null
+  suggestions:
+    - desc: Rename parameter from foo to `set`.
+      messageId: updateParam
+      output: |
+        <script>
+        	import { readable, writable } from 'svelte/store';
+
+        	readable(false, function () {});
+        	readable(false, (set) => function () {});
+
+        	writable(false, () => function () {});
+        	writable(false, (foo) => function () {});
+        </script>
 - message: Store callbacks must use `set` param.
   line: 7
   column: 18
-  suggestions: null
+  suggestions:
+    - desc: Add a `set` parameter.
+      messageId: addParam
+      output: |
+        <script>
+        	import { readable, writable } from 'svelte/store';
+
+        	readable(false, function () {});
+        	readable(false, (foo) => function () {});
+
+        	writable(false, (set) => function () {});
+        	writable(false, (foo) => function () {});
+        </script>
 - message: Store callbacks must use `set` param.
   line: 8
   column: 18
-  suggestions: null
+  suggestions:
+    - desc: Rename parameter from foo to `set`.
+      messageId: updateParam
+      output: |
+        <script>
+        	import { readable, writable } from 'svelte/store';
+
+        	readable(false, function () {});
+        	readable(false, (foo) => function () {});
+
+        	writable(false, () => function () {});
+        	writable(false, (set) => function () {});
+        </script>

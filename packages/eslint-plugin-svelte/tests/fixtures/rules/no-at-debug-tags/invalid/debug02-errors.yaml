@@ -1,4 +1,20 @@
 - message: Unexpected `{@debug}`.
   line: 11
   column: 1
-  suggestions: null
+  suggestions:
+    - desc: Remove `{@debug}` from the source
+      messageId: suggestRemove
+      output: |
+        <script>
+        	let user = {
+        		firstname: 'Ada',
+        		lastname: 'Lovelace'
+        	};
+        </script>
+
+        <input bind:value={user.firstname} />
+        <input bind:value={user.lastname} />
+
+
+
+        <h1>Hello {user.firstname}!</h1>

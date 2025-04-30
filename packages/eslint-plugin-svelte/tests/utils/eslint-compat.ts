@@ -1,9 +1,9 @@
-import { getLegacyESLint, getESLint } from 'eslint-compat-utils/eslint';
-import { getLinter } from 'eslint-compat-utils/linter';
-import { getRuleTester, getRuleIdPrefix } from 'eslint-compat-utils/rule-tester';
+import * as eslint from 'eslint';
+import * as experimental from 'eslint/use-at-your-own-risk';
 
-export const LegacyESLint = getLegacyESLint();
-export const ESLint = getESLint();
-export const RuleTester = getRuleTester();
-export const TEST_RULE_ID_PREFIX = getRuleIdPrefix();
-export const Linter = getLinter();
+type MaybeHasRuleTester = {
+	FlatRuleTester?: typeof eslint.RuleTester;
+};
+
+export const RuleTester =
+	(experimental as never as MaybeHasRuleTester).FlatRuleTester ?? eslint.RuleTester;

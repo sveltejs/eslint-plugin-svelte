@@ -8,9 +8,11 @@ export default createRule('no-at-debug-tags', {
 			recommended: true,
 			default: 'warn'
 		},
+		hasSuggestions: true,
 		schema: [],
 		messages: {
-			unexpected: 'Unexpected `{@debug}`.'
+			unexpected: 'Unexpected `{@debug}`.',
+			suggestRemove: 'Remove `{@debug}` from the source'
 		},
 		type: 'problem'
 	},
@@ -19,7 +21,13 @@ export default createRule('no-at-debug-tags', {
 			SvelteDebugTag(node) {
 				context.report({
 					node,
-					messageId: 'unexpected'
+					messageId: 'unexpected',
+					suggest: [
+						{
+							messageId: 'suggestRemove',
+							fix: (fixer) => fixer.remove(node)
+						}
+					]
 				});
 			}
 		};

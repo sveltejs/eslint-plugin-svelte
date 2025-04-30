@@ -40,7 +40,7 @@ If you are certain the content passed to `{@html}` is sanitized HTML you can dis
 
 ## :books: Further Reading
 
-- [Svelte - Tutorial > 1. Introduction / HTML tags](https://svelte.dev/tutorial/html-tags)
+- [Svelte - Tutorial > Basic Svelte / Introduction / HTML tags](https://svelte.dev/tutorial/svelte/html-tags)
 
 ## :rocket: Version
 
