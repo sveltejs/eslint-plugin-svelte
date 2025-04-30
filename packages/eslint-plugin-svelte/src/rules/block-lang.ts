@@ -1,6 +1,6 @@
 import { createRule } from '../utils/index.js';
 import { findAttribute, getLangValue } from '../utils/ast-utils.js';
-import type { SvelteScriptElement, SvelteStyleElement } from 'svelte-eslint-parser/lib/ast';
+import type { AST } from 'svelte-eslint-parser';
 import type { SuggestionReportDescriptor, SourceCode } from '../types.js';
 
 export default createRule('block-lang', {
@@ -68,13 +68,13 @@ export default createRule('block-lang', {
 		const allowedScriptLangs: (string | null)[] = Array.isArray(scriptOption)
 			? scriptOption
 			: [scriptOption];
-		const scriptNodes: SvelteScriptElement[] = [];
+		const scriptNodes: AST.SvelteScriptElement[] = [];
 
 		const styleOption: string | null | (string | null)[] = context.options[0]?.style ?? null;
 		const allowedStyleLangs: (string | null)[] = Array.isArray(styleOption)
 			? styleOption
 			: [styleOption];
-		const styleNodes: SvelteStyleElement[] = [];
+		const styleNodes: AST.SvelteStyleElement[] = [];
 
 		return {
 			SvelteScriptElement(node) {
@@ -153,7 +153,7 @@ function buildAddLangSuggestions(
 
 function buildReplaceLangSuggestions(
 	langs: (string | null)[],
-	node: SvelteScriptElement | SvelteStyleElement
+	node: AST.SvelteScriptElement | AST.SvelteStyleElement
 ): SuggestionReportDescriptor[] {
 	const tagName = node.name.name;
 	const langAttribute = findAttribute(node, 'lang');

@@ -4,7 +4,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
 import { extractExpressionPrefixVariable } from '../utils/expression-affixes.js';
 import type { RuleContext } from '../types.js';
-import type { SvelteLiteral } from 'svelte-eslint-parser/lib/ast';
+import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('no-navigation-without-base', {
 	meta: {
@@ -236,7 +236,7 @@ function expressionIsEmpty(url: TSESTree.Expression): boolean {
 	);
 }
 
-function expressionIsAbsolute(url: SvelteLiteral | TSESTree.Expression): boolean {
+function expressionIsAbsolute(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
 			return binaryExpressionIsAbsolute(url);
@@ -269,7 +269,7 @@ function urlValueIsAbsolute(url: string): boolean {
 	return url.includes('://');
 }
 
-function expressionIsFragment(url: SvelteLiteral | TSESTree.Expression): boolean {
+function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
 			return binaryExpressionIsFragment(url);

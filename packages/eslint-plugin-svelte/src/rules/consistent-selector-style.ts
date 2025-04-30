@@ -6,7 +6,6 @@ import type {
 	Node as SelectorNode,
 	Tag as SelectorTag
 } from 'postcss-selector-parser';
-import type { SvelteHTMLElement } from 'svelte-eslint-parser/lib/ast';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import {
 	extractExpressionPrefixLiteral,
@@ -286,7 +285,7 @@ function addToArrayMap<T>(
 /**
  * Finds all nodes in selections that could be matched by key
  */
-function matchSelection(selections: Selections, key: string): SvelteHTMLElement[] {
+function matchSelection(selections: Selections, key: string): AST.SvelteHTMLElement[] {
 	const selection = selections.exact.get(key) ?? [];
 	selections.affixes.forEach((nodes, [prefix, suffix]) => {
 		if ((prefix === null || key.startsWith(prefix)) && (suffix === null || key.endsWith(suffix))) {
