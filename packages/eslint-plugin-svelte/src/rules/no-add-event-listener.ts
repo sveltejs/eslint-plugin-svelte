@@ -26,7 +26,7 @@ export default createRule('no-add-event-listener', {
 	create(context) {
 		return {
 			CallExpression(node: TSESTree.CallExpression) {
-				const { callee, arguments: args } = node;
+				const { callee } = node;
 				let target: string | null = null;
 
 				if (
