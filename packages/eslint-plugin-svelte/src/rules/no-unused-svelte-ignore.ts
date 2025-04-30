@@ -2,6 +2,8 @@ import { getSvelteCompileWarnings } from '../shared/svelte-compile-warns/index.j
 import { createRule } from '../utils/index.js';
 import type { IgnoreItem } from '../shared/svelte-compile-warns/ignore-comment.js';
 import { getSvelteIgnoreItems } from '../shared/svelte-compile-warns/ignore-comment.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
+import semver from 'semver';
 
 export default createRule('no-unused-svelte-ignore', {
 	meta: {
@@ -46,6 +48,14 @@ export default createRule('no-unused-svelte-ignore', {
 		}
 
 		for (const unused of warnings.unusedIgnores) {
+			if (unused.code === 'reactive-component' && semver.satisfies(SVELTE_VERSION, '<5')) {
+				// Svelte v4 `reactive-component` warnings are not emitted
+				// when we use the `generate: false` compiler option.
+				// This is probably not the intended behavior of Svelte v4, but it's not going to be fixed,
+				// so as a workaround we'll ignore the `reactive-component` warnings.
+				// See https://github.com/sveltejs/eslint-plugin-svelte/issues/1192
+				continue;
+			}
 			context.report({
 				loc: {
 					start: sourceCode.getLocFromIndex(unused.range[0]),
