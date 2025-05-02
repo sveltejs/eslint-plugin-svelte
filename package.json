@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-yml": "^1.15.0",
-    "npm-run-all2": "^7.0.1",
+    "npm-run-all2": "^8.0.0",
     "prettier": "^3.4.1",
     "prettier-plugin-svelte": "^3.3.2",
     "rimraf": "^6.0.1",
