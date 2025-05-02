@@ -38,7 +38,9 @@ export default createRule('no-top-level-browser-globals', {
 		}
 
 		function enterFunction(node: TSESTree.FunctionLike) {
-			functions.push(node);
+			if (isTopLevelLocation(node)) {
+				functions.push(node);
+			}
 		}
 
 		function verifyGlobalReferences() {
@@ -94,12 +96,13 @@ export default createRule('no-top-level-browser-globals', {
 						yield ref.node;
 					} else if (ref.node.type === 'ImportSpecifier') {
 						const variable = findVariable(context, ref.node.local);
-						if (variable)
+						if (variable) {
 							for (const reference of variable.references) {
 								if (reference.isRead() && reference.identifier.type === 'Identifier') {
 									yield reference.identifier;
 								}
 							}
+						}
 					}
 				}
 			}
@@ -220,7 +223,7 @@ export default createRule('no-top-level-browser-globals', {
 					return null;
 				}
 				const staticValue = getStaticValue(
-					pp.left === node ? pp.right : pp.left,
+					pp.left === parent ? pp.right : pp.left,
 					getScope(context, node)
 				);
 				if (!staticValue) {

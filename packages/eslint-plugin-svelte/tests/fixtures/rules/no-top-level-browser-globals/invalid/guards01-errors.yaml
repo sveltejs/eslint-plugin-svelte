@@ -1,0 +1,40 @@
+- message: Unexpected top-level browser global variable "location".
+  line: 5
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 10
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 15
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 18
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 23
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 30
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 35
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 38
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 43
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 50
+  column: 15
+  suggestions: null
