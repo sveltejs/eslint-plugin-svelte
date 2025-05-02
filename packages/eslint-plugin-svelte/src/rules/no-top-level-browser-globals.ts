@@ -1,5 +1,5 @@
 import type { TrackedReferences } from '@eslint-community/eslint-utils';
-import { ReferenceTracker, getStaticValue, getPropertyName } from '@eslint-community/eslint-utils';
+import { ReferenceTracker, getStaticValue } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils/index.js';
 import globals from 'globals';
 import type { TSESTree } from '@typescript-eslint/types';
@@ -50,7 +50,7 @@ export default createRule('no-top-level-browser-globals', {
 			});
 
 			type MaybeGuard = {
-				referenceNode: TSESTree.Node;
+				reference?: { node: TSESTree.Node; name: string };
 				isAvailableLocation: (node: TSESTree.Node) => boolean;
 				// The guard that checks whether the browser environment is set to true.
 				browserEnvironment: boolean;
@@ -62,10 +62,10 @@ export default createRule('no-top-level-browser-globals', {
 			 * Checks whether the node is in a location where the expression is available or not.
 			 * @returns `true` if the expression is available.
 			 */
-			function isAvailableLocation({ node }: { node: TSESTree.Node }) {
+			function isAvailableLocation(ref: { node: TSESTree.Node; name: string }) {
 				for (const guard of maybeGuards.reverse()) {
-					if (guard.browserEnvironment || equalNode(guard.referenceNode, node)) {
-						if (guard.isAvailableLocation(node)) {
+					if (guard.isAvailableLocation(ref.node)) {
+						if (guard.browserEnvironment || guard.reference?.name === ref.name) {
 							guard.used = true;
 							return true;
 						}
@@ -114,7 +114,6 @@ export default createRule('no-top-level-browser-globals', {
 				const guardChecker = getGuardChecker({ node: referenceNode });
 				if (guardChecker) {
 					maybeGuards.push({
-						referenceNode,
 						isAvailableLocation: guardChecker,
 						browserEnvironment: true
 					});
@@ -139,7 +138,7 @@ export default createRule('no-top-level-browser-globals', {
 				if (guardChecker) {
 					const name = ref.path.join('.');
 					maybeGuards.push({
-						referenceNode: ref.node,
+						reference: { node: ref.node, name },
 						isAvailableLocation: guardChecker,
 						browserEnvironment: name === 'window' || name === 'document'
 					});
@@ -149,15 +148,14 @@ export default createRule('no-top-level-browser-globals', {
 			}
 
 			for (const ref of reportCandidates) {
-				if (isAvailableLocation({ node: ref.node })) {
+				const name = ref.path.join('.');
+				if (isAvailableLocation({ node: ref.node, name })) {
 					continue;
 				}
 				context.report({
 					node: ref.node,
 					messageId: 'unexpectedGlobal',
-					data: {
-						name: ref.path.join('.')
-					}
+					data: { name }
 				});
 			}
 		}
@@ -300,34 +298,6 @@ export default createRule('no-top-level-browser-globals', {
 			}
 			return null;
 		}
-
-		/**
-		 * Checks whether or not the two given nodes are same.
-		 * @param a A node 1 to compare.
-		 * @param b A node 2 to compare.
-		 */
-		function equalNode(a: TSESTree.Node, b: TSESTree.Node) {
-			if (a.type === 'Identifier' && b.type === 'Identifier') {
-				const leftVar = findVariable(context, a);
-				const rightVar = findVariable(context, b);
-				return leftVar && rightVar && leftVar === rightVar;
-			}
-			if (a.type === 'MemberExpression' && b.type === 'MemberExpression') {
-				if (!equalNode(a.object, b.object)) {
-					return false;
-				}
-				const leftKey = getPropertyName(a);
-				const rightKey = getPropertyName(b);
-				return leftKey && rightKey && leftKey === rightKey;
-			}
-			if (isSkipExpression(a)) {
-				return equalNode(a.expression, b);
-			}
-			if (isSkipExpression(b)) {
-				return equalNode(a, b.expression);
-			}
-			return false;
-		}
 	}
 });
 
@@ -377,24 +347,5 @@ function isJumpStatement(statement: TSESTree.Statement) {
 		statement.type === 'ReturnStatement' ||
 		statement.type === 'ContinueStatement' ||
 		statement.type === 'BreakStatement'
-	);
-}
-
-function isSkipExpression(
-	node: TSESTree.Node
-): node is
-	| TSESTree.TSInstantiationExpression
-	| TSESTree.TSNonNullExpression
-	| TSESTree.TSAsExpression
-	| TSESTree.TSSatisfiesExpression
-	| TSESTree.TSTypeAssertion
-	| TSESTree.ChainExpression {
-	return (
-		node.type === 'TSInstantiationExpression' ||
-		node.type === 'TSNonNullExpression' ||
-		node.type === 'TSAsExpression' ||
-		node.type === 'TSSatisfiesExpression' ||
-		node.type === 'TSTypeAssertion' ||
-		node.type === 'ChainExpression'
 	);
 }

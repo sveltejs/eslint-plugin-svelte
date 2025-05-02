@@ -11,20 +11,11 @@ import { Linter } from 'eslint';
 import * as svelteParser from 'svelte-eslint-parser';
 import * as typescriptParser from '@typescript-eslint/parser';
 import Module from 'module';
+import globals from 'globals';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const require = Module.createRequire(import.meta.url);
 
-const globals = {
-	console: 'readonly',
-	setTimeout: 'readonly',
-	setInterval: 'readonly',
-	queueMicrotask: 'readonly',
-	window: 'readonly',
-	globalThis: 'readonly',
-	location: 'readonly',
-	document: 'readonly'
-};
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string
  */
@@ -250,7 +241,7 @@ function writeFixtures(
 				[`svelte/${ruleName}`]: ['error', ...(options || [])]
 			},
 			languageOptions: {
-				globals,
+				globals: globals.browser,
 				ecmaVersion: 2020,
 				sourceType: 'module',
 				...verifyConfig?.languageOptions,
@@ -334,7 +325,7 @@ function getConfig(ruleName: string, inputFile: string) {
 		{
 			...config,
 			languageOptions: {
-				globals,
+				globals: globals.browser,
 				ecmaVersion: 2020,
 				sourceType: 'module',
 				...config?.languageOptions,

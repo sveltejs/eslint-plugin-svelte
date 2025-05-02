@@ -1,0 +1,4 @@
+- message: Unexpected top-level browser global variable "localStorage".
+  line: 2
+  column: 12
+  suggestions: null
