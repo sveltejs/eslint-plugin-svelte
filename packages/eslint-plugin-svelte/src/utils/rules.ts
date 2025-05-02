@@ -49,6 +49,7 @@ import noSpacesAroundEqualSignsInAttribute from '../rules/no-spaces-around-equal
 import noStoreAsync from '../rules/no-store-async.js';
 import noSvelteInternal from '../rules/no-svelte-internal.js';
 import noTargetBlank from '../rules/no-target-blank.js';
+import noTopLevelBrowserGlobals from '../rules/no-top-level-browser-globals.js';
 import noTrailingSpaces from '../rules/no-trailing-spaces.js';
 import noUnknownStyleDirectiveProperty from '../rules/no-unknown-style-directive-property.js';
 import noUnnecessaryStateWrap from '../rules/no-unnecessary-state-wrap.js';
@@ -127,6 +128,7 @@ export const rules = [
 	noStoreAsync,
 	noSvelteInternal,
 	noTargetBlank,
+	noTopLevelBrowserGlobals,
 	noTrailingSpaces,
 	noUnknownStyleDirectiveProperty,
 	noUnnecessaryStateWrap,

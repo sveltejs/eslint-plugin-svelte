@@ -252,6 +252,11 @@ export interface RuleOptions {
    */
   'svelte/no-target-blank'?: Linter.RuleEntry<SvelteNoTargetBlank>
   /**
+   * disallow using top-level browser global variables
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-top-level-browser-globals/
+   */
+  'svelte/no-top-level-browser-globals'?: Linter.RuleEntry<[]>
+  /**
    * disallow trailing whitespace at the end of lines
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/
    */

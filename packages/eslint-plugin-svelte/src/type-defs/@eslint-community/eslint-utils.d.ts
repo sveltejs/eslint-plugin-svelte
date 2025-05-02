@@ -1,15 +1,18 @@
+import type {
+	CALL,
+	CONSTRUCT,
+	ESM,
+	READ,
+	StaticValue,
+	TraceMap,
+	TrackedReferences,
+	ReferenceTrackerOptions
+} from '../../../node_modules/@eslint-community/eslint-utils/index.mjs';
+import type { AST } from 'svelte-eslint-parser';
+import type { TSESTree } from '@typescript-eslint/types';
+import type { Scope } from '@typescript-eslint/scope-manager';
+
 declare module '@eslint-community/eslint-utils' {
-	import type { AST } from 'svelte-eslint-parser';
-	import type { TSESTree } from '@typescript-eslint/types';
-	import type { Scope } from '@typescript-eslint/scope-manager';
-	import type {
-		CALL,
-		CONSTRUCT,
-		ESM,
-		READ,
-		TraceMap
-	} from '@eslint-community/eslint-utils/referenceTracker';
-	export { ReferenceTracker, TrackedReferences } from '../../../node_modules/@types/eslint-utils';
 	type Token = { type: string; value: string };
 	export function isArrowToken(token: Token): boolean;
 	export function isCommaToken(token: Token): boolean;
@@ -88,4 +91,8 @@ declare module '@eslint-community/eslint-utils' {
 			traceMap: TraceMap<T>
 		): IterableIterator<TrackedReferences<T>>;
 	}
+	export function getStaticValue(
+		node: TSESTree.Node,
+		initialScope?: Scope | null | undefined
+	): StaticValue | null;
 }
