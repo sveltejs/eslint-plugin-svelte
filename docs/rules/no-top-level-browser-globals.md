@@ -26,18 +26,24 @@ This rule helps prevent the use of browser global variables that can cause error
 
   /* ✓ GOOD */
   onMount(() => {
-    const a = window.localStorage.getItem('myCat');
+    const a = localStorage.getItem('myCat');
     console.log(a);
   });
 
   /* ✓ GOOD */
   if (browser) {
-    const a = window.localStorage.getItem('myCat');
+    const a = localStorage.getItem('myCat');
+    console.log(a);
+  }
+
+  /* ✓ GOOD */
+  if (typeof localStorage !== 'undefined') {
+    const a = localStorage.getItem('myCat');
     console.log(a);
   }
 
   /* ✗ BAD */
-  const a = window.localStorage.getItem('myCat');
+  const a = localStorage.getItem('myCat');
   console.log(a);
 </script>
 ```
