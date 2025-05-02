@@ -26,16 +26,21 @@ export default createRule('no-top-level-browser-globals', {
 		}
 		const blowerGlobals = getBrowserGlobals();
 
-		const functions: TSESTree.FunctionLike[] = [];
+		const referenceTracker = new ReferenceTracker(sourceCode.scopeManager.globalScope!, {
+			// Specifies the global variables that are allowed to prevent `window.window` from being iterated over.
+			globalObjectNames: ['globalThis']
+		});
 
-		function isTopLevelLocation(node: TSESTree.Node) {
-			for (const func of functions) {
-				if (func.range[0] <= node.range[0] && node.range[1] <= func.range[1]) {
-					return false;
-				}
-			}
-			return true;
-		}
+		type MaybeGuard = {
+			reference?: { node: TSESTree.Node; name: string };
+			isAvailableLocation: (node: TSESTree.Node) => boolean;
+			// The guard that checks whether the browser environment is set to true.
+			browserEnvironment: boolean;
+			used?: boolean;
+		};
+		const maybeGuards: MaybeGuard[] = [];
+
+		const functions: TSESTree.FunctionLike[] = [];
 
 		function enterFunction(node: TSESTree.FunctionLike) {
 			if (isTopLevelLocation(node)) {
@@ -43,88 +48,29 @@ export default createRule('no-top-level-browser-globals', {
 			}
 		}
 
+		function enterMetaProperty(node: TSESTree.MetaProperty) {
+			if (node.meta.name !== 'import' || node.property.name !== 'meta') return;
+			for (const ref of referenceTracker.iteratePropertyReferences(node, {
+				env: {
+					// See https://vite.dev/guide/ssr#conditional-logic
+					SSR: {
+						[ReferenceTracker.READ]: true
+					}
+				}
+			})) {
+				if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
+					const guardChecker = getGuardChecker({ node: ref.node, not: true });
+					if (guardChecker) {
+						maybeGuards.push({
+							isAvailableLocation: guardChecker,
+							browserEnvironment: true
+						});
+					}
+				}
+			}
+		}
+
 		function verifyGlobalReferences() {
-			const referenceTracker = new ReferenceTracker(sourceCode.scopeManager.globalScope!, {
-				// Specifies the global variables that are allowed to prevent `window.window` from being iterated over.
-				globalObjectNames: ['globalThis']
-			});
-
-			type MaybeGuard = {
-				reference?: { node: TSESTree.Node; name: string };
-				isAvailableLocation: (node: TSESTree.Node) => boolean;
-				// The guard that checks whether the browser environment is set to true.
-				browserEnvironment: boolean;
-				used?: boolean;
-			};
-			const maybeGuards: MaybeGuard[] = [];
-
-			/**
-			 * Checks whether the node is in a location where the expression is available or not.
-			 * @returns `true` if the expression is available.
-			 */
-			function isAvailableLocation(ref: { node: TSESTree.Node; name: string }) {
-				for (const guard of maybeGuards.reverse()) {
-					if (guard.isAvailableLocation(ref.node)) {
-						if (guard.browserEnvironment || guard.reference?.name === ref.name) {
-							guard.used = true;
-							return true;
-						}
-					}
-				}
-				return false;
-			}
-
-			/**
-			 * Iterate over the references of modules that can check the browser environment.
-			 */
-			function* iterateBrowserCheckerModuleReferences(): Iterable<TSESTree.Expression> {
-				for (const ref of referenceTracker.iterateEsmReferences({
-					'esm-env': {
-						[ReferenceTracker.ESM]: true,
-						// See https://www.npmjs.com/package/esm-env
-						BROWSER: {
-							[ReferenceTracker.READ]: true
-						}
-					},
-					'$app/environment': {
-						[ReferenceTracker.ESM]: true,
-						// See https://svelte.dev/docs/kit/$app-environment#browser
-						browser: {
-							[ReferenceTracker.READ]: true
-						}
-					}
-				})) {
-					if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
-						yield ref.node;
-					} else if (ref.node.type === 'ImportSpecifier') {
-						const variable = findVariable(context, ref.node.local);
-						if (variable) {
-							for (const reference of variable.references) {
-								if (reference.isRead() && reference.identifier.type === 'Identifier') {
-									yield reference.identifier;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			/**
-			 * Iterate over the used references of global variables.
-			 */
-			function* iterateBrowserGlobalReferences(): Iterable<TrackedReferences<unknown>> {
-				yield* referenceTracker.iterateGlobalReferences(
-					Object.fromEntries(
-						blowerGlobals.map((name) => [
-							name,
-							{
-								[ReferenceTracker.READ]: true
-							}
-						])
-					)
-				);
-			}
-
 			// Collects guarded location checkers by checking module references
 			// that can check the browser environment.
 			for (const referenceNode of iterateBrowserCheckerModuleReferences()) {
@@ -171,8 +117,89 @@ export default createRule('no-top-level-browser-globals', {
 
 		return {
 			':function': enterFunction,
+			MetaProperty: enterMetaProperty,
 			'Program:exit': verifyGlobalReferences
 		};
+
+		/**
+		 * Checks whether the node is in a location where the expression is available or not.
+		 * @returns `true` if the expression is available.
+		 */
+		function isAvailableLocation(ref: { node: TSESTree.Node; name: string }) {
+			for (const guard of maybeGuards.reverse()) {
+				if (guard.isAvailableLocation(ref.node)) {
+					if (guard.browserEnvironment || guard.reference?.name === ref.name) {
+						guard.used = true;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Checks whether the node is in a top-level location.
+		 * @returns `true` if the node is in a top-level location.
+		 */
+		function isTopLevelLocation(node: TSESTree.Node) {
+			for (const func of functions) {
+				if (func.range[0] <= node.range[0] && node.range[1] <= func.range[1]) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/**
+		 * Iterate over the references of modules that can check the browser environment.
+		 */
+		function* iterateBrowserCheckerModuleReferences(): Iterable<TSESTree.Expression> {
+			for (const ref of referenceTracker.iterateEsmReferences({
+				'esm-env': {
+					[ReferenceTracker.ESM]: true,
+					// See https://www.npmjs.com/package/esm-env
+					BROWSER: {
+						[ReferenceTracker.READ]: true
+					}
+				},
+				'$app/environment': {
+					[ReferenceTracker.ESM]: true,
+					// See https://svelte.dev/docs/kit/$app-environment#browser
+					browser: {
+						[ReferenceTracker.READ]: true
+					}
+				}
+			})) {
+				if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
+					yield ref.node;
+				} else if (ref.node.type === 'ImportSpecifier') {
+					const variable = findVariable(context, ref.node.local);
+					if (variable) {
+						for (const reference of variable.references) {
+							if (reference.isRead() && reference.identifier.type === 'Identifier') {
+								yield reference.identifier;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * Iterate over the used references of global variables.
+		 */
+		function* iterateBrowserGlobalReferences(): Iterable<TrackedReferences<unknown>> {
+			yield* referenceTracker.iterateGlobalReferences(
+				Object.fromEntries(
+					blowerGlobals.map((name) => [
+						name,
+						{
+							[ReferenceTracker.READ]: true
+						}
+					])
+				)
+			);
+		}
 
 		/**
 		 * If the node is a reference used in a guard clause that checks if the node is in a browser environment,

@@ -90,6 +90,14 @@ declare module '@eslint-community/eslint-utils' {
 		public iterateGlobalReferences<T = unknown>(
 			traceMap: TraceMap<T>
 		): IterableIterator<TrackedReferences<T>>;
+
+		/**
+		 * Iterate the property references for a given expression AST node.
+		 */
+		public iteratePropertyReferences<T = unknown>(
+			node: TSESTree.Expression,
+			traceMap: TraceMap<T>
+		): IterableIterator<TrackedReferences<T>>;
 	}
 	export function getStaticValue(
 		node: TSESTree.Node,
