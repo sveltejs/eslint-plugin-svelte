@@ -1,0 +1,8 @@
+- message: Unexpected top-level browser global variable "location".
+  line: 9
+  column: 15
+  suggestions: null
+- message: Unexpected top-level browser global variable "location".
+  line: 13
+  column: 16
+  suggestions: null

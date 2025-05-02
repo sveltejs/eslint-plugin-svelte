@@ -1,55 +1,57 @@
 <script>
-	if (typeof window !== 'undefined') {
+	if (globalThis.window !== undefined) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG
 	}
-	if (typeof document !== 'undefined') {
+	if (globalThis.document !== undefined) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG
 	}
-	if (typeof location !== 'undefined') {
+	if (globalThis.location !== undefined) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG
 	}
-	if (typeof location === 'undefined') {
+	if (globalThis.location === undefined) {
 		console.log(location.href); // NG
 	} else {
 		console.log(location.href);
 	}
-	if (typeof location !== 'object') {
-		console.log(location.href); // NG
-	} else {
-		console.log(location.href);
-	}
-	if (typeof location === 'object') {
+	if (globalThis.location != undefined) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG
 	}
-	if (typeof location != 'undefined') {
-		console.log(location.href);
-	} else {
-		console.log(location.href); // NG
-	}
-	if (typeof location == 'undefined') {
+	if (globalThis.location == undefined) {
 		console.log(location.href); // NG
 	} else {
 		console.log(location.href);
 	}
-	if (typeof location != 'object') {
-		console.log(location.href); // NG
-	} else {
-		console.log(location.href);
-	}
-	if (typeof location == 'object') {
+	if (globalThis.location != null) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG
 	}
-	if ('undefined' !== typeof window) {
+	if (globalThis.location == null) {
+		console.log(location.href); // NG
+	} else {
+		console.log(location.href);
+	}
+	if (globalThis.location !== null) {
+		// NG
+		console.log(location.href); // NG
+	} else {
+		console.log(location.href); // NG
+	}
+	if (globalThis.location === null) {
+		// NG
+		console.log(location.href); // NG
+	} else {
+		console.log(location.href); // NG
+	}
+	if (undefined !== globalThis.window) {
 		console.log(location.href);
 	} else {
 		console.log(location.href); // NG

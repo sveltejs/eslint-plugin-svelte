@@ -81,12 +81,14 @@ export default createRule('no-top-level-browser-globals', {
 				for (const ref of referenceTracker.iterateEsmReferences({
 					'esm-env': {
 						[ReferenceTracker.ESM]: true,
+						// See https://www.npmjs.com/package/esm-env
 						BROWSER: {
 							[ReferenceTracker.READ]: true
 						}
 					},
 					'$app/environment': {
 						[ReferenceTracker.ESM]: true,
+						// See https://svelte.dev/docs/kit/$app-environment#browser
 						browser: {
 							[ReferenceTracker.READ]: true
 						}
@@ -107,6 +109,22 @@ export default createRule('no-top-level-browser-globals', {
 				}
 			}
 
+			/**
+			 * Iterate over the used references of global variables.
+			 */
+			function* iterateBrowserGlobalReferences(): Iterable<TrackedReferences<unknown>> {
+				yield* referenceTracker.iterateGlobalReferences(
+					Object.fromEntries(
+						blowerGlobals.map((name) => [
+							name,
+							{
+								[ReferenceTracker.READ]: true
+							}
+						])
+					)
+				);
+			}
+
 			// Collects guarded location checkers by checking module references
 			// that can check the browser environment.
 			for (const referenceNode of iterateBrowserCheckerModuleReferences()) {
@@ -123,16 +141,7 @@ export default createRule('no-top-level-browser-globals', {
 			const reportCandidates: TrackedReferences<unknown>[] = [];
 
 			// Collects references to global variables.
-			for (const ref of referenceTracker.iterateGlobalReferences({
-				...Object.fromEntries(
-					blowerGlobals.map((name) => [
-						name,
-						{
-							[ReferenceTracker.READ]: true
-						}
-					])
-				)
-			})) {
+			for (const ref of iterateBrowserGlobalReferences()) {
 				if (!isTopLevelLocation(ref.node)) continue;
 				const guardChecker = getGuardCheckerFromReference(ref.node);
 				if (guardChecker) {
@@ -189,9 +198,8 @@ export default createRule('no-top-level-browser-globals', {
 				if (!operand) return null;
 
 				const staticValue = getStaticValue(operand, getScope(context, operand));
-				if (!staticValue) {
-					return null;
-				}
+				if (!staticValue) return null;
+
 				if (staticValue.value === undefined && node.type === 'MemberExpression') {
 					if (parent.operator === '!==' || parent.operator === '!=') {
 						// e.g. if (globalThis.window !== undefined), if (globalThis.window != undefined)
@@ -224,9 +232,8 @@ export default createRule('no-top-level-browser-globals', {
 					pp.left === parent ? pp.right : pp.left,
 					getScope(context, node)
 				);
-				if (!staticValue) {
-					return null;
-				}
+				if (!staticValue) return null;
+
 				if (staticValue.value !== 'undefined' && staticValue.value !== 'object') {
 					return null;
 				}
@@ -264,9 +271,8 @@ export default createRule('no-top-level-browser-globals', {
 			not?: boolean;
 		}): ((node: TSESTree.Node) => boolean) | null {
 			const parent = guardInfo.node.parent;
-			if (!parent) {
-				return null;
-			}
+			if (!parent) return null;
+
 			if (parent.type === 'ConditionalExpression') {
 				const block = guardInfo.not ? parent.alternate : parent.consequent;
 				return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
@@ -279,7 +285,6 @@ export default createRule('no-top-level-browser-globals', {
 					const block = parent.consequent;
 					return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
 				}
-				// e.g. if (typeof x === 'undefined')
 				if (parent.alternate) {
 					const block = parent.alternate;
 					return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
