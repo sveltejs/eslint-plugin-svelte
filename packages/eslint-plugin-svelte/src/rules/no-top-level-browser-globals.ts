@@ -17,13 +17,10 @@ export default createRule('no-top-level-browser-globals', {
 			unexpectedGlobal: 'Unexpected top-level browser global variable "{{name}}".'
 		},
 		type: 'problem',
-		conditions: []
+		conditions: [{ svelteFileTypes: ['.svelte', '.svelte.[js|ts]'] }]
 	},
 	create(context) {
 		const sourceCode = context.sourceCode;
-		if (!sourceCode.parserServices.isSvelte && !sourceCode.parserServices.isSvelteScript) {
-			return {};
-		}
 		const blowerGlobals = getBrowserGlobals();
 
 		const referenceTracker = new ReferenceTracker(sourceCode.scopeManager.globalScope!, {
