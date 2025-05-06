@@ -25,7 +25,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/cross-spawn": "^6.0.6",
     "@types/escape-html": "^1.0.4",
-    "@types/eslint-scope": "^3.7.7",
+    "@types/eslint-scope": "^8.0.0",
     "@types/eslint-visitor-keys": "^3.3.2",
     "@types/less": "^3.0.7",
     "@types/markdown-it": "^14.1.2",
