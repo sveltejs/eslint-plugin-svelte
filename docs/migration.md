@@ -65,7 +65,7 @@ Therefore, you need to replace the package name, and the presets, rules, and set
 
 ## From `eslint-plugin-svelte` v2 To v3
 
-This section explains the necessary changes when upgrading from `eslint-plugin-svelte` v2 to v3.  
+This section explains the necessary changes when upgrading from `eslint-plugin-svelte` v2 to v3.\
 v3 includes **support for ESLint Flat Config only**, **changes to the recommended rule set**, and other breaking changes.
 
 ---

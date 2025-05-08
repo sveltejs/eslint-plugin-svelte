@@ -15,7 +15,7 @@ since: 'v0.14.0'
 
 ## :book: Rule Details
 
-This rule reports the dynamically specified `<slot>` name.  
+This rule reports the dynamically specified `<slot>` name.\
 Dynamic `<slot>` names are not allowed in Svelte, so you must use static names.
 
 The auto-fix of this rule can be replaced with a static `<slot>` name if the expression given to the `<slot>` name is static and resolvable.

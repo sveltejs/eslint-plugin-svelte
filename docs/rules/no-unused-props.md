@@ -14,7 +14,7 @@ since: 'v3.2.0'
 
 ## :book: Rule Details
 
-This rule reports properties that are defined in Props but never used in the component code.  
+This rule reports properties that are defined in Props but never used in the component code.\
 It helps to detect dead code and improve component clarity by ensuring that every declared prop is utilized.
 
 This rule checks various usage patterns of props:

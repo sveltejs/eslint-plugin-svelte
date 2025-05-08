@@ -184,8 +184,8 @@ export default [
 
 ## Editor Integrations
 
-**Visual Studio Code**  
-Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).  
+**Visual Studio Code**\
+Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).\
 Configure `.svelte` files in `.vscode/settings.json`:
 
 ```json

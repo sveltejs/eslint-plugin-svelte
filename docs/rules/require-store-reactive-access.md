@@ -15,7 +15,7 @@ since: 'v2.12.0'
 
 ## :book: Rule Details
 
-This rule disallow to use of the store itself as an operand.  
+This rule disallow to use of the store itself as an operand.\
 You should access the store value using the `$` prefix or the `get` function.
 
 <!--eslint-skip-->
@@ -58,7 +58,7 @@ You should access the store value using the `$` prefix or the `get` function.
 <MyComponent {...storeValue} />
 ```
 
-This rule checks the usage of store variables only if the store can be determined within a single file.  
+This rule checks the usage of store variables only if the store can be determined within a single file.
 However, when using `@typescript-eslint/parser` and full type information, this rule uses the type information to determine if the expression is a store.
 
 <!--eslint-skip-->

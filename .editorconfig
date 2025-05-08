@@ -5,3 +5,9 @@ end_of_line = lf
 indent_size = 2
 indent_style = tab
 trim_trailing_whitespace = true
+
+[docs/rules/no-trailing-spaces.md]
+trim_trailing_whitespace = false
+
+[packages/eslint-plugin-svelte/tests/fixtures/**/*-input.svelte]
+trim_trailing_whitespace = false
