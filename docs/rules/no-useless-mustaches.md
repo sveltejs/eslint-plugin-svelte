@@ -15,7 +15,7 @@ since: 'v0.0.4'
 
 ## :book: Rule Details
 
-This rule reports mustache interpolation with a string literal value.  
+This rule reports mustache interpolation with a string literal value.\
 The mustache interpolation with a string literal value can be changed to a static contents.
 
 <!--eslint-skip-->

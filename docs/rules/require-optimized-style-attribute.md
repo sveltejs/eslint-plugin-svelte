@@ -14,7 +14,7 @@ since: 'v0.32.0'
 
 This rule reports `style` attributes written in a format that cannot be optimized.
 
-Svelte parses the content written in the style attribute and tries to optimize it. (See [https://github.com/sveltejs/svelte/pull/810](https://github.com/sveltejs/svelte/pull/810))  
+Svelte parses the content written in the style attribute and tries to optimize it. (See [https://github.com/sveltejs/svelte/pull/810](https://github.com/sveltejs/svelte/pull/810))\
 If Svelte can be successfully optimized, Svelte can minimize the number of re-renders.
 
 e.g.

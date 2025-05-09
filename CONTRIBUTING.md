@@ -34,7 +34,7 @@ Rule tests typically use fixtures. For example, for the `indent` rule, the test 
 - The `invalid` directory contains test cases where the rule should report errors.
 - The `valid` directory contains test cases where no errors are reported.
 
-Fixture input files should be named `*-input.svelte` and are automatically collected.  
+Fixture input files should be named `*-input.svelte` and are automatically collected.\
 If configuration is needed, include a JSON file:
 
 - For a specific test file (e.g., `my-test-input.svelte`), add `my-test-config.json`.
@@ -52,7 +52,7 @@ pnpm run test -- -g indent
 
 Refer to [this Stack Overflow post](https://stackoverflow.com/questions/10832031/how-to-run-a-single-test-with-mocha) for details.
 
-To test a single file (e.g., `my-test-input.svelte`), add a `my-test-config.json` with `{"only": true}`.  
+To test a single file (e.g., `my-test-input.svelte`), add a `my-test-config.json` with `{"only": true}`.
 (Remember to remove `{"only": true}` before submitting a pull request.)
 
 ## Preview Docs

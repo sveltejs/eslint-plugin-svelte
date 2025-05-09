@@ -14,7 +14,7 @@ since: 'v2.4.0'
 
 ## :book: Rule Details
 
-This rule aims to enforce ordering of attributes.  
+This rule aims to enforce ordering of attributes.\
 The default order is:
 
 - `this` property.
@@ -175,8 +175,8 @@ If there is a spread attribute between the attributes, it will not be reported a
       - `"alphabetical"` ... Sorts the attributes of the same group in alphabetical order.
       - `"ignore"` ... Attributes in the same group are not sorted.
 
-Note that the behavior may change depending on how you specify the `order` setting.  
-For example, `bind:value` and `on:input={() => console.log(value)}` behave differently depending on the order. See <https://svelte.dev/docs#template-syntax-element-directives-bind-property> for details.  
+Note that the behavior may change depending on how you specify the `order` setting.\
+For example, `bind:value` and `on:input={() => console.log(value)}` behave differently depending on the order. See <https://svelte.dev/docs#template-syntax-element-directives-bind-property> for details.\
 By default it is designed to be sorted safely.
 
 You can use the following formats for names or patterns:
