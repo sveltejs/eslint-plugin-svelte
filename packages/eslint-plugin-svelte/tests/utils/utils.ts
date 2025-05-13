@@ -21,7 +21,9 @@ const globals = {
 	setInterval: 'readonly',
 	queueMicrotask: 'readonly',
 	window: 'readonly',
-	globalThis: 'readonly'
+	globalThis: 'readonly',
+	URL: 'readonly',
+	URLSearchParams: 'readonly'
 };
 /**
  * Prevents leading spaces in a multiline template literal from appearing in the resulting string

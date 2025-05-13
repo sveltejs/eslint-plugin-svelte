@@ -1,0 +1,4 @@
+- message: Found a usage of the built-in URL class. Use a SvelteURL instead.
+  line: 2
+  column: 20
+  suggestions: null
