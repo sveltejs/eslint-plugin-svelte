@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/prefer-writable-derived'
 description: 'Prefer using writable $derived instead of $state and $effect'
+since: 'v3.6.0'
 ---
 
 # svelte/prefer-writable-derived
 
 > Prefer using writable $derived instead of $state and $effect
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
@@ -53,6 +53,10 @@ Nothing.
 
 - [Svelte Documentation on Reactivity Primitives](https://svelte.dev/docs/svelte-components#script-2-assignments-are-reactive)
 - [Svelte RFC for Reactivity Primitives](https://github.com/sveltejs/rfcs/blob/rfc-better-primitives/text/0000-better-primitives.md)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.6.0
 
 ## :mag: Implementation
 
