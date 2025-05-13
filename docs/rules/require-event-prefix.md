@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/require-event-prefix'
 description: 'require component event names to start with "on"'
+since: 'v3.6.0'
 ---
 
 # svelte/require-event-prefix
 
 > require component event names to start with "on"
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -64,6 +63,10 @@ Starting with Svelte 5, component events are just component props that are funct
 ## :books: Further Reading
 
 - [Svelte docs on events in version 5](https://svelte.dev/docs/svelte/v5-migration-guide#Event-changes)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.6.0
 
 ## :mag: Implementation
 

@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-add-event-listener'
 description: 'Warns against the use of `addEventListener`'
+since: 'v3.6.0'
 ---
 
 # svelte/no-add-event-listener
 
 > Warns against the use of `addEventListener`
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
@@ -43,6 +43,10 @@ Svelte relies on event delegation for performance and predictable handler order.
 
 [svelte - event delegation]: https://svelte.dev/docs/svelte/basic-markup#Events-Event-delegation
 [svelte/events `on` documentation]: https://svelte.dev/docs/svelte/svelte-events#on
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.6.0
 
 ## :mag: Implementation
 
