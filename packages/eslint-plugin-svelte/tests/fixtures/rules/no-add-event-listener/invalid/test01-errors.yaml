@@ -1,0 +1,396 @@
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 17
+  column: 3
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		on(target, 'focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 18
+  column: 3
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		on(deepObj.deep.obj.target, 'focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 21
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	on(window, 'message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 22
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	on(window, 'message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 23
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	on(document, 'visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 26
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	on    (window, 'message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 28
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	on/* foo */(window, 'message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 31
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	on(window, 'message', handler, { once: true });
+
+        	// using spread
+        	window.addEventListener(...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
+- message: Do not use `addEventListener`. Use the `on` function from
+    `svelte/events` instead.
+  line: 34
+  column: 2
+  suggestions:
+    - desc: Use `on` from `svelte/events` instead
+      output: |
+        <script>
+        	const handler = (ev) => {
+        		console.log(ev);
+        	};
+
+        	function onClick(event) {
+        		const target = event.currentTarget;
+
+        		const deepObj = {
+        			deep: {
+        				obj: {
+        					target
+        				}
+        			}
+        		};
+
+        		target.addEventListener('focus', handler);
+        		deepObj.deep.obj.target.addEventListener('focus', handler);
+        	}
+
+        	addEventListener('message', handler);
+        	window.addEventListener('message', handler);
+        	document.addEventListener('visibilitychange', handler);
+
+        	// with a load of whitespace
+        	window.addEventListener    ('message', handler);
+        	// with a comment
+        	window.addEventListener/* foo */('message', handler);
+
+        	// with options
+        	window.addEventListener('message', handler, { once: true });
+
+        	// using spread
+        	on(window, ...params);
+        </script>
+
+        <button onclick={onClick}>Hello</button>
