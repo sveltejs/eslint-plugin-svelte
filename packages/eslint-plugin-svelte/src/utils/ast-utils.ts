@@ -559,6 +559,7 @@ export function findClassesInAttribute(
 		| SvAST.SvelteStyleDirective
 		| SvAST.SvelteSpecialDirective
 		| SvAST.SvelteGenericsDirective
+		| SvAST.SvelteAttachTag
 ): string[] {
 	if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'class') {
 		return attribute.value.flatMap((value) =>
