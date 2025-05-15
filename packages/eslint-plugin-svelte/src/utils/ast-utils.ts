@@ -462,7 +462,8 @@ export function getAttributeKeyText(
 		| SvAST.SvelteStyleDirective
 		| SvAST.SvelteDirective
 		| SvAST.SvelteSpecialDirective
-		| SvAST.SvelteGenericsDirective,
+		| SvAST.SvelteGenericsDirective
+		| SvAST.SvelteAttachTag,
 	context: RuleContext
 ): string {
 	switch (node.type) {
@@ -480,6 +481,8 @@ export function getAttributeKeyText(
 				node.key.modifiers.length ? `|${node.key.modifiers.join('|')}` : ''
 			}`;
 		}
+		case 'SvelteAttachTag':
+			return '@attach';
 		default:
 			throw new Error(
 				`Unknown node type: ${
