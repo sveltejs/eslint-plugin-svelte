@@ -56,7 +56,7 @@
     "sass": "^1.81.0",
     "source-map-js": "^1.2.1",
     "stylus": "^0.64.0",
-    "svelte": "^5.2.10",
+    "svelte": "^5.30.1",
     "svelte-adapter-ghpages": "0.2.2",
     "twoslash-eslint": "^0.3.0",
     "twoslash-protocol": "^0.3.0",

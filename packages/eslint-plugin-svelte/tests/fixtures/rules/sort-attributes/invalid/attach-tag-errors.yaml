@@ -1,0 +1,4 @@
+- message: Attribute '@attach' should go before 'foo'.
+  line: 14
+  column: 10
+  suggestions: null
