@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-top-level-browser-globals'
 description: 'disallow using top-level browser global variables'
+since: 'v3.8.0'
 ---
 
 # svelte/no-top-level-browser-globals
 
 > disallow using top-level browser global variables
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -55,6 +54,10 @@ Nothing.
 ## :books: Further Reading
 
 - [`$app/environment` documentation > browser](https://svelte.dev/docs/kit/$app-environment#browser)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.8.0
 
 ## :mag: Implementation
 

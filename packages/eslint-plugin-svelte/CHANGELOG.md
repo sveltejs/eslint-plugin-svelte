@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.8.0
+
+### Minor Changes
+
+- [#1210](https://github.com/sveltejs/eslint-plugin-svelte/pull/1210) [`9cffd3b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9cffd3ba86926793f3240263e38914cdb2180f0a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `svelte/no-top-level-browser-globals` rule
+
 ## 3.7.0
 
 ### Minor Changes
