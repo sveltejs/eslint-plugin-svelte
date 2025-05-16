@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.7.0
+
+### Minor Changes
+
+- [#1221](https://github.com/sveltejs/eslint-plugin-svelte/pull/1221) [`534ad78`](https://github.com/sveltejs/eslint-plugin-svelte/commit/534ad78221f040ea5f9c32835d6973f4a3643580) Thanks [@baseballyama](https://github.com/baseballyama)! - feat(sort-attributes): support `{@attach}`
+
 ## 3.6.0
 
 ### Minor Changes
