@@ -33,7 +33,6 @@ export default createRule('no-top-level-browser-globals', {
 			isAvailableLocation: (node: TSESTree.Node) => boolean;
 			// The guard that checks whether the browser environment is set to true.
 			browserEnvironment: boolean;
-			used?: boolean;
 		};
 		const maybeGuards: MaybeGuard[] = [];
 
@@ -126,7 +125,6 @@ export default createRule('no-top-level-browser-globals', {
 			for (const guard of maybeGuards.reverse()) {
 				if (guard.isAvailableLocation(ref.node)) {
 					if (guard.browserEnvironment || guard.reference?.name === ref.name) {
-						guard.used = true;
 						return true;
 					}
 				}
@@ -280,6 +278,14 @@ export default createRule('no-top-level-browser-globals', {
 			}
 
 			if (node.type === 'MemberExpression') {
+				if (
+					((parent.type === 'CallExpression' && parent.callee === node) ||
+						(parent.type === 'MemberExpression' && parent.object === node)) &&
+					parent.optional
+				) {
+					// e.g. globalThis.location?.href
+					return (n) => n === node;
+				}
 				// e.g. if (globalThis.window)
 				return getGuardChecker({ node });
 			}
@@ -324,6 +330,15 @@ export default createRule('no-top-level-browser-globals', {
 				const end = pp.range[1];
 
 				return (n) => start <= n.range[0] && n.range[1] <= end;
+			}
+			if (
+				!guardInfo.not &&
+				parent.type === 'LogicalExpression' &&
+				parent.operator === '&&' &&
+				parent.left === guardInfo.node
+			) {
+				const block = parent.right;
+				return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
 			}
 			return null;
 		}
