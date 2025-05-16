@@ -106,7 +106,7 @@ function extractGotoReferences(referenceTracker: ReferenceTracker): TSESTree.Cal
 				}
 			}
 		}),
-		({ node }) => node
+		({ node }) => node as TSESTree.CallExpression
 	);
 }
 

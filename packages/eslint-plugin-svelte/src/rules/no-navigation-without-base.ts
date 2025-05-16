@@ -171,13 +171,13 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 	return {
 		goto: rawReferences
 			.filter(({ path }) => path[path.length - 1] === 'goto')
-			.map(({ node }) => node),
+			.map(({ node }) => node as TSESTree.CallExpression),
 		pushState: rawReferences
 			.filter(({ path }) => path[path.length - 1] === 'pushState')
-			.map(({ node }) => node),
+			.map(({ node }) => node as TSESTree.CallExpression),
 		replaceState: rawReferences
 			.filter(({ path }) => path[path.length - 1] === 'replaceState')
-			.map(({ node }) => node)
+			.map(({ node }) => node as TSESTree.CallExpression)
 	};
 }
 
