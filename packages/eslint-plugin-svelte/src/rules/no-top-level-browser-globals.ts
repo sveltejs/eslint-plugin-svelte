@@ -37,10 +37,17 @@ export default createRule('no-top-level-browser-globals', {
 		const maybeGuards: MaybeGuard[] = [];
 
 		const functions: TSESTree.FunctionLike[] = [];
+		const typeAnnotations: (TSESTree.TypeNode | TSESTree.TSTypeAnnotation)[] = [];
 
 		function enterFunction(node: TSESTree.FunctionLike) {
 			if (isTopLevelLocation(node)) {
 				functions.push(node);
+			}
+		}
+
+		function enterTypeAnnotation(node: TSESTree.TypeNode | TSESTree.TSTypeAnnotation) {
+			if (!isInTypeAnnotation(node)) {
+				typeAnnotations.push(node);
 			}
 		}
 
@@ -84,7 +91,7 @@ export default createRule('no-top-level-browser-globals', {
 
 			// Collects references to global variables.
 			for (const ref of iterateBrowserGlobalReferences()) {
-				if (!isTopLevelLocation(ref.node)) continue;
+				if (!isTopLevelLocation(ref.node) || isInTypeAnnotation(ref.node)) continue;
 				const guardChecker = getGuardCheckerFromReference(ref.node);
 				if (guardChecker) {
 					const name = ref.path.join('.');
@@ -113,6 +120,7 @@ export default createRule('no-top-level-browser-globals', {
 
 		return {
 			':function': enterFunction,
+			'*.typeAnnotation': enterTypeAnnotation,
 			MetaProperty: enterMetaProperty,
 			'Program:exit': verifyGlobalReferences
 		};
@@ -143,6 +151,19 @@ export default createRule('no-top-level-browser-globals', {
 				}
 			}
 			return true;
+		}
+
+		/**
+		 * Checks whether the node is in type annotation.
+		 * @returns `true` if the node is in type annotation.
+		 */
+		function isInTypeAnnotation(node: TSESTree.Node) {
+			for (const typeAnnotation of typeAnnotations) {
+				if (typeAnnotation.range[0] <= node.range[0] && node.range[1] <= typeAnnotation.range[1]) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/**
