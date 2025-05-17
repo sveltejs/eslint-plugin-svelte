@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.8.1
+
+### Patch Changes
+
+- [#1227](https://github.com/sveltejs/eslint-plugin-svelte/pull/1227) [`c938185`](https://github.com/sveltejs/eslint-plugin-svelte/commit/c938185b8a413f200049bc11376db76d768f2ae3) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-top-level-browser-globals): false positives for type annotations
+
 ## 3.8.0
 
 ### Minor Changes
