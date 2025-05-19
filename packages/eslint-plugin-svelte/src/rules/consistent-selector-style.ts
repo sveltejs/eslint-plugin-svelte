@@ -144,7 +144,7 @@ export default createRule('consistent-selector-style', {
 				if (styleValue === 'class') {
 					return;
 				}
-				if (styleValue === 'id' && canUseIdSelector(selection)) {
+				if (styleValue === 'id' && canUseIdSelector(selection.map(([elem]) => elem))) {
 					context.report({
 						messageId: 'classShouldBeId',
 						loc: styleSelectorNodeLoc(node) as AST.SourceLocation
@@ -286,11 +286,13 @@ function addToArrayMap<T>(
 /**
  * Finds all nodes in selections that could be matched by key
  */
-function matchSelection(selections: Selections, key: string): AST.SvelteHTMLElement[] {
-	const selection = selections.exact.get(key) ?? [];
+function matchSelection(selections: Selections, key: string): [AST.SvelteHTMLElement, boolean][] {
+	const selection = (selections.exact.get(key) ?? []).map<[AST.SvelteHTMLElement, boolean]>(
+		(elem) => [elem, true]
+	);
 	selections.affixes.forEach((nodes, [prefix, suffix]) => {
 		if ((prefix === null || key.startsWith(prefix)) && (suffix === null || key.endsWith(suffix))) {
-			selection.push(...nodes);
+			selection.push(...nodes.map<[AST.SvelteHTMLElement, boolean]>((elem) => [elem, false]));
 		}
 	});
 	return selection;
@@ -311,19 +313,32 @@ function canUseIdSelector(selection: AST.SvelteHTMLElement[]): boolean {
  * Checks whether a given selection could be obtained using a type selector
  */
 function canUseTypeSelector(
-	selection: AST.SvelteHTMLElement[],
+	selection: [AST.SvelteHTMLElement, boolean][],
 	typeSelections: Map<string, AST.SvelteHTMLElement[]>
 ): boolean {
-	const types = new Set(selection.map((node) => node.name.name));
+	const types = new Set(selection.map(([node]) => node.name.name));
 	if (types.size > 1) {
 		return false;
 	}
 	if (types.size < 1) {
 		return true;
 	}
+	if (
+		selection.some(
+			([elem, exact]) => !exact && elementOccurrenceCount(elem) === ElementOccurenceCount.ZeroToInf
+		)
+	) {
+		return false;
+	}
 	const type = [...types][0];
 	const typeSelection = typeSelections.get(type);
-	return typeSelection !== undefined && arrayEquals(typeSelection, selection);
+	return (
+		typeSelection !== undefined &&
+		arrayEquals(
+			typeSelection,
+			selection.map(([elem]) => elem)
+		)
+	);
 }
 
 /**
