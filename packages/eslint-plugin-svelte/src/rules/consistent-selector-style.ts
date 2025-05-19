@@ -12,6 +12,7 @@ import {
 	extractExpressionSuffixLiteral
 } from '../utils/expression-affixes.js';
 import { createRule } from '../utils/index.js';
+import { ElementOccurenceCount, elementOccurrenceCount } from '../utils/element-occurences.js';
 
 interface Selections {
 	exact: Map<string, AST.SvelteHTMLElement[]>;
@@ -299,7 +300,11 @@ function matchSelection(selections: Selections, key: string): AST.SvelteHTMLElem
  * Checks whether a given selection could be obtained using an ID selector
  */
 function canUseIdSelector(selection: AST.SvelteHTMLElement[]): boolean {
-	return selection.length <= 1;
+	return (
+		selection.length === 0 ||
+		(selection.length === 1 &&
+			elementOccurrenceCount(selection[0]) !== ElementOccurenceCount.ZeroToInf)
+	);
 }
 
 /**
