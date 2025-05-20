@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.8.2
+
+### Patch Changes
+
+- [#1231](https://github.com/sveltejs/eslint-plugin-svelte/pull/1231) [`0681f90`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0681f901196cf81a87169155f8f632bf12666908) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(consistent-selector-style): Fixed detections of repeated elements such as in {#each}
+
 ## 3.8.1
 
 ### Patch Changes
