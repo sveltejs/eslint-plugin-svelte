@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { RuleContext } from '../../types.js';
 
-const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore/m;
+const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore\s+/;
 
 /**
  * Map of legacy code -> new code
@@ -37,29 +37,45 @@ export function getSvelteIgnoreItems(context: RuleContext): (IgnoreItem | Ignore
 
 	const ignoreComments: (IgnoreItem | IgnoreItemWithoutCode)[] = [];
 	for (const comment of sourceCode.getAllComments()) {
-		const ignores = extractSvelteIgnore(comment.value, comment.range[0] + 2, comment);
-		if (ignores) {
-			ignoreComments.push(...ignores);
-		} else if (hasMissingCodeIgnore(comment.value)) {
+		const match = SVELTE_IGNORE_PATTERN.exec(comment.value);
+		if (!match) {
+			continue;
+		}
+		const codeListStart = match.index + match[0].length;
+		const codeList = comment.value.slice(codeListStart);
+		if (hasMissingCodeIgnore(codeList)) {
 			ignoreComments.push({
 				range: comment.range,
 				code: null,
 				token: comment
 			});
+		} else {
+			const ignores = extractSvelteIgnore(comment.range[0] + 2, comment, codeList, codeListStart);
+			if (ignores) {
+				ignoreComments.push(...ignores);
+			}
 		}
 	}
 	for (const token of sourceCode.ast.tokens) {
 		if (token.type === 'HTMLComment') {
 			const text = token.value.slice(4, -3);
-			const ignores = extractSvelteIgnore(text, token.range[0] + 4, token);
-			if (ignores) {
-				ignoreComments.push(...ignores);
-			} else if (hasMissingCodeIgnore(text)) {
+			const match = SVELTE_IGNORE_PATTERN.exec(text);
+			if (!match) {
+				continue;
+			}
+			const codeListStart = match.index + match[0].length;
+			const codeList = text.slice(codeListStart);
+			if (hasMissingCodeIgnore(codeList)) {
 				ignoreComments.push({
 					range: token.range,
 					code: null,
 					token
 				});
+			} else {
+				const ignores = extractSvelteIgnore(token.range[0] + 4, token, codeList, codeListStart);
+				if (ignores) {
+					ignoreComments.push(...ignores);
+				}
 			}
 		}
 	}
@@ -69,46 +85,42 @@ export function getSvelteIgnoreItems(context: RuleContext): (IgnoreItem | Ignore
 
 /** Extract svelte-ignore rule names */
 function extractSvelteIgnore(
-	text: string,
 	startIndex: number,
-	token: AST.Token | AST.Comment
+	token: AST.Token | AST.Comment,
+	codeList: string,
+	ignoreStart: number
 ): IgnoreItem[] | null {
-	const m1 = SVELTE_IGNORE_PATTERN.exec(text);
-	if (!m1) {
-		return null;
-	}
-	const ignoreStart = m1.index + m1[0].length;
-	const beforeText = text.slice(ignoreStart);
-	if (!/^\s/.test(beforeText) || !beforeText.trim()) {
-		return null;
-	}
-	let start = startIndex + ignoreStart;
-
+	const start = startIndex + ignoreStart;
 	const results: IgnoreItem[] = [];
-	for (const code of beforeText.split(/\s/)) {
-		const end = start + code.length;
-		const trimmed = code.trim();
-		if (trimmed) {
+	const separatorPattern = /\s*[\s,]\s*/g;
+	const separators = codeList.matchAll(separatorPattern);
+	let lastSeparatorEnd = 0;
+	for (const separator of separators) {
+		const code = codeList.slice(lastSeparatorEnd, separator.index);
+		if (code) {
 			results.push({
-				code: trimmed,
-				codeForV5: V5_REPLACEMENTS[trimmed] || trimmed.replace(/-/gu, '_'),
-				range: [start, end],
+				code,
+				codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+				range: [start + lastSeparatorEnd, start + separator.index],
 				token
 			});
 		}
-		start = end + 1; /* space */
+		lastSeparatorEnd = separator.index + separator[0].length;
+	}
+	if (results.length === 0) {
+		const code = codeList;
+		results.push({
+			code,
+			codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+			range: [start, start + code.length],
+			token
+		});
 	}
 
 	return results;
 }
 
 /** Checks whether given comment has missing code svelte-ignore */
-function hasMissingCodeIgnore(text: string) {
-	const m1 = SVELTE_IGNORE_PATTERN.exec(text);
-	if (!m1) {
-		return false;
-	}
-	const ignoreStart = m1.index + m1[0].length;
-	const beforeText = text.slice(ignoreStart);
-	return !beforeText.trim();
+function hasMissingCodeIgnore(codeList: string) {
+	return !codeList.trim();
 }
