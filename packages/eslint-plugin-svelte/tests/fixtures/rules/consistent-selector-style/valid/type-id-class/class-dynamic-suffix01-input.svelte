@@ -19,6 +19,10 @@
 
 <a class={derived}>Click me four!</a>
 
+{#each ["one", "two"] as count}
+  <b class={"bold-" + count}>Bold in each</b>
+{/each}
+
 <style>
   .foo-link-one {
     color: red;
@@ -30,5 +34,13 @@
 
   .foo-link-three {
     color: red;
+  }
+
+  .bold-one {
+    color: red;
+  }
+
+  .bold-two {
+    color: blue;
   }
 </style>
