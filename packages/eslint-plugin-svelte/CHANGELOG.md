@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.9.0
+
+### Minor Changes
+
+- [#1235](https://github.com/sveltejs/eslint-plugin-svelte/pull/1235) [`6e86e30`](https://github.com/sveltejs/eslint-plugin-svelte/commit/6e86e30cd766181dce5849ae739eedd2adfd8d8e) Thanks [@43081j](https://github.com/43081j)! - Improve performance of ignore comment extraction and add support for comma-separated ignore codes
+
 ## 3.8.2
 
 ### Patch Changes
