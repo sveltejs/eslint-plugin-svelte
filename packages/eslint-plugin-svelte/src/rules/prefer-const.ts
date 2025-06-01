@@ -59,8 +59,6 @@ export default createRule('prefer-const', {
 			{
 				type: 'object',
 				properties: {
-					destructuring: { enum: ['any', 'all'] },
-					ignoreReadBeforeAssign: { type: 'boolean' },
 					excludedRunes: {
 						type: 'array',
 						items: {
@@ -68,7 +66,8 @@ export default createRule('prefer-const', {
 						}
 					}
 				},
-				additionalProperties: false
+				// allow ESLint core rule's properties
+				additionalProperties: true
 			}
 		]
 	},
