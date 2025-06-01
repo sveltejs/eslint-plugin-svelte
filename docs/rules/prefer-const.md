@@ -46,7 +46,7 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
     "error",
     {
       "destructuring": "any",
-      "ignoreReadonly": true,
+      "additionalProperties": true,
       "excludedRunes": ["$props", "$derived"]
     }
   ]
