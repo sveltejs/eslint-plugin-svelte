@@ -570,6 +570,8 @@ type SveltePreferClassDirective = []|[{
 }]
 // ----- svelte/prefer-const -----
 type SveltePreferConst = []|[{
+  destructuring?: ("any" | "all")
+  ignoreReadBeforeAssign?: boolean
   excludedRunes?: string[]
   [k: string]: unknown | undefined
 }]
