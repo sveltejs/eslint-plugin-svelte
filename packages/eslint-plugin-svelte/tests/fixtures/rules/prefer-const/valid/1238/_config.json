@@ -1,0 +1,8 @@
+{
+	"options": [
+		{
+			"destructuring": "all",
+			"additionalProperties": true
+		}
+	]
+}

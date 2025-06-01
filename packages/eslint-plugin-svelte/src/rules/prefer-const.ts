@@ -68,7 +68,8 @@ export default createRule('prefer-const', {
 						}
 					}
 				},
-				additionalProperties: false
+				// Allow ESLint core rule properties in case new options are added in the future.
+				additionalProperties: true
 			}
 		]
 	},
