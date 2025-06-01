@@ -54,14 +54,14 @@ This rule reports the same as the base ESLint `prefer-const` rule, except that i
 ```
 
 - `destructuring`: The kind of the way to address variables in destructuring. There are 2 values:
-  - `any` (default): if any variables in destructuring should be const, this rule warns for those variables.
-  - `all`: if all variables in destructuring should be const, this rule warns the variables. Otherwise, ignores them.
-- `ignoreReadonly`: If `true`, this rule will ignore variables that are read between the declaration and the _first_ assignment.
+  - `any` (default) - If any variables in destructuring should be const, this rule warns for those variables.
+  - `all`: If all variables in destructuring should be const, this rule warns the variables. Otherwise, ignores them.
+- `ignoreReadBeforeAssign`: This is an option to avoid conflicting with `no-use-before-define` rule (without "nofunc" option). If `true` is specified, this rule will ignore variables that are read between the declaration and the first assignment. Default is `false`.
 - `excludedRunes`: An array of rune names that should be ignored. Even if a rune is declared with `let`, it will still be ignored.
 
 ## :books: Further Reading
 
-- See [ESLint `prefer-const` rule](https://eslint.org/docs/latest/rules/prefer-const) for more information about the base rule.
+- See [ESLint prefer-const rule](https://eslint.org/docs/latest/rules/prefer-const) for more information about the base rule.
 
 ## :rocket: Version
 
