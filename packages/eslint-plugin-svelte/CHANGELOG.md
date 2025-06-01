@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.9.1
+
+### Patch Changes
+
+- [#1239](https://github.com/sveltejs/eslint-plugin-svelte/pull/1239) [`a3d4224`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a3d42245fbb6a6663a1b3c6a4e211dce2b6dfbbb) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(prefer-const): Use `additionalProperties` instead of `ignoreReadonly` to match the ESLint core rule option name.
+
 ## 3.9.0
 
 ### Minor Changes
