@@ -1,0 +1,6 @@
+- message: |-
+    Using a rest element or a non-destructured declaration with `$props()` means that Svelte can't infer what properties to expose when creating a custom element. Consider destructuring all the props or explicitly specifying the `customElement.props` option.
+    https://svelte.dev/e/custom_element_props_identifier(custom_element_props_identifier)
+  line: 4
+  column: 6
+  suggestions: null
