@@ -17,7 +17,6 @@ import { extractLeadingComments } from './extract-leading-comments.js';
 import { findAttribute, getLangValue } from '../../utils/ast-utils.js';
 import path from 'path';
 import fs from 'fs';
-import semver from 'semver';
 
 type WarningTargetNode =
 	| (AST.SvelteProgram & ASTNodeWithParent)
@@ -383,7 +382,7 @@ function* transformScripts(context: RuleContext, text: string) {
 	}
 }
 
-function hasTagOption(program: AST.SvelteProgram) {
+function isCustomElement(program: AST.SvelteProgram) {
 	return program.body.some((body) => {
 		if (body.type !== 'SvelteElement' || body.kind !== 'special') {
 			return false;
@@ -392,7 +391,7 @@ function hasTagOption(program: AST.SvelteProgram) {
 			return false;
 		}
 
-		return Boolean(findAttribute(body, 'tag'));
+		return Boolean(findAttribute(body, 'tag')) || Boolean(findAttribute(body, 'customElement'));
 	});
 }
 
@@ -409,11 +408,7 @@ function getWarningsFromCode(
 	try {
 		const result = compiler.compile(code, {
 			generate: false,
-			...(semver.satisfies(compiler.VERSION, '>=4.0.0-0')
-				? { customElement: true }
-				: hasTagOption(context.sourceCode.ast)
-					? { customElement: true }
-					: {})
+			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
 
 		return { warnings: result.warnings as Warning[], kind: 'warn' };
