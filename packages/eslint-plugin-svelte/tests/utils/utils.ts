@@ -68,6 +68,14 @@ export function getRuleFixturesRoot(ruleName: string): string {
 	return path.resolve(FIXTURES_ROOT, `./rules/${ruleName}`);
 }
 
+function fileNameSuffix(fileName: string): string {
+	return fileName.match(/\.svelte\.(?:j|t)s$/u) ? fileName.slice(fileName.length - 10) : path.extname(fileName);
+}
+
+function isSvelteFile(fileName): boolean {
+	return fileName.match(/\.svelte(?:\.(?:j|t)s)?$/u);
+}
+
 /**
  * Load test cases
  */
@@ -118,11 +126,11 @@ export function loadTestCases(
 		.filter(filter)
 		.map((inputFile) => {
 			const config = getConfig(ruleName, inputFile);
-			const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
-			const outputExt = path.extname(inputFile);
+			const errorFile = inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'errors.yaml');
+			const outputSuffix = fileNameSuffix(inputFile);
 			const outputFile = inputFile.replace(
-				/(input|\+.+)\.[a-z]+$/u,
-				`output.${outputExt.slice(1)}`
+				/(input|\+.+)(?:\.[a-z]+)+$/u,
+				`output.${outputSuffix.slice(1)}`
 			);
 
 			if (!fs.existsSync(errorFile)) {
@@ -193,7 +201,8 @@ function* itrListupInput(rootDir: string): IterableIterator<string> {
 			continue;
 		}
 		const abs = path.join(rootDir, filename);
-		const baseFileName = path.basename(filename, path.extname(filename));
+		const baseName = path.basename(filename);
+		const baseFileName = baseName.slice(0, baseName.length - fileNameSuffix(baseName).length);
 		if (baseFileName.endsWith('input') || baseFileName.startsWith('+')) {
 			yield abs;
 		} else if (fs.statSync(abs).isDirectory()) {
@@ -217,12 +226,12 @@ function writeFixtures(
 	{ force }: { force?: boolean } = {}
 ) {
 	const linter = new Linter();
-	const errorFile = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'errors.yaml');
+	const errorFile = inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'errors.yaml');
 
 	const config = getConfig(ruleName, inputFile);
 
 	const parser =
-		path.extname(inputFile) === '.svelte'
+		isSvelteFile(inputFile)
 			? svelteParser
 			: path.extname(inputFile) === '.ts'
 				? typescriptParser
@@ -298,11 +307,11 @@ function getConfig(ruleName: string, inputFile: string) {
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
 	let configFile = [
-		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.json'),
+		inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'config.json'),
 		path.join(path.dirname(inputFile), '_config.json'),
-		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.js'),
+		inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'config.js'),
 		path.join(path.dirname(inputFile), '_config.js'),
-		inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'config.cjs'),
+		inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'config.cjs'),
 		path.join(path.dirname(inputFile), '_config.cjs')
 	].find((f) => fs.existsSync(f));
 	if (configFile) {
@@ -312,7 +321,7 @@ function getConfig(ruleName: string, inputFile: string) {
 				: JSON.parse(fs.readFileSync(configFile, 'utf8'));
 	}
 	const parser =
-		path.extname(filename) === '.svelte'
+		isSvelteFile(filename)
 			? svelteParser
 			: path.extname(inputFile) === '.ts'
 				? typescriptParser
@@ -350,7 +359,7 @@ function getConfig(ruleName: string, inputFile: string) {
 }
 
 function getRequirements(inputFile: string): Record<string, string> {
-	let requirementsFile: string = inputFile.replace(/(input|\+.+)\.[a-z]+$/u, 'requirements.json');
+	let requirementsFile: string = inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'requirements.json');
 	if (!fs.existsSync(requirementsFile)) {
 		requirementsFile = path.join(path.dirname(inputFile), '_requirements.json');
 	}
