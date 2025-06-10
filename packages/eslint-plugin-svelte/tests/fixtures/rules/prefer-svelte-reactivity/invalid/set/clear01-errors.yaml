@@ -1,0 +1,4 @@
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 2
+  column: 20
+  suggestions: null
