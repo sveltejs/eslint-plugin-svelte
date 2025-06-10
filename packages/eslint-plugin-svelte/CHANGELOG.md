@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.9.2
+
+### Patch Changes
+
+- [#1243](https://github.com/sveltejs/eslint-plugin-svelte/pull/1243) [`5df1121`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5df1121d1428d8f31578bd040bb248c8b1edf8a4) Thanks [@zachstence](https://github.com/zachstence)! - fix false positives for regular components in valid-compile/custom_element_props_identifier
+
 ## 3.9.1
 
 ### Patch Changes
