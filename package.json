@@ -28,7 +28,7 @@
     "eslint-config-prettier": "^10.0.0",
     "eslint-formatter-friendly": "^7.0.0",
     "eslint-plugin-eslint-plugin": "^6.3.2",
-    "eslint-plugin-jsdoc": "^50.6.0",
+    "eslint-plugin-jsdoc": "^51.0.0",
     "eslint-plugin-json-schema-validator": "^5.1.3",
     "eslint-plugin-jsonc": "^2.18.2",
     "eslint-plugin-markdown": "^5.1.0",
