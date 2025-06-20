@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.9.3
+
+### Patch Changes
+
+- [#1252](https://github.com/sveltejs/eslint-plugin-svelte/pull/1252) [`5db956e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5db956ef737cddce4d8ec31178b6a677c9ed7680) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-top-level-browser-globals): false positive for `{#if browser}`
+
 ## 3.9.2
 
 ### Patch Changes
