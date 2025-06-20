@@ -4,6 +4,7 @@ import { createRule } from '../utils/index.js';
 import globals from 'globals';
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, getScope } from '../utils/ast-utils.js';
+import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('no-top-level-browser-globals', {
 	meta: {
@@ -36,10 +37,10 @@ export default createRule('no-top-level-browser-globals', {
 		};
 		const maybeGuards: MaybeGuard[] = [];
 
-		const functions: TSESTree.FunctionLike[] = [];
+		const functions: (TSESTree.FunctionLike | AST.SvelteSnippetBlock)[] = [];
 		const typeAnnotations: (TSESTree.TypeNode | TSESTree.TSTypeAnnotation)[] = [];
 
-		function enterFunction(node: TSESTree.FunctionLike) {
+		function enterFunction(node: TSESTree.FunctionLike | AST.SvelteSnippetBlock) {
 			if (isTopLevelLocation(node)) {
 				functions.push(node);
 			}
@@ -120,6 +121,7 @@ export default createRule('no-top-level-browser-globals', {
 
 		return {
 			':function': enterFunction,
+			SvelteSnippetBlock: enterFunction,
 			'*.typeAnnotation': enterTypeAnnotation,
 			MetaProperty: enterMetaProperty,
 			'Program:exit': verifyGlobalReferences
@@ -144,7 +146,7 @@ export default createRule('no-top-level-browser-globals', {
 		 * Checks whether the node is in a top-level location.
 		 * @returns `true` if the node is in a top-level location.
 		 */
-		function isTopLevelLocation(node: TSESTree.Node) {
+		function isTopLevelLocation(node: TSESTree.Node | AST.SvelteSnippetBlock) {
 			for (const func of functions) {
 				if (func.range[0] <= node.range[0] && node.range[1] <= func.range[1]) {
 					return false;
@@ -321,7 +323,7 @@ export default createRule('no-top-level-browser-globals', {
 			node: TSESTree.Expression;
 			not?: boolean;
 		}): ((node: TSESTree.Node) => boolean) | null {
-			const parent = guardInfo.node.parent;
+			const parent = guardInfo.node.parent as TSESTree.Node | AST.SvelteNode;
 			if (!parent) return null;
 
 			if (parent.type === 'ConditionalExpression') {
@@ -330,6 +332,22 @@ export default createRule('no-top-level-browser-globals', {
 			}
 			if (parent.type === 'UnaryExpression' && parent.operator === '!') {
 				return getGuardChecker({ not: !guardInfo.not, node: parent });
+			}
+			if (parent.type === 'SvelteIfBlock' && parent.expression === guardInfo.node) {
+				if (!guardInfo.not) {
+					if (parent.children.length === 0) {
+						return null; // No block to check
+					}
+					const first = parent.children[0];
+					const last = parent.children.at(-1)!;
+					return (n) => first.range[0] <= n.range[0] && n.range[1] <= last.range[1];
+				}
+				// not
+				if (parent.else) {
+					const block = parent.else;
+					return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
+				}
+				return null;
 			}
 			if (parent.type === 'IfStatement' && parent.test === guardInfo.node) {
 				if (!guardInfo.not) {
