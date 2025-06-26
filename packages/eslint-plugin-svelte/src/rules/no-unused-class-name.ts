@@ -4,6 +4,7 @@ import type { AnyNode } from 'postcss';
 import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import type { SourceCode } from '../types.js';
+import { toRegExp } from '../utils/regexp.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {
@@ -57,7 +58,12 @@ export default createRule('no-unused-class-name', {
 						? findClassesInPostCSSNode(styleContext.sourceAst, sourceCode.parserServices)
 						: [];
 				for (const className in classesUsedInTemplate) {
-					if (!allowedClassNames.includes(className) && !classesUsedInStyle.includes(className)) {
+					if (
+						!allowedClassNames.some((allowedClassName: string) =>
+							toRegExp(allowedClassName).test(className)
+						) &&
+						!classesUsedInStyle.includes(className)
+					) {
 						context.report({
 							loc: classesUsedInTemplate[className],
 							message: `Unused class "${className}".`
