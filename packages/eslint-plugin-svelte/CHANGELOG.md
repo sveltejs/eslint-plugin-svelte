@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.10.0
+
+### Minor Changes
+
+- [#1257](https://github.com/sveltejs/eslint-plugin-svelte/pull/1257) [`e94a3be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e94a3be9c110cbe7f7e04decfe1b85f9725bccba) Thanks [@tbashiyy](https://github.com/tbashiyy)! - feat(no-unused-class-name): support regex for `allowedClassNames` option
+
 ## 3.9.3
 
 ### Patch Changes
@@ -191,7 +197,6 @@
 - [#937](https://github.com/sveltejs/eslint-plugin-svelte/pull/937) [`729394e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/729394e34d2d6f51e00c89b67a40d0f9192260b4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: drop support for old eslint
 
 - [#1033](https://github.com/sveltejs/eslint-plugin-svelte/pull/1033) [`3bfcc31`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3bfcc31e0f2d127c7a1cb838c4c57125c30109ea) Thanks [@baseballyama](https://github.com/baseballyama)! - **Enabled in recommended config**:
-
   - `svelte/infinite-reactive-loop`
   - `svelte/no-dom-manipulating`
   - `svelte/no-dupe-on-directives`
@@ -215,7 +220,6 @@
   - `svelte/valid-prop-names-in-kit-pages`
 
   **Removed from recommended config**:
-
   - `svelte/valid-compile`
 
   This update introduces breaking changes due to newly enabled rules.
@@ -335,7 +339,6 @@
 ### Major Changes
 
 - [#1033](https://github.com/sveltejs/eslint-plugin-svelte/pull/1033) [`3bfcc31`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3bfcc31e0f2d127c7a1cb838c4c57125c30109ea) Thanks [@baseballyama](https://github.com/baseballyama)! - **Enabled in recommended config**:
-
   - `svelte/infinite-reactive-loop`
   - `svelte/no-dom-manipulating`
   - `svelte/no-dupe-on-directives`
@@ -359,7 +362,6 @@
   - `svelte/valid-prop-names-in-kit-pages`
 
   **Removed from recommended config**:
-
   - `svelte/valid-compile`
 
   This update introduces breaking changes due to newly enabled rules.
