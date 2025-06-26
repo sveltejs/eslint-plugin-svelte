@@ -4,6 +4,7 @@ import type { AnyNode } from 'postcss';
 import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import type { SourceCode } from '../types.js';
+import { isRegExp, toRegExp } from 'src/utils/regexp.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {
@@ -60,12 +61,11 @@ export default createRule('no-unused-class-name', {
 					if (
 						!allowedClassNames.includes(className) &&
 						!allowedClassNames.some((allowedClassName: string) => {
-							const regex = /^\/(.*)\/$/.exec(allowedClassName);
-							if (regex == null || regex[1] == null) {
+							if (!isRegExp(allowedClassName)) {
 								return false;
 							}
 
-							return new RegExp(regex[1]).test(className);
+							return toRegExp(allowedClassName).test(className);
 						}) &&
 						!classesUsedInStyle.includes(className)
 					) {
