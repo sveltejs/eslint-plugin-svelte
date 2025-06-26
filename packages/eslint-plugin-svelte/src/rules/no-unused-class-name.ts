@@ -59,14 +59,9 @@ export default createRule('no-unused-class-name', {
 						: [];
 				for (const className in classesUsedInTemplate) {
 					if (
-						!allowedClassNames.includes(className) &&
-						!allowedClassNames.some((allowedClassName: string) => {
-							if (!isRegExp(allowedClassName)) {
-								return false;
-							}
-
-							return toRegExp(allowedClassName).test(className);
-						}) &&
+						!allowedClassNames.some((allowedClassName: string) =>
+							toRegExp(allowedClassName).test(className)
+						) &&
 						!classesUsedInStyle.includes(className)
 					) {
 						context.report({
