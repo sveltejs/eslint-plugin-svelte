@@ -57,7 +57,18 @@ export default createRule('no-unused-class-name', {
 						? findClassesInPostCSSNode(styleContext.sourceAst, sourceCode.parserServices)
 						: [];
 				for (const className in classesUsedInTemplate) {
-					if (!allowedClassNames.includes(className) && !classesUsedInStyle.includes(className)) {
+					if (
+						!allowedClassNames.includes(className) &&
+						!allowedClassNames.some((allowedClassName: string) => {
+							const regex = /^\/(.*)\/$/.exec(allowedClassName);
+							if (regex == null || regex[1] == null) {
+								return false;
+							}
+
+							return new RegExp(regex[1]).test(className);
+						}) &&
+						!classesUsedInStyle.includes(className)
+					) {
 						context.report({
 							loc: classesUsedInTemplate[className],
 							message: `Unused class "${className}".`
