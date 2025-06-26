@@ -4,7 +4,7 @@ import type { AnyNode } from 'postcss';
 import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import type { SourceCode } from '../types.js';
-import { isRegExp, toRegExp } from 'src/utils/regexp.js';
+import { toRegExp } from 'src/utils/regexp.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {
