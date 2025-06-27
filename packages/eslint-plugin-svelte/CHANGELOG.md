@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.10.1
+
+### Patch Changes
+
+- [#1260](https://github.com/sveltejs/eslint-plugin-svelte/pull/1260) [`a51363f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a51363fc87bf18191b704ec8a56663e522abab14) Thanks [@tbashiyy](https://github.com/tbashiyy)! - fix(no-unused-class-name): detect duplicated class names
+
 ## 3.10.0
 
 ### Minor Changes
