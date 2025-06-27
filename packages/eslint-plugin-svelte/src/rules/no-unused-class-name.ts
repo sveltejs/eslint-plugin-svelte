@@ -36,7 +36,10 @@ export default createRule('no-unused-class-name', {
 			return {};
 		}
 		const allowedClassNames = context.options[0]?.allowedClassNames ?? [];
-		const classesUsedInTemplate: Record<string, AST.SourceLocation> = {};
+		const classesUsedInTemplate: {
+			className: string;
+			loc: AST.SourceLocation;
+		}[] = [];
 
 		return {
 			SvelteElement(node) {
@@ -45,7 +48,7 @@ export default createRule('no-unused-class-name', {
 				}
 				const classes = node.startTag.attributes.flatMap(findClassesInAttribute);
 				for (const className of classes) {
-					classesUsedInTemplate[className] = node.startTag.loc;
+					classesUsedInTemplate.push({ className, loc: node.startTag.loc });
 				}
 			},
 			'Program:exit'() {
@@ -57,7 +60,8 @@ export default createRule('no-unused-class-name', {
 					styleContext.status === 'success'
 						? findClassesInPostCSSNode(styleContext.sourceAst, sourceCode.parserServices)
 						: [];
-				for (const className in classesUsedInTemplate) {
+
+				for (const { className, loc } of classesUsedInTemplate) {
 					if (
 						!allowedClassNames.some((allowedClassName: string) =>
 							toRegExp(allowedClassName).test(className)
@@ -65,7 +69,7 @@ export default createRule('no-unused-class-name', {
 						!classesUsedInStyle.includes(className)
 					) {
 						context.report({
-							loc: classesUsedInTemplate[className],
+							loc,
 							message: `Unused class "${className}".`
 						});
 					}
