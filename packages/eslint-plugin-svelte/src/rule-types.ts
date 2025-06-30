@@ -317,6 +317,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-style-directive'?: Linter.RuleEntry<[]>
   /**
+   * disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/
+   */
+  'svelte/prefer-svelte-reactivity'?: Linter.RuleEntry<[]>
+  /**
    * Prefer using writable $derived instead of $state and $effect
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/
    */
