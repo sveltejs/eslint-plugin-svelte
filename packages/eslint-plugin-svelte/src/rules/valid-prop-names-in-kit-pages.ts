@@ -4,7 +4,7 @@ import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { getSvelteVersion } from '../utils/svelte-context.js';
 
-const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'snapshot'];
+const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'params', 'snapshot'];
 const EXPECTED_PROP_NAMES_SVELTE5 = [...EXPECTED_PROP_NAMES, 'children'];
 
 function checkProp(
