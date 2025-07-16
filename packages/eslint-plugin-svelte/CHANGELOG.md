@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.11.0
+
+### Minor Changes
+
+- [#1151](https://github.com/sveltejs/eslint-plugin-svelte/pull/1151) [`843730d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/843730dba5cb907bacf007023ad1971b8925f733) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the `prefer-svelte-reactivity` rule
+
+- [#1269](https://github.com/sveltejs/eslint-plugin-svelte/pull/1269) [`a444476`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a4444766bf619ba8e3f34289fef606b46a4c64fd) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: support asynchronous svelte
+
+### Patch Changes
+
+- [#1268](https://github.com/sveltejs/eslint-plugin-svelte/pull/1268) [`4e33ba4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4e33ba4c09c792672837db91b46885a85f6cdfe2) Thanks [@GauBen](https://github.com/GauBen)! - feat(valid-prop-names-in-kit-pages): add support for the new `params` page prop
+
 ## 3.10.1
 
 ### Patch Changes

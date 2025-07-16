@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/prefer-svelte-reactivity'
 description: 'disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity'
+since: 'v3.11.0'
 ---
 
 # svelte/prefer-svelte-reactivity
 
 > disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
@@ -110,6 +110,10 @@ Nothing.
 ## :books: Further Reading
 
 - [svelte/reactivity documentation](https://svelte.dev/docs/svelte/svelte-reactivity)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.11.0
 
 ## :mag: Implementation
 
