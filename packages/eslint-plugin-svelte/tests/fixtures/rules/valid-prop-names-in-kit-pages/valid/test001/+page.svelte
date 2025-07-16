@@ -2,7 +2,7 @@
 	export let data;
 	export let errors;
 	export let form;
-  export let params;
+	export let params;
 
 	let comment = '';
 
