@@ -1,5 +1,5 @@
 <script>
-	let { data, errors, form, children } = $props();
+	let { data, errors, form, params, children } = $props();
 
 	let comment = '';
 
