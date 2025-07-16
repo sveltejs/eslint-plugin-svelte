@@ -1,0 +1,29 @@
+- message: Found a mutable instance of the built-in Date class. Use SvelteDate instead.
+  line: 1
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 2
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 3
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in URLSearchParams class. Use
+    SvelteURLSearchParams instead.
+  line: 4
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 5
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in Date class. Use SvelteDate instead.
+  line: 6
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in Date class. Use SvelteDate instead.
+  line: 10
+  column: 26
+  suggestions: null

@@ -37,6 +37,7 @@ const config: Linter.Config[] = [
 			'svelte/no-unused-svelte-ignore': 'error',
 			'svelte/no-useless-children-snippet': 'error',
 			'svelte/no-useless-mustaches': 'error',
+			'svelte/prefer-svelte-reactivity': 'error',
 			'svelte/prefer-writable-derived': 'error',
 			'svelte/require-each-key': 'error',
 			'svelte/require-event-dispatcher-types': 'error',
