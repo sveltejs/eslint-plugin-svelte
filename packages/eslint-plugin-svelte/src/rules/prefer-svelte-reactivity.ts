@@ -2,7 +2,8 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, isIn } from '../utils/ast-utils.js';
-import { getSvelteContext } from '../utils/svelte-context.js';
+import { getSvelteContext } from 'src/utils/svelte-context.js';
+import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('prefer-svelte-reactivity', {
 	meta: {
@@ -12,7 +13,18 @@ export default createRule('prefer-svelte-reactivity', {
 			category: 'Possible Errors',
 			recommended: true
 		},
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					ignoreLocalVariables: {
+						type: 'boolean',
+						default: true
+					}
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			mutableDateUsed:
 				'Found a mutable instance of the built-in Date class. Use SvelteDate instead.',
@@ -31,6 +43,7 @@ export default createRule('prefer-svelte-reactivity', {
 		]
 	},
 	create(context) {
+		const options = context.options[0] ?? { ignoreLocalVariables: true };
 		const exportedVars: TSESTree.Node[] = [];
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
@@ -78,6 +91,10 @@ export default createRule('prefer-svelte-reactivity', {
 						[ReferenceTracker.CONSTRUCT]: true
 					}
 				})) {
+					if (options.ignoreLocalVariables && !isTopLevelDeclaration(node)) {
+						continue;
+					}
+
 					const messageId =
 						path[0] === 'Date'
 							? 'mutableDateUsed'
@@ -134,6 +151,32 @@ export default createRule('prefer-svelte-reactivity', {
 		};
 	}
 });
+
+function isTopLevelDeclaration(node: TSESTree.Node | AST.SvelteNode): boolean {
+	let declaration: TSESTree.Node | AST.SvelteNode | null = node;
+	while (
+		declaration &&
+		declaration.type !== 'VariableDeclaration' &&
+		declaration.type !== 'FunctionDeclaration' &&
+		declaration.type !== 'ClassDeclaration' &&
+		declaration.type !== 'ExportDefaultDeclaration'
+	) {
+		declaration = declaration.parent as TSESTree.Node | AST.SvelteNode | null;
+	}
+
+	if (!declaration) {
+		return false;
+	}
+
+	const parentType: string | undefined = declaration.parent?.type;
+	return (
+		parentType === 'SvelteScriptElement' ||
+		parentType === 'Program' ||
+		parentType === 'ExportDefaultDeclaration' ||
+		parentType === 'ExportNamedDeclaration' ||
+		parentType === 'ExportAllDeclaration'
+	);
+}
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
 	return !referenceTracker
