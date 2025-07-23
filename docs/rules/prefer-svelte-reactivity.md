@@ -105,7 +105,18 @@ export default e;
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "svelte/prefer-svelte-reactivity": [
+    "error",
+    {
+      "ignoreLocalVariables": true
+    }
+  ]
+}
+```
+
+- `ignoreLocalVariables` ... Set to `true` to ignore variables declared anywhere other than the top level, such as inside functions. The default is `true`. In almost all cases, we do not need to set this to `false`.
 
 ## :books: Further Reading
 
