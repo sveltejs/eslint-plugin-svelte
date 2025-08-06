@@ -31,6 +31,10 @@ export default createRule('prefer-svelte-reactivity', {
 		]
 	},
 	create(context) {
+		const returnedVariables: Map<
+			TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration,
+			TSESTree.VariableDeclarator[]
+		> = new Map();
 		const exportedVars: TSESTree.Node[] = [];
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
@@ -59,6 +63,28 @@ export default createRule('prefer-svelte-reactivity', {
 					}
 				}
 			}),
+			Identifier(node) {
+				const enclosingReturn = findEnclosingReturn(node);
+				if (enclosingReturn === null) {
+					return;
+				}
+				const enclosingFunction = findEnclosingFunction(enclosingReturn);
+				if (enclosingFunction === null) {
+					return;
+				}
+				const variable = findVariable(context, node);
+				if (
+					variable === null ||
+					variable.identifiers.length < 1 ||
+					variable.identifiers[0].parent.type !== 'VariableDeclarator'
+				) {
+					return;
+				}
+				if (!returnedVariables.has(enclosingFunction)) {
+					returnedVariables.set(enclosingFunction, []);
+				}
+				returnedVariables.get(enclosingFunction)?.push(variable.identifiers[0].parent);
+			},
 			'Program:exit'() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				for (const { node, path } of referenceTracker.iterateGlobalReferences({
@@ -95,6 +121,20 @@ export default createRule('prefer-svelte-reactivity', {
 								node
 							});
 						}
+					}
+					for (const returnedVar of Array.from(returnedVariables.values()).flat()) {
+						if (isIn(node, returnedVar)) {
+							context.report({
+								messageId,
+								node
+							});
+						}
+					}
+					if (findEnclosingReturn(node) !== null) {
+						context.report({
+							messageId,
+							node
+						});
 					}
 					if (path[0] === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
 						context.report({
@@ -134,6 +174,29 @@ export default createRule('prefer-svelte-reactivity', {
 		};
 	}
 });
+
+function findAncestorOfTypes<T extends string>(
+	node: TSESTree.Node,
+	types: string[]
+): (TSESTree.Node & { type: T }) | null {
+	if (types.includes(node.type)) {
+		return node as TSESTree.Node & { type: T };
+	}
+	if (node.parent === undefined || node.parent === null) {
+		return null;
+	}
+	return findAncestorOfTypes(node.parent, types);
+}
+
+function findEnclosingReturn(node: TSESTree.Node): TSESTree.ReturnStatement | null {
+	return findAncestorOfTypes(node, ['ReturnStatement']);
+}
+
+function findEnclosingFunction(
+	node: TSESTree.Node
+): TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | null {
+	return findAncestorOfTypes(node, ['ArrowFunctionExpression', 'FunctionDeclaration']);
+}
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
 	return !referenceTracker
