@@ -4,6 +4,13 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, isIn } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
 
+type FunctionLike =
+	| TSESTree.ArrowFunctionExpression
+	| TSESTree.FunctionDeclaration
+	| TSESTree.MethodDefinition;
+
+type VariableLike = TSESTree.VariableDeclarator | TSESTree.PropertyDefinition;
+
 export default createRule('prefer-svelte-reactivity', {
 	meta: {
 		docs: {
@@ -44,10 +51,7 @@ export default createRule('prefer-svelte-reactivity', {
 	create(context) {
 		const ignoreEncapsulatedLocalVariables =
 			context.options[0]?.ignoreEncapsulatedLocalVariables ?? true;
-		const returnedVariables: Map<
-			TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration,
-			TSESTree.VariableDeclarator[]
-		> = new Map();
+		const returnedVariables: Map<FunctionLike, VariableLike[]> = new Map();
 		const exportedVars: TSESTree.Node[] = [];
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
@@ -85,18 +89,35 @@ export default createRule('prefer-svelte-reactivity', {
 				if (enclosingFunction === null) {
 					return;
 				}
-				const variable = findVariable(context, node);
-				if (
-					variable === null ||
-					variable.identifiers.length < 1 ||
-					variable.identifiers[0].parent.type !== 'VariableDeclarator'
-				) {
+				let variableDeclaration = null;
+				if (node.parent.type === 'MemberExpression') {
+					const enclosingClassBody = findEnclosingClassBody(node);
+					for (const classElement of enclosingClassBody?.body ?? []) {
+						if (
+							classElement.type === 'PropertyDefinition' &&
+							classElement.key.type === 'Identifier' &&
+							node.name === classElement.key.name
+						) {
+							variableDeclaration = classElement;
+						}
+					}
+				} else {
+					const variable = findVariable(context, node);
+					if (
+						variable !== null &&
+						variable.identifiers.length > 0 &&
+						variable.identifiers[0].parent.type === 'VariableDeclarator'
+					) {
+						variableDeclaration = variable.identifiers[0].parent;
+					}
+				}
+				if (variableDeclaration === null) {
 					return;
 				}
 				if (!returnedVariables.has(enclosingFunction)) {
 					returnedVariables.set(enclosingFunction, []);
 				}
-				returnedVariables.get(enclosingFunction)?.push(variable.identifiers[0].parent);
+				returnedVariables.get(enclosingFunction)?.push(variableDeclaration);
 			},
 			'Program:exit'() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
@@ -135,17 +156,25 @@ export default createRule('prefer-svelte-reactivity', {
 							});
 						}
 					}
-					for (const returnedVar of Array.from(returnedVariables.values()).flat()) {
-						if (isIn(node, returnedVar)) {
-							context.report({
-								messageId,
-								node
-							});
+					for (const [fn, fnReturnVars] of returnedVariables.entries()) {
+						for (const returnedVar of fnReturnVars) {
+							if (fn.type === 'MethodDefinition' && returnedVar.type === 'PropertyDefinition') {
+								continue;
+							}
+							if (isIn(node, returnedVar)) {
+								context.report({
+									messageId,
+									node
+								});
+							}
 						}
 					}
+					const enclosingPropertyDefinition = findEnclosingPropertyDefinition(node);
 					if (
 						findEnclosingReturn(node) !== null ||
-						findEnclosingPropertyDefinition(node)?.accessibility === 'public'
+						(enclosingPropertyDefinition !== null &&
+							(!ignoreEncapsulatedLocalVariables ||
+								!isPropertyEncapsulated(enclosingPropertyDefinition, returnedVariables)))
 					) {
 						context.report({
 							messageId,
@@ -207,10 +236,18 @@ function findAncestorOfTypes<T extends string>(
 	return findAncestorOfTypes(node.parent, types);
 }
 
+function findEnclosingClassBody(node: TSESTree.Node): TSESTree.ClassBody | null {
+	return findAncestorOfTypes(node, ['ClassBody']);
+}
+
 function findEnclosingFunction(
 	node: TSESTree.Node
 ): TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | null {
-	return findAncestorOfTypes(node, ['ArrowFunctionExpression', 'FunctionDeclaration']);
+	return findAncestorOfTypes(node, [
+		'ArrowFunctionExpression',
+		'FunctionDeclaration',
+		'MethodDefinition'
+	]);
 }
 
 function findEnclosingPropertyDefinition(node: TSESTree.Node): TSESTree.PropertyDefinition | null {
@@ -222,10 +259,7 @@ function findEnclosingReturn(node: TSESTree.Node): TSESTree.ReturnStatement | nu
 }
 
 function isLocalVarEncapsulated(
-	returnedVariables: Map<
-		TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration,
-		TSESTree.VariableDeclarator[]
-	>,
+	returnedVariables: Map<FunctionLike, VariableLike[]>,
 	node: TSESTree.Node
 ): boolean {
 	const enclosingFunction = findEnclosingFunction(node);
@@ -235,6 +269,33 @@ function isLocalVarEncapsulated(
 	return (
 		returnedVariables.get(enclosingFunction)?.some((variable) => isIn(node, variable)) !== true
 	);
+}
+
+function methodReturnsProperty(
+	method: TSESTree.MethodDefinition,
+	property: TSESTree.PropertyDefinition,
+	returnedVariables: Map<FunctionLike, VariableLike[]>
+): boolean {
+	return returnedVariables.get(method)?.includes(property) ?? false;
+}
+
+function isPropertyEncapsulated(
+	node: TSESTree.PropertyDefinition,
+	returnedVariables: Map<FunctionLike, VariableLike[]>
+): boolean {
+	if (node.accessibility === 'public') {
+		return false;
+	}
+	for (const classElement of node.parent.body) {
+		if (
+			classElement.type === 'MethodDefinition' &&
+			classElement.accessibility === 'public' &&
+			methodReturnsProperty(classElement, node, returnedVariables)
+		) {
+			return false;
+		}
+	}
+	return true;
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
