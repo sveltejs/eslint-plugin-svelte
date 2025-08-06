@@ -12,7 +12,18 @@ export default createRule('prefer-svelte-reactivity', {
 			category: 'Possible Errors',
 			recommended: true
 		},
-		schema: [],
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					ignoreEncapsulatedLocalVariables: {
+						type: 'boolean',
+						default: true
+					}
+				},
+				additionalProperties: false
+			}
+		],
 		messages: {
 			mutableDateUsed:
 				'Found a mutable instance of the built-in Date class. Use SvelteDate instead.',
@@ -31,6 +42,8 @@ export default createRule('prefer-svelte-reactivity', {
 		]
 	},
 	create(context) {
+		const ignoreEncapsulatedLocalVariables =
+			context.options[0]?.ignoreEncapsulatedLocalVariables ?? true;
 		const returnedVariables: Map<
 			TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration,
 			TSESTree.VariableDeclarator[]
@@ -139,6 +152,9 @@ export default createRule('prefer-svelte-reactivity', {
 							node
 						});
 					}
+					if (ignoreEncapsulatedLocalVariables && isLocalVarEncapsulated(returnedVariables, node)) {
+						continue;
+					}
 					if (path[0] === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
 						context.report({
 							messageId: 'mutableDateUsed',
@@ -203,6 +219,22 @@ function findEnclosingPropertyDefinition(node: TSESTree.Node): TSESTree.Property
 
 function findEnclosingReturn(node: TSESTree.Node): TSESTree.ReturnStatement | null {
 	return findAncestorOfTypes(node, ['ReturnStatement']);
+}
+
+function isLocalVarEncapsulated(
+	returnedVariables: Map<
+		TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration,
+		TSESTree.VariableDeclarator[]
+	>,
+	node: TSESTree.Node
+): boolean {
+	const enclosingFunction = findEnclosingFunction(node);
+	if (enclosingFunction === null) {
+		return false;
+	}
+	return (
+		returnedVariables.get(enclosingFunction)?.some((variable) => isIn(node, variable)) !== true
+	);
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
