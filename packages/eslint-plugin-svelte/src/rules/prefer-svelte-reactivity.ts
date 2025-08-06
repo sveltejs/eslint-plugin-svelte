@@ -51,6 +51,7 @@ export default createRule('prefer-svelte-reactivity', {
 	create(context) {
 		const ignoreEncapsulatedLocalVariables =
 			context.options[0]?.ignoreEncapsulatedLocalVariables ?? true;
+		const returnedFunctionCalls: Map<FunctionLike, TSESTree.MethodDefinition[]> = new Map();
 		const returnedVariables: Map<FunctionLike, VariableLike[]> = new Map();
 		const exportedVars: TSESTree.Node[] = [];
 		return {
@@ -81,6 +82,29 @@ export default createRule('prefer-svelte-reactivity', {
 				}
 			}),
 			Identifier(node) {
+				function recordVariable(enclosingFunction: FunctionLike, variable: VariableLike): void {
+					if (variable === null) {
+						return;
+					}
+					if (!returnedVariables.has(enclosingFunction)) {
+						returnedVariables.set(enclosingFunction, []);
+					}
+					returnedVariables.get(enclosingFunction)?.push(variable);
+				}
+
+				function recordFunctionCall(
+					enclosingFunction: FunctionLike,
+					functionCall: TSESTree.MethodDefinition
+				): void {
+					if (functionCall === null) {
+						return;
+					}
+					if (!returnedFunctionCalls.has(enclosingFunction)) {
+						returnedFunctionCalls.set(enclosingFunction, []);
+					}
+					returnedFunctionCalls.get(enclosingFunction)?.push(functionCall);
+				}
+
 				const enclosingReturn = findEnclosingReturn(node);
 				if (enclosingReturn === null) {
 					return;
@@ -89,7 +113,6 @@ export default createRule('prefer-svelte-reactivity', {
 				if (enclosingFunction === null) {
 					return;
 				}
-				let variableDeclaration = null;
 				if (node.parent.type === 'MemberExpression') {
 					const enclosingClassBody = findEnclosingClassBody(node);
 					for (const classElement of enclosingClassBody?.body ?? []) {
@@ -98,7 +121,14 @@ export default createRule('prefer-svelte-reactivity', {
 							classElement.key.type === 'Identifier' &&
 							node.name === classElement.key.name
 						) {
-							variableDeclaration = classElement;
+							recordVariable(enclosingFunction, classElement);
+						}
+						if (
+							classElement.type === 'MethodDefinition' &&
+							classElement.key.type === 'Identifier' &&
+							node.name === classElement.key.name
+						) {
+							recordFunctionCall(enclosingFunction, classElement);
 						}
 					}
 				} else {
@@ -108,16 +138,9 @@ export default createRule('prefer-svelte-reactivity', {
 						variable.identifiers.length > 0 &&
 						variable.identifiers[0].parent.type === 'VariableDeclarator'
 					) {
-						variableDeclaration = variable.identifiers[0].parent;
+						recordVariable(enclosingFunction, variable.identifiers[0].parent);
 					}
 				}
-				if (variableDeclaration === null) {
-					return;
-				}
-				if (!returnedVariables.has(enclosingFunction)) {
-					returnedVariables.set(enclosingFunction, []);
-				}
-				returnedVariables.get(enclosingFunction)?.push(variableDeclaration);
 			},
 			'Program:exit'() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
@@ -174,7 +197,11 @@ export default createRule('prefer-svelte-reactivity', {
 						findEnclosingReturn(node) !== null ||
 						(enclosingPropertyDefinition !== null &&
 							(!ignoreEncapsulatedLocalVariables ||
-								!isPropertyEncapsulated(enclosingPropertyDefinition, returnedVariables)))
+								!isPropertyEncapsulated(
+									enclosingPropertyDefinition,
+									returnedFunctionCalls,
+									returnedVariables
+								)))
 					) {
 						context.report({
 							messageId,
@@ -274,13 +301,23 @@ function isLocalVarEncapsulated(
 function methodReturnsProperty(
 	method: TSESTree.MethodDefinition,
 	property: TSESTree.PropertyDefinition,
+	returnedFunctionCalls: Map<FunctionLike, TSESTree.MethodDefinition[]>,
 	returnedVariables: Map<FunctionLike, VariableLike[]>
 ): boolean {
-	return returnedVariables.get(method)?.includes(property) ?? false;
+	return (
+		(returnedVariables.get(method)?.includes(property) ?? false) ||
+		(returnedFunctionCalls
+			.get(method)
+			?.some((calledFn) =>
+				methodReturnsProperty(calledFn, property, returnedFunctionCalls, returnedVariables)
+			) ??
+			false)
+	);
 }
 
 function isPropertyEncapsulated(
 	node: TSESTree.PropertyDefinition,
+	returnedFunctionCalls: Map<FunctionLike, TSESTree.MethodDefinition[]>,
 	returnedVariables: Map<FunctionLike, VariableLike[]>
 ): boolean {
 	if (node.accessibility === 'public') {
@@ -290,7 +327,7 @@ function isPropertyEncapsulated(
 		if (
 			classElement.type === 'MethodDefinition' &&
 			classElement.accessibility === 'public' &&
-			methodReturnsProperty(classElement, node, returnedVariables)
+			methodReturnsProperty(classElement, node, returnedFunctionCalls, returnedVariables)
 		) {
 			return false;
 		}
