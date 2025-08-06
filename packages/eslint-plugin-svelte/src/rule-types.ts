@@ -326,7 +326,7 @@ export interface RuleOptions {
    * disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/
    */
-  'svelte/prefer-svelte-reactivity'?: Linter.RuleEntry<[]>
+  'svelte/prefer-svelte-reactivity'?: Linter.RuleEntry<SveltePreferSvelteReactivity>
   /**
    * Prefer using writable $derived instead of $state and $effect
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/
@@ -592,6 +592,10 @@ type SveltePreferConst = []|[{
   ignoreReadBeforeAssign?: boolean
   excludedRunes?: string[]
   [k: string]: unknown | undefined
+}]
+// ----- svelte/prefer-svelte-reactivity -----
+type SveltePreferSvelteReactivity = []|[{
+  ignoreEncapsulatedLocalVariables?: boolean
 }]
 // ----- svelte/require-event-prefix -----
 type SvelteRequireEventPrefix = []|[{
