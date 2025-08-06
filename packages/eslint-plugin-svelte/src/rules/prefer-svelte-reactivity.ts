@@ -130,7 +130,10 @@ export default createRule('prefer-svelte-reactivity', {
 							});
 						}
 					}
-					if (findEnclosingReturn(node) !== null) {
+					if (
+						findEnclosingReturn(node) !== null ||
+						findEnclosingPropertyDefinition(node)?.accessibility === 'public'
+					) {
 						context.report({
 							messageId,
 							node
@@ -188,14 +191,18 @@ function findAncestorOfTypes<T extends string>(
 	return findAncestorOfTypes(node.parent, types);
 }
 
-function findEnclosingReturn(node: TSESTree.Node): TSESTree.ReturnStatement | null {
-	return findAncestorOfTypes(node, ['ReturnStatement']);
-}
-
 function findEnclosingFunction(
 	node: TSESTree.Node
 ): TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | null {
 	return findAncestorOfTypes(node, ['ArrowFunctionExpression', 'FunctionDeclaration']);
+}
+
+function findEnclosingPropertyDefinition(node: TSESTree.Node): TSESTree.PropertyDefinition | null {
+	return findAncestorOfTypes(node, ['PropertyDefinition']);
+}
+
+function findEnclosingReturn(node: TSESTree.Node): TSESTree.ReturnStatement | null {
+	return findAncestorOfTypes(node, ['ReturnStatement']);
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
