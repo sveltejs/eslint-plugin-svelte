@@ -37,6 +37,7 @@ import noInlineStyles from '../rules/no-inline-styles.js';
 import noInnerDeclarations from '../rules/no-inner-declarations.js';
 import noInspect from '../rules/no-inspect.js';
 import noNavigationWithoutBase from '../rules/no-navigation-without-base.js';
+import noNavigationWithoutResolve from '../rules/no-navigation-without-resolve.js';
 import noNotFunctionHandler from '../rules/no-not-function-handler.js';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches.js';
 import noRawSpecialElements from '../rules/no-raw-special-elements.js';
@@ -117,6 +118,7 @@ export const rules = [
 	noInnerDeclarations,
 	noInspect,
 	noNavigationWithoutBase,
+	noNavigationWithoutResolve,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noRawSpecialElements,
