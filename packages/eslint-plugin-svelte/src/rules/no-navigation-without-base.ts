@@ -8,6 +8,8 @@ import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('no-navigation-without-base', {
 	meta: {
+		deprecated: true,
+		replacedBy: ['no-navigation-without-resolve'],
 		docs: {
 			description:
 				'disallow using navigation (links, goto, pushState, replaceState) without the base path',

@@ -363,7 +363,6 @@ These rules relate to SvelteKit and its best Practices.
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. | :star: |
-| [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) | disallow using navigation (links, goto, pushState, replaceState) without the base path |  |
 | [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. | :star: |
 
 ## Experimental
@@ -393,7 +392,8 @@ These rules relate to this plugin works:
 |:--------|:------------|
 | [svelte/@typescript-eslint/no-unnecessary-condition](https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0. |
 | [svelte/no-dynamic-slot-name](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/) | Now Svelte compiler itself throws an compile error. |
-| [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) |
+| [svelte/no-goto-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/) | [svelte/no-navigation-without-resolve](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/) |
+| [svelte/no-navigation-without-base](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/) | [svelte/no-navigation-without-resolve](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/) |
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
