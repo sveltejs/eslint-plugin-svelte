@@ -26,7 +26,7 @@ describe('ignore-warnings', () => {
 				files: ['**'],
 				languageOptions: {
 					parser: svelteParser,
-					ecmaVersion: 2020
+					ecmaVersion:"latest"
 				},
 				plugins: {
 					svelte: plugin as never
@@ -92,7 +92,7 @@ describe('ignore-warnings', () => {
 				files: ['**'],
 				languageOptions: {
 					parser: svelteParser,
-					ecmaVersion: 2020
+					ecmaVersion:"latest"
 				},
 				plugins: {
 					svelte: plugin as never
@@ -159,7 +159,7 @@ describe('ignore-warnings', () => {
 				files: ['**'],
 				languageOptions: {
 					parser: svelteParser,
-					ecmaVersion: 2020
+					ecmaVersion:"latest"
 				},
 				plugins: {
 					svelte: plugin as never

@@ -17,7 +17,7 @@ describe('comment-directive', () => {
 			baseConfig: {
 				languageOptions: {
 					parser: svelteParser,
-					ecmaVersion: 2020
+					ecmaVersion:"latest"
 				},
 				plugins: {
 					svelte: plugin
@@ -360,7 +360,7 @@ describe('comment-directive', () => {
 				baseConfig: {
 					languageOptions: {
 						parser: svelteParser,
-						ecmaVersion: 2020
+						ecmaVersion:"latest"
 					},
 					plugins: {
 						svelte: plugin

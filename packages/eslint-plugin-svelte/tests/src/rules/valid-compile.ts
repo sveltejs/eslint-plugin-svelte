@@ -4,7 +4,7 @@ import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({
 	languageOptions: {
-		ecmaVersion: 2020,
+		ecmaVersion:"latest",
 		sourceType: 'module',
 		parserOptions: {
 			parser: '@typescript-eslint/parser'
