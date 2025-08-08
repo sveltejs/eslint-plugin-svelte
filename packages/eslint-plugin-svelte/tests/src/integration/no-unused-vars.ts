@@ -8,7 +8,7 @@ describe('Integration test for no-unused-vars', () => {
 	const tester = new RuleTester({
 		languageOptions: {
 			parser: parser,
-			ecmaVersion: 2020,
+			ecmaVersion:"latest",
 			sourceType: 'module'
 		}
 	});

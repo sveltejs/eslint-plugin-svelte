@@ -251,7 +251,7 @@ function writeFixtures(
 			},
 			languageOptions: {
 				globals: globals.browser,
-				ecmaVersion: 2020,
+				ecmaVersion:"latest",
 				sourceType: 'module',
 				...verifyConfig?.languageOptions,
 				parserOptions: {
@@ -335,7 +335,7 @@ function getConfig(ruleName: string, inputFile: string) {
 			...config,
 			languageOptions: {
 				globals: globals.browser,
-				ecmaVersion: 2020,
+				ecmaVersion:"latest",
 				sourceType: 'module',
 				...config?.languageOptions,
 				parserOptions: {

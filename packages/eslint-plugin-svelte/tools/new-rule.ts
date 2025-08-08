@@ -81,7 +81,7 @@ import { loadTestCases } from '${getModulePath(testFile, testUtilsPath)}';
 
 const tester = new RuleTester({
 	languageOptions: {
-		ecmaVersion: 2020,
+		ecmaVersion:"latest",
 		sourceType: 'module'
 	}
 });
@@ -117,16 +117,16 @@ This rule reports ???.
 \`\`\`json
 {
   "svelte/${ruleId}": ["error", {
-   
+
   }]
 }
 \`\`\`
 
-- 
+-
 
 ## :books: Further Reading
 
-- 
+-
 
 `
 	);
