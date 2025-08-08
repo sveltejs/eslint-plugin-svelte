@@ -54,6 +54,71 @@ export default createRule('prefer-svelte-reactivity', {
 		const returnedFunctionCalls: Map<FunctionLike, TSESTree.MethodDefinition[]> = new Map();
 		const returnedVariables: Map<FunctionLike, VariableLike[]> = new Map();
 		const exportedVars: TSESTree.Node[] = [];
+
+		function recordReturnedIdentifiers(node: TSESTree.Identifier | TSESTree.PrivateIdentifier) {
+			function recordVariable(enclosingFunction: FunctionLike, variable: VariableLike): void {
+				if (variable === null) {
+					return;
+				}
+				if (!returnedVariables.has(enclosingFunction)) {
+					returnedVariables.set(enclosingFunction, []);
+				}
+				returnedVariables.get(enclosingFunction)?.push(variable);
+			}
+
+			function recordFunctionCall(
+				enclosingFunction: FunctionLike,
+				functionCall: TSESTree.MethodDefinition
+			): void {
+				if (functionCall === null) {
+					return;
+				}
+				if (!returnedFunctionCalls.has(enclosingFunction)) {
+					returnedFunctionCalls.set(enclosingFunction, []);
+				}
+				returnedFunctionCalls.get(enclosingFunction)?.push(functionCall);
+			}
+
+			const enclosingReturn = findEnclosingReturn(node);
+			if (enclosingReturn === null) {
+				return;
+			}
+			const enclosingFunction = findEnclosingFunction(enclosingReturn);
+			if (enclosingFunction === null) {
+				return;
+			}
+			if (node.parent.type === 'MemberExpression') {
+				const enclosingClassBody = findEnclosingClassBody(node);
+				for (const classElement of enclosingClassBody?.body ?? []) {
+					if (
+						classElement.type === 'PropertyDefinition' &&
+						(classElement.key.type === 'Identifier' ||
+							classElement.key.type === 'PrivateIdentifier') &&
+						node.name === classElement.key.name
+					) {
+						recordVariable(enclosingFunction, classElement);
+					}
+					if (
+						classElement.type === 'MethodDefinition' &&
+						(classElement.key.type === 'Identifier' ||
+							classElement.key.type === 'PrivateIdentifier') &&
+						node.name === classElement.key.name
+					) {
+						recordFunctionCall(enclosingFunction, classElement);
+					}
+				}
+			} else if (node.type === 'Identifier') {
+				const variable = findVariable(context, node);
+				if (
+					variable !== null &&
+					variable.identifiers.length > 0 &&
+					variable.identifiers[0].parent.type === 'VariableDeclarator'
+				) {
+					recordVariable(enclosingFunction, variable.identifiers[0].parent);
+				}
+			}
+		}
+
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
 				ExportNamedDeclaration(node) {
@@ -81,67 +146,8 @@ export default createRule('prefer-svelte-reactivity', {
 					}
 				}
 			}),
-			Identifier(node) {
-				function recordVariable(enclosingFunction: FunctionLike, variable: VariableLike): void {
-					if (variable === null) {
-						return;
-					}
-					if (!returnedVariables.has(enclosingFunction)) {
-						returnedVariables.set(enclosingFunction, []);
-					}
-					returnedVariables.get(enclosingFunction)?.push(variable);
-				}
-
-				function recordFunctionCall(
-					enclosingFunction: FunctionLike,
-					functionCall: TSESTree.MethodDefinition
-				): void {
-					if (functionCall === null) {
-						return;
-					}
-					if (!returnedFunctionCalls.has(enclosingFunction)) {
-						returnedFunctionCalls.set(enclosingFunction, []);
-					}
-					returnedFunctionCalls.get(enclosingFunction)?.push(functionCall);
-				}
-
-				const enclosingReturn = findEnclosingReturn(node);
-				if (enclosingReturn === null) {
-					return;
-				}
-				const enclosingFunction = findEnclosingFunction(enclosingReturn);
-				if (enclosingFunction === null) {
-					return;
-				}
-				if (node.parent.type === 'MemberExpression') {
-					const enclosingClassBody = findEnclosingClassBody(node);
-					for (const classElement of enclosingClassBody?.body ?? []) {
-						if (
-							classElement.type === 'PropertyDefinition' &&
-							classElement.key.type === 'Identifier' &&
-							node.name === classElement.key.name
-						) {
-							recordVariable(enclosingFunction, classElement);
-						}
-						if (
-							classElement.type === 'MethodDefinition' &&
-							classElement.key.type === 'Identifier' &&
-							node.name === classElement.key.name
-						) {
-							recordFunctionCall(enclosingFunction, classElement);
-						}
-					}
-				} else {
-					const variable = findVariable(context, node);
-					if (
-						variable !== null &&
-						variable.identifiers.length > 0 &&
-						variable.identifiers[0].parent.type === 'VariableDeclarator'
-					) {
-						recordVariable(enclosingFunction, variable.identifiers[0].parent);
-					}
-				}
-			},
+			Identifier: recordReturnedIdentifiers,
+			PrivateIdentifier: recordReturnedIdentifiers,
 			'Program:exit'() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				for (const { node, path } of referenceTracker.iterateGlobalReferences({
@@ -320,19 +326,26 @@ function isPropertyEncapsulated(
 	returnedFunctionCalls: Map<FunctionLike, TSESTree.MethodDefinition[]>,
 	returnedVariables: Map<FunctionLike, VariableLike[]>
 ): boolean {
-	if (node.accessibility === 'public') {
+	if (isPublic(node)) {
 		return false;
 	}
 	for (const classElement of node.parent.body) {
 		if (
 			classElement.type === 'MethodDefinition' &&
-			classElement.accessibility === 'public' &&
+			isPublic(classElement) &&
 			methodReturnsProperty(classElement, node, returnedFunctionCalls, returnedVariables)
 		) {
 			return false;
 		}
 	}
 	return true;
+}
+
+function isPublic(node: TSESTree.MethodDefinition | TSESTree.PropertyDefinition): boolean {
+	return (
+		(node.accessibility === undefined && node.key.type !== 'PrivateIdentifier') ||
+		node.accessibility === 'public'
+	);
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
