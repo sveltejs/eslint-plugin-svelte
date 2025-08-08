@@ -119,6 +119,92 @@ export default createRule('prefer-svelte-reactivity', {
 			}
 		}
 
+		function checkNonReactiveUsage(
+			node: TSESTree.Node,
+			objectType: 'Date' | 'Map' | 'Set' | 'URL' | 'URLSearchParams',
+			referenceTracker: ReferenceTracker
+		) {
+			const messageId = `mutable${objectType}Used`;
+
+			function report() {
+				context.report({
+					messageId,
+					node
+				});
+			}
+
+			// Report all values directly returned from functions
+			if (findEnclosingReturn(node) !== null) {
+				report();
+				return;
+			}
+
+			// Report all exported variables
+			for (const exportedVar of exportedVars) {
+				if (isIn(node, exportedVar)) {
+					report();
+					return;
+				}
+			}
+
+			// Report all returned variables
+			for (const [fn, fnReturnVars] of returnedVariables.entries()) {
+				for (const returnedVar of fnReturnVars) {
+					if (fn.type === 'MethodDefinition' && returnedVar.type === 'PropertyDefinition') {
+						continue;
+					}
+					if (isIn(node, returnedVar)) {
+						report();
+						return;
+					}
+				}
+			}
+
+			// Report all encapsulated class properties
+			const enclosingPropertyDefinition = findEnclosingPropertyDefinition(node);
+			if (
+				enclosingPropertyDefinition !== null &&
+				(!ignoreEncapsulatedLocalVariables ||
+					!isPropertyEncapsulated(
+						enclosingPropertyDefinition,
+						returnedFunctionCalls,
+						returnedVariables
+					))
+			) {
+				report();
+				return;
+			}
+
+			// Ignore all variables encapsulated in functions
+			if (ignoreEncapsulatedLocalVariables && isLocalVarEncapsulated(returnedVariables, node)) {
+				return;
+			}
+
+			// Report all other mutable variables
+			if (objectType === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
+				report();
+				return;
+			}
+			if (objectType === 'Map' && isMapMutable(referenceTracker, node as TSESTree.Expression)) {
+				report();
+				return;
+			}
+			if (objectType === 'Set' && isSetMutable(referenceTracker, node as TSESTree.Expression)) {
+				report();
+				return;
+			}
+			if (objectType === 'URL' && isURLMutable(referenceTracker, node as TSESTree.Expression)) {
+				report();
+				return;
+			}
+			if (
+				objectType === 'URLSearchParams' &&
+				isURLSearchParamsMutable(referenceTracker, node as TSESTree.Expression)
+			) {
+				report();
+			}
+		}
+
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
 				ExportNamedDeclaration(node) {
@@ -167,89 +253,11 @@ export default createRule('prefer-svelte-reactivity', {
 						[ReferenceTracker.CONSTRUCT]: true
 					}
 				})) {
-					const messageId =
-						path[0] === 'Date'
-							? 'mutableDateUsed'
-							: path[0] === 'Map'
-								? 'mutableMapUsed'
-								: path[0] === 'Set'
-									? 'mutableSetUsed'
-									: path[0] === 'URL'
-										? 'mutableURLUsed'
-										: 'mutableURLSearchParamsUsed';
-					for (const exportedVar of exportedVars) {
-						if (isIn(node, exportedVar)) {
-							context.report({
-								messageId,
-								node
-							});
-						}
-					}
-					for (const [fn, fnReturnVars] of returnedVariables.entries()) {
-						for (const returnedVar of fnReturnVars) {
-							if (fn.type === 'MethodDefinition' && returnedVar.type === 'PropertyDefinition') {
-								continue;
-							}
-							if (isIn(node, returnedVar)) {
-								context.report({
-									messageId,
-									node
-								});
-							}
-						}
-					}
-					const enclosingPropertyDefinition = findEnclosingPropertyDefinition(node);
-					if (
-						findEnclosingReturn(node) !== null ||
-						(enclosingPropertyDefinition !== null &&
-							(!ignoreEncapsulatedLocalVariables ||
-								!isPropertyEncapsulated(
-									enclosingPropertyDefinition,
-									returnedFunctionCalls,
-									returnedVariables
-								)))
-					) {
-						context.report({
-							messageId,
-							node
-						});
-					}
-					if (ignoreEncapsulatedLocalVariables && isLocalVarEncapsulated(returnedVariables, node)) {
-						continue;
-					}
-					if (path[0] === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableDateUsed',
-							node
-						});
-					}
-					if (path[0] === 'Map' && isMapMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableMapUsed',
-							node
-						});
-					}
-					if (path[0] === 'Set' && isSetMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableSetUsed',
-							node
-						});
-					}
-					if (path[0] === 'URL' && isURLMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableURLUsed',
-							node
-						});
-					}
-					if (
-						path[0] === 'URLSearchParams' &&
-						isURLSearchParamsMutable(referenceTracker, node as TSESTree.Expression)
-					) {
-						context.report({
-							messageId: 'mutableURLSearchParamsUsed',
-							node
-						});
-					}
+					checkNonReactiveUsage(
+						node,
+						path[0] as 'Date' | 'Map' | 'Set' | 'URL' | 'URLSearchParams',
+						referenceTracker
+					);
 				}
 			}
 		};
