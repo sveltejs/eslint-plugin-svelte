@@ -10,7 +10,7 @@ since: 'v2.36.0-next.9'
 
 > disallow using goto() without the base path
 
-- :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-base](no-navigation-without-base.md) rule.
+- :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-resolve](no-navigation-without-resolve.md) rule.
 
 ## :book: Rule Details
 
