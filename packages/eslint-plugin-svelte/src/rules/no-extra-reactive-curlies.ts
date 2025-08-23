@@ -15,7 +15,16 @@ export default createRule('no-extra-reactive-curlies', {
 			extraCurlies: `Do not wrap reactive statements in curly braces unless necessary.`,
 			removeExtraCurlies: `Remove the unnecessary curly braces.`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		return {

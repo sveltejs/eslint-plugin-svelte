@@ -18,7 +18,12 @@ export default createRule('no-goto-without-base', {
 			isNotPrefixedWithBasePath:
 				"Found a goto() call with a url that isn't prefixed with the base path."
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteKitVersions: ['1.0.0-next', '1', '2']
+			}
+		]
 	},
 	create(context) {
 		return {
