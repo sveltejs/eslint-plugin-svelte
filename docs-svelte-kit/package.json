@@ -38,7 +38,7 @@
     "acorn": "^8.14.0",
     "assert": "^2.1.0",
     "cross-spawn": "^7.0.6",
-    "env-cmd": "^10.1.0",
+    "env-cmd": "^11.0.0",
     "esbuild": "^0.25.0",
     "escape-html": "^1.0.3",
     "eslint-plugin-svelte": "workspace:^",
