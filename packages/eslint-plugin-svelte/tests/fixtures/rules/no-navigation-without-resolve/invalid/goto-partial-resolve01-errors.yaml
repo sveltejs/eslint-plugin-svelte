@@ -1,0 +1,8 @@
+- message: Found a goto() call with a url that isn't resolved.
+  line: 5
+  column: 7
+  suggestions: null
+- message: Found a goto() call with a url that isn't resolved.
+  line: 6
+  column: 7
+  suggestions: null

@@ -2,17 +2,14 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
-import { extractExpressionPrefixVariable } from '../utils/expression-affixes.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
 
-export default createRule('no-navigation-without-base', {
+export default createRule('no-navigation-without-resolve', {
 	meta: {
-		deprecated: true,
-		replacedBy: ['no-navigation-without-resolve'],
 		docs: {
 			description:
-				'disallow using navigation (links, goto, pushState, replaceState) without the base path',
+				'disallow using navigation (links, goto, pushState, replaceState) without a resolve()',
 			category: 'SvelteKit',
 			recommended: false
 		},
@@ -37,21 +34,24 @@ export default createRule('no-navigation-without-base', {
 			}
 		],
 		messages: {
-			gotoNotPrefixed: "Found a goto() call with a url that isn't prefixed with the base path.",
-			linkNotPrefixed: "Found a link with a url that isn't prefixed with the base path.",
-			pushStateNotPrefixed:
-				"Found a pushState() call with a url that isn't prefixed with the base path.",
-			replaceStateNotPrefixed:
-				"Found a replaceState() call with a url that isn't prefixed with the base path."
+			gotoWithoutResolve: "Found a goto() call with a url that isn't resolved.",
+			linkWithoutResolve: "Found a link with a url that isn't resolved.",
+			pushStateWithoutResolve: "Found a pushState() call with a url that isn't resolved.",
+			replaceStateWithoutResolve: "Found a replaceState() call with a url that isn't resolved."
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteKitVersions: ['1.0.0-next', '1', '2']
+			}
+		]
 	},
 	create(context) {
-		let basePathNames: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
+		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
-				basePathNames = extractBasePathReferences(referenceTracker, context);
+				resolveReferences = extractResolveReferences(referenceTracker, context);
 				const {
 					goto: gotoCalls,
 					pushState: pushStateCalls,
@@ -59,7 +59,7 @@ export default createRule('no-navigation-without-base', {
 				} = extractFunctionCallReferences(referenceTracker);
 				if (context.options[0]?.ignoreGoto !== true) {
 					for (const gotoCall of gotoCalls) {
-						checkGotoCall(context, gotoCall, basePathNames);
+						checkGotoCall(context, gotoCall, resolveReferences);
 					}
 				}
 				if (context.options[0]?.ignorePushState !== true) {
@@ -67,8 +67,8 @@ export default createRule('no-navigation-without-base', {
 						checkShallowNavigationCall(
 							context,
 							pushStateCall,
-							basePathNames,
-							'pushStateNotPrefixed'
+							resolveReferences,
+							'pushStateWithoutResolve'
 						);
 					}
 				}
@@ -77,8 +77,8 @@ export default createRule('no-navigation-without-base', {
 						checkShallowNavigationCall(
 							context,
 							replaceStateCall,
-							basePathNames,
-							'replaceStateNotPrefixed'
+							resolveReferences,
+							'replaceStateWithoutResolve'
 						);
 					}
 				}
@@ -94,28 +94,25 @@ export default createRule('no-navigation-without-base', {
 				) {
 					return;
 				}
-				const hrefValue = node.value[0];
-				if (hrefValue.type === 'SvelteLiteral') {
-					if (!expressionIsAbsolute(hrefValue) && !expressionIsFragment(hrefValue)) {
-						context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
-					}
-					return;
-				}
 				if (
-					!expressionStartsWithBase(context, hrefValue.expression, basePathNames) &&
-					!expressionIsAbsolute(hrefValue.expression) &&
-					!expressionIsFragment(hrefValue.expression)
+					(node.value[0].type === 'SvelteLiteral' &&
+						!expressionIsAbsolute(node.value[0]) &&
+						!expressionIsFragment(node.value[0])) ||
+					(node.value[0].type === 'SvelteMustacheTag' &&
+						!expressionIsAbsolute(node.value[0].expression) &&
+						!expressionIsFragment(node.value[0].expression) &&
+						!isResolveCall(context, node.value[0].expression, resolveReferences))
 				) {
-					context.report({ loc: hrefValue.loc, messageId: 'linkNotPrefixed' });
+					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
 				}
 			}
 		};
 	}
 });
 
-// Extract all imports of the base path
+// Extract all imports of the resolve() function
 
-function extractBasePathReferences(
+function extractResolveReferences(
 	referenceTracker: ReferenceTracker,
 	context: RuleContext
 ): Set<TSESTree.Identifier> {
@@ -123,7 +120,7 @@ function extractBasePathReferences(
 	for (const { node } of referenceTracker.iterateEsmReferences({
 		'$app/paths': {
 			[ReferenceTracker.ESM]: true,
-			base: {
+			resolve: {
 				[ReferenceTracker.READ]: true
 			}
 		}
@@ -139,7 +136,7 @@ function extractBasePathReferences(
 		} else if (
 			node.type === 'MemberExpression' &&
 			node.property.type === 'Identifier' &&
-			node.property.name === 'base'
+			node.property.name === 'resolve'
 		) {
 			set.add(node.property);
 		}
@@ -188,47 +185,64 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 function checkGotoCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	basePathNames: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Identifier>
 ): void {
 	if (call.arguments.length < 1) {
 		return;
 	}
 	const url = call.arguments[0];
-	if (url.type === 'SpreadElement' || !expressionStartsWithBase(context, url, basePathNames)) {
-		context.report({ loc: url.loc, messageId: 'gotoNotPrefixed' });
+	if (!isResolveCall(context, url, resolveReferences)) {
+		context.report({ loc: url.loc, messageId: 'gotoWithoutResolve' });
 	}
 }
 
 function checkShallowNavigationCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	basePathNames: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Identifier>,
 	messageId: string
 ): void {
 	if (call.arguments.length < 1) {
 		return;
 	}
 	const url = call.arguments[0];
-	if (
-		url.type === 'SpreadElement' ||
-		(!expressionIsEmpty(url) && !expressionStartsWithBase(context, url, basePathNames))
-	) {
+	if (!expressionIsEmpty(url) && !isResolveCall(context, url, resolveReferences)) {
 		context.report({ loc: url.loc, messageId });
 	}
 }
 
 // Helper functions
 
-function expressionStartsWithBase(
+function isResolveCall(
 	context: RuleContext,
-	url: TSESTree.Expression,
-	basePathNames: Set<TSESTree.Identifier>
+	node: TSESTree.CallExpressionArgument,
+	resolveReferences: Set<TSESTree.Identifier>
 ): boolean {
-	const prefixVariable = extractExpressionPrefixVariable(context, url);
-	return prefixVariable !== null && basePathNames.has(prefixVariable);
+	if (
+		node.type === 'CallExpression' &&
+		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
+			(node.callee.type === 'MemberExpression' &&
+				node.callee.property.type === 'Identifier' &&
+				resolveReferences.has(node.callee.property)))
+	) {
+		return true;
+	}
+	if (node.type === 'Identifier') {
+		const variable = findVariable(context, node);
+		if (
+			variable !== null &&
+			variable.identifiers.length > 0 &&
+			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
+			variable.identifiers[0].parent.init !== null &&
+			isResolveCall(context, variable.identifiers[0].parent.init, resolveReferences)
+		) {
+			return true;
+		}
+	}
+	return false;
 }
 
-function expressionIsEmpty(url: TSESTree.Expression): boolean {
+function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 	return (
 		(url.type === 'Literal' && url.value === '') ||
 		(url.type === 'TemplateLiteral' &&
