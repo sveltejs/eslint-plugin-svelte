@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { markdownPath, menuItems, isActive } from '../utils.js';
-	import { base as baseUrl } from '$app/paths';
+	import { resolve } from '$app/paths';
 	export let fileInfo = {};
 	export let frontmatter = {};
 
@@ -76,10 +76,10 @@
 	</div>
 	<div class="footer-move">
 		{#if prev}
-			<span class="prev">←<a href="{baseUrl}{prev.path}">{prev.title}</a></span>
+			<span class="prev">←<a href={resolve(prev.path)}>{prev.title}</a></span>
 		{/if}
 		{#if next}
-			<span class="next"><a href="{baseUrl}{next.path}">{next.title}</a>→ </span>
+			<span class="next"><a href={resolve(next.path)}>{next.title}</a>→ </span>
 		{/if}
 	</div>
 	<div class="footer-text">
