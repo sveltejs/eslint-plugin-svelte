@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-navigation-without-resolve'
 description: 'disallow using navigation (links, goto, pushState, replaceState) without a resolve()'
+since: 'v3.12.0'
 ---
 
 # svelte/no-navigation-without-resolve
 
 > disallow using navigation (links, goto, pushState, replaceState) without a resolve()
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
@@ -82,6 +82,10 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 - [`goto()` documentation](https://svelte.dev/docs/kit/$app-navigation#goto)
 - [`pushState()` documentation](https://svelte.dev/docs/kit/$app-navigation#pushState)
 - [`replaceState()` documentation](https://svelte.dev/docs/kit/$app-navigation#replaceState)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.12.0
 
 ## :mag: Implementation
 

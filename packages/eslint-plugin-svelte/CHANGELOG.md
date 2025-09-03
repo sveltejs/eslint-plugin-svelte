@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.12.0
+
+### Minor Changes
+
+- [#1308](https://github.com/sveltejs/eslint-plugin-svelte/pull/1308) [`abbcfdd`](https://github.com/sveltejs/eslint-plugin-svelte/commit/abbcfdd55baac44800ff1d58b67640d28f849803) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added to recommended rule set
+
+- [#1289](https://github.com/sveltejs/eslint-plugin-svelte/pull/1289) [`e2e791f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e2e791f8fb8268750a9190089c19b16a02843066) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-navigation-without-resolve rule
+
+- [#1289](https://github.com/sveltejs/eslint-plugin-svelte/pull/1289) [`e2e791f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e2e791f8fb8268750a9190089c19b16a02843066) Thanks [@marekdedic](https://github.com/marekdedic)! - chore: deprecated the no-navigation-without-base rule
+
 ## 3.11.0
 
 ### Minor Changes
