@@ -16,9 +16,9 @@
       =
       1
     ,
-    [
-      b
-    ]
+    // [ Computed property names are not allowed in enums.
+    b
+      // ]
       =
       2
   }
