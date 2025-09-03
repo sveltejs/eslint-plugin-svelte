@@ -71,8 +71,7 @@ function checkTemplateLiteral(
 }
 
 function checkLiteral(context: RuleContext, path: TSESTree.Literal): void {
-	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-	if (!absolutePathRegex.test(path.value?.toString() ?? '')) {
+	if (!/^[+a-z]*:/i.test(path.value?.toString() ?? '')) {
 		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 	}
 }
