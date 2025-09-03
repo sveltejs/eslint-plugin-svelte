@@ -9,6 +9,8 @@ description: 'disallow using navigation (links, goto, pushState, replaceState) w
 
 > disallow using navigation (links, goto, pushState, replaceState) without a resolve()
 
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+
 ## :book: Rule Details
 
 This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without resolving a relative URL. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for iternal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the URL must be resolved using SvelteKit's `resolve()`, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.
@@ -79,10 +81,6 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 - [`goto()` documentation](https://svelte.dev/docs/kit/$app-navigation#goto)
 - [`pushState()` documentation](https://svelte.dev/docs/kit/$app-navigation#pushState)
 - [`replaceState()` documentation](https://svelte.dev/docs/kit/$app-navigation#replaceState)
-
-## :rocket: Version
-
-This rule was introduced in eslint-plugin-svelte v2.36.0-next.9
 
 ## :mag: Implementation
 
