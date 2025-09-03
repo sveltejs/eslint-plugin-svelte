@@ -11,7 +11,7 @@ export default createRule('no-navigation-without-resolve', {
 			description:
 				'disallow using navigation (links, goto, pushState, replaceState) without a resolve()',
 			category: 'SvelteKit',
-			recommended: false
+			recommended: true
 		},
 		schema: [
 			{

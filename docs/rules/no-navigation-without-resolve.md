@@ -10,6 +10,7 @@ description: 'disallow using navigation (links, goto, pushState, replaceState) w
 > disallow using navigation (links, goto, pushState, replaceState) without a resolve()
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+- :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
