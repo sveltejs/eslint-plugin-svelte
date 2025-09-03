@@ -282,7 +282,7 @@ function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
 }
 
 function urlValueIsAbsolute(url: string): boolean {
-	return url.includes('://');
+	return /^[+a-z]*:/i.test(url);
 }
 
 function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {

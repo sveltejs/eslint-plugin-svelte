@@ -14,3 +14,7 @@
   line: 7
   column: 9
   suggestions: null
+- message: Found a link with a url that isn't prefixed with the base path.
+  line: 8
+  column: 9
+  suggestions: null
