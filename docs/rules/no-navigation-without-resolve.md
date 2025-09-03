@@ -16,7 +16,7 @@ since: 'v3.12.0'
 
 This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without resolving a relative URL. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for internal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the URL must be resolved using SvelteKit's `resolve()`, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.
 
-This rule checks all 4 navigation options for the presence of the `resolve()` function call, with an exception for `<a>` links to absolute URLs (and fragment URLs), which are assumed to be used for external navigation and so do not require the `resolve()` function, and for shallow outing functions with an empty string as the path, which keeps the current URL.
+This rule checks all 4 navigation options for the presence of the `resolve()` function call, with an exception for `<a>` links to absolute URLs (and fragment URLs), which are assumed to be used for external navigation and so do not require the `resolve()` function, and for shallow routing functions with an empty string as the path, which keeps the current URL.
 
 <!--eslint-skip-->
 
