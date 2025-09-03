@@ -189,8 +189,14 @@ export interface RuleOptions {
   /**
    * disallow using navigation (links, goto, pushState, replaceState) without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
+   * @deprecated
    */
   'svelte/no-navigation-without-base'?: Linter.RuleEntry<SvelteNoNavigationWithoutBase>
+  /**
+   * disallow using navigation (links, goto, pushState, replaceState) without a resolve()
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/
+   */
+  'svelte/no-navigation-without-resolve'?: Linter.RuleEntry<SvelteNoNavigationWithoutResolve>
   /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
@@ -513,6 +519,13 @@ type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "bo
 }]
 // ----- svelte/no-navigation-without-base -----
 type SvelteNoNavigationWithoutBase = []|[{
+  ignoreGoto?: boolean
+  ignoreLinks?: boolean
+  ignorePushState?: boolean
+  ignoreReplaceState?: boolean
+}]
+// ----- svelte/no-navigation-without-resolve -----
+type SvelteNoNavigationWithoutResolve = []|[{
   ignoreGoto?: boolean
   ignoreLinks?: boolean
   ignorePushState?: boolean
