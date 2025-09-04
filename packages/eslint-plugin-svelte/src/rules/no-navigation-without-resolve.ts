@@ -83,6 +83,26 @@ export default createRule('no-navigation-without-resolve', {
 					}
 				}
 			},
+			SvelteShorthandAttribute(node) {
+				if (
+					context.options[0]?.ignoreLinks === true ||
+					node.parent.parent.type !== 'SvelteElement' ||
+					node.parent.parent.kind !== 'html' ||
+					node.parent.parent.name.type !== 'SvelteName' ||
+					node.parent.parent.name.name !== 'a' ||
+					node.key.name !== 'href' ||
+					node.value.type !== 'Identifier'
+				) {
+					return;
+				}
+				if (
+					!expressionIsAbsolute(node.value, context) &&
+					!expressionIsFragment(node.value, context) &&
+					!isResolveCall(context, node.value, resolveReferences)
+				) {
+					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
+				}
+			},
 			SvelteAttribute(node) {
 				if (
 					context.options[0]?.ignoreLinks === true ||
