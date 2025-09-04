@@ -1,5 +1,5 @@
 import { createRule } from '../utils/index.js';
-import { getTypeScriptTools } from '../utils/ts-utils/index.js';
+import { getTypeScriptTools, isAnyType } from '../utils/ts-utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type ts from 'typescript';
 import { findVariable } from '../utils/ast-utils.js';
@@ -341,7 +341,9 @@ export default createRule('no-unused-props', {
 			if (parentPath.length === 0) {
 				const indexType = propsType.getStringIndexType();
 				const numberIndexType = propsType.getNumberIndexType();
-				const hasIndexSignature = Boolean(indexType) || Boolean(numberIndexType);
+				const hasIndexSignature =
+					Boolean(indexType && !isAnyType(indexType, tools!.ts)) ||
+					Boolean(numberIndexType && !isAnyType(numberIndexType, tools!.ts));
 
 				if (hasIndexSignature && !hasRestElement(declaredPropertyNames)) {
 					context.report({
