@@ -21,7 +21,7 @@ jobs:
         run: pnpm run build
       - run: pnpx pkg-pr-new publish --compact './packages/eslint-plugin-svelte' --json output.json --comment=off
       - name: Add metadata to output
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
