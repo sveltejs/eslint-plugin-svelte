@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.12.1
+
+### Patch Changes
+
+- [#1313](https://github.com/sveltejs/eslint-plugin-svelte/pull/1313) [`27573f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/27573f4100411f4d33d821bf46825b9dcdb9895e) Thanks [@marekdedic](https://github.com/marekdedic)! - fix: Not reporting mailto: and other unusual schema addresses in no-nmavigation-without-resolve (and its deprecated versions)
+
 ## 3.12.0
 
 ### Minor Changes
