@@ -1,8 +1,16 @@
 - message: Found a link with a url that isn't resolved.
-  line: 5
+  line: 8
   column: 9
   suggestions: null
 - message: Found a link with a url that isn't resolved.
-  line: 6
+  line: 9
   column: 9
+  suggestions: null
+- message: Found a link with a url that isn't resolved.
+  line: 10
+  column: 9
+  suggestions: null
+- message: Found a link with a url that isn't resolved.
+  line: 11
+  column: 4
   suggestions: null
