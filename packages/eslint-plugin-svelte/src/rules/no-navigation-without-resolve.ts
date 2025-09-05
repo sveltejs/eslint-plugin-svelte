@@ -157,19 +157,20 @@ export default createRule('no-navigation-without-resolve', {
 			) {
 				return true;
 			}
-			if (node.type === 'Identifier') {
-				const variable = findVariable(context, node);
-				if (
-					variable !== null &&
-					variable.identifiers.length > 0 &&
-					variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-					variable.identifiers[0].parent.init !== null &&
-					isResolveCall(variable.identifiers[0].parent.init, resolveReferences)
-				) {
-					return true;
-				}
+			if (node.type !== 'Identifier') {
+				return false;
 			}
-			return false;
+			const variable = findVariable(context, node);
+			if (
+				variable === null ||
+				variable.identifiers.length === 0 ||
+				variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+				variable.identifiers[0].parent.init === null ||
+				variable.identifiers[0].parent.init === node
+			) {
+				return false;
+			}
+			return isResolveCall(variable.identifiers[0].parent.init, resolveReferences);
 		}
 
 		function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
@@ -212,7 +213,8 @@ export default createRule('no-navigation-without-resolve', {
 				variable === null ||
 				variable.identifiers.length === 0 ||
 				variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-				variable.identifiers[0].parent.init === null
+				variable.identifiers[0].parent.init === null ||
+				variable.identifiers[0].parent.init === url
 			) {
 				return false;
 			}
@@ -257,7 +259,8 @@ export default createRule('no-navigation-without-resolve', {
 				variable === null ||
 				variable.identifiers.length === 0 ||
 				variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-				variable.identifiers[0].parent.init === null
+				variable.identifiers[0].parent.init === null ||
+				variable.identifiers[0].parent.init === url
 			) {
 				return false;
 			}
