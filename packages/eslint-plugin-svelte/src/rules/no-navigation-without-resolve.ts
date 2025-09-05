@@ -235,19 +235,19 @@ function isResolveCall(
 	) {
 		return true;
 	}
-	if (node.type === 'Identifier') {
-		const variable = ctx.findVariable(node);
-		if (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null &&
-			isResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences)
-		) {
-			return true;
-		}
+	if (node.type !== 'Identifier') {
+		return false;
 	}
-	return false;
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return isResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
 }
 
 function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
