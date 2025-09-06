@@ -4,6 +4,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
+import { type TSTools, getTypeScriptTools } from 'src/utils/ts-utils/index.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
@@ -47,6 +48,8 @@ export default createRule('no-navigation-without-resolve', {
 		]
 	},
 	create(context) {
+		const tsTools = getTypeScriptTools(context);
+
 		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
@@ -59,7 +62,7 @@ export default createRule('no-navigation-without-resolve', {
 				} = extractFunctionCallReferences(referenceTracker);
 				if (context.options[0]?.ignoreGoto !== true) {
 					for (const gotoCall of gotoCalls) {
-						checkGotoCall(context, gotoCall, resolveReferences);
+						checkGotoCall(context, gotoCall, resolveReferences, tsTools);
 					}
 				}
 				if (context.options[0]?.ignorePushState !== true) {
@@ -68,6 +71,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							pushStateCall,
 							resolveReferences,
+							tsTools,
 							'pushStateWithoutResolve'
 						);
 					}
@@ -78,6 +82,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							replaceStateCall,
 							resolveReferences,
+							tsTools,
 							'replaceStateWithoutResolve'
 						);
 					}
@@ -101,7 +106,7 @@ export default createRule('no-navigation-without-resolve', {
 					(node.value[0].type === 'SvelteMustacheTag' &&
 						!expressionIsAbsolute(node.value[0].expression) &&
 						!expressionIsFragment(node.value[0].expression) &&
-						!isResolveCall(context, node.value[0].expression, resolveReferences))
+						!isResolveCall(context, node.value[0].expression, resolveReferences, tsTools))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
 				}
@@ -185,13 +190,14 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 function checkGotoCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	resolveReferences: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null
 ): void {
 	if (call.arguments.length < 1) {
 		return;
 	}
 	const url = call.arguments[0];
-	if (!isResolveCall(context, url, resolveReferences)) {
+	if (!isResolveCall(context, url, resolveReferences, tsTools)) {
 		context.report({ loc: url.loc, messageId: 'gotoWithoutResolve' });
 	}
 }
@@ -200,13 +206,14 @@ function checkShallowNavigationCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
 	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
 	messageId: string
 ): void {
 	if (call.arguments.length < 1) {
 		return;
 	}
 	const url = call.arguments[0];
-	if (!expressionIsEmpty(url) && !isResolveCall(context, url, resolveReferences)) {
+	if (!expressionIsEmpty(url) && !isResolveCall(context, url, resolveReferences, tsTools)) {
 		context.report({ loc: url.loc, messageId });
 	}
 }
@@ -216,7 +223,8 @@ function checkShallowNavigationCall(
 function isResolveCall(
 	context: RuleContext,
 	node: TSESTree.CallExpressionArgument,
-	resolveReferences: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null
 ): boolean {
 	if (
 		node.type === 'CallExpression' &&
@@ -227,6 +235,12 @@ function isResolveCall(
 	) {
 		return true;
 	}
+	if (node.type === 'Identifier' && tsTools !== null) {
+		const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(node);
+		console.log(tsNode);
+		console.log(tsTools.service.program.getTypeChecker().getTypeAtLocation(tsNode));
+	}
+	/*
 	if (node.type === 'Identifier') {
 		const variable = findVariable(context, node);
 		if (
@@ -239,6 +253,7 @@ function isResolveCall(
 			return true;
 		}
 	}
+	*/
 	return false;
 }
 
