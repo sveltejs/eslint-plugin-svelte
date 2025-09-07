@@ -69,11 +69,13 @@ export function getRuleFixturesRoot(ruleName: string): string {
 }
 
 function fileNameSuffix(fileName: string): string {
-	return fileName.match(/\.svelte\.(?:j|t)s$/u) ? fileName.slice(fileName.length - 10) : path.extname(fileName);
+	return fileName.match(/\.svelte\.(?:j|t)s$/u)
+		? fileName.slice(fileName.length - 10)
+		: path.extname(fileName);
 }
 
-function isSvelteFile(fileName): boolean {
-	return fileName.match(/\.svelte(?:\.(?:j|t)s)?$/u);
+function isSvelteFile(fileName: string): boolean {
+	return Boolean(fileName.match(/\.svelte(?:\.(?:j|t)s)?$/u));
 }
 
 /**
@@ -230,13 +232,12 @@ function writeFixtures(
 
 	const config = getConfig(ruleName, inputFile);
 
-	const parser =
-		isSvelteFile(inputFile)
-			? svelteParser
-			: path.extname(inputFile) === '.ts'
-				? typescriptParser
-				: undefined;
-	const { code, filename, options, ...verifyConfig } = config;
+	const parser = isSvelteFile(inputFile)
+		? svelteParser
+		: path.extname(inputFile) === '.ts'
+			? typescriptParser
+			: undefined;
+	const { code, filename, options, only, ...verifyConfig } = config;
 	const resolvedParser = verifyConfig.languageOptions?.parser ?? parser;
 	const result = linter.verify(
 		code,
@@ -251,7 +252,7 @@ function writeFixtures(
 			},
 			languageOptions: {
 				globals: globals.browser,
-				ecmaVersion:"latest",
+				ecmaVersion: 'latest',
 				sourceType: 'module',
 				...verifyConfig?.languageOptions,
 				parserOptions: {
@@ -320,12 +321,11 @@ function getConfig(ruleName: string, inputFile: string) {
 				? require(configFile)
 				: JSON.parse(fs.readFileSync(configFile, 'utf8'));
 	}
-	const parser =
-		isSvelteFile(filename)
-			? svelteParser
-			: path.extname(inputFile) === '.ts'
-				? typescriptParser
-				: undefined;
+	const parser = isSvelteFile(filename)
+		? svelteParser
+		: path.extname(inputFile) === '.ts'
+			? typescriptParser
+			: undefined;
 
 	const resolvedParser = config?.languageOptions?.parser
 		? require(config.languageOptions.parser)
@@ -335,7 +335,7 @@ function getConfig(ruleName: string, inputFile: string) {
 			...config,
 			languageOptions: {
 				globals: globals.browser,
-				ecmaVersion:"latest",
+				ecmaVersion: 'latest',
 				sourceType: 'module',
 				...config?.languageOptions,
 				parserOptions: {
@@ -359,7 +359,10 @@ function getConfig(ruleName: string, inputFile: string) {
 }
 
 function getRequirements(inputFile: string): Record<string, string> {
-	let requirementsFile: string = inputFile.replace(/(input|\+.+)(?:\.[a-z]+)+$/u, 'requirements.json');
+	let requirementsFile: string = inputFile.replace(
+		/(input|\+.+)(?:\.[a-z]+)+$/u,
+		'requirements.json'
+	);
 	if (!fs.existsSync(requirementsFile)) {
 		requirementsFile = path.join(path.dirname(inputFile), '_requirements.json');
 	}
