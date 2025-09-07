@@ -79,37 +79,40 @@ export default createRule('no-navigation-without-resolve', {
 		}
 
 		// Extract all references to goto, pushState and replaceState
-		function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
-			goto: TSESTree.CallExpression[];
-			pushState: TSESTree.CallExpression[];
-			replaceState: TSESTree.CallExpression[];
-		} {
-			const rawReferences = Array.from(
-				referenceTracker.iterateEsmReferences({
-					'$app/navigation': {
-						[ReferenceTracker.ESM]: true,
-						goto: {
-							[ReferenceTracker.CALL]: true
-						},
-						pushState: {
-							[ReferenceTracker.CALL]: true
-						},
-						replaceState: {
-							[ReferenceTracker.CALL]: true
-						}
+		function extractFunctionCallReferences(referenceTracker: ReferenceTracker) {
+			const gotoCalls: TSESTree.CallExpression[] = [];
+			const pushStateCalls: TSESTree.CallExpression[] = [];
+			const replaceStateCalls: TSESTree.CallExpression[] = [];
+			for (const { node, path } of referenceTracker.iterateEsmReferences({
+				'$app/navigation': {
+					[ReferenceTracker.ESM]: true,
+					goto: {
+						[ReferenceTracker.CALL]: true
+					},
+					pushState: {
+						[ReferenceTracker.CALL]: true
+					},
+					replaceState: {
+						[ReferenceTracker.CALL]: true
 					}
-				})
-			);
+				}
+			})) {
+				if (node.type !== 'CallExpression') {
+					continue;
+				}
+				const lastPart = path[path.length - 1];
+				if (lastPart === 'goto') {
+					gotoCalls.push(node);
+				} else if (lastPart === 'pushState') {
+					pushStateCalls.push(node);
+				} else if (lastPart === 'replaceState') {
+					replaceStateCalls.push(node);
+				}
+			}
 			return {
-				goto: rawReferences
-					.filter(({ path }) => path[path.length - 1] === 'goto')
-					.map(({ node }) => node as TSESTree.CallExpression),
-				pushState: rawReferences
-					.filter(({ path }) => path[path.length - 1] === 'pushState')
-					.map(({ node }) => node as TSESTree.CallExpression),
-				replaceState: rawReferences
-					.filter(({ path }) => path[path.length - 1] === 'replaceState')
-					.map(({ node }) => node as TSESTree.CallExpression)
+				gotoCalls,
+				pushStateCalls,
+				replaceStateCalls
 			};
 		}
 
@@ -137,7 +140,7 @@ export default createRule('no-navigation-without-resolve', {
 				return;
 			}
 			const url = call.arguments[0];
-			if (!expressionIsEmpty(url) && !isResolveCall(url, resolveReferences)) {
+			if (!isEmptyExpression(url) && !isResolveCall(url, resolveReferences)) {
 				context.report({ loc: url.loc, messageId });
 			}
 		}
@@ -173,7 +176,7 @@ export default createRule('no-navigation-without-resolve', {
 			return isResolveCall(variable.identifiers[0].parent.init, resolveReferences);
 		}
 
-		function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
+		function isEmptyExpression(url: TSESTree.CallExpressionArgument): boolean {
 			return (
 				(url.type === 'Literal' && url.value === '') ||
 				(url.type === 'TemplateLiteral' &&
@@ -183,31 +186,31 @@ export default createRule('no-navigation-without-resolve', {
 			);
 		}
 
-		function expressionIsAbsolute(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
+		function isAbsoluteExpression(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
 			switch (url.type) {
 				case 'BinaryExpression':
-					return binaryExpressionIsAbsolute(url);
+					return isAbsoluteBinaryExpression(url);
 				case 'Identifier':
-					return identifierIsAbsolute(url);
+					return isAbsoluteIdentifier(url);
 				case 'Literal':
-					return typeof url.value === 'string' && urlValueIsAbsolute(url.value);
+					return typeof url.value === 'string' && isAbsoluteUrl(url.value);
 				case 'SvelteLiteral':
-					return urlValueIsAbsolute(url.value);
+					return isAbsoluteUrl(url.value);
 				case 'TemplateLiteral':
-					return templateLiteralIsAbsolute(url);
+					return isAbsoluteTemplateLiteral(url);
 				default:
 					return false;
 			}
 		}
 
-		function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression): boolean {
+		function isAbsoluteBinaryExpression(url: TSESTree.BinaryExpression): boolean {
 			return (
-				(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(url.left)) ||
-				expressionIsAbsolute(url.right)
+				(url.left.type !== 'PrivateIdentifier' && isAbsoluteExpression(url.left)) ||
+				isAbsoluteExpression(url.right)
 			);
 		}
 
-		function identifierIsAbsolute(url: TSESTree.Identifier): boolean {
+		function isAbsoluteIdentifier(url: TSESTree.Identifier): boolean {
 			const variable = findVariable(context, url);
 			if (
 				variable === null ||
@@ -218,42 +221,42 @@ export default createRule('no-navigation-without-resolve', {
 			) {
 				return false;
 			}
-			return expressionIsAbsolute(variable.identifiers[0].parent.init);
+			return isAbsoluteExpression(variable.identifiers[0].parent.init);
 		}
 
-		function urlValueIsAbsolute(url: string): boolean {
+		function isAbsoluteUrl(url: string): boolean {
 			return /^[+a-z]*:/i.test(url);
 		}
 
-		function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
+		function isAbsoluteTemplateLiteral(url: TSESTree.TemplateLiteral): boolean {
 			return (
-				url.expressions.some(expressionIsAbsolute) ||
-				url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
+				url.expressions.some(isAbsoluteExpression) ||
+				url.quasis.some((quasi) => isAbsoluteUrl(quasi.value.raw))
 			);
 		}
 
-		function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
+		function isFragmentExpression(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
 			switch (url.type) {
 				case 'BinaryExpression':
-					return binaryExpressionIsFragment(url);
+					return isFragmentBinaryExpression(url);
 				case 'Identifier':
-					return identifierIsFragment(url);
+					return isFragmentIdentifier(url);
 				case 'Literal':
-					return typeof url.value === 'string' && urlValueIsFragment(url.value);
+					return typeof url.value === 'string' && isFragmentUrl(url.value);
 				case 'SvelteLiteral':
-					return urlValueIsFragment(url.value);
+					return isFragmentUrl(url.value);
 				case 'TemplateLiteral':
-					return templateLiteralIsFragment(url);
+					return isFragmentTemplateLiteral(url);
 				default:
 					return false;
 			}
 		}
 
-		function binaryExpressionIsFragment(url: TSESTree.BinaryExpression): boolean {
-			return url.left.type !== 'PrivateIdentifier' && expressionIsFragment(url.left);
+		function isFragmentBinaryExpression(url: TSESTree.BinaryExpression): boolean {
+			return url.left.type !== 'PrivateIdentifier' && isFragmentExpression(url.left);
 		}
 
-		function identifierIsFragment(url: TSESTree.Identifier): boolean {
+		function isFragmentIdentifier(url: TSESTree.Identifier): boolean {
 			const variable = findVariable(context, url);
 			if (
 				variable === null ||
@@ -264,17 +267,17 @@ export default createRule('no-navigation-without-resolve', {
 			) {
 				return false;
 			}
-			return expressionIsFragment(variable.identifiers[0].parent.init);
+			return isFragmentExpression(variable.identifiers[0].parent.init);
 		}
 
-		function urlValueIsFragment(url: string): boolean {
+		function isFragmentUrl(url: string): boolean {
 			return url.startsWith('#');
 		}
 
-		function templateLiteralIsFragment(url: TSESTree.TemplateLiteral): boolean {
+		function isFragmentTemplateLiteral(url: TSESTree.TemplateLiteral): boolean {
 			return (
-				(url.expressions.length >= 1 && expressionIsFragment(url.expressions[0])) ||
-				(url.quasis.length >= 1 && urlValueIsFragment(url.quasis[0].value.raw))
+				(url.expressions.length >= 1 && isFragmentExpression(url.expressions[0])) ||
+				(url.quasis.length >= 1 && isFragmentUrl(url.quasis[0].value.raw))
 			);
 		}
 
@@ -283,11 +286,8 @@ export default createRule('no-navigation-without-resolve', {
 			Program() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				resolveReferences = extractResolveReferences(referenceTracker);
-				const {
-					goto: gotoCalls,
-					pushState: pushStateCalls,
-					replaceState: replaceStateCalls
-				} = extractFunctionCallReferences(referenceTracker);
+				const { gotoCalls, pushStateCalls, replaceStateCalls } =
+					extractFunctionCallReferences(referenceTracker);
 				if (context.options[0]?.ignoreGoto !== true) {
 					for (const gotoCall of gotoCalls) {
 						checkGotoCall(gotoCall, resolveReferences);
@@ -321,11 +321,11 @@ export default createRule('no-navigation-without-resolve', {
 				}
 				if (
 					(node.value[0].type === 'SvelteLiteral' &&
-						!expressionIsAbsolute(node.value[0]) &&
-						!expressionIsFragment(node.value[0])) ||
+						!isAbsoluteExpression(node.value[0]) &&
+						!isFragmentExpression(node.value[0])) ||
 					(node.value[0].type === 'SvelteMustacheTag' &&
-						!expressionIsAbsolute(node.value[0].expression) &&
-						!expressionIsFragment(node.value[0].expression) &&
+						!isAbsoluteExpression(node.value[0].expression) &&
+						!isFragmentExpression(node.value[0].expression) &&
 						!isResolveCall(node.value[0].expression, resolveReferences))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
