@@ -16,7 +16,16 @@ export default createRule('no-immutable-reactive-statements', {
 			immutable:
 				'This statement is not reactive because all variables referenced in the reactive statement are immutable.'
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			},
+			{
+				svelteVersions: ['5'],
+				runes: [false, 'undetermined']
+			}
+		]
 	},
 	create(context) {
 		const scopeManager = context.sourceCode.scopeManager;
