@@ -370,14 +370,23 @@ export default createRule('no-top-level-browser-globals', {
 
 				return (n) => start <= n.range[0] && n.range[1] <= end;
 			}
-			if (
-				!guardInfo.not &&
-				parent.type === 'LogicalExpression' &&
-				parent.operator === '&&' &&
-				parent.left === guardInfo.node
-			) {
-				const block = parent.right;
-				return (n) => block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
+			if (parent.type === 'LogicalExpression') {
+				if (!guardInfo.not && parent.operator === '&&') {
+					const parentChecker = getGuardChecker({ not: guardInfo.not, node: parent });
+					if (parent.left === guardInfo.node) {
+						const block = parent.right;
+						return (n) => {
+							if (parentChecker?.(n)) {
+								return true;
+							}
+							return block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
+						};
+					}
+					return parentChecker;
+				}
+				if (guardInfo.not && parent.operator === '||') {
+					return getGuardChecker({ not: guardInfo.not, node: parent });
+				}
 			}
 			return null;
 		}
