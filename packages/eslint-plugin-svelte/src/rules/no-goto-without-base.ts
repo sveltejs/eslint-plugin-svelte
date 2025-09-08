@@ -7,7 +7,7 @@ import type { RuleContext } from '../types.js';
 export default createRule('no-goto-without-base', {
 	meta: {
 		deprecated: true,
-		replacedBy: ['no-navigation-without-base'],
+		replacedBy: ['no-navigation-without-resolve'],
 		docs: {
 			description: 'disallow using goto() without the base path',
 			category: 'SvelteKit',
@@ -18,7 +18,12 @@ export default createRule('no-goto-without-base', {
 			isNotPrefixedWithBasePath:
 				"Found a goto() call with a url that isn't prefixed with the base path."
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteKitVersions: ['1.0.0-next', '1', '2']
+			}
+		]
 	},
 	create(context) {
 		return {
@@ -71,8 +76,7 @@ function checkTemplateLiteral(
 }
 
 function checkLiteral(context: RuleContext, path: TSESTree.Literal): void {
-	const absolutePathRegex = /^(?:[+a-z]+:)?\/\//i;
-	if (!absolutePathRegex.test(path.value?.toString() ?? '')) {
+	if (!/^[+a-z]*:/i.test(path.value?.toString() ?? '')) {
 		context.report({ loc: path.loc, messageId: 'isNotPrefixedWithBasePath' });
 	}
 }

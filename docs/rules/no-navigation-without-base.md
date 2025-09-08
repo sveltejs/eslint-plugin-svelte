@@ -10,11 +10,13 @@ since: 'v2.36.0-next.9'
 
 > disallow using navigation (links, goto, pushState, replaceState) without the base path
 
+- :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-resolve](no-navigation-without-resolve.md) rule.
+
 ## :book: Rule Details
 
-This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without prefixing a relative URL with the base path. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for iternal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the base path must be prepended, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.
+This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without prefixing a relative URL with the base path. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for internal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the base path must be prepended, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.
 
-This rule checks all 4 navigation options for the presence of the base path, with an exception for `<a>` links to absolute URLs, which are assumed to be used for external navigation and so do not require the base path, and for shallow outing functions with an empty string as the path, which keeps the current URL.
+This rule checks all 4 navigation options for the presence of the base path, with an exception for `<a>` links to absolute URLs, which are assumed to be used for external navigation and so do not require the base path, and for shallow routing functions with an empty string as the path, which keeps the current URL.
 
 <!--eslint-skip-->
 

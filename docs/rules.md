@@ -117,11 +117,11 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                                                                        | Description                                                                            |        |
-| :------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- | :----- |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.   | :star: |
-| [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md)                                     | disallow using navigation (links, goto, pushState, replaceState) without the base path |        |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                 | :star: |
+| Rule ID                                                                                                        | Description                                                                          |        |
+| :------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- | :----- |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. | :star: |
+| [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md)                               | disallow using navigation (links, goto, pushState, replaceState) without a resolve() | :star: |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.               | :star: |
 
 ## Experimental
 
@@ -146,8 +146,9 @@ These rules relate to this plugin works:
 - :warning: We're going to remove deprecated rules in the next major release. Please migrate to successor/new rules.
 - :innocent: We don't fix bugs which are in deprecated rules since we don't have enough resources.
 
-| Rule ID                                                                                                      | Replaced by                                                                |
-| :----------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.    |
-| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md)                                               | Now Svelte compiler itself throws an compile error.                        |
-| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                               | [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md) |
+| Rule ID                                                                                                      | Replaced by                                                                      |
+| :----------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------- |
+| [svelte/@typescript-eslint/no-unnecessary-condition](./rules/@typescript-eslint/no-unnecessary-condition.md) | This rule is no longer needed when using svelte-eslint-parser>=v0.19.0.          |
+| [svelte/no-dynamic-slot-name](./rules/no-dynamic-slot-name.md)                                               | Now Svelte compiler itself throws an compile error.                              |
+| [svelte/no-goto-without-base](./rules/no-goto-without-base.md)                                               | [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md) |
+| [svelte/no-navigation-without-base](./rules/no-navigation-without-base.md)                                   | [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md) |

@@ -25,17 +25,7 @@ const config = {
 			// default options are shown
 			pages: outDir,
 			assets: outDir
-		}),
-		files: {
-			routes: path.join(dirname, './src/routes'),
-			appTemplate: path.join(dirname, './src/app.html'),
-			hooks: {
-				server: path.join(dirname, './src/hooks/server'),
-				client: path.join(dirname, './src/hooks/client')
-			},
-			lib: path.join(dirname, './src/lib'),
-			assets: path.join(dirname, './statics')
-		}
+		})
 	}
 };
 export default config;

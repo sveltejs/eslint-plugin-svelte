@@ -22,6 +22,7 @@ const config: Linter.Config[] = [
 			'svelte/no-immutable-reactive-statements': 'error',
 			'svelte/no-inner-declarations': 'error',
 			'svelte/no-inspect': 'warn',
+			'svelte/no-navigation-without-resolve': 'error',
 			'svelte/no-not-function-handler': 'error',
 			'svelte/no-object-in-text-mustaches': 'error',
 			'svelte/no-raw-special-elements': 'error',

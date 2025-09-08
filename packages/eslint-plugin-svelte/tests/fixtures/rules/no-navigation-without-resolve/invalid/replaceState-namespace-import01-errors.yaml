@@ -1,0 +1,4 @@
+- message: Found a replaceState() call with a url that isn't resolved.
+  line: 4
+  column: 26
+  suggestions: null

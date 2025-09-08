@@ -8,6 +8,8 @@ import type { AST } from 'svelte-eslint-parser';
 
 export default createRule('no-navigation-without-base', {
 	meta: {
+		deprecated: true,
+		replacedBy: ['no-navigation-without-resolve'],
 		docs: {
 			description:
 				'disallow using navigation (links, goto, pushState, replaceState) without the base path',
@@ -42,7 +44,12 @@ export default createRule('no-navigation-without-base', {
 			replaceStateNotPrefixed:
 				"Found a replaceState() call with a url that isn't prefixed with the base path."
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteKitVersions: ['1.0.0-next', '1', '2']
+			}
+		]
 	},
 	create(context) {
 		let basePathNames: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
@@ -266,7 +273,7 @@ function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
 }
 
 function urlValueIsAbsolute(url: string): boolean {
-	return url.includes('://');
+	return /^[+a-z]*:/i.test(url);
 }
 
 function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {

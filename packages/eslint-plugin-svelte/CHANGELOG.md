@@ -1,5 +1,31 @@
 # eslint-plugin-svelte
 
+## 3.12.2
+
+### Patch Changes
+
+- [#1299](https://github.com/sveltejs/eslint-plugin-svelte/pull/1299) [`5c7cba3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5c7cba3c20dbef33d22df7e99ff56fa259f34027) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: disabling more rules in runes mode
+
+- [#1299](https://github.com/sveltejs/eslint-plugin-svelte/pull/1299) [`5c7cba3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5c7cba3c20dbef33d22df7e99ff56fa259f34027) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: restricting SvelteKit rules to SvelteKit
+
+- [#1306](https://github.com/sveltejs/eslint-plugin-svelte/pull/1306) [`7cb3660`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7cb36605784dd689379600462dbe41f7940ce79a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-unused-props): false positives for `ComponentProps<any>`
+
+## 3.12.1
+
+### Patch Changes
+
+- [#1313](https://github.com/sveltejs/eslint-plugin-svelte/pull/1313) [`27573f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/27573f4100411f4d33d821bf46825b9dcdb9895e) Thanks [@marekdedic](https://github.com/marekdedic)! - fix: Not reporting mailto: and other unusual schema addresses in no-nmavigation-without-resolve (and its deprecated versions)
+
+## 3.12.0
+
+### Minor Changes
+
+- [#1308](https://github.com/sveltejs/eslint-plugin-svelte/pull/1308) [`abbcfdd`](https://github.com/sveltejs/eslint-plugin-svelte/commit/abbcfdd55baac44800ff1d58b67640d28f849803) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added to recommended rule set
+
+- [#1289](https://github.com/sveltejs/eslint-plugin-svelte/pull/1289) [`e2e791f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e2e791f8fb8268750a9190089c19b16a02843066) Thanks [@marekdedic](https://github.com/marekdedic)! - feat: added the no-navigation-without-resolve rule
+
+- [#1289](https://github.com/sveltejs/eslint-plugin-svelte/pull/1289) [`e2e791f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e2e791f8fb8268750a9190089c19b16a02843066) Thanks [@marekdedic](https://github.com/marekdedic)! - chore: deprecated the no-navigation-without-base rule
+
 ## 3.11.0
 
 ### Minor Changes

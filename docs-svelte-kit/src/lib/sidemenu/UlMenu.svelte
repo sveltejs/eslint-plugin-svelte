@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { isActive, stripBaseUrl } from '../utils.js';
-	import { base as baseUrl } from '$app/paths';
+	import { resolve } from '$app/paths';
 	export let children;
 	export let level = 1;
 </script>
@@ -16,7 +16,7 @@
 				<a
 					class="sidebar-menu-item-title"
 					class:active={item.active || (item.path && isActive(item.path, $page))}
-					href="{baseUrl}{item.path || `${stripBaseUrl($page.url.pathname)}#${item.id}`}"
+					href={resolve(item.path || `${stripBaseUrl($page.url.pathname)}#${item.id}`)}
 				>
 					{item.title}
 				</a>

@@ -1,0 +1,8 @@
+- message: Found a pushState() call with a url that isn't resolved.
+  line: 5
+  column: 12
+  suggestions: null
+- message: Found a pushState() call with a url that isn't resolved.
+  line: 6
+  column: 12
+  suggestions: null

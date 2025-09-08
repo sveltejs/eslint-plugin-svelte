@@ -16,7 +16,12 @@ export default createRule('experimental-require-strict-events', {
 		messages: {
 			missingStrictEvents: `The component must have the strictEvents attribute on its <script> tag or it must define the $$Events interface.`
 		},
-		type: 'suggestion'
+		type: 'suggestion',
+		conditions: [
+			{
+				svelteVersions: ['3/4']
+			}
+		]
 	},
 	create(context) {
 		let isTs = false;

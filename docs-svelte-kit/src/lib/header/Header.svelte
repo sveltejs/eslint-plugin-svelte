@@ -3,7 +3,7 @@
 	import { isActive } from '../utils.js';
 	import { page } from '$app/stores';
 	import logo from './logo.svg';
-	import { base as baseUrl } from '$app/paths';
+	import { resolve } from '$app/paths';
 
 	const dispatch = createEventDispatcher();
 
@@ -34,7 +34,7 @@
 				/>
 			</svg>
 		</div>
-		<a href="{baseUrl}/" class="home-link">
+		<a href={resolve('/')} class="home-link">
 			<img src={logo} alt="Logo" />
 		</a>
 	</div>
@@ -45,13 +45,13 @@
 		</svg>
 		<ul>
 			<li class:active={isActive('/', $page)}>
-				<a href="{baseUrl}/">Home</a>
+				<a href={resolve('/')}>Home</a>
 			</li>
 			<li class:active={isActive('/user-guide/', $page)}>
-				<a href="{baseUrl}/user-guide/">User Guide</a>
+				<a href={resolve('/user-guide/')}>User Guide</a>
 			</li>
 			<li class:active={isActive('/rules/', $page)}>
-				<a href="{baseUrl}/rules/">Rules</a>
+				<a href={resolve('/rules/')}>Rules</a>
 			</li>
 			<li>
 				<a
@@ -64,7 +64,7 @@
 			</li>
 		</ul>
 		<div class="nav-title">
-			<a href="{baseUrl}/"> <img src={logo} alt="Logo" />eslint-plugin-svelte</a>
+			<a href={resolve('/')}> <img src={logo} alt="Logo" />eslint-plugin-svelte</a>
 		</div>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
