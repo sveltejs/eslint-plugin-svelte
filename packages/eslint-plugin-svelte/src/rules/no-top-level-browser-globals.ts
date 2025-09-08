@@ -376,7 +376,7 @@ export default createRule('no-top-level-browser-globals', {
 					if (parent.left === guardInfo.node) {
 						const block = parent.right;
 						return (n) => {
-							if (parentChecker && parentChecker(n)) {
+							if (parentChecker?.(n)) {
 								return true;
 							}
 							return block.range[0] <= n.range[0] && n.range[1] <= block.range[1];
