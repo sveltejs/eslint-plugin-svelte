@@ -6,6 +6,7 @@ import {
 	getAttributeValueQuoteAndRange,
 	getStringIfConstant
 } from '../utils/ast-utils.js';
+import { ASTSearchHelper } from '../utils/ast-search-helper.js';
 
 export default createRule('no-dynamic-slot-name', {
 	meta: {
@@ -72,26 +73,24 @@ export default createRule('no-dynamic-slot-name', {
 		}
 
 		/** Find data expression */
-		function findRootExpression(
-			node: TSESTree.Expression,
-			already = new Set<TSESTree.Identifier>()
-		): TSESTree.Expression {
-			if (node.type !== 'Identifier' || already.has(node)) {
-				return node;
-			}
-			already.add(node);
-			const variable = findVariable(context, node);
-			if (!variable || variable.defs.length !== 1) {
-				return node;
-			}
-			const def = variable.defs[0];
-			if (def.type === 'Variable') {
-				if (def.parent.kind === 'const' && def.node.init) {
-					const init = def.node.init;
-					return findRootExpression(init, already);
-				}
-			}
-			return node;
+		function findRootExpression(node: TSESTree.Expression): TSESTree.Expression {
+			return (
+				ASTSearchHelper(node, {
+					Identifier: (node, searchAnotherNode) => {
+						const variable = findVariable(context, node);
+						if (
+							variable === null ||
+							variable.defs.length !== 1 ||
+							variable.defs[0].type !== 'Variable' ||
+							variable.defs[0].parent.kind !== 'const' ||
+							variable.defs[0].node.init === null
+						) {
+							return node;
+						}
+						return searchAnotherNode(variable.defs[0].node.init) ?? variable.defs[0].node.init;
+					}
+				}) ?? node
+			);
 		}
 	}
 });
