@@ -4,6 +4,7 @@ import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
 import * as eslintUtils from '@eslint-community/eslint-utils';
 import { voidElements, svgElements, mathmlElements } from './element-types.js';
+import { ASTSearchHelper } from './ast-search-helper.js';
 
 /**
  * Checks whether or not the tokens of two given nodes are same.
@@ -34,39 +35,37 @@ export function equalTokens(left: ASTNode, right: ASTNode, sourceCode: SourceCod
 export function getStringIfConstant(
 	node: TSESTree.Expression | TSESTree.PrivateIdentifier
 ): string | null {
-	if (node.type === 'Literal') {
-		if (typeof node.value === 'string') return node.value;
-	} else if (node.type === 'TemplateLiteral') {
-		let str = '';
-		const quasis = [...node.quasis];
-		const expressions = [...node.expressions];
-		let quasi: TSESTree.TemplateElement | undefined, expr: TSESTree.Expression | undefined;
-		while ((quasi = quasis.shift())) {
-			str += quasi.value.cooked;
-			expr = expressions.shift();
-			if (expr) {
-				const exprStr = getStringIfConstant(expr);
-				if (exprStr == null) {
-					return null;
-				}
-				str += exprStr;
-			}
-		}
-		return str;
-	} else if (node.type === 'BinaryExpression') {
-		if (node.operator === '+') {
-			const left = getStringIfConstant(node.left);
-			if (left == null) {
+	return ASTSearchHelper(node, {
+		BinaryExpression: (node, searchAnotherNode) => {
+			if (node.operator !== '+') {
 				return null;
 			}
-			const right = getStringIfConstant(node.right);
-			if (right == null) {
+			const left = searchAnotherNode(node.left);
+			if (left === null) {
+				return null;
+			}
+			const right = searchAnotherNode(node.right);
+			if (right === null) {
 				return null;
 			}
 			return left + right;
+		},
+		Literal: (node) => (typeof node.value === 'string' ? node.value : null),
+		TemplateLiteral: (node, searchAnotherNode) => {
+			let str = '';
+			for (const quasi of node.quasis) {
+				str += quasi.value.cooked;
+				if (node.expressions[0]) {
+					const exprStr = searchAnotherNode(node.expressions[0]);
+					if (exprStr === null) {
+						return null;
+					}
+					str += exprStr;
+				}
+			}
+			return str;
 		}
-	}
-	return null;
+	});
 }
 
 /**
