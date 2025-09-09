@@ -51,7 +51,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest,windows-latest]
         eslint: [8, 9]
         node: [18.x, 20.x, 22.x, latest]
     steps:
