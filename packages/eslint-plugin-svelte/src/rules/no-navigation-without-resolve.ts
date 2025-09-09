@@ -4,6 +4,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import { isAbsoluteURL, isFragmentURL } from '../utils/url-utils.js';
+import { ASTSearchHelper } from '../utils/ast-search-helper.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
@@ -218,28 +219,25 @@ function isResolveCall(
 	node: TSESTree.CallExpressionArgument,
 	resolveReferences: Set<TSESTree.Identifier>
 ): boolean {
-	if (
-		node.type === 'CallExpression' &&
-		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
-			(node.callee.type === 'MemberExpression' &&
-				node.callee.property.type === 'Identifier' &&
-				resolveReferences.has(node.callee.property)))
-	) {
-		return true;
-	}
-	if (node.type === 'Identifier') {
-		const variable = findVariable(context, node);
-		if (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null &&
-			isResolveCall(context, variable.identifiers[0].parent.init, resolveReferences)
-		) {
-			return true;
-		}
-	}
-	return false;
+	return (
+		ASTSearchHelper(node, {
+			CallExpression: (node) =>
+				(node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
+				(node.callee.type === 'MemberExpression' &&
+					node.callee.property.type === 'Identifier' &&
+					resolveReferences.has(node.callee.property)),
+			Identifier: (node, searchAnotherNode) => {
+				const variable = findVariable(context, node);
+				return (
+					variable !== null &&
+					variable.identifiers.length > 0 &&
+					variable.identifiers[0].parent.type === 'VariableDeclarator' &&
+					variable.identifiers[0].parent.init !== null &&
+					searchAnotherNode(variable.identifiers[0].parent.init)
+				);
+			}
+		}) ?? false
+	);
 }
 
 function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
