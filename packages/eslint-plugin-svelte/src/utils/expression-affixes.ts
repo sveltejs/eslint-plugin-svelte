@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable } from './ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
+import { ASTSearchHelper } from './ast-search-helper.js';
 
 // Variable prefix extraction
 
@@ -76,134 +77,81 @@ function extractTemplateLiteralPrefixVariable(
 	return null;
 }
 
-// Literal prefix extraction
-
 export function extractExpressionPrefixLiteral(
 	context: RuleContext,
 	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
-	switch (expression.type) {
-		case 'BinaryExpression':
-			return extractBinaryExpressionPrefixLiteral(context, expression);
-		case 'Identifier':
-			return extractVariablePrefixLiteral(context, expression);
-		case 'Literal':
-			return typeof expression.value === 'string' ? expression.value : null;
-		case 'SvelteLiteral':
-			return expression.value;
-		case 'TemplateLiteral':
-			return extractTemplateLiteralPrefixLiteral(context, expression);
-		default:
-			return null;
-	}
-}
-
-function extractBinaryExpressionPrefixLiteral(
-	context: RuleContext,
-	expression: TSESTree.BinaryExpression
-): string | null {
-	return expression.left.type !== 'PrivateIdentifier'
-		? extractExpressionPrefixLiteral(context, expression.left)
-		: null;
-}
-
-function extractVariablePrefixLiteral(
-	context: RuleContext,
-	expression: TSESTree.Identifier
-): string | null {
-	const variable = findVariable(context, expression);
-	if (
-		variable === null ||
-		variable.identifiers.length !== 1 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return null;
-	}
-	return extractExpressionPrefixLiteral(context, variable.identifiers[0].parent.init);
-}
-
-function extractTemplateLiteralPrefixLiteral(
-	context: RuleContext,
-	expression: TSESTree.TemplateLiteral
-): string | null {
-	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
-		a.range[0] < b.range[0] ? -1 : 1
-	);
-	for (const part of literalParts) {
-		if (part.type === 'TemplateElement') {
-			if (part.value.raw === '') {
-				// Skip empty quasi
-				continue;
+	return ASTSearchHelper(expression, {
+		BinaryExpression: (node, searchAnotherNode) =>
+			node.left.type !== 'PrivateIdentifier' ? searchAnotherNode(node.left) : null,
+		Identifier: (node, searchAnotherNode) => {
+			const variable = findVariable(context, node);
+			if (
+				variable === null ||
+				variable.identifiers.length !== 1 ||
+				variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+				variable.identifiers[0].parent.init === null
+			) {
+				return null;
 			}
-			return part.value.raw;
+			return searchAnotherNode(variable.identifiers[0].parent.init);
+		},
+		Literal: (node) => (typeof node.value === 'string' ? node.value : null),
+		SvelteLiteral: (node) => node.value,
+		TemplateLiteral: (node, searchAnotherNode) => {
+			const literalParts = [...node.expressions, ...node.quasis].sort((a, b) =>
+				a.range[0] < b.range[0] ? -1 : 1
+			);
+			for (const part of literalParts) {
+				if (part.type === 'TemplateElement') {
+					if (part.value.raw === '') {
+						// Skip empty quasi
+						continue;
+					}
+					return part.value.raw;
+				}
+				return searchAnotherNode(part);
+			}
+			return null;
 		}
-		return extractExpressionPrefixLiteral(context, part);
-	}
-	return null;
+	});
 }
-
-// Literal suffix extraction
 
 export function extractExpressionSuffixLiteral(
 	context: RuleContext,
 	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
-	switch (expression.type) {
-		case 'BinaryExpression':
-			return extractBinaryExpressionSuffixLiteral(context, expression);
-		case 'Identifier':
-			return extractVariableSuffixLiteral(context, expression);
-		case 'Literal':
-			return typeof expression.value === 'string' ? expression.value : null;
-		case 'SvelteLiteral':
-			return expression.value;
-		case 'TemplateLiteral':
-			return extractTemplateLiteralSuffixLiteral(context, expression);
-		default:
-			return null;
-	}
-}
-
-function extractBinaryExpressionSuffixLiteral(
-	context: RuleContext,
-	expression: TSESTree.BinaryExpression
-): string | null {
-	return extractExpressionSuffixLiteral(context, expression.right);
-}
-
-function extractVariableSuffixLiteral(
-	context: RuleContext,
-	expression: TSESTree.Identifier
-): string | null {
-	const variable = findVariable(context, expression);
-	if (
-		variable === null ||
-		variable.identifiers.length !== 1 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return null;
-	}
-	return extractExpressionSuffixLiteral(context, variable.identifiers[0].parent.init);
-}
-
-function extractTemplateLiteralSuffixLiteral(
-	context: RuleContext,
-	expression: TSESTree.TemplateLiteral
-): string | null {
-	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
-		a.range[0] < b.range[0] ? -1 : 1
-	);
-	for (const part of literalParts.reverse()) {
-		if (part.type === 'TemplateElement') {
-			if (part.value.raw === '') {
-				// Skip empty quasi
-				continue;
+	return ASTSearchHelper(expression, {
+		BinaryExpression: (node, searchAnotherNode) => searchAnotherNode(node.right),
+		Identifier: (node, searchAnotherNode) => {
+			const variable = findVariable(context, node);
+			if (
+				variable === null ||
+				variable.identifiers.length !== 1 ||
+				variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+				variable.identifiers[0].parent.init === null
+			) {
+				return null;
 			}
-			return part.value.raw;
+			return searchAnotherNode(variable.identifiers[0].parent.init);
+		},
+		Literal: (node) => (typeof node.value === 'string' ? node.value : null),
+		SvelteLiteral: (node) => node.value,
+		TemplateLiteral: (node, searchAnotherNode) => {
+			const literalParts = [...node.expressions, ...node.quasis].sort((a, b) =>
+				a.range[0] < b.range[0] ? -1 : 1
+			);
+			for (const part of literalParts.reverse()) {
+				if (part.type === 'TemplateElement') {
+					if (part.value.raw === '') {
+						// Skip empty quasi
+						continue;
+					}
+					return part.value.raw;
+				}
+				return searchAnotherNode(part);
+			}
+			return null;
 		}
-		return extractExpressionSuffixLiteral(context, part);
-	}
-	return null;
+	});
 }
