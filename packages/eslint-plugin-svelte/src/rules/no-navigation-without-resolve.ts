@@ -3,7 +3,7 @@ import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
-import type { AST } from 'svelte-eslint-parser';
+import { isAbsoluteURL, isFragmentURL } from '../utils/url-utils.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
@@ -96,11 +96,11 @@ export default createRule('no-navigation-without-resolve', {
 				}
 				if (
 					(node.value[0].type === 'SvelteLiteral' &&
-						!expressionIsAbsolute(node.value[0]) &&
-						!expressionIsFragment(node.value[0])) ||
+						!isAbsoluteURL(node.value[0]) &&
+						!isFragmentURL(node.value[0])) ||
 					(node.value[0].type === 'SvelteMustacheTag' &&
-						!expressionIsAbsolute(node.value[0].expression) &&
-						!expressionIsFragment(node.value[0].expression) &&
+						!isAbsoluteURL(node.value[0].expression) &&
+						!isFragmentURL(node.value[0].expression) &&
 						!isResolveCall(context, node.value[0].expression, resolveReferences))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
@@ -250,67 +250,4 @@ function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 			url.quasis.length === 1 &&
 			url.quasis[0].value.raw === '')
 	);
-}
-
-function expressionIsAbsolute(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
-	switch (url.type) {
-		case 'BinaryExpression':
-			return binaryExpressionIsAbsolute(url);
-		case 'Literal':
-			return typeof url.value === 'string' && urlValueIsAbsolute(url.value);
-		case 'SvelteLiteral':
-			return urlValueIsAbsolute(url.value);
-		case 'TemplateLiteral':
-			return templateLiteralIsAbsolute(url);
-		default:
-			return false;
-	}
-}
-
-function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression): boolean {
-	return (
-		(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(url.left)) ||
-		expressionIsAbsolute(url.right)
-	);
-}
-
-function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
-	return (
-		url.expressions.some(expressionIsAbsolute) ||
-		url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
-	);
-}
-
-function urlValueIsAbsolute(url: string): boolean {
-	return /^[+a-z]*:/i.test(url);
-}
-
-function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
-	switch (url.type) {
-		case 'BinaryExpression':
-			return binaryExpressionIsFragment(url);
-		case 'Literal':
-			return typeof url.value === 'string' && urlValueIsFragment(url.value);
-		case 'SvelteLiteral':
-			return urlValueIsFragment(url.value);
-		case 'TemplateLiteral':
-			return templateLiteralIsFragment(url);
-		default:
-			return false;
-	}
-}
-
-function binaryExpressionIsFragment(url: TSESTree.BinaryExpression): boolean {
-	return url.left.type !== 'PrivateIdentifier' && expressionIsFragment(url.left);
-}
-
-function templateLiteralIsFragment(url: TSESTree.TemplateLiteral): boolean {
-	return (
-		(url.expressions.length >= 1 && expressionIsFragment(url.expressions[0])) ||
-		(url.quasis.length >= 1 && urlValueIsFragment(url.quasis[0].value.raw))
-	);
-}
-
-function urlValueIsFragment(url: string): boolean {
-	return url.startsWith('#');
 }
