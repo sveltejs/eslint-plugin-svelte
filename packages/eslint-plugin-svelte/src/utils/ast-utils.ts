@@ -666,17 +666,18 @@ function getSimpleNameFromNode(
 		| TSESTree.Expression,
 	context: RuleContext | undefined
 ): string {
-	if (node.type === 'Identifier' || node.type === 'SvelteName') {
-		return node.name;
-	}
-	if (
-		node.type === 'SvelteMemberExpressionName' ||
-		(node.type === 'MemberExpression' && !node.computed)
-	) {
-		return `${getSimpleNameFromNode(node.object, context!)}.${getSimpleNameFromNode(
-			node.property,
-			context!
-		)}`;
+	const name = ASTSearchHelper(node, {
+		Identifier: (node) => node.name,
+		MemberExpression: (node, searchAnotherNode) =>
+			!node.computed
+				? `${searchAnotherNode(node.object)}.${searchAnotherNode(node.property)}`
+				: null,
+		SvelteName: (node) => node.name,
+		SvelteMemberExpressionName: (node, searchAnotherNode) =>
+			`${searchAnotherNode(node.object)}.${searchAnotherNode(node.property)}`
+	});
+	if (name !== null) {
+		return name;
 	}
 
 	// No nodes other than those listed above are currently expected to be used in names.
