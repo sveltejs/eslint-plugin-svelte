@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.12.3
+
+### Patch Changes
+
+- [#1305](https://github.com/sveltejs/eslint-plugin-svelte/pull/1305) [`d92dde0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d92dde085fa7dc71852d28bda906548aece9e531) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-top-level-browser-globals): false positives for compound logical expression guards
+
 ## 3.12.2
 
 ### Patch Changes
