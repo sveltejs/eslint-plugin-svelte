@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { findVariable } from '../utils/ast-utils.js';
+import { findVariableSafe } from '../utils/ast-utils.js';
 import { EVENT_NAMES } from '../utils/events.js';
 
 const PHRASES = {
@@ -37,15 +37,11 @@ export default createRule('no-not-function-handler', {
 	},
 	create(context) {
 		/** Find data expression */
-		function findRootExpression(
-			node: TSESTree.Expression,
-			already = new Set<TSESTree.Identifier>()
-		): TSESTree.Expression {
-			if (node.type !== 'Identifier' || already.has(node)) {
+		function findRootExpression(node: TSESTree.Expression): TSESTree.Expression {
+			if (node.type !== 'Identifier') {
 				return node;
 			}
-			already.add(node);
-			const variable = findVariable(context, node);
+			const variable = findVariableSafe(findRootExpression, context, node);
 			if (!variable || variable.defs.length !== 1) {
 				return node;
 			}
@@ -53,7 +49,7 @@ export default createRule('no-not-function-handler', {
 			if (def.type === 'Variable') {
 				if (def.parent.kind === 'const' && def.node.init) {
 					const init = def.node.init;
-					return findRootExpression(init, already);
+					return findRootExpression(init);
 				}
 			}
 			return node;
