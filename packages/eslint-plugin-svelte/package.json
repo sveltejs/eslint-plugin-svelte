@@ -2,7 +2,11 @@
   "name": "eslint-plugin-svelte",
   "version": "3.12.3",
   "description": "ESLint plugin for Svelte using AST",
-  "repository": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
+    "directory": "packages/eslint-plugin-svelte"
+  },
   "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
   "author": "Yosuke Ota (https://github.com/ota-meshi)",
   "funding": "https://github.com/sponsors/ota-meshi",

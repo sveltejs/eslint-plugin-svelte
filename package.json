@@ -5,6 +5,10 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/ota-meshi",
   "packageManager": "pnpm@10.15.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/eslint-plugin-svelte.git"
+  },
   "scripts": {
     "prerelease": "cd packages/eslint-plugin-svelte && pnpm clean && pnpm run build && cd ../.. && cp README.md packages/eslint-plugin-svelte",
     "release": "changeset publish",
