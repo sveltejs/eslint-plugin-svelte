@@ -230,6 +230,43 @@ export function findVariable(context: RuleContext, node: TSESTree.Identifier): V
 	// Remove the $ and search for the variable again, as it may be a store access variable.
 	return eslintUtils.findVariable(initialScope, node.name.slice(1));
 }
+
+const findVariableSafeVisited = new WeakMap<
+	RuleContext,
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- ignore
+	WeakMap<Function, Set<TSESTree.Identifier>>
+>();
+
+/**
+ * Find the variable of a given name safely, avoiding infinite recursion.
+ * This should be used when the caller function may be called recursively.
+ * @param caller The caller function. This is used to track recursion.
+ * @param context The rule context.
+ * @param node The identifier node to find.
+ */
+export function findVariableSafe(
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- ignore
+	caller: Function,
+	context: RuleContext,
+	node: TSESTree.Identifier
+): Variable | null {
+	let visited = findVariableSafeVisited.get(context);
+	if (!visited) {
+		visited = new WeakMap();
+		findVariableSafeVisited.set(context, visited);
+	}
+	let visitedNodes = visited.get(caller);
+	if (!visitedNodes) {
+		visitedNodes = new Set();
+		visited.set(caller, visitedNodes);
+	}
+	if (visitedNodes.has(node)) {
+		return null;
+	}
+	visitedNodes.add(node);
+	return findVariable(context, node);
+}
+
 /**
  * Iterate the identifiers of a given pattern node.
  */

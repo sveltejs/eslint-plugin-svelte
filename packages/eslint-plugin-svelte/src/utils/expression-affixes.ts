@@ -1,5 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { findVariable } from './ast-utils.js';
+import { findVariableSafe } from './ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
 
@@ -36,7 +36,7 @@ function extractVariablePrefixVariable(
 	context: RuleContext,
 	expression: TSESTree.Identifier
 ): TSESTree.Identifier | null {
-	const variable = findVariable(context, expression);
+	const variable = findVariableSafe(extractVariablePrefixVariable, context, expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||
@@ -111,7 +111,7 @@ function extractVariablePrefixLiteral(
 	context: RuleContext,
 	expression: TSESTree.Identifier
 ): string | null {
-	const variable = findVariable(context, expression);
+	const variable = findVariableSafe(extractVariablePrefixLiteral, context, expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||
@@ -176,7 +176,7 @@ function extractVariableSuffixLiteral(
 	context: RuleContext,
 	expression: TSESTree.Identifier
 ): string | null {
-	const variable = findVariable(context, expression);
+	const variable = findVariableSafe(extractVariableSuffixLiteral, context, expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||

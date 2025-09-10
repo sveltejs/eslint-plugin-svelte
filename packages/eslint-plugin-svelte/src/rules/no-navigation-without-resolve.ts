@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { findVariable } from '../utils/ast-utils.js';
+import { findVariableSafe } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
 
@@ -126,7 +126,7 @@ function extractResolveReferences(
 		}
 	})) {
 		if (node.type === 'ImportSpecifier') {
-			const variable = findVariable(context, node.local);
+			const variable = findVariableSafe(extractResolveReferences, context, node.local);
 			if (variable === null) {
 				continue;
 			}
@@ -228,7 +228,7 @@ function isResolveCall(
 		return true;
 	}
 	if (node.type === 'Identifier') {
-		const variable = findVariable(context, node);
+		const variable = findVariableSafe(isResolveCall, context, node);
 		if (
 			variable !== null &&
 			variable.identifiers.length > 0 &&
