@@ -305,7 +305,7 @@ function writeFixtures(
 }
 
 function getConfig(ruleName: string, inputFile: string) {
-	const filename = inputFile.slice(inputFile.indexOf(ruleName));
+	const filename = inputFile.slice(inputFile.indexOf(path.normalize(ruleName)));
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
 	let configFile = [
