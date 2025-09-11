@@ -231,40 +231,26 @@ export function findVariable(context: RuleContext, node: TSESTree.Identifier): V
 	return eslintUtils.findVariable(initialScope, node.name.slice(1));
 }
 
-const findVariableSafeVisited = new WeakMap<
-	RuleContext,
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- ignore
-	WeakMap<Function, Set<TSESTree.Identifier>>
->();
-
 /**
- * Find the variable of a given name safely, avoiding infinite recursion.
- * This should be used when the caller function may be called recursively.
- * @param caller The caller function. This is used to track recursion.
- * @param context The rule context.
- * @param node The identifier node to find.
+ * Context for safely finding variables, avoiding infinite recursion.
+ * This should be used when the caller function may be called recursively, instead of `findVariable()`.
+ *
+ * Create an instance of this class at the top of the call stack where you want to start searching for identifiers,
+ * and then use it within the recursion.
  */
-export function findVariableSafe(
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- ignore
-	caller: Function,
-	context: RuleContext,
-	node: TSESTree.Identifier
-): Variable | null {
-	let visited = findVariableSafeVisited.get(context);
-	if (!visited) {
-		visited = new WeakMap();
-		findVariableSafeVisited.set(context, visited);
+export class FindVariableContext {
+	public readonly findVariable: (node: TSESTree.Identifier) => Variable | null;
+
+	public constructor(context: RuleContext) {
+		const visited = new Set<TSESTree.Identifier>();
+		this.findVariable = (node: TSESTree.Identifier) => {
+			if (visited.has(node)) {
+				return null;
+			}
+			visited.add(node);
+			return findVariable(context, node);
+		};
 	}
-	let visitedNodes = visited.get(caller);
-	if (!visitedNodes) {
-		visitedNodes = new Set();
-		visited.set(caller, visitedNodes);
-	}
-	if (visitedNodes.has(node)) {
-		return null;
-	}
-	visitedNodes.add(node);
-	return findVariable(context, node);
 }
 
 /**

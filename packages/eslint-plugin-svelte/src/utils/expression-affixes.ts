@@ -1,12 +1,33 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { findVariableSafe } from './ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
-
-// Variable prefix extraction
+import { FindVariableContext } from './ast-utils.js';
 
 export function extractExpressionPrefixVariable(
 	context: RuleContext,
+	expression: TSESTree.Expression
+): TSESTree.Identifier | null {
+	return extractExpressionPrefixVariableInternal(new FindVariableContext(context), expression);
+}
+
+export function extractExpressionPrefixLiteral(
+	context: RuleContext,
+	expression: AST.SvelteLiteral | TSESTree.Node
+): string | null {
+	return extractExpressionPrefixLiteralInternal(new FindVariableContext(context), expression);
+}
+
+export function extractExpressionSuffixLiteral(
+	context: RuleContext,
+	expression: AST.SvelteLiteral | TSESTree.Node
+): string | null {
+	return extractExpressionSuffixLiteralInternal(new FindVariableContext(context), expression);
+}
+
+// Variable prefix extraction
+
+function extractExpressionPrefixVariableInternal(
+	context: FindVariableContext,
 	expression: TSESTree.Expression
 ): TSESTree.Identifier | null {
 	switch (expression.type) {
@@ -24,19 +45,19 @@ export function extractExpressionPrefixVariable(
 }
 
 function extractBinaryExpressionPrefixVariable(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.BinaryExpression
 ): TSESTree.Identifier | null {
 	return expression.left.type !== 'PrivateIdentifier'
-		? extractExpressionPrefixVariable(context, expression.left)
+		? extractExpressionPrefixVariableInternal(context, expression.left)
 		: null;
 }
 
 function extractVariablePrefixVariable(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.Identifier
 ): TSESTree.Identifier | null {
-	const variable = findVariableSafe(extractVariablePrefixVariable, context, expression);
+	const variable = context.findVariable(expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||
@@ -46,7 +67,8 @@ function extractVariablePrefixVariable(
 		return expression;
 	}
 	return (
-		extractExpressionPrefixVariable(context, variable.identifiers[0].parent.init) ?? expression
+		extractExpressionPrefixVariableInternal(context, variable.identifiers[0].parent.init) ??
+		expression
 	);
 }
 
@@ -57,7 +79,7 @@ function extractMemberExpressionPrefixVariable(
 }
 
 function extractTemplateLiteralPrefixVariable(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.TemplateLiteral
 ): TSESTree.Identifier | null {
 	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
@@ -69,7 +91,7 @@ function extractTemplateLiteralPrefixVariable(
 			continue;
 		}
 		if (part.type !== 'TemplateElement') {
-			return extractExpressionPrefixVariable(context, part);
+			return extractExpressionPrefixVariableInternal(context, part);
 		}
 		return null;
 	}
@@ -78,8 +100,8 @@ function extractTemplateLiteralPrefixVariable(
 
 // Literal prefix extraction
 
-export function extractExpressionPrefixLiteral(
-	context: RuleContext,
+function extractExpressionPrefixLiteralInternal(
+	context: FindVariableContext,
 	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
 	switch (expression.type) {
@@ -99,19 +121,19 @@ export function extractExpressionPrefixLiteral(
 }
 
 function extractBinaryExpressionPrefixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.BinaryExpression
 ): string | null {
 	return expression.left.type !== 'PrivateIdentifier'
-		? extractExpressionPrefixLiteral(context, expression.left)
+		? extractExpressionPrefixLiteralInternal(context, expression.left)
 		: null;
 }
 
 function extractVariablePrefixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.Identifier
 ): string | null {
-	const variable = findVariableSafe(extractVariablePrefixLiteral, context, expression);
+	const variable = context.findVariable(expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||
@@ -120,11 +142,11 @@ function extractVariablePrefixLiteral(
 	) {
 		return null;
 	}
-	return extractExpressionPrefixLiteral(context, variable.identifiers[0].parent.init);
+	return extractExpressionPrefixLiteralInternal(context, variable.identifiers[0].parent.init);
 }
 
 function extractTemplateLiteralPrefixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.TemplateLiteral
 ): string | null {
 	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
@@ -138,15 +160,15 @@ function extractTemplateLiteralPrefixLiteral(
 			}
 			return part.value.raw;
 		}
-		return extractExpressionPrefixLiteral(context, part);
+		return extractExpressionPrefixLiteralInternal(context, part);
 	}
 	return null;
 }
 
 // Literal suffix extraction
 
-export function extractExpressionSuffixLiteral(
-	context: RuleContext,
+function extractExpressionSuffixLiteralInternal(
+	context: FindVariableContext,
 	expression: AST.SvelteLiteral | TSESTree.Node
 ): string | null {
 	switch (expression.type) {
@@ -166,17 +188,17 @@ export function extractExpressionSuffixLiteral(
 }
 
 function extractBinaryExpressionSuffixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.BinaryExpression
 ): string | null {
-	return extractExpressionSuffixLiteral(context, expression.right);
+	return extractExpressionSuffixLiteralInternal(context, expression.right);
 }
 
 function extractVariableSuffixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.Identifier
 ): string | null {
-	const variable = findVariableSafe(extractVariableSuffixLiteral, context, expression);
+	const variable = context.findVariable(expression);
 	if (
 		variable === null ||
 		variable.identifiers.length !== 1 ||
@@ -185,11 +207,11 @@ function extractVariableSuffixLiteral(
 	) {
 		return null;
 	}
-	return extractExpressionSuffixLiteral(context, variable.identifiers[0].parent.init);
+	return extractExpressionSuffixLiteralInternal(context, variable.identifiers[0].parent.init);
 }
 
 function extractTemplateLiteralSuffixLiteral(
-	context: RuleContext,
+	context: FindVariableContext,
 	expression: TSESTree.TemplateLiteral
 ): string | null {
 	const literalParts = [...expression.expressions, ...expression.quasis].sort((a, b) =>
@@ -203,7 +225,7 @@ function extractTemplateLiteralSuffixLiteral(
 			}
 			return part.value.raw;
 		}
-		return extractExpressionSuffixLiteral(context, part);
+		return extractExpressionSuffixLiteralInternal(context, part);
 	}
 	return null;
 }

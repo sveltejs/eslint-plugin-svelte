@@ -1,8 +1,8 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { findVariableSafe } from '../utils/ast-utils.js';
 import { EVENT_NAMES } from '../utils/events.js';
+import { FindVariableContext } from '../utils/ast-utils.js';
 
 const PHRASES = {
 	ObjectExpression: 'object',
@@ -37,11 +37,14 @@ export default createRule('no-not-function-handler', {
 	},
 	create(context) {
 		/** Find data expression */
-		function findRootExpression(node: TSESTree.Expression): TSESTree.Expression {
+		function findRootExpression(
+			ctx: FindVariableContext,
+			node: TSESTree.Expression
+		): TSESTree.Expression {
 			if (node.type !== 'Identifier') {
 				return node;
 			}
-			const variable = findVariableSafe(findRootExpression, context, node);
+			const variable = ctx.findVariable(node);
 			if (!variable || variable.defs.length !== 1) {
 				return node;
 			}
@@ -49,7 +52,7 @@ export default createRule('no-not-function-handler', {
 			if (def.type === 'Variable') {
 				if (def.parent.kind === 'const' && def.node.init) {
 					const init = def.node.init;
-					return findRootExpression(init);
+					return findRootExpression(ctx, init);
 				}
 			}
 			return node;
@@ -60,7 +63,7 @@ export default createRule('no-not-function-handler', {
 			if (!node) {
 				return;
 			}
-			const expression = findRootExpression(node);
+			const expression = findRootExpression(new FindVariableContext(context), node);
 
 			if (
 				expression.type !== 'ObjectExpression' &&

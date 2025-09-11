@@ -7,14 +7,14 @@ import type { Variable } from '@typescript-eslint/scope-manager';
 export default {
 	meta: {
 		docs: {
-			description: 'enforce to use findVariableSafe() to avoid infinite recursion',
+			description: 'enforce to use FindVariableContext to avoid infinite recursion',
 			category: 'Best Practices',
 			recommended: false,
 			conflictWithPrettier: false,
 			url: 'https://github.com/sveltejs/eslint-plugin-svelte/blob/v3.12.3/docs/rules/prefer-find-variable-safe.md'
 		},
 		messages: {
-			preferFindVariableSafe: 'Prefer to use findVariableSafe() to avoid infinite recursion.'
+			preferFindVariableSafe: 'Prefer to use FindVariableContext to avoid infinite recursion.'
 		},
 		schema: [],
 		type: 'suggestion'
