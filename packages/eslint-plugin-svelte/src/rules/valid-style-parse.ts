@@ -1,4 +1,5 @@
 import { createRule } from '../utils/index.js';
+import path from 'path';
 
 export default createRule('valid-style-parse', {
 	meta: {
@@ -16,7 +17,7 @@ export default createRule('valid-style-parse', {
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
-		const cwd = `${context.cwd ?? process.cwd()}/`;
+		const cwd = `${context.cwd ?? process.cwd()}${path.sep}`;
 
 		return {
 			SvelteStyleElement(node) {
@@ -24,7 +25,7 @@ export default createRule('valid-style-parse', {
 				if (styleContext.status === 'parse-error') {
 					context.report({
 						loc: node.loc,
-						message: `Error parsing style element. Error message: "${styleContext.error.message.replace(cwd, '')}"`
+						message: `Error parsing style element. Error message: "${path.posix.normalize(styleContext.error.message.replace(cwd, ''))}"`
 					});
 				}
 				if (styleContext.status === 'unknown-lang') {

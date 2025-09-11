@@ -1,5 +1,5 @@
 - message: 'Error parsing style element. Error message:
-    "tests/fixtures/rules/valid-style-parse/invalid/invalid-css01-input.svelte:4:11:
+    "tests\fixtures\rules\valid-style-parse\invalid\invalid-css01-input.svelte:4:11:
     Unknown word .div-class/35"'
   line: 7
   column: 1
