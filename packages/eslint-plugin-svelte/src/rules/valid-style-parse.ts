@@ -23,9 +23,12 @@ export default createRule('valid-style-parse', {
 			SvelteStyleElement(node) {
 				const styleContext = sourceCode.parserServices.getStyleContext!();
 				if (styleContext.status === 'parse-error') {
+					let message = styleContext.error.message.replace(cwd, '');
+					if (path.sep === '\\') message = message.replace(/\\/g, '/');
+
 					context.report({
 						loc: node.loc,
-						message: `Error parsing style element. Error message: "${path.posix.normalize(styleContext.error.message.replace(cwd, ''))}"`
+						message: `Error parsing style element. Error message: "${message}"`
 					});
 				}
 				if (styleContext.status === 'unknown-lang') {
