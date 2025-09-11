@@ -83,6 +83,26 @@ export default createRule('no-navigation-without-resolve', {
 					}
 				}
 			},
+			SvelteShorthandAttribute(node) {
+				if (
+					context.options[0]?.ignoreLinks === true ||
+					node.parent.parent.type !== 'SvelteElement' ||
+					node.parent.parent.kind !== 'html' ||
+					node.parent.parent.name.type !== 'SvelteName' ||
+					node.parent.parent.name.name !== 'a' ||
+					node.key.name !== 'href' ||
+					node.value.type !== 'Identifier'
+				) {
+					return;
+				}
+				if (
+					!expressionIsAbsolute(node.value, context) &&
+					!expressionIsFragment(node.value, context) &&
+					!isResolveCall(context, node.value, resolveReferences)
+				) {
+					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
+				}
+			},
 			SvelteAttribute(node) {
 				if (
 					context.options[0]?.ignoreLinks === true ||
@@ -96,11 +116,11 @@ export default createRule('no-navigation-without-resolve', {
 				}
 				if (
 					(node.value[0].type === 'SvelteLiteral' &&
-						!expressionIsAbsolute(node.value[0]) &&
-						!expressionIsFragment(node.value[0])) ||
+						!expressionIsAbsolute(node.value[0], context) &&
+						!expressionIsFragment(node.value[0], context)) ||
 					(node.value[0].type === 'SvelteMustacheTag' &&
-						!expressionIsAbsolute(node.value[0].expression) &&
-						!expressionIsFragment(node.value[0].expression) &&
+						!expressionIsAbsolute(node.value[0].expression, context) &&
+						!expressionIsFragment(node.value[0].expression, context) &&
 						!isResolveCall(context, node.value[0].expression, resolveReferences))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
@@ -252,31 +272,49 @@ function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 	);
 }
 
-function expressionIsAbsolute(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
+function expressionIsAbsolute(
+	url: AST.SvelteLiteral | TSESTree.Expression,
+	context: RuleContext
+): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsAbsolute(url);
+			return binaryExpressionIsAbsolute(url, context);
+		case 'Identifier':
+			return identifierIsAbsolute(url, context);
 		case 'Literal':
 			return typeof url.value === 'string' && urlValueIsAbsolute(url.value);
 		case 'SvelteLiteral':
 			return urlValueIsAbsolute(url.value);
 		case 'TemplateLiteral':
-			return templateLiteralIsAbsolute(url);
+			return templateLiteralIsAbsolute(url, context);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression): boolean {
+function binaryExpressionIsAbsolute(url: TSESTree.BinaryExpression, context: RuleContext): boolean {
 	return (
-		(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(url.left)) ||
-		expressionIsAbsolute(url.right)
+		(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(url.left, context)) ||
+		expressionIsAbsolute(url.right, context)
 	);
 }
 
-function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral): boolean {
+function identifierIsAbsolute(url: TSESTree.Identifier, context: RuleContext): boolean {
+	const variable = findVariable(context, url);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsAbsolute(variable.identifiers[0].parent.init, context);
+}
+
+function templateLiteralIsAbsolute(url: TSESTree.TemplateLiteral, context: RuleContext): boolean {
 	return (
-		url.expressions.some(expressionIsAbsolute) ||
+		url.expressions.some((expression) => expressionIsAbsolute(expression, context)) ||
 		url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
 	);
 }
@@ -285,28 +323,46 @@ function urlValueIsAbsolute(url: string): boolean {
 	return /^[+a-z]*:/i.test(url);
 }
 
-function expressionIsFragment(url: AST.SvelteLiteral | TSESTree.Expression): boolean {
+function expressionIsFragment(
+	url: AST.SvelteLiteral | TSESTree.Expression,
+	context: RuleContext
+): boolean {
 	switch (url.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsFragment(url);
+			return binaryExpressionIsFragment(url, context);
+		case 'Identifier':
+			return identifierIsFragment(url, context);
 		case 'Literal':
 			return typeof url.value === 'string' && urlValueIsFragment(url.value);
 		case 'SvelteLiteral':
 			return urlValueIsFragment(url.value);
 		case 'TemplateLiteral':
-			return templateLiteralIsFragment(url);
+			return templateLiteralIsFragment(url, context);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionIsFragment(url: TSESTree.BinaryExpression): boolean {
-	return url.left.type !== 'PrivateIdentifier' && expressionIsFragment(url.left);
+function binaryExpressionIsFragment(url: TSESTree.BinaryExpression, context: RuleContext): boolean {
+	return url.left.type !== 'PrivateIdentifier' && expressionIsFragment(url.left, context);
 }
 
-function templateLiteralIsFragment(url: TSESTree.TemplateLiteral): boolean {
+function identifierIsFragment(url: TSESTree.Identifier, context: RuleContext): boolean {
+	const variable = findVariable(context, url);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsFragment(variable.identifiers[0].parent.init, context);
+}
+
+function templateLiteralIsFragment(url: TSESTree.TemplateLiteral, context: RuleContext): boolean {
 	return (
-		(url.expressions.length >= 1 && expressionIsFragment(url.expressions[0])) ||
+		(url.expressions.length >= 1 && expressionIsFragment(url.expressions[0], context)) ||
 		(url.quasis.length >= 1 && urlValueIsFragment(url.quasis[0].value.raw))
 	);
 }
