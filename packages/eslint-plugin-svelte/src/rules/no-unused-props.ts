@@ -4,6 +4,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type ts from 'typescript';
 import { findVariable } from '../utils/ast-utils.js';
 import { toRegExp } from '../utils/regexp.js';
+import { normalize } from 'path';
 
 type PropertyPathArray = string[];
 type DeclaredPropertyNames = Set<{ originalName: string; aliasName: string }>;
@@ -122,7 +123,7 @@ export default createRule('no-unused-props', {
 			const declarations = symbol.getDeclarations();
 			if (!declarations || declarations.length === 0) return false;
 
-			return declarations.every((decl) => decl.getSourceFile().fileName === fileName);
+			return declarations.every((decl) => normalize(decl.getSourceFile().fileName) === fileName);
 		}
 
 		/**
