@@ -123,6 +123,7 @@ export default createRule('no-unused-props', {
 			const declarations = symbol.getDeclarations();
 			if (!declarations || declarations.length === 0) return false;
 
+			// TypeScript declaration file name is normalized to support Windows style paths
 			return declarations.every((decl) => normalize(decl.getSourceFile().fileName) === fileName);
 		}
 

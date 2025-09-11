@@ -11,6 +11,8 @@ env:
 
 defaults:
   run:
+    # Setting every runner to bash simplifies command calls;
+    #  plus, every platform supports it
     shell: bash
 
 jobs:

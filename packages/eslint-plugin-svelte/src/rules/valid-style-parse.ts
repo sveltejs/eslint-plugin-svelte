@@ -23,6 +23,8 @@ export default createRule('valid-style-parse', {
 			SvelteStyleElement(node) {
 				const styleContext = sourceCode.parserServices.getStyleContext!();
 				if (styleContext.status === 'parse-error') {
+					// This will replace backslashes to forward slashes only
+					// 	if Node.js reports Windows style path separators
 					let message = styleContext.error.message.replace(cwd, '');
 					if (path.sep === '\\') message = message.replace(/\\/g, '/');
 

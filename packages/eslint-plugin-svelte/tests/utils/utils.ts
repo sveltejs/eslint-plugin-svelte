@@ -305,6 +305,7 @@ function writeFixtures(
 }
 
 function getConfig(ruleName: string, inputFile: string) {
+	// ruleName is normalized to support Windows style paths
 	const filename = inputFile.slice(inputFile.indexOf(path.normalize(ruleName)));
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
