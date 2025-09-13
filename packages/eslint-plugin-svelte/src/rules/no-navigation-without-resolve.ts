@@ -1,6 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
+import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
@@ -101,7 +102,11 @@ export default createRule('no-navigation-without-resolve', {
 					(node.value[0].type === 'SvelteMustacheTag' &&
 						!expressionIsAbsolute(node.value[0].expression) &&
 						!expressionIsFragment(node.value[0].expression) &&
-						!isResolveCall(context, node.value[0].expression, resolveReferences))
+						!isResolveCall(
+							new FindVariableContext(context),
+							node.value[0].expression,
+							resolveReferences
+						))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
 				}
@@ -191,7 +196,7 @@ function checkGotoCall(
 		return;
 	}
 	const url = call.arguments[0];
-	if (!isResolveCall(context, url, resolveReferences)) {
+	if (!isResolveCall(new FindVariableContext(context), url, resolveReferences)) {
 		context.report({ loc: url.loc, messageId: 'gotoWithoutResolve' });
 	}
 }
@@ -206,7 +211,10 @@ function checkShallowNavigationCall(
 		return;
 	}
 	const url = call.arguments[0];
-	if (!expressionIsEmpty(url) && !isResolveCall(context, url, resolveReferences)) {
+	if (
+		!expressionIsEmpty(url) &&
+		!isResolveCall(new FindVariableContext(context), url, resolveReferences)
+	) {
 		context.report({ loc: url.loc, messageId });
 	}
 }
@@ -214,7 +222,7 @@ function checkShallowNavigationCall(
 // Helper functions
 
 function isResolveCall(
-	context: RuleContext,
+	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument,
 	resolveReferences: Set<TSESTree.Identifier>
 ): boolean {
@@ -228,13 +236,13 @@ function isResolveCall(
 		return true;
 	}
 	if (node.type === 'Identifier') {
-		const variable = findVariable(context, node);
+		const variable = ctx.findVariable(node);
 		if (
 			variable !== null &&
 			variable.identifiers.length > 0 &&
 			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
 			variable.identifiers[0].parent.init !== null &&
-			isResolveCall(context, variable.identifiers[0].parent.init, resolveReferences)
+			isResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences)
 		) {
 			return true;
 		}

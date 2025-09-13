@@ -95,6 +95,7 @@
     "eslint-typegen": "^2.3.0",
     "eslint-visitor-keys": "^4.2.1",
     "espree": "^10.4.0",
+    "jiti": "^2.5.1",
     "less": "^4.4.1",
     "mocha": "~11.7.2",
     "postcss-nested": "^7.0.2",

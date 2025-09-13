@@ -2,7 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import type { Scope, Variable, Reference, Definition } from '@typescript-eslint/scope-manager';
 import type { TSESTree } from '@typescript-eslint/types';
-import { findVariable, iterateIdentifiers } from '../utils/ast-utils.js';
+import { FindVariableContext, iterateIdentifiers } from '../utils/ast-utils.js';
 
 export default createRule('no-immutable-reactive-statements', {
 	meta: {
@@ -91,7 +91,7 @@ export default createRule('no-immutable-reactive-statements', {
 							return true;
 						}
 					}
-					return hasWrite(variable);
+					return hasWrite(new FindVariableContext(context), variable);
 				}
 				return false;
 			});
@@ -100,7 +100,7 @@ export default createRule('no-immutable-reactive-statements', {
 		}
 
 		/** Checks whether the given variable has a write or reactive store reference or not. */
-		function hasWrite(variable: Variable) {
+		function hasWrite(ctx: FindVariableContext, variable: Variable) {
 			const defIds = variable.defs.map((def: Definition) => def.name);
 			for (const reference of variable.references) {
 				if (
@@ -113,7 +113,7 @@ export default createRule('no-immutable-reactive-statements', {
 				) {
 					return true;
 				}
-				if (hasWriteMember(reference.identifier)) {
+				if (hasWriteMember(ctx, reference.identifier)) {
 					return true;
 				}
 			}
@@ -122,6 +122,7 @@ export default createRule('no-immutable-reactive-statements', {
 
 		/** Checks whether the given expression has writing to a member or not. */
 		function hasWriteMember(
+			ctx: FindVariableContext,
 			expr: TSESTree.Identifier | TSESTree.JSXIdentifier | TSESTree.MemberExpression
 		): boolean {
 			if (expr.type === 'JSXIdentifier') return false;
@@ -136,14 +137,16 @@ export default createRule('no-immutable-reactive-statements', {
 				return parent.operator === 'delete' && parent.argument === expr;
 			}
 			if (parent.type === 'MemberExpression') {
-				return parent.object === expr && hasWriteMember(parent);
+				return parent.object === expr && hasWriteMember(ctx, parent);
 			}
 			if (parent.type === 'SvelteDirective') {
 				return parent.kind === 'Binding' && parent.expression === expr;
 			}
 			if (parent.type === 'SvelteEachBlock') {
 				return (
-					parent.context !== null && parent.expression === expr && hasWriteReference(parent.context)
+					parent.context !== null &&
+					parent.expression === expr &&
+					hasWriteReference(ctx, parent.context)
 				);
 			}
 
@@ -151,10 +154,13 @@ export default createRule('no-immutable-reactive-statements', {
 		}
 
 		/** Checks whether the given pattern has writing or not. */
-		function hasWriteReference(pattern: TSESTree.DestructuringPattern): boolean {
+		function hasWriteReference(
+			ctx: FindVariableContext,
+			pattern: TSESTree.DestructuringPattern
+		): boolean {
 			for (const id of iterateIdentifiers(pattern)) {
-				const variable = findVariable(context, id);
-				if (variable && hasWrite(variable)) return true;
+				const variable = ctx.findVariable(id);
+				if (variable && hasWrite(ctx, variable)) return true;
 			}
 
 			return false;

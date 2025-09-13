@@ -2,7 +2,7 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import {
-	findVariable,
+	FindVariableContext,
 	getAttributeValueQuoteAndRange,
 	getStringIfConstant
 } from '../utils/ast-utils.js';
@@ -67,20 +67,19 @@ export default createRule('no-dynamic-slot-name', {
 		 * Get static text from given expression
 		 */
 		function getStaticText(node: TSESTree.Expression) {
-			const expr = findRootExpression(node);
+			const expr = findRootExpression(new FindVariableContext(context), node);
 			return getStringIfConstant(expr);
 		}
 
 		/** Find data expression */
 		function findRootExpression(
-			node: TSESTree.Expression,
-			already = new Set<TSESTree.Identifier>()
+			ctx: FindVariableContext,
+			node: TSESTree.Expression
 		): TSESTree.Expression {
-			if (node.type !== 'Identifier' || already.has(node)) {
+			if (node.type !== 'Identifier') {
 				return node;
 			}
-			already.add(node);
-			const variable = findVariable(context, node);
+			const variable = ctx.findVariable(node);
 			if (!variable || variable.defs.length !== 1) {
 				return node;
 			}
@@ -88,7 +87,7 @@ export default createRule('no-dynamic-slot-name', {
 			if (def.type === 'Variable') {
 				if (def.parent.kind === 'const' && def.node.init) {
 					const init = def.node.init;
-					return findRootExpression(init, already);
+					return findRootExpression(ctx, init);
 				}
 			}
 			return node;

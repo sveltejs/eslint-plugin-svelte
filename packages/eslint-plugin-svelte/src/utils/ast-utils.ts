@@ -230,6 +230,29 @@ export function findVariable(context: RuleContext, node: TSESTree.Identifier): V
 	// Remove the $ and search for the variable again, as it may be a store access variable.
 	return eslintUtils.findVariable(initialScope, node.name.slice(1));
 }
+
+/**
+ * Context for safely finding variables, avoiding infinite recursion.
+ * This should be used when the caller function may be called recursively, instead of `findVariable()`.
+ *
+ * Create an instance of this class at the top of the call stack where you want to start searching for identifiers,
+ * and then use it within the recursion.
+ */
+export class FindVariableContext {
+	public readonly findVariable: (node: TSESTree.Identifier) => Variable | null;
+
+	public constructor(context: RuleContext) {
+		const visited = new Set<TSESTree.Identifier>();
+		this.findVariable = (node: TSESTree.Identifier) => {
+			if (visited.has(node)) {
+				return null;
+			}
+			visited.add(node);
+			return findVariable(context, node);
+		};
+	}
+}
+
 /**
  * Iterate the identifiers of a given pattern node.
  */

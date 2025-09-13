@@ -1,5 +1,12 @@
 import * as myPlugin from '@ota-meshi/eslint-plugin';
 import * as tseslint from 'typescript-eslint';
+import { createJiti } from 'jiti';
+const jiti = createJiti(import.meta.url);
+const internal = {
+	rules: {
+		'prefer-find-variable-safe': await jiti.import('./internal-rules/prefer-find-variable-safe.ts')
+	}
+};
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -54,6 +61,9 @@ const config = [
 	},
 	{
 		files: ['src/**'],
+		plugins: {
+			internal
+		},
 		rules: {
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
@@ -80,7 +90,8 @@ const config = [
 				{ object: 'context', property: 'getCwd', message: 'Use `context.cwd`' },
 				{ object: 'context', property: 'getScope', message: 'Use src/utils/compat.ts' },
 				{ object: 'context', property: 'parserServices', message: 'Use src/utils/compat.ts' }
-			]
+			],
+			'internal/prefer-find-variable-safe': 'error'
 		}
 	},
 	...tseslint.config({

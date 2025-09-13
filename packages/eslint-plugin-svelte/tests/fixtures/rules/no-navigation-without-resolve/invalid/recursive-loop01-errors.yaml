@@ -1,0 +1,4 @@
+- message: Found a link with a url that isn't resolved.
+  line: 6
+  column: 9
+  suggestions: null
