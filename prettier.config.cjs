@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+	endOfLine: 'lf',
 	useTabs: true,
 	singleQuote: true,
 	trailingComma: 'none',

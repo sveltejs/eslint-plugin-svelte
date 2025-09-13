@@ -9,6 +9,12 @@ on:
 env:
   project_root_path: ./packages/eslint-plugin-svelte
 
+defaults:
+  run:
+    # Setting every runner to bash simplifies command calls;
+    #  plus, every platform supports it
+    shell: bash
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -51,7 +57,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         eslint: [8, 9]
         node: [18.x, 20.x, 22.x, latest]
     steps:
@@ -84,7 +90,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         eslint: [9]
         node: [18, 20, 22]
     steps:
@@ -115,7 +121,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         node: [18]
     steps:
       - name: Checkout

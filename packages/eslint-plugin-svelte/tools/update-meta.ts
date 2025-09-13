@@ -1,10 +1,10 @@
-import path from 'path';
+import { fileURLToPath } from 'url';
 import { name, version } from '../package.json';
 import { getNewVersion } from './lib/changesets-util.js';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const META_PATH = path.join(__dirname, '../src/meta.ts');
+const fileURL = new URL('../src/meta.ts', import.meta.url);
+const META_PATH = fileURLToPath(fileURL);
 
 void main();
 

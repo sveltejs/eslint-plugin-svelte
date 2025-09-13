@@ -1,4 +1,5 @@
 import { createRule } from '../utils/index.js';
+import path from 'path';
 
 export default createRule('valid-style-parse', {
 	meta: {
@@ -16,15 +17,20 @@ export default createRule('valid-style-parse', {
 		if (!sourceCode.parserServices.isSvelte) {
 			return {};
 		}
-		const cwd = `${context.cwd ?? process.cwd()}/`;
+		const cwd = `${context.cwd ?? process.cwd()}${path.sep}`;
 
 		return {
 			SvelteStyleElement(node) {
 				const styleContext = sourceCode.parserServices.getStyleContext!();
 				if (styleContext.status === 'parse-error') {
+					// This will replace backslashes to forward slashes only
+					// 	if Node.js reports Windows style path separators
+					let message = styleContext.error.message.replace(cwd, '');
+					if (path.sep === '\\') message = message.replace(/\\/g, '/');
+
 					context.report({
 						loc: node.loc,
-						message: `Error parsing style element. Error message: "${styleContext.error.message.replace(cwd, '')}"`
+						message: `Error parsing style element. Error message: "${message}"`
 					});
 				}
 				if (styleContext.status === 'unknown-lang') {
