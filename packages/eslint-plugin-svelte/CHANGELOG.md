@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.12.4
+
+### Patch Changes
+
+- [#1344](https://github.com/sveltejs/eslint-plugin-svelte/pull/1344) [`03a93f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/03a93f4ff1b3a1d665bd94befcd5f9126a938602) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: preventing infinite loops in multiple rules
+
 ## 3.12.3
 
 ### Patch Changes
