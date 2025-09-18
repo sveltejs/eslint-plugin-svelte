@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs';
 import type { RuleModule } from '../../src/types.js';
-import util from 'util';
 
 const rulesLibRootURL = new URL('../../src/rules/', import.meta.url);
 
