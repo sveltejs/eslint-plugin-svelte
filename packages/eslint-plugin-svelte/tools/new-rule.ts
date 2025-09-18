@@ -1,11 +1,8 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import cp from 'node:child_process';
-import url from 'node:url';
 import { writeAndFormat } from './lib/write.js';
-
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { fileURLToPath } from 'node:url';
 
 const logger = console;
 
@@ -21,39 +18,39 @@ void (async ([ruleId, ...args]) => {
 		process.exitCode = 1;
 		return;
 	}
-	const utilsPath = path.resolve(__dirname, `../src/utils/index.ts`);
-	const testUtilsPath = path.resolve(__dirname, `../tests/utils/utils.ts`);
+	const utilsURL = new URL(`../src/utils/index.ts`, import.meta.url);
+	const testUtilsURL = new URL(`../tests/utils/utils.ts`, import.meta.url);
 
-	const ruleFile = path.resolve(__dirname, `../src/rules/${ruleId}.ts`);
-	const testFile = path.resolve(__dirname, `../tests/src/rules/${ruleId}.ts`);
-	const docFile = path.resolve(__dirname, `../../../docs/rules/${ruleId}.md`);
-	const fixturesRoot = path.resolve(__dirname, `../tests/fixtures/rules/${ruleId}/`);
+	const ruleFileURL = new URL(`../src/rules/${ruleId}.ts`, import.meta.url);
+	const testFileURL = new URL(`../tests/src/rules/${ruleId}.ts`, import.meta.url);
+	const docFileURL = new URL(`../../../docs/rules/${ruleId}.md`, import.meta.url);
+	const fixturesRootURL = new URL(`../tests/fixtures/rules/${ruleId}/`, import.meta.url);
 	try {
-		fs.mkdirSync(path.dirname(ruleFile), { recursive: true });
+		fs.mkdirSync(new URL('./', ruleFileURL), { recursive: true });
 	} catch {
 		// ignore
 	}
 	try {
-		fs.mkdirSync(path.dirname(testFile), { recursive: true });
+		fs.mkdirSync(new URL('./', testFileURL), { recursive: true });
 	} catch {
 		// ignore
 	}
 	try {
-		fs.mkdirSync(path.dirname(docFile), { recursive: true });
+		fs.mkdirSync(new URL('./', docFileURL), { recursive: true });
 	} catch {
 		// ignore
 	}
 	try {
-		fs.mkdirSync(path.resolve(fixturesRoot, 'valid'), { recursive: true });
-		fs.mkdirSync(path.resolve(fixturesRoot, 'invalid'), { recursive: true });
+		fs.mkdirSync(new URL('./valid', fixturesRootURL), { recursive: true });
+		fs.mkdirSync(new URL('./invalid', fixturesRootURL), { recursive: true });
 	} catch {
 		// ignore
 	}
 
 	await writeAndFormat(
-		ruleFile,
+		ruleFileURL,
 		`import { AST } from 'svelte-eslint-parser';
-import { createRule } from '${getModulePath(ruleFile, utilsPath)}';
+import { createRule } from '${getModulePath(ruleFileURL, utilsURL)}';
 
 export default createRule('${ruleId}', {
     meta: {
@@ -74,10 +71,10 @@ export default createRule('${ruleId}', {
 `
 	);
 	await writeAndFormat(
-		testFile,
+		testFileURL,
 		`import { RuleTester } from '../../utils/eslint-compat.js';
-import rule from '${getModulePath(testFile, ruleFile)}';
-import { loadTestCases } from '${getModulePath(testFile, testUtilsPath)}';
+import rule from '${getModulePath(testFileURL, ruleFileURL)}';
+import { loadTestCases } from '${getModulePath(testFileURL, testUtilsURL)}';
 
 const tester = new RuleTester({
 	languageOptions: {
@@ -90,7 +87,7 @@ tester.run('${ruleId}', rule as any, loadTestCases('${ruleId}'));
 `
 	);
 	await writeAndFormat(
-		docFile,
+		docFileURL,
 		`#  (svelte/${ruleId})
 
 > description
@@ -139,17 +136,20 @@ This rule reports ???.
 	try {
 		// Use code -v to know if vscode is installed and do not print anything to the console
 		cp.execSync('code -v', { stdio: 'ignore' });
-		cp.execSync(`code "${ruleFile}"`);
-		cp.execSync(`code "${testFile}"`);
-		cp.execSync(`code "${docFile}"`);
+		cp.execSync(`code "${fileURLToPath(ruleFileURL)}"`);
+		cp.execSync(`code "${fileURLToPath(testFileURL)}"`);
+		cp.execSync(`code "${fileURLToPath(docFileURL)}"`);
 	} catch {
 		logger.error('Unable to find code command. Will not open files with VSCode.');
 	}
 })(process.argv.slice(2));
 
 /** Get module path */
-function getModulePath(from: string, module: string): string {
-	return path.relative(path.dirname(from), module).replace(/.ts$/u, '.js');
+function getModulePath(from: URL, module: URL): string {
+	const fromDir = fileURLToPath(new URL('./', from));
+	const modulePath = fileURLToPath(module);
+
+	return path.relative(fromDir, modulePath).replace(/\\/g, '/').replace(/.ts$/u, '.js');
 }
 
 /** Argument parsing */
