@@ -1,28 +1,31 @@
 import fs from 'fs';
 import { ESLint } from 'eslint';
 import prettier from 'prettier';
+import { fileURLToPath } from 'url';
 
 /**
  * Write file and format it with ESLint
  */
-export function writeAndFormat(fileName: string, content: string): Promise<void> {
-	fs.writeFileSync(fileName, content, 'utf8');
+export async function writeAndFormat(fileURL: URL, content: string): Promise<void> {
+	fs.writeFileSync(fileURL, content, 'utf8');
+
+	const filePath = fileURLToPath(fileURL);
 	return prettier
-		.resolveConfig(fileName)
+		.resolveConfig(fileURL)
 		.then((prettierrc) => {
 			if (!prettierrc) {
 				return content;
 			}
-			return prettier.format(content, { filepath: fileName, ...prettierrc });
+			return prettier.format(content, { filepath: filePath, ...prettierrc });
 		})
 		.then((formatted) => {
-			fs.writeFileSync(fileName, formatted, 'utf8');
+			fs.writeFileSync(fileURL, formatted, 'utf8');
 			const eslint = new ESLint({ fix: true });
-			return eslint.lintText(formatted, { filePath: fileName });
+			return eslint.lintText(formatted, { filePath });
 		})
 		.then(([result]) => {
 			if (result.output) {
-				fs.writeFileSync(fileName, result.output, 'utf8');
+				fs.writeFileSync(fileURL, result.output, 'utf8');
 			}
 		});
 }

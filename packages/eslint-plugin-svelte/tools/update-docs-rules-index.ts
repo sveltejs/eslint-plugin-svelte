@@ -1,13 +1,10 @@
-import path from 'path';
 import renderRulesTableContent from './render-rules.js';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
 // -----------------------------------------------------------------------------
-const readmeFilePath = path.resolve(__dirname, '../../../docs/rules.md');
+const readmeFileURL = new URL('../../../docs/rules.md', import.meta.url);
 void writeAndFormat(
-	readmeFilePath,
+	readmeFileURL,
 	`---
 sidebarDepth: 0
 ---
