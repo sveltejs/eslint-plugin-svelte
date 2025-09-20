@@ -12,8 +12,9 @@ import * as svelteParser from 'svelte-eslint-parser';
 import * as typescriptParser from '@typescript-eslint/parser';
 import Module from 'module';
 import globals from 'globals';
+import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(new URL(import.meta.url)));
 const require = Module.createRequire(import.meta.url);
 
 /**
@@ -304,7 +305,8 @@ function writeFixtures(
 }
 
 function getConfig(ruleName: string, inputFile: string) {
-	const filename = inputFile.slice(inputFile.indexOf(ruleName));
+	// ruleName is normalized to support Windows style paths
+	const filename = inputFile.slice(inputFile.indexOf(path.normalize(ruleName)));
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
 	let configFile = [

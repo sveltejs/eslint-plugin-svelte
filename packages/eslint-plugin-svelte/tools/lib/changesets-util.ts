@@ -1,11 +1,11 @@
 import getReleasePlan from '@changesets/get-release-plan';
-import path from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const cwdURL = new URL('../../../..', import.meta.url);
 
 /** Get new version string from changesets */
 export async function getNewVersion(): Promise<string> {
-	const releasePlan = await getReleasePlan(path.resolve(__dirname, '../../../..'));
+	const releasePlan = await getReleasePlan(fileURLToPath(cwdURL));
 
 	return releasePlan.releases.find(({ name }) => name === 'eslint-plugin-svelte')!.newVersion;
 }

@@ -1,8 +1,7 @@
-import path from 'path';
 import { rules } from './lib/load-rules.js';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const flatConfigFolderURL = new URL('../src/configs/flat/', import.meta.url);
 
 // ------------------
 // Flat Config
@@ -79,10 +78,10 @@ const config: Linter.Config[] = [
 export default config
 `;
 
-const baseFilePath = path.resolve(__dirname, '../src/configs/flat/base.ts');
+const baseFileURL = new URL('base.ts', flatConfigFolderURL);
 
 // Update file.
-void writeAndFormat(baseFilePath, baseContent);
+void writeAndFormat(baseFileURL, baseContent);
 
 const recommendedContent = `/*
  * IMPORTANT!
@@ -110,10 +109,10 @@ const config: Linter.Config[] = [
 export default config
 `;
 
-const recommendedFilePath = path.resolve(__dirname, '../src/configs/flat/recommended.ts');
+const recommendedFileURL = new URL('recommended.ts', flatConfigFolderURL);
 
 // Update file.
-void writeAndFormat(recommendedFilePath, recommendedContent);
+void writeAndFormat(recommendedFileURL, recommendedContent);
 
 const prettierContent = `/*
  * IMPORTANT!
@@ -138,7 +137,7 @@ const config: Linter.Config[] = [
 export default config
 `;
 
-const prettierFilePath = path.resolve(__dirname, '../src/configs/flat/prettier.ts');
+const prettierFileURL = new URL('prettier.ts', flatConfigFolderURL);
 
 // Update file.
-void writeAndFormat(prettierFilePath, prettierContent);
+void writeAndFormat(prettierFileURL, prettierContent);

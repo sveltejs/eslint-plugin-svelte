@@ -1,11 +1,8 @@
-import path from 'path';
 import fs from 'fs';
 import { rules } from '../src/utils/rules.js';
 import type { RuleModule } from '../src/types.js';
 import { getNewVersion } from './lib/changesets-util.js';
 import { writeAndFormat } from './lib/write.js';
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function formatItems(items: string[]) {
 	if (items.length <= 2) {
@@ -21,7 +18,7 @@ function yamlValue(val: unknown) {
 	return val;
 }
 
-const ROOT = path.resolve(__dirname, '../../../docs/rules');
+const ROOT_URL = new URL('../../../docs/rules/', import.meta.url);
 
 function pickSince(content: string): string | null | Promise<string> {
 	const fileIntro = /^---\n((?:.*\n)+)---\n*/.exec(content);
@@ -46,7 +43,7 @@ function pickSince(content: string): string | null | Promise<string> {
 class DocFile {
 	private readonly rule: RuleModule;
 
-	private readonly filePath: string;
+	private readonly fileURL: URL;
 
 	private content: string;
 
@@ -54,8 +51,8 @@ class DocFile {
 
 	public constructor(rule: RuleModule) {
 		this.rule = rule;
-		this.filePath = path.join(ROOT, `${rule.meta.docs.ruleName}.md`);
-		this.content = fs.readFileSync(this.filePath, 'utf8');
+		this.fileURL = new URL(`./${rule.meta.docs.ruleName}.md`, ROOT_URL);
+		this.content = fs.readFileSync(this.fileURL, 'utf8');
 		this.since = pickSince(this.content);
 	}
 
@@ -221,7 +218,7 @@ ${
 	public async write() {
 		this.content = this.content.replace(/\r?\n/gu, '\n');
 
-		await writeAndFormat(this.filePath, this.content);
+		await writeAndFormat(this.fileURL, this.content);
 	}
 }
 

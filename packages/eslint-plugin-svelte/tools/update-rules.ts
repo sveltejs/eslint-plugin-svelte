@@ -1,9 +1,6 @@
-import path from 'path';
 // import eslint from "eslint"
 import { rules } from './lib/load-rules.js';
 import { writeAndFormat } from './lib/write.js';
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 /**
  * Convert text to camelCase
@@ -41,7 +38,7 @@ export const rules = [
 ] as RuleModule[]
 `;
 
-const filePath = path.resolve(__dirname, '../src/utils/rules.ts');
+const fileURL = new URL('../src/utils/rules.ts', import.meta.url);
 
 // Update file.
-void writeAndFormat(filePath, content);
+void writeAndFormat(fileURL, content);

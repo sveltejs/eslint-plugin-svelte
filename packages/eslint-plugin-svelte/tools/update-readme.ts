@@ -1,27 +1,26 @@
-import path from 'path';
 import fs from 'fs';
 import renderRulesTableContent from './render-rules.js';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const rootURL = new URL('../../../', import.meta.url);
 
 const insertText = `\n${renderRulesTableContent(
 	(name) => `https://sveltejs.github.io/eslint-plugin-svelte/rules/${name}/`
 )}\n`;
 
-const readmeFilePath = path.resolve(__dirname, '../../../README.md');
+const readmeFileURL = new URL('README.md', rootURL);
 const newReadme = fs
-	.readFileSync(readmeFilePath, 'utf8')
+	.readFileSync(readmeFileURL, 'utf8')
 	.replace(
 		/<!--RULES_TABLE_START-->[\s\S]*<!--RULES_TABLE_END-->/u,
 		`<!--RULES_TABLE_START-->${insertText.replace(/\$/g, '$$$$')}<!--RULES_TABLE_END-->`
 	);
-void writeAndFormat(readmeFilePath, newReadme);
+void writeAndFormat(readmeFileURL, newReadme);
 
-const docsReadmeFilePath = path.resolve(__dirname, '../../../docs/README.md');
+const docsReadmeFileURL = new URL('./docs/README.md', rootURL);
 
 void writeAndFormat(
-	docsReadmeFilePath,
+	docsReadmeFileURL,
 	`---
 title: "eslint-plugin-svelte"
 ---
@@ -65,12 +64,12 @@ ${newReadme
 	.replace(/\n{3,}/gu, '\n\n')}`
 );
 
-const docsUserGuideFilePath = path.resolve(__dirname, '../../../docs/user-guide.md');
+const docsUserGuideFileURL = new URL('./docs/user-guide.md', rootURL);
 
-const docsUserGuide = fs.readFileSync(docsUserGuideFilePath, 'utf8');
+const docsUserGuide = fs.readFileSync(docsUserGuideFileURL, 'utf8');
 
 void writeAndFormat(
-	docsUserGuideFilePath,
+	docsUserGuideFileURL,
 	docsUserGuide
 		.replace(
 			/<!--USAGE_GUIDE_START-->[\s\S]*<!--USAGE_GUIDE_END-->/u,

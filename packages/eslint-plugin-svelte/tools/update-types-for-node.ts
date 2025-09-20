@@ -1,15 +1,11 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/types';
 import { parseForESLint } from 'svelte-eslint-parser';
-import path from 'path';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const sourceFolderURL = new URL('../src/', import.meta.url);
 
-// import { fileURLToPath } from "url"
-// const filename = fileURLToPath(import.meta.url)
-const dirname = __dirname; // path.dirname(filename)
-const typesForNodeFilename = path.join(dirname, '../src/types-for-node.ts');
-const estreeFilename = path.join(dirname, '../src/type-defs/estree.d.ts');
+const typesForNodeFileURL = new URL('types-for-node.ts', sourceFolderURL);
+const estreeFileURL = new URL('type-defs/estree.d.ts', sourceFolderURL);
 const { visitorKeys } = parseForESLint('');
 
 const esNextNodeNames = ['Decorator', 'ImportAttribute', 'StaticBlock'];
@@ -119,5 +115,5 @@ for (const nodeType of svelteNodeNames.filter((k) => !esSvelteNodeNames.includes
 typesForNodeCode.push(`}`);
 
 estreeCode.push(`}`);
-void writeAndFormat(typesForNodeFilename, typesForNodeCode.join('\n'));
-void writeAndFormat(estreeFilename, estreeCode.join('\n'));
+void writeAndFormat(typesForNodeFileURL, typesForNodeCode.join('\n'));
+void writeAndFormat(estreeFileURL, estreeCode.join('\n'));

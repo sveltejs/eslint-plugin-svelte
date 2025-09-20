@@ -1,8 +1,5 @@
 import fs from 'fs';
-import path from 'path';
 import plugin from '../src/index.js';
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 void main();
 
@@ -13,7 +10,7 @@ async function main() {
 	const ruleTypes = await pluginsToRulesDTS({ svelte: plugin });
 
 	void fs.writeFileSync(
-		path.join(__dirname, '../src/rule-types.ts'),
+		new URL('../src/rule-types.ts', import.meta.url),
 		`// IMPORTANT!
 // This file has been automatically generated,
 // in order to update its content execute "pnpm run update"

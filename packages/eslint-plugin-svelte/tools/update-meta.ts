@@ -1,17 +1,15 @@
-import path from 'path';
 import { name, version } from '../package.json';
 import { getNewVersion } from './lib/changesets-util.js';
 import { writeAndFormat } from './lib/write.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const META_PATH = path.join(__dirname, '../src/meta.ts');
+const META_URL = new URL('../src/meta.ts', import.meta.url);
 
 void main();
 
 /** main */
 async function main() {
 	await writeAndFormat(
-		META_PATH,
+		META_URL,
 		`/*
  * IMPORTANT!
  * This file has been automatically generated,
