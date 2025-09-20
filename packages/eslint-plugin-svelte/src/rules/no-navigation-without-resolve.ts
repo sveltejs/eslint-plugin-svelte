@@ -125,6 +125,9 @@ function extractResolveReferences(
 	for (const { node } of referenceTracker.iterateEsmReferences({
 		'$app/paths': {
 			[ReferenceTracker.ESM]: true,
+			asset: {
+				[ReferenceTracker.READ]: true
+			},
 			resolve: {
 				[ReferenceTracker.READ]: true
 			}
