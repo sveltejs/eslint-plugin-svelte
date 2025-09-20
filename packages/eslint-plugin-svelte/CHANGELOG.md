@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.12.4
+
+### Patch Changes
+
+- [#1355](https://github.com/sveltejs/eslint-plugin-svelte/pull/1355) [`d8df1e8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d8df1e8838cd39a6260c3a9f571a2611ba2c2c17) Thanks [@InkedCat](https://github.com/InkedCat)! - fix: properly support Windows in `no-unused-props` rule
+  fix: properly support Windows in `valid-style-parse` rule
+  fix: properly support Windows in `no-unnecessary-condition` rule
+
+- [#1344](https://github.com/sveltejs/eslint-plugin-svelte/pull/1344) [`03a93f4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/03a93f4ff1b3a1d665bd94befcd5f9126a938602) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: preventing infinite loops in multiple rules
+
 ## 3.12.3
 
 ### Patch Changes
