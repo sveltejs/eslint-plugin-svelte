@@ -85,6 +85,9 @@ export default [
         // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
         // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
         // explicitly specifying it ensures better compatibility and functionality.
+        //
+        // If non-serializable properties are included, running ESLint with the --cache flag will fail.
+        // In that case, please remove the non-serializable properties. (e.g. `svelteConfig: { ...svelteConfig, kit: { ...svelteConfig.kit, typescript: undefined }}`)
         svelteConfig
       }
     }
@@ -143,6 +146,9 @@ export default ts.config(
         // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
         // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
         // explicitly specifying it ensures better compatibility and functionality.
+        //
+        // If non-serializable properties are included, running ESLint with the --cache flag will fail.
+        // In that case, please remove the non-serializable properties. (e.g. `svelteConfig: { ...svelteConfig, kit: { ...svelteConfig.kit, typescript: undefined }}`)
         svelteConfig
       }
     }
