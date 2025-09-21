@@ -10,8 +10,7 @@ export default {
 			description: 'enforce to use FindVariableContext to avoid infinite recursion',
 			category: 'Best Practices',
 			recommended: false,
-			conflictWithPrettier: false,
-			url: 'https://github.com/sveltejs/eslint-plugin-svelte/blob/v3.12.3/docs/rules/prefer-find-variable-safe.md'
+			conflictWithPrettier: false
 		},
 		messages: {
 			preferFindVariableSafe: 'Prefer to use FindVariableContext to avoid infinite recursion.'

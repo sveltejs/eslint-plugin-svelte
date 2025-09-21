@@ -41,6 +41,9 @@ const config = [
 			'@typescript-eslint/naming-convention': 'off',
 			'new-cap': 'off',
 			complexity: 'off',
+			// This is not necessary as we manage it in a different way,
+			// and it also prevents false positives for our internal rule implementation.
+			'eslint-plugin/require-meta-docs-url': 'off',
 			// Repo rule
 			'no-restricted-imports': [
 				'error',
