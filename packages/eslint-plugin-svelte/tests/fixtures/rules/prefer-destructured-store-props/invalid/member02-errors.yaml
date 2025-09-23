@@ -19,7 +19,7 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {$store.baz.bar}
-    - desc: 'Using destructuring like $: ({ foo } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ foo } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -58,7 +58,7 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {$store.baz.bar}
-    - desc: 'Using destructuring like $: ({ bar } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ bar } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -97,7 +97,7 @@
 
         baz.foo: {bbb.foo}
         baz.bar: {bbb.bar}
-    - desc: 'Using destructuring like $: ({ baz } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ baz } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>

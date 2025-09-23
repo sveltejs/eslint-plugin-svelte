@@ -2,7 +2,7 @@
   line: 5
   column: 8
   suggestions:
-    - desc: 'Using destructuring like $: ({ $foo } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ $foo } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -20,7 +20,7 @@
   line: 6
   column: 7
   suggestions:
-    - desc: 'Using destructuring like $: ({ bar } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ bar } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -38,7 +38,7 @@
   line: 7
   column: 7
   suggestions:
-    - desc: 'Using destructuring like $: ({ baz } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ baz } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -56,7 +56,7 @@
   line: 8
   column: 7
   suggestions:
-    - desc: 'Using destructuring like $: ({ var } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ var } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -74,7 +74,7 @@
   line: 9
   column: 8
   suggestions:
-    - desc: 'Using destructuring like $: ({ null } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ null } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
@@ -92,7 +92,7 @@
   line: 10
   column: 13
   suggestions:
-    - desc: 'Using destructuring like $: ({ undefined } = $store); will run faster'
+    - desc: "Using destructuring like $: ({ undefined } = $store); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>

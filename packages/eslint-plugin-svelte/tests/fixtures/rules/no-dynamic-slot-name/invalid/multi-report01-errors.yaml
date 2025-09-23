@@ -1,12 +1,12 @@
-- message: '`<slot>` name cannot be dynamic.'
+- message: "`<slot>` name cannot be dynamic."
   line: 6
   column: 12
   suggestions: null
-- message: '`<slot>` name cannot be dynamic.'
+- message: "`<slot>` name cannot be dynamic."
   line: 7
   column: 12
   suggestions: null
-- message: '`<slot>` name cannot be dynamic.'
+- message: "`<slot>` name cannot be dynamic."
   line: 8
   column: 12
   suggestions: null

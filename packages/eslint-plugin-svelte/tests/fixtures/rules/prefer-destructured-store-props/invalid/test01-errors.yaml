@@ -2,7 +2,7 @@
   line: 4
   column: 2
   suggestions:
-    - desc: 'Using destructuring like $: ({ bar } = $foo); will run faster'
+    - desc: "Using destructuring like $: ({ bar } = $foo); will run faster"
       messageId: fixUseDestructuring
       output: |
         <script>
