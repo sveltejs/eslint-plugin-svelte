@@ -414,6 +414,10 @@ function getWarningsFromCode(
 		const result = compiler.compile(code, {
 			...(svelteVersion === '5'
 				? {
+						runes:
+							typeof compilerOptions.runes === 'function'
+								? compilerOptions.runes({ filename: context.filename })
+								: compilerOptions.runes,
 						experimental: {
 							async: compilerOptions.experimental?.async
 						}
