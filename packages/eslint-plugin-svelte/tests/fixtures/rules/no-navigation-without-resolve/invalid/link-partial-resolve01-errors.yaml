@@ -1,12 +1,12 @@
-- message: Found a link with a url that isn't resolved.
+- message: Unexpected href link without resolve().
   line: 7
   column: 9
   suggestions: null
-- message: Found a link with a url that isn't resolved.
+- message: Unexpected href link without resolve().
   line: 8
   column: 9
   suggestions: null
-- message: Found a link with a url that isn't resolved.
+- message: Unexpected href link without resolve().
   line: 9
   column: 9
   suggestions: null

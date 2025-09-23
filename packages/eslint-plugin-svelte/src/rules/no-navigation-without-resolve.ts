@@ -35,10 +35,10 @@ export default createRule('no-navigation-without-resolve', {
 			}
 		],
 		messages: {
-			gotoWithoutResolve: "Found a goto() call with a url that isn't resolved.",
-			linkWithoutResolve: "Found a link with a url that isn't resolved.",
-			pushStateWithoutResolve: "Found a pushState() call with a url that isn't resolved.",
-			replaceStateWithoutResolve: "Found a replaceState() call with a url that isn't resolved."
+			gotoWithoutResolve: 'Unexpected goto() call without resolve().',
+			linkWithoutResolve: 'Unexpected href link without resolve().',
+			pushStateWithoutResolve: 'Unexpected pushState() call without resolve().',
+			replaceStateWithoutResolve: 'Unexpected replaceState() call without resolve().'
 		},
 		type: 'suggestion',
 		conditions: [
