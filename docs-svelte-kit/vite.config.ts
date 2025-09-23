@@ -1,17 +1,18 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import path from 'path';
-// @ts-expect-error -- Missing types
 import svelteMd from 'vite-plugin-svelte-md';
 import { rules as pluginRules } from 'eslint-plugin-svelte';
 import svelteMdOption from './tools/vite-plugin-svelte-md-option.mjs';
 
 import generateRoutes from './tools/generate-routes.mjs';
-import type { UserConfig } from 'vite';
+import { createLogger, type UserConfig } from 'vite';
 import { fileURLToPath } from 'url';
 
 generateRoutes();
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const logger = createLogger();
 
 /** @type {import('vite').UserConfig} */
 const config: UserConfig = {
@@ -37,6 +38,16 @@ const config: UserConfig = {
 	build: {
 		commonjsOptions: {
 			ignoreDynamicRequires: true
+		}
+	},
+
+	customLogger: {
+		...logger,
+		warn(msg, options) {
+			if (msg.includes('vite-plugin-svelte-md') && msg.includes('was used to transform files')) {
+				return;
+			}
+			logger.warn(msg, options);
 		}
 	}
 };
