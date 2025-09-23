@@ -1,31 +1,26 @@
-import ghpagesAdapter from 'svelte-adapter-ghpages';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import adapter from '@sveltejs/adapter-static';
 
 if (typeof self === 'undefined') {
 	globalThis.self = globalThis;
 }
 
-const dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const outDir = path.join(dirname, 'build/eslint-plugin-svelte');
-
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	compilerOptions: {
-		preserveWhitespace: true
+		preserveWhitespace: true,
+		warningFilter: (warning) => {
+			if (warning.code === 'a11y_no_noninteractive_tabindex') return false;
+			return true;
+		}
 	},
 	extensions: ['.svelte', '.md'],
 	kit: {
+		adapter: adapter({
+			fallback: '404.html'
+		}),
 		paths: {
-			base: '/eslint-plugin-svelte',
-			relative: false
-		},
-		adapter: ghpagesAdapter({
-			// default options are shown
-			pages: outDir,
-			assets: outDir
-		})
+			base: '/eslint-plugin-svelte'
+		}
 	}
 };
 export default config;
