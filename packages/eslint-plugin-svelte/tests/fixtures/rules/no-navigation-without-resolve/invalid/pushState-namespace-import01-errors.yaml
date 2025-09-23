@@ -1,4 +1,4 @@
-- message: Found a pushState() call with a url that isn't resolved.
+- message: Unexpected pushState() call without resolve().
   line: 4
   column: 23
   suggestions: null

@@ -1,4 +1,4 @@
-- message: Found a goto() call with a url that isn't resolved.
+- message: Unexpected goto() call without resolve().
   line: 4
   column: 18
   suggestions: null

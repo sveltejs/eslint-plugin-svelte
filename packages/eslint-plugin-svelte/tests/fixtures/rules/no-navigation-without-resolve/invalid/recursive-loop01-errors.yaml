@@ -1,4 +1,4 @@
-- message: Found a link with a url that isn't resolved.
+- message: Unexpected href link without resolve().
   line: 6
   column: 9
   suggestions: null
