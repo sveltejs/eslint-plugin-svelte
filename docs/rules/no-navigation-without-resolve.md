@@ -16,7 +16,13 @@ since: 'v3.12.0'
 
 This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without resolving a relative URL. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for internal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the URL must be resolved using SvelteKit's `resolve()`, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.
 
-This rule checks all 4 navigation options for the presence of the `resolve()` function call, with an exception for `<a>` links to absolute URLs (and fragment URLs), which are assumed to be used for external navigation and so do not require the `resolve()` function, and for shallow routing functions with an empty string as the path, which keeps the current URL.
+This rule checks all 4 navigation options for the presence of the `resolve()` function call, with exceptions for:
+
+- `<a>` links to absolute URLs (and fragment URLs), which are assumed to be used for external navigation and so do not require the `resolve()` function
+- `<a>` links that opt out of SvelteKit navigation using `data-sveltekit-reload`
+- `<a>` links with `rel="external"` (including multi-token values like `"external nofollow"`), which SvelteKit also treats as full-page navigations
+
+See SvelteKit link options for details: [Link options — data-sveltekit-reload](https://svelte.dev/docs/kit/link-options#data-sveltekit-reload).
 
 <!--eslint-skip-->
 
@@ -52,6 +58,10 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 <!-- ✗ BAD -->
 <a href="/foo">Click me!</a>
 <a href={'/foo'}>Click me!</a>
+
+<!-- ✓ GOOD (opts out of SPA handling) -->
+<a data-sveltekit-reload href="/foo">Click me!</a>
+<a rel="external" href="/foo">Click me!</a>
 ```
 
 ## :wrench: Options
@@ -82,6 +92,7 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 - [`goto()` documentation](https://svelte.dev/docs/kit/$app-navigation#goto)
 - [`pushState()` documentation](https://svelte.dev/docs/kit/$app-navigation#pushState)
 - [`replaceState()` documentation](https://svelte.dev/docs/kit/$app-navigation#replaceState)
+- [Link options — data-sveltekit-reload](https://svelte.dev/docs/kit/link-options#data-sveltekit-reload)
 
 ## :rocket: Version
 
