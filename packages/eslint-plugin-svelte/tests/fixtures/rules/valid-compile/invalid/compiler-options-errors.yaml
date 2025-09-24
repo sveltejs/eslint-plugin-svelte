@@ -1,0 +1,8 @@
+- message: >-
+    `count` is updated, but is not declared with `$state(...)`. Changing its
+    value will not correctly trigger updates
+
+    https://svelte.dev/e/non_reactive_update(non_reactive_update)
+  line: 2
+  column: 6
+  suggestions: null
