@@ -227,6 +227,7 @@ function checkLinkAttribute(
 		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, {
 			allowAbsolute: true,
 			allowFragment: true,
+			allowParentDirectoryRelative: true,
 			allowNullish: true
 		})
 	) {
@@ -277,6 +278,7 @@ function isValueAllowed(
 		allowAbsolute?: boolean;
 		allowEmpty?: boolean;
 		allowFragment?: boolean;
+		allowParentDirectoryRelative?: boolean;
 		allowNullish?: boolean;
 	}
 ): boolean {
@@ -295,6 +297,7 @@ function isValueAllowed(
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
+		(config.allowParentDirectoryRelative && expressionStartsWith(ctx, value, '..')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
