@@ -407,6 +407,7 @@ function getWarningsFromCode(
 } {
 	try {
 		const result = compiler.compile(code, {
+			...context.sourceCode.parserServices.svelteParseContext?.svelteConfig?.compilerOptions,
 			generate: false,
 			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
