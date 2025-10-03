@@ -1,5 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
+import type { TrackedReferences } from '@eslint-community/eslint-utils';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
@@ -29,6 +30,9 @@ export default createRule('no-navigation-without-resolve', {
 					},
 					ignoreReplaceState: {
 						type: 'boolean'
+					},
+					allowSuffix: {
+						type: 'boolean'
 					}
 				},
 				additionalProperties: false
@@ -49,10 +53,14 @@ export default createRule('no-navigation-without-resolve', {
 	},
 	create(context) {
 		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
+		let assetReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 		return {
 			Program() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
-				resolveReferences = extractResolveReferences(referenceTracker, context);
+				({ resolve: resolveReferences, asset: assetReferences } = extractResolveReferences(
+					referenceTracker,
+					context
+				));
 				const {
 					goto: gotoCalls,
 					pushState: pushStateCalls,
@@ -102,10 +110,16 @@ export default createRule('no-navigation-without-resolve', {
 					(node.value[0].type === 'SvelteMustacheTag' &&
 						!expressionIsAbsolute(new FindVariableContext(context), node.value[0].expression) &&
 						!expressionIsFragment(new FindVariableContext(context), node.value[0].expression) &&
-						!isResolveCall(
+						!isResolveWithOptionalSuffix(
 							new FindVariableContext(context),
 							node.value[0].expression,
-							resolveReferences
+							resolveReferences,
+							context.options[0]?.allowSuffix !== false
+						) &&
+						!isAssetOnly(
+							new FindVariableContext(context),
+							node.value[0].expression,
+							assetReferences
 						))
 				) {
 					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
@@ -120,9 +134,10 @@ export default createRule('no-navigation-without-resolve', {
 function extractResolveReferences(
 	referenceTracker: ReferenceTracker,
 	context: RuleContext
-): Set<TSESTree.Identifier> {
-	const set = new Set<TSESTree.Identifier>();
-	for (const { node } of referenceTracker.iterateEsmReferences({
+): { resolve: Set<TSESTree.Identifier>; asset: Set<TSESTree.Identifier> } {
+	const resolveSet = new Set<TSESTree.Identifier>();
+	const assetSet = new Set<TSESTree.Identifier>();
+	for (const { node, path } of referenceTracker.iterateEsmReferences({
 		'$app/paths': {
 			[ReferenceTracker.ESM]: true,
 			asset: {
@@ -139,17 +154,16 @@ function extractResolveReferences(
 				continue;
 			}
 			for (const reference of variable.references) {
-				if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
+				if (reference.identifier.type !== 'Identifier') continue;
+				if (path[path.length - 1] === 'resolve') resolveSet.add(reference.identifier);
+				if (path[path.length - 1] === 'asset') assetSet.add(reference.identifier);
 			}
-		} else if (
-			node.type === 'MemberExpression' &&
-			node.property.type === 'Identifier' &&
-			node.property.name === 'resolve'
-		) {
-			set.add(node.property);
+		} else if (node.type === 'MemberExpression' && node.property.type === 'Identifier') {
+			if (node.property.name === 'resolve') resolveSet.add(node.property);
+			if (node.property.name === 'asset') assetSet.add(node.property);
 		}
 	}
-	return set;
+	return { resolve: resolveSet, asset: assetSet };
 }
 
 // Extract all references to goto, pushState and replaceState
@@ -175,16 +189,21 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 			}
 		})
 	);
+
+	function onlyCallExpressions(list: TrackedReferences<boolean>[]): TSESTree.CallExpression[] {
+		return list
+			.filter((r) => r.node.type === 'CallExpression')
+			.map((r) => r.node as TSESTree.CallExpression);
+	}
+
 	return {
-		goto: rawReferences
-			.filter(({ path }) => path[path.length - 1] === 'goto')
-			.map(({ node }) => node as TSESTree.CallExpression),
-		pushState: rawReferences
-			.filter(({ path }) => path[path.length - 1] === 'pushState')
-			.map(({ node }) => node as TSESTree.CallExpression),
-		replaceState: rawReferences
-			.filter(({ path }) => path[path.length - 1] === 'replaceState')
-			.map(({ node }) => node as TSESTree.CallExpression)
+		goto: onlyCallExpressions(rawReferences.filter(({ path }) => path[path.length - 1] === 'goto')),
+		pushState: onlyCallExpressions(
+			rawReferences.filter(({ path }) => path[path.length - 1] === 'pushState')
+		),
+		replaceState: onlyCallExpressions(
+			rawReferences.filter(({ path }) => path[path.length - 1] === 'replaceState')
+		)
 	};
 }
 
@@ -199,7 +218,14 @@ function checkGotoCall(
 		return;
 	}
 	const url = call.arguments[0];
-	if (!isResolveCall(new FindVariableContext(context), url, resolveReferences)) {
+	if (
+		!isResolveWithOptionalSuffix(
+			new FindVariableContext(context),
+			url,
+			resolveReferences,
+			context.options[0]?.allowSuffix !== false
+		)
+	) {
 		context.report({ loc: url.loc, messageId: 'gotoWithoutResolve' });
 	}
 }
@@ -216,7 +242,12 @@ function checkShallowNavigationCall(
 	const url = call.arguments[0];
 	if (
 		!expressionIsEmpty(url) &&
-		!isResolveCall(new FindVariableContext(context), url, resolveReferences)
+		!isResolveWithOptionalSuffix(
+			new FindVariableContext(context),
+			url,
+			resolveReferences,
+			context.options[0]?.allowSuffix !== false
+		)
 	) {
 		context.report({ loc: url.loc, messageId });
 	}
@@ -251,6 +282,90 @@ function isResolveCall(
 		return false;
 	}
 	return isResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
+}
+
+function isResolveWithOptionalSuffix(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression | TSESTree.CallExpressionArgument,
+	resolveReferences: Set<TSESTree.Identifier>,
+	allowSuffix: boolean
+): boolean {
+	if (
+		(node.type === 'CallExpression' || node.type === 'Identifier') &&
+		isResolveCall(ctx, node, resolveReferences)
+	) {
+		return true;
+	}
+
+	if (!allowSuffix) return false;
+	return expressionStartsWithResolve(ctx, node, resolveReferences);
+}
+
+function expressionStartsWithResolve(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression | TSESTree.CallExpressionArgument,
+	resolveReferences: Set<TSESTree.Identifier>
+): boolean {
+	// Direct call
+	if (node.type === 'CallExpression') {
+		return isResolveCall(ctx, node, resolveReferences);
+	}
+	// Binary chain: ensure the left-most operand is resolve(); any right-hand content is allowed
+	if (node.type === 'BinaryExpression') {
+		if (node.operator !== '+' || node.left.type === 'PrivateIdentifier') return false;
+		return expressionStartsWithResolve(ctx, node.left, resolveReferences);
+	}
+	// Template literal: must start with expression and that expression starts with resolve(); content after is allowed
+	if (node.type === 'TemplateLiteral') {
+		if (
+			node.expressions.length === 0 ||
+			(node.quasis.length >= 1 && node.quasis[0].value.raw !== '')
+		)
+			return false;
+		return expressionStartsWithResolve(ctx, node.expressions[0], resolveReferences);
+	}
+	// Identifier indirection
+	if (node.type === 'Identifier') {
+		const variable = ctx.findVariable(node);
+		if (
+			variable === null ||
+			variable.identifiers.length === 0 ||
+			variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+			variable.identifiers[0].parent.init === null
+		) {
+			return false;
+		}
+		return expressionStartsWithResolve(ctx, variable.identifiers[0].parent.init, resolveReferences);
+	}
+	return false;
+}
+
+function isAssetOnly(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression | TSESTree.CallExpressionArgument,
+	assetReferences: Set<TSESTree.Identifier>
+): boolean {
+	if (node.type === 'CallExpression') {
+		return (
+			(node.callee.type === 'Identifier' && assetReferences.has(node.callee)) ||
+			(node.callee.type === 'MemberExpression' &&
+				node.callee.property.type === 'Identifier' &&
+				assetReferences.has(node.callee.property))
+		);
+	}
+	if (node.type === 'Identifier') {
+		const variable = ctx.findVariable(node);
+		if (
+			variable === null ||
+			variable.identifiers.length === 0 ||
+			variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+			variable.identifiers[0].parent.init === null
+		) {
+			return false;
+		}
+		return isAssetOnly(ctx, variable.identifiers[0].parent.init, assetReferences);
+	}
+	return false;
 }
 
 function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
