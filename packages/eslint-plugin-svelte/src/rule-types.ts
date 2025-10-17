@@ -530,6 +530,7 @@ type SvelteNoNavigationWithoutResolve = []|[{
   ignoreLinks?: boolean
   ignorePushState?: boolean
   ignoreReplaceState?: boolean
+  allowSuffix?: boolean
 }]
 // ----- svelte/no-reactive-reassign -----
 type SvelteNoReactiveReassign = []|[{

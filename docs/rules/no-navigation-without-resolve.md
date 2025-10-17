@@ -39,7 +39,6 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
   // ✗ BAD
   goto('/foo');
   goto('/foo' + resolve('/bar'));
-  goto(resolve('/foo') + '/bar');
 
   pushState('/foo', {});
   replaceState('/foo', {});
@@ -64,7 +63,8 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
       "ignoreGoto": false,
       "ignoreLinks": false,
       "ignorePushState": false,
-      "ignoreReplaceState": false
+      "ignoreReplaceState": false,
+      "allowSuffix": true
     }
   ]
 }
@@ -74,6 +74,34 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 - `ignoreLinks` ... Whether to ignore all `<a>` tags. Default `false`.
 - `ignorePushState` ... Whether to ignore all `pushState()` calls. Default `false`.
 - `ignoreReplaceState` ... Whether to ignore all `replaceState()` calls. Default `false`.
+- `allowSuffix` ... Whether to allow adding any suffix to a `resolve()` result. Default `true`.
+
+When `allowSuffix` is enabled (default), the following patterns are allowed:
+
+```svelte
+<script>
+  import { resolve } from '$app/paths';
+  import { goto, pushState, replaceState } from '$app/navigation';
+
+  goto(resolve('/foo') + '?q=1');
+  goto(`${resolve('/bar')}#frag`);
+
+  const base = resolve('/baz');
+  pushState(base + '&x=1');
+  replaceState(`${base}?k=v`);
+</script>
+
+<a href={resolve('/qux') + '?a=1'}>OK</a>
+```
+
+When `allowSuffix` is enabled (default), any suffix after `resolve()` is accepted. Examples:
+
+```svelte
+goto(resolve('/foo') + window.location.search); const base = resolve('/baz');
+<a href={`${base}${window.location.hash}`}>OK</a>
+```
+
+If you want to report partial `resolve()` concatenations (such as `resolve('/foo') + '?foo=bar'`), set `allowSuffix` to `false`.
 
 ## :books: Further Reading
 
