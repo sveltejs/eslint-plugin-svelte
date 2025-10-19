@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
       - name: Install Packages
         run: pnpm install --frozen-lockfile
       - name: Lint eslint-plugin-svelte
@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
       - name: Install Packages
         run: pnpm install --frozen-lockfile
       - name: Build
@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - name: Install Packages
@@ -98,7 +98,7 @@ jobs:
         uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@4
@@ -128,7 +128,7 @@ jobs:
         uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@3
@@ -150,7 +150,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
       - name: Install Packages
         run: pnpm install --frozen-lockfile
       - name: Update resources
