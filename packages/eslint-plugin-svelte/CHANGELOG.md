@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.12.5
+
+### Patch Changes
+
+- [#1403](https://github.com/sveltejs/eslint-plugin-svelte/pull/1403) [`e4d788d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e4d788d4b7dbab6e250a79ba8bd41ab45bc602e1) Thanks [@baseballyama](https://github.com/baseballyama)! - deps: update `svelte-eslint-parser` to 1.4.0 (It supports `$state.eager`)
+
+- [#1365](https://github.com/sveltejs/eslint-plugin-svelte/pull/1365) [`57ccf95`](https://github.com/sveltejs/eslint-plugin-svelte/commit/57ccf95c4dbc3b863ee80791981a2f9dd4bad529) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): Detecting asset() function as well
+
+- [#1378](https://github.com/sveltejs/eslint-plugin-svelte/pull/1378) [`5ba5c3e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5ba5c3e1b8445358d1813a78faf30982b8051ad8) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-unused-props): validate spread operator properly
+
+- [#1377](https://github.com/sveltejs/eslint-plugin-svelte/pull/1377) [`27cf677`](https://github.com/sveltejs/eslint-plugin-svelte/commit/27cf677e24500e2a83a0c7df8d506ef93b162a78) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-navigation-without-resolve): improve error messages
+
 ## 3.12.4
 
 ### Patch Changes
