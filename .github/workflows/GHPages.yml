@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
       - name: Install And Build
         run: |
-          pnpm install
+          pnpm install --frozen-lockfile
           cd packages/eslint-plugin-svelte
           pnpm run update
           pnpm build
