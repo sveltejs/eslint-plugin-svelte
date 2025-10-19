@@ -23,7 +23,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
       - name: Install Packages
-        run: --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Lint eslint-plugin-svelte
         run: |
           pnpm run build
