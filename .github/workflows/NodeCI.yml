@@ -23,7 +23,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Lint eslint-plugin-svelte
         run: |
           pnpm run build
@@ -45,7 +45,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Build
         run: |
           pnpm run update
@@ -69,7 +69,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Build eslint-plugin-svelte
         run: pnpm build
         working-directory: ${{ env.project_root_path }}
@@ -111,7 +111,7 @@ jobs:
           pnpm install -D -w eslint@${{ matrix.eslint }}
           rm -rf node_modules
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Test
         run: pnpm run test
         working-directory: ${{ env.project_root_path }}
@@ -140,7 +140,7 @@ jobs:
           rm -rf docs-svelte-kit/node_modules
           rm -rf node_modules
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Test
         run: pnpm run test
         working-directory: ${{ env.project_root_path }}
@@ -152,7 +152,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
       - name: Install Packages
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Update resources
         run: pnpm run update
         working-directory: ${{ env.project_root_path }}

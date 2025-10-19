@@ -4,8 +4,8 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "lint": "eslint --cache .",
-    "lint-fix": "eslint --cache . --fix",
+    "lint": "eslint --concurrency auto --cache .",
+    "lint-fix": "eslint --concurrency auto --cache . --fix",
     "build": "cd ../packages/eslint-plugin-svelte && pnpm build && cd ../../docs-svelte-kit && pnpm run svelte-kit build",
     "preview": "pnpm run svelte-kit preview",
     "dev": "pnpm run svelte-kit dev",
