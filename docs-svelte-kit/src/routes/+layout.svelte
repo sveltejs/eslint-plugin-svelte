@@ -76,4 +76,23 @@
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
+
+	.main-content :global(:where(li)) {
+		margin: 0 0 0.5em;
+		line-height: 1.5;
+		position: relative;
+	}
+
+	.main-content :global(:where(ul li):before) {
+		--sk-back-5: #c2cdd6;
+		content: '';
+		background-color: var(--sk-back-5);
+		opacity: 0.7;
+		border-radius: 2px;
+		width: 6px;
+		height: 6px;
+		margin-top: 8px;
+		margin-left: -18px;
+		position: absolute;
+	}
 </style>

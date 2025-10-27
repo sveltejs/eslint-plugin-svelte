@@ -84,6 +84,8 @@ h5 + h6 {
 
 ul {
 	margin: 1rem 0;
+	--list-padding: 30px;
+	margin-left: var(--list-padding);
 }
 
 pre {
