@@ -49,6 +49,12 @@ export default createRule('no-navigation-without-resolve', {
 	},
 	create(context) {
 		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
+
+		const ignoreGoto = context.options[0]?.ignoreGoto ?? false;
+		const ignorePushState = context.options[0]?.ignorePushState ?? false;
+		const ignoreReplaceState = context.options[0]?.ignoreReplaceState ?? false;
+		const ignoreLinks = context.options[0]?.ignoreLinks ?? false;
+
 		return {
 			Program() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
@@ -58,12 +64,12 @@ export default createRule('no-navigation-without-resolve', {
 					pushState: pushStateCalls,
 					replaceState: replaceStateCalls
 				} = extractFunctionCallReferences(referenceTracker);
-				if (context.options[0]?.ignoreGoto !== true) {
+				if (!ignoreGoto) {
 					for (const gotoCall of gotoCalls) {
 						checkGotoCall(context, gotoCall, resolveReferences);
 					}
 				}
-				if (context.options[0]?.ignorePushState !== true) {
+				if (!ignorePushState) {
 					for (const pushStateCall of pushStateCalls) {
 						checkShallowNavigationCall(
 							context,
@@ -73,7 +79,7 @@ export default createRule('no-navigation-without-resolve', {
 						);
 					}
 				}
-				if (context.options[0]?.ignoreReplaceState !== true) {
+				if (!ignoreReplaceState) {
 					for (const replaceStateCall of replaceStateCalls) {
 						checkShallowNavigationCall(
 							context,
@@ -84,9 +90,29 @@ export default createRule('no-navigation-without-resolve', {
 					}
 				}
 			},
+			SvelteShorthandAttribute(node) {
+				if (
+					ignoreLinks ||
+					node.parent.parent.type !== 'SvelteElement' ||
+					node.parent.parent.kind !== 'html' ||
+					node.parent.parent.name.type !== 'SvelteName' ||
+					node.parent.parent.name.name !== 'a' ||
+					node.key.name !== 'href' ||
+					node.value.type !== 'Identifier'
+				) {
+					return;
+				}
+				if (
+					!expressionIsAbsolute(new FindVariableContext(context), node.value) &&
+					!expressionIsFragment(new FindVariableContext(context), node.value) &&
+					!isResolveCall(new FindVariableContext(context), node.value, resolveReferences)
+				) {
+					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
+				}
+			},
 			SvelteAttribute(node) {
 				if (
-					context.options[0]?.ignoreLinks === true ||
+					ignoreLinks ||
 					node.parent.parent.type !== 'SvelteElement' ||
 					node.parent.parent.kind !== 'html' ||
 					node.parent.parent.name.type !== 'SvelteName' ||
