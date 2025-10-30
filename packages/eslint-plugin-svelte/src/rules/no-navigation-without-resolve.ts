@@ -123,9 +123,11 @@ export default createRule('no-navigation-without-resolve', {
 				}
 				if (
 					(node.value[0].type === 'SvelteLiteral' &&
+						!expressionIsNullish(new FindVariableContext(context), node.value[0]) &&
 						!expressionIsAbsolute(new FindVariableContext(context), node.value[0]) &&
 						!expressionIsFragment(new FindVariableContext(context), node.value[0])) ||
 					(node.value[0].type === 'SvelteMustacheTag' &&
+						!expressionIsNullish(new FindVariableContext(context), node.value[0].expression) &&
 						!expressionIsAbsolute(new FindVariableContext(context), node.value[0].expression) &&
 						!expressionIsFragment(new FindVariableContext(context), node.value[0].expression) &&
 						!isResolveCall(
@@ -287,6 +289,36 @@ function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
 			url.quasis.length === 1 &&
 			url.quasis[0].value.raw === '')
 	);
+}
+
+function expressionIsNullish(
+	ctx: FindVariableContext,
+	url: AST.SvelteLiteral | TSESTree.Expression
+): boolean {
+	switch (url.type) {
+		case 'Identifier':
+			return identifierIsNullish(ctx, url);
+		case 'Literal':
+			return url.value === null; // Undefined is an Identifier in ESTree, null is a Literal
+		default:
+			return false;
+	}
+}
+
+function identifierIsNullish(ctx: FindVariableContext, url: TSESTree.Identifier): boolean {
+	if (url.name === 'undefined') {
+		return true;
+	}
+	const variable = ctx.findVariable(url);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsNullish(ctx, variable.identifiers[0].parent.init);
 }
 
 function expressionIsAbsolute(
