@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.13.0
+
+### Minor Changes
+
+- [#1323](https://github.com/sveltejs/eslint-plugin-svelte/pull/1323) [`074af20`](https://github.com/sveltejs/eslint-plugin-svelte/commit/074af20f617b998479b5f0051ab3f55634455ebd) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): checking link shorthand attributes
+
+### Patch Changes
+
+- [#1388](https://github.com/sveltejs/eslint-plugin-svelte/pull/1388) [`005e9fd`](https://github.com/sveltejs/eslint-plugin-svelte/commit/005e9fd5ec99aaacf39d9dbbd8339dc3be33e776) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): allowing undefined and null in link hrefs
+
 ## 3.12.5
 
 ### Patch Changes
