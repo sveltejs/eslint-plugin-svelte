@@ -60,6 +60,7 @@ export default createRule('require-event-prefix', {
 					if (
 						isFunctionLike(property, tsTools) &&
 						!property.getName().startsWith('on') &&
+						!property.getName().startsWith('get') &&
 						(checkAsyncFunctions || !isFunctionAsync(property, tsTools))
 					) {
 						const declarationTsNode = property.getDeclarations()?.[0];
