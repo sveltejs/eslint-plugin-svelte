@@ -1,10 +1,12 @@
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
+import type { Range } from 'svelte-eslint-parser/lib/ast/common.js';
 
 const DEFAULT_ORDER: string[] = [
 	'ImportDeclaration',
 	'TSTypeAliasDeclaration',
+	'TSInterfaceDeclaration',
 	'VariableDeclaration',
 	'FunctionDeclaration'
 ];
@@ -74,18 +76,25 @@ export default createRule('sort-scripts-elements', {
 					fix: (fixer) => {
 						const foo: { order: number; text: string }[] = [];
 
+						const ranges: Range[] = [];
 						for (let i = 0; i < statements.length; i++) {
-							// Getting the comments between previous and current statement
-							const comments = sourceCode
-								.getCommentsInside({
-									type: 'Null',
-									range: [
-										// Get comment between the last statement and current
-										i === 0 ? node.startTag.range[1] : statements[i - 1].range[1],
-										i === statements.length - 1 ? svelteEndTag.range[0] : statements[i].range[0]
-									]
-								})
-								.map((comment) => sourceCode.getText(comment));
+							// the first token start after the previous statement
+							let start: number;
+							if (i === 0) {
+								// special case: first statement, we copy everything from <script> <--
+								start = node.startTag.range[1];
+							} else {
+								start = ranges[i - 1][1];
+							}
+
+							let end: number;
+							if (i === statements.length - 1) {
+								end = svelteEndTag.range[0] - 1;
+							} else {
+								end = statements[i].range[1];
+							}
+
+							ranges.push([start, end]);
 
 							/**
 							 * We need to handle the missing \t\n
@@ -95,17 +104,20 @@ export default createRule('sort-scripts-elements', {
 							 */
 							foo.push({
 								order: MAPPING.get(statements[i].type) ?? Number.MAX_SAFE_INTEGER,
-								text: comments.join('') + sourceCode.getText(statements[i])
+								text: sourceCode.getText({
+									range: [start, end],
+									type: 'Null'
+								})
 							});
 						}
 
 						const text = foo
 							.sort((a, b) => a.order - b.order)
 							.map(({ text }) => text)
-							.join('\n');
+							.join('');
 
 						return [
-							fixer.replaceTextRange([node.startTag.range[1] + 1, svelteEndTag.range[0] - 1], text)
+							fixer.replaceTextRange([node.startTag.range[1], svelteEndTag.range[0] - 1], text)
 						];
 					}
 				});
