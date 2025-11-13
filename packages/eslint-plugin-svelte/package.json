@@ -91,7 +91,7 @@
     "acorn": "^8.15.0",
     "assert": "^2.1.0",
     "esbuild": "^0.27.0",
-    "eslint-scope": "^8.4.0",
+    "eslint-scope": "^9.0.0",
     "eslint-typegen": "^2.3.0",
     "eslint-visitor-keys": "^4.2.1",
     "espree": "^10.4.0",
