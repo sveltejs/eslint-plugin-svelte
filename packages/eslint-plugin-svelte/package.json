@@ -93,7 +93,7 @@
     "esbuild": "^0.27.0",
     "eslint-scope": "^9.0.0",
     "eslint-typegen": "^2.3.0",
-    "eslint-visitor-keys": "^4.2.1",
+    "eslint-visitor-keys": "^5.0.0",
     "espree": "^10.4.0",
     "jiti": "^2.5.1",
     "less": "^4.4.1",
