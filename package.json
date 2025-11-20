@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "funding": "https://github.com/sponsors/ota-meshi",
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sveltejs/eslint-plugin-svelte.git"
