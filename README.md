@@ -231,7 +231,7 @@ Configure `.svelte` files in `.vscode/settings.json`:
 
 ```json
 {
-  "eslint.validate": ["javascript", "javascriptreact", "svelte"]
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "svelte"]
 }
 ```
 
