@@ -2,9 +2,10 @@
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
-  - svelte-eslint-parser
-  - svelte
   - '@ota-meshi/*'
+  - esrap
+  - svelte
+  - svelte-eslint-parser
   - typescript-eslint-parser-for-extra-files
 
 packages:
