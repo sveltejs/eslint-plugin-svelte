@@ -6,24 +6,11 @@ import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
 import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
+import { SVELTE_RUNES } from '../shared/runes.js';
 
 type StoreMemberExpression = TSESTree.MemberExpression & {
 	object: TSESTree.Identifier & { name: string };
 };
-
-/**
- * Svelte 5 runes that start with `$` but are not stores.
- * These should be excluded from the prefer-destructured-store-props rule.
- */
-const SVELTE_RUNES = new Set([
-	'$state',
-	'$derived',
-	'$effect',
-	'$props',
-	'$bindable',
-	'$inspect',
-	'$host'
-]);
 
 export default createRule('prefer-destructured-store-props', {
 	meta: {
