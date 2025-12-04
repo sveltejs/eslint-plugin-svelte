@@ -406,7 +406,12 @@ function getWarningsFromCode(
 	kind: 'warn' | 'error';
 } {
 	try {
+		const svelteConfig = context.sourceCode.parserServices.svelteParseContext?.svelteConfig;
+		const compilerOptions = svelteConfig?.compilerOptions ?? {};
 		const result = compiler.compile(code, {
+			experimental: {
+				async: compilerOptions.experimental?.async
+			},
 			generate: false,
 			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
