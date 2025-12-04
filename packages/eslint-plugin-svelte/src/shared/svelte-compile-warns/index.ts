@@ -15,6 +15,7 @@ import type { IgnoreItem } from './ignore-comment.js';
 import { getSvelteIgnoreItems } from './ignore-comment.js';
 import { extractLeadingComments } from './extract-leading-comments.js';
 import { findAttribute, getLangValue } from '../../utils/ast-utils.js';
+import { getSvelteVersion } from '../../utils/svelte-context.js';
 import path from 'path';
 import fs from 'fs';
 
@@ -395,6 +396,8 @@ function isCustomElement(program: AST.SvelteProgram) {
 	});
 }
 
+const svelteVersion = getSvelteVersion();
+
 /**
  * Get compile warnings
  */
@@ -409,9 +412,13 @@ function getWarningsFromCode(
 		const svelteConfig = context.sourceCode.parserServices.svelteParseContext?.svelteConfig;
 		const compilerOptions = svelteConfig?.compilerOptions ?? {};
 		const result = compiler.compile(code, {
-			experimental: {
-				async: compilerOptions.experimental?.async
-			},
+			...(svelteVersion === '5'
+				? {
+						experimental: {
+							async: compilerOptions.experimental?.async
+						}
+					}
+				: {}),
 			generate: false,
 			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
