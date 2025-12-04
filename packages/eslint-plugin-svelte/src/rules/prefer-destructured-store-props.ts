@@ -5,10 +5,25 @@ import { keyword } from 'esutils';
 import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
 import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils.js';
+import { getSvelteContext } from '../utils/svelte-context.js';
 
 type StoreMemberExpression = TSESTree.MemberExpression & {
 	object: TSESTree.Identifier & { name: string };
 };
+
+/**
+ * Svelte 5 runes that start with `$` but are not stores.
+ * These should be excluded from the prefer-destructured-store-props rule.
+ */
+const SVELTE_RUNES = new Set([
+	'$state',
+	'$derived',
+	'$effect',
+	'$props',
+	'$bindable',
+	'$inspect',
+	'$host'
+]);
 
 export default createRule('prefer-destructured-store-props', {
 	meta: {
@@ -29,6 +44,7 @@ export default createRule('prefer-destructured-store-props', {
 	},
 	create(context) {
 		let mainScript: AST.SvelteScriptElement | null = null;
+		const svelteContext = getSvelteContext(context);
 
 		// Store off instances of probably-destructurable statements
 		const reports: StoreMemberExpression[] = [];
@@ -150,6 +166,8 @@ export default createRule('prefer-destructured-store-props', {
 				node: StoreMemberExpression
 			) {
 				if (inScriptElement) return; // Within a script tag
+				// Skip Svelte 5 runes (e.g., $derived.by, $state.raw, $effect.pre)
+				if (svelteContext?.runes === true && SVELTE_RUNES.has(node.object.name)) return;
 				storeMemberAccessStack.unshift({ node, identifiers: [] });
 			},
 			Identifier(node: TSESTree.Identifier) {
