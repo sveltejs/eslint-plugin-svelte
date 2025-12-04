@@ -715,15 +715,25 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				includeComments: false
 			})!;
 			offsets.setOffsetToken(leftParenToken, 1, firstToken);
-			const argument =
-				node.argument ||
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any -- typescript-eslint<v6 node
-				(node as any).parameter;
-			const rightParenToken = sourceCode.getTokenAfter(argument, {
+			const args: (TSESTree.TypeNode | TSESTree.StringLiteral | TSESTree.ObjectExpression)[] = [];
+			if (node.source) {
+				args.push(node.source);
+				if (node.options) {
+					args.push(node.options);
+				}
+			} else {
+				// typescript-eslint<v8.48 node
+				args.push(
+					node.argument ||
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any -- typescript-eslint<v6 node
+						(node as any).parameter
+				);
+			}
+			const rightParenToken = sourceCode.getTokenAfter(args[args.length - 1], {
 				filter: isClosingParenToken,
 				includeComments: false
 			})!;
-			offsets.setOffsetElementList([argument], leftParenToken, rightParenToken, 1);
+			offsets.setOffsetElementList(args, leftParenToken, rightParenToken, 1);
 			if (node.qualifier) {
 				const dotToken = sourceCode.getTokenBefore(node.qualifier)!;
 				const propertyToken = sourceCode.getTokenAfter(dotToken);
