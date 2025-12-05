@@ -48,7 +48,7 @@
     "rimraf": "^6.0.1",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.48.1",
-    "undici": "^6.21.3"
+    "undici": "^7.0.0"
   },
   "publishConfig": {
     "access": "public"
