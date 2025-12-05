@@ -1,0 +1,18 @@
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 10
+  column: 18
+  suggestions:
+    - desc: 'Using destructuring like $: ({ foo } = $store); will run faster'
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+        	import store from './store.js';
+        	let count = $state(0);
+        	let doubled = $derived.by(() => count * 2);
+        $: ({ foo } = $store);
+        </script>
+
+        <!-- $state and $derived.by should be ignored (runes), but $store.foo should be reported -->
+        <p>Count: {count}</p>
+        <p>Doubled: {doubled}</p>
+        <p>Store value: {foo}</p>
