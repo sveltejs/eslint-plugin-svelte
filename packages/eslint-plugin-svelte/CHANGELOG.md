@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.13.1
+
+### Patch Changes
+
+- [#1437](https://github.com/sveltejs/eslint-plugin-svelte/pull/1437) [`89d030d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/89d030dd61dd3ec3240c53dfcfac203da0c543f3) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(svelte/indent): crash when using ts import type
+
+- [#1440](https://github.com/sveltejs/eslint-plugin-svelte/pull/1440) [`a87e40b`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a87e40b61445ddc1ba584048021c8f0db13bef02) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(prefer-destructured-store-props): handle runes properly
+
+- [#1438](https://github.com/sveltejs/eslint-plugin-svelte/pull/1438) [`817b137`](https://github.com/sveltejs/eslint-plugin-svelte/commit/817b137504bcbe6aa4eeb4ec70277e4668b725dd) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: Support `experimental.async` compiler option
+
 ## 3.13.0
 
 ### Minor Changes
