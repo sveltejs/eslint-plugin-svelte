@@ -255,7 +255,6 @@ function checkLinkAttribute(
 		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
 		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, tsTools, {
 			allowAbsolute: true,
-			allowFragment: true,
 			allowNullish: true
 		})
 	) {
@@ -306,7 +305,6 @@ function isValueAllowed(
 	config: {
 		allowAbsolute?: boolean;
 		allowEmpty?: boolean;
-		allowFragment?: boolean;
 		allowNullish?: boolean;
 	}
 ): boolean {
@@ -340,9 +338,10 @@ function isValueAllowed(
 	if (
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
-		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
+		expressionStartsWith(ctx, value, '#') ||
 		(config.allowNullish && expressionIsNullish(value)) ||
 		expressionIsAllowedType(value, config.allowNullish, tsTools) ||
+		expressionStartsWith(ctx, value, '?') ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
 		return true;
