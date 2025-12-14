@@ -296,6 +296,7 @@ function isValueAllowed(
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
+		expressionStartsWith(ctx, value, '?') ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
 		return true;
