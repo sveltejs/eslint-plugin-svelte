@@ -1,14 +1,14 @@
 - message: Unexpected href link without resolve().
   line: 8
-  column: 9
+  column: 4
   suggestions: null
 - message: Unexpected href link without resolve().
   line: 9
-  column: 9
+  column: 4
   suggestions: null
 - message: Unexpected href link without resolve().
   line: 10
-  column: 9
+  column: 4
   suggestions: null
 - message: Unexpected href link without resolve().
   line: 11

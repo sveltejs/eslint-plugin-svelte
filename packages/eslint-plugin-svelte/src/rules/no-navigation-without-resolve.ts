@@ -138,7 +138,7 @@ export default createRule('no-navigation-without-resolve', {
 							resolveReferences
 						))
 				) {
-					context.report({ loc: node.value[0].loc, messageId: 'linkWithoutResolve' });
+					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
 				}
 			}
 		};
