@@ -234,6 +234,41 @@ function checkLinkAttribute(
 	}
 }
 
+function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
+	function identifierIsExternal(identifier: TSESTree.Identifier): boolean {
+		const variable = ctx.findVariable(identifier);
+		return (
+			variable !== null &&
+			variable.identifiers.length > 0 &&
+			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
+			variable.identifiers[0].parent.init !== null &&
+			variable.identifiers[0].parent.init.type === 'Literal' &&
+			variable.identifiers[0].parent.init.value === 'external'
+		);
+	}
+
+	for (const attr of element.attributes) {
+		if (
+			(attr.type === 'SvelteAttribute' &&
+				attr.key.name === 'rel' &&
+				((attr.value[0].type === 'SvelteLiteral' &&
+					attr.value[0].value.split(/\s+/).includes('external')) ||
+					(attr.value[0].type === 'SvelteMustacheTag' &&
+						((attr.value[0].expression.type === 'Literal' &&
+							attr.value[0].expression.value?.toString().split(/\s+/).includes('external')) ||
+							(attr.value[0].expression.type === 'Identifier' &&
+								identifierIsExternal(attr.value[0].expression)))))) ||
+			(attr.type === 'SvelteShorthandAttribute' &&
+				attr.key.name === 'rel' &&
+				attr.value.type === 'Identifier' &&
+				identifierIsExternal(attr.value))
+		) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function isValueAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
@@ -259,8 +294,9 @@ function isValueAllowed(
 	if (
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
-		(config.allowFragment && expressionIsFragment(ctx, value)) ||
+		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
+		expressionStartsWith(ctx, value, '?') ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
 		return true;
@@ -366,34 +402,40 @@ function valueIsAbsoluteUrl(node: string): boolean {
 	return /^[+a-z]*:/i.test(node);
 }
 
-function expressionIsFragment(
+function expressionStartsWith(
 	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	prefix: string
 ): boolean {
 	switch (node.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsFragment(ctx, node);
+			return binaryExpressionStartsWith(ctx, node, prefix);
 		case 'Identifier':
-			return identifierIsFragment(ctx, node);
+			return identifierStartsWith(ctx, node, prefix);
 		case 'Literal':
-			return typeof node.value === 'string' && urlValueIsFragment(node.value);
+			return typeof node.value === 'string' && node.value.startsWith(prefix);
 		case 'SvelteLiteral':
-			return urlValueIsFragment(node.value);
+			return node.value.startsWith(prefix);
 		case 'TemplateLiteral':
-			return templateLiteralIsFragment(ctx, node);
+			return templateLiteralStartsWith(ctx, node, prefix);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionIsFragment(
+function binaryExpressionStartsWith(
 	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression
+	node: TSESTree.BinaryExpression,
+	prefix: string
 ): boolean {
-	return node.left.type !== 'PrivateIdentifier' && expressionIsFragment(ctx, node.left);
+	return node.left.type !== 'PrivateIdentifier' && expressionStartsWith(ctx, node.left, prefix);
 }
 
-function identifierIsFragment(ctx: FindVariableContext, node: TSESTree.Identifier): boolean {
+function identifierStartsWith(
+	ctx: FindVariableContext,
+	node: TSESTree.Identifier,
+	prefix: string
+): boolean {
 	const variable = ctx.findVariable(node);
 	if (
 		variable === null ||
@@ -403,54 +445,16 @@ function identifierIsFragment(ctx: FindVariableContext, node: TSESTree.Identifie
 	) {
 		return false;
 	}
-	return expressionIsFragment(ctx, variable.identifiers[0].parent.init);
+	return expressionStartsWith(ctx, variable.identifiers[0].parent.init, prefix);
 }
 
-function templateLiteralIsFragment(
+function templateLiteralStartsWith(
 	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral
+	node: TSESTree.TemplateLiteral,
+	prefix: string
 ): boolean {
 	return (
-		(node.expressions.length >= 1 && expressionIsFragment(ctx, node.expressions[0])) ||
-		(node.quasis.length >= 1 && urlValueIsFragment(node.quasis[0].value.raw))
+		(node.expressions.length >= 1 && expressionStartsWith(ctx, node.expressions[0], prefix)) ||
+		(node.quasis.length >= 1 && node.quasis[0].value.raw.startsWith(prefix))
 	);
-}
-
-function urlValueIsFragment(node: string): boolean {
-	return node.startsWith('#');
-}
-
-function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
-	function identifierIsExternal(identifier: TSESTree.Identifier): boolean {
-		const variable = ctx.findVariable(identifier);
-		return (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null &&
-			variable.identifiers[0].parent.init.type === 'Literal' &&
-			variable.identifiers[0].parent.init.value === 'external'
-		);
-	}
-
-	for (const attr of element.attributes) {
-		if (
-			(attr.type === 'SvelteAttribute' &&
-				attr.key.name === 'rel' &&
-				((attr.value[0].type === 'SvelteLiteral' &&
-					attr.value[0].value.split(/\s+/).includes('external')) ||
-					(attr.value[0].type === 'SvelteMustacheTag' &&
-						((attr.value[0].expression.type === 'Literal' &&
-							attr.value[0].expression.value?.toString().split(/\s+/).includes('external')) ||
-							(attr.value[0].expression.type === 'Identifier' &&
-								identifierIsExternal(attr.value[0].expression)))))) ||
-			(attr.type === 'SvelteShorthandAttribute' &&
-				attr.key.name === 'rel' &&
-				attr.value.type === 'Identifier' &&
-				identifierIsExternal(attr.value))
-		) {
-			return true;
-		}
-	}
-	return false;
 }
