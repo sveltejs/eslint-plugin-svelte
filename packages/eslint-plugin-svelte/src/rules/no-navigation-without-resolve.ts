@@ -121,6 +121,9 @@ export default createRule('no-navigation-without-resolve', {
 				) {
 					return;
 				}
+				if (anchorHasSveltekitReload(node) || anchorRelIncludesExternal(node)) {
+					return;
+				}
 				if (
 					(node.value[0].type === 'SvelteLiteral' &&
 						!expressionIsNullish(new FindVariableContext(context), node.value[0]) &&
@@ -430,4 +433,44 @@ function templateLiteralIsFragment(
 
 function urlValueIsFragment(url: string): boolean {
 	return url.startsWith('#');
+}
+
+function anchorHasSveltekitReload(node: AST.SvelteAttribute): boolean {
+	const startTag = node.parent;
+	return startTag.attributes.some((attr): attr is AST.SvelteAttribute => {
+		return attr.type === 'SvelteAttribute' && attr.key.name === 'data-sveltekit-reload';
+	});
+}
+
+function relTokenListIncludesExternal(value: string): boolean {
+	return /(?:^|\s)external(?:\s|$)/i.test(value);
+}
+
+function anchorRelIncludesExternal(node: AST.SvelteAttribute): boolean {
+	const startTag = node.parent;
+	const relAttr = startTag.attributes.find((attr): attr is AST.SvelteAttribute => {
+		return attr.type === 'SvelteAttribute' && attr.key.name === 'rel';
+	});
+	if (!relAttr) return false;
+	// Handle literal values like rel="external" or rel="external nofollow"
+	for (const v of relAttr.value) {
+		if (v.type === 'SvelteLiteral') {
+			if (relTokenListIncludesExternal(v.value)) return true;
+		}
+		if (v.type === 'SvelteMustacheTag') {
+			// Best-effort: detect simple string literals in mustache, e.g., rel={'external'}
+			const expr = v.expression;
+			if (expr.type === 'Literal' && typeof expr.value === 'string') {
+				if (relTokenListIncludesExternal(expr.value)) return true;
+			}
+			if (
+				expr.type === 'TemplateLiteral' &&
+				expr.expressions.length === 0 &&
+				expr.quasis.length === 1
+			) {
+				if (relTokenListIncludesExternal(expr.quasis[0].value.raw)) return true;
+			}
+		}
+	}
+	return false;
 }
