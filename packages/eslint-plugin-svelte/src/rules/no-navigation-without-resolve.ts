@@ -98,7 +98,8 @@ export default createRule('no-navigation-without-resolve', {
 					node.parent.parent.name.type !== 'SvelteName' ||
 					node.parent.parent.name.name !== 'a' ||
 					node.key.name !== 'href' ||
-					node.value.type !== 'Identifier'
+					node.value.type !== 'Identifier' ||
+					hasRelExternal(new FindVariableContext(context), node.parent)
 				) {
 					return;
 				}
@@ -117,7 +118,8 @@ export default createRule('no-navigation-without-resolve', {
 					node.parent.parent.kind !== 'html' ||
 					node.parent.parent.name.type !== 'SvelteName' ||
 					node.parent.parent.name.name !== 'a' ||
-					node.key.name !== 'href'
+					node.key.name !== 'href' ||
+					hasRelExternal(new FindVariableContext(context), node.parent)
 				) {
 					return;
 				}
@@ -430,4 +432,39 @@ function templateLiteralIsFragment(
 
 function urlValueIsFragment(url: string): boolean {
 	return url.startsWith('#');
+}
+
+function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
+	function identifierIsExternal(identifier: TSESTree.Identifier): boolean {
+		const variable = ctx.findVariable(identifier);
+		return (
+			variable !== null &&
+			variable.identifiers.length > 0 &&
+			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
+			variable.identifiers[0].parent.init !== null &&
+			variable.identifiers[0].parent.init.type === 'Literal' &&
+			variable.identifiers[0].parent.init.value === 'external'
+		);
+	}
+
+	for (const attr of element.attributes) {
+		if (
+			(attr.type === 'SvelteAttribute' &&
+				attr.key.name === 'rel' &&
+				((attr.value[0].type === 'SvelteLiteral' &&
+					attr.value[0].value.split(/\s+/).includes('external')) ||
+					(attr.value[0].type === 'SvelteMustacheTag' &&
+						((attr.value[0].expression.type === 'Literal' &&
+							attr.value[0].expression.value?.toString().split(/\s+/).includes('external')) ||
+							(attr.value[0].expression.type === 'Identifier' &&
+								identifierIsExternal(attr.value[0].expression)))))) ||
+			(attr.type === 'SvelteShorthandAttribute' &&
+				attr.key.name === 'rel' &&
+				attr.value.type === 'Identifier' &&
+				identifierIsExternal(attr.value))
+		) {
+			return true;
+		}
+	}
+	return false;
 }
