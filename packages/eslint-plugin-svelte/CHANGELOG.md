@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.14.0
+
+### Minor Changes
+
+- [#1443](https://github.com/sveltejs/eslint-plugin-svelte/pull/1443) [`18266fc`](https://github.com/sveltejs/eslint-plugin-svelte/commit/18266fc9a3acc413f5a727241e8db6264005e520) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): ignoring links with rel=external
+
 ## 3.13.1
 
 ### Patch Changes
