@@ -48,6 +48,7 @@ This rule checks all 4 navigation options for the presence of the `resolve()` fu
 <!-- ✓ GOOD -->
 <a href={resolve('/foo/')}>Click me!</a>
 <a href="https://svelte.dev">Click me!</a>
+<a href={someURL} rel="external">Click me!</a>
 
 <!-- ✗ BAD -->
 <a href="/foo">Click me!</a>
