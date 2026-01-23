@@ -21,8 +21,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(eslint@9.39.1(jiti@2.6.1))
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.18.0
-        version: 0.18.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
+        specifier: ^0.19.0
+        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
@@ -114,8 +114,8 @@ importers:
         specifier: ^5.2.6
         version: 5.2.7
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.18.0
-        version: 0.18.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
+        specifier: ^0.19.0
+        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       '@shikijs/markdown-it':
         specifier: ^3.12.2
         version: 3.13.0
@@ -1074,10 +1074,6 @@ packages:
     resolution: {integrity: sha512-jaS+NJ+hximswBG6pjNX0uEJZkrT0zwpVi3BA3vX22aFGjJjmgSTSmPpZCRKmoBL5VY/M6p0xsSJx7rk7sy5gg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.38.0':
-    resolution: {integrity: sha512-UZ1VpFvXf9J06YG9xQBdnzU+kthors6KjhMAl6f4gH4usHyh31rUf2DLGInT8RFYIReYXNSydgPY0V2LuWgl7A==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@eslint/js@9.39.1':
     resolution: {integrity: sha512-S26Stp4zCy88tH94QbBv3XCuzRQiZ9yXofEILmglYTh/Ug/a9/umqvgFtYBAo3Lp0nsI/5/qH1CCrbdK3AP1Tw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1214,13 +1210,13 @@ packages:
     resolution: {integrity: sha512-xhfYPXoV5Dy4UkY0D+v2KkwvnDfiA/8Mt3sWCGI/hM03NsYIH8ZaG6QzS9x7pje5vHZBZJ2v6VRFVTWACnqcmQ==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  '@ota-meshi/eslint-plugin@0.18.0':
-    resolution: {integrity: sha512-xi8veF+CMqw7VKvBnFD0+9GzEJCs2sY/w3UMOO6K3WPxtqEX6NQCP7W9OVO5Ahpkuu/5jplKUzWcjE8anBJ9kQ==}
+  '@ota-meshi/eslint-plugin@0.19.0':
+    resolution: {integrity: sha512-pumFXOvJFoto805a4taS07Et7dJ/OU5TGNRqt8pgGOa3/nx5kWlxp5Q3liHow4MU99t2J4T+U7NRqpyj87tBOg==}
     engines: {node: ^18.18.0||^20.9.0||>=21.1.0}
     peerDependencies:
       '@eslint-community/eslint-plugin-eslint-comments': ^4.3.0
-      eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
-      eslint-plugin-regexp: ^2.5.0
+      eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+      eslint-plugin-regexp: ^2.5.0 || ^3.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
     resolution: {integrity: sha512-KF8+j9nNbUN8vzOFDpRMsaKBHZ/mcjEjMToVMJOhTozkDonQFFrRcfdLWn6yWKCmJKmdVxSgHiYvTCef4/qcBA==}
@@ -4785,8 +4781,6 @@ snapshots:
 
   '@eslint/js@9.37.0': {}
 
-  '@eslint/js@9.38.0': {}
-
   '@eslint/js@9.39.1': {}
 
   '@eslint/object-schema@2.1.7': {}
@@ -4967,10 +4961,10 @@ snapshots:
     dependencies:
       which: 4.0.0
 
-  '@ota-meshi/eslint-plugin@0.18.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))':
+  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.5.0(eslint@9.39.1(jiti@2.6.1))
-      '@eslint/js': 9.38.0
+      '@eslint/js': 9.39.1
       eslint: 9.39.1(jiti@2.6.1)
       eslint-plugin-regexp: 2.10.0(eslint@9.39.1(jiti@2.6.1))
       semver: 7.7.3
