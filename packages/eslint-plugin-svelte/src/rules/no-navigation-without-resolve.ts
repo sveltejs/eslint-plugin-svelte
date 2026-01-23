@@ -104,6 +104,7 @@ export default createRule('no-navigation-without-resolve', {
 					return;
 				}
 				if (
+					!expressionIsNullish(new FindVariableContext(context), node.value) &&
 					!expressionIsAbsolute(new FindVariableContext(context), node.value) &&
 					!expressionIsFragment(new FindVariableContext(context), node.value) &&
 					!isResolveCall(new FindVariableContext(context), node.value, resolveReferences)
