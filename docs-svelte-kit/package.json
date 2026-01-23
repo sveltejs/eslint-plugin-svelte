@@ -29,7 +29,7 @@
     "@types/eslint-visitor-keys": "^3.3.2",
     "@types/less": "^3.0.8",
     "@types/markdown-it": "^14.1.2",
-    "@types/markdown-it-container": "^2.0.10",
+    "@types/markdown-it-container": "^4.0.0",
     "@types/markdown-it-emoji": "^3.0.1",
     "@types/node": "^22.18.0",
     "@types/prismjs": "^1.26.5",
