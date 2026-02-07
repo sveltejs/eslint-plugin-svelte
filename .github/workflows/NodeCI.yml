@@ -60,15 +60,15 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         eslint: [8, 9, 10]
         node: [20.x, 22.x, latest]
-      include:
-        # ESLint v9 and Node.js 18.x
-        - os: ubuntu-latest
-          eslint: 9
-          node: 18.x
-        # ESLint v8 and Node.js 18.x
-        - os: ubuntu-latest
-          eslint: 8
-          node: 18.x
+        include:
+          # ESLint v9 and Node.js 18.x
+          - os: ubuntu-latest
+            eslint: 9
+            node: 18.x
+          # ESLint v8 and Node.js 18.x
+          - os: ubuntu-latest
+            eslint: 8
+            node: 18.x
     steps:
       - name: Checkout
         uses: actions/checkout@v6
