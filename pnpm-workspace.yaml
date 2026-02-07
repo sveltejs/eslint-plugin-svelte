@@ -19,6 +19,7 @@ minimumReleaseAgeExclude:
   - typescript-eslint-parser-for-extra-files
   - vite
   - zimmerframe
+  - eslint
 
 packages:
   - 'packages/*'
