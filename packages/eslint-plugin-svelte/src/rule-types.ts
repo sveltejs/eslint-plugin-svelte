@@ -7,10 +7,11 @@
 import type { Linter } from 'eslint'
 
 declare module 'eslint' {
-  namespace Linter {
-    interface RulesRecord extends RuleOptions {}
-  }
+	interface RulesConfig extends RuleOptions {}
 }
+
+/* eslint-disable */
+/* prettier-ignore */
 
 export interface RuleOptions {
   /**
