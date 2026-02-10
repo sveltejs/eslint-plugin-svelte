@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 3.15.0
+
+### Minor Changes
+
+- [#1472](https://github.com/sveltejs/eslint-plugin-svelte/pull/1472) [`a314e4f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a314e4f0f4df348665cfabef724fd5bb731a2469) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - feat: add support for ESLint v10
+
+- [#1461](https://github.com/sveltejs/eslint-plugin-svelte/pull/1461) [`d8e1dc1`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d8e1dc1405d9d9c8cc4efd1b449c3b5ea9f843c8) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): for links, the rule now reports on the whole attribute
+
 ## 3.14.0
 
 ### Minor Changes
