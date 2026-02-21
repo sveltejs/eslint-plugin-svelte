@@ -90,58 +90,19 @@ export default createRule('no-navigation-without-resolve', {
 					}
 				}
 			},
-			SvelteShorthandAttribute(node) {
-				if (
-					ignoreLinks ||
-					node.parent.parent.type !== 'SvelteElement' ||
-					node.parent.parent.kind !== 'html' ||
-					node.parent.parent.name.type !== 'SvelteName' ||
-					node.parent.parent.name.name !== 'a' ||
-					node.key.name !== 'href' ||
-					node.value.type !== 'Identifier' ||
-					hasRelExternal(new FindVariableContext(context), node.parent)
-				) {
-					return;
+			...(!ignoreLinks && {
+				SvelteShorthandAttribute(node) {
+					checkLinkAttribute(context, node, node.value, resolveReferences);
+				},
+				SvelteAttribute(node) {
+					checkLinkAttribute(
+						context,
+						node,
+						node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
+						resolveReferences
+					);
 				}
-				if (
-					!expressionIsNullish(new FindVariableContext(context), node.value) &&
-					!expressionIsAbsolute(new FindVariableContext(context), node.value) &&
-					!expressionIsFragment(new FindVariableContext(context), node.value) &&
-					!isResolveCall(new FindVariableContext(context), node.value, resolveReferences)
-				) {
-					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
-				}
-			},
-			SvelteAttribute(node) {
-				if (
-					ignoreLinks ||
-					node.parent.parent.type !== 'SvelteElement' ||
-					node.parent.parent.kind !== 'html' ||
-					node.parent.parent.name.type !== 'SvelteName' ||
-					node.parent.parent.name.name !== 'a' ||
-					node.key.name !== 'href' ||
-					hasRelExternal(new FindVariableContext(context), node.parent)
-				) {
-					return;
-				}
-				if (
-					(node.value[0].type === 'SvelteLiteral' &&
-						!expressionIsNullish(new FindVariableContext(context), node.value[0]) &&
-						!expressionIsAbsolute(new FindVariableContext(context), node.value[0]) &&
-						!expressionIsFragment(new FindVariableContext(context), node.value[0])) ||
-					(node.value[0].type === 'SvelteMustacheTag' &&
-						!expressionIsNullish(new FindVariableContext(context), node.value[0].expression) &&
-						!expressionIsAbsolute(new FindVariableContext(context), node.value[0].expression) &&
-						!expressionIsFragment(new FindVariableContext(context), node.value[0].expression) &&
-						!isResolveCall(
-							new FindVariableContext(context),
-							node.value[0].expression,
-							resolveReferences
-						))
-				) {
-					context.report({ loc: node.loc, messageId: 'linkWithoutResolve' });
-				}
-			}
+			})
 		};
 	}
 });
@@ -226,12 +187,11 @@ function checkGotoCall(
 	call: TSESTree.CallExpression,
 	resolveReferences: Set<TSESTree.Identifier>
 ): void {
-	if (call.arguments.length < 1) {
-		return;
-	}
-	const url = call.arguments[0];
-	if (!isResolveCall(new FindVariableContext(context), url, resolveReferences)) {
-		context.report({ loc: url.loc, messageId: 'gotoWithoutResolve' });
+	if (
+		call.arguments.length > 0 &&
+		!isValueAllowed(new FindVariableContext(context), call.arguments[0], resolveReferences, {})
+	) {
+		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
 	}
 }
 
@@ -241,198 +201,37 @@ function checkShallowNavigationCall(
 	resolveReferences: Set<TSESTree.Identifier>,
 	messageId: string
 ): void {
-	if (call.arguments.length < 1) {
-		return;
-	}
-	const url = call.arguments[0];
 	if (
-		!expressionIsEmpty(url) &&
-		!isResolveCall(new FindVariableContext(context), url, resolveReferences)
+		call.arguments.length > 0 &&
+		!isValueAllowed(new FindVariableContext(context), call.arguments[0], resolveReferences, {
+			allowEmpty: true
+		})
 	) {
-		context.report({ loc: url.loc, messageId });
+		context.report({ loc: call.arguments[0].loc, messageId });
 	}
 }
 
-// Helper functions
-
-function isResolveCall(
-	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument,
+function checkLinkAttribute(
+	context: RuleContext,
+	attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute,
+	value: TSESTree.Expression | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>
-): boolean {
+): void {
 	if (
-		node.type === 'CallExpression' &&
-		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
-			(node.callee.type === 'MemberExpression' &&
-				node.callee.property.type === 'Identifier' &&
-				resolveReferences.has(node.callee.property)))
+		attribute.parent.parent.type === 'SvelteElement' &&
+		attribute.parent.parent.kind === 'html' &&
+		attribute.parent.parent.name.type === 'SvelteName' &&
+		attribute.parent.parent.name.name === 'a' &&
+		attribute.key.name === 'href' &&
+		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
+		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, {
+			allowAbsolute: true,
+			allowFragment: true,
+			allowNullish: true
+		})
 	) {
-		return true;
+		context.report({ loc: attribute.loc, messageId: 'linkWithoutResolve' });
 	}
-	if (node.type !== 'Identifier') {
-		return false;
-	}
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return isResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
-}
-
-function expressionIsEmpty(url: TSESTree.CallExpressionArgument): boolean {
-	return (
-		(url.type === 'Literal' && url.value === '') ||
-		(url.type === 'TemplateLiteral' &&
-			url.expressions.length === 0 &&
-			url.quasis.length === 1 &&
-			url.quasis[0].value.raw === '')
-	);
-}
-
-function expressionIsNullish(
-	ctx: FindVariableContext,
-	url: AST.SvelteLiteral | TSESTree.Expression
-): boolean {
-	switch (url.type) {
-		case 'Identifier':
-			return identifierIsNullish(ctx, url);
-		case 'Literal':
-			return url.value === null; // Undefined is an Identifier in ESTree, null is a Literal
-		default:
-			return false;
-	}
-}
-
-function identifierIsNullish(ctx: FindVariableContext, url: TSESTree.Identifier): boolean {
-	if (url.name === 'undefined') {
-		return true;
-	}
-	const variable = ctx.findVariable(url);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionIsNullish(ctx, variable.identifiers[0].parent.init);
-}
-
-function expressionIsAbsolute(
-	ctx: FindVariableContext,
-	url: AST.SvelteLiteral | TSESTree.Expression
-): boolean {
-	switch (url.type) {
-		case 'BinaryExpression':
-			return binaryExpressionIsAbsolute(ctx, url);
-		case 'Identifier':
-			return identifierIsAbsolute(ctx, url);
-		case 'Literal':
-			return typeof url.value === 'string' && urlValueIsAbsolute(url.value);
-		case 'SvelteLiteral':
-			return urlValueIsAbsolute(url.value);
-		case 'TemplateLiteral':
-			return templateLiteralIsAbsolute(ctx, url);
-		default:
-			return false;
-	}
-}
-
-function binaryExpressionIsAbsolute(
-	ctx: FindVariableContext,
-	url: TSESTree.BinaryExpression
-): boolean {
-	return (
-		(url.left.type !== 'PrivateIdentifier' && expressionIsAbsolute(ctx, url.left)) ||
-		expressionIsAbsolute(ctx, url.right)
-	);
-}
-
-function identifierIsAbsolute(ctx: FindVariableContext, url: TSESTree.Identifier): boolean {
-	const variable = ctx.findVariable(url);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionIsAbsolute(ctx, variable.identifiers[0].parent.init);
-}
-
-function templateLiteralIsAbsolute(
-	ctx: FindVariableContext,
-	url: TSESTree.TemplateLiteral
-): boolean {
-	return (
-		url.expressions.some((expression) => expressionIsAbsolute(ctx, expression)) ||
-		url.quasis.some((quasi) => urlValueIsAbsolute(quasi.value.raw))
-	);
-}
-
-function urlValueIsAbsolute(url: string): boolean {
-	return /^[+a-z]*:/i.test(url);
-}
-
-function expressionIsFragment(
-	ctx: FindVariableContext,
-	url: AST.SvelteLiteral | TSESTree.Expression
-): boolean {
-	switch (url.type) {
-		case 'BinaryExpression':
-			return binaryExpressionIsFragment(ctx, url);
-		case 'Identifier':
-			return identifierIsFragment(ctx, url);
-		case 'Literal':
-			return typeof url.value === 'string' && urlValueIsFragment(url.value);
-		case 'SvelteLiteral':
-			return urlValueIsFragment(url.value);
-		case 'TemplateLiteral':
-			return templateLiteralIsFragment(ctx, url);
-		default:
-			return false;
-	}
-}
-
-function binaryExpressionIsFragment(
-	ctx: FindVariableContext,
-	url: TSESTree.BinaryExpression
-): boolean {
-	return url.left.type !== 'PrivateIdentifier' && expressionIsFragment(ctx, url.left);
-}
-
-function identifierIsFragment(ctx: FindVariableContext, url: TSESTree.Identifier): boolean {
-	const variable = ctx.findVariable(url);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionIsFragment(ctx, variable.identifiers[0].parent.init);
-}
-
-function templateLiteralIsFragment(
-	ctx: FindVariableContext,
-	url: TSESTree.TemplateLiteral
-): boolean {
-	return (
-		(url.expressions.length >= 1 && expressionIsFragment(ctx, url.expressions[0])) ||
-		(url.quasis.length >= 1 && urlValueIsFragment(url.quasis[0].value.raw))
-	);
-}
-
-function urlValueIsFragment(url: string): boolean {
-	return url.startsWith('#');
 }
 
 function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
@@ -468,4 +267,199 @@ function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): 
 		}
 	}
 	return false;
+}
+
+function isValueAllowed(
+	ctx: FindVariableContext,
+	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	resolveReferences: Set<TSESTree.Identifier>,
+	config: {
+		allowAbsolute?: boolean;
+		allowEmpty?: boolean;
+		allowFragment?: boolean;
+		allowNullish?: boolean;
+	}
+): boolean {
+	if (value.type === 'Identifier') {
+		const variable = ctx.findVariable(value);
+		if (
+			variable !== null &&
+			variable.identifiers.length > 0 &&
+			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
+			variable.identifiers[0].parent.init !== null
+		) {
+			return isValueAllowed(ctx, variable.identifiers[0].parent.init, resolveReferences, config);
+		}
+	}
+	if (
+		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
+		(config.allowEmpty && expressionIsEmpty(value)) ||
+		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
+		(config.allowNullish && expressionIsNullish(value)) ||
+		expressionIsResolveCall(ctx, value, resolveReferences)
+	) {
+		return true;
+	}
+	return false;
+}
+
+// Helper functions
+
+function expressionIsResolveCall(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
+	resolveReferences: Set<TSESTree.Identifier>
+): boolean {
+	if (
+		node.type === 'CallExpression' &&
+		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
+			(node.callee.type === 'MemberExpression' &&
+				node.callee.property.type === 'Identifier' &&
+				resolveReferences.has(node.callee.property)))
+	) {
+		return true;
+	}
+	if (node.type !== 'Identifier') {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
+}
+
+function expressionIsEmpty(
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	return (
+		(node.type === 'Literal' && node.value === '') ||
+		(node.type === 'TemplateLiteral' &&
+			node.expressions.length === 0 &&
+			node.quasis.length === 1 &&
+			node.quasis[0].value.raw === '')
+	);
+}
+
+function expressionIsNullish(
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	switch (node.type) {
+		case 'Identifier':
+			return node.name === 'undefined';
+		case 'Literal':
+			return node.value === null; // Undefined is an Identifier in ESTree, null is a Literal
+		default:
+			return false;
+	}
+}
+
+function expressionIsAbsoluteUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	switch (node.type) {
+		case 'BinaryExpression':
+			return binaryExpressionIsAbsoluteUrl(ctx, node);
+		case 'Literal':
+			return typeof node.value === 'string' && valueIsAbsoluteUrl(node.value);
+		case 'SvelteLiteral':
+			return valueIsAbsoluteUrl(node.value);
+		case 'TemplateLiteral':
+			return templateLiteralIsAbsoluteUrl(ctx, node);
+		default:
+			return false;
+	}
+}
+
+function binaryExpressionIsAbsoluteUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.BinaryExpression
+): boolean {
+	return (
+		(node.left.type !== 'PrivateIdentifier' && expressionIsAbsoluteUrl(ctx, node.left)) ||
+		expressionIsAbsoluteUrl(ctx, node.right)
+	);
+}
+
+function templateLiteralIsAbsoluteUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.TemplateLiteral
+): boolean {
+	return (
+		node.expressions.some((expression) => expressionIsAbsoluteUrl(ctx, expression)) ||
+		node.quasis.some((quasi) => valueIsAbsoluteUrl(quasi.value.raw))
+	);
+}
+
+function valueIsAbsoluteUrl(node: string): boolean {
+	return /^[+a-z]*:/i.test(node);
+}
+
+function expressionStartsWith(
+	ctx: FindVariableContext,
+	node:
+		| TSESTree.CallExpressionArgument
+		| TSESTree.Expression
+		| TSESTree.TemplateElement
+		| AST.SvelteLiteral,
+	prefix: string
+): boolean {
+	switch (node.type) {
+		case 'BinaryExpression':
+			return binaryExpressionStartsWith(ctx, node, prefix);
+		case 'Identifier':
+			return identifierStartsWith(ctx, node, prefix);
+		case 'Literal':
+			return typeof node.value === 'string' && node.value.startsWith(prefix);
+		case 'SvelteLiteral':
+			return node.value.startsWith(prefix);
+		case 'TemplateElement':
+			return node.value.raw.startsWith(prefix);
+		case 'TemplateLiteral':
+			return templateLiteralStartsWith(ctx, node, prefix);
+		default:
+			return false;
+	}
+}
+
+function binaryExpressionStartsWith(
+	ctx: FindVariableContext,
+	node: TSESTree.BinaryExpression,
+	prefix: string
+): boolean {
+	return node.left.type !== 'PrivateIdentifier' && expressionStartsWith(ctx, node.left, prefix);
+}
+
+function identifierStartsWith(
+	ctx: FindVariableContext,
+	node: TSESTree.Identifier,
+	prefix: string
+): boolean {
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionStartsWith(ctx, variable.identifiers[0].parent.init, prefix);
+}
+
+function templateLiteralStartsWith(
+	ctx: FindVariableContext,
+	node: TSESTree.TemplateLiteral,
+	prefix: string
+): boolean {
+	return (
+		(node.expressions.length >= 1 && expressionStartsWith(ctx, node.expressions[0], prefix)) ||
+		(node.quasis.length >= 1 && expressionStartsWith(ctx, node.quasis[0], prefix))
+	);
 }
