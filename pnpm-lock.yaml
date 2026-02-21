@@ -21,8 +21,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(eslint@9.39.1(jiti@2.6.1))
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
+        specifier: ^0.20.0
+        version: 0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
@@ -114,8 +114,8 @@ importers:
         specifier: ^5.2.6
         version: 5.2.7
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
+        specifier: ^0.20.0
+        version: 0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       '@shikijs/markdown-it':
         specifier: ^3.12.2
         version: 3.13.0
@@ -1194,8 +1194,8 @@ packages:
     resolution: {integrity: sha512-xhfYPXoV5Dy4UkY0D+v2KkwvnDfiA/8Mt3sWCGI/hM03NsYIH8ZaG6QzS9x7pje5vHZBZJ2v6VRFVTWACnqcmQ==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  '@ota-meshi/eslint-plugin@0.19.0':
-    resolution: {integrity: sha512-pumFXOvJFoto805a4taS07Et7dJ/OU5TGNRqt8pgGOa3/nx5kWlxp5Q3liHow4MU99t2J4T+U7NRqpyj87tBOg==}
+  '@ota-meshi/eslint-plugin@0.20.0':
+    resolution: {integrity: sha512-85+kofUl2kHVRaITvU/3UMnKapYPlqZBqFoksJMzVWB5HXVOTuG+EutOpznoG3LwWJzUiz7v6dNr77G/0IR9Kw==}
     engines: {node: ^18.18.0||^20.9.0||>=21.1.0}
     peerDependencies:
       '@eslint-community/eslint-plugin-eslint-comments': ^4.3.0
@@ -2519,11 +2519,13 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@11.0.3:
     resolution: {integrity: sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globals@14.0.0:
@@ -4909,7 +4911,7 @@ snapshots:
     dependencies:
       which: 4.0.0
 
-  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))':
+  '@ota-meshi/eslint-plugin@0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.5.0(eslint@9.39.1(jiti@2.6.1))
       '@eslint/js': 9.39.1
