@@ -226,14 +226,7 @@ export default [
 ## Editor Integrations
 
 **Visual Studio Code**\
-Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).\
-Configure `.svelte` files in `.vscode/settings.json`:
-
-```json
-{
-  "eslint.validate": ["javascript", "javascriptreact", "svelte"]
-}
-```
+Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
 <!--USAGE_GUIDE_END-->
 <!--USAGE_SECTION_END-->
