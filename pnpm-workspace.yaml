@@ -21,7 +21,7 @@ minimumReleaseAgeExclude:
   - zimmerframe
   - eslint
   - '@eslint/*'
-	- eslint-visitor-keys
+  - eslint-visitor-keys
 
 packages:
   - 'packages/*'
