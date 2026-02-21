@@ -22,6 +22,7 @@ minimumReleaseAgeExclude:
   - eslint
   - '@eslint/*'
   - eslint-visitor-keys
+  - eslint-scope
 
 packages:
   - 'packages/*'
