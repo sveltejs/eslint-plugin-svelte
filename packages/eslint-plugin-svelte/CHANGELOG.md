@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.15.1
+
+### Patch Changes
+
+- [#1467](https://github.com/sveltejs/eslint-plugin-svelte/pull/1467) [`d81b556`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d81b556a4ab9399db1a4c464fb647f9bdf97aa32) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed nullish link shorthands not being allowed
+
 ## 3.15.0
 
 ### Minor Changes
