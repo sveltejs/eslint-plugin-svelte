@@ -38,7 +38,11 @@ export default createRule('no-top-level-browser-globals', {
 		const maybeGuards: MaybeGuard[] = [];
 
 		const functions: (TSESTree.FunctionLike | AST.SvelteSnippetBlock)[] = [];
-		const typeAnnotations: (TSESTree.TypeNode | TSESTree.TSTypeAnnotation)[] = [];
+		const typeAnnotations: (
+			| TSESTree.TypeNode
+			| TSESTree.TSTypeAnnotation
+			| TSESTree.TSTypeParameterInstantiation
+		)[] = [];
 
 		function enterFunction(node: TSESTree.FunctionLike | AST.SvelteSnippetBlock) {
 			if (isTopLevelLocation(node)) {
@@ -46,7 +50,7 @@ export default createRule('no-top-level-browser-globals', {
 			}
 		}
 
-		function enterTypeAnnotation(node: TSESTree.TypeNode | TSESTree.TSTypeAnnotation) {
+		function enterTypeAnnotation(node: TSESTree.TypeNode | TSESTree.TSTypeParameterInstantiation) {
 			if (!isInTypeAnnotation(node)) {
 				typeAnnotations.push(node);
 			}
@@ -123,6 +127,7 @@ export default createRule('no-top-level-browser-globals', {
 			':function': enterFunction,
 			SvelteSnippetBlock: enterFunction,
 			'*.typeAnnotation': enterTypeAnnotation,
+			'*.typeArguments': enterTypeAnnotation,
 			MetaProperty: enterMetaProperty,
 			'Program:exit': verifyGlobalReferences
 		};
