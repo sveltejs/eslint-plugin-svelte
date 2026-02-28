@@ -82,7 +82,7 @@
     "@types/json-schema": "^7.0.15",
     "@types/less": "^3.0.8",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.18.0",
+    "@types/node": "^24.0.0",
     "@types/postcss-safe-parser": "^5.0.4",
     "@types/semver": "^7.7.0",
     "@types/stylus": "^0.48.43",
