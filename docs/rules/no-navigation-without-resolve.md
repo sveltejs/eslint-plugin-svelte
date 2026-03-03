@@ -38,6 +38,7 @@ This rule ensures internal navigation using HTML `<a>` tags, SvelteKit's `goto()
 <a href={resolve('/foo/')}>Click me!</a>
 <a href="https://svelte.dev">Click me!</a>
 <a href={someURL} rel="external">Click me!</a>
+<a href="#top">Click me!</a>
 ```
 
 ```svelte
