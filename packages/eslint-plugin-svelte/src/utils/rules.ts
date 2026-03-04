@@ -18,6 +18,7 @@ import htmlSelfClosing from '../rules/html-self-closing.js';
 import indent from '../rules/indent.js';
 import infiniteReactiveLoop from '../rules/infinite-reactive-loop.js';
 import maxAttributesPerLine from '../rules/max-attributes-per-line.js';
+import maxLinesPerBlock from '../rules/max-lines-per-block.js';
 import mustacheSpacing from '../rules/mustache-spacing.js';
 import noAddEventListener from '../rules/no-add-event-listener.js';
 import noAtDebugTags from '../rules/no-at-debug-tags.js';
@@ -99,6 +100,7 @@ export const rules = [
 	indent,
 	infiniteReactiveLoop,
 	maxAttributesPerLine,
+	maxLinesPerBlock,
 	mustacheSpacing,
 	noAddEventListener,
 	noAtDebugTags,
