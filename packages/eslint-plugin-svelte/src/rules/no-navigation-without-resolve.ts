@@ -273,7 +273,7 @@ function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): 
 
 function isValueAllowed(
 	ctx: FindVariableContext,
-	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	value: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
 	config: {
 		allowAbsolute?: boolean;
