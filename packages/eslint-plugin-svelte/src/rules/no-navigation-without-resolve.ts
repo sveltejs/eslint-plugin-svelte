@@ -293,6 +293,12 @@ function isValueAllowed(
 			return isValueAllowed(ctx, variable.identifiers[0].parent.init, resolveReferences, config);
 		}
 	}
+	if (value.type === 'ConditionalExpression') {
+		return (
+			isValueAllowed(ctx, value.consequent, resolveReferences, config) &&
+			isValueAllowed(ctx, value.alternate, resolveReferences, config)
+		);
+	}
 	if (
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
