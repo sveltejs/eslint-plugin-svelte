@@ -15,6 +15,28 @@ This rule enforces a maximum number of lines per block (`<script>`, `<style>`, o
 
 ESLint's core `max-lines` rule counts all lines in a `.svelte` file including CSS in `<style>` blocks, which penalizes components for styling rather than logic complexity. This rule allows limiting each block independently — for example, enforcing script and template limits while leaving style unchecked.
 
+## :bulb: Usage Example
+
+If ESLint's `max-lines` rule triggers on your Svelte components because of large `<style>` blocks, you can replace it with this rule to check only the blocks that matter:
+
+```jsonc
+{
+  // Before: counts ALL lines including CSS
+  // "max-lines": ["error", { "max": 300 }]
+
+  // After: only checks script and template, ignores style
+  "svelte/max-lines-per-block": [
+    "error",
+    {
+      "script": 300,
+      "template": 200,
+      "skipBlankLines": true,
+      "skipComments": true
+    }
+  ]
+}
+```
+
 ## :wrench: Options
 
 ```json

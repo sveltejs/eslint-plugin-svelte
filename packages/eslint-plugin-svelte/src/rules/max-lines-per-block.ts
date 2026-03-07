@@ -1,48 +1,84 @@
 import type { AST } from 'svelte-eslint-parser';
+import { Input } from 'postcss';
+import tokenize from 'postcss/lib/tokenize';
 import { createRule } from '../utils/index.js';
 
-/** Collect 1-indexed line numbers occupied by CSS block comments within a range. */
-function collectCssCommentLines(
+/** Check if a comment occupies the entire source line (matching ESLint core max-lines behavior). */
+function isFullLineComment(line: string, lineNumber: number, loc: AST.SourceLocation): boolean {
+	return (
+		(loc.start.line < lineNumber || !line.slice(0, loc.start.column).trim()) &&
+		(loc.end.line > lineNumber || !line.slice(loc.end.column).trim())
+	);
+}
+
+/** Collect line numbers where AST comments occupy the full line. */
+function collectAstCommentLines(
+	comments: Array<{ loc: AST.SourceLocation }>,
 	sourceLines: string[],
 	startLine: number,
 	endLine: number
 ): Set<number> {
 	const lines = new Set<number>();
-	let inComment = false;
-
-	for (let lineNum = startLine; lineNum <= endLine; lineNum++) {
-		const line = sourceLines[lineNum - 1];
-		let hasCode = false;
-		let col = 0;
-
-		while (col < line.length) {
-			if (inComment) {
-				const closeIdx = line.indexOf('*/', col);
-				if (closeIdx === -1) break;
-				inComment = false;
-				col = closeIdx + 2;
-			} else {
-				const openIdx = line.indexOf('/*', col);
-				if (openIdx === -1) {
-					if (line.substring(col).trim()) hasCode = true;
-					break;
-				}
-				if (line.substring(col, openIdx).trim()) hasCode = true;
-				inComment = true;
-				col = openIdx + 2;
+	for (const comment of comments) {
+		if (comment.loc.end.line < startLine || comment.loc.start.line > endLine) continue;
+		for (
+			let i = Math.max(comment.loc.start.line, startLine);
+			i <= Math.min(comment.loc.end.line, endLine);
+			i++
+		) {
+			if (isFullLineComment(sourceLines[i - 1], i, comment.loc)) {
+				lines.add(i);
 			}
 		}
-
-		if (!hasCode) lines.add(lineNum);
 	}
-
 	return lines;
 }
 
-/**
- * Count inner content lines of a block (excluding opening/closing tag lines),
- * optionally skipping blank lines and lines identified as comments.
- */
+/** Collect line numbers where CSS comments occupy the full line, using postcss tokenizer. */
+function collectCssCommentLines(
+	sourceLines: string[],
+	startLine: number,
+	endLine: number
+): Set<number> {
+	const result = new Set<number>();
+	const cssText = sourceLines.slice(startLine - 1, endLine).join('\n');
+	if (!cssText.trim()) return result;
+
+	try {
+		const input = new Input(cssText);
+		const tk = tokenize(input);
+		const commentLines = new Set<number>();
+		const codeLines = new Set<number>();
+
+		let token;
+		while ((token = tk.nextToken())) {
+			if (token[2] == null) continue;
+			const startPos = input.fromOffset(token[2]);
+			if (!startPos) continue;
+			const tokenLine = startPos.line + startLine - 1;
+
+			if (token[0] === 'comment') {
+				const endPos = token[3] != null ? input.fromOffset(token[3]) : null;
+				const commentEndLine = endPos ? endPos.line + startLine - 1 : tokenLine;
+				for (let i = tokenLine; i <= commentEndLine; i++) {
+					commentLines.add(i);
+				}
+			} else {
+				codeLines.add(tokenLine);
+			}
+		}
+
+		for (const line of commentLines) {
+			if (!codeLines.has(line)) result.add(line);
+		}
+	} catch {
+		// Malformed CSS — don't skip any lines
+	}
+
+	return result;
+}
+
+/** Count inner content lines, skipping blanks and/or comment lines. */
 function countLines(
 	sourceLines: string[],
 	startLine: number,
@@ -60,26 +96,6 @@ function countLines(
 	}
 
 	return count;
-}
-
-/** Collect 1-indexed line numbers covered by AST comment nodes within a range. */
-function collectAstCommentLines(
-	comments: AST.Comment[],
-	startLine: number,
-	endLine: number
-): Set<number> {
-	const lines = new Set<number>();
-	for (const comment of comments) {
-		if (comment.loc.end.line < startLine || comment.loc.start.line > endLine) continue;
-		for (
-			let i = Math.max(comment.loc.start.line, startLine);
-			i <= Math.min(comment.loc.end.line, endLine);
-			i++
-		) {
-			lines.add(i);
-		}
-	}
-	return lines;
 }
 
 function isSvelteOptions(node: AST.SvelteElement): boolean {
@@ -149,6 +165,7 @@ export default createRule('max-lines-per-block', {
 				const commentLines = skipComments
 					? collectAstCommentLines(
 							sourceCode.getAllComments(),
+							sourceCode.lines,
 							node.loc.start.line + 1,
 							node.loc.end.line - 1
 						)
@@ -222,17 +239,19 @@ export default createRule('max-lines-per-block', {
 					}
 				}
 
-				// Collect comment lines for template region
+				// Collect full-line comment lines for template region
 				const commentLines = new Set<number>();
 				if (skipComments) {
-					for (const node of htmlCommentNodes) {
-						for (let i = node.loc.start.line; i <= node.loc.end.line; i++) {
-							if (!excludedLines.has(i)) commentLines.add(i);
-						}
-					}
-					for (const comment of sourceCode.getAllComments()) {
+					const allComments: Array<{ loc: AST.SourceLocation }> = [
+						...htmlCommentNodes,
+						...sourceCode.getAllComments()
+					];
+					for (const comment of allComments) {
 						for (let i = comment.loc.start.line; i <= comment.loc.end.line; i++) {
-							if (!excludedLines.has(i)) commentLines.add(i);
+							if (excludedLines.has(i)) continue;
+							if (isFullLineComment(sourceCode.lines[i - 1], i, comment.loc)) {
+								commentLines.add(i);
+							}
 						}
 					}
 				}
