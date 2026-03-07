@@ -333,12 +333,12 @@ function isValueAllowed(
 		);
 	}
 	if (
-		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
+		(config.allowAbsolute && expressionIsAbsoluteUrl(value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
-		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
+		(config.allowFragment && expressionStartsWith(value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
 		expressionIsResolvedPathname(value, tsTools) ||
-		expressionIsResolveCall(ctx, value, resolveReferences)
+		expressionIsResolveCall(value, resolveReferences)
 	) {
 		return true;
 	}
@@ -383,32 +383,16 @@ function expressionIsResolvedPathname(
 }
 
 function expressionIsResolveCall(
-	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>
 ): boolean {
-	if (
+	return (
 		node.type === 'CallExpression' &&
 		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
 			(node.callee.type === 'MemberExpression' &&
 				node.callee.property.type === 'Identifier' &&
 				resolveReferences.has(node.callee.property)))
-	) {
-		return true;
-	}
-	if (node.type !== 'Identifier') {
-		return false;
-	}
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionIsResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
+	);
 }
 
 function expressionIsEmpty(
@@ -437,39 +421,32 @@ function expressionIsNullish(
 }
 
 function expressionIsAbsoluteUrl(
-	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
 ): boolean {
 	switch (node.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsAbsoluteUrl(ctx, node);
+			return binaryExpressionIsAbsoluteUrl(node);
 		case 'Literal':
 			return typeof node.value === 'string' && valueIsAbsoluteUrl(node.value);
 		case 'SvelteLiteral':
 			return valueIsAbsoluteUrl(node.value);
 		case 'TemplateLiteral':
-			return templateLiteralIsAbsoluteUrl(ctx, node);
+			return templateLiteralIsAbsoluteUrl(node);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionIsAbsoluteUrl(
-	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression
-): boolean {
+function binaryExpressionIsAbsoluteUrl(node: TSESTree.BinaryExpression): boolean {
 	return (
 		node.operator === '+' &&
-		(expressionIsAbsoluteUrl(ctx, node.left) || expressionIsAbsoluteUrl(ctx, node.right))
+		(expressionIsAbsoluteUrl(node.left) || expressionIsAbsoluteUrl(node.right))
 	);
 }
 
-function templateLiteralIsAbsoluteUrl(
-	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral
-): boolean {
+function templateLiteralIsAbsoluteUrl(node: TSESTree.TemplateLiteral): boolean {
 	return (
-		node.expressions.some((expression) => expressionIsAbsoluteUrl(ctx, expression)) ||
+		node.expressions.some((expression) => expressionIsAbsoluteUrl(expression)) ||
 		node.quasis.some((quasi) => valueIsAbsoluteUrl(quasi.value.raw))
 	);
 }
@@ -479,7 +456,6 @@ function valueIsAbsoluteUrl(node: string): boolean {
 }
 
 function expressionStartsWith(
-	ctx: FindVariableContext,
 	node:
 		| TSESTree.CallExpressionArgument
 		| TSESTree.Expression
@@ -489,9 +465,7 @@ function expressionStartsWith(
 ): boolean {
 	switch (node.type) {
 		case 'BinaryExpression':
-			return binaryExpressionStartsWith(ctx, node, prefix);
-		case 'Identifier':
-			return identifierStartsWith(ctx, node, prefix);
+			return binaryExpressionStartsWith(node, prefix);
 		case 'Literal':
 			return typeof node.value === 'string' && node.value.startsWith(prefix);
 		case 'SvelteLiteral':
@@ -499,44 +473,19 @@ function expressionStartsWith(
 		case 'TemplateElement':
 			return node.value.raw.startsWith(prefix);
 		case 'TemplateLiteral':
-			return templateLiteralStartsWith(ctx, node, prefix);
+			return templateLiteralStartsWith(node, prefix);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression,
-	prefix: string
-): boolean {
-	return node.operator === '+' && expressionStartsWith(ctx, node.left, prefix);
+function binaryExpressionStartsWith(node: TSESTree.BinaryExpression, prefix: string): boolean {
+	return node.operator === '+' && expressionStartsWith(node.left, prefix);
 }
 
-function identifierStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier,
-	prefix: string
-): boolean {
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionStartsWith(ctx, variable.identifiers[0].parent.init, prefix);
-}
-
-function templateLiteralStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral,
-	prefix: string
-): boolean {
+function templateLiteralStartsWith(node: TSESTree.TemplateLiteral, prefix: string): boolean {
 	return (
-		(node.expressions.length >= 1 && expressionStartsWith(ctx, node.expressions[0], prefix)) ||
-		(node.quasis.length >= 1 && expressionStartsWith(ctx, node.quasis[0], prefix))
+		(node.expressions.length >= 1 && expressionStartsWith(node.expressions[0], prefix)) ||
+		(node.quasis.length >= 1 && expressionStartsWith(node.quasis[0], prefix))
 	);
 }
