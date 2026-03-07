@@ -1,74 +1,98 @@
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 
-/**
- * Check whether a line of source text is blank (whitespace-only).
- */
-function isBlankLine(text: string): boolean {
-	return text.trim().length === 0;
+/** Collect 1-indexed line numbers occupied by CSS block comments within a range. */
+function collectCssCommentLines(
+	sourceLines: string[],
+	startLine: number,
+	endLine: number
+): Set<number> {
+	const lines = new Set<number>();
+	let inComment = false;
+
+	for (let lineNum = startLine; lineNum <= endLine; lineNum++) {
+		const line = sourceLines[lineNum - 1];
+		let hasCode = false;
+		let col = 0;
+
+		while (col < line.length) {
+			if (inComment) {
+				const closeIdx = line.indexOf('*/', col);
+				if (closeIdx === -1) break;
+				inComment = false;
+				col = closeIdx + 2;
+			} else {
+				const openIdx = line.indexOf('/*', col);
+				if (openIdx === -1) {
+					if (line.substring(col).trim()) hasCode = true;
+					break;
+				}
+				if (line.substring(col, openIdx).trim()) hasCode = true;
+				inComment = true;
+				col = openIdx + 2;
+			}
+		}
+
+		if (!hasCode) lines.add(lineNum);
+	}
+
+	return lines;
 }
 
 /**
- * Check whether a line of source text appears to be a comment line.
- *
- * Covers JS/TS single-line comments (`//`), block comment delimiters and
- * continuation lines, HTML/Svelte comments (`<!-- -->`),
- * and CSS comments (same block-comment syntax).
- *
- * This is intentionally a heuristic — matching ESLint core `max-lines`
- * behaviour, which also uses a line-based heuristic rather than AST analysis
- * for comment detection.
+ * Count inner content lines of a block (excluding opening/closing tag lines),
+ * optionally skipping blank lines and lines identified as comments.
  */
-function isCommentLine(text: string): boolean {
-	const trimmed = text.trim();
-	return (
-		trimmed.startsWith('//') ||
-		trimmed.startsWith('/*') ||
-		trimmed.startsWith('*') ||
-		trimmed.startsWith('*/') ||
-		trimmed.startsWith('<!--') ||
-		trimmed.endsWith('-->')
-	);
-}
-
-/**
- * Count the inner content lines of a block node (excluding opening/closing
- * tag lines), optionally skipping blank lines and comment lines.
- */
-function countInnerLines(
+function countLines(
 	sourceLines: string[],
 	startLine: number,
 	endLine: number,
 	skipBlankLines: boolean,
-	skipComments: boolean
+	commentLines: Set<number>
 ): number {
-	// Single-line or empty block: <style></style> or <style>\n</style>
-	if (endLine - startLine <= 1) {
-		return 0;
-	}
+	if (endLine - startLine <= 1) return 0;
 
 	let count = 0;
-	// Iterate over inner lines only (exclude opening/closing tag lines)
 	for (let i = startLine + 1; i < endLine; i++) {
-		const lineText = sourceLines[i - 1]; // sourceLines is 0-indexed, lines are 1-indexed
-		if (skipBlankLines && isBlankLine(lineText)) {
-			continue;
-		}
-		if (skipComments && isCommentLine(lineText)) {
-			continue;
-		}
+		if (skipBlankLines && sourceLines[i - 1].trim().length === 0) continue;
+		if (commentLines.has(i)) continue;
 		count++;
 	}
 
 	return count;
 }
 
+/** Collect 1-indexed line numbers covered by AST comment nodes within a range. */
+function collectAstCommentLines(
+	comments: AST.Comment[],
+	startLine: number,
+	endLine: number
+): Set<number> {
+	const lines = new Set<number>();
+	for (const comment of comments) {
+		if (comment.loc.end.line < startLine || comment.loc.start.line > endLine) continue;
+		for (
+			let i = Math.max(comment.loc.start.line, startLine);
+			i <= Math.min(comment.loc.end.line, endLine);
+			i++
+		) {
+			lines.add(i);
+		}
+	}
+	return lines;
+}
+
+function isSvelteOptions(node: AST.SvelteElement): boolean {
+	return node.name.type === 'SvelteName' && node.name.name === 'svelte:options';
+}
+
 export default createRule('max-lines-per-block', {
 	meta: {
 		docs: {
 			description: 'enforce maximum number of lines in svelte component blocks',
-			category: 'Best Practices',
-			recommended: false
+			category: 'Stylistic Issues',
+			recommended: false,
+			conflictWithPrettier: false
 		},
 		schema: [
 			{
@@ -111,19 +135,31 @@ export default createRule('max-lines-per-block', {
 		const skipComments: boolean = options.skipComments ?? false;
 
 		const sourceCode = context.sourceCode;
+		const htmlCommentNodes: AST.SvelteHTMLComment[] = [];
+		const emptySet = new Set<number>();
 
 		return {
-			SvelteScriptElement(node: AST.SvelteScriptElement) {
-				if (scriptMax == null) {
-					return;
-				}
+			SvelteHTMLComment(node: AST.SvelteHTMLComment) {
+				htmlCommentNodes.push(node);
+			},
 
-				const lineCount = countInnerLines(
+			SvelteScriptElement(node: AST.SvelteScriptElement) {
+				if (scriptMax == null) return;
+
+				const commentLines = skipComments
+					? collectAstCommentLines(
+							sourceCode.getAllComments(),
+							node.loc.start.line + 1,
+							node.loc.end.line - 1
+						)
+					: emptySet;
+
+				const lineCount = countLines(
 					sourceCode.lines,
 					node.loc.start.line,
 					node.loc.end.line,
 					skipBlankLines,
-					skipComments
+					commentLines
 				);
 
 				if (lineCount > scriptMax) {
@@ -140,16 +176,18 @@ export default createRule('max-lines-per-block', {
 			},
 
 			SvelteStyleElement(node: AST.SvelteStyleElement) {
-				if (styleMax == null) {
-					return;
-				}
+				if (styleMax == null) return;
 
-				const lineCount = countInnerLines(
+				const commentLines = skipComments
+					? collectCssCommentLines(sourceCode.lines, node.loc.start.line + 1, node.loc.end.line - 1)
+					: emptySet;
+
+				const lineCount = countLines(
 					sourceCode.lines,
 					node.loc.start.line,
 					node.loc.end.line,
 					skipBlankLines,
-					skipComments
+					commentLines
 				);
 
 				if (lineCount > styleMax) {
@@ -166,18 +204,17 @@ export default createRule('max-lines-per-block', {
 			},
 
 			'Program:exit'(program: AST.SvelteProgram) {
-				if (templateMax == null) {
-					return;
-				}
+				if (templateMax == null) return;
 
 				const totalLines = sourceCode.lines.length;
 
-				// Collect line ranges occupied by <script> and <style> blocks
+				// Exclude lines occupied by <script>, <style>, and <svelte:options>
 				const excludedLines = new Set<number>();
 				for (const child of program.body) {
 					if (
 						child.type === 'SvelteScriptElement' ||
-						child.type === 'SvelteStyleElement'
+						child.type === 'SvelteStyleElement' ||
+						(child.type === 'SvelteElement' && isSvelteOptions(child))
 					) {
 						for (let i = child.loc.start.line; i <= child.loc.end.line; i++) {
 							excludedLines.add(i);
@@ -185,24 +222,30 @@ export default createRule('max-lines-per-block', {
 					}
 				}
 
-				// Count template lines (everything not inside script/style blocks)
+				// Collect comment lines for template region
+				const commentLines = new Set<number>();
+				if (skipComments) {
+					for (const node of htmlCommentNodes) {
+						for (let i = node.loc.start.line; i <= node.loc.end.line; i++) {
+							if (!excludedLines.has(i)) commentLines.add(i);
+						}
+					}
+					for (const comment of sourceCode.getAllComments()) {
+						for (let i = comment.loc.start.line; i <= comment.loc.end.line; i++) {
+							if (!excludedLines.has(i)) commentLines.add(i);
+						}
+					}
+				}
+
 				let templateLineCount = 0;
 				for (let i = 1; i <= totalLines; i++) {
-					if (excludedLines.has(i)) {
-						continue;
-					}
-					const lineText = sourceCode.lines[i - 1];
-					if (skipBlankLines && isBlankLine(lineText)) {
-						continue;
-					}
-					if (skipComments && isCommentLine(lineText)) {
-						continue;
-					}
+					if (excludedLines.has(i)) continue;
+					if (skipBlankLines && sourceCode.lines[i - 1].trim().length === 0) continue;
+					if (commentLines.has(i)) continue;
 					templateLineCount++;
 				}
 
 				if (templateLineCount > templateMax) {
-					// Report on the first template node for meaningful location
 					const firstTemplateNode = program.body.find(
 						(
 							child
@@ -211,7 +254,8 @@ export default createRule('max-lines-per-block', {
 							AST.SvelteScriptElement | AST.SvelteStyleElement
 						> =>
 							child.type !== 'SvelteScriptElement' &&
-							child.type !== 'SvelteStyleElement'
+							child.type !== 'SvelteStyleElement' &&
+							!(child.type === 'SvelteElement' && isSvelteOptions(child))
 					);
 					if (firstTemplateNode) {
 						context.report({

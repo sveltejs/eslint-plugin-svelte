@@ -33,7 +33,7 @@ ESLint's core `max-lines` rule counts all lines in a `.svelte` file including CS
 ```
 
 - `script` ... Maximum number of inner lines in `<script>` blocks. Omit to skip checking.
-- `template` ... Maximum number of lines in the template (markup) region. Omit to skip checking.
+- `template` ... Maximum number of lines in the template (markup) region. Lines inside `<script>`, `<style>`, and `<svelte:options>` are excluded. Omit to skip checking.
 - `style` ... Maximum number of inner lines in `<style>` blocks. Omit to skip checking.
 - `skipBlankLines` ... Ignore blank (whitespace-only) lines when counting. Default: `false`.
 - `skipComments` ... Ignore comment lines when counting. Default: `false`.
