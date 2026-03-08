@@ -14,7 +14,7 @@ since: 'v0.0.13'
 
 ## :book: Rule Details
 
-This rule is a system rule for working the this plugin. This rule does not report any errors, but make sure the rule is enabled for the this plugin to work properly.
+This rule is a system rule to make the plugin work. This rule does not report any errors, but make sure the rule is enabled for this plugin to work properly.
 
 ## :wrench: Options
 
