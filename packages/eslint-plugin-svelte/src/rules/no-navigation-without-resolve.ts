@@ -95,12 +95,14 @@ export default createRule('no-navigation-without-resolve', {
 					checkLinkAttribute(context, node, node.value, resolveReferences);
 				},
 				SvelteAttribute(node) {
-					checkLinkAttribute(
-						context,
-						node,
-						node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
-						resolveReferences
-					);
+					if (node.value.length > 0) {
+						checkLinkAttribute(
+							context,
+							node,
+							node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
+							resolveReferences
+						);
+					}
 				}
 			})
 		};
