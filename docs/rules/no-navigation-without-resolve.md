@@ -14,7 +14,7 @@ since: 'v3.12.0'
 
 ## :book: Rule Details
 
-This rule ensures internal navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` use the `resolve()` function. `<a>` tags will skip this check for external navigation using an abosolute URL or `rel="external"`. `resolve()` ensures the base path is prefixed and pathname is type-checked. For programmatic external navigation, using `window.location`.
+This rule ensures internal navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` use the `resolve()` function. `<a>` tags will skip this check for external navigation using an absolute URL or `rel="external"`. `resolve()` ensures the base path is prefixed and pathname is type-checked. For programmatic external navigation, using `window.location` is recommended.
 
 <!--eslint-skip-->
 
