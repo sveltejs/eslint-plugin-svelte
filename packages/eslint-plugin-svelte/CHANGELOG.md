@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.15.2
+
+### Patch Changes
+
+- [#1494](https://github.com/sveltejs/eslint-plugin-svelte/pull/1494) [`5d556c8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5d556c86f8a532eec560fabf6f0c8d47a3db5a1f) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed a rule crash when encountering an attribute without value
+
 ## 3.15.1
 
 ### Patch Changes
