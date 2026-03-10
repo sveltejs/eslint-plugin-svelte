@@ -1,5 +1,19 @@
 # eslint-plugin-svelte
 
+## 3.15.2
+
+### Patch Changes
+
+- [#1494](https://github.com/sveltejs/eslint-plugin-svelte/pull/1494) [`5d556c8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5d556c86f8a532eec560fabf6f0c8d47a3db5a1f) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed a rule crash when encountering an attribute without value
+
+## 3.15.1
+
+### Patch Changes
+
+- [#1477](https://github.com/sveltejs/eslint-plugin-svelte/pull/1477) [`8c5f51e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8c5f51efbf54e4d8fcbd7e167321e8c0bc4713ab) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-top-level-browser-globals): false positive when browser globals appear inside TypeScript generic type parameters (e.g. `$state<HTMLElement>(...)`).
+
+- [#1467](https://github.com/sveltejs/eslint-plugin-svelte/pull/1467) [`d81b556`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d81b556a4ab9399db1a4c464fb647f9bdf97aa32) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed nullish link shorthands not being allowed
+
 ## 3.15.0
 
 ### Minor Changes
