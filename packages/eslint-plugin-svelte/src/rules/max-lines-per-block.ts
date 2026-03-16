@@ -13,7 +13,7 @@ function isFullLineComment(line: string, lineNumber: number, loc: AST.SourceLoca
 
 /** Collect line numbers where AST comments occupy the full line. */
 function collectAstCommentLines(
-	comments: Array<{ loc: AST.SourceLocation }>,
+	comments: { loc: AST.SourceLocation }[],
 	sourceLines: string[],
 	startLine: number,
 	endLine: number
@@ -242,7 +242,7 @@ export default createRule('max-lines-per-block', {
 				// Collect full-line comment lines for template region
 				const commentLines = new Set<number>();
 				if (skipComments) {
-					const allComments: Array<{ loc: AST.SourceLocation }> = [
+					const allComments: { loc: AST.SourceLocation }[] = [
 						...htmlCommentNodes,
 						...sourceCode.getAllComments()
 					];

@@ -9,6 +9,8 @@ description: 'enforce maximum number of lines in svelte component blocks'
 
 > enforce maximum number of lines in svelte component blocks
 
+- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
+
 ## :book: Rule Details
 
 This rule enforces a maximum number of lines per block (`<script>`, `<style>`, or template) in Svelte single-file components, in order to aid in maintainability and reduce complexity.

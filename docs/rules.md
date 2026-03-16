@@ -92,6 +92,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                         | :wrench: |
 | [svelte/indent](./rules/indent.md)                                                                       | enforce consistent indentation                                                     | :wrench: |
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
+| [svelte/max-lines-per-block](./rules/max-lines-per-block.md)                                             | enforce maximum number of lines in svelte component blocks                         |          |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
 | [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
