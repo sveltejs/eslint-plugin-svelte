@@ -1,0 +1,4 @@
+- message: "<script> block has too many lines (5). Maximum allowed is 3."
+  line: 1
+  column: 1
+  suggestions: null

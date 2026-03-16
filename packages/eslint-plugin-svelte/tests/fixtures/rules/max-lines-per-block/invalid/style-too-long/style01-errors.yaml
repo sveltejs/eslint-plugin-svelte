@@ -1,0 +1,4 @@
+- message: "<style> block has too many lines (7). Maximum allowed is 5."
+  line: 7
+  column: 1
+  suggestions: null

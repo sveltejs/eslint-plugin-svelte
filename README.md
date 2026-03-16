@@ -341,6 +341,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/html-self-closing](https://sveltejs.github.io/eslint-plugin-svelte/rules/html-self-closing/) | enforce self-closing style | :wrench: |
 | [svelte/indent](https://sveltejs.github.io/eslint-plugin-svelte/rules/indent/) | enforce consistent indentation | :wrench: |
 | [svelte/max-attributes-per-line](https://sveltejs.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/) | enforce the maximum number of attributes per line | :wrench: |
+| [svelte/max-lines-per-block](https://sveltejs.github.io/eslint-plugin-svelte/rules/max-lines-per-block/) | enforce maximum number of lines in svelte component blocks |  |
 | [svelte/mustache-spacing](https://sveltejs.github.io/eslint-plugin-svelte/rules/mustache-spacing/) | enforce unified spacing in mustache | :wrench: |
 | [svelte/no-extra-reactive-curlies](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies/) | disallow wrapping single reactive statements in curly braces | :bulb: |
 | [svelte/no-restricted-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/) | disallow specific HTML elements |  |
