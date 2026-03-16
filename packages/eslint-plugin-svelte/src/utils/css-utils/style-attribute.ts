@@ -66,8 +66,9 @@ export interface SvelteStyleRoot<E extends SvelteStyleInterpolation = SvelteStyl
 	type: 'root';
 	nodes: (SvelteStyleChildNode<E> | SvelteStyleInline<E>)[];
 }
-export interface SvelteStyleInline<E extends SvelteStyleInterpolation = SvelteStyleInterpolation>
-	extends SvelteStyleNode<E> {
+export interface SvelteStyleInline<
+	E extends SvelteStyleInterpolation = SvelteStyleInterpolation
+> extends SvelteStyleNode<E> {
 	type: 'inline';
 	node: E;
 	getInlineStyle(node: TSESTree.Expression): SvelteStyleRoot<TSESTree.Expression> | null;
