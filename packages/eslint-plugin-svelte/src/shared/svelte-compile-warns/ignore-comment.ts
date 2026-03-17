@@ -3,6 +3,9 @@ import type { RuleContext } from '../../types.js';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore\s+/;
 
+/** Matches parenthetical notes in svelte-ignore comments, e.g. "(because of reasons)" */
+const PARENTHETICAL_NOTE_PATTERN = /\([^)]*\)/gu;
+
 /**
  * Map of legacy code -> new code
  * See https://github.com/sveltejs/svelte/blob/c9202a889612df3c2fcb369096a5573668be99d6/packages/svelte/src/compiler/utils/extract_svelte_ignore.js#L6
@@ -92,11 +95,16 @@ function extractSvelteIgnore(
 ): IgnoreItem[] | null {
 	const start = startIndex + ignoreStart;
 	const results: IgnoreItem[] = [];
+	// Replace parenthetical notes (e.g., "(because of reasons)") with spaces of the same length
+	// to preserve character positions while preventing note words from being treated as rule names.
+	const processedCodeList = codeList.replace(PARENTHETICAL_NOTE_PATTERN, (match) =>
+		' '.repeat(match.length)
+	);
 	const separatorPattern = /\s*[\s,]\s*/g;
-	const separators = codeList.matchAll(separatorPattern);
+	const separators = processedCodeList.matchAll(separatorPattern);
 	let lastSeparatorEnd = 0;
 	for (const separator of separators) {
-		const code = codeList.slice(lastSeparatorEnd, separator.index);
+		const code = processedCodeList.slice(lastSeparatorEnd, separator.index);
 		if (code) {
 			results.push({
 				code,
@@ -108,7 +116,7 @@ function extractSvelteIgnore(
 		lastSeparatorEnd = separator.index + separator[0].length;
 	}
 	if (results.length === 0) {
-		const code = codeList;
+		const code = processedCodeList;
 		results.push({
 			code,
 			codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
@@ -122,5 +130,5 @@ function extractSvelteIgnore(
 
 /** Checks whether given comment has missing code svelte-ignore */
 function hasMissingCodeIgnore(codeList: string) {
-	return !codeList.trim();
+	return !codeList.replace(PARENTHETICAL_NOTE_PATTERN, '').trim();
 }
