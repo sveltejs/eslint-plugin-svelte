@@ -10,7 +10,7 @@ export default createRule('no-navigation-without-resolve', {
 	meta: {
 		docs: {
 			description:
-				'disallow using navigation (links, goto, pushState, replaceState) without a resolve()',
+				'disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()`',
 			category: 'SvelteKit',
 			recommended: true
 		},

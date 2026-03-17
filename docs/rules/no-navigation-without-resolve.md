@@ -2,7 +2,7 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-navigation-without-resolve'
-description: 'disallow internal navigation (links, goto, pushState, replaceState) without a resolve()'
+description: 'disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()`'
 since: 'v3.12.0'
 ---
 
