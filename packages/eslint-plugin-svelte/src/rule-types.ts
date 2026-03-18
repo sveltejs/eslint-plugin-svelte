@@ -199,7 +199,7 @@ export interface RuleOptions {
    */
   'svelte/no-navigation-without-base'?: Linter.RuleEntry<SvelteNoNavigationWithoutBase>
   /**
-   * disallow using navigation (links, goto, pushState, replaceState) without a resolve()
+   * disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/
    */
   'svelte/no-navigation-without-resolve'?: Linter.RuleEntry<SvelteNoNavigationWithoutResolve>
