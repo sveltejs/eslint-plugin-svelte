@@ -25,22 +25,22 @@ Use the `eslint.config.js` file to configure rules. For more details, see the [E
 
 ```js
 // eslint.config.js
+import path from 'node:path';
+import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import svelte from 'eslint-plugin-svelte';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import svelteConfig from './svelte.config.js';
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
+
+export default defineConfig([
+  includeIgnoreFile(gitignorePath),
   js.configs.recommended,
-  ...svelte.configs.recommended,
+  svelte.configs.recommended,
   {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node // Add this if you are using SvelteKit in non-SPA mode
-      }
-    }
+    languageOptions: { globals: { ...globals.browser, ...globals.node } }
   },
   {
     files: ['**/*.svelte', '**/*.svelte.js'],
@@ -63,7 +63,7 @@ export default [
       // 'svelte/rule-name': 'error'
     }
   }
-];
+]);
 ```
 
 #### TypeScript project
@@ -74,22 +74,28 @@ npm install --save-dev typescript-eslint
 
 ```js
 // eslint.config.js
+import path from 'node:path';
+import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import svelte from 'eslint-plugin-svelte';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 
-export default ts.config(
+const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
+
+export default defineConfig(
+  includeIgnoreFile(gitignorePath),
   js.configs.recommended,
-  ...ts.configs.recommended,
-  ...svelte.configs.recommended,
+  ts.configs.recommended,
+  svelte.configs.recommended,
   {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      }
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    rules: {
+      // typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
+      // see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
+      'no-undef': 'off'
     }
   },
   {
@@ -149,7 +155,7 @@ You can customize the behavior of this plugin using specific settings.
 
 ```js
 // eslint.config.js
-export default [
+export default defineConfig([
   // ...
   {
     settings: {
@@ -185,7 +191,7 @@ export default [
     }
   }
   // ...
-];
+]);
 ```
 
 ## Editor Integrations
@@ -193,12 +199,6 @@ export default [
 **Visual Studio Code**\
 Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).\
 Configure `.svelte` files in `.vscode/settings.json`:
-
-```json
-{
-  "eslint.validate": ["javascript", "javascriptreact", "svelte"]
-}
-```
 
 <!--USAGE_GUIDE_END-->
 
