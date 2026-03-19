@@ -35,7 +35,9 @@ npm install --save-dev svelte eslint eslint-plugin-svelte globals
 
 Use `eslint.config.js` to configure rules. See [ESLint documentation](https://eslint.org/docs/latest/use/configure/configuration-files-new) for more details.
 
-### JavaScript project
+### Configuration
+
+#### JavaScript project
 
 ```js
 // eslint.config.js
@@ -86,7 +88,7 @@ export default defineConfig([
 ]);
 ```
 
-### TypeScript project
+#### TypeScript project
 
 ```shell
 npm install --save-dev typescript-eslint
