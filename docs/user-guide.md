@@ -4,7 +4,23 @@
 
 ## Installation
 
-```bash
+### CLI
+
+The recommended way to get started is to use the CLI.
+
+```sh
+# new project
+npx sv create
+
+# existing project
+npx sv add eslint
+```
+
+See the [CLI docs](https://svelte.dev/docs/cli/eslint) for more details.
+
+### Manual Setup
+
+```sh
 npm install --save-dev svelte eslint eslint-plugin-svelte globals
 ```
 
@@ -17,42 +33,46 @@ npm install --save-dev svelte eslint eslint-plugin-svelte globals
 
 ## Usage
 
-Use the `eslint.config.js` file to configure rules. For more details, see the [ESLint documentation](https://eslint.org/docs/latest/use/configure/configuration-files-new).
+Use `eslint.config.js` to configure rules. See [ESLint documentation](https://eslint.org/docs/latest/use/configure/configuration-files-new) for more details.
 
-### Configuration
-
-#### JavaScript project
+### JavaScript project
 
 ```js
 // eslint.config.js
-import path from 'node:path';
-import { includeIgnoreFile } from '@eslint/compat';
-import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
+import svelteConfig from './svelte.config.js';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
-import svelteConfig from './svelte.config.js';
-
-const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
+import js from '@eslint/js';
+import svelte from 'eslint-plugin-svelte';
 
 export default defineConfig([
-  includeIgnoreFile(gitignorePath),
+  // ...
   js.configs.recommended,
   svelte.configs.recommended,
   {
-    languageOptions: { globals: { ...globals.browser, ...globals.node } }
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        // for Sveltekit in non-SPA mode
+        ...globals.node
+      }
+    }
   },
   {
     files: ['**/*.svelte', '**/*.svelte.js'],
     languageOptions: {
       parserOptions: {
-        // We recommend importing and specifying svelte.config.js.
-        // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
-        // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
-        // explicitly specifying it ensures better compatibility and functionality.
+        // explicitly importing allows for better compatibilty and functionality with rules and other tooling that depend on the config file.
         //
-        // If non-serializable properties are included, running ESLint with the --cache flag will fail.
-        // In that case, please remove the non-serializable properties. (e.g. `svelteConfig: { ...svelteConfig, kit: { ...svelteConfig.kit, typescript: undefined }}`)
+        // Note: `eslint --cache` will fail with non-serializable properties.
+        // In those cases, please remove the non-serializable properties.
+        // svelteConfig: {
+        //   ...svelteConfig,
+        //   kit: {
+        //     ...svelteConfig.kit,
+        //     typescript: undefined
+        //   }
+        // }
         svelteConfig
       }
     }
@@ -66,7 +86,7 @@ export default defineConfig([
 ]);
 ```
 
-#### TypeScript project
+### TypeScript project
 
 ```shell
 npm install --save-dev typescript-eslint
@@ -74,29 +94,26 @@ npm install --save-dev typescript-eslint
 
 ```js
 // eslint.config.js
-import path from 'node:path';
-import { includeIgnoreFile } from '@eslint/compat';
-import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
+import svelteConfig from './svelte.config.js';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
+import js from '@eslint/js';
 import ts from 'typescript-eslint';
-import svelteConfig from './svelte.config.js';
-
-const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
+import svelte from 'eslint-plugin-svelte';
 
 export default defineConfig(
-  includeIgnoreFile(gitignorePath),
   js.configs.recommended,
   ts.configs.recommended,
   svelte.configs.recommended,
   {
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    rules: {
-      // typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
-      // see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
-      'no-undef': 'off'
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        // for Sveltekit in non-SPA mode
+        ...globals.node
+      }
     }
+    // ...
   },
   {
     files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
@@ -104,22 +121,28 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        extraFileExtensions: ['.svelte'], // Add support for additional file extensions, such as .svelte
-        parser: ts.parser,
+        // Enable typescript parsing for `.svelte` files.
+        extraFileExtensions: ['.svelte'],
+
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,
-        //   js: espree,    // Use espree for .js files (add: import espree from 'espree')
         //   typescript: ts.parser
+        //   js: espree,            // add `import espree from 'espree'`
         // },
+        parser: ts.parser,
 
-        // We recommend importing and specifying svelte.config.js.
-        // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
-        // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
-        // explicitly specifying it ensures better compatibility and functionality.
+        // explicitly importing allows for better compatibilty and functionality with rules and other tooling that depend on the config file.
         //
-        // If non-serializable properties are included, running ESLint with the --cache flag will fail.
-        // In that case, please remove the non-serializable properties. (e.g. `svelteConfig: { ...svelteConfig, kit: { ...svelteConfig.kit, typescript: undefined }}`)
+        // Note: `eslint --cache` will fail with non-serializable properties.
+        // In those cases, please remove the non-serializable properties.
+        // svelteConfig: {
+        //   ...svelteConfig,
+        //   kit: {
+        //     ...svelteConfig.kit,
+        //     typescript: undefined
+        //   }
+        // }
         svelteConfig
       }
     }
@@ -142,10 +165,10 @@ export default defineConfig(
 
 This plugin provides the following configurations:
 
-- **`eslintPluginSvelte.configs.base`** ... Enables correct Svelte parsing.
-- **`eslintPluginSvelte.configs.recommended`** ... Includes `base` configuration, plus rules to prevent errors or unintended behavior.
-- **`eslintPluginSvelte.configs.prettier`** ... Disables rules that may conflict with [Prettier](https://prettier.io/). You still need to configure Prettier to work with Svelte manually, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
-- **`eslintPluginSvelte.configs.all`** ... Includes all available rules. **Note:** This configuration is not recommended for production use, as it changes with every minor and major version of `eslint-plugin-svelte`. Use at your own risk.
+- **`svelte.configs.base`** - Enables correct Svelte parsing. What does this include exactly?
+- **`svelte.configs.recommended`** - Extends the `base` config with additional rules for Svelte best practices.
+- **`svelte.configs.prettier`** - Disables rules that may conflict with [Prettier](https://prettier.io/). You still need to configure Prettier to work with Svelte, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
+- **`svelte.configs.all`** - **Not Recommended** - Includes all available rules. Subject to change with every major and minor release. Use at your own risk.
 
 For more details, see [the rule list](./rules.md) to explore the rules provided by this plugin.
 
@@ -166,9 +189,10 @@ export default defineConfig([
           '@typescript-eslint/no-unsafe-assignment',
           '@typescript-eslint/no-unsafe-member-access'
         ],
+
         // Specifies options for Svelte compilation.
         // This affects rules that rely on Svelte compilation,
-        // such as svelte/valid-compile and svelte/no-unused-svelte-ignore.
+        // such as `svelte/valid-compile` and `svelte/no-unused-svelte-ignore`.
         // Note that this setting does not impact ESLint’s custom parser.
         compileOptions: {
           // Specifies options related to PostCSS. You can disable the PostCSS processing by setting it to false.
@@ -177,6 +201,7 @@ export default defineConfig([
             configFilePath: './path/to/my/postcss.config.js'
           }
         },
+
         // Even if settings.svelte.kit is not specified, the rules will attempt to load information from svelte.config.js.
         // However, if the default behavior does not work as expected, you should specify settings.svelte.kit explicitly.
         // If you are using SvelteKit with a non-default configuration, you need to set the following options.
