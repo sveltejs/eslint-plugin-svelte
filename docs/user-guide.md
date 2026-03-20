@@ -167,7 +167,7 @@ export default defineConfig(
 
 This plugin provides the following configurations:
 
-- **`svelte.configs.base`** - Enables correct Svelte parsing. What does this include exactly?
+- **`svelte.configs.base`** - Enables correct Svelte parsing.
 - **`svelte.configs.recommended`** - Extends the `base` config with additional rules for Svelte best practices.
 - **`svelte.configs.prettier`** - Disables rules that may conflict with [Prettier](https://prettier.io/). You still need to configure Prettier to work with Svelte, for example, by using [prettier-plugin-svelte](https://github.com/sveltejs/prettier-plugin-svelte).
 - **`svelte.configs.all`** - **Not Recommended** - Includes all available rules. Subject to change with every major and minor release. Use at your own risk.
