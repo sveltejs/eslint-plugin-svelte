@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 3.16.0
+
+### Minor Changes
+
+- [#1483](https://github.com/sveltejs/eslint-plugin-svelte/pull/1483) [`69c9a6a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/69c9a6af7081e7011a4123cf2045ad3fd58609e0) Thanks [@shimscho](https://github.com/shimscho)! - feat: add `svelte/max-lines-per-block` rule to enforce maximum line counts per block in Svelte SFCs
+
+- [#1484](https://github.com/sveltejs/eslint-plugin-svelte/pull/1484) [`98eae61`](https://github.com/sveltejs/eslint-plugin-svelte/commit/98eae61f4462b3a92a40e697d8fbd18e2541118a) Thanks [@Stadly](https://github.com/Stadly)! - feat: ignore parenthetical notes in svelte-ignore comments
+
 ## 3.15.2
 
 ### Patch Changes

@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/max-lines-per-block'
 description: 'enforce maximum number of lines in svelte component blocks'
+since: 'v3.16.0'
 ---
 
 # svelte/max-lines-per-block
 
 > enforce maximum number of lines in svelte component blocks
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -68,6 +67,10 @@ Each block option is **optional**. If a block option is not specified, that bloc
 
 - [ESLint core `max-lines`](https://eslint.org/docs/rules/max-lines)
 - [vue/max-lines-per-block](https://eslint.vuejs.org/rules/max-lines-per-block)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.16.0
 
 ## :mag: Implementation
 
