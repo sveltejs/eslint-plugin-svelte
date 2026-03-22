@@ -191,7 +191,13 @@ function checkGotoCall(
 ): void {
 	if (
 		call.arguments.length > 0 &&
-		!isValueAllowed(new FindVariableContext(context), call.arguments[0], resolveReferences, {})
+		!isValueAllowed(
+			context,
+			new FindVariableContext(context),
+			call.arguments[0],
+			resolveReferences,
+			{}
+		)
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
 	}
@@ -205,9 +211,15 @@ function checkShallowNavigationCall(
 ): void {
 	if (
 		call.arguments.length > 0 &&
-		!isValueAllowed(new FindVariableContext(context), call.arguments[0], resolveReferences, {
-			allowEmpty: true
-		})
+		!isValueAllowed(
+			context,
+			new FindVariableContext(context),
+			call.arguments[0],
+			resolveReferences,
+			{
+				allowEmpty: true
+			}
+		)
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId });
 	}
@@ -226,7 +238,7 @@ function checkLinkAttribute(
 		attribute.parent.parent.name.name === 'a' &&
 		attribute.key.name === 'href' &&
 		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
-		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, {
+		!isValueAllowed(context, new FindVariableContext(context), value, resolveReferences, {
 			allowAbsolute: true,
 			allowFragment: true,
 			allowNullish: true
@@ -272,7 +284,8 @@ function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): 
 }
 
 function isValueAllowed(
-	ctx: FindVariableContext,
+	context: RuleContext,
+	findContext: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
 	config: {
@@ -283,24 +296,64 @@ function isValueAllowed(
 	}
 ): boolean {
 	if (value.type === 'Identifier') {
-		const variable = ctx.findVariable(value);
+		const variable = findContext.findVariable(value);
 		if (
 			variable !== null &&
 			variable.identifiers.length > 0 &&
 			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
 			variable.identifiers[0].parent.init !== null
 		) {
-			return isValueAllowed(ctx, variable.identifiers[0].parent.init, resolveReferences, config);
+			return isValueAllowed(
+				context,
+				findContext,
+				variable.identifiers[0].parent.init,
+				resolveReferences,
+				config
+			);
 		}
 	}
 	if (
-		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
-		(config.allowEmpty && expressionIsEmpty(value)) ||
-		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
+		(config.allowAbsolute && expressionIsAbsoluteUrl(new FindVariableContext(context), value)) ||
+		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
+		(config.allowFragment && expressionStartsWith(new FindVariableContext(context), value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionIsResolveCall(ctx, value, resolveReferences)
+		expressionStartsWith(new FindVariableContext(context), value, '?') ||
+		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
 	) {
 		return true;
+	}
+	if (value.type === 'BinaryExpression' && value.left.type !== 'PrivateIdentifier') {
+		if (['BinaryExpression', 'TemplateLiteral'].includes(value.left.type)) {
+			return isValueAllowed(
+				context,
+				new FindVariableContext(context),
+				value.left,
+				resolveReferences,
+				config
+			);
+		}
+		if (
+			expressionIsResolveCall(new FindVariableContext(context), value.left, resolveReferences) &&
+			(expressionIsEmpty(new FindVariableContext(context), value.right) ||
+				expressionStartsWith(new FindVariableContext(context), value.right, '?') ||
+				expressionStartsWith(new FindVariableContext(context), value.right, '#'))
+		) {
+			return true;
+		}
+	}
+	if (value.type === 'TemplateLiteral') {
+		const parts = [
+			...value.expressions,
+			...value.quasis.filter((quasi) => quasi.value.raw !== '')
+		].sort((a, b) => a.range[0] - b.range[0]);
+		if (
+			expressionIsResolveCall(new FindVariableContext(context), parts[0], resolveReferences) &&
+			(expressionIsEmpty(new FindVariableContext(context), parts[1]) ||
+				expressionStartsWith(new FindVariableContext(context), parts[1], '?') ||
+				expressionStartsWith(new FindVariableContext(context), parts[1], '#'))
+		) {
+			return true;
+		}
 	}
 	return false;
 }
@@ -309,7 +362,7 @@ function isValueAllowed(
 
 function expressionIsResolveCall(
 	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
+	node: TSESTree.CallExpressionArgument | TSESTree.TemplateElement | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>
 ): boolean {
 	if (
@@ -337,15 +390,36 @@ function expressionIsResolveCall(
 }
 
 function expressionIsEmpty(
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	ctx: FindVariableContext,
+	node:
+		| TSESTree.CallExpressionArgument
+		| TSESTree.Expression
+		| TSESTree.TemplateElement
+		| AST.SvelteLiteral
 ): boolean {
-	return (
+	if (
 		(node.type === 'Literal' && node.value === '') ||
+		(node.type === 'TemplateElement' && node.value.raw === '') ||
 		(node.type === 'TemplateLiteral' &&
 			node.expressions.length === 0 &&
 			node.quasis.length === 1 &&
-			node.quasis[0].value.raw === '')
-	);
+			expressionIsEmpty(ctx, node.quasis[0]))
+	) {
+		return true;
+	}
+	if (node.type !== 'Identifier') {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsEmpty(ctx, variable.identifiers[0].parent.init);
 }
 
 function expressionIsNullish(
