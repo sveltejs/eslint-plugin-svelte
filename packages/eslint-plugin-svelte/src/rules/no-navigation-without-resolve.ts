@@ -384,8 +384,8 @@ function binaryExpressionIsAbsoluteUrl(
 	node: TSESTree.BinaryExpression
 ): boolean {
 	return (
-		(node.left.type !== 'PrivateIdentifier' && expressionIsAbsoluteUrl(ctx, node.left)) ||
-		expressionIsAbsoluteUrl(ctx, node.right)
+		node.operator === '+' &&
+		(expressionIsAbsoluteUrl(ctx, node.left) || expressionIsAbsoluteUrl(ctx, node.right))
 	);
 }
 
@@ -435,7 +435,7 @@ function binaryExpressionStartsWith(
 	node: TSESTree.BinaryExpression,
 	prefix: string
 ): boolean {
-	return node.left.type !== 'PrivateIdentifier' && expressionStartsWith(ctx, node.left, prefix);
+	return node.operator === '+' && expressionStartsWith(ctx, node.left, prefix);
 }
 
 function identifierStartsWith(
