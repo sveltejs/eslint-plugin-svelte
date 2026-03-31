@@ -2,10 +2,11 @@ import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
-import { getSvelteVersion } from '../utils/svelte-context.js';
+import { getSvelteContext, getSvelteVersion } from '../utils/svelte-context.js';
 
-const EXPECTED_PROP_NAMES = ['data', 'errors', 'form', 'params', 'snapshot'];
-const EXPECTED_PROP_NAMES_SVELTE5 = [...EXPECTED_PROP_NAMES, 'children'];
+const PAGE_PROP_NAMES = ['data', 'form', 'params', 'snapshot'];
+const LAYOUT_PROP_NAMES = [...PAGE_PROP_NAMES, 'children'];
+const ERROR_PROP_NAMES = ['error'];
 
 function checkProp(
 	node: TSESTree.VariableDeclarator,
@@ -48,25 +49,34 @@ function isModuleScript(node: AST.SvelteAttribute) {
 export default createRule('valid-prop-names-in-kit-pages', {
 	meta: {
 		docs: {
-			description: 'disallow props other than data or errors in SvelteKit page components.',
+			description: 'Invalid prop in SvelteKit route component.',
 			category: 'SvelteKit',
 			recommended: true
 		},
 		schema: [],
 		messages: {
-			unexpected: 'disallow props other than data or errors in SvelteKit page components.'
+			unexpected: 'Invalid prop in SvelteKit route component.'
 		},
 		type: 'problem',
 		conditions: [
 			{
-				svelteKitFileTypes: ['+page.svelte', '+error.svelte', '+layout.svelte']
+				svelteKitFileTypes: ['+page.svelte', '+layout.svelte', '+error.svelte']
 			}
 		]
 	},
 	create(context) {
 		let isScript = false;
 		const isSvelte5 = getSvelteVersion() === '5';
-		const expectedPropNames = isSvelte5 ? EXPECTED_PROP_NAMES_SVELTE5 : EXPECTED_PROP_NAMES;
+		const svelteContext = getSvelteContext(context);
+		const fileType = svelteContext?.svelteKitFileType;
+
+		let expectedPropNames = PAGE_PROP_NAMES;
+		if (isSvelte5 && fileType === '+layout.svelte') {
+			expectedPropNames = LAYOUT_PROP_NAMES;
+		}
+		if (isSvelte5 && fileType === '+error.svelte') {
+			expectedPropNames = ERROR_PROP_NAMES;
+		}
 		return {
 			// <script>
 			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {

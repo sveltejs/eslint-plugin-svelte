@@ -1,16 +1,16 @@
-- message: disallow props other than data or errors in SvelteKit page components.
+- message: Invalid prop in SvelteKit route component.
   line: 2
   column: 13
   suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
+- message: Invalid prop in SvelteKit route component.
   line: 3
   column: 13
   suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
+- message: Invalid prop in SvelteKit route component.
   line: 4
   column: 15
   suggestions: null
-- message: disallow props other than data or errors in SvelteKit page components.
+- message: Invalid prop in SvelteKit route component.
   line: 4
   column: 20
   suggestions: null
