@@ -2,13 +2,13 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/valid-prop-names-in-kit-pages'
-description: 'Invalid prop in SvelteKit route component.'
+description: 'disallow invalid props in SvelteKit route components.'
 since: 'v2.12.0'
 ---
 
 # svelte/valid-prop-names-in-kit-pages
 
-> Invalid prop in SvelteKit route component.
+> disallow invalid props in SvelteKit route components.
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 

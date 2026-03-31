@@ -49,13 +49,13 @@ function isModuleScript(node: AST.SvelteAttribute) {
 export default createRule('valid-prop-names-in-kit-pages', {
 	meta: {
 		docs: {
-			description: 'Invalid prop in SvelteKit route component.',
+			description: 'disallow invalid props in SvelteKit route components.',
 			category: 'SvelteKit',
 			recommended: true
 		},
 		schema: [],
 		messages: {
-			unexpected: 'Invalid prop in SvelteKit route component.'
+			unexpected: 'disallow invalid props in SvelteKit route components.'
 		},
 		type: 'problem',
 		conditions: [

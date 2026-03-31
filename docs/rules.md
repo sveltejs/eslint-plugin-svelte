@@ -122,7 +122,7 @@ These rules relate to SvelteKit and its best Practices.
 | :------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- | :----- |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.                  | :star: |
 | [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md)                               | disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()` | :star: |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                                | :star: |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow invalid props in SvelteKit route components.                                                 | :star: |
 
 ## Experimental
 
