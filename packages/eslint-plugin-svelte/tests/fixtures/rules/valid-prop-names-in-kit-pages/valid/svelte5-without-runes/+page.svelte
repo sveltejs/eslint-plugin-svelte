@@ -1,6 +1,5 @@
 <script>
 	export let data;
-	export let errors;
 	export let form;
 
 	let comment = '';

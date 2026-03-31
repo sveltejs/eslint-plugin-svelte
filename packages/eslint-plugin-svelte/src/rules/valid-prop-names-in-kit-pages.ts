@@ -5,6 +5,7 @@ import type { RuleContext } from '../types.js';
 import { getSvelteContext, getSvelteVersion } from '../utils/svelte-context.js';
 
 const PAGE_PROP_NAMES = ['data', 'form', 'params', 'snapshot'];
+const LEGACY_PAGE_PROP_NAMES = [...PAGE_PROP_NAMES, 'errors'];
 const LAYOUT_PROP_NAMES = [...PAGE_PROP_NAMES, 'children'];
 const ERROR_PROP_NAMES = ['error'];
 
@@ -70,13 +71,19 @@ export default createRule('valid-prop-names-in-kit-pages', {
 		const svelteContext = getSvelteContext(context);
 		const fileType = svelteContext?.svelteKitFileType;
 
-		let expectedPropNames = PAGE_PROP_NAMES;
-		if (isSvelte5 && fileType === '+layout.svelte') {
-			expectedPropNames = LAYOUT_PROP_NAMES;
+		let expectedPropNames;
+		if (isSvelte5) {
+			if (fileType === '+layout.svelte') {
+				expectedPropNames = LAYOUT_PROP_NAMES;
+			} else if (fileType === '+error.svelte') {
+				expectedPropNames = ERROR_PROP_NAMES;
+			} else {
+				expectedPropNames = PAGE_PROP_NAMES;
+			}
+		} else {
+			expectedPropNames = LEGACY_PAGE_PROP_NAMES;
 		}
-		if (isSvelte5 && fileType === '+error.svelte') {
-			expectedPropNames = ERROR_PROP_NAMES;
-		}
+
 		return {
 			// <script>
 			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {
