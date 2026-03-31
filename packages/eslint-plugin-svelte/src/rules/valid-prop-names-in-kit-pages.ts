@@ -71,17 +71,13 @@ export default createRule('valid-prop-names-in-kit-pages', {
 		const svelteContext = getSvelteContext(context);
 		const fileType = svelteContext?.svelteKitFileType;
 
-		let expectedPropNames;
+		let expectedPropNames = PAGE_PROP_NAMES;
 		if (isSvelte5) {
 			if (fileType === '+layout.svelte') {
 				expectedPropNames = LAYOUT_PROP_NAMES;
 			} else if (fileType === '+error.svelte') {
 				expectedPropNames = ERROR_PROP_NAMES;
-			} else {
-				expectedPropNames = PAGE_PROP_NAMES;
 			}
-		} else {
-			expectedPropNames = LEGACY_PAGE_PROP_NAMES;
 		}
 
 		return {
@@ -104,7 +100,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 
 				// export let foo
 				if (node.id.type === 'Identifier') {
-					if (!expectedPropNames.includes(node.id.name)) {
+					if (!LEGACY_PAGE_PROP_NAMES.includes(node.id.name)) {
 						context.report({
 							node,
 							loc: node.loc,
@@ -115,7 +111,7 @@ export default createRule('valid-prop-names-in-kit-pages', {
 				}
 
 				// export let { xxx, yyy } = zzz
-				checkProp(node, context, expectedPropNames);
+				checkProp(node, context, LEGACY_PAGE_PROP_NAMES);
 			},
 
 			// Svelte5
