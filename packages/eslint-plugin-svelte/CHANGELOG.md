@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.17.0
+
+### Minor Changes
+
+- [#1489](https://github.com/sveltejs/eslint-plugin-svelte/pull/1489) [`eb8172c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eb8172cc5eaf2f319542e6ce42c8319ac48bd517) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added support for ternary expressions
+
+### Patch Changes
+
+- [#1490](https://github.com/sveltejs/eslint-plugin-svelte/pull/1490) [`b742163`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b742163d240e5cb99359ed372659489c0ed94b30) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): properly detecting invalid binary expression operators
+
 ## 3.16.0
 
 ### Minor Changes
