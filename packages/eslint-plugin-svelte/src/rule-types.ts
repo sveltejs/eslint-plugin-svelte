@@ -409,7 +409,7 @@ export interface RuleOptions {
    */
   'svelte/valid-each-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow props other than data or errors in SvelteKit page components.
+   * disallow invalid props in SvelteKit route components.
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/
    */
   'svelte/valid-prop-names-in-kit-pages'?: Linter.RuleEntry<[]>
@@ -422,214 +422,362 @@ export interface RuleOptions {
 
 /* ======= Declarations ======= */
 // ----- svelte/@typescript-eslint/no-unnecessary-condition -----
-type SvelteTypescriptEslintNoUnnecessaryCondition = []|[{
-  
-  allowConstantLoopConditions?: boolean
-  
-  allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
-}]
+type SvelteTypescriptEslintNoUnnecessaryCondition =
+	| []
+	| [
+			{
+				allowConstantLoopConditions?: boolean;
+
+				allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean;
+			}
+	  ];
 // ----- svelte/block-lang -----
-type SvelteBlockLang = []|[{
-  enforceScriptPresent?: boolean
-  enforceStylePresent?: boolean
-  script?: ((string | null) | [(string | null), ...((string | null))[]])
-  style?: ((string | null) | [(string | null), ...((string | null))[]])
-}]
+type SvelteBlockLang =
+	| []
+	| [
+			{
+				enforceScriptPresent?: boolean;
+				enforceStylePresent?: boolean;
+				script?: (string | null) | [string | null, ...(string | null)[]];
+				style?: (string | null) | [string | null, ...(string | null)[]];
+			}
+	  ];
 // ----- svelte/button-has-type -----
-type SvelteButtonHasType = []|[{
-  button?: boolean
-  submit?: boolean
-  reset?: boolean
-}]
+type SvelteButtonHasType =
+	| []
+	| [
+			{
+				button?: boolean;
+				submit?: boolean;
+				reset?: boolean;
+			}
+	  ];
 // ----- svelte/comment-directive -----
-type SvelteCommentDirective = []|[{
-  reportUnusedDisableDirectives?: boolean
-}]
+type SvelteCommentDirective =
+	| []
+	| [
+			{
+				reportUnusedDisableDirectives?: boolean;
+			}
+	  ];
 // ----- svelte/consistent-selector-style -----
-type SvelteConsistentSelectorStyle = []|[{
-  checkGlobal?: boolean
-  
-  style?: []|[("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
-}]
+type SvelteConsistentSelectorStyle =
+	| []
+	| [
+			{
+				checkGlobal?: boolean;
+
+				style?:
+					| []
+					| ['class' | 'id' | 'type']
+					| ['class' | 'id' | 'type', 'class' | 'id' | 'type']
+					| ['class' | 'id' | 'type', 'class' | 'id' | 'type', 'class' | 'id' | 'type'];
+			}
+	  ];
 // ----- svelte/first-attribute-linebreak -----
-type SvelteFirstAttributeLinebreak = []|[{
-  multiline?: ("below" | "beside")
-  singleline?: ("below" | "beside")
-}]
+type SvelteFirstAttributeLinebreak =
+	| []
+	| [
+			{
+				multiline?: 'below' | 'beside';
+				singleline?: 'below' | 'beside';
+			}
+	  ];
 // ----- svelte/html-closing-bracket-new-line -----
-type SvelteHtmlClosingBracketNewLine = []|[{
-  singleline?: ("always" | "never")
-  multiline?: ("always" | "never")
-  selfClosingTag?: {
-    singleline?: ("always" | "never")
-    multiline?: ("always" | "never")
-  }
-}]
+type SvelteHtmlClosingBracketNewLine =
+	| []
+	| [
+			{
+				singleline?: 'always' | 'never';
+				multiline?: 'always' | 'never';
+				selfClosingTag?: {
+					singleline?: 'always' | 'never';
+					multiline?: 'always' | 'never';
+				};
+			}
+	  ];
 // ----- svelte/html-closing-bracket-spacing -----
-type SvelteHtmlClosingBracketSpacing = []|[{
-  startTag?: ("always" | "never" | "ignore")
-  endTag?: ("always" | "never" | "ignore")
-  selfClosingTag?: ("always" | "never" | "ignore")
-}]
+type SvelteHtmlClosingBracketSpacing =
+	| []
+	| [
+			{
+				startTag?: 'always' | 'never' | 'ignore';
+				endTag?: 'always' | 'never' | 'ignore';
+				selfClosingTag?: 'always' | 'never' | 'ignore';
+			}
+	  ];
 // ----- svelte/html-quotes -----
-type SvelteHtmlQuotes = []|[{
-  prefer?: ("double" | "single")
-  dynamic?: {
-    quoted?: boolean
-    avoidInvalidUnquotedInHTML?: boolean
-  }
-}]
+type SvelteHtmlQuotes =
+	| []
+	| [
+			{
+				prefer?: 'double' | 'single';
+				dynamic?: {
+					quoted?: boolean;
+					avoidInvalidUnquotedInHTML?: boolean;
+				};
+			}
+	  ];
 // ----- svelte/html-self-closing -----
-type SvelteHtmlSelfClosing = []|[({
-  void?: ("never" | "always" | "ignore")
-  normal?: ("never" | "always" | "ignore")
-  svg?: ("never" | "always" | "ignore")
-  math?: ("never" | "always" | "ignore")
-  component?: ("never" | "always" | "ignore")
-  svelte?: ("never" | "always" | "ignore")
-} | ("all" | "html" | "none"))]
+type SvelteHtmlSelfClosing =
+	| []
+	| [
+			| {
+					void?: 'never' | 'always' | 'ignore';
+					normal?: 'never' | 'always' | 'ignore';
+					svg?: 'never' | 'always' | 'ignore';
+					math?: 'never' | 'always' | 'ignore';
+					component?: 'never' | 'always' | 'ignore';
+					svelte?: 'never' | 'always' | 'ignore';
+			  }
+			| ('all' | 'html' | 'none')
+	  ];
 // ----- svelte/indent -----
-type SvelteIndent = []|[{
-  indent?: (number | "tab")
-  indentScript?: boolean
-  switchCase?: number
-  alignAttributesVertically?: boolean
-  ignoredNodes?: (string & {
-    [k: string]: unknown | undefined
-  } & {
-    [k: string]: unknown | undefined
-  })[]
-}]
+type SvelteIndent =
+	| []
+	| [
+			{
+				indent?: number | 'tab';
+				indentScript?: boolean;
+				switchCase?: number;
+				alignAttributesVertically?: boolean;
+				ignoredNodes?: (string & {
+					[k: string]: unknown | undefined;
+				} & {
+					[k: string]: unknown | undefined;
+				})[];
+			}
+	  ];
 // ----- svelte/max-attributes-per-line -----
-type SvelteMaxAttributesPerLine = []|[{
-  multiline?: number
-  singleline?: number
-}]
+type SvelteMaxAttributesPerLine =
+	| []
+	| [
+			{
+				multiline?: number;
+				singleline?: number;
+			}
+	  ];
 // ----- svelte/max-lines-per-block -----
-type SvelteMaxLinesPerBlock = []|[{
-  script?: number
-  template?: number
-  style?: number
-  skipBlankLines?: boolean
-  skipComments?: boolean
-}]
+type SvelteMaxLinesPerBlock =
+	| []
+	| [
+			{
+				script?: number;
+				template?: number;
+				style?: number;
+				skipBlankLines?: boolean;
+				skipComments?: boolean;
+			}
+	  ];
 // ----- svelte/mustache-spacing -----
-type SvelteMustacheSpacing = []|[{
-  textExpressions?: ("never" | "always")
-  attributesAndProps?: ("never" | "always")
-  directiveExpressions?: ("never" | "always")
-  tags?: {
-    openingBrace?: ("never" | "always")
-    closingBrace?: ("never" | "always" | "always-after-expression")
-  }
-}]
+type SvelteMustacheSpacing =
+	| []
+	| [
+			{
+				textExpressions?: 'never' | 'always';
+				attributesAndProps?: 'never' | 'always';
+				directiveExpressions?: 'never' | 'always';
+				tags?: {
+					openingBrace?: 'never' | 'always';
+					closingBrace?: 'never' | 'always' | 'always-after-expression';
+				};
+			}
+	  ];
 // ----- svelte/no-inline-styles -----
-type SvelteNoInlineStyles = []|[{
-  allowTransitions?: boolean
-}]
+type SvelteNoInlineStyles =
+	| []
+	| [
+			{
+				allowTransitions?: boolean;
+			}
+	  ];
 // ----- svelte/no-inner-declarations -----
-type SvelteNoInnerDeclarations = []|[("functions" | "both")]|[("functions" | "both"), {
-  blockScopedFunctions?: ("allow" | "disallow")
-}]
+type SvelteNoInnerDeclarations =
+	| []
+	| ['functions' | 'both']
+	| [
+			'functions' | 'both',
+			{
+				blockScopedFunctions?: 'allow' | 'disallow';
+			}
+	  ];
 // ----- svelte/no-navigation-without-base -----
-type SvelteNoNavigationWithoutBase = []|[{
-  ignoreGoto?: boolean
-  ignoreLinks?: boolean
-  ignorePushState?: boolean
-  ignoreReplaceState?: boolean
-}]
+type SvelteNoNavigationWithoutBase =
+	| []
+	| [
+			{
+				ignoreGoto?: boolean;
+				ignoreLinks?: boolean;
+				ignorePushState?: boolean;
+				ignoreReplaceState?: boolean;
+			}
+	  ];
 // ----- svelte/no-navigation-without-resolve -----
-type SvelteNoNavigationWithoutResolve = []|[{
-  ignoreGoto?: boolean
-  ignoreLinks?: boolean
-  ignorePushState?: boolean
-  ignoreReplaceState?: boolean
-}]
+type SvelteNoNavigationWithoutResolve =
+	| []
+	| [
+			{
+				ignoreGoto?: boolean;
+				ignoreLinks?: boolean;
+				ignorePushState?: boolean;
+				ignoreReplaceState?: boolean;
+			}
+	  ];
 // ----- svelte/no-reactive-reassign -----
-type SvelteNoReactiveReassign = []|[{
-  props?: boolean
-}]
+type SvelteNoReactiveReassign =
+	| []
+	| [
+			{
+				props?: boolean;
+			}
+	  ];
 // ----- svelte/no-restricted-html-elements -----
-type SvelteNoRestrictedHtmlElements = [(string | {
-  
-  elements?: [string, ...(string)[]]
-  message?: string
-}), ...((string | {
-  
-  elements?: [string, ...(string)[]]
-  message?: string
-}))[]]
+type SvelteNoRestrictedHtmlElements = [
+	(
+		| string
+		| {
+				elements?: [string, ...string[]];
+				message?: string;
+		  }
+	),
+	...(
+		| string
+		| {
+				elements?: [string, ...string[]];
+				message?: string;
+		  }
+	)[]
+];
 // ----- svelte/no-target-blank -----
-type SvelteNoTargetBlank = []|[{
-  allowReferrer?: boolean
-  enforceDynamicLinks?: ("always" | "never")
-}]
+type SvelteNoTargetBlank =
+	| []
+	| [
+			{
+				allowReferrer?: boolean;
+				enforceDynamicLinks?: 'always' | 'never';
+			}
+	  ];
 // ----- svelte/no-trailing-spaces -----
-type SvelteNoTrailingSpaces = []|[{
-  skipBlankLines?: boolean
-  ignoreComments?: boolean
-}]
+type SvelteNoTrailingSpaces =
+	| []
+	| [
+			{
+				skipBlankLines?: boolean;
+				ignoreComments?: boolean;
+			}
+	  ];
 // ----- svelte/no-unknown-style-directive-property -----
-type SvelteNoUnknownStyleDirectiveProperty = []|[{
-  
-  ignoreProperties?: [string, ...(string)[]]
-  ignorePrefixed?: boolean
-}]
+type SvelteNoUnknownStyleDirectiveProperty =
+	| []
+	| [
+			{
+				ignoreProperties?: [string, ...string[]];
+				ignorePrefixed?: boolean;
+			}
+	  ];
 // ----- svelte/no-unnecessary-state-wrap -----
-type SvelteNoUnnecessaryStateWrap = []|[{
-  additionalReactiveClasses?: string[]
-  allowReassign?: boolean
-}]
+type SvelteNoUnnecessaryStateWrap =
+	| []
+	| [
+			{
+				additionalReactiveClasses?: string[];
+				allowReassign?: boolean;
+			}
+	  ];
 // ----- svelte/no-unused-class-name -----
-type SvelteNoUnusedClassName = []|[{
-  allowedClassNames?: string[]
-}]
+type SvelteNoUnusedClassName =
+	| []
+	| [
+			{
+				allowedClassNames?: string[];
+			}
+	  ];
 // ----- svelte/no-unused-props -----
-type SvelteNoUnusedProps = []|[{
-  checkImportedTypes?: boolean
-  ignoreTypePatterns?: string[]
-  ignorePropertyPatterns?: string[]
-  allowUnusedNestedProperties?: boolean
-}]
+type SvelteNoUnusedProps =
+	| []
+	| [
+			{
+				checkImportedTypes?: boolean;
+				ignoreTypePatterns?: string[];
+				ignorePropertyPatterns?: string[];
+				allowUnusedNestedProperties?: boolean;
+			}
+	  ];
 // ----- svelte/no-useless-mustaches -----
-type SvelteNoUselessMustaches = []|[{
-  ignoreIncludesComment?: boolean
-  ignoreStringEscape?: boolean
-}]
+type SvelteNoUselessMustaches =
+	| []
+	| [
+			{
+				ignoreIncludesComment?: boolean;
+				ignoreStringEscape?: boolean;
+			}
+	  ];
 // ----- svelte/prefer-class-directive -----
-type SveltePreferClassDirective = []|[{
-  prefer?: ("always" | "empty")
-}]
+type SveltePreferClassDirective =
+	| []
+	| [
+			{
+				prefer?: 'always' | 'empty';
+			}
+	  ];
 // ----- svelte/prefer-const -----
-type SveltePreferConst = []|[{
-  destructuring?: ("any" | "all")
-  ignoreReadBeforeAssign?: boolean
-  excludedRunes?: string[]
-  [k: string]: unknown | undefined
-}]
+type SveltePreferConst =
+	| []
+	| [
+			{
+				destructuring?: 'any' | 'all';
+				ignoreReadBeforeAssign?: boolean;
+				excludedRunes?: string[];
+				[k: string]: unknown | undefined;
+			}
+	  ];
 // ----- svelte/require-event-prefix -----
-type SvelteRequireEventPrefix = []|[{
-  checkAsyncFunctions?: boolean
-}]
+type SvelteRequireEventPrefix =
+	| []
+	| [
+			{
+				checkAsyncFunctions?: boolean;
+			}
+	  ];
 // ----- svelte/shorthand-attribute -----
-type SvelteShorthandAttribute = []|[{
-  prefer?: ("always" | "never")
-}]
+type SvelteShorthandAttribute =
+	| []
+	| [
+			{
+				prefer?: 'always' | 'never';
+			}
+	  ];
 // ----- svelte/shorthand-directive -----
-type SvelteShorthandDirective = []|[{
-  prefer?: ("always" | "never")
-}]
+type SvelteShorthandDirective =
+	| []
+	| [
+			{
+				prefer?: 'always' | 'never';
+			}
+	  ];
 // ----- svelte/sort-attributes -----
-type SvelteSortAttributes = []|[{
-  order?: (string | [string, ...(string)[]] | {
-    match: (string | [string, ...(string)[]])
-    sort: ("alphabetical" | "ignore")
-  })[]
-  alphabetical?: boolean
-}]
+type SvelteSortAttributes =
+	| []
+	| [
+			{
+				order?: (
+					| string
+					| [string, ...string[]]
+					| {
+							match: string | [string, ...string[]];
+							sort: 'alphabetical' | 'ignore';
+					  }
+				)[];
+				alphabetical?: boolean;
+			}
+	  ];
 // ----- svelte/spaced-html-comment -----
-type SvelteSpacedHtmlComment = []|[("always" | "never")]
+type SvelteSpacedHtmlComment = [] | ['always' | 'never'];
 // ----- svelte/valid-compile -----
-type SvelteValidCompile = []|[{
-  ignoreWarnings?: boolean
-}]
+type SvelteValidCompile =
+	| []
+	| [
+			{
+				ignoreWarnings?: boolean;
+			}
+	  ];
