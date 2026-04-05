@@ -19,7 +19,7 @@ export default createRule('require-each-key', {
 				// see: https://svelte.dev/docs/svelte/each#Each-blocks-without-an-item
 				if (node.context != null && node.key == null) {
 					context.report({
-						node,
+						loc: node.index?.loc.end ?? node.context.loc.end,
 						messageId: 'expectedKey'
 					});
 				}

@@ -1,12 +1,12 @@
 - message: "'base' is an unused Props property."
-  line: 10
-  column: 6
+  line: 3
+  column: 3
   suggestions: null
 - message: "'bar' in 'my_foo' is an unused property."
-  line: 10
-  column: 6
+  line: 6
+  column: 2
   suggestions: null
 - message: "'qux' is an unused Props property."
-  line: 10
-  column: 6
+  line: 7
+  column: 3
   suggestions: null

@@ -336,8 +336,19 @@ export default createRule('no-unused-props', {
 
 				if (!isUsedInPath && !isUsedInProps) {
 					reportedPropertyPaths.add(currentPathStr);
+
+					let declLoc: TSESTree.SourceLocation | undefined;
+
+					if (prop.declarations && prop.declarations.length > 0) {
+						const firstDecl = prop.declarations[0];
+						const file = firstDecl.getSourceFile();
+						declLoc = {
+							start: lineAndCharToPos(file.getLineAndCharacterOfPosition(firstDecl.getStart())),
+							end: lineAndCharToPos(file.getLineAndCharacterOfPosition(firstDecl.getEnd()))
+						};
+					}
 					context.report({
-						node: reportNode,
+						loc: declLoc ?? reportNode.loc,
 						messageId: parentPath.length ? 'unusedNestedProp' : 'unusedProp',
 						data: {
 							name: propName,
@@ -380,6 +391,10 @@ export default createRule('no-unused-props', {
 					});
 				}
 			}
+		}
+
+		function lineAndCharToPos({ line, character }: ts.LineAndCharacter): TSESTree.Position {
+			return { line, column: character };
 		}
 
 		/**

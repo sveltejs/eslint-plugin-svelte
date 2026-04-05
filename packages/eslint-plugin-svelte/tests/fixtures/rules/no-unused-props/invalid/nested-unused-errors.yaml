@@ -1,4 +1,4 @@
 - message: "'location' in 'user' is an unused property."
-  line: 8
-  column: 6
+  line: 4
+  column: 4
   suggestions: null
