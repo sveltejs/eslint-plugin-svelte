@@ -21,7 +21,7 @@ See the [CLI docs](https://svelte.dev/docs/cli/eslint) for more details.
 ### Manual Setup
 
 ```sh
-npm install --save-dev svelte eslint eslint-plugin-svelte globals
+npm install --save-dev svelte eslint svelte-eslint-parser eslint-plugin-svelte globals
 ```
 
 > [!NOTE]
