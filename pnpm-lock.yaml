@@ -252,8 +252,8 @@ importers:
         specifier: ^7.1.4
         version: 7.1.10(@types/node@22.18.11)(jiti@2.6.1)(less@4.4.2)(sass@1.93.2)(stylus@0.64.0)(tsx@4.20.6)(yaml@2.8.2)
       vite-plugin-svelte-md:
-        specifier: ^0.5.0
-        version: 0.5.0(vite@7.1.10(@types/node@22.18.11)(jiti@2.6.1)(less@4.4.2)(sass@1.93.2)(stylus@0.64.0)(tsx@4.20.6)(yaml@2.8.2))
+        specifier: ^0.6.0
+        version: 0.6.0(vite@7.1.10(@types/node@22.18.11)(jiti@2.6.1)(less@4.4.2)(sass@1.93.2)(stylus@0.64.0)(tsx@4.20.6)(yaml@2.8.2))
 
   packages/eslint-plugin-svelte:
     dependencies:
@@ -4089,8 +4089,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite-plugin-svelte-md@0.5.0:
-    resolution: {integrity: sha512-8IUuhmSUkSRZsHCXygT68JGZOrji/dy/br5/BAt58Aao5PKYL77MgvcRrLA0JcvtpcUPYKARIdPPAJNAPJ9CYA==}
+  vite-plugin-svelte-md@0.6.0:
+    resolution: {integrity: sha512-ObSRMgtbmL9qecvUkp3Zl7MXVhgI5gw7XXtnGmyaXJEIgcA54vEKIBxP/Lq63a6vzKxqmjyT83INjz/8wP2PtQ==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-beta.0
 
@@ -8316,7 +8316,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-plugin-svelte-md@0.5.0(vite@7.1.10(@types/node@22.18.11)(jiti@2.6.1)(less@4.4.2)(sass@1.93.2)(stylus@0.64.0)(tsx@4.20.6)(yaml@2.8.2)):
+  vite-plugin-svelte-md@0.6.0(vite@7.1.10(@types/node@22.18.11)(jiti@2.6.1)(less@4.4.2)(sass@1.93.2)(stylus@0.64.0)(tsx@4.20.6)(yaml@2.8.2)):
     dependencies:
       devalue: 5.6.4
       markdown-exit: 1.0.0-beta.9
