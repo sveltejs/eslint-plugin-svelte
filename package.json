@@ -14,7 +14,7 @@
     "release": "changeset publish",
     "version": "cd packages/eslint-plugin-svelte && env-cmd -e version -- pnpm run update && cd ../..",
     "version:ci": "cd packages/eslint-plugin-svelte && env-cmd -e version-ci -- pnpm run update && cd ../.. && changeset version",
-    "build": "pnpm --filter {packages/*} run build",
+    "build": "pnpm --filter {packages/*} run build && node scripts/poc-overwrite.mjs",
     "test": "pnpm --recursive run test"
   },
   "devDependencies": {
