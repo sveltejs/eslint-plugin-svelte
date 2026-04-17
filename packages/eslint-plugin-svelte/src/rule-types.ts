@@ -389,6 +389,11 @@ export interface RuleOptions {
    */
   'svelte/sort-attributes'?: Linter.RuleEntry<SvelteSortAttributes>
   /**
+   * enforce grouped order of props and directives
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-props/
+   */
+  'svelte/sort-props'?: Linter.RuleEntry<SvelteSortProps>
+  /**
    * enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment/
    */
@@ -626,6 +631,68 @@ type SvelteSortAttributes = []|[{
     sort: ("alphabetical" | "ignore")
   })[]
   alphabetical?: boolean
+}]
+// ----- svelte/sort-props -----
+type SvelteSortProps = []|[{
+  type?: ("alphabetical" | "natural" | "line-length" | "unsorted")
+  order?: ("asc" | "desc")
+  ignoreCase?: boolean
+  specialCharacters?: ("keep" | "remove")
+  locales?: (string | [string, ...(string)[]])
+  fallbackSort?: {
+    type: ("alphabetical" | "natural" | "line-length")
+    order?: ("asc" | "desc")
+  }
+  
+  groups?: [(string | {
+    group: string
+    type?: ("alphabetical" | "natural" | "line-length" | "unsorted")
+    order?: ("asc" | "desc")
+    ignoreCase?: boolean
+    specialCharacters?: ("keep" | "remove")
+    locales?: (string | [string, ...(string)[]])
+  }), ...((string | {
+    group: string
+    type?: ("alphabetical" | "natural" | "line-length" | "unsorted")
+    order?: ("asc" | "desc")
+    ignoreCase?: boolean
+    specialCharacters?: ("keep" | "remove")
+    locales?: (string | [string, ...(string)[]])
+  }))[]]
+  
+  customGroups?: [{
+    groupName: string
+    selector?: (("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive") | [("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive"), ...(("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive"))[]])
+    
+    modifiers?: [("shorthand" | "multiline"), ...(("shorthand" | "multiline"))[]]
+    elementNamePattern?: string
+    elementValuePattern?: string
+    type?: ("alphabetical" | "natural" | "line-length" | "unsorted")
+    order?: ("asc" | "desc")
+    ignoreCase?: boolean
+    specialCharacters?: ("keep" | "remove")
+    locales?: (string | [string, ...(string)[]])
+    fallbackSort?: {
+      type: ("alphabetical" | "natural" | "line-length")
+      order?: ("asc" | "desc")
+    }
+  }, ...({
+    groupName: string
+    selector?: (("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive") | [("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive"), ...(("attribute" | "shorthand-attribute" | "style-directive" | "special-directive" | "attach-tag" | "bind-directive" | "on-directive" | "class-directive" | "use-directive" | "transition-directive" | "in-directive" | "out-directive" | "animate-directive" | "let-directive" | "ref-directive" | "directive"))[]])
+    
+    modifiers?: [("shorthand" | "multiline"), ...(("shorthand" | "multiline"))[]]
+    elementNamePattern?: string
+    elementValuePattern?: string
+    type?: ("alphabetical" | "natural" | "line-length" | "unsorted")
+    order?: ("asc" | "desc")
+    ignoreCase?: boolean
+    specialCharacters?: ("keep" | "remove")
+    locales?: (string | [string, ...(string)[]])
+    fallbackSort?: {
+      type: ("alphabetical" | "natural" | "line-length")
+      order?: ("asc" | "desc")
+    }
+  })[]]
 }]
 // ----- svelte/spaced-html-comment -----
 type SvelteSpacedHtmlComment = []|[("always" | "never")]

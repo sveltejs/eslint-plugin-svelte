@@ -15,6 +15,11 @@ since: 'v2.4.0'
 ## :book: Rule Details
 
 This rule aims to enforce ordering of attributes.\
+
+> :warning: Do not enable `svelte/sort-attributes` together with `svelte/sort-props`.
+> Both rules can target the same start tag and may emit overlapping or conflicting order reports/fixes.
+> Prefer `svelte/sort-attributes` when you want pattern-based attribute order matching.
+
 The default order is:
 
 - `this` property.

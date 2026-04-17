@@ -1,0 +1,7 @@
+{
+	"options": [
+		{
+			"groups": ["shorthand-attribute", "multiline-attribute", "attribute"]
+		}
+	]
+}

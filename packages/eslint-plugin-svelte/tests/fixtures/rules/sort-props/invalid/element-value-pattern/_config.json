@@ -1,0 +1,14 @@
+{
+	"options": [
+		{
+			"groups": ["data-attribute", "attribute"],
+			"customGroups": [
+				{
+					"groupName": "data-attribute",
+					"selector": "attribute",
+					"elementNamePattern": "/^data-/u"
+				}
+			]
+		}
+	]
+}

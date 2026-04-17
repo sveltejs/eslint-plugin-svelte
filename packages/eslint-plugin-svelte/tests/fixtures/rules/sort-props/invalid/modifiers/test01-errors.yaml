@@ -1,0 +1,10 @@
+- message: "'active' (group: shorthand-attribute) should go before 'id' (group:
+    attribute)."
+  line: 3
+  column: 2
+  suggestions: null
+- message: >-
+    'class' (group: multiline-attribute) should go before 'id' (group: attribute).
+  line: 4
+  column: 2
+  suggestions: null

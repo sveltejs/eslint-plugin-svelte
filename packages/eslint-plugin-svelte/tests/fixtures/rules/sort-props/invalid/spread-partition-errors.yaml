@@ -1,0 +1,4 @@
+- message: "'a' should go before 'b'."
+  line: 1
+  column: 22
+  suggestions: null

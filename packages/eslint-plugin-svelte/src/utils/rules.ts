@@ -76,6 +76,7 @@ import requireStoresInit from '../rules/require-stores-init.js';
 import shorthandAttribute from '../rules/shorthand-attribute.js';
 import shorthandDirective from '../rules/shorthand-directive.js';
 import sortAttributes from '../rules/sort-attributes.js';
+import sortProps from '../rules/sort-props.js';
 import spacedHtmlComment from '../rules/spaced-html-comment.js';
 import system from '../rules/system.js';
 import validCompile from '../rules/valid-compile.js';
@@ -158,6 +159,7 @@ export const rules = [
 	shorthandAttribute,
 	shorthandDirective,
 	sortAttributes,
+	sortProps,
 	spacedHtmlComment,
 	system,
 	validCompile,

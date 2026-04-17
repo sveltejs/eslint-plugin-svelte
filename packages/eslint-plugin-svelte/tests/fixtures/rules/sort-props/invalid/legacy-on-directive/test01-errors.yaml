@@ -1,0 +1,5 @@
+- message: "'bind:value' (group: bind-directive) should go before 'on:commit'
+    (group: on-directive)."
+  line: 8
+  column: 32
+  suggestions: null

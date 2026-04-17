@@ -103,6 +103,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/shorthand-attribute](./rules/shorthand-attribute.md)                                             | enforce use of shorthand syntax in attribute                                       | :wrench: |
 | [svelte/shorthand-directive](./rules/shorthand-directive.md)                                             | enforce use of shorthand syntax in directives                                      | :wrench: |
 | [svelte/sort-attributes](./rules/sort-attributes.md)                                                     | enforce order of attributes                                                        | :wrench: |
+| [svelte/sort-props](./rules/sort-props.md)                                                               | enforce grouped order of props and directives                                      | :wrench: |
 | [svelte/spaced-html-comment](./rules/spaced-html-comment.md)                                             | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## Extension Rules

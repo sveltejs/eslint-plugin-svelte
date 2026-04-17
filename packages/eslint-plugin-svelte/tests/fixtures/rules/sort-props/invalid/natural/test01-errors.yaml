@@ -1,0 +1,4 @@
+- message: "'item2' should go before 'item10'."
+  line: 1
+  column: 27
+  suggestions: null

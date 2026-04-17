@@ -1,0 +1,5 @@
+- message: >-
+    'onclick' (group: attribute) should go before 'bind:value' (group: bind-directive).
+  line: 6
+  column: 27
+  suggestions: null

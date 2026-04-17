@@ -1,0 +1,5 @@
+- message: >-
+    'class:active' (group: class-directive) should go before 'animate:flip' (group: animate-directive).
+  line: 9
+  column: 40
+  suggestions: null

@@ -382,6 +382,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/shorthand-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/) | enforce use of shorthand syntax in attribute | :wrench: |
 | [svelte/shorthand-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-directive/) | enforce use of shorthand syntax in directives | :wrench: |
 | [svelte/sort-attributes](https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/) | enforce order of attributes | :wrench: |
+| [svelte/sort-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-props/) | enforce grouped order of props and directives | :wrench: |
 | [svelte/spaced-html-comment](https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment/) | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
 
 ## Extension Rules

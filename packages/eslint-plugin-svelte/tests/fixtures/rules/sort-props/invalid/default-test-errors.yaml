@@ -1,0 +1,9 @@
+- message: "'a' should go before 'b'."
+  line: 6
+  column: 14
+  suggestions: null
+- message: >-
+    'bind:value' (group: bind-directive) should go before 'b' (group: attribute).
+  line: 6
+  column: 20
+  suggestions: null

@@ -1,0 +1,19 @@
+{
+	"options": [
+		{
+			"groups": [
+				"class-directive",
+				"style-directive",
+				"bind-directive",
+				"attribute",
+				"on-directive",
+				"use-directive",
+				"transition-directive",
+				"in-directive",
+				"out-directive",
+				"animate-directive",
+				"let-directive"
+			]
+		}
+	]
+}

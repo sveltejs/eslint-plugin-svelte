@@ -1,0 +1,4 @@
+- message: "'bind:focused' should go before 'bind:value'."
+  line: 7
+  column: 27
+  suggestions: null

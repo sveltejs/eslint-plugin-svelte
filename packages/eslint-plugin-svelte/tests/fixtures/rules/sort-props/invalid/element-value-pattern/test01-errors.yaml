@@ -1,0 +1,5 @@
+- message: "'data-foo' (group: data-attribute) should go before 'aria-label'
+    (group: attribute)."
+  line: 1
+  column: 21
+  suggestions: null

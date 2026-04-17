@@ -1,0 +1,4 @@
+- message: "'abc' should go before 'Zbc'."
+  line: 1
+  column: 14
+  suggestions: null

@@ -1,0 +1,11 @@
+{
+	"options": [
+		{
+			"type": "alphabetical",
+			"groups": [
+				{ "group": "bind-directive", "type": "line-length", "order": "desc" },
+				"attribute"
+			]
+		}
+	]
+}

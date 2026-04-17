@@ -1,0 +1,13 @@
+- message: "'id' should go before 'name'."
+  line: 6
+  column: 17
+  suggestions: null
+- message: "'aria-label' should go before 'data-a'."
+  line: 6
+  column: 35
+  suggestions: null
+- message: >-
+    'onclick' (group: attribute) should go before 'bind:value' (group: bind-directive).
+  line: 6
+  column: 69
+  suggestions: null

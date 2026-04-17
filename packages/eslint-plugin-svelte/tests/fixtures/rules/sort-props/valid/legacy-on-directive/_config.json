@@ -1,0 +1,7 @@
+{
+	"options": [
+		{
+			"groups": ["bind-directive", "on-directive"]
+		}
+	]
+}

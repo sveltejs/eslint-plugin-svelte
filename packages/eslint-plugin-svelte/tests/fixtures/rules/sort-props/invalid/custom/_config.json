@@ -1,0 +1,14 @@
+{
+	"options": [
+		{
+			"groups": ["important-attribute", "attribute", "unknown", "bind-directive", "on-directive"],
+			"customGroups": [
+				{
+					"groupName": "important-attribute",
+					"selector": "attribute",
+					"elementNamePattern": "/^(?:id|name)$/u"
+				}
+			]
+		}
+	]
+}
