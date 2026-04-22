@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.17.1
+
+### Patch Changes
+
+- [#1321](https://github.com/sveltejs/eslint-plugin-svelte/pull/1321) [`97d89f7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/97d89f7d068321d4f79399c6c695ca4c0de2bd82) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added support for ResolvedPathname types
+
 ## 3.17.0
 
 ### Minor Changes
