@@ -315,13 +315,7 @@ function isValueAllowed(
 			variable.identifiers.length > 0 &&
 			variable.identifiers[0].parent.type === 'VariableDeclarator'
 		) {
-			if (
-				expressionIsResolvedPathname(
-					new FindVariableContext(context),
-					variable.identifiers[0],
-					tsTools
-				)
-			) {
+			if (expressionIsResolvedPathname(variable.identifiers[0], tsTools)) {
 				return true;
 			}
 			if (variable.identifiers[0].parent.init !== null) {
@@ -347,7 +341,7 @@ function isValueAllowed(
 		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
 		(config.allowFragment && expressionStartsWith(new FindVariableContext(context), value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionIsResolvedPathname(new FindVariableContext(context), value, tsTools) ||
+		expressionIsResolvedPathname(alue, tsTools) ||
 		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
 	) {
 		return true;
@@ -392,7 +386,6 @@ function isValueAllowed(
 // Helper functions
 
 function expressionIsResolvedPathname(
-	ctx: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
 	tsTools: TSTools | null
 ): boolean {
