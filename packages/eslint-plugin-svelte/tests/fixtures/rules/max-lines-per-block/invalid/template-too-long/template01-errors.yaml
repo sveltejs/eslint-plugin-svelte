@@ -1,0 +1,4 @@
+- message: "template block has too many lines (10). Maximum allowed is 3."
+  line: 3
+  column: 10
+  suggestions: null

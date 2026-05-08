@@ -595,7 +595,7 @@ export default createRule('@typescript-eslint/no-unnecessary-condition', {
 			const typeName = getTypeName(propertyType, tools!);
 			return Boolean(
 				(typeName === 'string' && checker.getIndexInfoOfType(objType, ts.IndexKind.String)) ||
-					(typeName === 'number' && checker.getIndexInfoOfType(objType, ts.IndexKind.Number))
+				(typeName === 'number' && checker.getIndexInfoOfType(objType, ts.IndexKind.Number))
 			);
 		}
 

@@ -367,8 +367,8 @@ export default createRule('mustache-spacing', {
 					options.tags.closingBrace,
 					Boolean(
 						openBlockClosingToken &&
-							openBlockLast &&
-							openBlockClosingToken === sourceCode.getTokenAfter(openBlockLast)
+						openBlockLast &&
+						openBlockClosingToken === sourceCode.getTokenAfter(openBlockLast)
 					)
 				);
 			},
@@ -388,8 +388,8 @@ export default createRule('mustache-spacing', {
 					options.tags.closingBrace,
 					Boolean(
 						openBlockClosingToken &&
-							openBlockLast &&
-							openBlockClosingToken === sourceCode.getTokenAfter(openBlockLast)
+						openBlockLast &&
+						openBlockClosingToken === sourceCode.getTokenAfter(openBlockLast)
 					)
 				);
 			},

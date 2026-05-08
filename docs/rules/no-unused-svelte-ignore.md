@@ -16,6 +16,9 @@ since: 'v0.19.0'
 
 This rule warns unnecessary `svelte-ignore` comments.
 
+`svelte-ignore` comments can include an explanatory note in parentheses after the warning names.
+This rule checks only the warning names and ignores the explanatory note.
+
 <!--eslint-skip-->
 
 ```svelte
@@ -25,6 +28,9 @@ This rule warns unnecessary `svelte-ignore` comments.
 
 <!-- ✓ GOOD -->
 <!-- svelte-ignore a11y-autofocus a11y-missing-attribute -->
+<img src="https://example.com/img.png" autofocus />
+
+<!-- svelte-ignore a11y-autofocus, a11y-missing-attribute (intentional for this example) -->
 <img src="https://example.com/img.png" autofocus />
 
 <!-- ✗ BAD -->
@@ -39,6 +45,7 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte - Docs > Comments](https://svelte.dev/docs#template-syntax-comments)
+- [Svelte - Compiler warnings](https://svelte.dev/docs/svelte/compiler-warnings)
 
 ## :rocket: Version
 

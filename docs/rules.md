@@ -92,6 +92,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                         | :wrench: |
 | [svelte/indent](./rules/indent.md)                                                                       | enforce consistent indentation                                                     | :wrench: |
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
+| [svelte/max-lines-per-block](./rules/max-lines-per-block.md)                                             | enforce maximum number of lines in svelte component blocks                         |          |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
 | [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
@@ -117,11 +118,11 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 
 These rules relate to SvelteKit and its best Practices.
 
-| Rule ID                                                                                                        | Description                                                                          |        |
-| :------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- | :----- |
-| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. | :star: |
-| [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md)                               | disallow using navigation (links, goto, pushState, replaceState) without a resolve() | :star: |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.               | :star: |
+| Rule ID                                                                                                        | Description                                                                                           |        |
+| :------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- | :----- |
+| [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.                  | :star: |
+| [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md)                               | disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()` | :star: |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                                | :star: |
 
 ## Experimental
 

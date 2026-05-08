@@ -1,0 +1,4 @@
+- message: Unexpected replaceState() call without resolve().
+  line: 10
+  column: 15
+  suggestions: null

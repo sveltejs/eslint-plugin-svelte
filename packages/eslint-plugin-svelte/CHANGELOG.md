@@ -1,5 +1,43 @@
 # eslint-plugin-svelte
 
+## 3.17.1
+
+### Patch Changes
+
+- [#1321](https://github.com/sveltejs/eslint-plugin-svelte/pull/1321) [`97d89f7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/97d89f7d068321d4f79399c6c695ca4c0de2bd82) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added support for ResolvedPathname types
+
+## 3.17.0
+
+### Minor Changes
+
+- [#1489](https://github.com/sveltejs/eslint-plugin-svelte/pull/1489) [`eb8172c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/eb8172cc5eaf2f319542e6ce42c8319ac48bd517) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added support for ternary expressions
+
+### Patch Changes
+
+- [#1490](https://github.com/sveltejs/eslint-plugin-svelte/pull/1490) [`b742163`](https://github.com/sveltejs/eslint-plugin-svelte/commit/b742163d240e5cb99359ed372659489c0ed94b30) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): properly detecting invalid binary expression operators
+
+## 3.16.0
+
+### Minor Changes
+
+- [#1483](https://github.com/sveltejs/eslint-plugin-svelte/pull/1483) [`69c9a6a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/69c9a6af7081e7011a4123cf2045ad3fd58609e0) Thanks [@shimscho](https://github.com/shimscho)! - feat: add `svelte/max-lines-per-block` rule to enforce maximum line counts per block in Svelte SFCs
+
+- [#1484](https://github.com/sveltejs/eslint-plugin-svelte/pull/1484) [`98eae61`](https://github.com/sveltejs/eslint-plugin-svelte/commit/98eae61f4462b3a92a40e697d8fbd18e2541118a) Thanks [@Stadly](https://github.com/Stadly)! - feat: ignore parenthetical notes in svelte-ignore comments
+
+## 3.15.2
+
+### Patch Changes
+
+- [#1494](https://github.com/sveltejs/eslint-plugin-svelte/pull/1494) [`5d556c8`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5d556c86f8a532eec560fabf6f0c8d47a3db5a1f) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed a rule crash when encountering an attribute without value
+
+## 3.15.1
+
+### Patch Changes
+
+- [#1477](https://github.com/sveltejs/eslint-plugin-svelte/pull/1477) [`8c5f51e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8c5f51efbf54e4d8fcbd7e167321e8c0bc4713ab) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(no-top-level-browser-globals): false positive when browser globals appear inside TypeScript generic type parameters (e.g. `$state<HTMLElement>(...)`).
+
+- [#1467](https://github.com/sveltejs/eslint-plugin-svelte/pull/1467) [`d81b556`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d81b556a4ab9399db1a4c464fb647f9bdf97aa32) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): fixed nullish link shorthands not being allowed
+
 ## 3.15.0
 
 ### Minor Changes

@@ -1,16 +1,18 @@
 import type { TSESTree } from '@typescript-eslint/types';
+
 import { createRule } from '../utils/index.js';
 import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
+import { type TSTools, getTypeScriptTools } from '../utils/ts-utils/index.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
 		docs: {
 			description:
-				'disallow using navigation (links, goto, pushState, replaceState) without a resolve()',
+				'disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()`',
 			category: 'SvelteKit',
 			recommended: true
 		},
@@ -48,6 +50,8 @@ export default createRule('no-navigation-without-resolve', {
 		]
 	},
 	create(context) {
+		const tsTools = getTypeScriptTools(context);
+
 		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
 
 		const ignoreGoto = context.options[0]?.ignoreGoto ?? false;
@@ -66,7 +70,7 @@ export default createRule('no-navigation-without-resolve', {
 				} = extractFunctionCallReferences(referenceTracker);
 				if (!ignoreGoto) {
 					for (const gotoCall of gotoCalls) {
-						checkGotoCall(context, gotoCall, resolveReferences);
+						checkGotoCall(context, gotoCall, resolveReferences, tsTools);
 					}
 				}
 				if (!ignorePushState) {
@@ -75,6 +79,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							pushStateCall,
 							resolveReferences,
+							tsTools,
 							'pushStateWithoutResolve'
 						);
 					}
@@ -85,6 +90,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							replaceStateCall,
 							resolveReferences,
+							tsTools,
 							'replaceStateWithoutResolve'
 						);
 					}
@@ -92,15 +98,18 @@ export default createRule('no-navigation-without-resolve', {
 			},
 			...(!ignoreLinks && {
 				SvelteShorthandAttribute(node) {
-					checkLinkAttribute(context, node, node.value, resolveReferences);
+					checkLinkAttribute(context, node, node.value, resolveReferences, tsTools);
 				},
 				SvelteAttribute(node) {
-					checkLinkAttribute(
-						context,
-						node,
-						node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
-						resolveReferences
-					);
+					if (node.value.length > 0) {
+						checkLinkAttribute(
+							context,
+							node,
+							node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
+							resolveReferences,
+							tsTools
+						);
+					}
 				}
 			})
 		};
@@ -185,7 +194,8 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 function checkGotoCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	resolveReferences: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null
 ): void {
 	if (
 		call.arguments.length > 0 &&
@@ -194,6 +204,7 @@ function checkGotoCall(
 			new FindVariableContext(context),
 			call.arguments[0],
 			resolveReferences,
+			tsTools,
 			{}
 		)
 	) {
@@ -205,6 +216,7 @@ function checkShallowNavigationCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
 	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
 	messageId: string
 ): void {
 	if (
@@ -214,6 +226,7 @@ function checkShallowNavigationCall(
 			new FindVariableContext(context),
 			call.arguments[0],
 			resolveReferences,
+			tsTools,
 			{
 				allowEmpty: true
 			}
@@ -227,7 +240,8 @@ function checkLinkAttribute(
 	context: RuleContext,
 	attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute,
 	value: TSESTree.Expression | AST.SvelteLiteral,
-	resolveReferences: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null
 ): void {
 	if (
 		attribute.parent.parent.type === 'SvelteElement' &&
@@ -236,7 +250,7 @@ function checkLinkAttribute(
 		attribute.parent.parent.name.name === 'a' &&
 		attribute.key.name === 'href' &&
 		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
-		!isValueAllowed(context, new FindVariableContext(context), value, resolveReferences, {
+		!isValueAllowed(context, new FindVariableContext(context), value, resolveReferences, tsTools, {
 			allowAbsolute: true,
 			allowFragment: true,
 			allowNullish: true
@@ -286,6 +300,7 @@ function isValueAllowed(
 	findContext: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
 	config: {
 		allowAbsolute?: boolean;
 		allowEmpty?: boolean;
@@ -298,24 +313,41 @@ function isValueAllowed(
 		if (
 			variable !== null &&
 			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null
+			variable.identifiers[0].parent.type === 'VariableDeclarator'
 		) {
-			return isValueAllowed(
-				context,
-				findContext,
-				variable.identifiers[0].parent.init,
-				resolveReferences,
-				config
-			);
+			if (
+				expressionIsResolvedPathname(
+					new FindVariableContext(context),
+					variable.identifiers[0],
+					tsTools
+				)
+			) {
+				return true;
+			}
+			if (variable.identifiers[0].parent.init !== null) {
+				return isValueAllowed(
+					context,
+					findContext,
+					variable.identifiers[0].parent.init,
+					resolveReferences,
+					tsTools,
+					config
+				);
+			}
 		}
+	}
+	if (value.type === 'ConditionalExpression') {
+		return (
+			isValueAllowed(context, findContext, value.consequent, resolveReferences, tsTools, config) &&
+			isValueAllowed(context, findContext, value.alternate, resolveReferences, tsTools, config)
+		);
 	}
 	if (
 		(config.allowAbsolute && expressionIsAbsoluteUrl(new FindVariableContext(context), value)) ||
 		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
 		(config.allowFragment && expressionStartsWith(new FindVariableContext(context), value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionStartsWith(new FindVariableContext(context), value, '?') ||
+		expressionIsResolvedPathname(new FindVariableContext(context), value, tsTools) ||
 		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
 	) {
 		return true;
@@ -327,6 +359,7 @@ function isValueAllowed(
 				new FindVariableContext(context),
 				value.left,
 				resolveReferences,
+				tsTools,
 				config
 			);
 		}
@@ -357,6 +390,43 @@ function isValueAllowed(
 }
 
 // Helper functions
+
+function expressionIsResolvedPathname(
+	ctx: FindVariableContext,
+	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	tsTools: TSTools | null
+): boolean {
+	if (tsTools === null) {
+		return false;
+	}
+
+	const checker = tsTools.service.program.getTypeChecker();
+
+	const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(value);
+	if (tsNode === undefined) {
+		return false;
+	}
+	const nodeType = checker.getTypeAtLocation(tsNode);
+
+	const appTypesModule = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
+	if (!appTypesModule) {
+		return false;
+	}
+
+	const resolvedPathnameSymbol = checker
+		.getExportsOfModule(appTypesModule)
+		.find((e) => e.name === 'ResolvedPathname');
+	if (!resolvedPathnameSymbol) {
+		return false;
+	}
+	const resolvedPathnameType = checker.getDeclaredTypeOfSymbol(resolvedPathnameSymbol);
+
+	// getTypeAtLocation returns the resolved (structural) type without alias information, so we cannot compare aliasSymbols directly. Instead we check structural equivalence by testing assignability in both directions: this correctly rejects strict subtypes like Pathname (Pathname ⊂ ResolvedPathname, so only one direction holds).
+	return (
+		checker.isTypeAssignableTo(nodeType, resolvedPathnameType) &&
+		checker.isTypeAssignableTo(resolvedPathnameType, nodeType)
+	);
+}
 
 function expressionIsResolveCall(
 	ctx: FindVariableContext,
@@ -456,8 +526,8 @@ function binaryExpressionIsAbsoluteUrl(
 	node: TSESTree.BinaryExpression
 ): boolean {
 	return (
-		(node.left.type !== 'PrivateIdentifier' && expressionIsAbsoluteUrl(ctx, node.left)) ||
-		expressionIsAbsoluteUrl(ctx, node.right)
+		node.operator === '+' &&
+		(expressionIsAbsoluteUrl(ctx, node.left) || expressionIsAbsoluteUrl(ctx, node.right))
 	);
 }
 
@@ -507,7 +577,7 @@ function binaryExpressionStartsWith(
 	node: TSESTree.BinaryExpression,
 	prefix: string
 ): boolean {
-	return node.left.type !== 'PrivateIdentifier' && expressionStartsWith(ctx, node.left, prefix);
+	return node.operator === '+' && expressionStartsWith(ctx, node.left, prefix);
 }
 
 function identifierStartsWith(

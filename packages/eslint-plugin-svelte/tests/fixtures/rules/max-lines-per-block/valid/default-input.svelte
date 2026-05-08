@@ -1,0 +1,17 @@
+<script>
+	let count = 0;
+	function increment() {
+		count++;
+	}
+</script>
+
+<button on:click={increment}>
+	Count: {count}
+</button>
+
+<style>
+	button {
+		background: blue;
+		color: white;
+	}
+</style>

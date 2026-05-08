@@ -96,6 +96,11 @@ export interface RuleOptions {
    */
   'svelte/max-attributes-per-line'?: Linter.RuleEntry<SvelteMaxAttributesPerLine>
   /**
+   * enforce maximum number of lines in svelte component blocks
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/max-lines-per-block/
+   */
+  'svelte/max-lines-per-block'?: Linter.RuleEntry<SvelteMaxLinesPerBlock>
+  /**
    * enforce unified spacing in mustache
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/mustache-spacing/
    */
@@ -194,7 +199,7 @@ export interface RuleOptions {
    */
   'svelte/no-navigation-without-base'?: Linter.RuleEntry<SvelteNoNavigationWithoutBase>
   /**
-   * disallow using navigation (links, goto, pushState, replaceState) without a resolve()
+   * disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/
    */
   'svelte/no-navigation-without-resolve'?: Linter.RuleEntry<SvelteNoNavigationWithoutResolve>
@@ -499,6 +504,14 @@ type SvelteIndent = []|[{
 type SvelteMaxAttributesPerLine = []|[{
   multiline?: number
   singleline?: number
+}]
+// ----- svelte/max-lines-per-block -----
+type SvelteMaxLinesPerBlock = []|[{
+  script?: number
+  template?: number
+  style?: number
+  skipBlankLines?: boolean
+  skipComments?: boolean
 }]
 // ----- svelte/mustache-spacing -----
 type SvelteMustacheSpacing = []|[{
