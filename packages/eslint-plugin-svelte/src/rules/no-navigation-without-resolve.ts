@@ -341,7 +341,7 @@ function isValueAllowed(
 		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
 		(config.allowFragment && expressionStartsWith(new FindVariableContext(context), value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionIsResolvedPathname(alue, tsTools) ||
+		expressionIsResolvedPathname(value, tsTools) ||
 		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
 	) {
 		return true;
