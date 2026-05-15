@@ -375,10 +375,13 @@ function expressionIsResolvedPathname(
 	}
 	const resolvedPathnameType = checker.getDeclaredTypeOfSymbol(resolvedPathnameSymbol);
 
+	// Strip nullability so that optional properties (e.g. `href?: ResolvedPathname`) are still recognized.
+	const nonNullableNodeType = checker.getNonNullableType(nodeType);
+
 	// getTypeAtLocation returns the resolved (structural) type without alias information, so we cannot compare aliasSymbols directly. Instead we check structural equivalence by testing assignability in both directions: this correctly rejects strict subtypes like Pathname (Pathname ⊂ ResolvedPathname, so only one direction holds).
 	return (
-		checker.isTypeAssignableTo(nodeType, resolvedPathnameType) &&
-		checker.isTypeAssignableTo(resolvedPathnameType, nodeType)
+		checker.isTypeAssignableTo(nonNullableNodeType, resolvedPathnameType) &&
+		checker.isTypeAssignableTo(resolvedPathnameType, nonNullableNodeType)
 	);
 }
 
