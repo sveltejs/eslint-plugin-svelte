@@ -15,6 +15,9 @@ defaults:
     #  plus, every platform supports it
     shell: bash
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
