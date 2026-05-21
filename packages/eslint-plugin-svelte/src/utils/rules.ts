@@ -62,6 +62,7 @@ import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
 import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
+import preferDerivedOverDerivedBy from '../rules/prefer-derived-over-derived-by.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import preferSvelteReactivity from '../rules/prefer-svelte-reactivity.js';
@@ -144,6 +145,7 @@ export const rules = [
 	noUselessMustaches,
 	preferClassDirective,
 	preferConst,
+	preferDerivedOverDerivedBy,
 	preferDestructuredStoreProps,
 	preferStyleDirective,
 	preferSvelteReactivity,

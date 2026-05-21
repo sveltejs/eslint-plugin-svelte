@@ -319,6 +319,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
   /**
+   * disallow unnecessary `$derived.by()` when `$derived()` is sufficient
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by/
+   */
+  'svelte/prefer-derived-over-derived-by'?: Linter.RuleEntry<[]>
+  /**
    * destructure values from object stores for better change tracking & fewer redraws
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/
    */
