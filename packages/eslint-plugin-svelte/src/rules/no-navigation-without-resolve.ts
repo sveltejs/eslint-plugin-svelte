@@ -6,7 +6,12 @@ import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
-import { type TSTools, getTypeScriptTools } from '../utils/ts-utils/index.js';
+import {
+	type TSTools,
+	getTypeScriptTools,
+	isNullType,
+	isUndefinedType
+} from '../utils/ts-utils/index.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
@@ -336,7 +341,7 @@ function isValueAllowed(
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
-		(config.allowNullish && expressionIsNullish(value)) ||
+		(config.allowNullish && expressionIsNullish(value, tsTools)) ||
 		expressionIsResolvedPathname(value, tsTools) ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
@@ -424,16 +429,32 @@ function expressionIsEmpty(
 }
 
 function expressionIsNullish(
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	tsTools: TSTools | null
 ): boolean {
 	switch (node.type) {
 		case 'Identifier':
-			return node.name === 'undefined';
+			return node.name === 'undefined' || expressionIsNullishType(node, tsTools);
 		case 'Literal':
 			return node.value === null; // Undefined is an Identifier in ESTree, null is a Literal
 		default:
 			return false;
 	}
+}
+
+function expressionIsNullishType(value: TSESTree.Identifier, tsTools: TSTools | null): boolean {
+	if (tsTools === null) {
+		return false;
+	}
+	const checker = tsTools.service.program.getTypeChecker();
+
+	const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(value);
+	if (tsNode === undefined) {
+		return false;
+	}
+	const nodeType = checker.getTypeAtLocation(tsNode);
+
+	return isNullType(nodeType, tsTools.ts) || isUndefinedType(nodeType, tsTools.ts);
 }
 
 function expressionIsAbsoluteUrl(
