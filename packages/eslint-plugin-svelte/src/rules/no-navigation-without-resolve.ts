@@ -317,7 +317,7 @@ function isValueAllowed(
 			variable.identifiers.length > 0 &&
 			variable.identifiers[0].parent.type === 'VariableDeclarator'
 		) {
-			if (expressionIsResolvedPathname(variable.identifiers[0], tsTools)) {
+			if (expressionIsAllowedType(variable.identifiers[0], config.allowNullish, tsTools)) {
 				return true;
 			}
 			if (variable.identifiers[0].parent.init !== null) {
@@ -341,8 +341,8 @@ function isValueAllowed(
 		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
-		(config.allowNullish && expressionIsNullish(value, tsTools)) ||
-		expressionIsResolvedPathname(value, tsTools) ||
+		(config.allowNullish && expressionIsNullish(value)) ||
+		expressionIsAllowedType(value, config.allowNullish, tsTools) ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
 		return true;
@@ -352,8 +352,9 @@ function isValueAllowed(
 
 // Helper functions
 
-function expressionIsResolvedPathname(
+function expressionIsAllowedType(
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	allowNullish: boolean | undefined,
 	tsTools: TSTools | null
 ): boolean {
 	if (tsTools === null) {
@@ -365,7 +366,13 @@ function expressionIsResolvedPathname(
 	if (tsNode === undefined) {
 		return false;
 	}
-	const nodeType = checker.getTypeAtLocation(tsNode);
+	let nodeType = checker.getTypeAtLocation(tsNode);
+	if (allowNullish === true) {
+		if (isNullType(nodeType, tsTools.ts) || isUndefinedType(nodeType, tsTools.ts)) {
+			return true;
+		}
+		nodeType = checker.getNonNullableType(nodeType);
+	}
 
 	const appTypesModule = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
 	if (!appTypesModule) {
@@ -429,32 +436,16 @@ function expressionIsEmpty(
 }
 
 function expressionIsNullish(
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
-	tsTools: TSTools | null
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
 ): boolean {
 	switch (node.type) {
 		case 'Identifier':
-			return node.name === 'undefined' || expressionIsNullishType(node, tsTools);
+			return node.name === 'undefined';
 		case 'Literal':
 			return node.value === null; // Undefined is an Identifier in ESTree, null is a Literal
 		default:
 			return false;
 	}
-}
-
-function expressionIsNullishType(value: TSESTree.Identifier, tsTools: TSTools | null): boolean {
-	if (tsTools === null) {
-		return false;
-	}
-	const checker = tsTools.service.program.getTypeChecker();
-
-	const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(value);
-	if (tsNode === undefined) {
-		return false;
-	}
-	const nodeType = checker.getTypeAtLocation(tsNode);
-
-	return isNullType(nodeType, tsTools.ts) || isUndefinedType(nodeType, tsTools.ts);
 }
 
 function expressionIsAbsoluteUrl(
