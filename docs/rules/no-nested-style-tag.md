@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-nested-style-tag'
 description: 'disallow `<style>` elements nested inside other elements or blocks'
+since: 'v3.18.0'
 ---
 
 # svelte/no-nested-style-tag
 
 > disallow `<style>` elements nested inside other elements or blocks
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -56,6 +55,10 @@ Nothing.
 ## :books: Further Reading
 
 - [Svelte docs: nested style elements](https://svelte.dev/docs/svelte/nested-style-elements)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.18.0
 
 ## :mag: Implementation
 

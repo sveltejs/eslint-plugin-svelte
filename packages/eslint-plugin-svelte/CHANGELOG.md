@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.18.0
+
+### Minor Changes
+
+- [#1530](https://github.com/sveltejs/eslint-plugin-svelte/pull/1530) [`f110d75`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f110d753d64440d37d061644a3a41c09614828ba) Thanks [@SAY-5](https://github.com/SAY-5)! - feat: add `no-nested-style-tag` rule
+
+- [#1531](https://github.com/sveltejs/eslint-plugin-svelte/pull/1531) [`d3043d3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d3043d30b8b772ef3f3b4fc65df5c3bb7ad4af12) Thanks [@SAY-5](https://github.com/SAY-5)! - feat: add `prefer-derived-over-derived-by` rule
+
+- [#1532](https://github.com/sveltejs/eslint-plugin-svelte/pull/1532) [`aa8fe83`](https://github.com/sveltejs/eslint-plugin-svelte/commit/aa8fe83b2664d9af1e11040eea9f8ff4418a4315) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): recognizing nullish TS types as allowed
+
 ## 3.17.1
 
 ### Patch Changes
