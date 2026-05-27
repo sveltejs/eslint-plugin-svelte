@@ -46,26 +46,26 @@ export default createRule('prefer-derived-over-derived-by', {
 				if (arg.params.length !== 0 || arg.async || arg.generator) {
 					return;
 				}
-				let expressionText: string | null = null;
+				let expressionNode: TSESTree.Expression | null = null;
 				if (arg.type === 'ArrowFunctionExpression' && arg.body.type !== 'BlockStatement') {
-					expressionText = context.sourceCode.getText(arg.body);
+					expressionNode = arg.body;
 				} else if (
 					arg.body.type === 'BlockStatement' &&
 					arg.body.body.length === 1 &&
 					arg.body.body[0].type === 'ReturnStatement' &&
 					arg.body.body[0].argument !== null
 				) {
-					expressionText = context.sourceCode.getText(arg.body.body[0].argument);
+					expressionNode = arg.body.body[0].argument;
 				}
-				if (expressionText === null) {
+				if (expressionNode === null) {
 					return;
 				}
-				const replacement = `$derived(${expressionText})`;
 				context.report({
 					node,
 					messageId: 'unnecessary',
 					fix(fixer) {
-						return fixer.replaceText(node, replacement);
+						const expressionText = context.sourceCode.getText(expressionNode!);
+						return fixer.replaceText(node, `$derived(${expressionText})`);
 					}
 				});
 			}
