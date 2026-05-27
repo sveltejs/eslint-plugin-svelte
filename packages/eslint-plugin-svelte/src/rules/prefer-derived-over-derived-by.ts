@@ -64,7 +64,7 @@ export default createRule('prefer-derived-over-derived-by', {
 					node,
 					messageId: 'unnecessary',
 					fix(fixer) {
-						const expressionText = context.sourceCode.getText(expressionNode!);
+						const expressionText = context.sourceCode.getText(expressionNode);
 						return fixer.replaceText(node, `$derived(${expressionText})`);
 					}
 				});
