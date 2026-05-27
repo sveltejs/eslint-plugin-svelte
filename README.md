@@ -349,6 +349,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-useless-children-snippet](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/) | disallow explicit children snippet where it's not needed | :star: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :star::wrench: |
 | [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
+| [svelte/prefer-derived-over-derived-by](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by/) | disallow unnecessary `$derived.by()` when `$derived()` is sufficient | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/prefer-writable-derived](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/) | Prefer using writable $derived instead of $state and $effect | :star::bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block | :star: |
