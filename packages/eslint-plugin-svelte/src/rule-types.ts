@@ -204,6 +204,11 @@ export interface RuleOptions {
    */
   'svelte/no-navigation-without-resolve'?: Linter.RuleEntry<SvelteNoNavigationWithoutResolve>
   /**
+   * disallow `<style>` elements nested inside other elements or blocks
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-nested-style-tag/
+   */
+  'svelte/no-nested-style-tag'?: Linter.RuleEntry<[]>
+  /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
    */

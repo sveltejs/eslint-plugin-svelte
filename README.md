@@ -301,6 +301,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives | :star: |
 | [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives | :star: |
+| [svelte/no-nested-style-tag](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-nested-style-tag/) | disallow `<style>` elements nested inside other elements or blocks |  |
 | [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/) | Checks for invalid raw HTML elements | :star::wrench: |
