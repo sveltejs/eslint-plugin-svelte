@@ -6,7 +6,12 @@ import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
-import { type TSTools, getTypeScriptTools } from '../utils/ts-utils/index.js';
+import {
+	type TSTools,
+	getTypeScriptTools,
+	isNullType,
+	isUndefinedType
+} from '../utils/ts-utils/index.js';
 
 export default createRule('no-navigation-without-resolve', {
 	meta: {
@@ -312,7 +317,7 @@ function isValueAllowed(
 			variable.identifiers.length > 0 &&
 			variable.identifiers[0].parent.type === 'VariableDeclarator'
 		) {
-			if (expressionIsResolvedPathname(variable.identifiers[0], tsTools)) {
+			if (expressionIsAllowedType(variable.identifiers[0], config.allowNullish, tsTools)) {
 				return true;
 			}
 			if (variable.identifiers[0].parent.init !== null) {
@@ -337,7 +342,7 @@ function isValueAllowed(
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionIsResolvedPathname(value, tsTools) ||
+		expressionIsAllowedType(value, config.allowNullish, tsTools) ||
 		expressionIsResolveCall(ctx, value, resolveReferences)
 	) {
 		return true;
@@ -347,8 +352,9 @@ function isValueAllowed(
 
 // Helper functions
 
-function expressionIsResolvedPathname(
+function expressionIsAllowedType(
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	allowNullish: boolean | undefined,
 	tsTools: TSTools | null
 ): boolean {
 	if (tsTools === null) {
@@ -360,7 +366,13 @@ function expressionIsResolvedPathname(
 	if (tsNode === undefined) {
 		return false;
 	}
-	const nodeType = checker.getTypeAtLocation(tsNode);
+	let nodeType = checker.getTypeAtLocation(tsNode);
+	if (allowNullish === true) {
+		if (isNullType(nodeType, tsTools.ts) || isUndefinedType(nodeType, tsTools.ts)) {
+			return true;
+		}
+		nodeType = checker.getNonNullableType(nodeType);
+	}
 
 	const appTypesModule = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
 	if (!appTypesModule) {
