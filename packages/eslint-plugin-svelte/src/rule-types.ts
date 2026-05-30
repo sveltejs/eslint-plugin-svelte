@@ -111,6 +111,11 @@ export interface RuleOptions {
    */
   'svelte/no-add-event-listener'?: Linter.RuleEntry<[]>
   /**
+   * disallow the use of `{@const}` in favor of `{const ...}` declaration tags
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags/
+   */
+  'svelte/no-at-const-tags'?: Linter.RuleEntry<[]>
+  /**
    * disallow the use of `{@debug}`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/
    */

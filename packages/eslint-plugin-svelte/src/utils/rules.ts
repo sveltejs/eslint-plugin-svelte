@@ -21,6 +21,7 @@ import maxAttributesPerLine from '../rules/max-attributes-per-line.js';
 import maxLinesPerBlock from '../rules/max-lines-per-block.js';
 import mustacheSpacing from '../rules/mustache-spacing.js';
 import noAddEventListener from '../rules/no-add-event-listener.js';
+import noAtConstTags from '../rules/no-at-const-tags.js';
 import noAtDebugTags from '../rules/no-at-debug-tags.js';
 import noAtHtmlTags from '../rules/no-at-html-tags.js';
 import noDomManipulating from '../rules/no-dom-manipulating.js';
@@ -105,6 +106,7 @@ export const rules = [
 	maxLinesPerBlock,
 	mustacheSpacing,
 	noAddEventListener,
+	noAtConstTags,
 	noAtDebugTags,
 	noAtHtmlTags,
 	noDomManipulating,
