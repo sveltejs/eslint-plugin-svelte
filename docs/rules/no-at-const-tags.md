@@ -18,20 +18,22 @@ This rule reports all uses of `{@const ...}`.
 
 In Svelte 5, the `{@const ...}` tag is considered legacy. Use the `{const ...}` declaration tag instead, which can be placed anywhere inside the component.
 
+`{@const ...}` is reactive — its value is re-evaluated when its dependencies change. To preserve that behavior in runes mode, the initializer must be wrapped in `$derived(...)`. The auto-fix does this automatically in runes mode; in legacy (non-runes) mode it simply strips the leading `@`, since `$derived` is not available there.
+
 <!--eslint-skip-->
 
 ```svelte
 <script>
   /* eslint svelte/no-at-const-tags: "error" */
-  let boxes = [
+  let boxes = $state([
     { width: 10, height: 10 },
     { width: 15, height: 15 }
-  ];
+  ]);
 </script>
 
 {#each boxes as box}
   <!-- ✓ GOOD -->
-  {const area = box.width * box.height}
+  {const area = $derived(box.width * box.height)}
 
   <!-- ✗ BAD -->
   {@const label = `${box.width} ⨉ ${box.height}`}

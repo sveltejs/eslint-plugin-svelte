@@ -1,8 +1,8 @@
 <script>
-	let boxes = [
+	let boxes = $state([
 		{ width: 10, height: 10 },
 		{ width: 15, height: 15 }
-	];
+	]);
 </script>
 
 {#each boxes as box}

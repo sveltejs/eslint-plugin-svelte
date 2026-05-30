@@ -1,4 +1,5 @@
 import { createRule } from '../utils/index.js';
+import { getSvelteContext } from '../utils/svelte-context.js';
 
 export default createRule('no-at-const-tags', {
 	meta: {
@@ -21,19 +22,37 @@ export default createRule('no-at-const-tags', {
 	},
 	create(context) {
 		const sourceCode = context.sourceCode;
+		const runes = getSvelteContext(context)?.runes;
+		const wrapInDerived = runes === true;
 		return {
 			SvelteConstTag(node) {
 				context.report({
 					node,
 					messageId: 'unexpected',
-					fix(fixer) {
+					*fix(fixer) {
 						const text = sourceCode.getText(node);
 						const match = /^\{(\s*)@const\b/u.exec(text);
 						if (!match) {
-							return null;
+							return;
 						}
 						const atOffset = node.range[0] + 1 + match[1].length;
-						return fixer.removeRange([atOffset, atOffset + 1]);
+						yield fixer.removeRange([atOffset, atOffset + 1]);
+
+						if (!wrapInDerived) {
+							return;
+						}
+						const init = node.declarations[0].init;
+						// Preserve the reactivity of legacy `{@const}` by wrapping the
+						// initializer in `$derived(...)`. Skip when already wrapped.
+						if (
+							init.type === 'CallExpression' &&
+							init.callee.type === 'Identifier' &&
+							init.callee.name === '$derived'
+						) {
+							return;
+						}
+						yield fixer.insertTextBefore(init, '$derived(');
+						yield fixer.insertTextAfter(init, ')');
 					}
 				});
 			}
