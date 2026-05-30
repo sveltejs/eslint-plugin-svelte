@@ -1,5 +1,13 @@
 # eslint-plugin-svelte
 
+## 3.19.0
+
+### Minor Changes
+
+- [#1533](https://github.com/sveltejs/eslint-plugin-svelte/pull/1533) [`f0416be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f0416be2623d01dd2af410cf10a74f65303722fd) Thanks [@dummdidumm](https://github.com/dummdidumm)! - feat: support Svelte 5 declaration tags
+
+- [#1533](https://github.com/sveltejs/eslint-plugin-svelte/pull/1533) [`f0416be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f0416be2623d01dd2af410cf10a74f65303722fd) Thanks [@dummdidumm](https://github.com/dummdidumm)! - feat: update svelte-eslint-parser to 1.7.0
+
 ## 3.18.0
 
 ### Minor Changes
