@@ -42,6 +42,9 @@ export default createRule('no-at-const-tags', {
 							return;
 						}
 						const init = node.declarations[0].init;
+						if (init == null) {
+							return;
+						}
 						// Preserve the reactivity of legacy `{@const}` by wrapping the
 						// initializer in `$derived(...)`. Skip when already wrapped.
 						if (
