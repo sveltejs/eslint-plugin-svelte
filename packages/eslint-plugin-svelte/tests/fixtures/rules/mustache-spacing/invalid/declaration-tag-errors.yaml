@@ -6,11 +6,3 @@
   line: 2
   column: 37
   suggestions: null
-- message: Expected no space after '{', but found.
-  line: 3
-  column: 2
-  suggestions: null
-- message: Expected no space before '}', but found.
-  line: 5
-  column: 3
-  suggestions: null
