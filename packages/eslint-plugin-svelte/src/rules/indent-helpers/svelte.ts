@@ -213,6 +213,13 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			offsets.setOffsetToken(declarationToken, 1, openToken);
 			offsets.setOffsetToken(closeToken, 0, openToken);
 		},
+		SvelteDeclarationTag(node: AST.SvelteDeclarationTag) {
+			const openToken = sourceCode.getFirstToken(node);
+			const declarationToken = sourceCode.getFirstToken(node.declaration);
+			const closeToken = sourceCode.getLastToken(node);
+			offsets.setOffsetToken(declarationToken, 1, openToken);
+			offsets.setOffsetToken(closeToken, 0, openToken);
+		},
 		SvelteRenderTag(node: AST.SvelteRenderTag) {
 			const openToken = sourceCode.getFirstToken(node);
 			const renderToken = sourceCode.getTokenAfter(openToken)!;

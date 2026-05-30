@@ -375,6 +375,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -389,6 +390,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -404,6 +406,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -461,18 +464,21 @@ function isWrappedInBraces(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag
 ): node is
 	| SvAST.SvelteMustacheTag
 	| SvAST.SvelteShorthandAttribute
 	| SvAST.SvelteSpreadAttribute
 	| SvAST.SvelteDebugTag
+	| SvAST.SvelteDeclarationTag
 	| SvAST.SvelteRenderTag {
 	return (
 		node.type === 'SvelteMustacheTag' ||
 		node.type === 'SvelteShorthandAttribute' ||
 		node.type === 'SvelteSpreadAttribute' ||
 		node.type === 'SvelteDebugTag' ||
+		node.type === 'SvelteDeclarationTag' ||
 		node.type === 'SvelteRenderTag'
 	);
 }
