@@ -1,6 +1,6 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { ASTNode } from '../../types.js';
-import type { SvelteDeclarationTag, SvelteNodeListener } from '../../types-for-node.js';
+import type { SvelteNodeListener } from '../../types-for-node.js';
 import { isNotWhitespace } from './ast.js';
 import type { IndentContext } from './commons.js';
 import { isBeginningOfElement } from './commons.js';
@@ -213,7 +213,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			offsets.setOffsetToken(declarationToken, 1, openToken);
 			offsets.setOffsetToken(closeToken, 0, openToken);
 		},
-		SvelteDeclarationTag(node: SvelteDeclarationTag) {
+		SvelteDeclarationTag(node: AST.SvelteDeclarationTag) {
 			const openToken = sourceCode.getFirstToken(node);
 			const declarationToken = sourceCode.getFirstToken(node.declaration);
 			const closeToken = sourceCode.getLastToken(node);

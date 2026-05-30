@@ -9,14 +9,8 @@
 import type { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 
-export type SvelteDeclarationTag = Omit<AST.SvelteConstTag, 'type' | 'declaration' | 'declarations'> & {
-	type: 'SvelteDeclarationTag';
-	declaration: TSESTree.VariableDeclaration | TSESTree.FunctionDeclaration;
-};
-
 export type ASTNode =
 	| AST.SvelteNode
-	| SvelteDeclarationTag
 	| Exclude<Omit<TSESTree.Node, 'parent'>, { type: AST.SvelteNode['type'] }>;
 export type ASTNodeWithParent =
 	| (Exclude<ASTNode, AST.SvelteProgram> & { parent: ASTNodeWithParent })
@@ -453,8 +447,8 @@ export type ASTNodeListener = {
 	'SvelteDebugTag:exit'?: (node: AST.SvelteDebugTag & ASTNodeWithParent) => void;
 	SvelteConstTag?: (node: AST.SvelteConstTag & ASTNodeWithParent) => void;
 	'SvelteConstTag:exit'?: (node: AST.SvelteConstTag & ASTNodeWithParent) => void;
-	SvelteDeclarationTag?: (node: SvelteDeclarationTag & ASTNodeWithParent) => void;
-	'SvelteDeclarationTag:exit'?: (node: SvelteDeclarationTag & ASTNodeWithParent) => void;
+	SvelteDeclarationTag?: (node: AST.SvelteDeclarationTag & ASTNodeWithParent) => void;
+	'SvelteDeclarationTag:exit'?: (node: AST.SvelteDeclarationTag & ASTNodeWithParent) => void;
 	SvelteRenderTag?: (node: AST.SvelteRenderTag & ASTNodeWithParent) => void;
 	'SvelteRenderTag:exit'?: (node: AST.SvelteRenderTag & ASTNodeWithParent) => void;
 	SvelteIfBlock?: (node: AST.SvelteIfBlock & ASTNodeWithParent) => void;
@@ -920,8 +914,8 @@ export type SvelteNodeListener = {
 	'SvelteDebugTag:exit'?: (node: AST.SvelteDebugTag & ASTNodeWithParent) => void;
 	SvelteConstTag?: (node: AST.SvelteConstTag & ASTNodeWithParent) => void;
 	'SvelteConstTag:exit'?: (node: AST.SvelteConstTag & ASTNodeWithParent) => void;
-	SvelteDeclarationTag?: (node: SvelteDeclarationTag & ASTNodeWithParent) => void;
-	'SvelteDeclarationTag:exit'?: (node: SvelteDeclarationTag & ASTNodeWithParent) => void;
+	SvelteDeclarationTag?: (node: AST.SvelteDeclarationTag & ASTNodeWithParent) => void;
+	'SvelteDeclarationTag:exit'?: (node: AST.SvelteDeclarationTag & ASTNodeWithParent) => void;
 	SvelteRenderTag?: (node: AST.SvelteRenderTag & ASTNodeWithParent) => void;
 	'SvelteRenderTag:exit'?: (node: AST.SvelteRenderTag & ASTNodeWithParent) => void;
 	SvelteIfBlock?: (node: AST.SvelteIfBlock & ASTNodeWithParent) => void;

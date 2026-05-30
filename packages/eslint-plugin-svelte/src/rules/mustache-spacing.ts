@@ -1,5 +1,4 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { SvelteDeclarationTag } from '../types-for-node.js';
 import { isClosingBraceToken, isOpeningBraceToken } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils/index.js';
 import { getMustacheTokens } from '../utils/ast-utils.js';
@@ -158,7 +157,7 @@ export default createRule('mustache-spacing', {
 				| AST.SvelteSpecialDirective
 				| AST.SvelteShorthandAttribute
 				| AST.SvelteSpreadAttribute
-				| SvelteDeclarationTag,
+				| AST.SvelteDeclarationTag,
 			option: OptionValue
 		) {
 			const mustacheTokens = getMustacheTokens(node, sourceCode);

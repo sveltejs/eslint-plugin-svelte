@@ -1,5 +1,4 @@
 import type { ASTNode, RuleContext, SourceCode } from '../types.js';
-import type { SvelteDeclarationTag } from '../types-for-node.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type { Scope, Variable } from '@typescript-eslint/scope-manager';
 import type { AST as SvAST } from 'svelte-eslint-parser';
@@ -376,7 +375,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
-		| SvelteDeclarationTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -391,7 +390,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
-		| SvelteDeclarationTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -407,7 +406,7 @@ export function getMustacheTokens(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
-		| SvelteDeclarationTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag,
 	sourceCode: SourceCode
 ): {
@@ -465,14 +464,14 @@ function isWrappedInBraces(
 		| SvAST.SvelteShorthandAttribute
 		| SvAST.SvelteSpreadAttribute
 		| SvAST.SvelteDebugTag
-		| SvelteDeclarationTag
+		| SvAST.SvelteDeclarationTag
 		| SvAST.SvelteRenderTag
 ): node is
 	| SvAST.SvelteMustacheTag
 	| SvAST.SvelteShorthandAttribute
 	| SvAST.SvelteSpreadAttribute
 	| SvAST.SvelteDebugTag
-	| SvelteDeclarationTag
+	| SvAST.SvelteDeclarationTag
 	| SvAST.SvelteRenderTag {
 	return (
 		node.type === 'SvelteMustacheTag' ||
