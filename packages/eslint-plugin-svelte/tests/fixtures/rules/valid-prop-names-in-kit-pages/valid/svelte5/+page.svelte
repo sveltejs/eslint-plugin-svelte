@@ -1,5 +1,5 @@
 <script>
-	let { data, errors, form, params, children } = $props();
+	let { data, form, params } = $props();
 
 	let comment = '';
 
@@ -18,5 +18,4 @@
 <form method="POST">
 	<textarea bind:value={comment} />
 	<button>Post comment</button>
-	{@render children()}
 </form>

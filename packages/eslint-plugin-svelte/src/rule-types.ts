@@ -419,7 +419,7 @@ export interface RuleOptions {
    */
   'svelte/valid-each-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow props other than data or errors in SvelteKit page components.
+   * disallow invalid props in SvelteKit route components.
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/
    */
   'svelte/valid-prop-names-in-kit-pages'?: Linter.RuleEntry<[]>
