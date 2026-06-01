@@ -1,5 +1,9 @@
 import { createRule } from '../utils/index.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
+import semver from 'semver';
+
+const shouldRun = semver.satisfies(SVELTE_VERSION, '>=5.56.0');
 
 export default createRule('no-at-const-tags', {
 	meta: {
@@ -21,6 +25,9 @@ export default createRule('no-at-const-tags', {
 		]
 	},
 	create(context) {
+		if (!shouldRun) {
+			return {};
+		}
 		const sourceCode = context.sourceCode;
 		const runes = getSvelteContext(context)?.runes;
 		// Only report and fix in runes mode, since preserving reactivity requires
