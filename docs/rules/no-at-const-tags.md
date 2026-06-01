@@ -16,6 +16,8 @@ description: 'disallow the use of `{@const}` in favor of `{const ...}` declarati
 
 This rule reports uses of `{@const ...}` in runes mode.
 
+`{let/const ...}` declaration tags were introduced in Svelte 5.56.0. This rule only reports and fixes when running on Svelte >=5.56.0.
+
 In Svelte 5, the `{@const ...}` tag is considered legacy. Use the `{const ...}` declaration tag instead, which can be placed anywhere inside the component.
 
 `{@const ...}` is reactive — its value is re-evaluated when its dependencies change. To preserve that behavior, the initializer must be wrapped in `$derived(...)`, and the auto-fix does this automatically.
