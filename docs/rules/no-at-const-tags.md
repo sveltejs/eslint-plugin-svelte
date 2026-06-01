@@ -14,11 +14,13 @@ description: 'disallow the use of `{@const}` in favor of `{const ...}` declarati
 
 ## :book: Rule Details
 
-This rule reports all uses of `{@const ...}`.
+This rule reports uses of `{@const ...}` in runes mode.
 
 In Svelte 5, the `{@const ...}` tag is considered legacy. Use the `{const ...}` declaration tag instead, which can be placed anywhere inside the component.
 
-`{@const ...}` is reactive — its value is re-evaluated when its dependencies change. To preserve that behavior in runes mode, the initializer must be wrapped in `$derived(...)`. The auto-fix does this automatically in runes mode; in legacy (non-runes) mode it simply strips the leading `@`, since `$derived` is not available there.
+`{@const ...}` is reactive — its value is re-evaluated when its dependencies change. To preserve that behavior, the initializer must be wrapped in `$derived(...)`, and the auto-fix does this automatically.
+
+This rule does nothing in non-runes mode: it neither reports nor fixes there. `$derived(...)` is unavailable outside runes mode, so the reactive behavior of `{@const ...}` cannot be preserved when converting to a `{const ...}` declaration tag.
 
 <!--eslint-skip-->
 

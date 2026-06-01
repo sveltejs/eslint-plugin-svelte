@@ -23,7 +23,11 @@ export default createRule('no-at-const-tags', {
 	create(context) {
 		const sourceCode = context.sourceCode;
 		const runes = getSvelteContext(context)?.runes;
-		const wrapInDerived = runes === true;
+		// Only report and fix in runes mode, since preserving reactivity requires
+		// `$derived(...)`, which is unavailable outside runes mode.
+		if (runes !== true) {
+			return {};
+		}
 		return {
 			SvelteConstTag(node) {
 				context.report({
@@ -38,9 +42,6 @@ export default createRule('no-at-const-tags', {
 						const atOffset = node.range[0] + 1 + match[1].length;
 						yield fixer.removeRange([atOffset, atOffset + 1]);
 
-						if (!wrapInDerived) {
-							return;
-						}
 						const init = node.declarations[0].init;
 						if (init == null) {
 							return;
