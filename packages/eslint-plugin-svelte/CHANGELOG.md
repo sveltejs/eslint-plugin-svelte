@@ -1,5 +1,15 @@
 # eslint-plugin-svelte
 
+## 3.20.0
+
+### Minor Changes
+
+- [#1545](https://github.com/sveltejs/eslint-plugin-svelte/pull/1545) [`32ba915`](https://github.com/sveltejs/eslint-plugin-svelte/commit/32ba9159b00bf65ef8fc9a4bf0897dfaf33e8cea) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/no-at-const-tags` rule
+
+### Patch Changes
+
+- [#1503](https://github.com/sveltejs/eslint-plugin-svelte/pull/1503) [`989bfa5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/989bfa5beecc495f38fc563498c39e755668c457) Thanks [@teemingc](https://github.com/teemingc)! - fix(valid-prop-names-in-kit-pages): drop `errors` from allowed page props in Svelte 5 to follow SvelteKit
+
 ## 3.19.0
 
 ### Minor Changes
