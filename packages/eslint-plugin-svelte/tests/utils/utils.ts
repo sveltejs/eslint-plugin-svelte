@@ -69,6 +69,11 @@ export function getRuleFixturesRoot(ruleName: string): string {
 	return path.resolve(FIXTURES_ROOT, `./rules/${ruleName}`);
 }
 
+function getFixtureTestName(inputFile: string): string {
+	const fixturePath = path.relative(FIXTURES_ROOT, inputFile).split(path.sep).join(path.posix.sep);
+	return `tests/fixtures/${fixturePath}`;
+}
+
 function fileNameSuffix(fileName: string): string {
 	return fileName.match(/\.svelte\.(?:j|t)s$/u)
 		? fileName.slice(fileName.length - 10)
@@ -121,7 +126,10 @@ export function loadTestCases(
 
 	const valid = listupInput(validFixtureRoot)
 		.filter(filter)
-		.map((inputFile) => getConfig(ruleName, inputFile));
+		.map((inputFile) => ({
+			...getConfig(ruleName, inputFile),
+			name: getFixtureTestName(inputFile)
+		}));
 
 	const fixable = plugin.rules[ruleName].meta?.fixable != null;
 
@@ -165,7 +173,10 @@ export function loadTestCases(
 				config.output = output === config.code ? null : output;
 			}
 
-			return config;
+			return {
+				...config,
+				name: getFixtureTestName(inputFile)
+			};
 		});
 
 	if (options?.additionals) {
