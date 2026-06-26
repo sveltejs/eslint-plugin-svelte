@@ -390,6 +390,9 @@ importers:
       svelte-i18n:
         specifier: ^4.0.1
         version: 4.0.1(svelte@5.56.0(@typescript-eslint/types@8.48.1))
+      svelte-shaker:
+        specifier: ^0.10.1
+        version: 0.10.1(svelte@5.56.0(@typescript-eslint/types@8.48.1))
       tsx:
         specifier: ^4.20.5
         version: 4.20.6
@@ -3878,6 +3881,16 @@ packages:
     hasBin: true
     peerDependencies:
       svelte: ^3 || ^4 || ^5
+
+  svelte-shaker@0.10.1:
+    resolution: {integrity: sha512-nVmjB3yTM12LZplAimsfhPDKuVVRItR1QG93t0FThuW3RVVmb8pnO/ty3gHDpJjLUeyTTt01Dw2hbnc9EtauAw==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@rsvelte/vite-plugin-svelte-native': '>=0.2.4'
+      svelte: ^5
+    peerDependenciesMeta:
+      '@rsvelte/vite-plugin-svelte-native':
+        optional: true
 
   svelte@5.41.0:
     resolution: {integrity: sha512-mP3vFFv5OUM5JN189+nJVW74kQ1dGqUrXTEzvCEVZqessY0GxZDls1nWVvt4Sxyv2USfQvAZO68VRaeIZvpzKg==}
@@ -8043,6 +8056,12 @@ snapshots:
       sade: 1.8.1
       svelte: 5.56.0(@typescript-eslint/types@8.48.1)
       tiny-glob: 0.2.9
+
+  svelte-shaker@0.10.1(svelte@5.56.0(@typescript-eslint/types@8.48.1)):
+    dependencies:
+      magic-string: 0.30.21
+      svelte: 5.56.0(@typescript-eslint/types@8.48.1)
+      zimmerframe: 1.1.4
 
   svelte@5.41.0:
     dependencies:
