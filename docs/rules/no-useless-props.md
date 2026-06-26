@@ -58,6 +58,12 @@ An incomplete scan (e.g. a component reached only through an unfollowed import a
 - `include` (`string[]`, default `["src"]`) — directories, relative to the ESLint working directory, that contain the whole app. **Every `.svelte` call site must be inside them** for the analysis to be complete; otherwise the rule simply under-reports.
 - `aliases` (`Record<string, string>`, default `{ "$lib": "src/lib" }`) — import-prefix aliases mapped to a directory (relative to the cwd), so aliased imports such as `import X from '$lib/X.svelte'` resolve during the scan.
 
+## :stopwatch: Performance & caveats
+
+Unlike an ordinary per-file rule, this one parses and analyzes **every component in the project**. To keep that affordable it runs the whole-program scan **once** on the first file of a lint run and caches the result for the rest of the run, but that one-time cost still scales with project size (it grows with the number of `.svelte` files — expect on the order of a few seconds for a large app). Enabling it therefore adds a fixed startup cost to `eslint`; it is best suited to CI / pre-commit and a deliberate opt-in for editors.
+
+The scan reads files from **disk**. In a long-lived editor session, edits to _other_ files are not reflected until the cache is rebuilt (a fresh ESLint process); and a finding in the file you are editing is suppressed when its on-disk text has drifted from the buffer, to avoid reporting at the wrong location. Treat the diagnostics as accurate on save / in CI, and approximate while typing.
+
 ## :warning: Requirements
 
 This rule needs the optional peer dependency [`svelte-shaker`](https://www.npmjs.com/package/svelte-shaker) installed, and a Node version with synchronous `require(ESM)` support (**Node >= 22.12**). If either is missing the rule prints a one-time warning and does nothing.
