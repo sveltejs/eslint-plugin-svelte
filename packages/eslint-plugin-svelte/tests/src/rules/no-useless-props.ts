@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import semver from 'semver';
@@ -28,14 +29,19 @@ const tester = new RuleTester({
 	}
 });
 
-// The rule loads `svelte-shaker` via synchronous `require()`, which needs Node's
-// require(ESM) support (>=22.12); on older Node the rule no-ops, so skip there.
-const SUPPORTS_REQUIRE_ESM = semver.gte(semver.coerce(process.version)!, '22.12.0');
+// This rule (and `svelte-shaker`) targets Svelte 5 runes, and it loads
+// `svelte-shaker` via synchronous `require()`, which needs Node's require(ESM)
+// support (>=22.12). On the older-Svelte / older-Node legs of the test matrix the
+// rule is inert, so run the real cases only where it can actually fire.
+const require = createRequire(import.meta.url);
+const svelteMajor = Number(String(require('svelte/package.json').version).split('.')[0]);
+const SUPPORTED =
+	svelteMajor >= 5 && semver.gte(semver.coerce(process.version)!, '22.12.0');
 
 tester.run(
 	'no-useless-props',
 	rule as any,
-	SUPPORTS_REQUIRE_ESM
+	SUPPORTED
 		? {
 				valid: [
 					// App is rendered by nobody (zero call sites) → treated as an entry and
