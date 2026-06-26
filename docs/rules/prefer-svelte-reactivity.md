@@ -105,7 +105,18 @@ export default e;
 
 ## :wrench: Options
 
-Nothing.
+```json
+{
+  "svelte/prefer-svelte-reactivity": [
+    "error",
+    {
+      "ignoreEncapsulatedLocalVariables": true
+    }
+  ]
+}
+```
+
+- `ignoreEncapsulatedLocalVariables` ... Whether to ignore variables that are defined inside a function and aren't returned, thus being encapsulated in the function. Default `true`.
 
 ## :books: Further Reading
 
