@@ -15,6 +15,17 @@ interface ShakerModule {
 }
 
 /**
+ * The OPTIONAL native (napi) scanner `svelte-shaker-engine-scan-native`. When
+ * present it parses with rsvelte and runs the same never-passed-props analysis
+ * in-process — faster than the JS path, and pinned byte-for-byte to it by
+ * svelte-shaker's `native-never-passed` differential test, so the rule's reports
+ * are identical whichever path runs. Absent, the rule falls back to the JS engine.
+ */
+interface NativeScannerModule {
+	scan: (inputJson: string) => string;
+}
+
+/**
  * Per-(cwd+options) whole-program scan result: absolute file path -> the props it
  * declares that no call site in the program passes. Computed once, lazily, then
  * reused for every file ESLint lints in the same run.
@@ -86,10 +97,13 @@ export default createRule('no-useless-props', {
 		const include: string[] = options.include ?? ['src'];
 		const aliases: Record<string, string> = options.aliases ?? { $lib: 'src/lib' };
 
-		const cacheKey = JSON.stringify({ cwd, include, aliases });
+		// Optional native scanner — preferred when installed (faster, same result).
+		const native = loadModule<NativeScannerModule>(context, 'svelte-shaker-engine-scan-native');
+
+		const cacheKey = JSON.stringify({ cwd, include, aliases, native: Boolean(native?.scan) });
 		let byFile = scanCache.get(cacheKey);
 		if (!byFile) {
-			byFile = scanProject(shaker, cwd, include, aliases);
+			byFile = scanProject(shaker, native, cwd, include, aliases);
 			scanCache.set(cacheKey, byFile);
 		}
 
@@ -129,6 +143,7 @@ export default createRule('no-useless-props', {
  */
 function scanProject(
 	shaker: ShakerModule,
+	native: NativeScannerModule | null,
 	cwd: string,
 	include: string[],
 	aliases: Record<string, string>
@@ -162,7 +177,15 @@ function scanProject(
 		}
 
 		const input = shaker.buildAnalyzeInputSync(files, resolve, readFile);
-		const byId = shaker.findNeverPassedProps(input);
+		// Prefer the native scanner (it re-parses from `input.files[*].code` and runs
+		// the identical analysis); fall back to the JS engine when it is not installed.
+		const byId: Iterable<[string, UnpassedProp[]]> = native?.scan
+			? Object.entries(
+					JSON.parse(
+						native.scan(JSON.stringify({ files: input.files, edges: input.edges }))
+					) as Record<string, UnpassedProp[]>
+				)
+			: shaker.findNeverPassedProps(input);
 		const out = new Map<string, UnpassedProp[]>();
 		for (const [id, props] of byId) out.set(path.resolve(id), props);
 		return out;
