@@ -54,7 +54,7 @@ export default createRule('no-reactive-functions', {
 									count: 3
 								});
 
-								const noExtraSpace = source.isSpaceBetweenTokens(
+								const noExtraSpace = source.isSpaceBetween(
 									tokens[1] as AST.Token,
 									tokens[2] as AST.Token
 								);
