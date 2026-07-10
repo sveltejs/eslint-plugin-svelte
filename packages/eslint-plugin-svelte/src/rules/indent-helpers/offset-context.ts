@@ -48,6 +48,10 @@ export class OffsetContext {
 		if (index === base) {
 			return;
 		}
+		const previousOffset = this.offsets.get(index);
+		if (previousOffset?.type === 2) {
+			return;
+		}
 		this.offsets.set(index, {
 			type: OffsetDataType.normal,
 			base,
