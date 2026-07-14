@@ -15,7 +15,7 @@ description: 'disallow useless `bind:value` on `<input type="checkbox">`'
 
 ## :book: Rule Details
 
-This rule reports `bind:value` on `<input type="checkbox">` elements.. It is a common mistake to use `bind:value` with checkboxes instead of the appropriate `bind:checked`.
+This rule reports `bind:value` on `<input type="checkbox">` elements. For most `<input>` types, `bind:value` is used to bind the user-editable state. Checkboxes are an exception, as their state is represented by the `checked` property instead. As a result, using `bind:value` instead of `bind:checked` on a checkbox is a common mistake.
 
 <!--eslint-skip-->
 
