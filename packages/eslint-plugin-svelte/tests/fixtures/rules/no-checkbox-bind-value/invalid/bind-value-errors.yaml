@@ -1,0 +1,20 @@
+- message: "`bind:value` does not work on checkbox inputs. Did you mean `bind:checked`?"
+  line: 10
+  column: 24
+  suggestions: null
+- message: "`bind:value` does not work on checkbox inputs. Did you mean `bind:checked`?"
+  line: 12
+  column: 24
+  suggestions: null
+- message: "`bind:value` does not work on checkbox inputs. Did you mean `bind:checked`?"
+  line: 13
+  column: 24
+  suggestions: null
+- message: "`bind:value` does not work on checkbox inputs. Did you mean `bind:checked`?"
+  line: 14
+  column: 26
+  suggestions: null
+- message: "`bind:value` does not work on checkbox inputs. Did you mean `bind:checked`?"
+  line: 15
+  column: 26
+  suggestions: null
