@@ -1,0 +1,20 @@
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 10
+  column: 21
+  suggestions: null
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 12
+  column: 21
+  suggestions: null
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 13
+  column: 21
+  suggestions: null
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 14
+  column: 23
+  suggestions: null
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 15
+  column: 23
+  suggestions: null

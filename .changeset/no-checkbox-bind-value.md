@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': minor
 ---
 
-feat: add no-checkbox-bind-value rule
+feat: add no-bind-value-on-checkable-inputs rule
