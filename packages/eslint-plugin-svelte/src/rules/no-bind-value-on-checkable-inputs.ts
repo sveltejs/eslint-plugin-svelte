@@ -10,13 +10,7 @@ export default createRule('no-bind-value-on-checkable-inputs', {
 			category: 'Possible Errors',
 			recommended: false
 		},
-		schema: [
-			{
-				type: 'object',
-				properties: {},
-				additionalProperties: false
-			}
-		],
+		schema: [],
 		type: 'problem',
 		messages: {
 			checkbox:
