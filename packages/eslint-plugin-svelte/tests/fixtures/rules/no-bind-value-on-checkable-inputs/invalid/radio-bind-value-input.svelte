@@ -13,3 +13,5 @@
 <input type="RADIO" bind:value={check2} />
 <input type={'radio'} bind:value={check3} />
 <input type={'RADIO'} bind:value={check4} />
+
+<input TYPE="radio" bind:value />

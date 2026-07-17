@@ -10,7 +10,7 @@ description: 'disallow useless `bind:value` on `<input type="checkbox">` and `<i
 > disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
-- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
 
@@ -25,6 +25,7 @@ This rule reports `bind:value` on `<input type="checkbox">` and `<input type="ra
 
 <!-- ✓ GOOD -->
 <input type="checkbox" bind:checked={...}>
+<input type="checkbox" bind:group={...}>
 
 <!-- ✗ BAD -->
 <input type="checkbox" bind:value={...}>

@@ -1,20 +1,144 @@
 - message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
   line: 10
   column: 21
-  suggestions: null
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:group={value} />
+
+        <input type="radio" bind:value={check1} />
+        <input type="RADIO" bind:value={check2} />
+        <input type={'radio'} bind:value={check3} />
+        <input type={'RADIO'} bind:value={check4} />
+
+        <input TYPE="radio" bind:value />
 - message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
   line: 12
   column: 21
-  suggestions: null
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:value />
+
+        <input type="radio" bind:group={check1} />
+        <input type="RADIO" bind:value={check2} />
+        <input type={'radio'} bind:value={check3} />
+        <input type={'RADIO'} bind:value={check4} />
+
+        <input TYPE="radio" bind:value />
 - message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
   line: 13
   column: 21
-  suggestions: null
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:value />
+
+        <input type="radio" bind:value={check1} />
+        <input type="RADIO" bind:group={check2} />
+        <input type={'radio'} bind:value={check3} />
+        <input type={'RADIO'} bind:value={check4} />
+
+        <input TYPE="radio" bind:value />
 - message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
   line: 14
   column: 23
-  suggestions: null
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:value />
+
+        <input type="radio" bind:value={check1} />
+        <input type="RADIO" bind:value={check2} />
+        <input type={'radio'} bind:group={check3} />
+        <input type={'RADIO'} bind:value={check4} />
+
+        <input TYPE="radio" bind:value />
 - message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
   line: 15
   column: 23
-  suggestions: null
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:value />
+
+        <input type="radio" bind:value={check1} />
+        <input type="RADIO" bind:value={check2} />
+        <input type={'radio'} bind:value={check3} />
+        <input type={'RADIO'} bind:group={check4} />
+
+        <input TYPE="radio" bind:value />
+- message: "`bind:value` does not work on radio inputs. Did you mean `bind:group`?"
+  line: 17
+  column: 21
+  suggestions:
+    - desc: Change `bind:value` to `bind:group`.
+      messageId: groupSuggestion
+      output: |
+        <script lang="ts">
+        	let check1 = $state(true);
+        	let check2 = $state(true);
+        	let check3 = $state(true);
+        	let check4 = $state(true);
+
+        	let value = $state(true);
+        </script>
+
+        <input type="radio" bind:value />
+
+        <input type="radio" bind:value={check1} />
+        <input type="RADIO" bind:value={check2} />
+        <input type={'radio'} bind:value={check3} />
+        <input type={'RADIO'} bind:value={check4} />
+
+        <input TYPE="radio" bind:group={value} />

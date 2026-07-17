@@ -129,7 +129,7 @@ export interface RuleOptions {
    * disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs/
    */
-  'svelte/no-bind-value-on-checkable-inputs'?: Linter.RuleEntry<SvelteNoBindValueOnCheckableInputs>
+  'svelte/no-bind-value-on-checkable-inputs'?: Linter.RuleEntry<[]>
   /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
@@ -543,8 +543,6 @@ type SvelteMustacheSpacing = []|[{
     closingBrace?: ("never" | "always" | "always-after-expression")
   }
 }]
-// ----- svelte/no-bind-value-on-checkable-inputs -----
-type SvelteNoBindValueOnCheckableInputs = []|[{}]
 // ----- svelte/no-inline-styles -----
 type SvelteNoInlineStyles = []|[{
   allowTransitions?: boolean

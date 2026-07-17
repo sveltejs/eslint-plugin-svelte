@@ -13,3 +13,5 @@
 <input type="CHECKBOX" bind:value={check2} />
 <input type={'checkbox'} bind:value={check3} />
 <input type={'CHECKBOX'} bind:value={check4} />
+
+<input TYPE="checkbox" bind:value />
