@@ -21,22 +21,28 @@ export default createRule('no-bind-value-on-checkable-inputs', {
 	create(context) {
 		return {
 			"SvelteElement[name.name='input']"(node: AST.SvelteHTMLElement) {
-				function getType(inputType: 'checkbox' | 'radio'): boolean {
-					return Boolean(
-						node.startTag?.attributes.some(
-							(attr) =>
-								attr.type === 'SvelteAttribute' &&
-								attr.key.name === 'type' &&
-								attr.value?.length === 1 &&
-								((attr.value[0].type === 'SvelteLiteral' &&
-									attr.value[0].value.toLowerCase() === inputType) || // type="checkbox"
-									(attr.value[0].type === 'SvelteMustacheTag' &&
-										attr.value[0].kind === 'text' &&
-										attr.value[0].expression.type === 'Literal' &&
-										typeof attr.value[0].expression.value === 'string' &&
-										attr.value[0].expression.value.toLowerCase() === inputType)) // type={"checkbox"}
-						)
+				function getType(): string | null {
+					const typeAttr = node.startTag?.attributes.find(
+						(attr): attr is AST.SvelteAttribute =>
+							attr.type === 'SvelteAttribute' && attr.key.name === 'type'
 					);
+					if (!typeAttr) return null;
+					if (typeAttr.value.length !== 1) return null;
+					const typeValue = typeAttr.value[0];
+					if (typeValue.type === 'SvelteLiteral') {
+						// <input type="checkbox" />
+						return typeValue.value.toLowerCase();
+					}
+					if (typeValue.type === 'SvelteMustacheTag') {
+						const staticValue = getStaticValue(
+							typeValue.expression,
+							getScope(context, typeValue.expression)
+						);
+						if (typeof staticValue?.value !== 'string') return null
+						 // <input type={"checkbox"} />;
+						return staticValue.value.toLowerCase()
+					}
+					return null;
 				}
 
 				const type = getType();
