@@ -39,8 +39,10 @@ export default createRule('no-bind-value-on-checkable-inputs', {
 					);
 				}
 
-				const isCheckbox = getType('checkbox');
-				const isRadio = getType('radio');
+				const type = getType();
+				if (!type) return;
+				const isCheckbox = type === 'checkbox';
+				const isRadio = type === 'radio';
 
 				const bindValue = node.startTag?.attributes.find(
 					(attr): attr is AST.SvelteBindingDirective =>
