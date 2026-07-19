@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.21.0
+
+### Minor Changes
+
+- [#1559](https://github.com/sveltejs/eslint-plugin-svelte/pull/1559) [`4138a57`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4138a571f1d51f46fbc485cf0f89013119ee9187) Thanks [@knrdl](https://github.com/knrdl)! - feat: add no-bind-value-on-checkable-inputs rule
+
 ## 3.20.0
 
 ### Minor Changes

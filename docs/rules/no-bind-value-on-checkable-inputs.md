@@ -3,13 +3,13 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-bind-value-on-checkable-inputs'
 description: 'disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`'
+since: 'v3.21.0'
 ---
 
 # svelte/no-bind-value-on-checkable-inputs
 
 > disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
@@ -55,6 +55,10 @@ You may need to set the `value` attribute of an `<input type="checkbox">` or `<i
 
 - [Svelte - Tutorial > Basic Svelte / Bindings / Checkbox inputs](https://svelte.dev/tutorial/svelte/checkbox-inputs)
 - [Svelte - Tutorial > Basic Svelte / Bindings / Group inputs](https://svelte.dev/tutorial/svelte/group-inputs)
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.21.0
 
 ## :mag: Implementation
 
