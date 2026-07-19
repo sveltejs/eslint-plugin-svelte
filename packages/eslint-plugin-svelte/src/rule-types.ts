@@ -126,6 +126,11 @@ export interface RuleOptions {
    */
   'svelte/no-at-html-tags'?: Linter.RuleEntry<[]>
   /**
+   * disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs/
+   */
+  'svelte/no-bind-value-on-checkable-inputs'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
