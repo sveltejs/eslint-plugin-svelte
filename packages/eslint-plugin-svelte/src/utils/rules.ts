@@ -64,6 +64,7 @@ import noUnusedProps from '../rules/no-unused-props.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
+import noUselessProps from '../rules/no-useless-props.js';
 import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
 import preferDerivedOverDerivedBy from '../rules/prefer-derived-over-derived-by.js';
@@ -151,6 +152,7 @@ export const rules = [
 	noUnusedSvelteIgnore,
 	noUselessChildrenSnippet,
 	noUselessMustaches,
+	noUselessProps,
 	preferClassDirective,
 	preferConst,
 	preferDerivedOverDerivedBy,

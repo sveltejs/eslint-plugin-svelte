@@ -329,6 +329,11 @@ export interface RuleOptions {
    */
   'svelte/no-useless-mustaches'?: Linter.RuleEntry<SvelteNoUselessMustaches>
   /**
+   * disallow component props that no call site ever passes (whole-program, opt-in)
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-props/
+   */
+  'svelte/no-useless-props'?: Linter.RuleEntry<SvelteNoUselessProps>
+  /**
    * require class directives instead of ternary expressions
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/
    */
@@ -620,6 +625,13 @@ type SvelteNoUnusedProps = []|[{
 type SvelteNoUselessMustaches = []|[{
   ignoreIncludesComment?: boolean
   ignoreStringEscape?: boolean
+}]
+// ----- svelte/no-useless-props -----
+type SvelteNoUselessProps = []|[{
+  include?: string[]
+  aliases?: {
+    [k: string]: string | undefined
+  }
 }]
 // ----- svelte/prefer-class-directive -----
 type SveltePreferClassDirective = []|[{
