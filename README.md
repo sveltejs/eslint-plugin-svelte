@@ -297,6 +297,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 |:--------|:------------|:---|
 | [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. | :star: |
 | [svelte/no-bind-value-on-checkable-inputs](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs/) | disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">` | :bulb: |
+| [svelte/no-conflicting-module-names](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-conflicting-module-names/) | disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting |  |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating | :star: |
 | [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives | :star: |

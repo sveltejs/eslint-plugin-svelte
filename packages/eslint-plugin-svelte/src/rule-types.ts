@@ -131,6 +131,11 @@ export interface RuleOptions {
    */
   'svelte/no-bind-value-on-checkable-inputs'?: Linter.RuleEntry<[]>
   /**
+   * disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-conflicting-module-names/
+   */
+  'svelte/no-conflicting-module-names'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
