@@ -1,8 +1,8 @@
-- message: SvelteSet is already reactive, $state wrapping is unnecessary.
+- message: SvelteSet is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 12
   column: 21
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -27,11 +27,11 @@
         	const regularState = $state(42);
         	const stateObject = $state({ foo: 'bar' });
         </script>
-- message: SvelteMap is already reactive, $state wrapping is unnecessary.
+- message: SvelteMap is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 13
   column: 21
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -56,11 +56,11 @@
         	const regularState = $state(42);
         	const stateObject = $state({ foo: 'bar' });
         </script>
-- message: SvelteURL is already reactive, $state wrapping is unnecessary.
+- message: SvelteURL is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 14
   column: 21
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -85,11 +85,11 @@
         	const regularState = $state(42);
         	const stateObject = $state({ foo: 'bar' });
         </script>
-- message: SvelteURLSearchParams is already reactive, $state wrapping is unnecessary.
+- message: SvelteURLSearchParams is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 15
   column: 24
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -114,11 +114,11 @@
         	const regularState = $state(42);
         	const stateObject = $state({ foo: 'bar' });
         </script>
-- message: SvelteDate is already reactive, $state wrapping is unnecessary.
+- message: SvelteDate is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 16
   column: 22
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
@@ -143,11 +143,11 @@
         	const regularState = $state(42);
         	const stateObject = $state({ foo: 'bar' });
         </script>
-- message: MediaQuery is already reactive, $state wrapping is unnecessary.
+- message: MediaQuery is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).
   line: 17
   column: 28
   suggestions:
-    - desc: Remove unnecessary $state wrapping
+    - desc: Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).
       messageId: suggestRemoveStateWrap
       output: |
         <script>
