@@ -22,7 +22,9 @@ Since Svelte 5 you can write runes modules named `.svelte.ts` and `.svelte.js`. 
 
 Plain TypeScript does not know the `.svelte` extension, so it appends `.ts` and lands on the module. Your app builds and runs with the component, while type checking and type-aware lint quietly use the module. The mismatch is silent and hard to spot.
 
-This rule reports the `.svelte` component when a sibling module file with the same name exists. Renaming the module (for example to `foo-state.svelte.ts`) removes the ambiguity.
+This rule reports **both files** of the collision: the component `Foo.svelte` and the module `Foo.svelte.ts`. This plugin lints `.svelte.js` and `.svelte.ts` files too, and a lint run may include only one of the two files, so reporting on both makes sure you see the problem either way.
+
+To fix it, rename the module (for example to `foo-state.svelte.ts`). The component keeps its name.
 
 The following module extensions trigger a report: `.ts`, `.tsx`, `.js`, `.jsx`, `.mts`, `.cts`, `.mjs`, `.cjs`.
 
@@ -32,11 +34,11 @@ Declaration files are not reported. `Foo.svelte.d.ts` and `Foo.d.svelte.ts` are 
 ```
 
 src/
-  Foo.svelte
-  Foo.svelte.ts   // ✗ BAD: collides with Foo.svelte
+  Foo.svelte      // ✗ BAD: reported, a module with the same name exists
+  Foo.svelte.ts   // ✗ BAD: reported, it collides with Foo.svelte
 
 src/
-  Foo.svelte
+  Foo.svelte            // ✓ GOOD
   foo-state.svelte.ts   // ✓ GOOD: a different name, no collision
 ```
 

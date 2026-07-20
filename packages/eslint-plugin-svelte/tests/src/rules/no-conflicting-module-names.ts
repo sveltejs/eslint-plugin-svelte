@@ -43,21 +43,56 @@ tester.run('no-conflicting-module-names', rule as any, {
 		// Component with only a `.d.svelte.ts` declaration sibling.
 		fixture('valid', 'declaration-sibling-d-svelte', 'Bar.svelte'),
 		// Untitled/virtual file with a fake path that does not exist on disk.
-		{ code: '<p>virtual</p>', filename: path.join(FIXTURES_ROOT, 'does-not-exist', 'Foo.svelte') }
+		{ code: '<p>virtual</p>', filename: path.join(FIXTURES_ROOT, 'does-not-exist', 'Foo.svelte') },
+
+		// --- module side ---
+		// Module with no component of the same name.
+		fixture('valid', 'different-module', 'foo-state.svelte.ts'),
+		// `Foo.svelte.d.ts` declares `Foo.svelte` and must not be reported. It
+		// needs the TypeScript parser because it contains type-only syntax.
+		{
+			...fixture('valid', 'declaration-sibling', 'Foo.svelte.d.ts'),
+			languageOptions: { parserOptions: { parser: '@typescript-eslint/parser' } }
+		},
+		// `Bar.d.svelte.ts` declares `Bar.svelte` and must not be reported.
+		fixture('valid', 'declaration-sibling-d-svelte', 'Bar.d.svelte.ts'),
+		// Module whose matching component does not exist on disk.
+		{
+			code: 'export const value = 1;',
+			filename: path.join(FIXTURES_ROOT, 'does-not-exist', 'Foo.svelte.ts')
+		}
 	],
-	invalid: INVALID_EXTENSIONS.map((ext) => ({
-		...fixture('invalid', ext, 'Foo.svelte'),
-		errors: [
-			{
-				messageId: 'conflict',
-				data: {
-					conflictingName: `Foo.svelte.${ext}`,
-					svelteName: 'Foo.svelte',
-					specifier: './Foo.svelte'
-				},
-				line: 1,
-				column: 1
-			}
-		]
-	}))
+	invalid: [
+		// Reported on the component.
+		...INVALID_EXTENSIONS.map((ext) => ({
+			...fixture('invalid', ext, 'Foo.svelte'),
+			errors: [
+				{
+					messageId: 'conflictOnComponent',
+					data: {
+						moduleName: `Foo.svelte.${ext}`,
+						specifier: './Foo.svelte'
+					},
+					line: 1,
+					column: 1
+				}
+			]
+		})),
+		// Reported on the module, so the collision is surfaced even when only the
+		// module file is part of the lint run.
+		...INVALID_EXTENSIONS.map((ext) => ({
+			...fixture('invalid', ext, `Foo.svelte.${ext}`),
+			errors: [
+				{
+					messageId: 'conflictOnModule',
+					data: {
+						svelteName: 'Foo.svelte',
+						specifier: './Foo.svelte'
+					},
+					line: 1,
+					column: 1
+				}
+			]
+		}))
+	]
 });
