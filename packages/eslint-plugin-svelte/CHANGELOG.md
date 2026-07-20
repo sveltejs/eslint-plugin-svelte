@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.22.0
+
+### Minor Changes
+
+- [#1563](https://github.com/sveltejs/eslint-plugin-svelte/pull/1563) [`cdad05a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cdad05a463d2ae7c8fe57c1a4e7cdd820723526c) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add no-conflicting-module-names rule
+
 ## 3.21.0
 
 ### Minor Changes

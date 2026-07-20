@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/no-conflicting-module-names'
 description: 'disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting'
+since: 'v3.22.0'
 ---
 
 # svelte/no-conflicting-module-names
 
 > disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -59,6 +58,10 @@ Nothing.
 ## :mag: Preset
 
 This rule is not included in any preset. Enable it explicitly if you want it.
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.22.0
 
 ## :mag: Implementation
 
