@@ -329,6 +329,11 @@ export interface RuleOptions {
    */
   'svelte/no-useless-mustaches'?: Linter.RuleEntry<SvelteNoUselessMustaches>
   /**
+   * require attribute interpolation instead of template literals
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-attribute-interpolation/
+   */
+  'svelte/prefer-attribute-interpolation'?: Linter.RuleEntry<[]>
+  /**
    * require class directives instead of ternary expressions
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/
    */
