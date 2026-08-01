@@ -317,6 +317,14 @@ export default createRule('no-unused-props', {
 
 				const propType = typeChecker.getTypeOfSymbol(prop);
 
+				// A spread of this property, or of anything containing it, consumes
+				// every property beneath it, so there is nothing left to report
+				// even when some of them are also accessed individually.
+				const isSpreadInThisPath = usedSpreadPropertyPaths.some((path) => {
+					return path === '' || path === currentPathStr || currentPathStr.startsWith(`${path}.`);
+				});
+				if (isSpreadInThisPath) continue;
+
 				const isUsedThisInPath =
 					usedPropertyPaths.includes(currentPathStr) ||
 					usedSpreadPropertyPaths.some((path) => {
