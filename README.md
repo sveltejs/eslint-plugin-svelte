@@ -201,6 +201,17 @@ export default defineConfig(
 > If you try to change the options for a different file or override them later, the parser will ignore the new options, which may lead to errors.
 > For more context, see [typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778).
 
+#### Svelte config inside `vite.config.js`
+
+The Svelte config can also be passed to the `sveltekit()` or `svelte()` plugin in `vite.config.js`; SvelteKit 3 projects do this by default. Use [`@sveltejs/load-config`](https://www.npmjs.com/package/@sveltejs/load-config) to load it:
+
+```js
+// eslint.config.js
+import { loadConfig } from '@sveltejs/load-config';
+
+const svelteConfig = (await loadConfig('./', { traverse: false }))?.config;
+```
+
 ### Available Configurations
 
 This plugin provides the following configurations:
