@@ -1,157 +1,203 @@
 <script>
 	import { page } from '$app/stores';
-	import { markdownPath, menuItems, isActive } from '../utils.js';
 	import { resolve } from '$app/paths';
+	import { markdownPath, menuItems, isActive } from '../utils.js';
+
 	export let fileInfo = {};
 	export let frontmatter = {};
 
 	let prev, next;
 	$: {
-		let prevItem, currItem;
+		prev = undefined;
+		next = undefined;
+		let prevItem;
+		let currentFound = false;
 		for (const item of iterateMenuItem($menuItems)) {
-			if (!item.path) {
-				continue;
-			}
-			if (currItem) {
+			if (!item.path) continue;
+			if (currentFound) {
 				next = item;
 				break;
 			}
 			if (isActive(item.path, $page)) {
 				prev = prevItem;
-				currItem = item;
-				continue;
+				currentFound = true;
+			} else {
+				prevItem = item;
 			}
-			prevItem = item;
 		}
 	}
 
-	/** Iterate */
 	function* iterateMenuItem(children) {
 		for (const item of children) {
 			yield item;
-
-			if (item.children && item.children.length) {
-				yield* iterateMenuItem(item.children);
-			}
+			if (item.children?.length) yield* iterateMenuItem(item.children);
 		}
 	}
 </script>
 
 <footer class:hidden-menu={frontmatter.hiddenMenu}>
-	<div class="footer-tools">
-		<div class="edit-link">
-			<a
-				href="https://github.com/sveltejs/eslint-plugin-svelte/edit/main/docs/{markdownPath(
-					$page.url.pathname
-				)}"
-				target="_blank"
-				rel="noopener noreferrer">Edit this page</a
+	<div class="page-meta">
+		<a
+			href="https://github.com/sveltejs/eslint-plugin-svelte/edit/main/docs/{markdownPath(
+				$page.url.pathname
+			)}"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			<svg viewBox="0 0 24 24" aria-hidden="true"
+				><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg
 			>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				aria-hidden="true"
-				focusable="false"
-				x="0px"
-				y="0px"
-				viewBox="0 0 100 100"
-				width="15"
-				height="15"
-				class="icon outbound"
-				><path
-					fill="currentColor"
-					d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"
-				/>
-				<polygon
-					fill="currentColor"
-					points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"
-				/>
-			</svg>
-		</div>
+			Edit this page
+		</a>
 		{#if fileInfo.lastUpdated}
-			<div class="last-updated">
-				<span class="prefix">Last Updated:</span>
-				<span class="time">{fileInfo.lastUpdated}</span>
-			</div>
+			<span>Last updated {fileInfo.lastUpdated}</span>
 		{/if}
 	</div>
-	<div class="footer-move">
-		{#if prev}
-			<span class="prev">←<a href={resolve(prev.path)}>{prev.title}</a></span>
-		{/if}
-		{#if next}
-			<span class="next"><a href={resolve(next.path)}>{next.title}</a>→ </span>
-		{/if}
-	</div>
-	<div class="footer-text">
-		<span>
-			This site was built with <a href="https://kit.svelte.dev/" target="_brank">SvelteKit</a>.
-		</span>
-	</div>
+
+	{#if prev || next}
+		<nav aria-label="Previous and next pages">
+			{#if prev}
+				<a class="prev" href={resolve(prev.path)}>
+					<span>Previous</span>
+					<strong><span aria-hidden="true">←</span> {prev.title}</strong>
+				</a>
+			{/if}
+			{#if next}
+				<a class="next" href={resolve(next.path)}>
+					<span>Next</span>
+					<strong>{next.title} <span aria-hidden="true">→</span></strong>
+				</a>
+			{/if}
+		</nav>
+	{/if}
+
+	<p>
+		Released under the <a href="https://github.com/sveltejs/eslint-plugin-svelte/blob/main/LICENSE"
+			>MIT License</a
+		>.
+	</p>
 </footer>
 
 <style>
-	.footer-tools {
-		width: 100%;
-		padding: 0 1rem;
-		box-sizing: border-box;
-		display: flex;
-	}
-
-	.edit-link {
-		display: flex;
-		gap: 4px;
-	}
-
-	.footer-move {
-		border-top: 1px solid var(--background-without-opacity);
-		width: 100%;
-		padding: 0 1rem;
-		box-sizing: border-box;
-		display: flex;
-	}
-	.footer-text {
-		padding: 0 1rem 1rem 1rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.last-updated,
-	.next {
-		margin-left: auto;
-	}
-
-	footer:not(.hidden-menu) {
-		padding-left: 20rem;
-	}
-
-	@media (max-width: 959px) {
-		footer:not(.hidden-menu) {
-			padding-left: 16.4rem;
-		}
-	}
-	@media (max-width: 719px) {
-		footer:not(.hidden-menu) {
-			padding-left: 0;
-		}
-	}
-
 	footer {
+		margin-top: 4.5rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.page-meta {
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
 		align-items: center;
-		padding: 16px 0 0 0;
+		justify-content: space-between;
+		gap: 1rem;
+		color: var(--text-faint);
+		font-size: 0.72rem;
 	}
 
-	footer a {
-		font-weight: bold;
+	.page-meta a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: var(--text-muted);
+		font-weight: 600;
+		text-decoration: none;
 	}
 
-	@media (min-width: 480px) {
-		footer {
-			padding: 24px 0 0 0;
+	.page-meta a:hover {
+		color: var(--accent);
+	}
+
+	.page-meta svg {
+		width: 0.9rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 1.7;
+	}
+
+	nav {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin-top: 2rem;
+	}
+
+	nav a {
+		display: flex;
+		min-height: 5.25rem;
+		justify-content: center;
+		flex-direction: column;
+		gap: 0.3rem;
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+		text-decoration: none;
+		transition:
+			border-color 120ms ease,
+			box-shadow 120ms ease,
+			transform 120ms ease;
+	}
+
+	nav a:hover {
+		border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+		box-shadow: 0 5px 18px rgb(15 23 42 / 0.06);
+		transform: translateY(-1px);
+	}
+
+	nav a.next {
+		grid-column: 2;
+		text-align: right;
+	}
+
+	nav a > span {
+		color: var(--text-faint);
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	nav strong {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--text);
+		font-size: 0.8rem;
+		font-weight: 550;
+	}
+
+	nav strong span {
+		color: var(--accent);
+		line-height: 1;
+	}
+
+	nav .next strong {
+		justify-content: flex-end;
+	}
+
+	footer > p {
+		margin: 2rem 0 0;
+		color: var(--text-faint);
+		font-size: 0.68rem;
+		text-align: center;
+	}
+
+	footer > p a {
+		color: var(--text-muted);
+	}
+
+	@media (max-width: 560px) {
+		.page-meta {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+		nav {
+			grid-template-columns: 1fr;
+		}
+		nav a.next {
+			grid-column: 1;
 		}
 	}
 </style>

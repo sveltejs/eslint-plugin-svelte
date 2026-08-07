@@ -1,244 +1,279 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { isActive } from '../utils.js';
 	import { page } from '$app/stores';
-	import logo from './logo.svg';
 	import { resolve } from '$app/paths';
+	import { isActive, stripBaseUrl } from '../utils.js';
+	import Search from '../search/Search.svelte';
+	import ThemeToggle from '../theme/ThemeToggle.svelte';
+	import logo from './logo.svg';
+
+	export let sidebarOpen = false;
 
 	const dispatch = createEventDispatcher();
-
-	function handleToggleSidebar() {
-		dispatch('toggleSidebarOpen');
-	}
+	let searchOpen = false;
 </script>
 
 <header>
-	<div class="corner">
-		<div
-			class="sidebar-button"
-			role="button"
-			tabindex="0"
-			on:click={handleToggleSidebar}
-			on:keydown={(e) => (e.code === 'Enter' || e.code === 'Space') && handleToggleSidebar()}
+	<div class="header-inner">
+		<button
+			type="button"
+			class="menu-button"
+			class:open={sidebarOpen}
+			on:click={() => dispatch('toggleSidebarOpen')}
+			aria-label={sidebarOpen ? 'Close navigation' : 'Open navigation'}
+			aria-expanded={sidebarOpen}
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				aria-hidden="true"
-				role="img"
-				viewBox="0 0 448 512"
-				class="icon"
-			>
-				<path
-					fill="currentColor"
-					d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"
-				/>
-			</svg>
-		</div>
-		<a href={resolve('/')} class="home-link">
-			<img src={logo} alt="Logo" />
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+		</button>
+
+		<a href={resolve('/')} class="brand" aria-label="eslint-plugin-svelte home">
+			<img src={logo} alt="" />
+			<span>eslint-plugin-svelte</span>
 		</a>
-	</div>
 
-	<nav>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-		</svg>
-		<ul>
-			<li class:active={isActive('/', $page)}>
-				<a href={resolve('/')}>Home</a>
-			</li>
-			<li class:active={isActive('/user-guide/', $page)}>
-				<a href={resolve('/user-guide/')}>User Guide</a>
-			</li>
-			<li class:active={isActive('/rules/', $page)}>
-				<a href={resolve('/rules/')}>Rules</a>
-			</li>
-			<li>
-				<a
-					href="https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Playground
-				</a>
-			</li>
-		</ul>
-		<div class="nav-title">
-			<a href={resolve('/')}> <img src={logo} alt="Logo" />eslint-plugin-svelte</a>
-		</div>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-		</svg>
-	</nav>
+		<button
+			type="button"
+			class="search-button"
+			on:click={() => (searchOpen = true)}
+			aria-label="Search documentation"
+			aria-keyshortcuts="Meta+K Control+K"
+		>
+			<svg viewBox="0 0 24 24" aria-hidden="true"
+				><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg
+			>
+			<span>Search documentation…</span>
+			<kbd><span>⌘</span>K</kbd>
+		</button>
 
-	<div class="corner">
+		<nav aria-label="Main navigation">
+			<a class:active={isActive('/user-guide/', $page)} href={resolve('/user-guide/')}>Guide</a>
+			<a
+				class:active={stripBaseUrl($page.url.pathname).startsWith('/rules/')}
+				href={resolve('/rules/')}>Rules</a
+			>
+			<a
+				href="https://eslint-online-playground.netlify.app/#eslint-plugin-svelte%20with%20typescript"
+				target="_blank"
+				rel="noopener noreferrer">Playground <span aria-hidden="true">↗</span></a
+			>
+		</nav>
+		<ThemeToggle />
+
 		<a
 			href="https://github.com/sveltejs/eslint-plugin-svelte"
 			target="_blank"
 			class="github-link"
 			rel="noopener noreferrer"
-			aria-label="GitHub"
+			aria-label="eslint-plugin-svelte on GitHub"
 		>
-			<svg
-				version="1.1"
-				width="16"
-				height="16"
-				viewBox="0 0 16 16"
-				class="octicon octicon-mark-github"
-				aria-hidden="true"
+			<svg viewBox="0 0 24 24" aria-hidden="true"
 				><path
-					style:fill="#2c3e50"
-					fill-rule="evenodd"
-					d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-				/>
-			</svg>
+					d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 7.01a9.6 9.6 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+				></path></svg
+			>
 		</a>
 	</div>
 </header>
 
+<Search bind:open={searchOpen} />
+
 <style>
 	header {
-		display: flex;
-		justify-content: space-between;
-		padding: 0.5em 2em;
 		position: fixed;
 		top: 0;
-		width: 100vw;
+		left: 0;
 		z-index: 100;
-		background-color: var(--primary-color);
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.corner {
-		width: 3em;
-		height: 3em;
-	}
-
-	.corner a,
-	.sidebar-button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		width: 100%;
-		height: 100%;
+		height: var(--header-height);
+		border-bottom: 1px solid var(--border);
+		background: color-mix(in srgb, var(--surface) 92%, transparent);
+		backdrop-filter: blur(14px) saturate(1.4);
 	}
 
-	.corner img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
+	.header-inner {
+		display: flex;
+		width: 100%;
+		max-width: 96rem;
+		height: 100%;
+		align-items: center;
+		gap: 1.5rem;
+		margin: 0 auto;
+		padding: 0 1.5rem;
 	}
-	.corner svg {
-		width: 2rem;
-		height: 2rem;
-		object-fit: contain;
+
+	.brand {
+		display: flex;
+		flex: 0 0 auto;
+		align-items: center;
+		gap: 0.65rem;
+		color: var(--text);
+		font-size: 0.92rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		text-decoration: none;
 	}
-	.corner path {
-		fill: var(--heading-color);
+
+	.brand img {
+		width: 1.85rem;
+		height: 1.85rem;
+	}
+
+	.search-button {
+		display: flex;
+		width: min(22rem, 30vw);
+		height: 2.25rem;
+		align-items: center;
+		gap: 0.55rem;
+		margin-left: auto;
+		padding: 0 0.55rem 0 0.7rem;
+		border: 1px solid var(--border-strong);
+		border-radius: 8px;
+		background: var(--surface-muted);
+		color: var(--text-faint);
+		font-size: 0.76rem;
+		transition:
+			border-color 120ms ease,
+			background 120ms ease,
+			box-shadow 120ms ease;
+	}
+
+	.search-button:hover {
+		border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+		background: var(--surface);
+		box-shadow: 0 2px 8px rgb(15 23 42 / 0.06);
+	}
+
+	.search-button svg {
+		width: 1rem;
+		flex: 0 0 auto;
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 1.8;
+	}
+
+	.search-button > span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	kbd {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.1rem;
+		margin-left: auto;
+		padding: 0.12rem 0.3rem;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		background: var(--surface);
+		box-shadow: 0 1px 0 var(--border-strong);
+		color: var(--text-muted);
+		font: 600 0.64rem/1.2 var(--font-sans);
 	}
 
 	nav {
 		display: flex;
-		justify-content: center;
-		min-width: 1px;
-	}
-
-	nav svg {
-		width: 2em;
-		height: 3em;
-		display: block;
-	}
-
-	nav path {
-		fill: var(--background-without-opacity);
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
 		align-items: center;
-		list-style: none;
-		background: var(--background-without-opacity);
-		background-size: contain;
-	}
-
-	li {
-		position: relative;
-		height: 100%;
-	}
-
-	li.active > a {
-		color: var(--accent-color);
+		gap: 1.25rem;
 	}
 
 	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
-		color: var(--heading-color);
-		font-weight: 700;
-		font-size: 0.8rem;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
+		color: var(--text-muted);
+		font-size: 0.78rem;
+		font-weight: 550;
 		text-decoration: none;
-		transition: color 0.2s linear;
+		transition: color 120ms ease;
 	}
 
-	a:hover {
-		color: var(--accent-color);
+	nav a:hover,
+	nav a.active {
+		color: var(--text);
 	}
 
-	.home-link {
-		background: var(--background-without-opacity);
-		border-bottom-right-radius: 20%;
+	nav a.active {
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.45rem;
 	}
 
-	.github-link {
-		background: var(--background-without-opacity);
-		border-bottom-left-radius: 20%;
+	nav span {
+		font-size: 0.65rem;
 	}
 
-	.sidebar-button {
-		background: var(--background-without-opacity);
+	.github-link,
+	.menu-button {
+		display: grid;
+		width: 2rem;
+		height: 2rem;
+		flex: 0 0 auto;
+		place-items: center;
+		border-radius: 7px;
+		color: var(--text-muted);
+		transition:
+			color 120ms ease,
+			background 120ms ease;
 	}
-	.sidebar-button,
-	.nav-title {
+
+	.github-link:hover,
+	.menu-button:hover {
+		background: var(--surface-muted);
+		color: var(--text);
+	}
+
+	.github-link svg {
+		width: 1.2rem;
+		fill: currentColor;
+	}
+
+	.menu-button {
 		display: none;
 	}
-	@media (max-width: 719px) {
-		.sidebar-button {
-			display: flex;
+
+	.menu-button svg {
+		width: 1.25rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-width: 1.8;
+	}
+
+	@media (max-width: 900px) {
+		.header-inner {
+			gap: 0.75rem;
+			padding: 0 1rem;
 		}
-		.corner .home-link {
+		.menu-button {
+			display: grid;
+		}
+		nav {
 			display: none;
 		}
-		.nav-title {
-			display: flex;
-			justify-content: center;
-			background: var(--background-without-opacity);
-			width: calc(100vw - 96px);
+		.search-button {
+			width: auto;
+			margin-left: auto;
 		}
-		.nav-title a {
-			height: 3rem;
-			object-fit: contain;
-			font-size: 0.5rem;
-		}
-		.nav-title img {
-			width: 2rem;
-			height: 2rem;
-			object-fit: contain;
-		}
-		nav ul,
-		nav svg {
+		.search-button > span {
 			display: none;
 		}
 		.github-link {
-			border-bottom-left-radius: 0;
+			display: none;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.brand span {
+			display: none;
+		}
+		.search-button kbd {
+			display: none;
+		}
+		.search-button {
+			padding: 0;
+			width: 2.25rem;
+			justify-content: center;
 		}
 	}
 </style>

@@ -7,42 +7,74 @@
 </script>
 
 {#if !hiddenMenu || sidebarOpen}
-	<aside class:sidebar-open={sidebarOpen}>
+	<aside class:sidebar-open={sidebarOpen} aria-label="Documentation navigation">
+		<div class="sidebar-heading">
+			<span>Documentation</span>
+			<span class="version">v3</span>
+		</div>
 		<UlMenu children={$menuItems} />
 	</aside>
 {/if}
 
 <style>
 	aside {
-		font-size: 16px;
-		width: 20rem;
 		position: fixed;
-		z-index: 10;
-		margin: 0;
-		top: 3.6rem;
-		left: 0;
+		top: var(--header-height);
 		bottom: 0;
-		box-sizing: border-box;
-		border-right: 1px solid var(--background-without-opacity);
+		left: max(0px, calc((100vw - 96rem) / 2));
+		z-index: 50;
+		width: var(--sidebar-width);
 		overflow-y: auto;
-		background-color: var(--secondary-color);
+		padding: 1.5rem 1rem 3rem;
+		border-right: 1px solid var(--border);
+		background: var(--surface);
+		scrollbar-width: thin;
+		scrollbar-color: var(--border-strong) transparent;
 	}
 
-	@media (max-width: 959px) {
+	.sidebar-heading {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 0.35rem 1rem;
+		color: var(--text-faint);
+		font-size: 0.68rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+	}
+
+	.version {
+		padding: 0.08rem 0.3rem;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		font-size: 0.6rem;
+		letter-spacing: 0;
+	}
+
+	@media (max-width: 1535px) {
 		aside {
-			font-size: 15px;
-			width: 16.4rem;
+			left: 0;
 		}
 	}
-	@media (max-width: 719px) {
+
+	@media (max-width: 900px) {
 		aside {
-			top: 0;
-			padding-top: 3.6rem;
-			transform: translateX(-100%);
-			transition: transform 0.2s ease;
+			z-index: 90;
+			width: min(var(--sidebar-width), 86vw);
+			box-shadow: 14px 0 40px rgb(15 23 42 / 0.12);
+			transform: translateX(-105%);
+			transition: transform 180ms ease;
 		}
+
 		aside.sidebar-open {
 			transform: translateX(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		aside {
+			transition: none;
 		}
 	}
 </style>

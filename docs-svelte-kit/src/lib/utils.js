@@ -6,13 +6,52 @@ import { base as baseUrl } from '$app/paths';
 const rules = RULES_META;
 
 export function stripBaseUrl(path) {
-	if (path.startsWith(baseUrl)) {
-		return path.slice(baseUrl.length);
+	const docsBase = baseUrl || '/eslint-plugin-svelte';
+	if (path.startsWith(docsBase)) {
+		return path.slice(docsBase.length);
 	}
 	return path;
 }
 
 const svelteRules = rules.filter((rule) => !rule.meta.deprecated);
+
+export const searchItems = [
+	{
+		title: 'Introduction',
+		description: 'What eslint-plugin-svelte is and how it helps you lint Svelte applications.',
+		section: 'Documentation',
+		path: '/',
+		keywords: 'home getting started overview'
+	},
+	{
+		title: 'User Guide',
+		description: 'Install and configure ESLint for Svelte, SvelteKit, and TypeScript projects.',
+		section: 'Documentation',
+		path: '/user-guide/',
+		keywords: 'install setup configuration typescript editor vscode'
+	},
+	{
+		title: 'Available Rules',
+		description: 'Browse every lint rule provided by eslint-plugin-svelte.',
+		section: 'Reference',
+		path: '/rules/',
+		keywords: 'rules reference recommended'
+	},
+	{
+		title: 'Migration',
+		description: 'Upgrade from earlier versions of eslint-plugin-svelte.',
+		section: 'Documentation',
+		path: '/migration/',
+		keywords: 'upgrade migrate legacy'
+	},
+	...svelteRules.map((rule) => ({
+		title: rule.meta.docs.ruleId,
+		description: rule.meta.docs.description.replaceAll('`', ''),
+		section: rule.meta.docs.category,
+		path: `/rules/${rule.meta.docs.ruleName}/`,
+		keywords: `${rule.meta.docs.ruleName} ${rule.meta.docs.recommended ? 'recommended' : ''}`
+	}))
+];
 
 const categories = [
 	'Possible Errors',
@@ -43,6 +82,18 @@ const categoryRules = categories.map((cat) => {
 			})
 	};
 });
+
+export const ruleCategories = categories;
+export const ruleCatalog = svelteRules.map((rule) => ({
+	title: rule.meta.docs.ruleId,
+	description: rule.meta.docs.description.replaceAll('`', ''),
+	category: rule.meta.docs.category,
+	path: `/rules/${rule.meta.docs.ruleName}/`,
+	recommended: rule.meta.docs.recommended === true,
+	base: rule.meta.docs.recommended === 'base',
+	fixable: Boolean(rule.meta.fixable),
+	hasSuggestions: Boolean(rule.meta.hasSuggestions)
+}));
 const SIDE_MENU = {
 	'/rules': [
 		{ path: '/', title: 'Introduction' },

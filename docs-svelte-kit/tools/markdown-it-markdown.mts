@@ -60,10 +60,9 @@ export default (md: Md): void => {
 			}
 			// Aggregate the next token children text.
 			const title = tokens[idx + 1]
-				.children!.filter(
-					(token) => token.type === 'text' || token.type === 'emoji' || token.type === 'code_inline'
-				)
-				.reduce((acc, t) => acc + t.content, '');
+				.children!.filter((token) => token.type === 'text' || token.type === 'code_inline')
+				.reduce((acc, t) => acc + t.content, '')
+				.trim();
 
 			const slug = token.attrGet('id')!;
 			renderer.addMenu(level, slug, title);

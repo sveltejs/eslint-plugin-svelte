@@ -16,7 +16,7 @@ export async function load({ url }) {
 	// 404
 	return {
 		moduleData: {
-			frontmatter: { title: '404', hiddenMenu: true }
+			frontmatter: { hiddenMenu: true, hideFooter: true }
 		}
 	};
 }

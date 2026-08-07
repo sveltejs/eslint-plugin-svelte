@@ -19,7 +19,6 @@ const config: UserConfig = {
 	plugins: [
 		svelteMd(
 			svelteMdOption({
-				baseUrl: '/eslint-plugin-svelte',
 				root: path.join(dirname, '../docs')
 			})
 		),

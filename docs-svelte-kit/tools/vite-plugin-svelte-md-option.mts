@@ -1,10 +1,11 @@
-import highlight from './highlight.mjs';
 import replaceLinkPlugin from './markdown-it-replace-link.mjs';
 import { full as emojiPlugin } from 'markdown-it-emoji';
 import anchorPlugin from 'markdown-it-anchor';
 import containerPlugin from 'markdown-it-container';
 import titlePlugin from './markdown-it-title.mjs';
 import markdownPlugin from './markdown-it-markdown.mjs';
+import alertPlugin from './markdown-it-alert.mjs';
+import stripEmojiPlugin from './markdown-it-strip-emoji.mjs';
 import containerPluginOption from './markdown-it-container-option.mjs';
 import slugify from '@sindresorhus/slugify';
 import type { Options } from 'vite-plugin-svelte-md';
@@ -17,7 +18,7 @@ import tsParser from '@typescript-eslint/parser';
 import path from 'path';
 
 const shikiPlugin = await Shiki({
-	theme: 'dark-plus',
+	theme: 'github-dark-default',
 	// Or any other integrations that support passing Shiki transformers
 	transformers: [
 		// Create another transformer, but with different trigger and ESLint twoslasher
@@ -72,11 +73,8 @@ function adjustTwoslasherESLint(base: TwoslashGenericFunction): TwoslashGenericF
 	};
 }
 
-export default (options: { baseUrl: string; root: string }): Options => ({
+export default (options: { root: string }): Options => ({
 	wrapperClasses: [],
-	markdownItOptions: {
-		highlight
-	},
 	markdownItUses: [
 		[
 			replaceLinkPlugin,
@@ -86,6 +84,7 @@ export default (options: { baseUrl: string; root: string }): Options => ({
 			}
 		],
 		emojiPlugin,
+		stripEmojiPlugin,
 		[
 			anchorPlugin,
 			{
@@ -97,6 +96,7 @@ export default (options: { baseUrl: string; root: string }): Options => ({
 			}
 		],
 		titlePlugin,
+		alertPlugin,
 		markdownPlugin,
 		[containerPlugin, 'tip', containerPluginOption('tip')],
 		[containerPlugin, 'warning', containerPluginOption('warning')],

@@ -2,29 +2,33 @@ import path from 'path';
 import type Md from 'markdown-it';
 import type Token from 'markdown-it/lib/token';
 
-export default (md: Md, options: { baseUrl: string; root: string }): void => {
-	const base = options.baseUrl;
+export default (md: Md, options: { root: string }): void => {
 	const root = path.resolve(options.root);
 
 	/** Normalize href */
 	function normalizeHref(curr: string, href: string) {
+		if (/^#.*$/.test(href)) {
+			return href;
+		}
+
 		let absolutePath;
 		let hash = '';
 		if (/\.md(?:#.*)?$/.test(href)) {
 			hash = /\.md(#.*)?$/.exec(href)![1] || '';
 			absolutePath = path.join(path.dirname(curr), hash ? href.slice(0, -hash.length) : href);
-		} else {
-			// hash only
-			absolutePath = curr;
-			hash = href;
 		}
 
-		return `${base}/${path
+		const fromRoute = path
+			.relative(root, curr)
+			.replace(/README\.md$/, '')
+			.replace(/\.md$/, '');
+		const toRoute = path
 			.relative(root, absolutePath)
 			.replace(/README\.md$/, '')
-			.replace(/\.md$/, '')}/${hash}`
-			.replace(/\\/gu, '/')
-			.replace(/\/+/gu, '/');
+			.replace(/\.md$/, '');
+		const relativeRoute = path.relative(fromRoute, toRoute).replace(/\\/gu, '/');
+
+		return `${relativeRoute || '.'}/${hash}`;
 	}
 
 	md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
@@ -43,7 +47,7 @@ export default (md: Md, options: { baseUrl: string; root: string }): void => {
 				const proxyToken = {
 					...token,
 					attrs: [
-						...token.attrs!.slice(0, hrefIndex - 1),
+						...token.attrs!.slice(0, hrefIndex),
 						[link[0], normalizeHref(env.id, href)],
 						...token.attrs!.slice(hrefIndex + 1)
 					]
