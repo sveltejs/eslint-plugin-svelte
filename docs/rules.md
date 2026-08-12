@@ -102,6 +102,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
 | [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
 | [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
+| [svelte/prefer-attribute-interpolation](./rules/prefer-attribute-interpolation.md)                       | require attribute interpolation instead of template literals                       |          |
 | [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
 | [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
 | [svelte/require-event-prefix](./rules/require-event-prefix.md)                                           | require component event names to start with "on"                                   |          |
