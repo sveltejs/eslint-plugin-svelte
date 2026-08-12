@@ -3,13 +3,12 @@ pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/prefer-attribute-interpolation'
 description: 'require attribute interpolation instead of template literals'
+since: 'v3.23.0'
 ---
 
 # svelte/prefer-attribute-interpolation
 
 > require attribute interpolation instead of template literals
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -46,6 +45,10 @@ Nothing.
 - [`prefer-template`]
 
 [`prefer-template`]: https://eslint.org/docs/latest/rules/prefer-template
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-svelte v3.23.0
 
 ## :mag: Implementation
 
