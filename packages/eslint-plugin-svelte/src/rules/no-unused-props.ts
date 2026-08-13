@@ -315,21 +315,20 @@ export default createRule('no-unused-props', {
 
 				if (reportedPropertyPaths.has(currentPathStr)) continue;
 
-				const propType = typeChecker.getTypeOfSymbol(prop);
-
-				// A spread of this property, or of anything containing it, consumes
-				// every property beneath it, so there is nothing left to report
-				// even when some of them are also accessed individually.
-				const isSpreadInThisPath = usedSpreadPropertyPaths.some((path) => {
+				// Spreading this property, or any of its ancestors, consumes everything
+				// beneath it, so nothing under it can be reported -- even when some of
+				// those properties are also read by name.
+				const isCoveredBySpread = usedSpreadPropertyPaths.some((path) => {
 					return path === '' || path === currentPathStr || currentPathStr.startsWith(`${path}.`);
 				});
-				if (isSpreadInThisPath) continue;
+				if (isCoveredBySpread) continue;
+
+				const propType = typeChecker.getTypeOfSymbol(prop);
 
 				const isUsedThisInPath =
 					usedPropertyPaths.includes(currentPathStr) ||
-					usedSpreadPropertyPaths.some((path) => {
-						return path === '' || path === currentPathStr || path.startsWith(`${currentPathStr}.`);
-					});
+					// A spread deeper inside this property counts as using the property itself.
+					usedSpreadPropertyPaths.some((path) => path.startsWith(`${currentPathStr}.`));
 				const isUsedInPath = usedPropertyPaths.some((path) => {
 					return path.startsWith(`${currentPathStr}.`);
 				});
