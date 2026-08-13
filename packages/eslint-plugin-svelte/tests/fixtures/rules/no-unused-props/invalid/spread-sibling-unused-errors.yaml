@@ -1,0 +1,4 @@
+- message: "'z' in 'b' is an unused property."
+  line: 8
+  column: 6
+  suggestions: null
