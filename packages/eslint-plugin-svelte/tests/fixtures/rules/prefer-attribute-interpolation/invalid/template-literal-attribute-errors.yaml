@@ -1,0 +1,12 @@
+- message: Prefer attribute interpolation over a template literal.
+  line: 6
+  column: 11
+  suggestions: null
+- message: Prefer attribute interpolation over a template literal.
+  line: 7
+  column: 16
+  suggestions: null
+- message: Prefer attribute interpolation over a template literal.
+  line: 9
+  column: 12
+  suggestions: null

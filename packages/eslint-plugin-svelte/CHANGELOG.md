@@ -1,5 +1,11 @@
 # eslint-plugin-svelte
 
+## 3.23.0
+
+### Minor Changes
+
+- [#1565](https://github.com/sveltejs/eslint-plugin-svelte/pull/1565) [`1ec3cf5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1ec3cf5edd561cb92b02c69e3bb9edb22773f278) Thanks [@ColumbusLabs](https://github.com/ColumbusLabs)! - feat: add prefer-attribute-interpolation rule
+
 ## 3.22.0
 
 ### Minor Changes

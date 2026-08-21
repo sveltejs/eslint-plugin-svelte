@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "3.22.0",
+  "version": "3.23.0",
   "description": "ESLint plugin for Svelte using AST",
   "repository": {
     "type": "git",
@@ -97,7 +97,7 @@
     "espree": "^11.0.0",
     "jiti": "^2.5.1",
     "less": "^4.4.1",
-    "mocha": "~11.7.2",
+    "mocha": "~11.8.0",
     "postcss-nested": "^7.0.2",
     "postcss-selector-parser": "^7.1.0",
     "sass": "^1.92.0",

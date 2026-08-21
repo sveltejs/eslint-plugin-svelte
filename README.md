@@ -201,6 +201,17 @@ export default defineConfig(
 > If you try to change the options for a different file or override them later, the parser will ignore the new options, which may lead to errors.
 > For more context, see [typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778).
 
+#### Svelte config inside `vite.config.js`
+
+The Svelte config can also be passed to the `sveltekit()` or `svelte()` plugin in `vite.config.js`; SvelteKit 3 projects do this by default. Use [`@sveltejs/load-config`](https://www.npmjs.com/package/@sveltejs/load-config) to load it:
+
+```js
+// eslint.config.js
+import { loadConfig } from '@sveltejs/load-config';
+
+const svelteConfig = (await loadConfig('./', { traverse: false }))?.config;
+```
+
 ### Available Configurations
 
 This plugin provides the following configurations:
@@ -381,6 +392,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/no-extra-reactive-curlies](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies/) | disallow wrapping single reactive statements in curly braces | :bulb: |
 | [svelte/no-restricted-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/) | disallow specific HTML elements |  |
 | [svelte/no-spaces-around-equal-signs-in-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-spaces-around-equal-signs-in-attribute/) | disallow spaces around equal signs in attribute | :wrench: |
+| [svelte/prefer-attribute-interpolation](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-attribute-interpolation/) | require attribute interpolation instead of template literals |  |
 | [svelte/prefer-class-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/) | require class directives instead of ternary expressions | :wrench: |
 | [svelte/prefer-style-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/) | require style directives instead of style attribute | :wrench: |
 | [svelte/require-event-prefix](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix/) | require component event names to start with "on" |  |
