@@ -31,7 +31,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-container": "^4.0.0",
     "@types/markdown-it-emoji": "^3.0.1",
-    "@types/node": "^22.18.0",
+    "@types/node": "^24.0.0",
     "@types/prismjs": "^1.26.5",
     "@types/stylus": "^0.48.43",
     "@typescript/vfs": "^1.6.1",
