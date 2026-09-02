@@ -13,7 +13,7 @@ importers:
         version: 0.7.0
       '@changesets/cli':
         specifier: ^2.30.0
-        version: 2.30.0(@types/node@22.19.15)
+        version: 2.30.0(@types/node@26.4.1)
       '@changesets/get-release-plan':
         specifier: ^4.0.15
         version: 4.0.15
@@ -22,7 +22,7 @@ importers:
         version: 4.7.1(eslint@9.39.4(jiti@2.6.1))
       '@ota-meshi/eslint-plugin':
         specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@3.2.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
@@ -75,8 +75,8 @@ importers:
         specifier: ^5.5.5
         version: 5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))(prettier@3.8.1)
       eslint-plugin-regexp:
-        specifier: ^2.10.0
-        version: 2.10.0(eslint@9.39.4(jiti@2.6.1))
+        specifier: ^3.0.0
+        version: 3.2.0(eslint@9.39.4(jiti@2.6.1))
       eslint-plugin-yml:
         specifier: ^1.19.1
         version: 1.19.1(eslint@9.39.4(jiti@2.6.1))
@@ -115,7 +115,7 @@ importers:
         version: 5.2.7
       '@ota-meshi/eslint-plugin':
         specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@3.2.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
       '@shikijs/markdown-it':
         specifier: ^3.12.2
         version: 3.13.0
@@ -1589,6 +1589,9 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/estree@1.0.9':
+    resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
   '@types/esutils@2.0.2':
     resolution: {integrity: sha512-HPQcBvKaxSKbCt+KKOfPhEFsrXoXDuTuMSEnpB/DVcHXzO6Yt2SAj2OnxqQT/LYO8sCPpk22AJQ2k+nTMMSvNw==}
 
@@ -1642,6 +1645,9 @@ packages:
 
   '@types/node@22.19.15':
     resolution: {integrity: sha512-F0R/h2+dsy5wJAUe3tAU6oqa2qbWY5TpNfL/RGmo1y38hiyO1w3x2jPtt76wmuaJI4DQnOBu21cNXQ2STIUUWg==}
+
+  '@types/node@26.4.1':
+    resolution: {integrity: sha512-k97ENvZWtvA6yqz5/FS6a7duDgOPEeOQOc2iKS/nY6mX6qJUKtLnWzQS+Xj6tXweyj6ZcTAK2Qecetnvi9nCLA==}
 
   '@types/postcss-safe-parser@5.0.4':
     resolution: {integrity: sha512-5zGTm1jsW3j4+omgND1SIDbrZOcigTuxa4ihppvKbLkg2INUGBHV/fWNRSRFibK084tU3fxqZ/kVoSIGqRHnrQ==}
@@ -2332,11 +2338,11 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-regexp@2.10.0:
-    resolution: {integrity: sha512-ovzQT8ESVn5oOe5a7gIDPD5v9bCSjIFJu57sVPDqgPRXicQzOnYfFN21WoQBQF18vrhT5o7UMKFwJQVVjyJ0ng==}
-    engines: {node: ^18 || >=20}
+  eslint-plugin-regexp@3.2.0:
+    resolution: {integrity: sha512-4yq47CnLxyfHFKJEo5kvNaiJ0aDtBxSJWk4M2LiamplUXdWxdlzDYqImb/ZVCp+2BqkQjBAmw4Xc07Q8SXVDZg==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
-      eslint: '>=8.44.0'
+      eslint: '>=9.38.0'
 
   eslint-plugin-yml@1.19.1:
     resolution: {integrity: sha512-bYkOxyEiXh9WxUhVYPELdSHxGG5pOjCSeJOVkfdIyj6tuiHDxrES2WAW1dBxn3iaZQey57XflwLtCYRcNPOiOg==}
@@ -2384,6 +2390,7 @@ packages:
   eslint@9.39.1:
     resolution: {integrity: sha512-BhHmn2yNOFA9H9JmmIVKJmd288g9hrVRDkdoIgRCRuSySRUHH7r/DI6aAXW9T1WwUuY3DFgrcaqB+deURBLR5g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -2394,6 +2401,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -2893,9 +2901,9 @@ packages:
     resolution: {integrity: sha512-Hicd6JK5Njt2QB6XYFS7ok9e37O8AYk3jTcppG4YVQnYjOemymvTcmc7OWsmq/Qqj5TdRFO5/x/tIPmBeRtGHg==}
     engines: {node: '>=12.0.0'}
 
-  jsdoc-type-pratt-parser@4.8.0:
-    resolution: {integrity: sha512-iZ8Bdb84lWRuGHamRXFyML07r21pcwBrLkHEuHgEY5UbCouBwv7ECknDRKzsQIXMiqpPymqtIf8TC/shYKB5rw==}
-    engines: {node: '>=12.0.0'}
+  jsdoc-type-pratt-parser@9.2.1:
+    resolution: {integrity: sha512-V4Ww4EHnTcTLSOMoB0FsF72JhQvcAsriCm/LWnxJeGWoxIjEL2l9na11abQok5SYShq8m0Gl02el/xAbTCulvQ==}
+    engines: {node: ^22.22.2 || >=24.15.0}
 
   jsesc@3.1.0:
     resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==}
@@ -4006,6 +4014,9 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
+  undici-types@8.3.0:
+    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
+
   undici@6.24.1:
     resolution: {integrity: sha512-sC+b0tB1whOCzbtlx20fx3WgCXwkW627p4EA9uM+/tNNPkSS+eSEld6pAs9nDv7WbY1UUljBMYPtu9BCOrCWKA==}
     engines: {node: '>=18.17'}
@@ -4424,7 +4435,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@changesets/cli@2.30.0(@types/node@22.19.15)':
+  '@changesets/cli@2.30.0(@types/node@26.4.1)':
     dependencies:
       '@changesets/apply-release-plan': 7.1.0
       '@changesets/assemble-release-plan': 6.0.9
@@ -4440,7 +4451,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@changesets/write': 0.4.0
-      '@inquirer/external-editor': 1.0.3(@types/node@22.19.15)
+      '@inquirer/external-editor': 1.0.3(@types/node@26.4.1)
       '@manypkg/get-packages': 1.1.3
       ansi-colors: 4.1.3
       enquirer: 2.4.1
@@ -4910,12 +4921,12 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@inquirer/external-editor@1.0.3(@types/node@22.19.15)':
+  '@inquirer/external-editor@1.0.3(@types/node@26.4.1)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 22.19.15
+      '@types/node': 26.4.1
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -5031,12 +5042,12 @@ snapshots:
     dependencies:
       which: 4.0.0
 
-  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))':
+  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@3.2.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.7.1(eslint@9.39.4(jiti@2.6.1))
       '@eslint/js': 9.39.4
       eslint: 9.39.4(jiti@2.6.1)
-      eslint-plugin-regexp: 2.10.0(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-regexp: 3.2.0(eslint@9.39.4(jiti@2.6.1))
       semver: 7.7.4
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -5342,6 +5353,8 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  '@types/estree@1.0.9': {}
+
   '@types/esutils@2.0.2': {}
 
   '@types/hast@3.0.4':
@@ -5394,6 +5407,10 @@ snapshots:
   '@types/node@22.19.15':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/node@26.4.1':
+    dependencies:
+      undici-types: 8.3.0
 
   '@types/postcss-safe-parser@5.0.4':
     dependencies:
@@ -6198,13 +6215,13 @@ snapshots:
       '@types/eslint': 9.6.1
       eslint-config-prettier: 10.1.8(eslint@9.39.4(jiti@2.6.1))
 
-  eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)):
+  eslint-plugin-regexp@3.2.0(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@2.6.1))
       '@eslint-community/regexpp': 4.12.2
       comment-parser: 1.4.5
       eslint: 9.39.4(jiti@2.6.1)
-      jsdoc-type-pratt-parser: 4.8.0
+      jsdoc-type-pratt-parser: 9.2.1
       refa: 0.12.1
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
@@ -6810,7 +6827,10 @@ snapshots:
 
   jsdoc-type-pratt-parser@4.1.0: {}
 
-  jsdoc-type-pratt-parser@4.8.0: {}
+  jsdoc-type-pratt-parser@9.2.1:
+    dependencies:
+      '@types/estree': 1.0.9
+      '@types/node': 26.4.1
 
   jsesc@3.1.0: {}
 
@@ -8211,6 +8231,8 @@ snapshots:
   uc.micro@2.1.0: {}
 
   undici-types@6.21.0: {}
+
+  undici-types@8.3.0: {}
 
   undici@6.24.1: {}
 
