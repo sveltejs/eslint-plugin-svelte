@@ -355,6 +355,9 @@ function isValueAllowed(
 			partStartsWith(first, '?') ||
 			partStartsWith(first, '#') ||
 			(config.allowAbsolute === true && partIsAbsoluteUrl(first)) ||
+			(config.allowAbsolute === true &&
+				first.type !== 'TemplateElement' &&
+				expressionIsUrlHref(new FindVariableContext(context), first)) ||
 			(partIsResolved(context, first, resolveReferences, allowNullish, tsTools) &&
 				// The suffix is checked with an empty `visited`, because it never refers back to the resolved value, but it can come from the same variable, e.g. `routes.home + routes.query`.
 				urlStartSatisfies(
@@ -865,6 +868,110 @@ function expressionIsNullish(
 			return node.value === null; // Undefined is an Identifier in ESTree, null is a Literal
 		default:
 			return false;
+	}
+}
+
+function isGlobalIdentifier(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	name: string
+): boolean {
+	if (node.type !== 'Identifier' || node.name !== name) {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	return variable === null || variable.defs.length === 0;
+}
+
+function expressionIsUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	if (node.type === 'NewExpression') {
+		return isGlobalIdentifier(ctx, node.callee, 'URL') && urlConstructionIsAbsolute(ctx, node);
+	}
+	if (node.type !== 'Identifier') {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsUrl(ctx, variable.identifiers[0].parent.init);
+}
+
+/**
+ * Whether `new URL(input, base)` is guaranteed to produce an absolute URL that does not need
+ * `resolve()`: either it has no base (and would throw on a relative input), or the input or the
+ * base is itself absolute. A relative input against an unknown base (e.g. `page.url`) is not.
+ */
+function urlConstructionIsAbsolute(
+	ctx: FindVariableContext,
+	node: TSESTree.NewExpression
+): boolean {
+	if (node.arguments.length === 1) {
+		return node.arguments[0].type !== 'SpreadElement';
+	}
+	return node.arguments
+		.slice(0, 2)
+		.some(
+			(argument) =>
+				argument.type !== 'SpreadElement' &&
+				(expressionIsAbsoluteUrl(argument) || expressionStartsWithUrl(ctx, argument))
+		);
+}
+
+function expressionIsUrlHref(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	if (expressionIsUrl(ctx, node)) {
+		return true;
+	}
+	if (
+		node.type === 'MemberExpression' &&
+		!node.computed &&
+		node.property.type === 'Identifier' &&
+		node.property.name === 'href'
+	) {
+		return expressionIsUrl(ctx, node.object);
+	}
+	if (node.type === 'CallExpression') {
+		if (
+			node.callee.type === 'MemberExpression' &&
+			!node.callee.computed &&
+			node.callee.property.type === 'Identifier' &&
+			(node.callee.property.name === 'toString' || node.callee.property.name === 'toJSON')
+		) {
+			return expressionIsUrl(ctx, node.callee.object);
+		}
+		if (isGlobalIdentifier(ctx, node.callee, 'String') && node.arguments.length > 0) {
+			return expressionIsUrl(ctx, node.arguments[0]);
+		}
+	}
+	return false;
+}
+
+function expressionStartsWithUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	switch (node.type) {
+		case 'BinaryExpression':
+			return node.operator === '+' && expressionStartsWithUrl(ctx, node.left);
+		case 'TemplateLiteral':
+			return (
+				node.expressions.length >= 1 &&
+				node.quasis[0].value.raw === '' &&
+				expressionStartsWithUrl(ctx, node.expressions[0])
+			);
+		default:
+			return expressionIsUrlHref(ctx, node);
 	}
 }
 
