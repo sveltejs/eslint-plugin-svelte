@@ -265,15 +265,8 @@ function checkLinkAttribute(
 
 function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
 	function identifierIsExternal(identifier: TSESTree.Identifier): boolean {
-		const variable = ctx.findVariable(identifier);
-		return (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null &&
-			variable.identifiers[0].parent.init.type === 'Literal' &&
-			variable.identifiers[0].parent.init.value === 'external'
-		);
+		const init = resolveVariableInit(ctx, identifier);
+		return init !== null && init.type === 'Literal' && init.value === 'external';
 	}
 
 	for (const attr of element.attributes) {
@@ -298,38 +291,36 @@ function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): 
 	return false;
 }
 
+interface AllowedValueConfig {
+	allowAbsolute?: boolean;
+	allowEmpty?: boolean;
+	allowFragment?: boolean;
+	allowNullish?: boolean;
+}
+
 function isValueAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
 	tsTools: TSTools | null,
-	config: {
-		allowAbsolute?: boolean;
-		allowEmpty?: boolean;
-		allowFragment?: boolean;
-		allowNullish?: boolean;
-	}
+	config: AllowedValueConfig
 ): boolean {
 	if (value.type === 'Identifier') {
-		const variable = ctx.findVariable(value);
-		if (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator'
-		) {
-			if (expressionIsAllowedType(variable.identifiers[0], config.allowNullish, tsTools)) {
+		const binding = resolveBindingIdentifier(ctx, value);
+		if (binding !== null) {
+			if (binding.parent.type === 'VariableDeclarator') {
+				return variableValueIsAllowed(ctx, binding, resolveReferences, tsTools, config);
+			}
+			if (eachItemValueIsAllowed(ctx, binding, undefined, resolveReferences, tsTools, config)) {
 				return true;
 			}
-			if (variable.identifiers[0].parent.init !== null) {
-				return isValueAllowed(
-					ctx,
-					variable.identifiers[0].parent.init,
-					resolveReferences,
-					tsTools,
-					config
-				);
-			}
 		}
+	}
+	if (
+		value.type === 'MemberExpression' &&
+		memberValueIsAllowed(ctx, value, resolveReferences, tsTools, config)
+	) {
+		return true;
 	}
 	if (value.type === 'ConditionalExpression') {
 		return (
@@ -350,7 +341,291 @@ function isValueAllowed(
 	return false;
 }
 
+function variableValueIsAllowed(
+	ctx: FindVariableContext,
+	binding: TSESTree.Identifier,
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
+	config: AllowedValueConfig
+): boolean {
+	if (expressionIsAllowedType(binding, config.allowNullish, tsTools)) {
+		return true;
+	}
+	if (binding.parent.type !== 'VariableDeclarator') {
+		return false;
+	}
+	return (
+		binding.parent.init !== null &&
+		isValueAllowed(ctx, binding.parent.init, resolveReferences, tsTools, config)
+	);
+}
+
+function eachItemValueIsAllowed(
+	ctx: FindVariableContext,
+	binding: TSESTree.Identifier,
+	key: string | number | undefined,
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
+	config: AllowedValueConfig
+): boolean {
+	const each = eachBlockOf(binding);
+	if (each === null) {
+		return false;
+	}
+	const array = resolveToArrayExpression(ctx, each.array);
+	if (array === null) {
+		return false;
+	}
+	for (const element of array.elements) {
+		if (element === null || element.type === 'SpreadElement') {
+			return false;
+		}
+		let bound = destructuredValue(ctx, each.context, element, binding);
+		if (bound !== null && key !== undefined) {
+			bound = accessKey(ctx, bound, key);
+		}
+		if (bound === null || !isValueAllowed(ctx, bound, resolveReferences, tsTools, config)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function memberValueIsAllowed(
+	ctx: FindVariableContext,
+	value: TSESTree.MemberExpression,
+	resolveReferences: Set<TSESTree.Identifier>,
+	tsTools: TSTools | null,
+	config: AllowedValueConfig
+): boolean {
+	const key = memberKey(value);
+	if (key === null) {
+		return false;
+	}
+	// Static access on an inline literal or nested expression: `[resolve('/')][0]`.
+	if (value.object.type !== 'Identifier') {
+		const target = accessKey(ctx, value.object, key);
+		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
+	}
+	const binding = resolveBindingIdentifier(ctx, value.object);
+	if (binding === null) {
+		return false;
+	}
+	// `item.url` where `item` is an `{#each}` iteration variable.
+	if (eachItemValueIsAllowed(ctx, binding, key, resolveReferences, tsTools, config)) {
+		return true;
+	}
+	// `paths[0]` where `paths` is a `const` array/object literal.
+	if (binding.parent.type === 'VariableDeclarator' && binding.parent.init !== null) {
+		const target = accessKey(ctx, binding.parent.init, key);
+		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
+	}
+	return false;
+}
+
 // Helper functions
+
+function resolveBindingIdentifier(
+	ctx: FindVariableContext,
+	node: TSESTree.Identifier
+): TSESTree.Identifier | null {
+	const variable = ctx.findVariable(node);
+	if (variable === null || variable.identifiers.length === 0) {
+		return null;
+	}
+	return variable.identifiers[0];
+}
+
+// Resolve an `{#each array as context}` iteration variable to the iterated array and the
+// `context` destructuring pattern.
+function eachBlockOf(
+	node: TSESTree.Node
+): { array: TSESTree.Expression; context: TSESTree.Node } | null {
+	const parent = node.parent as TSESTree.Node | AST.SvelteEachBlock | undefined;
+	if (parent === undefined) {
+		return null;
+	}
+	if (parent.type === 'SvelteEachBlock') {
+		const context = parent.context;
+		// Only the `as` context binds an element; reject the index/key identifiers.
+		if (context === null || node !== context) {
+			return null;
+		}
+		return { array: parent.expression, context };
+	}
+	if (parent.type === 'Property' && parent.parent.type === 'ObjectPattern') {
+		return eachBlockOf(parent.parent);
+	}
+	if (parent.type === 'ArrayPattern') {
+		return eachBlockOf(parent);
+	}
+	return null;
+}
+
+// Resolve the value that `binding` receives when the destructuring `pattern` is applied to
+// a concrete array `element`, descending one property/index at a time until it reaches
+// `binding`. Returns null if a step is not statically resolvable.
+function destructuredValue(
+	ctx: FindVariableContext,
+	pattern: TSESTree.Node,
+	element: TSESTree.Expression,
+	binding: TSESTree.Identifier
+): TSESTree.Expression | null {
+	if (pattern === binding) {
+		return element;
+	}
+	if (pattern.type === 'ObjectPattern') {
+		for (const property of pattern.properties) {
+			if (property.type !== 'Property') {
+				continue;
+			}
+			const key = propertyKey(property);
+			const propertyValue = key === null ? null : resolveProperty(ctx, element, key);
+			const result =
+				propertyValue === null
+					? null
+					: destructuredValue(ctx, property.value, propertyValue, binding);
+			if (result !== null) {
+				return result;
+			}
+		}
+		return null;
+	}
+	if (pattern.type === 'ArrayPattern') {
+		for (const [index, subPattern] of pattern.elements.entries()) {
+			const elementValue = subPattern === null ? null : resolveElement(ctx, element, index);
+			const result =
+				subPattern === null || elementValue === null
+					? null
+					: destructuredValue(ctx, subPattern, elementValue, binding);
+			if (result !== null) {
+				return result;
+			}
+		}
+		return null;
+	}
+	return null;
+}
+
+// Resolve a single access — an array index or an object property — on an expression.
+function accessKey(
+	ctx: FindVariableContext,
+	expr: TSESTree.Expression,
+	key: string | number
+): TSESTree.Expression | null {
+	return typeof key === 'number' ? resolveElement(ctx, expr, key) : resolveProperty(ctx, expr, key);
+}
+
+function resolveElement(
+	ctx: FindVariableContext,
+	arrayExpr: TSESTree.Expression,
+	index: number
+): TSESTree.Expression | null {
+	const array = resolveToArrayExpression(ctx, arrayExpr);
+	if (array === null) {
+		return null;
+	}
+	const element = array.elements[index];
+	if (element === null || element === undefined || element.type === 'SpreadElement') {
+		return null;
+	}
+	return element;
+}
+
+function resolveProperty(
+	ctx: FindVariableContext,
+	objectExpr: TSESTree.Expression,
+	key: string
+): TSESTree.Expression | null {
+	const object = resolveToObjectExpression(ctx, objectExpr);
+	if (object === null) {
+		return null;
+	}
+	for (const property of object.properties) {
+		if (property.type === 'Property' && propertyKey(property) === key) {
+			// `Property.value` is a shared type covering object patterns too, but in an object
+			// literal a property value is always an expression.
+			return property.value as TSESTree.Expression;
+		}
+	}
+	return null;
+}
+
+function resolveToArrayExpression(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression
+): TSESTree.ArrayExpression | null {
+	if (node.type === 'ArrayExpression') {
+		return node;
+	}
+	const resolved = resolveToLiteralSource(ctx, node);
+	return resolved === null ? null : resolveToArrayExpression(ctx, resolved);
+}
+
+function resolveToObjectExpression(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression
+): TSESTree.ObjectExpression | null {
+	if (node.type === 'ObjectExpression') {
+		return node;
+	}
+	const resolved = resolveToLiteralSource(ctx, node);
+	return resolved === null ? null : resolveToObjectExpression(ctx, resolved);
+}
+
+function resolveToLiteralSource(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression
+): TSESTree.Expression | null {
+	if (node.type === 'Identifier') {
+		return resolveVariableInit(ctx, node);
+	}
+	if (node.type === 'MemberExpression') {
+		const key = memberKey(node);
+		return key === null ? null : accessKey(ctx, node.object, key);
+	}
+	return null;
+}
+
+function resolveVariableInit(
+	ctx: FindVariableContext,
+	node: TSESTree.Identifier
+): TSESTree.Expression | null {
+	const binding = resolveBindingIdentifier(ctx, node);
+	if (binding === null || binding.parent.type !== 'VariableDeclarator') {
+		return null;
+	}
+	return binding.parent.init;
+}
+
+function propertyKey(property: TSESTree.Property): string | null {
+	if (property.computed) {
+		return null;
+	}
+	if (property.key.type === 'Identifier') {
+		return property.key.name;
+	}
+	if (property.key.type === 'Literal' && typeof property.key.value === 'string') {
+		return property.key.value;
+	}
+	return null;
+}
+
+function memberKey(member: TSESTree.MemberExpression): string | number | null {
+	if (member.computed) {
+		if (
+			member.property.type === 'Literal' &&
+			(typeof member.property.value === 'string' || typeof member.property.value === 'number')
+		) {
+			return member.property.value;
+		}
+		return null;
+	}
+	if (member.property.type === 'Identifier') {
+		return member.property.name;
+	}
+	return null;
+}
 
 function expressionIsAllowedType(
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
@@ -411,16 +686,11 @@ function expressionIsResolveCall(
 	if (node.type !== 'Identifier') {
 		return false;
 	}
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
+	const init = resolveVariableInit(ctx, node);
+	if (init === null) {
 		return false;
 	}
-	return expressionIsResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
+	return expressionIsResolveCall(ctx, init, resolveReferences);
 }
 
 function expressionIsEmpty(
@@ -530,16 +800,11 @@ function identifierStartsWith(
 	node: TSESTree.Identifier,
 	prefix: string
 ): boolean {
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
+	const init = resolveVariableInit(ctx, node);
+	if (init === null) {
 		return false;
 	}
-	return expressionStartsWith(ctx, variable.identifiers[0].parent.init, prefix);
+	return expressionStartsWith(ctx, init, prefix);
 }
 
 function templateLiteralStartsWith(
