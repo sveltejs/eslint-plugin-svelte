@@ -779,10 +779,78 @@ function expressionIsNullish(
 	}
 }
 
+function isGlobalIdentifier(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	name: string
+): boolean {
+	if (node.type !== 'Identifier' || node.name !== name) {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	return variable === null || variable.defs.length === 0;
+}
+
+function expressionIsUrl(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	if (node.type === 'NewExpression') {
+		return isGlobalIdentifier(ctx, node.callee, 'URL');
+	}
+	if (node.type !== 'Identifier') {
+		return false;
+	}
+	const variable = ctx.findVariable(node);
+	if (
+		variable === null ||
+		variable.identifiers.length === 0 ||
+		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+		variable.identifiers[0].parent.init === null
+	) {
+		return false;
+	}
+	return expressionIsUrl(ctx, variable.identifiers[0].parent.init);
+}
+
+function expressionIsUrlHref(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+): boolean {
+	if (expressionIsUrl(ctx, node)) {
+		return true;
+	}
+	if (
+		node.type === 'MemberExpression' &&
+		!node.computed &&
+		node.property.type === 'Identifier' &&
+		(node.property.name === 'href' || node.property.name === 'origin')
+	) {
+		return expressionIsUrl(ctx, node.object);
+	}
+	if (node.type === 'CallExpression') {
+		if (
+			node.callee.type === 'MemberExpression' &&
+			!node.callee.computed &&
+			node.callee.property.type === 'Identifier' &&
+			(node.callee.property.name === 'toString' || node.callee.property.name === 'toJSON')
+		) {
+			return expressionIsUrl(ctx, node.callee.object);
+		}
+		if (isGlobalIdentifier(ctx, node.callee, 'String') && node.arguments.length > 0) {
+			return expressionIsUrl(ctx, node.arguments[0]);
+		}
+	}
+	return false;
+}
+
 function expressionIsAbsoluteUrl(
 	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
 ): boolean {
+	if (expressionIsUrlHref(ctx, node)) {
+		return true;
+	}
 	switch (node.type) {
 		case 'BinaryExpression':
 			return binaryExpressionIsAbsoluteUrl(ctx, node);
