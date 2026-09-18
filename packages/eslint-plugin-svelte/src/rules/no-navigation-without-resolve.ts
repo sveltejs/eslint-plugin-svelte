@@ -436,8 +436,10 @@ function resolveBindingIdentifier(
 	return variable.identifiers[0];
 }
 
-// Resolve an `{#each array as context}` iteration variable to the iterated array and the
-// `context` destructuring pattern.
+/**
+ * Resolve an `{#each array as context}` iteration variable to the iterated array and the
+ * `context` destructuring pattern.
+ */
 function eachBlockOf(
 	node: TSESTree.Node
 ): { array: TSESTree.Expression; context: TSESTree.Node } | null {
@@ -462,9 +464,11 @@ function eachBlockOf(
 	return null;
 }
 
-// Resolve the value that `binding` receives when the destructuring `pattern` is applied to
-// a concrete array `element`, descending one property/index at a time until it reaches
-// `binding`. Returns null if a step is not statically resolvable.
+/**
+ * Resolve the value that `binding` receives when the destructuring `pattern` is applied to
+ * a concrete array `element`, descending one property/index at a time until it reaches
+ * `binding`. Returns null if a step is not statically resolvable.
+ */
 function destructuredValue(
 	ctx: FindVariableContext,
 	pattern: TSESTree.Node,
@@ -507,7 +511,9 @@ function destructuredValue(
 	return null;
 }
 
-// Resolve a single access — an array index or an object property — on an expression.
+/**
+ * Resolve a single access — an array index or an object property — on an expression.
+ */
 function accessKey(
 	ctx: FindVariableContext,
 	expr: TSESTree.Expression,
