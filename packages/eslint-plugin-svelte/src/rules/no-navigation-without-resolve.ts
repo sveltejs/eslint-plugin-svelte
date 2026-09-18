@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types';
 
 import { createRule } from '../utils/index.js';
-import { ReferenceTracker, getStaticValue } from '@eslint-community/eslint-utils';
+import { getPropertyName, ReferenceTracker, getStaticValue } from '@eslint-community/eslint-utils';
 import { FindVariableContext, getScope } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
@@ -372,7 +372,7 @@ function variableValueIsAllowed(
 function eachItemValueIsAllowed(
 	ctx: FindVariableContext,
 	binding: TSESTree.Identifier,
-	key: string | number | undefined,
+	key: string | undefined,
 	resolveReferences: Set<TSESTree.Identifier>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
@@ -407,7 +407,7 @@ function memberValueIsAllowed(
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
-	const key = memberKey(value);
+	const key = getPropertyName(value);
 	if (key === null) {
 		return false;
 	}
@@ -492,7 +492,7 @@ function destructuredValue(
 			if (property.type !== 'Property') {
 				continue;
 			}
-			const key = propertyKey(property);
+			const key = getPropertyName(property);
 			const propertyValue = key === null ? null : resolveProperty(ctx, element, key);
 			const result =
 				propertyValue === null
@@ -526,9 +526,19 @@ function destructuredValue(
 function accessKey(
 	ctx: FindVariableContext,
 	expr: TSESTree.Expression,
-	key: string | number
+	key: string
 ): TSESTree.Expression | null {
-	return typeof key === 'number' ? resolveElement(ctx, expr, key) : resolveProperty(ctx, expr, key);
+	const index = arrayIndex(key);
+	return index === null ? resolveProperty(ctx, expr, key) : resolveElement(ctx, expr, index);
+}
+
+/**
+ * The array index a property name refers to (e.g. `"0"`), or null if it is not a canonical
+ * non-negative integer index.
+ */
+function arrayIndex(key: string): number | null {
+	const index = Number(key);
+	return Number.isInteger(index) && index >= 0 && String(index) === key ? index : null;
 }
 
 function resolveElement(
@@ -557,7 +567,7 @@ function resolveProperty(
 		return null;
 	}
 	for (const property of object.properties) {
-		if (property.type === 'Property' && propertyKey(property) === key) {
+		if (property.type === 'Property' && getPropertyName(property) === key) {
 			// `Property.value` is a shared type covering object patterns too, but in an object
 			// literal a property value is always an expression.
 			return property.value as TSESTree.Expression;
@@ -596,7 +606,7 @@ function resolveToLiteralSource(
 		return resolveVariableInit(ctx, node);
 	}
 	if (node.type === 'MemberExpression') {
-		const key = memberKey(node);
+		const key = getPropertyName(node);
 		return key === null ? null : accessKey(ctx, node.object, key);
 	}
 	return null;
@@ -611,35 +621,6 @@ function resolveVariableInit(
 		return null;
 	}
 	return binding.parent.init;
-}
-
-function propertyKey(property: TSESTree.Property): string | null {
-	if (property.computed) {
-		return null;
-	}
-	if (property.key.type === 'Identifier') {
-		return property.key.name;
-	}
-	if (property.key.type === 'Literal' && typeof property.key.value === 'string') {
-		return property.key.value;
-	}
-	return null;
-}
-
-function memberKey(member: TSESTree.MemberExpression): string | number | null {
-	if (member.computed) {
-		if (
-			member.property.type === 'Literal' &&
-			(typeof member.property.value === 'string' || typeof member.property.value === 'number')
-		) {
-			return member.property.value;
-		}
-		return null;
-	}
-	if (member.property.type === 'Identifier') {
-		return member.property.name;
-	}
-	return null;
 }
 
 function expressionIsAllowedType(
