@@ -58,6 +58,10 @@ export default createRule('no-navigation-without-resolve', {
 		const tsTools = getTypeScriptTools(context);
 
 		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
+		let urlReferences: UrlReferences = {
+			constructions: new Set<TSESTree.NewExpression>(),
+			stringCalls: new Set<TSESTree.CallExpression>()
+		};
 
 		const ignoreGoto = context.options[0]?.ignoreGoto ?? false;
 		const ignorePushState = context.options[0]?.ignorePushState ?? false;
@@ -68,6 +72,7 @@ export default createRule('no-navigation-without-resolve', {
 			Program() {
 				const referenceTracker = new ReferenceTracker(context.sourceCode.scopeManager.globalScope!);
 				resolveReferences = extractResolveReferences(referenceTracker, context);
+				urlReferences = extractUrlReferences(referenceTracker);
 				const {
 					goto: gotoCalls,
 					pushState: pushStateCalls,
@@ -75,7 +80,7 @@ export default createRule('no-navigation-without-resolve', {
 				} = extractFunctionCallReferences(referenceTracker);
 				if (!ignoreGoto) {
 					for (const gotoCall of gotoCalls) {
-						checkGotoCall(context, gotoCall, resolveReferences, tsTools);
+						checkGotoCall(context, gotoCall, resolveReferences, urlReferences, tsTools);
 					}
 				}
 				if (!ignorePushState) {
@@ -84,6 +89,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							pushStateCall,
 							resolveReferences,
+							urlReferences,
 							tsTools,
 							'pushStateWithoutResolve'
 						);
@@ -95,6 +101,7 @@ export default createRule('no-navigation-without-resolve', {
 							context,
 							replaceStateCall,
 							resolveReferences,
+							urlReferences,
 							tsTools,
 							'replaceStateWithoutResolve'
 						);
@@ -103,7 +110,7 @@ export default createRule('no-navigation-without-resolve', {
 			},
 			...(!ignoreLinks && {
 				SvelteShorthandAttribute(node) {
-					checkLinkAttribute(context, node, node.value, resolveReferences, tsTools);
+					checkLinkAttribute(context, node, node.value, resolveReferences, urlReferences, tsTools);
 				},
 				SvelteAttribute(node) {
 					if (node.value.length > 0) {
@@ -112,6 +119,7 @@ export default createRule('no-navigation-without-resolve', {
 							node,
 							node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
 							resolveReferences,
+							urlReferences,
 							tsTools
 						);
 					}
@@ -194,12 +202,38 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 	};
 }
 
+interface UrlReferences {
+	constructions: Set<TSESTree.NewExpression>;
+	stringCalls: Set<TSESTree.CallExpression>;
+}
+
+function extractUrlReferences(referenceTracker: ReferenceTracker): UrlReferences {
+	const constructions = new Set<TSESTree.NewExpression>();
+	const stringCalls = new Set<TSESTree.CallExpression>();
+	for (const { node, path } of referenceTracker.iterateGlobalReferences({
+		URL: {
+			[ReferenceTracker.CONSTRUCT]: true
+		},
+		String: {
+			[ReferenceTracker.CALL]: true
+		}
+	})) {
+		if (path[path.length - 1] === 'URL') {
+			constructions.add(node as TSESTree.NewExpression);
+		} else if (path[path.length - 1] === 'String') {
+			stringCalls.add(node as TSESTree.CallExpression);
+		}
+	}
+	return { constructions, stringCalls };
+}
+
 // Actual function checking
 
 function checkGotoCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null
 ): void {
 	if (
@@ -208,6 +242,7 @@ function checkGotoCall(
 			new FindVariableContext(context),
 			call.arguments[0],
 			resolveReferences,
+			urlReferences,
 			tsTools,
 			{}
 		)
@@ -220,6 +255,7 @@ function checkShallowNavigationCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null,
 	messageId: string
 ): void {
@@ -229,6 +265,7 @@ function checkShallowNavigationCall(
 			new FindVariableContext(context),
 			call.arguments[0],
 			resolveReferences,
+			urlReferences,
 			tsTools,
 			{
 				allowEmpty: true
@@ -244,6 +281,7 @@ function checkLinkAttribute(
 	attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute,
 	value: TSESTree.Expression | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null
 ): void {
 	if (
@@ -253,11 +291,18 @@ function checkLinkAttribute(
 		attribute.parent.parent.name.name === 'a' &&
 		attribute.key.name === 'href' &&
 		!hasRelExternal(context, attribute.parent) &&
-		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, tsTools, {
-			allowAbsolute: true,
-			allowFragment: true,
-			allowNullish: true
-		})
+		!isValueAllowed(
+			new FindVariableContext(context),
+			value,
+			resolveReferences,
+			urlReferences,
+			tsTools,
+			{
+				allowAbsolute: true,
+				allowFragment: true,
+				allowNullish: true
+			}
+		)
 	) {
 		context.report({ loc: attribute.loc, messageId: 'linkWithoutResolve' });
 	}
@@ -311,6 +356,7 @@ function isValueAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -318,27 +364,44 @@ function isValueAllowed(
 		const binding = resolveBindingIdentifier(ctx, value);
 		if (binding !== null) {
 			if (binding.parent.type === 'VariableDeclarator') {
-				return variableValueIsAllowed(ctx, binding, resolveReferences, tsTools, config);
+				return variableValueIsAllowed(
+					ctx,
+					binding,
+					resolveReferences,
+					urlReferences,
+					tsTools,
+					config
+				);
 			}
-			if (eachItemValueIsAllowed(ctx, binding, undefined, resolveReferences, tsTools, config)) {
+			if (
+				eachItemValueIsAllowed(
+					ctx,
+					binding,
+					undefined,
+					resolveReferences,
+					urlReferences,
+					tsTools,
+					config
+				)
+			) {
 				return true;
 			}
 		}
 	}
 	if (
 		value.type === 'MemberExpression' &&
-		memberValueIsAllowed(ctx, value, resolveReferences, tsTools, config)
+		memberValueIsAllowed(ctx, value, resolveReferences, urlReferences, tsTools, config)
 	) {
 		return true;
 	}
 	if (value.type === 'ConditionalExpression') {
 		return (
-			isValueAllowed(ctx, value.consequent, resolveReferences, tsTools, config) &&
-			isValueAllowed(ctx, value.alternate, resolveReferences, tsTools, config)
+			isValueAllowed(ctx, value.consequent, resolveReferences, urlReferences, tsTools, config) &&
+			isValueAllowed(ctx, value.alternate, resolveReferences, urlReferences, tsTools, config)
 		);
 	}
 	if (
-		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value)) ||
+		(config.allowAbsolute && expressionIsAbsoluteUrl(ctx, value, urlReferences)) ||
 		(config.allowEmpty && expressionIsEmpty(value)) ||
 		(config.allowFragment && expressionStartsWith(ctx, value, '#')) ||
 		(config.allowNullish && expressionIsNullish(value)) ||
@@ -354,6 +417,7 @@ function variableValueIsAllowed(
 	ctx: FindVariableContext,
 	binding: TSESTree.Identifier,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -365,7 +429,7 @@ function variableValueIsAllowed(
 	}
 	return (
 		binding.parent.init !== null &&
-		isValueAllowed(ctx, binding.parent.init, resolveReferences, tsTools, config)
+		isValueAllowed(ctx, binding.parent.init, resolveReferences, urlReferences, tsTools, config)
 	);
 }
 
@@ -374,6 +438,7 @@ function eachItemValueIsAllowed(
 	binding: TSESTree.Identifier,
 	key: string | undefined,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -393,7 +458,10 @@ function eachItemValueIsAllowed(
 		if (bound !== null && key !== undefined) {
 			bound = accessKey(ctx, bound, key);
 		}
-		if (bound === null || !isValueAllowed(ctx, bound, resolveReferences, tsTools, config)) {
+		if (
+			bound === null ||
+			!isValueAllowed(ctx, bound, resolveReferences, urlReferences, tsTools, config)
+		) {
 			return false;
 		}
 	}
@@ -404,6 +472,7 @@ function memberValueIsAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.MemberExpression,
 	resolveReferences: Set<TSESTree.Identifier>,
+	urlReferences: UrlReferences,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -414,20 +483,38 @@ function memberValueIsAllowed(
 	// Static access on an inline literal or nested expression: `[resolve('/')][0]`.
 	if (value.object.type !== 'Identifier') {
 		const target = accessKey(ctx, value.object, key);
-		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
+		return (
+			target !== null &&
+			isValueAllowed(ctx, target, resolveReferences, urlReferences, tsTools, config)
+		);
 	}
 	const binding = resolveBindingIdentifier(ctx, value.object);
 	if (binding === null) {
 		return false;
 	}
 	// `item.url` where `item` is an `{#each}` iteration variable.
-	if (eachItemValueIsAllowed(ctx, binding, key, resolveReferences, tsTools, config)) {
+	if (
+		eachItemValueIsAllowed(ctx, binding, key, resolveReferences, urlReferences, tsTools, config)
+	) {
 		return true;
 	}
-	// `paths[0]` where `paths` is a `const` array/object literal.
 	if (binding.parent.type === 'VariableDeclarator' && binding.parent.init !== null) {
+		// `url.href` where `url` is a `const` URL object. Checked here because `binding` has already
+		// been looked up in `ctx`, so `expressionIsUrlHref()` could not resolve it again.
+		if (
+			config.allowAbsolute &&
+			!value.computed &&
+			(key === 'href' || key === 'origin') &&
+			expressionIsUrl(ctx, binding.parent.init, urlReferences)
+		) {
+			return true;
+		}
+		// `paths[0]` where `paths` is a `const` array/object literal.
 		const target = accessKey(ctx, binding.parent.init, key);
-		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
+		return (
+			target !== null &&
+			isValueAllowed(ctx, target, resolveReferences, urlReferences, tsTools, config)
+		);
 	}
 	return false;
 }
@@ -779,24 +866,13 @@ function expressionIsNullish(
 	}
 }
 
-function isGlobalIdentifier(
-	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
-	name: string
-): boolean {
-	if (node.type !== 'Identifier' || node.name !== name) {
-		return false;
-	}
-	const variable = ctx.findVariable(node);
-	return variable === null || variable.defs.length === 0;
-}
-
 function expressionIsUrl(
 	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	urlReferences: UrlReferences
 ): boolean {
 	if (node.type === 'NewExpression') {
-		return isGlobalIdentifier(ctx, node.callee, 'URL');
+		return urlReferences.constructions.has(node);
 	}
 	if (node.type !== 'Identifier') {
 		return false;
@@ -810,14 +886,15 @@ function expressionIsUrl(
 	) {
 		return false;
 	}
-	return expressionIsUrl(ctx, variable.identifiers[0].parent.init);
+	return expressionIsUrl(ctx, variable.identifiers[0].parent.init, urlReferences);
 }
 
 function expressionIsUrlHref(
 	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	urlReferences: UrlReferences
 ): boolean {
-	if (expressionIsUrl(ctx, node)) {
+	if (expressionIsUrl(ctx, node, urlReferences)) {
 		return true;
 	}
 	if (
@@ -826,7 +903,7 @@ function expressionIsUrlHref(
 		node.property.type === 'Identifier' &&
 		(node.property.name === 'href' || node.property.name === 'origin')
 	) {
-		return expressionIsUrl(ctx, node.object);
+		return expressionIsUrl(ctx, node.object, urlReferences);
 	}
 	if (node.type === 'CallExpression') {
 		if (
@@ -835,10 +912,10 @@ function expressionIsUrlHref(
 			node.callee.property.type === 'Identifier' &&
 			(node.callee.property.name === 'toString' || node.callee.property.name === 'toJSON')
 		) {
-			return expressionIsUrl(ctx, node.callee.object);
+			return expressionIsUrl(ctx, node.callee.object, urlReferences);
 		}
-		if (isGlobalIdentifier(ctx, node.callee, 'String') && node.arguments.length > 0) {
-			return expressionIsUrl(ctx, node.arguments[0]);
+		if (urlReferences.stringCalls.has(node) && node.arguments.length > 0) {
+			return expressionIsUrl(ctx, node.arguments[0], urlReferences);
 		}
 	}
 	return false;
@@ -846,20 +923,21 @@ function expressionIsUrlHref(
 
 function expressionIsAbsoluteUrl(
 	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	urlReferences: UrlReferences
 ): boolean {
-	if (expressionIsUrlHref(ctx, node)) {
+	if (expressionIsUrlHref(ctx, node, urlReferences)) {
 		return true;
 	}
 	switch (node.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsAbsoluteUrl(ctx, node);
+			return binaryExpressionIsAbsoluteUrl(ctx, node, urlReferences);
 		case 'Literal':
 			return typeof node.value === 'string' && valueIsAbsoluteUrl(node.value);
 		case 'SvelteLiteral':
 			return valueIsAbsoluteUrl(node.value);
 		case 'TemplateLiteral':
-			return templateLiteralIsAbsoluteUrl(ctx, node);
+			return templateLiteralIsAbsoluteUrl(ctx, node, urlReferences);
 		default:
 			return false;
 	}
@@ -867,21 +945,25 @@ function expressionIsAbsoluteUrl(
 
 function binaryExpressionIsAbsoluteUrl(
 	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression
+	node: TSESTree.BinaryExpression,
+	urlReferences: UrlReferences
 ): boolean {
 	return (
 		node.operator === '+' &&
-		(expressionIsAbsoluteUrl(ctx, node.left) || expressionIsAbsoluteUrl(ctx, node.right))
+		(expressionIsAbsoluteUrl(ctx, node.left, urlReferences) ||
+			expressionIsAbsoluteUrl(ctx, node.right, urlReferences))
 	);
 }
 
 function templateLiteralIsAbsoluteUrl(
 	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral
+	node: TSESTree.TemplateLiteral,
+	urlReferences: UrlReferences
 ): boolean {
 	return (
-		node.expressions.some((expression) => expressionIsAbsoluteUrl(ctx, expression)) ||
-		node.quasis.some((quasi) => valueIsAbsoluteUrl(quasi.value.raw))
+		node.expressions.some((expression) =>
+			expressionIsAbsoluteUrl(ctx, expression, urlReferences)
+		) || node.quasis.some((quasi) => valueIsAbsoluteUrl(quasi.value.raw))
 	);
 }
 
