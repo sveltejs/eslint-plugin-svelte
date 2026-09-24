@@ -22,7 +22,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
       - name: Install Packages
@@ -44,7 +44,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
       - name: Install Packages
@@ -74,7 +74,7 @@ jobs:
             node: 18.x
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
         uses: actions/setup-node@v6
@@ -107,7 +107,7 @@ jobs:
         node: [18, 20, 22]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
         uses: actions/setup-node@v6
@@ -137,7 +137,7 @@ jobs:
         node: [18]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js ${{ matrix.node }}
         uses: actions/setup-node@v6
@@ -160,7 +160,7 @@ jobs:
   update-resources:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
       - name: Install Packages
