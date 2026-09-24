@@ -1,13 +1,13 @@
-# CLAUDE.md
+# eslint-plugin-svelte
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents when working with code in this repository.
 
 ## Repository layout
 
 pnpm workspace monorepo. Two workspace members:
 
 - `packages/eslint-plugin-svelte` — the published plugin. All rule, config, and processor code lives here.
-- `docs-svelte-kit` — SvelteKit site published as the docs at https://sveltejs.github.io/eslint-plugin-svelte.
+- `docs-svelte-kit` — SvelteKit site published as the docs at <https://sveltejs.github.io/eslint-plugin-svelte>.
 
 `docs/rules/*.md` (at the repo root) is the source of truth for per-rule documentation; the docs site reads from it. `README.md` at the repo root is copied into the published package by `prerelease`.
 
