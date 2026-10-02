@@ -260,11 +260,9 @@ export interface SourceCode {
 		trailing: AST.Comment[];
 	};
 
-	getJSDocComment(node: NodeOrToken): AST.Comment | null;
-
 	getNodeByRangeIndex(index: number): ASTNodeWithParent | null;
 
-	isSpaceBetweenTokens(first: AST.Token, second: AST.Token): boolean;
+	isSpaceBetween(first: AST.Token, second: AST.Token): boolean;
 
 	getLocFromIndex(index: number): AST.Position;
 
