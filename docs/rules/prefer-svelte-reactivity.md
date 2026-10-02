@@ -116,7 +116,7 @@ export default e;
 }
 ```
 
-- `ignoreLocalVariables` ... Set to `true` to ignore instances stored in local variables and used only through their properties within the same function or block. The default is `true`. Instances returned, passed to other functions, assigned to other variables or class members, or captured by another function are still reported, since they may escape their local scope. Set to `false` to retain the previous behavior and check local instances for mutations as well.
+- `ignoreLocalVariables` ... Set to `true` to ignore instances stored in local variables and used only through their properties within the same function or block. The default is `true`. Instances returned, passed to other functions, assigned to other variables or class members, or captured by another function are still reported, since they may escape their local scope. Only known built-in operations are considered local. Unknown or dynamic methods, escaping iterator or `searchParams` views, and `forEach` callbacks that may access the collection are still reported. Inline arrow callbacks with at most two non-rest parameters are permitted. Set to `false` to retain the previous behavior and check local instances for mutations as well.
 
 ## :books: Further Reading
 
