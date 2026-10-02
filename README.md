@@ -148,7 +148,6 @@ export default defineConfig(
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
         // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
         extraFileExtensions: ['.svelte']
       },
@@ -165,6 +164,7 @@ export default defineConfig(
     // See more details at: https://typescript-eslint.io/packages/parser/
     languageOptions: {
       parserOptions: {
+        projectService: true,
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,

@@ -30,7 +30,11 @@ describe('TypeScript documentation configuration', () => {
 				['.svelte'],
 				file
 			);
-			assert.strictEqual(resolved.languageOptions.parserOptions.projectService, true, file);
+			assert.strictEqual(
+				resolved.languageOptions.parserOptions.projectService,
+				file === 'example.ts' ? undefined : true,
+				file
+			);
 		}
 	});
 });
