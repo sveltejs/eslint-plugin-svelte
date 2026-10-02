@@ -177,6 +177,12 @@ export default createRule('no-top-level-browser-globals', {
 		 * Iterate over the references of modules that can check the browser environment.
 		 */
 		function* iterateBrowserCheckerModuleReferences(): Iterable<TSESTree.Expression> {
+			const kitEnvironment = {
+				[ReferenceTracker.ESM]: true,
+				// $app/env is an alias of $app/environment.
+				// See https://svelte.dev/docs/kit/$app-environment#browser
+				browser: { [ReferenceTracker.READ]: true }
+			};
 			for (const ref of referenceTracker.iterateEsmReferences({
 				'esm-env': {
 					[ReferenceTracker.ESM]: true,
@@ -185,13 +191,8 @@ export default createRule('no-top-level-browser-globals', {
 						[ReferenceTracker.READ]: true
 					}
 				},
-				'$app/environment': {
-					[ReferenceTracker.ESM]: true,
-					// See https://svelte.dev/docs/kit/$app-environment#browser
-					browser: {
-						[ReferenceTracker.READ]: true
-					}
-				}
+				'$app/environment': kitEnvironment,
+				'$app/env': kitEnvironment
 			})) {
 				if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
 					yield ref.node;
