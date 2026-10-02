@@ -18,8 +18,10 @@ export default createRule('require-each-key', {
 				// No need a `key` if an each blocks without an item
 				// see: https://svelte.dev/docs/svelte/each#Each-blocks-without-an-item
 				if (node.context != null && node.key == null) {
+					const closingBrace = context.sourceCode.getTokenAfter(node.index ?? node.context)!;
 					context.report({
 						node,
+						loc: { start: node.loc.start, end: closingBrace.loc.end },
 						messageId: 'expectedKey'
 					});
 				}
