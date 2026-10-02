@@ -116,7 +116,7 @@ export default e;
 }
 ```
 
-- `ignoreLocalVariables` ... Set to `true` to ignore variables declared anywhere other than the top level, such as inside functions. The default is `true`. In almost all cases, we do not need to set this to `false`.
+- `ignoreLocalVariables` ... Set to `true` to ignore instances stored in local variables and used only through their properties within the same function or block. The default is `true`. Instances returned, passed to other functions, assigned to other variables or class members, or captured by another function are still reported, since they may escape their local scope. Set to `false` to retain the previous behavior and check local instances for mutations as well.
 
 ## :books: Further Reading
 

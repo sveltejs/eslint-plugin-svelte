@@ -6,7 +6,12 @@
 		const url = new URL('https://svelte.dev/');
 		const objectURL = URL.createObjectURL(new MediaSource());
 		const urlSearchParams = new URLSearchParams();
-		console.log({ date, map, set, url, objectURL, urlSearchParams });
+		date.setDate(1);
+		map.set('foo', 'bar');
+		set.add('foo');
+		url.pathname = '/foo';
+		urlSearchParams.set('foo', 'bar');
+		URL.revokeObjectURL(objectURL);
 	};
 </script>
 

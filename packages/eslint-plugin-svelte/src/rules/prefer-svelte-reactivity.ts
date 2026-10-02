@@ -2,8 +2,8 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { createRule } from '../utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, isIn } from '../utils/ast-utils.js';
-import { getSvelteContext } from 'src/utils/svelte-context.js';
-import type { AST } from 'svelte-eslint-parser';
+import { getSvelteContext } from '../utils/svelte-context.js';
+import type { RuleContext } from '../types.js';
 
 export default createRule('prefer-svelte-reactivity', {
 	meta: {
@@ -43,7 +43,7 @@ export default createRule('prefer-svelte-reactivity', {
 		]
 	},
 	create(context) {
-		const options = context.options[0] ?? { ignoreLocalVariables: true };
+		const ignoreLocalVariables = context.options[0]?.ignoreLocalVariables ?? true;
 		const exportedVars: TSESTree.Node[] = [];
 		return {
 			...(getSvelteContext(context)?.svelteFileType === '.svelte.[js|ts]' && {
@@ -91,7 +91,8 @@ export default createRule('prefer-svelte-reactivity', {
 						[ReferenceTracker.CONSTRUCT]: true
 					}
 				})) {
-					if (options.ignoreLocalVariables && !isTopLevelDeclaration(node)) {
+					const locality = getInstanceLocality(context, node);
+					if (ignoreLocalVariables && locality === 'local') {
 						continue;
 					}
 
@@ -105,6 +106,10 @@ export default createRule('prefer-svelte-reactivity', {
 									: path[0] === 'URL'
 										? 'mutableURLUsed'
 										: 'mutableURLSearchParamsUsed';
+					if (ignoreLocalVariables && locality === 'escaping') {
+						context.report({ messageId, node });
+						continue;
+					}
 					for (const exportedVar of exportedVars) {
 						if (isIn(node, exportedVar)) {
 							context.report({
@@ -152,30 +157,54 @@ export default createRule('prefer-svelte-reactivity', {
 	}
 });
 
-function isTopLevelDeclaration(node: TSESTree.Node | AST.SvelteNode): boolean {
-	let declaration: TSESTree.Node | AST.SvelteNode | null = node;
-	while (
-		declaration &&
-		declaration.type !== 'VariableDeclaration' &&
-		declaration.type !== 'FunctionDeclaration' &&
-		declaration.type !== 'ClassDeclaration' &&
-		declaration.type !== 'ExportDefaultDeclaration'
+/** Classify instances conservatively so values escaping a local scope are still reported. */
+function getInstanceLocality(
+	context: RuleContext,
+	node: TSESTree.Node
+): 'local' | 'escaping' | 'top-level' {
+	const declarator = node.parent;
+	if (declarator?.type === 'MemberExpression' || declarator?.type === 'ExpressionStatement') {
+		return 'top-level';
+	}
+	if (
+		declarator?.type !== 'VariableDeclarator' ||
+		declarator.init !== node ||
+		declarator.id.type !== 'Identifier'
 	) {
-		declaration = declaration.parent as TSESTree.Node | AST.SvelteNode | null;
+		return 'escaping';
 	}
-
-	if (!declaration) {
-		return false;
+	const variable = findVariable(context, declarator.id);
+	if (!variable) {
+		return 'escaping';
 	}
-
-	const parentType: string | undefined = declaration.parent?.type;
-	return (
-		parentType === 'SvelteScriptElement' ||
-		parentType === 'Program' ||
-		parentType === 'ExportDefaultDeclaration' ||
-		parentType === 'ExportNamedDeclaration' ||
-		parentType === 'ExportAllDeclaration'
-	);
+	if (variable.scope.type === 'module' || variable.scope.type === 'global') {
+		return 'top-level';
+	}
+	for (const reference of variable.references) {
+		if (reference.identifier === declarator.id) {
+			continue;
+		}
+		const parent = reference.identifier.parent;
+		if (
+			reference.from.variableScope !== variable.scope.variableScope ||
+			parent.type !== 'MemberExpression' ||
+			parent.object !== reference.identifier
+		) {
+			return 'escaping';
+		}
+		// Set.add and Map.set return the instance, so using their result may let it escape.
+		const call = parent.parent;
+		if (
+			parent.property.type === 'Identifier' &&
+			(parent.property.name === 'add' || parent.property.name === 'set') &&
+			call.type === 'CallExpression' &&
+			call.callee === parent &&
+			call.parent.type !== 'ExpressionStatement'
+		) {
+			return 'escaping';
+		}
+	}
+	return 'local';
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
