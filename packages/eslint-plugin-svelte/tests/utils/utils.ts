@@ -356,7 +356,7 @@ function getConfig(ruleName: string, inputFile: string) {
 					: {})
 			}
 		},
-		{ code, filename: inputFile }
+		{ code, filename: inputFile, name: config?.name ?? filename }
 	);
 }
 
