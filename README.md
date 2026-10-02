@@ -147,6 +147,11 @@ export default defineConfig(
   svelte.configs.recommended,
   {
     languageOptions: {
+      parserOptions: {
+        projectService: true,
+        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
+        extraFileExtensions: ['.svelte']
+      },
       globals: {
         ...globals.browser,
         // for Sveltekit in non-SPA mode
@@ -160,10 +165,6 @@ export default defineConfig(
     // See more details at: https://typescript-eslint.io/packages/parser/
     languageOptions: {
       parserOptions: {
-        projectService: true,
-        // Enable typescript parsing for `.svelte` files.
-        extraFileExtensions: ['.svelte'],
-
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,
