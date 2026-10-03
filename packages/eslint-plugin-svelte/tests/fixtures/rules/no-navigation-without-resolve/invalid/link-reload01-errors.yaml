@@ -1,0 +1,4 @@
+- message: Unexpected href link without resolve().
+  line: 1
+  column: 26
+  suggestions: null
