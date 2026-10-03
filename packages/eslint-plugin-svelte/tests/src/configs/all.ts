@@ -9,6 +9,22 @@ describe('`all` config', () => {
 		ESLint = await loadESLint({ useFlatConfig: true });
 	});
 
+	it('does not enable deprecated rules', async () => {
+		const linter = new ESLint({
+			overrideConfigFile: true,
+			overrideConfig: plugin.configs['flat/all']
+		});
+		const config = await linter.calculateConfigForFile('test.svelte');
+		assert.ok(config);
+		for (const [name, rule] of Object.entries(plugin.rules)) {
+			if (rule.meta?.deprecated) {
+				assert.strictEqual(config.rules?.[`svelte/${name}`], undefined, name);
+			} else if (name !== 'no-restricted-html-elements') {
+				assert.strictEqual(config.rules?.[`svelte/${name}`]?.[0], 2, name);
+			}
+		}
+	});
+
 	it('`all` config should work. ', async () => {
 		const code = `<script>const a = 1, b = 2;</script>{@html a+b}`;
 
