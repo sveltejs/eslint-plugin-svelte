@@ -35,7 +35,7 @@ export type SvelteContext = (
 			runes: null;
 	  }
 ) & {
-	svelteKitVersion: '1.0.0-next' | '1' | '2' | null;
+	svelteKitVersion: '1.0.0-next' | '1' | '2' | '3' | null;
 	svelteKitFileType:
 		| '+page.svelte'
 		| '+page.[js|ts]'
@@ -195,7 +195,12 @@ function checkAndSetSvelteKitVersion(
 	version: string,
 	filePath: string
 ): SvelteContext['svelteKitVersion'] {
-	const major = extractMajorVersion(version, true) as SvelteContext['svelteKitVersion'];
+	// Preserve Kit 1's distinct prerelease version; use the major for later prereleases.
+	const major = (
+		extractMajorVersion(version, true) === '1.0.0-next'
+			? '1.0.0-next'
+			: extractMajorVersion(version, false)
+	) as SvelteContext['svelteKitVersion'];
 	svelteKitVersionCache.set(filePath, major);
 	return major;
 }

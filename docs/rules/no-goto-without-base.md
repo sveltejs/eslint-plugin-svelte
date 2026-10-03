@@ -12,6 +12,8 @@ since: 'v2.36.0-next.9'
 
 - :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-resolve](no-navigation-without-resolve.md) rule.
 
+This rule applies to SvelteKit 1 and 2. SvelteKit 3 removed the `base` export from `$app/paths`; use `resolve()` instead, as described in the [migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#app-paths).
+
 ## :book: Rule Details
 
 This rule reports navigation using SvelteKit's `goto()` function without prefixing a relative URL with the base path. If a non-prefixed relative URL is used for navigation, the `goto` function navigates away from the base path, which is usually not what you wanted to do (for external URLs, `window.location = url` should be used instead).
