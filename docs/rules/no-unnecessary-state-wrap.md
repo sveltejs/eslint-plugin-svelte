@@ -66,14 +66,17 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
     "error",
     {
       "additionalReactiveClasses": [],
-      "allowReassign": false
+      "allowReassign": ["SvelteSet"]
     }
   ]
 }
 ```
 
 - `additionalReactiveClasses` ... An array of class names that should also be considered reactive. This is useful when you have custom classes that are inherently reactive. Default is `[]`.
-- `allowReassign` ... If `true`, allows `$state` wrapping of reactive classes when the variable is reassigned. Default is `false`.
+- `allowReassign` ... Can be either a boolean or an array of class names:
+  - If `true`, allows `$state` wrapping of any reactive classes when the variable is reassigned.
+  - If an array, allows `$state` wrapping for the specified reactive classes when the variable is reassigned.
+  - Default is `["SvelteSet"]`.
 
 ### Examples with Options
 
@@ -97,13 +100,36 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
 ```svelte
 <script>
   /* eslint svelte/no-unnecessary-state-wrap: ["error", { "allowReassign": true }] */
-  import { SvelteSet } from 'svelte/reactivity';
+  import { SvelteSet, SvelteMap } from 'svelte/reactivity';
 
   // ✓ GOOD
   let set1 = $state(new SvelteSet());
   set1 = new SvelteSet([1, 2, 3]); // Variable is reassigned
 
+  let map1 = $state(new SvelteMap());
+  map1 = new SvelteMap(); // Variable is reassigned
+
   // ✗ BAD
+  const set2 = $state(new SvelteSet()); // const cannot be reassigned
+  let set3 = $state(new SvelteSet()); // Variable is never reassigned
+</script>
+```
+
+#### `allowReassign` as array
+
+```svelte
+<script>
+  /* eslint svelte/no-unnecessary-state-wrap: ["error", { "allowReassign": ["SvelteSet"] }] */
+  import { SvelteSet, SvelteMap } from 'svelte/reactivity';
+
+  // ✓ GOOD
+  let set = $state(new SvelteSet());
+  set = new SvelteSet([1, 2, 3]); // SvelteSet is in allowReassign and variable is reassigned
+
+  // ✗ BAD
+  let map = $state(new SvelteMap()); // SvelteMap is not in allowReassign
+  map = new SvelteMap();
+
   const set2 = $state(new SvelteSet()); // const cannot be reassigned
   let set3 = $state(new SvelteSet()); // Variable is never reassigned
 </script>
