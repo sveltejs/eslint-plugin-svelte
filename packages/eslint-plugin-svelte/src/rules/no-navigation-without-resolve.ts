@@ -50,7 +50,7 @@ export default createRule('no-navigation-without-resolve', {
 		type: 'suggestion',
 		conditions: [
 			{
-				svelteKitVersions: ['1.0.0-next', '1', '2']
+				svelteKitVersions: ['1.0.0-next', '1', '2', '3']
 			}
 		]
 	},
