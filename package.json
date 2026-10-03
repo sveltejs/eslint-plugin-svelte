@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^2.30.0",
+    "@changesets/cli": "^3.0.0",
     "@changesets/get-release-plan": "^4.0.15",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@ota-meshi/eslint-plugin": "^0.19.0",
