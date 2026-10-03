@@ -34,7 +34,11 @@ const categoryRules = categories.map((cat) => {
 	return {
 		title: cat,
 		children: svelteRules
-			.filter((rule) => rule.meta.docs.category === cat)
+			.filter(
+				(rule) =>
+					rule.meta.docs.category === cat ||
+					(cat === 'Extension Rules' && Boolean(rule.meta.docs.extensionRule))
+			)
 			.map((rule) => {
 				return {
 					title: rule.meta.docs.ruleId,
