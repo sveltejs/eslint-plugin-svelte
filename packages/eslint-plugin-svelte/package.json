@@ -63,7 +63,7 @@
     "@eslint-community/eslint-utils": "^4.6.1",
     "@jridgewell/sourcemap-codec": "^1.5.0",
     "esutils": "^2.0.3",
-    "globals": "^16.0.0",
+    "globals": "^17.0.0",
     "known-css-properties": "^0.37.0",
     "postcss": "^8.4.49",
     "postcss-load-config": "^3.1.4",
