@@ -375,7 +375,11 @@ function isValueAllowed(
 			...value.expressions,
 			...value.quasis.filter((quasi) => quasi.value.raw !== '')
 		].sort((a, b) => a.range[0] - b.range[0]);
+		if (parts.length === 1) {
+			return expressionIsResolveCall(new FindVariableContext(context), parts[0], resolveReferences);
+		}
 		if (
+			parts.length >= 2 &&
 			expressionIsResolveCall(new FindVariableContext(context), parts[0], resolveReferences) &&
 			(expressionIsEmpty(new FindVariableContext(context), parts[1]) ||
 				expressionStartsWith(new FindVariableContext(context), parts[1], '?') ||
