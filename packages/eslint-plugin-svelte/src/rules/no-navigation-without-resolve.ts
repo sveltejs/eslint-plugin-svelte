@@ -5,6 +5,7 @@ import { ReferenceTracker } from '@eslint-community/eslint-utils';
 import { FindVariableContext } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
+import type { Variable } from '@typescript-eslint/scope-manager';
 import type { AST } from 'svelte-eslint-parser';
 import {
 	type TSTools,
@@ -103,14 +104,16 @@ export default createRule('no-navigation-without-resolve', {
 			},
 			...(!ignoreLinks && {
 				SvelteShorthandAttribute(node) {
-					checkLinkAttribute(context, node, node.value, resolveReferences, tsTools);
+					checkLinkAttribute(context, node, [node.value], resolveReferences, tsTools);
 				},
 				SvelteAttribute(node) {
 					if (node.value.length > 0) {
 						checkLinkAttribute(
 							context,
 							node,
-							node.value[0].type === 'SvelteMustacheTag' ? node.value[0].expression : node.value[0],
+							node.value.map((part) =>
+								part.type === 'SvelteMustacheTag' ? part.expression : part
+							),
 							resolveReferences,
 							tsTools
 						);
@@ -204,14 +207,7 @@ function checkGotoCall(
 ): void {
 	if (
 		call.arguments.length > 0 &&
-		!isValueAllowed(
-			context,
-			new FindVariableContext(context),
-			call.arguments[0],
-			resolveReferences,
-			tsTools,
-			{}
-		)
+		!isValueAllowed(context, [call.arguments[0]], resolveReferences, tsTools, {})
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
 	}
@@ -226,16 +222,9 @@ function checkShallowNavigationCall(
 ): void {
 	if (
 		call.arguments.length > 0 &&
-		!isValueAllowed(
-			context,
-			new FindVariableContext(context),
-			call.arguments[0],
-			resolveReferences,
-			tsTools,
-			{
-				allowEmpty: true
-			}
-		)
+		!isValueAllowed(context, [call.arguments[0]], resolveReferences, tsTools, {
+			allowEmpty: true
+		})
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId });
 	}
@@ -244,7 +233,7 @@ function checkShallowNavigationCall(
 function checkLinkAttribute(
 	context: RuleContext,
 	attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute,
-	value: TSESTree.Expression | AST.SvelteLiteral,
+	value: UrlPart[],
 	resolveReferences: Set<TSESTree.Identifier>,
 	tsTools: TSTools | null
 ): void {
@@ -255,7 +244,7 @@ function checkLinkAttribute(
 		attribute.parent.parent.name.name === 'a' &&
 		attribute.key.name === 'href' &&
 		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
-		!isValueAllowed(context, new FindVariableContext(context), value, resolveReferences, tsTools, {
+		!isValueAllowed(context, value, resolveReferences, tsTools, {
 			allowAbsolute: true,
 			allowNullish: true
 		})
@@ -299,11 +288,17 @@ function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): 
 	return false;
 }
 
-// `findContext` is shared by the recursive calls of this function, so that cyclic variable definitions terminate. Every other check gets a fresh FindVariableContext, because a FindVariableContext only looks up each identifier once, and sharing it between independent checks would make the later ones fail.
+// A URL is given as a list of parts that are concatenated together.
+type UrlPart =
+	| TSESTree.CallExpressionArgument
+	| TSESTree.Expression
+	| TSESTree.TemplateElement
+	| AST.SvelteLiteral;
+
+// A URL is allowed if it starts with a resolved value that is followed by nothing, a query or a fragment (appending a path would bypass the route type-checking of resolve()). It is also allowed if it starts with a query or a fragment (it then keeps the current path) or, depending on the config, if it is empty or nullish, or if it starts with an absolute URL.
 function isValueAllowed(
 	context: RuleContext,
-	findContext: FindVariableContext,
-	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
+	value: UrlPart[],
 	resolveReferences: Set<TSESTree.Identifier>,
 	tsTools: TSTools | null,
 	config: {
@@ -312,78 +307,91 @@ function isValueAllowed(
 		allowNullish?: boolean;
 	}
 ): boolean {
-	if (value.type === 'Identifier') {
-		const variable = findContext.findVariable(value);
-		if (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator'
-		) {
-			if (expressionIsAllowedType(variable.identifiers[0], config.allowNullish, tsTools)) {
-				return true;
-			}
-			if (variable.identifiers[0].parent.init !== null) {
-				return isValueAllowed(
-					context,
-					findContext,
-					variable.identifiers[0].parent.init,
-					resolveReferences,
-					tsTools,
-					config
-				);
-			}
-		}
+	if (
+		config.allowAbsolute &&
+		value.length === 1 &&
+		value[0].type !== 'TemplateElement' &&
+		expressionIsAbsoluteUrl(value[0])
+	) {
+		return true;
 	}
-	if (value.type === 'ConditionalExpression') {
+	return urlStartSatisfies(context, value, new Set(), (first, rest, visited) => {
+		if (first === null) {
+			return config.allowEmpty === true;
+		}
+		const allowNullish = config.allowNullish === true && rest.length === 0;
 		return (
-			isValueAllowed(context, findContext, value.consequent, resolveReferences, tsTools, config) &&
-			isValueAllowed(context, findContext, value.alternate, resolveReferences, tsTools, config)
+			(allowNullish && first.type !== 'TemplateElement' && expressionIsNullish(first)) ||
+			partStartsWith(first, '?') ||
+			partStartsWith(first, '#') ||
+			(config.allowAbsolute === true && partIsAbsoluteUrl(first)) ||
+			(partIsResolved(context, first, resolveReferences, allowNullish, tsTools) &&
+				urlStartSatisfies(
+					context,
+					rest,
+					visited,
+					(suffixFirst) =>
+						suffixFirst === null ||
+						partStartsWith(suffixFirst, '?') ||
+						partStartsWith(suffixFirst, '#')
+				))
+		);
+	});
+}
+
+// Checks `predicate` against every possible first part of the URL, together with the parts following it. Empty parts are skipped, and concatenations, template literals, variables and ternaries are expanded, so that `predicate` only gets indivisible parts (or null if the URL is empty). `visited` contains the variables already expanded on the current path, so that cyclic variable definitions terminate.
+function urlStartSatisfies(
+	context: RuleContext,
+	parts: UrlPart[],
+	visited: ReadonlySet<Variable>,
+	predicate: (first: UrlPart | null, rest: UrlPart[], visited: ReadonlySet<Variable>) => boolean
+): boolean {
+	if (parts.length === 0) {
+		return predicate(null, [], visited);
+	}
+	const [first, ...rest] = parts;
+	if (partIsEmpty(first)) {
+		return urlStartSatisfies(context, rest, visited, predicate);
+	}
+	if (first.type === 'BinaryExpression' && first.operator === '+') {
+		return urlStartSatisfies(context, [first.left, first.right, ...rest], visited, predicate);
+	}
+	if (first.type === 'TemplateLiteral') {
+		const templateParts = [...first.quasis, ...first.expressions].sort(
+			(a, b) => a.range[0] - b.range[0]
+		);
+		return urlStartSatisfies(context, [...templateParts, ...rest], visited, predicate);
+	}
+	if (first.type === 'ConditionalExpression') {
+		return (
+			urlStartSatisfies(context, [first.consequent, ...rest], visited, predicate) &&
+			urlStartSatisfies(context, [first.alternate, ...rest], visited, predicate)
 		);
 	}
-	// Concatenation is left-associative, so in e.g. `resolve('/foo') + '?' + query`, the resolve() call is nested in the left operand.
-	if (
-		value.type === 'BinaryExpression' &&
-		value.operator === '+' &&
-		value.left.type !== 'PrivateIdentifier' &&
-		((['BinaryExpression', 'TemplateLiteral'].includes(value.left.type) &&
-			isValueAllowed(context, findContext, value.left, resolveReferences, tsTools, config)) ||
-			(expressionIsResolveCall(new FindVariableContext(context), value.left, resolveReferences) &&
-				(expressionIsEmpty(new FindVariableContext(context), value.right) ||
-					expressionStartsWith(new FindVariableContext(context), value.right, '?') ||
-					expressionStartsWith(new FindVariableContext(context), value.right, '#'))))
-	) {
-		return true;
-	}
-	if (
-		(config.allowAbsolute && expressionIsAbsoluteUrl(new FindVariableContext(context), value)) ||
-		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
-		expressionStartsWith(new FindVariableContext(context), value, '#') ||
-		(config.allowNullish && expressionIsNullish(value)) ||
-		expressionIsAllowedType(value, config.allowNullish, tsTools) ||
-		expressionStartsWith(new FindVariableContext(context), value, '?') ||
-		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
-	) {
-		return true;
-	}
-	if (value.type === 'TemplateLiteral') {
-		const parts = [
-			...value.expressions,
-			...value.quasis.filter((quasi) => quasi.value.raw !== '')
-		].sort((a, b) => a.range[0] - b.range[0]);
-		if (parts.length === 1) {
-			return expressionIsResolveCall(new FindVariableContext(context), parts[0], resolveReferences);
-		}
-		if (
-			parts.length >= 2 &&
-			expressionIsResolveCall(new FindVariableContext(context), parts[0], resolveReferences) &&
-			(expressionIsEmpty(new FindVariableContext(context), parts[1]) ||
-				expressionStartsWith(new FindVariableContext(context), parts[1], '?') ||
-				expressionStartsWith(new FindVariableContext(context), parts[1], '#'))
-		) {
+	if (first.type === 'Identifier') {
+		if (predicate(first, rest, visited)) {
 			return true;
 		}
+		// `visited` is used instead of FindVariableContext, because the guard needs to be per path: the branches of a ternary share the parts following it, and each needs to expand their variables.
+		// eslint-disable-next-line internal/prefer-find-variable-safe -- guarded by `visited`
+		const variable = findVariable(context, first);
+		if (
+			variable === null ||
+			visited.has(variable) ||
+			variable.identifiers.length === 0 ||
+			variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+			variable.identifiers[0].parent.init === null
+		) {
+			return false;
+		}
+		return urlStartSatisfies(
+			context,
+			[variable.identifiers[0].parent.init, ...rest],
+			new Set([...visited, variable]),
+			predicate
+		);
 	}
-	return false;
+	return predicate(first, rest, visited);
 }
 
 // Helper functions
@@ -430,66 +438,41 @@ function expressionIsAllowedType(
 	);
 }
 
-function expressionIsResolveCall(
-	ctx: FindVariableContext,
-	node: TSESTree.CallExpressionArgument | TSESTree.TemplateElement | AST.SvelteLiteral,
-	resolveReferences: Set<TSESTree.Identifier>
+function partIsResolved(
+	context: RuleContext,
+	part: UrlPart,
+	resolveReferences: Set<TSESTree.Identifier>,
+	allowNullish: boolean,
+	tsTools: TSTools | null
 ): boolean {
 	if (
-		node.type === 'CallExpression' &&
-		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
-			(node.callee.type === 'MemberExpression' &&
-				node.callee.property.type === 'Identifier' &&
-				resolveReferences.has(node.callee.property)))
+		part.type === 'CallExpression' &&
+		((part.callee.type === 'Identifier' && resolveReferences.has(part.callee)) ||
+			(part.callee.type === 'MemberExpression' &&
+				part.callee.property.type === 'Identifier' &&
+				resolveReferences.has(part.callee.property)))
 	) {
 		return true;
 	}
-	if (node.type !== 'Identifier') {
+	if (part.type === 'TemplateElement') {
 		return false;
 	}
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
+	if (expressionIsAllowedType(part, allowNullish, tsTools)) {
+		return true;
+	}
+	if (part.type !== 'Identifier') {
 		return false;
 	}
-	return expressionIsResolveCall(ctx, variable.identifiers[0].parent.init, resolveReferences);
+	const variable = findVariable(context, part);
+	return (
+		variable !== null &&
+		variable.identifiers.length > 0 &&
+		expressionIsAllowedType(variable.identifiers[0], allowNullish, tsTools)
+	);
 }
 
-function expressionIsEmpty(
-	ctx: FindVariableContext,
-	node:
-		| TSESTree.CallExpressionArgument
-		| TSESTree.Expression
-		| TSESTree.TemplateElement
-		| AST.SvelteLiteral
-): boolean {
-	if (
-		(node.type === 'Literal' && node.value === '') ||
-		(node.type === 'TemplateElement' && node.value.raw === '') ||
-		(node.type === 'TemplateLiteral' &&
-			node.expressions.length === 0 &&
-			node.quasis.length === 1 &&
-			expressionIsEmpty(ctx, node.quasis[0]))
-	) {
-		return true;
-	}
-	if (node.type !== 'Identifier') {
-		return false;
-	}
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionIsEmpty(ctx, variable.identifiers[0].parent.init);
+function partIsEmpty(part: UrlPart): boolean {
+	return partText(part) === '';
 }
 
 function expressionIsNullish(
@@ -506,39 +489,32 @@ function expressionIsNullish(
 }
 
 function expressionIsAbsoluteUrl(
-	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral
 ): boolean {
 	switch (node.type) {
 		case 'BinaryExpression':
-			return binaryExpressionIsAbsoluteUrl(ctx, node);
+			return binaryExpressionIsAbsoluteUrl(node);
 		case 'Literal':
 			return typeof node.value === 'string' && valueIsAbsoluteUrl(node.value);
 		case 'SvelteLiteral':
 			return valueIsAbsoluteUrl(node.value);
 		case 'TemplateLiteral':
-			return templateLiteralIsAbsoluteUrl(ctx, node);
+			return templateLiteralIsAbsoluteUrl(node);
 		default:
 			return false;
 	}
 }
 
-function binaryExpressionIsAbsoluteUrl(
-	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression
-): boolean {
+function binaryExpressionIsAbsoluteUrl(node: TSESTree.BinaryExpression): boolean {
 	return (
 		node.operator === '+' &&
-		(expressionIsAbsoluteUrl(ctx, node.left) || expressionIsAbsoluteUrl(ctx, node.right))
+		(expressionIsAbsoluteUrl(node.left) || expressionIsAbsoluteUrl(node.right))
 	);
 }
 
-function templateLiteralIsAbsoluteUrl(
-	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral
-): boolean {
+function templateLiteralIsAbsoluteUrl(node: TSESTree.TemplateLiteral): boolean {
 	return (
-		node.expressions.some((expression) => expressionIsAbsoluteUrl(ctx, expression)) ||
+		node.expressions.some((expression) => expressionIsAbsoluteUrl(expression)) ||
 		node.quasis.some((quasi) => valueIsAbsoluteUrl(quasi.value.raw))
 	);
 }
@@ -547,65 +523,26 @@ function valueIsAbsoluteUrl(node: string): boolean {
 	return /^[+a-z]*:/i.test(node);
 }
 
-function expressionStartsWith(
-	ctx: FindVariableContext,
-	node:
-		| TSESTree.CallExpressionArgument
-		| TSESTree.Expression
-		| TSESTree.TemplateElement
-		| AST.SvelteLiteral,
-	prefix: string
-): boolean {
-	switch (node.type) {
-		case 'BinaryExpression':
-			return binaryExpressionStartsWith(ctx, node, prefix);
-		case 'Identifier':
-			return identifierStartsWith(ctx, node, prefix);
+function partIsAbsoluteUrl(part: UrlPart): boolean {
+	const text = partText(part);
+	return text !== null && valueIsAbsoluteUrl(text);
+}
+
+function partStartsWith(part: UrlPart, prefix: string): boolean {
+	const text = partText(part);
+	return text !== null && text.startsWith(prefix);
+}
+
+// The text of a part, if it is a string literal
+function partText(part: UrlPart): string | null {
+	switch (part.type) {
 		case 'Literal':
-			return typeof node.value === 'string' && node.value.startsWith(prefix);
+			return typeof part.value === 'string' ? part.value : null;
 		case 'SvelteLiteral':
-			return node.value.startsWith(prefix);
+			return part.value;
 		case 'TemplateElement':
-			return node.value.raw.startsWith(prefix);
-		case 'TemplateLiteral':
-			return templateLiteralStartsWith(ctx, node, prefix);
+			return part.value.raw;
 		default:
-			return false;
+			return null;
 	}
-}
-
-function binaryExpressionStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.BinaryExpression,
-	prefix: string
-): boolean {
-	return node.operator === '+' && expressionStartsWith(ctx, node.left, prefix);
-}
-
-function identifierStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier,
-	prefix: string
-): boolean {
-	const variable = ctx.findVariable(node);
-	if (
-		variable === null ||
-		variable.identifiers.length === 0 ||
-		variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
-		variable.identifiers[0].parent.init === null
-	) {
-		return false;
-	}
-	return expressionStartsWith(ctx, variable.identifiers[0].parent.init, prefix);
-}
-
-function templateLiteralStartsWith(
-	ctx: FindVariableContext,
-	node: TSESTree.TemplateLiteral,
-	prefix: string
-): boolean {
-	return (
-		(node.expressions.length >= 1 && expressionStartsWith(ctx, node.expressions[0], prefix)) ||
-		(node.quasis.length >= 1 && expressionStartsWith(ctx, node.quasis[0], prefix))
-	);
 }
