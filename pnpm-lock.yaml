@@ -21,8 +21,8 @@ importers:
         specifier: ^4.7.1
         version: 4.7.1(eslint@9.39.4(jiti@2.6.1))
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+        specifier: ^0.20.0
+        version: 0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
@@ -114,8 +114,8 @@ importers:
         specifier: ^5.2.6
         version: 5.2.7
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+        specifier: ^0.20.0
+        version: 0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
       '@shikijs/markdown-it':
         specifier: ^3.12.2
         version: 3.13.0
@@ -1280,8 +1280,8 @@ packages:
     resolution: {integrity: sha512-xhfYPXoV5Dy4UkY0D+v2KkwvnDfiA/8Mt3sWCGI/hM03NsYIH8ZaG6QzS9x7pje5vHZBZJ2v6VRFVTWACnqcmQ==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  '@ota-meshi/eslint-plugin@0.19.0':
-    resolution: {integrity: sha512-pumFXOvJFoto805a4taS07Et7dJ/OU5TGNRqt8pgGOa3/nx5kWlxp5Q3liHow4MU99t2J4T+U7NRqpyj87tBOg==}
+  '@ota-meshi/eslint-plugin@0.20.0':
+    resolution: {integrity: sha512-85+kofUl2kHVRaITvU/3UMnKapYPlqZBqFoksJMzVWB5HXVOTuG+EutOpznoG3LwWJzUiz7v6dNr77G/0IR9Kw==}
     engines: {node: ^18.18.0||^20.9.0||>=21.1.0}
     peerDependencies:
       '@eslint-community/eslint-plugin-eslint-comments': ^4.3.0
@@ -4448,7 +4448,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@changesets/assemble-release-plan@7.0.0':
     dependencies:
@@ -4526,7 +4526,7 @@ snapshots:
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
       picocolors: 1.1.1
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@changesets/get-dependents-graph@3.0.0':
     dependencies:
@@ -5088,7 +5088,7 @@ snapshots:
       ini: 4.1.3
       nopt: 7.2.1
       proc-log: 4.2.0
-      semver: 7.7.4
+      semver: 7.8.5
       walk-up-path: 3.0.1
     transitivePeerDependencies:
       - bluebird
@@ -5102,7 +5102,7 @@ snapshots:
       proc-log: 4.2.0
       promise-inflight: 1.0.1
       promise-retry: 2.0.1
-      semver: 7.7.4
+      semver: 7.8.5
       which: 4.0.0
     transitivePeerDependencies:
       - bluebird
@@ -5124,7 +5124,7 @@ snapshots:
       json-parse-even-better-errors: 3.0.2
       normalize-package-data: 6.0.2
       proc-log: 4.2.0
-      semver: 7.7.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - bluebird
 
@@ -5132,13 +5132,13 @@ snapshots:
     dependencies:
       which: 4.0.0
 
-  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))':
+  '@ota-meshi/eslint-plugin@0.20.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@9.39.4(jiti@2.6.1)))(eslint-plugin-regexp@2.10.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.7.1(eslint@9.39.4(jiti@2.6.1))
       '@eslint/js': 9.39.4
       eslint: 9.39.4(jiti@2.6.1)
       eslint-plugin-regexp: 2.10.0(eslint@9.39.4(jiti@2.6.1))
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
@@ -5593,7 +5593,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.57.0
       debug: 4.4.3(supports-color@8.1.1)
       minimatch: 10.2.4
-      semver: 7.7.4
+      semver: 7.8.5
       tinyglobby: 0.2.15
       ts-api-utils: 2.4.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -6122,12 +6122,12 @@ snapshots:
   eslint-compat-utils@0.5.1(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       eslint: 9.39.4(jiti@2.6.1)
-      semver: 7.7.4
+      semver: 7.8.5
 
   eslint-compat-utils@0.6.5(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       eslint: 9.39.4(jiti@2.6.1)
-      semver: 7.7.4
+      semver: 7.8.5
 
   eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
@@ -6942,7 +6942,7 @@ snapshots:
       acorn: 8.16.0
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      semver: 7.7.4
+      semver: 7.8.5
 
   jsonc-parser@3.3.1: {}
 
@@ -7050,7 +7050,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   markdown-exit@1.1.0-beta.2:
     dependencies:
@@ -7507,14 +7507,14 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.4
+      semver: 7.8.5
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   npm-normalize-package-bin@3.0.1: {}
 
@@ -7524,14 +7524,14 @@ snapshots:
     dependencies:
       hosted-git-info: 7.0.2
       proc-log: 4.2.0
-      semver: 7.7.4
+      semver: 7.8.5
       validate-npm-package-name: 5.0.1
 
   npm-package-arg@12.0.2:
     dependencies:
       hosted-git-info: 8.1.0
       proc-log: 5.0.0
-      semver: 7.7.4
+      semver: 7.8.5
       validate-npm-package-name: 6.0.2
 
   npm-pick-manifest@9.1.0:
@@ -7539,7 +7539,7 @@ snapshots:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 11.0.3
-      semver: 7.7.4
+      semver: 7.8.5
 
   npm-run-all2@8.0.4:
     dependencies:
@@ -7620,7 +7620,7 @@ snapshots:
       ky: 1.14.3
       registry-auth-token: 5.1.1
       registry-url: 6.0.1
-      semver: 7.7.4
+      semver: 7.8.5
 
   package-manager-detector@1.8.0: {}
 
