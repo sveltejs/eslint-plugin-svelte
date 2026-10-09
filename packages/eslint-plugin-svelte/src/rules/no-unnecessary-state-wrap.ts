@@ -30,15 +30,28 @@ export default createRule('no-unnecessary-state-wrap', {
 						uniqueItems: true
 					},
 					allowReassign: {
-						type: 'boolean'
+						oneOf: [
+							{
+								type: 'boolean'
+							},
+							{
+								type: 'array',
+								items: {
+									type: 'string'
+								},
+								uniqueItems: true
+							}
+						]
 					}
 				},
 				additionalProperties: false
 			}
 		],
 		messages: {
-			unnecessaryStateWrap: '{{className}} is already reactive, $state wrapping is unnecessary.',
-			suggestRemoveStateWrap: 'Remove unnecessary $state wrapping'
+			unnecessaryStateWrap:
+				'{{className}} is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).',
+			suggestRemoveStateWrap:
+				'Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).'
 		},
 		type: 'suggestion',
 		hasSuggestions: true,
@@ -52,7 +65,7 @@ export default createRule('no-unnecessary-state-wrap', {
 	create(context) {
 		const options = context.options[0] ?? {};
 		const additionalReactiveClasses = options.additionalReactiveClasses ?? [];
-		const allowReassign = options.allowReassign ?? false;
+		const allowReassign = options.allowReassign ?? ['SvelteSet'];
 		const { globalScope } = context.sourceCode.scopeManager;
 		if (globalScope == null) {
 			return {};
@@ -91,13 +104,27 @@ export default createRule('no-unnecessary-state-wrap', {
 			});
 		}
 
+		function isAllowedReassign(className: string, identifier?: TSESTree.Identifier): boolean {
+			if (!identifier) return false;
+
+			if (typeof allowReassign === 'boolean') {
+				return allowReassign && isReassigned(identifier);
+			}
+
+			return (
+				Array.isArray(allowReassign) &&
+				allowReassign.includes(className) &&
+				isReassigned(identifier)
+			);
+		}
+
 		function reportUnnecessaryStateWrap(
 			stateNode: TSESTree.Node,
 			targetNode: TSESTree.Node,
 			className: string,
 			identifier?: TSESTree.Identifier
 		) {
-			if (allowReassign && identifier && isReassigned(identifier)) {
+			if (isAllowedReassign(className, identifier)) {
 				return;
 			}
 
