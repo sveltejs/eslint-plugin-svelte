@@ -339,6 +339,27 @@ function isValueAllowed(
 			isValueAllowed(context, findContext, value.alternate, resolveReferences, tsTools, config)
 		);
 	}
+	// Concatenation is left-associative, so in e.g. `resolve('/foo') + '?' + query`, the resolve() call is nested in the left operand.
+	if (
+		value.type === 'BinaryExpression' &&
+		value.operator === '+' &&
+		value.left.type !== 'PrivateIdentifier' &&
+		((['BinaryExpression', 'TemplateLiteral'].includes(value.left.type) &&
+			isValueAllowed(
+				context,
+				new FindVariableContext(context),
+				value.left,
+				resolveReferences,
+				tsTools,
+				config
+			)) ||
+			(expressionIsResolveCall(new FindVariableContext(context), value.left, resolveReferences) &&
+				(expressionIsEmpty(new FindVariableContext(context), value.right) ||
+					expressionStartsWith(new FindVariableContext(context), value.right, '?') ||
+					expressionStartsWith(new FindVariableContext(context), value.right, '#'))))
+	) {
+		return true;
+	}
 	if (
 		(config.allowAbsolute && expressionIsAbsoluteUrl(new FindVariableContext(context), value)) ||
 		(config.allowEmpty && expressionIsEmpty(new FindVariableContext(context), value)) ||
@@ -349,30 +370,6 @@ function isValueAllowed(
 		expressionIsResolveCall(new FindVariableContext(context), value, resolveReferences)
 	) {
 		return true;
-	}
-	if (
-		value.type === 'BinaryExpression' &&
-		value.operator === '+' &&
-		value.left.type !== 'PrivateIdentifier'
-	) {
-		if (['BinaryExpression', 'TemplateLiteral'].includes(value.left.type)) {
-			return isValueAllowed(
-				context,
-				new FindVariableContext(context),
-				value.left,
-				resolveReferences,
-				tsTools,
-				config
-			);
-		}
-		if (
-			expressionIsResolveCall(new FindVariableContext(context), value.left, resolveReferences) &&
-			(expressionIsEmpty(new FindVariableContext(context), value.right) ||
-				expressionStartsWith(new FindVariableContext(context), value.right, '?') ||
-				expressionStartsWith(new FindVariableContext(context), value.right, '#'))
-		) {
-			return true;
-		}
 	}
 	if (value.type === 'TemplateLiteral') {
 		const parts = [
