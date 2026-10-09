@@ -366,7 +366,11 @@ function isValueAllowed(
 	) {
 		return true;
 	}
-	if (value.type === 'BinaryExpression' && value.left.type !== 'PrivateIdentifier') {
+	if (
+		value.type === 'BinaryExpression' &&
+		value.operator === '+' &&
+		value.left.type !== 'PrivateIdentifier'
+	) {
 		if (['BinaryExpression', 'TemplateLiteral'].includes(value.left.type)) {
 			return isValueAllowed(
 				context,
