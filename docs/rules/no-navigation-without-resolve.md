@@ -18,6 +18,14 @@ This rule also runs on SvelteKit 3. Use `resolve()` from `$app/paths` for intern
 
 This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
 
+A URL is considered resolved if it starts with a call to `resolve()` (or `asset()`) from `$app/paths`, or with a value of the type `ResolvedPathname` from `$app/types`. The resolved value may be followed by a query string or a fragment, as these don't change the route. Appending anything else, such as another path segment, is reported, as it bypasses the route type-checking of `resolve()`. The URL may be built with concatenation, template literals, variables or ternaries.
+
+The following URLs don't need `resolve()`:
+
+- URLs that start with a query string (e.g. `?page=2`) or a fragment (e.g. `#top`), as they keep the current path.
+- Empty URLs in `pushState()` and `replaceState()`, for [shallow routing](https://svelte.dev/docs/kit/shallow-routing).
+- Absolute URLs and nullish values in `<a>` tags.
+
 <!--eslint-skip-->
 
 ```svelte
@@ -32,12 +40,21 @@ This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`,
   pushState(resolve('/foo/'), {});
   replaceState(resolve('/foo/'), {});
 
+  // queries and fragments
+  goto(resolve('/foo/') + '?page=2');
+  goto(`${resolve('/foo/')}#section`);
+  goto(resolve('/foo/') + (searchParams.size ? `?${searchParams}` : ''));
+  goto('?page=2');
+  replaceState('#top', {});
+
   // shallow routing
   pushState('', {});
   replaceState('', {});
 </script>
 
 <a href={resolve('/foo/')}>Click me!</a>
+<a href="{resolve('/foo/')}?page=2">Click me!</a>
+<a href="?page=2">Click me!</a>
 <a href="https://svelte.dev">Click me!</a>
 <a href={someURL} rel="external">Click me!</a>
 <a href="#top">Click me!</a>
@@ -54,6 +71,8 @@ This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`,
   goto('/foo');
   goto('/foo' + resolve('/bar'));
   goto(resolve('/foo') + '/bar');
+  goto(resolve('/foo') + '/bar?page=2');
+  goto(`/foo?${searchParams}`);
 
   pushState('/foo', {});
   replaceState('/foo', {});
