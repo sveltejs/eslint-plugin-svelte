@@ -398,7 +398,7 @@ function memberValueIsAllowed(
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
-	const key = getPropertyName(value);
+	const key = getPropertyName(value, ctx.scopeFor(value));
 	if (key === null) {
 		return false;
 	}
@@ -483,7 +483,7 @@ function destructuredValue(
 			if (property.type !== 'Property') {
 				continue;
 			}
-			const key = getPropertyName(property);
+			const key = getPropertyName(property, ctx.scopeFor(property));
 			const propertyValue = key === null ? null : resolveProperty(ctx, element, key);
 			const result =
 				propertyValue === null
@@ -541,11 +541,46 @@ function resolveElement(
 	if (array === null) {
 		return null;
 	}
-	const element = array.elements[index];
-	if (element === null || element === undefined || element.type === 'SpreadElement') {
+	const flattened = flattenElements(ctx, array, index);
+	if (flattened === null) {
 		return null;
 	}
-	return element;
+	return flattened[index] ?? null;
+}
+
+/**
+ * Flatten an array literal's elements left to right, expanding each spread whose source is a
+ * statically-resolvable array literal, until at least `index + 1` entries are known. Stops early
+ * once the target index is covered, so a spread *after* it never forces a bail. Returns null if an
+ * unresolvable (unknown-length) spread is reached at or before the target index.
+ */
+function flattenElements(
+	ctx: FindVariableContext,
+	array: TSESTree.ArrayExpression,
+	index: number
+): (TSESTree.Expression | null)[] | null {
+	const flattened: (TSESTree.Expression | null)[] = [];
+	for (const element of array.elements) {
+		if (flattened.length > index) {
+			break;
+		}
+		if (element === null) {
+			flattened.push(null);
+		} else if (element.type === 'SpreadElement') {
+			const spread = resolveToArrayExpression(ctx, element.argument);
+			if (spread === null) {
+				return null;
+			}
+			const nested = flattenElements(ctx, spread, index - flattened.length);
+			if (nested === null) {
+				return null;
+			}
+			flattened.push(...nested);
+		} else {
+			flattened.push(element);
+		}
+	}
+	return flattened;
 }
 
 function resolveProperty(
@@ -553,18 +588,48 @@ function resolveProperty(
 	objectExpr: TSESTree.Expression,
 	key: string
 ): TSESTree.Expression | null {
+	const lookup = lookupProperty(ctx, objectExpr, key);
+	return lookup.type === 'found' ? lookup.value : null;
+}
+
+/**
+ * The outcome of resolving a property `key` on an object literal: either the expression it is
+ * definitely assigned (`found`), definitely not assigned (`absent`), or possibly assigned an
+ * unknown value (`unknown`, e.g. an unresolvable spread or computed key). The three states are
+ * needed to merge spreads soundly: `absent` keeps an earlier match, whereas `unknown` discards it.
+ */
+type PropertyLookup =
+	| { type: 'found'; value: TSESTree.Expression }
+	| { type: 'absent' }
+	| { type: 'unknown' };
+
+function lookupProperty(
+	ctx: FindVariableContext,
+	objectExpr: TSESTree.Expression,
+	key: string
+): PropertyLookup {
 	const object = resolveToObjectExpression(ctx, objectExpr);
 	if (object === null) {
-		return null;
+		return { type: 'unknown' };
 	}
+	// Properties are resolved last-write-wins.
+	let result: PropertyLookup = { type: 'absent' };
 	for (const property of object.properties) {
-		if (property.type === 'Property' && getPropertyName(property) === key) {
-			// `Property.value` is a shared type covering object patterns too, but in an object
-			// literal a property value is always an expression.
-			return property.value as TSESTree.Expression;
+		if (property.type === 'SpreadElement') {
+			const spread = lookupProperty(ctx, property.argument, key);
+			if (spread.type !== 'absent') {
+				result = spread;
+			}
+		} else {
+			const name = getPropertyName(property, ctx.scopeFor(property));
+			if (name === null) {
+				result = { type: 'unknown' };
+			} else if (name === key) {
+				result = { type: 'found', value: property.value as TSESTree.Expression };
+			}
 		}
 	}
-	return null;
+	return result;
 }
 
 function resolveToArrayExpression(
@@ -597,7 +662,7 @@ function resolveToLiteralSource(
 		return resolveVariableInit(ctx, node);
 	}
 	if (node.type === 'MemberExpression') {
-		const key = getPropertyName(node);
+		const key = getPropertyName(node, ctx.scopeFor(node));
 		return key === null ? null : accessKey(ctx, node.object, key);
 	}
 	return null;
