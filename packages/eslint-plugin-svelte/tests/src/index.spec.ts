@@ -50,6 +50,16 @@ const actualSvelteKitNotRoute: Parameters<typeof shouldRun>[0] = {
 };
 
 describe('shouldRun', () => {
+	it('matches Kit 3 conditions without enabling Kit 1/2-only rules', () => {
+		const context = { ...actualSvelteKit, svelteKitVersion: '3' as const };
+		assert.strictEqual(shouldRun(context, [{ svelteKitVersions: ['3'] }]), true);
+		assert.strictEqual(
+			shouldRun(context, [{ svelteKitVersions: ['1.0.0-next', '1', '2'] }]),
+			false
+		);
+		assert.strictEqual(shouldRun(actualSvelteKit, [{ svelteKitVersions: ['3'] }]), false);
+	});
+
 	it('no condition1', () => {
 		assert.strictEqual(shouldRun(actualSvelte3, []), true);
 	});
