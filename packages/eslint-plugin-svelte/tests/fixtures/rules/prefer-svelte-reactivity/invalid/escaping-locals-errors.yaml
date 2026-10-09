@@ -1,0 +1,36 @@
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 2
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 7
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 11
+  column: 10
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 14
+  column: 11
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 16
+  column: 19
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 22
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 27
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 31
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 35
+  column: 17
+  suggestions: null
