@@ -305,8 +305,8 @@ function writeFixtures(
 }
 
 function getConfig(ruleName: string, inputFile: string) {
-	// ruleName is normalized to support Windows style paths
-	const filename = inputFile.slice(inputFile.indexOf(path.normalize(ruleName)));
+	// Resolve from the fixture root so parent directory names cannot affect the label.
+	const filename = path.join(ruleName, path.relative(getRuleFixturesRoot(ruleName), inputFile));
 	const code = fs.readFileSync(inputFile, 'utf8');
 	let config;
 	let configFile = [
@@ -356,7 +356,7 @@ function getConfig(ruleName: string, inputFile: string) {
 					: {})
 			}
 		},
-		{ code, filename: inputFile }
+		{ code, filename: inputFile, name: config?.name ?? filename }
 	);
 }
 
