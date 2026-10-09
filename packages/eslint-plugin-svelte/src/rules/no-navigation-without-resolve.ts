@@ -307,6 +307,7 @@ interface AllowedValueConfig {
 	allowNullish?: boolean;
 }
 
+// `findContext` is shared by the recursive calls of this function, so that cyclic variable definitions terminate. Every other check gets a fresh FindVariableContext, because a FindVariableContext only looks up each identifier once, and sharing it between independent checks would make the later ones fail.
 function isValueAllowed(
 	context: RuleContext,
 	findContext: FindVariableContext,
@@ -361,14 +362,7 @@ function isValueAllowed(
 		value.operator === '+' &&
 		value.left.type !== 'PrivateIdentifier' &&
 		((['BinaryExpression', 'TemplateLiteral'].includes(value.left.type) &&
-			isValueAllowed(
-				context,
-				new FindVariableContext(context),
-				value.left,
-				resolveReferences,
-				tsTools,
-				config
-			)) ||
+			isValueAllowed(context, findContext, value.left, resolveReferences, tsTools, config)) ||
 			(expressionIsResolveCall(new FindVariableContext(context), value.left, resolveReferences) &&
 				(expressionIsEmpty(new FindVariableContext(context), value.right) ||
 					expressionStartsWith(new FindVariableContext(context), value.right, '?') ||
