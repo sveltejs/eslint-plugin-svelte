@@ -241,6 +241,8 @@ export function findVariable(context: RuleContext, node: TSESTree.Identifier): V
 export class FindVariableContext {
 	public readonly findVariable: (node: TSESTree.Identifier) => Variable | null;
 
+	public readonly scopeFor: (node: TSESTree.Node) => Scope;
+
 	public constructor(context: RuleContext) {
 		const visited = new Set<TSESTree.Identifier>();
 		this.findVariable = (node: TSESTree.Identifier) => {
@@ -250,6 +252,7 @@ export class FindVariableContext {
 			visited.add(node);
 			return findVariable(context, node);
 		};
+		this.scopeFor = (node: TSESTree.Node) => getScope(context, node);
 	}
 }
 
