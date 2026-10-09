@@ -12,6 +12,8 @@ since: 'v3.12.0'
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
+This rule also runs on SvelteKit 3. Use `resolve()` from `$app/paths` for internal navigation. SvelteKit 3 removed the `base` export, so the deprecated `no-navigation-without-base` and `no-goto-without-base` rules do not run on Kit 3. See the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#app-paths).
+
 ## :book: Rule Details
 
 This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
