@@ -45,7 +45,7 @@
     "eslint-scope": "^9.0.0",
     "eslint-visitor-keys": "^5.0.0",
     "espree": "^11.0.0",
-    "globals": "^16.3.0",
+    "globals": "^17.0.0",
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-emoji": "^3.0.0",
