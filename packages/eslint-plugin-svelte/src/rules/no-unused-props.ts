@@ -252,12 +252,22 @@ export default createRule('no-unused-props', {
 		}
 
 		/**
+		 * Checks whether `path` is `prefix` itself or sits beneath it. Segments are
+		 * compared one by one, so a property name that contains a dot is not read as
+		 * a nested path.
+		 */
+		function isPathAtOrUnder(path: string[], prefix: string[]): boolean {
+			if (prefix.length > path.length) return false;
+			return prefix.every((segment, index) => segment === path[index]);
+		}
+
+		/**
 		 * Recursively checks for unused properties in a type.
 		 */
 		function checkUnusedProperties({
 			propsType,
 			usedPropertyPaths,
-			usedSpreadPropertyPaths,
+			usedSpreadPropertyPathArrays,
 			declaredPropertyNames,
 			reportNode,
 			parentPath,
@@ -266,7 +276,7 @@ export default createRule('no-unused-props', {
 		}: {
 			propsType: ts.Type;
 			usedPropertyPaths: string[];
-			usedSpreadPropertyPaths: string[];
+			usedSpreadPropertyPathArrays: PropertyPathArray[];
 			declaredPropertyNames: DeclaredPropertyNames;
 			reportNode: TSESTree.Node;
 			parentPath: string[];
@@ -293,7 +303,7 @@ export default createRule('no-unused-props', {
 					checkUnusedProperties({
 						propsType: propsBaseType,
 						usedPropertyPaths,
-						usedSpreadPropertyPaths,
+						usedSpreadPropertyPathArrays,
 						declaredPropertyNames,
 						reportNode,
 						parentPath,
@@ -318,8 +328,8 @@ export default createRule('no-unused-props', {
 				// Spreading this property, or any of its ancestors, consumes everything
 				// beneath it, so nothing under it can be reported -- even when some of
 				// those properties are also read by name.
-				const isCoveredBySpread = usedSpreadPropertyPaths.some((path) => {
-					return path === '' || path === currentPathStr || currentPathStr.startsWith(`${path}.`);
+				const isCoveredBySpread = usedSpreadPropertyPathArrays.some((path) => {
+					return isPathAtOrUnder(currentPath, path);
 				});
 				if (isCoveredBySpread) continue;
 
@@ -328,7 +338,9 @@ export default createRule('no-unused-props', {
 				const isUsedThisInPath =
 					usedPropertyPaths.includes(currentPathStr) ||
 					// A spread deeper inside this property counts as using the property itself.
-					usedSpreadPropertyPaths.some((path) => path.startsWith(`${currentPathStr}.`));
+					usedSpreadPropertyPathArrays.some((path) => {
+						return path.length > currentPath.length && isPathAtOrUnder(path, currentPath);
+					});
 				const isUsedInPath = usedPropertyPaths.some((path) => {
 					return path.startsWith(`${currentPathStr}.`);
 				});
@@ -362,7 +374,7 @@ export default createRule('no-unused-props', {
 					checkUnusedProperties({
 						propsType: propType,
 						usedPropertyPaths,
-						usedSpreadPropertyPaths,
+						usedSpreadPropertyPathArrays,
 						declaredPropertyNames,
 						reportNode,
 						parentPath: currentPath,
@@ -409,8 +421,10 @@ export default createRule('no-unused-props', {
 				normalized.push(path);
 			}
 			return normalized.map((path) => {
-				// If we allow unused nested properties, only return first level properties
-				if (allowUnusedNestedProperties) return [path[0]];
+				// If we allow unused nested properties, only return first level properties.
+				// An empty path means the whole object was used, so it has no first level
+				// to narrow to and must stay empty.
+				if (allowUnusedNestedProperties && path.length > 0) return [path[0]];
 				return path;
 			});
 		}
@@ -470,7 +484,10 @@ export default createRule('no-unused-props', {
 				checkUnusedProperties({
 					propsType,
 					usedPropertyPaths: runNormalizeUsedPaths(usedPropertyPathsArray),
-					usedSpreadPropertyPaths: runNormalizeUsedPaths(usedSpreadPropertyPathsArray),
+					usedSpreadPropertyPathArrays: normalizeUsedPaths(
+						usedSpreadPropertyPathsArray,
+						options.allowUnusedNestedProperties
+					),
 					declaredPropertyNames,
 					reportNode: node.id,
 					parentPath: [],
