@@ -16,7 +16,7 @@ This rule also runs on SvelteKit 3. Use `resolve()` from `$app/paths` for intern
 
 ## :book: Rule Details
 
-This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. The `external` token must be present in the complete `rel` value. Adding `data-sveltekit-reload` does not exempt internal links from this rule. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
+This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. The `external` token must be present in the complete `rel` value. Adding `data-sveltekit-reload` does not exempt internal links from this rule. Shallow routing to the current URL (an empty URL in `pushState()`, `replaceState()`, or `goto()` with `shallow: true`) is also allowed. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
 
 <!--eslint-skip-->
 
@@ -33,6 +33,8 @@ This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`,
   replaceState(resolve('/foo/'), {});
 
   // shallow routing
+  goto('', { state: {}, shallow: true });
+  goto('', { state: {}, shallow: true, replace: true });
   pushState('', {});
   replaceState('', {});
 </script>
