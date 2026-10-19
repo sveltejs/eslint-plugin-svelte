@@ -209,7 +209,11 @@ function checkGotoCall(
 			call.arguments[0],
 			resolveReferences,
 			tsTools,
-			{}
+			{
+				allowEmpty:
+					call.arguments.length > 1 &&
+					expressionIsShallowOptions(new FindVariableContext(context), call.arguments[1])
+			}
 		)
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
@@ -433,6 +437,56 @@ function expressionIsEmpty(
 			node.quasis.length === 1 &&
 			node.quasis[0].value.raw === '')
 	);
+}
+
+// Checks for goto() options with `shallow: true` (shallow routing in SvelteKit 3)
+function expressionIsShallowOptions(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression
+): boolean {
+	return shallowOptionValue(ctx, node) === 'shallow';
+}
+
+// Returns the effect of an options object on `shallow`. Anything that cannot be statically resolved is treated as not shallow.
+function shallowOptionValue(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression
+): 'shallow' | 'notShallow' | 'unset' {
+	if (node.type === 'Identifier') {
+		const variable = ctx.findVariable(node);
+		if (
+			variable === null ||
+			variable.identifiers.length === 0 ||
+			variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+			variable.identifiers[0].parent.init === null
+		) {
+			return 'notShallow';
+		}
+		return shallowOptionValue(ctx, variable.identifiers[0].parent.init);
+	}
+	if (node.type !== 'ObjectExpression') {
+		return 'notShallow';
+	}
+	// Later properties win at runtime, so a spread after `shallow: true` may override it
+	let shallow: 'shallow' | 'notShallow' | 'unset' = 'unset';
+	for (const property of node.properties) {
+		if (property.type === 'SpreadElement') {
+			const spreadValue = shallowOptionValue(ctx, property.argument);
+			if (spreadValue !== 'unset') {
+				shallow = spreadValue;
+			}
+		} else if (
+			!property.computed &&
+			((property.key.type === 'Identifier' && property.key.name === 'shallow') ||
+				(property.key.type === 'Literal' && property.key.value === 'shallow'))
+		) {
+			shallow =
+				property.value.type === 'Literal' && property.value.value === true
+					? 'shallow'
+					: 'notShallow';
+		}
+	}
+	return shallow;
 }
 
 function expressionIsNullish(
