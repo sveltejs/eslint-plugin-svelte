@@ -772,18 +772,23 @@ function expressionIsEmpty(
  * Checks for goto() options with `shallow: true` (shallow routing in SvelteKit 3)
  */
 function expressionIsShallowOptions(node: TSESTree.CallExpressionArgument): boolean {
-	return (
-		node.type === 'ObjectExpression' &&
-		node.properties.some(
-			(property) =>
-				property.type === 'Property' &&
-				!property.computed &&
-				((property.key.type === 'Identifier' && property.key.name === 'shallow') ||
-					(property.key.type === 'Literal' && property.key.value === 'shallow')) &&
-				property.value.type === 'Literal' &&
-				property.value.value === true
-		)
-	);
+	if (node.type !== 'ObjectExpression') {
+		return false;
+	}
+	// Later properties win at runtime, so a spread after `shallow: true` may override it
+	let shallow = false;
+	for (const property of node.properties) {
+		if (property.type === 'SpreadElement') {
+			shallow = false;
+		} else if (
+			!property.computed &&
+			((property.key.type === 'Identifier' && property.key.name === 'shallow') ||
+				(property.key.type === 'Literal' && property.key.value === 'shallow'))
+		) {
+			shallow = property.value.type === 'Literal' && property.value.value === true;
+		}
+	}
+	return shallow;
 }
 
 function expressionIsNullish(
