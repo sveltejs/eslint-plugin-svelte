@@ -211,7 +211,9 @@ function checkGotoCall(
 	if (
 		call.arguments.length > 0 &&
 		!isValueAllowed(context, [call.arguments[0]], resolveReferences, tsTools, {
-			allowEmpty: call.arguments.length > 1 && expressionIsShallowOptions(call.arguments[1])
+			allowEmpty:
+				call.arguments.length > 1 &&
+				expressionIsShallowOptions(new FindVariableContext(context), call.arguments[1])
 		})
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
@@ -860,24 +862,19 @@ function partIsEmpty(part: UrlPart): boolean {
 /**
  * Checks for goto() options with `shallow: true` (shallow routing in SvelteKit 3)
  */
-function expressionIsShallowOptions(node: TSESTree.CallExpressionArgument): boolean {
-	if (node.type !== 'ObjectExpression') {
+function expressionIsShallowOptions(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument
+): boolean {
+	if (node.type === 'SpreadElement') {
 		return false;
 	}
-	// Later properties win at runtime, so a spread after `shallow: true` may override it
-	let shallow = false;
-	for (const property of node.properties) {
-		if (property.type === 'SpreadElement') {
-			shallow = false;
-		} else if (
-			!property.computed &&
-			((property.key.type === 'Identifier' && property.key.name === 'shallow') ||
-				(property.key.type === 'Literal' && property.key.value === 'shallow'))
-		) {
-			shallow = property.value.type === 'Literal' && property.value.value === true;
-		}
+	const shallow = lookupProperty(ctx, node, 'shallow');
+	if (shallow.type !== 'found') {
+		return false;
 	}
-	return shallow;
+	const value = getStaticValue(shallow.value, ctx.scopeFor(shallow.value));
+	return value !== null && Boolean(value.value);
 }
 
 function expressionIsNullish(
