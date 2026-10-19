@@ -210,7 +210,9 @@ function checkGotoCall(
 			resolveReferences,
 			tsTools,
 			{
-				allowEmpty: call.arguments.length > 1 && expressionIsShallowOptions(call.arguments[1])
+				allowEmpty:
+					call.arguments.length > 1 &&
+					expressionIsShallowOptions(context, new FindVariableContext(context), call.arguments[1])
 			}
 		)
 	) {
@@ -771,24 +773,68 @@ function expressionIsEmpty(
 /**
  * Checks for goto() options with `shallow: true` (shallow routing in SvelteKit 3)
  */
-function expressionIsShallowOptions(node: TSESTree.CallExpressionArgument): boolean {
+function expressionIsShallowOptions(
+	context: RuleContext,
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression
+): boolean {
+	return shallowOptionValue(context, ctx, node) === 'shallow';
+}
+
+/**
+ * Returns the effect of an options object on `shallow`. Anything that cannot be statically resolved is treated as not shallow.
+ */
+function shallowOptionValue(
+	context: RuleContext,
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument | TSESTree.Expression
+): 'shallow' | 'notShallow' | 'unset' {
+	if (node.type === 'Identifier') {
+		const variable = ctx.findVariable(node);
+		if (
+			variable === null ||
+			variable.identifiers.length === 0 ||
+			variable.identifiers[0].parent.type !== 'VariableDeclarator' ||
+			variable.identifiers[0].parent.init === null
+		) {
+			return 'notShallow';
+		}
+		return shallowOptionValue(context, ctx, variable.identifiers[0].parent.init);
+	}
 	if (node.type !== 'ObjectExpression') {
-		return false;
+		return 'notShallow';
 	}
 	// Later properties win at runtime, so a spread after `shallow: true` may override it
-	let shallow = false;
+	let shallow: 'shallow' | 'notShallow' | 'unset' = 'unset';
 	for (const property of node.properties) {
 		if (property.type === 'SpreadElement') {
-			shallow = false;
-		} else if (
-			!property.computed &&
-			((property.key.type === 'Identifier' && property.key.name === 'shallow') ||
-				(property.key.type === 'Literal' && property.key.value === 'shallow'))
-		) {
-			shallow = property.value.type === 'Literal' && property.value.value === true;
+			const spreadValue = shallowOptionValue(context, ctx, property.argument);
+			if (spreadValue !== 'unset') {
+				shallow = spreadValue;
+			}
+		} else {
+			const key = propertyKeyName(context, property);
+			if (key === null) {
+				// A computed key that cannot be resolved may be `shallow`
+				shallow = 'notShallow';
+			} else if (key === 'shallow') {
+				const value = getStaticValue(property.value, getScope(context, property.value));
+				shallow = value?.value === true ? 'shallow' : 'notShallow';
+			}
 		}
 	}
 	return shallow;
+}
+
+/**
+ * Returns the statically known name of a property key, or null if it cannot be determined.
+ */
+function propertyKeyName(context: RuleContext, property: TSESTree.Property): string | null {
+	if (!property.computed && property.key.type === 'Identifier') {
+		return property.key.name;
+	}
+	const value = getStaticValue(property.key, getScope(context, property.key));
+	return value === null ? null : String(value.value);
 }
 
 function expressionIsNullish(
