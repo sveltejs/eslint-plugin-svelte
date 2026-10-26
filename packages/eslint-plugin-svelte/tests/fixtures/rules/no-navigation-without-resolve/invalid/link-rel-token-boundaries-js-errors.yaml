@@ -1,0 +1,76 @@
+- message: Unexpected href link without resolve().
+  line: 12
+  column: 27
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 13
+  column: 27
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 14
+  column: 28
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 15
+  column: 28
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 16
+  column: 29
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 17
+  column: 30
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 18
+  column: 26
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 19
+  column: 19
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 20
+  column: 8
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 21
+  column: 11
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 22
+  column: 16
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 23
+  column: 18
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 24
+  column: 34
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 25
+  column: 34
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 26
+  column: 33
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 27
+  column: 33
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 28
+  column: 26
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 29
+  column: 31
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 30
+  column: 31
+  suggestions: null

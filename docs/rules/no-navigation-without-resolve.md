@@ -16,7 +16,7 @@ This rule also runs on SvelteKit 3. Use `resolve()` from `$app/paths` for intern
 
 ## :book: Rule Details
 
-This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
+This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` uses `resolve()`. `<a>` tags will skip this check when it has an absolute URL or `rel="external"`. The `external` token must be present in the complete `rel` value. Adding `data-sveltekit-reload` does not exempt internal links from this rule. For programmatic external navigation, use `window.location`. Enforcing this rule ensures the base path is prefixed and internal links are type-checked.
 
 <!--eslint-skip-->
 
@@ -40,6 +40,7 @@ This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`,
 <a href={resolve('/foo/')}>Click me!</a>
 <a href="https://svelte.dev">Click me!</a>
 <a href={someURL} rel="external">Click me!</a>
+<a href={someURL} rel={`external nofollow`}>Click me!</a>
 <a href="#top">Click me!</a>
 ```
 
@@ -61,6 +62,8 @@ This rule ensures internal navigation via HTML `<a>` tags, SvelteKit's `goto()`,
 
 <a href="/foo">Click me!</a>
 <a href={'/foo'}>Click me!</a>
+<a href="/foo" data-sveltekit-reload>Click me!</a>
+<a href="/foo" rel="external-suffix">Click me!</a>
 ```
 
 ## :wrench: Options

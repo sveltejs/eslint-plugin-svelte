@@ -1,8 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/types';
 
 import { createRule } from '../utils/index.js';
-import { ReferenceTracker } from '@eslint-community/eslint-utils';
-import { FindVariableContext } from '../utils/ast-utils.js';
+import { ReferenceTracker, getStaticValue } from '@eslint-community/eslint-utils';
+import { FindVariableContext, getScope } from '../utils/ast-utils.js';
 import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { AST } from 'svelte-eslint-parser';
@@ -252,7 +252,7 @@ function checkLinkAttribute(
 		attribute.parent.parent.name.type === 'SvelteName' &&
 		attribute.parent.parent.name.name === 'a' &&
 		attribute.key.name === 'href' &&
-		!hasRelExternal(new FindVariableContext(context), attribute.parent) &&
+		!hasRelExternal(context, attribute.parent) &&
 		!isValueAllowed(new FindVariableContext(context), value, resolveReferences, tsTools, {
 			allowAbsolute: true,
 			allowFragment: true,
@@ -263,39 +263,41 @@ function checkLinkAttribute(
 	}
 }
 
-function hasRelExternal(ctx: FindVariableContext, element: AST.SvelteStartTag): boolean {
-	function identifierIsExternal(identifier: TSESTree.Identifier): boolean {
-		const variable = ctx.findVariable(identifier);
-		return (
-			variable !== null &&
-			variable.identifiers.length > 0 &&
-			variable.identifiers[0].parent.type === 'VariableDeclarator' &&
-			variable.identifiers[0].parent.init !== null &&
-			variable.identifiers[0].parent.init.type === 'Literal' &&
-			variable.identifiers[0].parent.init.value === 'external'
-		);
+function hasRelExternal(context: RuleContext, element: AST.SvelteStartTag): boolean {
+	const relAttr = element.attributes.find(
+		(attr): attr is AST.SvelteAttribute | AST.SvelteShorthandAttribute =>
+			(attr.type === 'SvelteAttribute' || attr.type === 'SvelteShorthandAttribute') &&
+			attr.key.name === 'rel'
+	);
+	if (relAttr === undefined) return false;
+
+	function expressionValue(expression: TSESTree.Expression): string {
+		const value = getStaticValue(expression, getScope(context, expression));
+		if (typeof value?.value === 'string') return value.value;
+		if (expression.type === 'TemplateLiteral') {
+			return expression.quasis
+				.map((quasi, index) => {
+					const embedded = expression.expressions[index];
+					return (
+						(quasi.value.cooked ?? quasi.value.raw) +
+						(embedded === undefined ? '' : expressionValue(embedded))
+					);
+				})
+				.join('');
+		}
+		// An unknown value can extend an adjacent token, so it cannot be a token boundary.
+		return '\0';
 	}
 
-	for (const attr of element.attributes) {
-		if (
-			(attr.type === 'SvelteAttribute' &&
-				attr.key.name === 'rel' &&
-				((attr.value[0].type === 'SvelteLiteral' &&
-					attr.value[0].value.split(/\s+/).includes('external')) ||
-					(attr.value[0].type === 'SvelteMustacheTag' &&
-						((attr.value[0].expression.type === 'Literal' &&
-							attr.value[0].expression.value?.toString().split(/\s+/).includes('external')) ||
-							(attr.value[0].expression.type === 'Identifier' &&
-								identifierIsExternal(attr.value[0].expression)))))) ||
-			(attr.type === 'SvelteShorthandAttribute' &&
-				attr.key.name === 'rel' &&
-				attr.value.type === 'Identifier' &&
-				identifierIsExternal(attr.value))
-		) {
-			return true;
-		}
-	}
-	return false;
+	const value =
+		relAttr.type === 'SvelteShorthandAttribute'
+			? expressionValue(relAttr.value)
+			: relAttr.value
+					.map((part) =>
+						part.type === 'SvelteLiteral' ? part.value : expressionValue(part.expression)
+					)
+					.join('');
+	return value.split(/\s+/).includes('external');
 }
 
 function isValueAllowed(
