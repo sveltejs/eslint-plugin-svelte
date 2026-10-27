@@ -56,6 +56,10 @@ These are rewritten by `pnpm update` / `pnpm build:meta`. Edit the source then r
 
 The generators live in `packages/eslint-plugin-svelte/tools/`. `tools/update.ts` is the umbrella that runs them all.
 
+## Code style
+
+- Comments documenting a function, type, or other declaration must use JSDoc (`/** ... */`) placed directly above the declaration, not `//` line comments. `//` is fine for inline comments inside function bodies and for section-divider comments.
+
 ## Tests
 
 Mocha + a fixture-driven `RuleTester` wrapper from `tests/utils/eslint-compat.ts`. A rule test typically does:
