@@ -296,14 +296,18 @@ interface AllowedValueConfig {
 	allowNullish?: boolean;
 }
 
-// A URL is given as a list of parts that are concatenated together.
+/**
+ * A URL is given as a list of parts that are concatenated together.
+ */
 type UrlPart =
 	| TSESTree.CallExpressionArgument
 	| TSESTree.Expression
 	| TSESTree.TemplateElement
 	| AST.SvelteLiteral;
 
-// A URL is allowed if it starts with a resolved value that is followed by nothing, a query or a fragment (appending a path would bypass the route type-checking of resolve()). It is also allowed if it starts with a query or a fragment (it then keeps the current path) or, depending on the config, if it is empty or nullish, or if it starts with an absolute URL.
+/**
+ * A URL is allowed if it starts with a resolved value that is followed by nothing, a query or a fragment (appending a path would bypass the route type-checking of resolve()). It is also allowed if it starts with a query or a fragment (it then keeps the current path) or, depending on the config, if it is empty or nullish, or if it starts with an absolute URL.
+ */
 function isValueAllowed(
 	context: RuleContext,
 	value: UrlPart[],
@@ -343,7 +347,9 @@ function isValueAllowed(
 	});
 }
 
-// Checks `predicate` against every possible first part of the URL, together with the parts following it. Empty parts are skipped, and concatenations, template literals, variables and ternaries are expanded, so that `predicate` only gets indivisible parts (or null if the URL is empty). `visited` contains the variables already expanded on the current path, so that cyclic variable definitions terminate.
+/**
+ * Checks `predicate` against every possible first part of the URL, together with the parts following it. Empty parts are skipped, and concatenations, template literals, variables and ternaries are expanded, so that `predicate` only gets indivisible parts (or null if the URL is empty). `visited` contains the variables already expanded on the current path, so that cyclic variable definitions terminate.
+ */
 function urlStartSatisfies(
 	context: RuleContext,
 	parts: UrlPart[],
@@ -389,7 +395,9 @@ function urlStartSatisfies(
 	return predicate(first, rest, visited);
 }
 
-// The values that a variable or a member access can stand for, e.g. the initializer of a variable, or each element of the array iterated by an `{#each}` block. All of them need to be allowed. Returns null if the reference cannot be statically resolved, or if its variable has already been expanded on the current path. `variable` is the variable that got expanded, if any.
+/**
+ * The values that a variable or a member access can stand for, e.g. the initializer of a variable, or each element of the array iterated by an `{#each}` block. All of them need to be allowed. Returns null if the reference cannot be statically resolved, or if its variable has already been expanded on the current path. `variable` is the variable that got expanded, if any.
+ */
 function expandReference(
 	context: RuleContext,
 	reference: TSESTree.Identifier | TSESTree.MemberExpression,
@@ -442,7 +450,9 @@ function expandReference(
 	return { variable, values: accessed };
 }
 
-// The values that an `{#each}` iteration variable takes, one for each element of the iterated array, or null if they cannot be statically resolved.
+/**
+ * The values that an `{#each}` iteration variable takes, one for each element of the iterated array, or null if they cannot be statically resolved.
+ */
 function eachItemValues(
 	ctx: FindVariableContext,
 	binding: TSESTree.Identifier
@@ -862,7 +872,9 @@ function partStartsWith(part: UrlPart, prefix: string): boolean {
 	return text !== null && text.startsWith(prefix);
 }
 
-// The text of a part, if it is a string literal
+/**
+ * The text of a part, if it is a string literal
+ */
 function partText(part: UrlPart): string | null {
 	switch (part.type) {
 		case 'Literal':
