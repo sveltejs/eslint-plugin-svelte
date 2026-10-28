@@ -4,7 +4,12 @@ import * as SV from './svelte.js';
 import * as ES from './es.js';
 import * as TS from './ts.js';
 import { isNotWhitespace } from './ast.js';
-import { isCommentToken } from '@eslint-community/eslint-utils';
+import {
+	isClosingBraceToken,
+	isClosingBracketToken,
+	isClosingParenToken,
+	isCommentToken
+} from '@eslint-community/eslint-utils';
 import type { AnyToken, IndentOptions } from './commons.js';
 import type { OffsetCalculator } from './offset-context.js';
 import { OffsetContext } from './offset-context.js';
@@ -93,7 +98,11 @@ export function defineVisitor(
 	/**
 	 * Validate the given token with the pre-calculated expected indentation.
 	 */
-	function validateToken(token: AnyToken, expectedIndent: number) {
+	function validateToken(
+		token: AnyToken,
+		expectedIndent: number,
+		optionalExpectedIndents?: number[]
+	) {
 		const line = token.loc.start.line;
 		const indentText = getIndentText(token.loc.start);
 
@@ -110,7 +119,7 @@ export function defineVisitor(
 				mismatchCharIndexes.push(i);
 			}
 		}
-		if (actualIndent !== expectedIndent) {
+		if (actualIndent !== expectedIndent && !optionalExpectedIndents?.includes(actualIndent)) {
 			const loc = {
 				start: { line, column: 0 },
 				end: { line, column: actualIndent }
@@ -162,39 +171,82 @@ export function defineVisitor(
 		}
 	}
 
-	/** Process line tokens */
+	/**
+	 * Get the expected indents of the comments before the given next token.
+	 */
+	function getCommentExpectedIndents(
+		nextToken: AnyToken,
+		nextExpectedIndent: number,
+		lastExpectedIndent: number | null
+	): [number, ...number[]] {
+		if (
+			lastExpectedIndent != null &&
+			(isClosingParenToken(nextToken) ||
+				isClosingBraceToken(nextToken) ||
+				isClosingBracketToken(nextToken))
+		) {
+			if (nextExpectedIndent === lastExpectedIndent) {
+				// For solo comment. E.g.,
+				// function foo() {
+				//   // comment
+				// }
+				return [nextExpectedIndent + options.indentSize, nextExpectedIndent];
+			}
+
+			// For last comment. E.g.,
+			// function foo() {
+			//   bar();
+			//   // comment
+			// }
+			return [lastExpectedIndent, nextExpectedIndent];
+		}
+
+		// Adjust to next normally. E.g.,
+		// function foo() {
+		//   // comment
+		//   bar();
+		// }
+		return [nextExpectedIndent];
+	}
+
+	/**
+	 * Process line tokens.
+	 * @returns The expected indent saved for the line tokens, or `null` if the line is ignored.
+	 */
 	function processLine(
 		tokens: AnyToken[],
 		prevComments: AST.Comment[],
 		prevToken: AnyToken | null,
+		prevExpectedIndent: number | null,
 		calculator: OffsetCalculator
-	) {
+	): number | null {
 		const firstToken = tokens[0];
 		const actualIndent = firstToken.loc.start.column;
 		const expectedIndent = calculator.getExpectedIndentFromTokens(tokens);
 		if (expectedIndent == null) {
 			calculator.saveExpectedIndent(tokens, actualIndent);
-			return;
+			return null;
 		}
-		calculator.saveExpectedIndent(
-			tokens,
-			Math.min(
-				...tokens
-					.map((t) => calculator.getExpectedIndentFromToken(t))
-					.filter((i): i is number => i != null)
-			)
+		const lineExpectedIndent = Math.min(
+			...tokens
+				.map((t) => calculator.getExpectedIndentFromToken(t))
+				.filter((i): i is number => i != null)
 		);
+		calculator.saveExpectedIndent(tokens, lineExpectedIndent);
 
 		let prev = prevToken;
 		if (prevComments.length) {
 			if (prev && prev.loc.end.line < prevComments[0].loc.start.line) {
-				validateToken(prevComments[0], expectedIndent);
+				const [commentExpectedIndent, ...commentOptionalExpectedIndents] =
+					getCommentExpectedIndents(firstToken, expectedIndent, prevExpectedIndent);
+				validateToken(prevComments[0], commentExpectedIndent, commentOptionalExpectedIndents);
 			}
 			prev = prevComments[prevComments.length - 1];
 		}
 		if (prev && prev.loc.end.line < tokens[0].loc.start.line) {
 			validateToken(tokens[0], expectedIndent);
 		}
+		return lineExpectedIndent;
 	}
 
 	const indentContext = {
@@ -246,8 +298,15 @@ export function defineVisitor(
 			const calculator = offsets.getOffsetCalculator();
 
 			let prevToken: AnyToken | null = null;
+			let prevExpectedIndent: number | null = null;
 			for (const { prevComments, tokens } of iterateLineTokens()) {
-				processLine(tokens, prevComments, prevToken, calculator);
+				prevExpectedIndent = processLine(
+					tokens,
+					prevComments,
+					prevToken,
+					prevExpectedIndent,
+					calculator
+				);
 				prevToken = tokens[tokens.length - 1];
 			}
 
