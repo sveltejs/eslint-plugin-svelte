@@ -265,10 +265,7 @@ export default createRule('sort-attributes', {
 		/**
 		 * Checks whether have a spread attribute between the node and the previous node.
 		 */
-		function hasSpreadAttribute(
-			node: AST.SvelteAttribute,
-			previousNode: HasKeyAttr
-		): node is AST.SvelteAttribute {
+		function hasSpreadAttribute(node: HasKeyAttr, previousNode: HasKeyAttr): boolean {
 			const attributes = node.parent.attributes;
 			const previousNodes = attributes.slice(
 				attributes.indexOf(previousNode),
@@ -280,7 +277,7 @@ export default createRule('sort-attributes', {
 		/**
 		 * Verify the order for which the spread attribute exists.
 		 */
-		function verifyForSpreadAttributeExist(node: AST.SvelteAttribute) {
+		function verifyForSpreadAttributeExist(node: HasKeyAttr) {
 			const previousNodes: HasKeyAttr[] = [];
 			const attributes = node.parent.attributes;
 			for (const previousNode of attributes.slice(0, attributes.indexOf(node)).reverse()) {
@@ -319,7 +316,7 @@ export default createRule('sort-attributes', {
 						(previousNode) => option.compare(getKeyText(previousNode), key) > 0
 					);
 					if (invalidPreviousNode) {
-						if (attr.type !== 'SvelteAttribute' || !hasSpreadAttribute(attr, invalidPreviousNode)) {
+						if (!hasSpreadAttribute(attr, invalidPreviousNode)) {
 							report(attr, invalidPreviousNode);
 						} else {
 							// Verify the order for which the spread attribute exists.
