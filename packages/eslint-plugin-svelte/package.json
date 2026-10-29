@@ -72,9 +72,9 @@
     "svelte-eslint-parser": "^1.7.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/eslint-parser": "^7.28.0",
-    "@babel/plugin-proposal-function-bind": "^7.27.1",
+    "@babel/core": "^8.0.0",
+    "@babel/eslint-parser": "^8.0.0",
+    "@babel/plugin-proposal-function-bind": "^8.0.0",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
     "@types/babel__core": "^7.20.5",
     "@types/eslint-utils": "^3.0.5",
