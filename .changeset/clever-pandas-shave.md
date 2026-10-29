@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-fix: `svelte/no-unused-props` false positive when a prop is consumed via an object spread and also accessed by name
+fix(no-unused-props): fix false positives and negatives around spreads, aliases, dotted keys, and props that share a type

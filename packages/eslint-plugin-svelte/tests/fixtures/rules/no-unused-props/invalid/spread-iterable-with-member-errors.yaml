@@ -1,0 +1,4 @@
+- message: "'extra' in 'rows' is an unused property."
+  line: 6
+  column: 8
+  suggestions: null
