@@ -1,0 +1,8 @@
+- message: Unexpected goto() call without resolve().
+  line: 12
+  column: 7
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 13
+  column: 7
+  suggestions: null
