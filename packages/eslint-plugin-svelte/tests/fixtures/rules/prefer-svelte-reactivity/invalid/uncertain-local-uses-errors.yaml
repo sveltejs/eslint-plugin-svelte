@@ -1,0 +1,64 @@
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 2
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 6
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 11
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 15
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 19
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 23
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 27
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 31
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 35
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 39
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 43
+  column: 3
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 46
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 50
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 54
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 59
+  column: 17
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 64
+  column: 17
+  suggestions: null
