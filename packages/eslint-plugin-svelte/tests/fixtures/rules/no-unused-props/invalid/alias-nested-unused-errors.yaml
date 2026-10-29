@@ -1,0 +1,4 @@
+- message: "'description' in 'app' is an unused property."
+  line: 5
+  column: 8
+  suggestions: null
