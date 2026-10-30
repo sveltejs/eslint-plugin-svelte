@@ -14,6 +14,8 @@ since: 'v3.6.0'
 
 Starting with Svelte 5, component events are just component props that are functions and so can be called like any function. Events for HTML elements all have their name begin with "on" (e.g. `onclick`). This rule enforces that all component events (i.e. function props) also begin with "on".
 
+Props that start with "get" are considered getter functions and are automatically excluded from this rule, as they are not events.
+
 <!--eslint-skip-->
 
 ```svelte
@@ -25,9 +27,10 @@ Starting with Svelte 5, component events are just component props that are funct
   interface Props {
     regularProp: string;
     onclick(): void;
+    getHref(value: any): string;
   }
 
-  let { regularProp, onclick }: Props = $props();
+  let { regularProp, onclick, getHref }: Props = $props();
 </script>
 ```
 
