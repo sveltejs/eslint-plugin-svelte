@@ -465,8 +465,9 @@ function processIgnore(
 		if (!warning.code) {
 			continue;
 		}
-		let node: IgnoreTargetNode | null = getWarningNode(warning);
-		while (node) {
+
+		/** Mark the warning as handled if one of the node's leading comments matches */
+		function checkComments(node: IgnoreTargetNode | ASTNodeWithParent): boolean {
 			for (const comment of extractLeadingComments(context, node).reverse()) {
 				const ignoreItem = ignoreComments.find(
 					(item) =>
@@ -476,10 +477,45 @@ function processIgnore(
 				if (ignoreItem) {
 					unusedIgnores.delete(ignoreItem);
 					remainingWarning.delete(warning);
-					break;
+					return true;
 				}
 			}
+			return false;
+		}
+
+		let node: IgnoreTargetNode | null = getWarningNode(warning);
+		const isScriptWarning =
+			node != null &&
+			(node.parent?.type === 'Program' || node.parent?.type === 'SvelteScriptElement');
+
+		while (node) {
+			if (checkComments(node)) {
+				break;
+			}
 			node = getIgnoreParent(node);
+		}
+
+		// The compiler can report a script-level warning on a node nested inside the
+		// top-level statement (e.g. an object property of a call argument) and honours a
+		// svelte-ignore comment placed directly above that inner node, so for script
+		// warnings also walk up from the warning position.
+		// (Fixes sveltejs/eslint-plugin-svelte#1614.)
+		if (isScriptWarning && remainingWarning.has(warning)) {
+			const { start } = getWarningIndexes(warning);
+			if (start != null) {
+				let innerNode: ASTNodeWithParent | null = sourceCode.getNodeByRangeIndex(start) as
+					| (ASTNodeWithParent & { parent?: ASTNodeWithParent })
+					| null;
+				while (innerNode) {
+					if (checkComments(innerNode)) {
+						break;
+					}
+					if (innerNode.type === 'Program' || innerNode.type === 'SvelteScriptElement') {
+						break;
+					}
+					innerNode = innerNode.parent ?? null;
+				}
+			}
 		}
 	}
 
