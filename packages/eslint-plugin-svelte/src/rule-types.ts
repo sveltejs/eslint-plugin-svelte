@@ -418,6 +418,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/
    */
   'svelte/sort-attributes'?: Linter.RuleEntry<SvelteSortAttributes>
+	/**
+	 * enforce order of elements in Svelte scripts section
+	 * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-scripts-elements/
+	 */
+	'svelte/sort-scripts-sections'?: Linter.RuleEntry<SvelteSortScriptsElements>
   /**
    * enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment/
@@ -453,9 +458,9 @@ export interface RuleOptions {
 /* ======= Declarations ======= */
 // ----- svelte/@typescript-eslint/no-unnecessary-condition -----
 type SvelteTypescriptEslintNoUnnecessaryCondition = []|[{
-  
+
   allowConstantLoopConditions?: boolean
-  
+
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
 }]
 // ----- svelte/block-lang -----
@@ -478,7 +483,7 @@ type SvelteCommentDirective = []|[{
 // ----- svelte/consistent-selector-style -----
 type SvelteConsistentSelectorStyle = []|[{
   checkGlobal?: boolean
-  
+
   style?: []|[("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type")]|[("class" | "id" | "type"), ("class" | "id" | "type"), ("class" | "id" | "type")]
 }]
 // ----- svelte/first-attribute-linebreak -----
@@ -581,11 +586,11 @@ type SvelteNoReactiveReassign = []|[{
 }]
 // ----- svelte/no-restricted-html-elements -----
 type SvelteNoRestrictedHtmlElements = [(string | {
-  
+
   elements?: [string, ...(string)[]]
   message?: string
 }), ...((string | {
-  
+
   elements?: [string, ...(string)[]]
   message?: string
 }))[]]
@@ -601,7 +606,7 @@ type SvelteNoTrailingSpaces = []|[{
 }]
 // ----- svelte/no-unknown-style-directive-property -----
 type SvelteNoUnknownStyleDirectiveProperty = []|[{
-  
+
   ignoreProperties?: [string, ...(string)[]]
   ignorePrefixed?: boolean
 }]
@@ -656,6 +661,12 @@ type SvelteSortAttributes = []|[{
     sort: ("alphabetical" | "ignore")
   })[]
   alphabetical?: boolean
+}]
+// ----- svelte/sort-scripts-elements -----
+type SvelteSortScriptsElements = []|[{
+	order?: (string | [string, ...(string)[]] | {
+		match: (string | [string, ...(string)[]])
+	})[]
 }]
 // ----- svelte/spaced-html-comment -----
 type SvelteSpacedHtmlComment = []|[("always" | "never")]
