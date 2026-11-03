@@ -9,5 +9,4 @@
 <div {...rest} {components} bind:value />
 <div title="x" {...rest} style:color="red" />
 <div use:action {...rest} on:click={fn} />
-<div title="x" {...rest} {@attach fn} />
 <div c {...a} b {...b} {d} />
