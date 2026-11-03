@@ -29,6 +29,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          # Same version as the release build (Release.yml)
+          node-version: 26
       - name: Install Packages
         run: pnpm install --frozen-lockfile
       - name: Update resources
@@ -71,15 +74,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
-      - name: Setup Node.js ${{ matrix.node }}
+      # Build with the same Node.js version as the release build (Release.yml),
+      # then run the tests with the target Node.js version.
+      - name: Setup Node.js 26 for build
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 26
       - name: Install Packages
         run: pnpm install --frozen-lockfile
       - name: Build eslint-plugin-svelte
         run: pnpm build
         working-directory: ${{ env.project_root_path }}
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
       # Hack: Install `eslint-plugin-svelte` is necessary for `packages/eslint-plugin-svelte/tests/src/configs` tests.
       - name: Install eslint-plugin-svelte
         run: pnpm install -D eslint-plugin-svelte
