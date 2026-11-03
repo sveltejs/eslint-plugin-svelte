@@ -95,7 +95,14 @@ jobs:
         working-directory: ${{ env.project_root_path }}
       - name: Install ESLint ${{ matrix.eslint }}
         if: matrix.eslint != 9
-        run: pnpm install -D -w eslint@${{ matrix.eslint }}
+        # Install into the package as well. The package has its own auto-installed
+        # `eslint` peer, so installing only at the workspace root is not enough.
+        run: |
+          pnpm install -D -w eslint@${{ matrix.eslint }}
+          pnpm --filter eslint-plugin-svelte add -D eslint@${{ matrix.eslint }}
+      - name: Check ESLint version
+        run: node -p "'eslint ' + require('eslint/package.json').version"
+        working-directory: ${{ env.project_root_path }}
 
       - name: Test
         run: pnpm test
