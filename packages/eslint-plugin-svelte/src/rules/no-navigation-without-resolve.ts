@@ -1346,8 +1346,8 @@ class UrlEvaluator {
 	 * example of a prop or an imported constant) or by a literal value. A type that comes from a
 	 * function result is not declared.
 	 */
-	private hasDeclaredType(node: TSESTree.Node): boolean {
-		if (!this.tsTools) return false;
+	private hasDeclaredType(node: TSESTree.Node, depth = 0, asObject = false): boolean {
+		if (!this.tsTools || depth > MAX_DEPTH) return false;
 		const target = unwrapTypeScript(node as TSESTree.Expression);
 		if (target.type === 'MemberExpression') {
 			// The property of the object type (`obj[key]` would give the symbol of `key`).
@@ -1355,7 +1355,12 @@ class UrlEvaluator {
 			const object = this.tsTools.service.esTreeNodeToTSNodeMap.get(target.object as never);
 			if (key === null || !object) return false;
 			const type = this.checker().getTypeAtLocation(object);
-			return this.isDeclaredSymbol(this.checker().getApparentType(type).getProperty(key));
+			// The object itself must be declared too: `withBase(src).a` has the property symbol
+			// of `src.a`, but the value may differ.
+			return (
+				this.isDeclaredSymbol(this.checker().getApparentType(type).getProperty(key), 0, asObject) &&
+				this.hasDeclaredType(target.object, depth + 1, true)
+			);
 		}
 		if (target.type !== 'Identifier') return false;
 		const variable = findVariable(this.context, target);
@@ -1365,7 +1370,7 @@ class UrlEvaluator {
 		if (def === undefined) return false;
 		if (def.type === 'ImportBinding') {
 			const tsNode = this.tsTools.service.esTreeNodeToTSNodeMap.get(target as never) as TS.Node;
-			return this.isDeclaredSymbol(this.checker().getSymbolAtLocation(tsNode));
+			return this.isDeclaredSymbol(this.checker().getSymbolAtLocation(tsNode), 0, asObject);
 		}
 		if (def.type !== 'Parameter' && def.type !== 'Variable') return false;
 		const name = def.name as TSESTree.Identifier;
@@ -1384,9 +1389,27 @@ class UrlEvaluator {
 			property.parent.type === 'ObjectPattern'
 		) {
 			const key = getPropertyName(property, scopeOf(this.context, property));
-			const pattern = this.tsTools.service.esTreeNodeToTSNodeMap.get(property.parent as never);
+			const objectPattern = property.parent;
+			const pattern = this.tsTools.service.esTreeNodeToTSNodeMap.get(objectPattern as never);
 			const type = pattern ? this.checker().getTypeAtLocation(pattern) : null;
-			return key !== null && this.isDeclaredSymbol(type?.getProperty(key));
+			if (key === null || !this.isDeclaredSymbol(type?.getProperty(key), 0, asObject)) return false;
+			if (objectPattern.typeAnnotation) return true;
+			// `const { a } = links`: `links` must be declared too.
+			const declarator = objectPattern.parent;
+			return (
+				declarator?.type === 'VariableDeclarator' &&
+				declarator.init !== null &&
+				this.hasDeclaredType(declarator.init, depth + 1, true)
+			);
+		}
+		// `const src = { a: '/a' } as const`
+		if (def.type === 'Variable' && def.node.type === 'VariableDeclarator' && def.node.init) {
+			const init = this.tsTools.service.esTreeNodeToTSNodeMap.get(def.node.init as never);
+			return (
+				init !== undefined &&
+				name === def.node.id &&
+				this.isLiteralValue(init as TS.Expression, asObject)
+			);
 		}
 		return false;
 	}
@@ -1449,17 +1472,24 @@ class UrlEvaluator {
 	}
 
 	/** Whether a TypeScript expression is a literal (its type is what is written). */
-	private isLiteralValue(node: TS.Expression): boolean {
+	/**
+	 * @param asObject Only check that it is an object or array literal: its properties are
+	 * checked one by one.
+	 */
+	private isLiteralValue(node: TS.Expression, asObject = false): boolean {
 		const ts = this.tsTools!.ts;
 		let current = node;
 		while (ts.isParenthesizedExpression(current)) current = current.expression;
 		// `x satisfies T` keeps the type of `x`.
-		if (ts.isSatisfiesExpression(current)) return this.isLiteralValue(current.expression);
+		if (ts.isSatisfiesExpression(current)) return this.isLiteralValue(current.expression, asObject);
 		if (ts.isAsExpression(current)) {
 			// `x as const` keeps the type of `x`. `x as '/a'` declares it, `x as T` does not.
 			return ts.isConstTypeReference(current.type)
-				? this.isLiteralValue(current.expression)
+				? this.isLiteralValue(current.expression, asObject)
 				: this.isDeclaredTypeNode(current.type);
+		}
+		if (asObject) {
+			return ts.isObjectLiteralExpression(current) || ts.isArrayLiteralExpression(current);
 		}
 		// Every value inside must be written out too.
 		if (ts.isObjectLiteralExpression(current)) {
@@ -1483,7 +1513,7 @@ class UrlEvaluator {
 	}
 
 	/** Whether every declaration of the symbol has a type annotation or a literal value. */
-	private isDeclaredSymbol(symbol: TS.Symbol | undefined, depth = 0): boolean {
+	private isDeclaredSymbol(symbol: TS.Symbol | undefined, depth = 0, asObject = false): boolean {
 		if (depth > MAX_DEPTH) return false;
 		const ts = this.tsTools!.ts;
 		let target = symbol;
@@ -1503,12 +1533,12 @@ class UrlEvaluator {
 					if (declaration.type) return this.isDeclaredTypeNode(declaration.type, depth + 1);
 					const initializer =
 						'initializer' in declaration ? (declaration.initializer as TS.Expression) : undefined;
-					return initializer !== undefined && this.isLiteralValue(initializer);
+					return initializer !== undefined && this.isLiteralValue(initializer, asObject);
 				}
 				// `{ a: '/a' }`, but not `f({ a: '/a' })`, whose result may differ.
 				if (ts.isPropertyAssignment(declaration)) {
 					return (
-						this.isLiteralValue(declaration.initializer) &&
+						this.isLiteralValue(declaration.initializer, asObject) &&
 						this.isWrittenOutLiteral(declaration.parent)
 					);
 				}
@@ -2263,6 +2293,8 @@ export default createRule('no-navigation-without-resolve', {
 			if (!isKit3) return segments;
 			// SvelteKit 3: pathnames are written without the leading slash (`/` stays as the root route ID).
 			if (fn === 'resolve' && first.value === '/' && rest.length === 0) return segments;
+			// `/${slug}` would become `${slug}`, which is the root when `slug` is empty.
+			if (first.value === '/' && rest.length > 0) return null;
 			return [{ type: 'text', value: first.value.slice(1) }, ...rest];
 		}
 

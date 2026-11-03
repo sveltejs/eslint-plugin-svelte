@@ -29,3 +29,9 @@ export const LOGIN = withBase('/login') satisfies string;
 export const M = { about: withBase('/about') satisfies string };
 export const WRITTEN = [{ label: 'Docs', href: '/docs' }] as const;
 export type WrittenItem = (typeof WRITTEN)[number];
+export const src = { a: '/src-a' } as const;
+export function wrap<T extends Record<string, string>>(o: T): T {
+	return localize(o);
+}
+export const wrapped = wrap(src);
+export default wrap(src);

@@ -10,6 +10,7 @@
 	goto(TYPED);
 	goto(LINKS.a);
 
+	// `data` comes from a function result (`load`), so its literal types are not trusted.
 	let { data }: { data: ReturnType<typeof load> } = $props();
 	goto(data.next);
 	goto(data.plain);
