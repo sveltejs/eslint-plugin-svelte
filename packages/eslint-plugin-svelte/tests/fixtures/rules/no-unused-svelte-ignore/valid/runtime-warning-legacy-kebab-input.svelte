@@ -9,3 +9,6 @@
 
 <!-- svelte-ignore hydration-attribute-changed -->
 <img src={html} alt="" />
+
+<!-- svelte-ignore hydration_html_changed hydration-attribute-changed -->
+<img src={html} alt="" />

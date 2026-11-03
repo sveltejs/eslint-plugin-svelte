@@ -53,6 +53,8 @@ export type SvelteCompileWarnings = {
 	unusedIgnores: IgnoreItem[];
 	kind: 'warn' | 'error';
 	stripStyleElements: AST.SvelteStyleElement[];
+	/** Whether the Svelte v5 compiler compiled the component in runes mode. */
+	runes?: boolean;
 };
 export type Loc = {
 	start?: {
@@ -134,7 +136,8 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 				context
 			),
 			kind: warnings.kind,
-			stripStyleElements
+			stripStyleElements,
+			runes: warnings.runes
 		};
 	}
 
@@ -308,7 +311,8 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	return {
 		...processIgnore(warnings, baseWarnings.kind, stripStyleElements, ignoreComments, context),
 		kind: baseWarnings.kind,
-		stripStyleElements
+		stripStyleElements,
+		runes: baseWarnings.runes
 	};
 }
 
@@ -407,6 +411,7 @@ function getWarningsFromCode(
 ): {
 	warnings: Warning[];
 	kind: 'warn' | 'error';
+	runes?: boolean;
 } {
 	try {
 		const svelteConfig = context.sourceCode.parserServices.svelteParseContext?.svelteConfig;
@@ -423,7 +428,12 @@ function getWarningsFromCode(
 			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
 
-		return { warnings: result.warnings as Warning[], kind: 'warn' };
+		return {
+			warnings: result.warnings as Warning[],
+			kind: 'warn',
+			// `metadata.runes` exists only in Svelte v5.
+			runes: (result as { metadata?: { runes?: boolean } }).metadata?.runes
+		};
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
 	} catch (e: any) {
 		return {

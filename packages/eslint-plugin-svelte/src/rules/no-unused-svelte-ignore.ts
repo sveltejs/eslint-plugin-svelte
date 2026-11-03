@@ -50,7 +50,9 @@ export default createRule('no-unused-svelte-ignore', {
 			return {};
 		}
 
-		const runes = sourceCode.parserServices.svelteParseContext?.runes;
+		// The parser knows `svelte.config.js` and `<svelte:options>`,
+		// and the compiler also turns on runes mode for top-level `await`.
+		const runes = Boolean(sourceCode.parserServices.svelteParseContext?.runes || warnings.runes);
 		for (const unused of warnings.unusedIgnores) {
 			if (unused.code === 'reactive-component' && semver.satisfies(SVELTE_VERSION, '<5')) {
 				// Svelte v4 `reactive-component` warnings are not emitted
@@ -60,12 +62,8 @@ export default createRule('no-unused-svelte-ignore', {
 				// See https://github.com/sveltejs/eslint-plugin-svelte/issues/1192
 				continue;
 			}
-			if (
-				RUNTIME_WARNING_CODES.has(runes === false ? unused.codeForV5 : unused.code) &&
-				semver.satisfies(SVELTE_VERSION, '>=5')
-			) {
-				// In runes mode, Svelte does not accept the kebab-case form
-				// (e.g. `ownership-invalid-binding`), so that comment does nothing.
+			if (semver.satisfies(SVELTE_VERSION, '>=5') && isRuntimeWarningIgnore(unused, runes)) {
+				// The compiler never reports runtime warnings, so we can't tell whether the comment is used.
 				continue;
 			}
 			context.report({
@@ -79,3 +77,13 @@ export default createRule('no-unused-svelte-ignore', {
 		return {};
 	}
 });
+
+/** Checks whether the given item ignores a runtime warning that Svelte v5 accepts */
+function isRuntimeWarningIgnore(item: IgnoreItem, runes: boolean): boolean {
+	if (runes) {
+		// In runes mode, Svelte reads only comma-separated codes,
+		// and does not accept the kebab-case form (e.g. `ownership-invalid-binding`).
+		return item.readInRunesMode && RUNTIME_WARNING_CODES.has(item.code);
+	}
+	return RUNTIME_WARNING_CODES.has(item.codeForV5);
+}

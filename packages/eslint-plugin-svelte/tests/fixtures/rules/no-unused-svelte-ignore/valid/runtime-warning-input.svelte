@@ -15,6 +15,12 @@
 <!-- svelte-ignore ownership_invalid_binding -->
 <Child bind:value />
 
+<!-- svelte-ignore ownership_invalid_binding (the parent owns this value) -->
+<Child bind:value />
+
+<!-- svelte-ignore a11y_autofocus, binding_property_non_reactive -->
+<input bind:value={obj.name} autofocus />
+
 <!-- svelte-ignore binding_property_non_reactive -->
 <input bind:value={obj.name} />
 
