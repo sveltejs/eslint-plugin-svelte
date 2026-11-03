@@ -156,6 +156,8 @@ export default createRule('no-unused-props', {
 						(typeof property.value === 'string' || typeof property.value === 'number')
 					) {
 						paths.push(String(property.value));
+					} else if (property.type === 'TemplateLiteral' && property.expressions.length === 0) {
+						paths.push(property.quasis[0].value.cooked ?? property.quasis[0].value.raw);
 					} else if (parentNode.computed && property.type !== 'Literal') {
 						// A dynamic key like `obj[key]` may read any property of `obj`.
 						break;
