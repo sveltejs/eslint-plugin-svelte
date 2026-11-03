@@ -456,9 +456,7 @@ function expandReference(
 	const binding = variable.identifiers[0];
 	const values =
 		binding.parent.type === 'VariableDeclarator'
-			? binding.parent.init === null
-				? null
-				: [binding.parent.init]
+			? variableValues(variable)
 			: eachItemValues(ctx, binding);
 	if (values === null) {
 		return null;
@@ -507,17 +505,6 @@ function eachItemValues(
 }
 
 // Helper functions
-
-function resolveBindingIdentifier(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier
-): TSESTree.Identifier | null {
-	const variable = ctx.findVariable(node);
-	if (variable === null || variable.identifiers.length === 0) {
-		return null;
-	}
-	return variable.identifiers[0];
-}
 
 /**
  * Resolve an `{#each array as context}` iteration variable to the iterated array and the
@@ -755,11 +742,43 @@ function resolveVariableInit(
 	ctx: FindVariableContext,
 	node: TSESTree.Identifier
 ): TSESTree.Expression | null {
-	const binding = resolveBindingIdentifier(ctx, node);
-	if (binding === null || binding.parent.type !== 'VariableDeclarator') {
+	const variable = ctx.findVariable(node);
+	if (variable === null || variable.identifiers.length === 0) {
 		return null;
 	}
-	return binding.parent.init;
+	const values = variableValues(variable);
+	return values?.length === 1 ? values[0] : null;
+}
+
+/**
+ * The values that a variable can hold: its initializer and the right-hand side of each `=` assignment to it. Returns null if the variable has no initializer, or if it is written to in any other way (e.g. `+=`, `++`, destructuring or `bind:`), because its value then cannot be statically resolved.
+ */
+function variableValues(variable: Variable): TSESTree.Expression[] | null {
+	const binding = variable.identifiers[0];
+	if (
+		variable.defs.length !== 1 ||
+		variable.defs[0].type !== 'Variable' ||
+		binding.parent.type !== 'VariableDeclarator' ||
+		binding.parent.init === null
+	) {
+		return null;
+	}
+	const values = [binding.parent.init];
+	for (const reference of variable.references) {
+		if (reference.init === true || reference.isReadOnly()) {
+			continue;
+		}
+		const parent = reference.identifier.parent;
+		if (
+			parent.type !== 'AssignmentExpression' ||
+			parent.operator !== '=' ||
+			parent.left !== reference.identifier
+		) {
+			return null;
+		}
+		values.push(parent.right);
+	}
+	return values;
 }
 
 /**

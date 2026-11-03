@@ -1,0 +1,28 @@
+- message: Unexpected goto() call without resolve().
+  line: 10
+  column: 7
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 14
+  column: 7
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 18
+  column: 7
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 22
+  column: 7
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 26
+  column: 8
+  suggestions: null
+- message: Unexpected goto() call without resolve().
+  line: 31
+  column: 7
+  suggestions: null
+- message: Unexpected href link without resolve().
+  line: 37
+  column: 4
+  suggestions: null
