@@ -87,9 +87,10 @@ type LocalFunction =
  * - `none`: something not shared with the value, e.g. `v.includes(x)` or `JSON.stringify(v)`.
  * - `self`: the value itself, e.g. `v.sort()`.
  * - `part`: a part of the value, e.g. `v.find(f)`.
+ * - `shared`: something shared with the value at any depth, e.g. `v.reduce(f)`.
  * - `newContainer`: a new array or object whose elements are shared with the value, e.g. `v.slice()`.
  */
-type Result = 'none' | 'self' | 'part' | 'newContainer';
+type Result = 'none' | 'self' | 'part' | 'shared' | 'newContainer';
 
 type MethodInfo = {
 	result: Result;
@@ -136,8 +137,8 @@ const ARRAY_METHODS: [string, MethodInfo][] = [
 	['pop', { result: 'part', mutates: true }],
 	['push', { result: 'none', mutates: true, args: 'stored' }],
 	// The result may be the returned value of the callback.
-	['reduce', { result: 'self', callback: 'reduce' }],
-	['reduceRight', { result: 'self', callback: 'reduce' }],
+	['reduce', { result: 'shared', callback: 'reduce' }],
+	['reduceRight', { result: 'shared', callback: 'reduce' }],
 	['reverse', { result: 'self', mutates: true }],
 	['shift', { result: 'part', mutates: true }],
 	['slice', { result: 'newContainer' }],
@@ -364,6 +365,28 @@ function isComponentElement(element: AnyNode | null | undefined): boolean {
 		(element.kind === 'special' &&
 			(element.name.name === 'svelte:component' || element.name.name === 'svelte:self'))
 	);
+}
+
+/** Checks whether the node is a target of an assignment, e.g. `a.b` in `a.b = 1` or `[a.b] = x`. */
+function isWriteTarget(node: TSESTree.Node): boolean {
+	const parent = node.parent as AnyNode | null;
+	switch (parent?.type) {
+		case 'AssignmentExpression':
+		case 'AssignmentPattern':
+		case 'ForInStatement':
+		case 'ForOfStatement':
+			return parent.left === node;
+		case 'ArrayPattern':
+		case 'RestElement':
+		case 'UpdateExpression':
+			return true;
+		case 'Property':
+			return parent.parent?.type === 'ObjectPattern' && parent.value === node;
+		case 'UnaryExpression':
+			return parent.operator === 'delete';
+		default:
+			return false;
+	}
 }
 
 function isExportDeclaration(node: AnyNode | null | undefined): boolean {
@@ -594,12 +617,10 @@ function createDeepMutationChecker(context: RuleContext) {
 				}
 				const name = getPropertyName(member, getScope(context, member));
 				if (name != null && /^\d+$/u.test(name)) return true;
-				// e.g. `a[i] = x`
-				if (name == null) return member.computed;
+				// e.g. `a[i]`. Writing with an unknown key may add a method.
+				if (name == null) return !isWriteTarget(member);
 				// e.g. `a.push(x)` or `a.length`
-				const isAssigned =
-					member.parent?.type === 'AssignmentExpression' && member.parent.left === member;
-				return !isAssigned && (name === 'length' || METHODS.has(name));
+				return !isWriteTarget(member) && (name === 'length' || METHODS.has(name));
 			});
 			builtinArrays.set(variable, result);
 		}
@@ -820,7 +841,20 @@ function createDeepMutationChecker(context: RuleContext) {
 		if (node.type !== 'Identifier') return false;
 		const def = findVariable(node)?.defs[0];
 		const call = fn.parent as AnyNode | null;
-		if (def?.type !== 'Parameter' || def.node !== fn || call?.type !== 'CallExpression') {
+		const variable = findVariable(node);
+		if (
+			def?.type !== 'Parameter' ||
+			def.node !== fn ||
+			call?.type !== 'CallExpression' ||
+			// e.g. `(item = v) => item` or `({ a } = { a: v }) => a`. It gets other values, too.
+			!(fn.params as TSESTree.Node[]).includes(def.name as TSESTree.Node) ||
+			// e.g. `(item) => { item = v; return item; }`
+			variable!.references.some((reference) => reference.isWrite() && !reference.init) ||
+			// e.g. `function f(item) { f(v); }`. It can be called by its name, too.
+			(fn.type === 'FunctionExpression' &&
+				fn.id != null &&
+				(findVariable(fn.id)?.references.length ?? 0) > 0)
+		) {
 			return false;
 		}
 		const index = call.arguments.indexOf(fn as TSESTree.CallExpressionArgument);
@@ -930,7 +964,14 @@ function createDeepMutationChecker(context: RuleContext) {
 	function isReturnedValueMutated(fn: LocalFunction, mode: Mode): boolean {
 		if (fn.type === 'SvelteSnippetBlock') return false;
 		return withCache(fn, `return:${mode}`, () => {
-			if (fn.type !== 'FunctionDeclaration') return isFunctionResultMutated(fn, mode);
+			if (fn.type !== 'FunctionDeclaration') {
+				// e.g. `const f = function g() { g().a = 1; }`
+				const inner = fn.type === 'FunctionExpression' && fn.id ? findVariable(fn.id) : null;
+				return (
+					(inner != null && isFunctionVariableResultMutated(inner, mode)) ||
+					isFunctionResultMutated(fn, mode)
+				);
+			}
 			if (isExportDeclaration(fn.parent)) return true;
 			const variable = fn.id && findVariable(fn.id);
 			return variable == null || isFunctionVariableResultMutated(variable, mode);
@@ -972,6 +1013,19 @@ function createDeepMutationChecker(context: RuleContext) {
 		let isWritable = mode === 'eachItem';
 		// When `node` is `object.property`: the name of the property and the depth of `object`.
 		let member: { property: string | null; objectDepth: number } | null = null;
+
+		/**
+		 * Whether `node` is a property that may be called as a method with the object as `this`,
+		 * e.g. `copy.map` or `copy.toString`. Methods with built-in names are trusted.
+		 */
+		function isMethodProperty() {
+			return (
+				member != null &&
+				(member.property == null ||
+					METHODS.has(member.property) ||
+					PROTOCOL_PROPERTIES.has(member.property))
+			);
+		}
 
 		function moveTo(next: TSESTree.Node, nextDepth: number) {
 			node = next;
@@ -1057,7 +1111,13 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (info.result === 'none') return false;
 						moveTo(
 							parent,
-							info.result === 'self' ? objectDepth : info.result === 'part' ? objectDepth - 1 : 1
+							info.result === 'self'
+								? objectDepth
+								: info.result === 'part'
+									? objectDepth - 1
+									: info.result === 'shared'
+										? 0
+										: 1
 						);
 						continue;
 					}
@@ -1125,15 +1185,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (parent.left === node) {
 						// e.g. `copy.forEach = fn`. It may be called with the object as `this`,
 						// since methods with built-in names are trusted.
-						if (
-							member &&
-							!isPrimitive(parent.right) &&
-							(member.property == null ||
-								METHODS.has(member.property) ||
-								PROTOCOL_PROPERTIES.has(member.property))
-						) {
-							return true;
-						}
+						if (isMethodProperty() && !isPrimitive(parent.right)) return true;
 						return isWritable;
 					}
 					// e.g. `a += v`. The result is a primitive.
@@ -1181,7 +1233,7 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'Property':
 					if (parent.parent?.type === 'ObjectPattern') {
 						// e.g. `({ a: v.a } = x)`
-						return parent.value === node && isWritable;
+						return parent.value === node && (isWritable || isMethodProperty());
 					}
 					// e.g. `({ [v]: 1 })`
 					if (parent.value !== node) return false;
@@ -1196,14 +1248,14 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'ArrayPattern':
 				case 'RestElement':
 					// e.g. `[v.a] = x`
-					return isWritable;
+					return isWritable || isMethodProperty();
 				case 'AssignmentPattern':
-					if (parent.left === node) return isWritable;
+					if (parent.left === node) return isWritable || isMethodProperty();
 					// e.g. `const { a = v } = x`
 					return isPatternMutated(parent.left, toMode(depth));
 				case 'ForOfStatement':
 				case 'ForInStatement':
-					if (parent.left === node) return isWritable;
+					if (parent.left === node) return isWritable || isMethodProperty();
 					if (parent.type === 'ForInStatement') return false;
 					// e.g. `for (const item of v)`
 					return isPatternMutated(
