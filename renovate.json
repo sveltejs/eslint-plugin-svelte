@@ -8,6 +8,12 @@
 		{
 			"depTypeList": ["devDependencies"],
 			"automerge": true
+		},
+		{
+			"description": "Keep @types/node on a major we support. Newer types allow APIs that older Node.js versions do not have.",
+			"matchPackageNames": ["@types/node"],
+			"matchUpdateTypes": ["major"],
+			"enabled": false
 		}
 	]
 }
