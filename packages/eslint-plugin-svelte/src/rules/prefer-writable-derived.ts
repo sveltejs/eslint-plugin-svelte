@@ -929,7 +929,11 @@ function createDeepMutationChecker(context: RuleContext) {
 				return fn == null || isParamMutated(fn, 0, resultMode) || isValueMutated(call, resultMode);
 			}
 			case 'other':
-				return false;
+				// e.g. `a.sort(() => ({ ...v }))` converts the result with `valueOf`.
+				return (
+					mode === 'object' &&
+					['sort', 'toSorted'].includes(getPropertyName(callee, getScope(context, callee)) ?? '')
+				);
 			default:
 				return true;
 		}
@@ -1217,7 +1221,8 @@ function createDeepMutationChecker(context: RuleContext) {
 							moveTo(parent, 1);
 							continue;
 						}
-						return false;
+						// e.g. `a.join({ ...v })` converts it with `toString`.
+						return isObject;
 					}
 					// e.g. `fn(v)` or `{@render snippet(v)}`
 					return isArgumentMutated(parent, index, getMode(), false);
@@ -1235,7 +1240,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					}
 					if (!isFunction(fn)) return true;
 					// e.g. `v.map((item) => item.a)`. The result is followed from `v`.
-					if (isCallbackParamOfBuiltinMethod(expression, fn)) return false;
+					if (!isObject && isCallbackParamOfBuiltinMethod(expression, fn)) return false;
 					return isReturnedValueMutated(fn, getMode());
 				}
 				case 'AssignmentExpression':
@@ -1245,8 +1250,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (isMethodProperty() && !isPrimitive(parent.right)) return true;
 						return isWritable;
 					}
-					// e.g. `a += v`. The result is a primitive.
-					if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return false;
+					// e.g. `a += v`. The result is a primitive, but a new object is converted with `valueOf`.
+					if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return isObject;
 					// e.g. `a = v`
 					if (isPatternMutated(parent.left, getMode())) return true;
 					moveTo(parent, depth, isObject);
@@ -1267,6 +1272,9 @@ function createDeepMutationChecker(context: RuleContext) {
 				}
 				case 'SvelteShorthandAttribute':
 					return isObject || isAttributeEscaping(parent);
+				case 'SvelteSpecialDirective':
+					// e.g. `<svelte:element this={{ ...v }}>` converts it with `toString`.
+					return isObject;
 				case 'BinaryExpression':
 					// e.g. `{ ...v } + ''` calls `toString` of the object.
 					return (
@@ -1286,7 +1294,6 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'SwitchCase':
 				case 'TSTypeQuery':
 				case 'TSQualifiedName':
-				case 'SvelteSpecialDirective':
 				case 'SvelteStyleDirective':
 				case 'SvelteIfBlock':
 				case 'SvelteKeyBlock':
@@ -1301,8 +1308,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `({ a: v.a } = x)`
 						return parent.value === node && (isWritable || isMethodProperty());
 					}
-					// e.g. `({ [v]: 1 })`
-					if (parent.value !== node) return false;
+					// e.g. `({ [v]: 1 })`. A new object is converted to a key with `toString`.
+					if (parent.value !== node) return isObject;
 					// e.g. `({ a: { ...v } })`. A new object in another container is not followed.
 					if (isObject) return true;
 					// e.g. `({ a: v })`. Methods of the object may get it as `this`.
