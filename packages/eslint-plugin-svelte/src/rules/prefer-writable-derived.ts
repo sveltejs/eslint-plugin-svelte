@@ -400,11 +400,15 @@ function isExportDeclaration(node: AnyNode | null | undefined): boolean {
  * - `1`: a new array or object whose elements are shared, e.g. `v.slice()` or `[...v]`.
  * - `2`: a new container of such containers.
  * - `eachItem`: an `{#each}` item. Like `0`, and assigning to it also mutates the array.
+ * - `object`: a new object literal (e.g. `{ ...v }` or `{ a: v }`). Like `1`, but it may also have
+ *   functions from other objects, so its methods and conversions (e.g. `toString`) may change it.
  */
-type Mode = 0 | 1 | 2 | 'eachItem';
+type Mode = 0 | 1 | 2 | 'eachItem' | 'object';
 
 function toDepth(mode: Mode): number {
-	return mode === 'eachItem' ? 0 : mode;
+	if (mode === 'eachItem') return 0;
+	if (mode === 'object') return 1;
+	return mode;
 }
 
 /** Converts a depth to a mode. Deeper values are treated as `2`, which is safe. */
@@ -499,6 +503,13 @@ function createDeepMutationChecker(context: RuleContext) {
 	): Result | null {
 		const name = getGlobalName(callee);
 		if (name == null) return null;
+		// e.g. `JSON.stringify(...args)`. We can't know which argument is the callback.
+		if (
+			(name === 'JSON.stringify' || name === 'Array.from') &&
+			call?.arguments.some((arg) => arg.type === 'SpreadElement')
+		) {
+			return null;
+		}
 		// e.g. `JSON.stringify(v, (key, value) => ...)`. The replacer gets parts of the value.
 		if (name === 'JSON.stringify' && call && call.arguments.length >= 2) {
 			const replacer = unwrapTS(call.arguments[1]);
@@ -619,8 +630,15 @@ function createDeepMutationChecker(context: RuleContext) {
 				if (name != null && /^\d+$/u.test(name)) return true;
 				// e.g. `a[i]`. Writing with an unknown key may add a method.
 				if (name == null) return !isWriteTarget(member);
-				// e.g. `a.push(x)` or `a.length`
-				return !isWriteTarget(member) && (name === 'length' || METHODS.has(name));
+				if (isWriteTarget(member)) return false;
+				// e.g. `a.length`
+				if (name === 'length') return true;
+				// e.g. `a.push(x)`
+				const call = member.parent;
+				const info = METHODS.get(name);
+				if (!info || call?.type !== 'CallExpression' || call.callee !== member) return false;
+				// e.g. `a.sort().map = fn`. The result is the array itself.
+				return info.result !== 'self' || call.parent?.type === 'ExpressionStatement';
 			});
 			builtinArrays.set(variable, result);
 		}
@@ -655,7 +673,14 @@ function createDeepMutationChecker(context: RuleContext) {
 	function isStoredValueMutated(container: TSESTree.Node, mode: Mode): boolean {
 		// We follow only new local arrays and objects. Others may be shared with any code.
 		const variable = getNewContainerVariable(container);
-		return variable == null || isVariableMutated(variable, toMode(toDepth(mode) + 1));
+		// e.g. `a.b = { ...v }`. We don't follow new objects in other containers.
+		if (variable == null || mode === 'object') return true;
+		const def = variable.defs[0];
+		const isObject =
+			def.type === 'Variable' &&
+			def.node.init != null &&
+			unwrapTS(def.node.init).type === 'ObjectExpression';
+		return isVariableMutated(variable, isObject ? 'object' : toMode(toDepth(mode) + 1));
 	}
 
 	/** Checks the variables declared by the pattern, which get the object or a part of it. */
@@ -673,9 +698,12 @@ function createDeepMutationChecker(context: RuleContext) {
 				return pattern.properties.some((property) =>
 					property.type === 'Property'
 						? isPatternMutated(property.value, partMode)
-						: isPatternMutated(property.argument, restMode)
+						: // e.g. `const { ...rest } = v`. A new object.
+							isPatternMutated(property.argument, 'object')
 				);
 			case 'ArrayPattern':
+				// e.g. `const [a] = { ...v }`. It calls the iterator of the object.
+				if (mode === 'object') return true;
 				return pattern.elements.some(
 					(element) =>
 						element != null &&
@@ -814,7 +842,7 @@ function createDeepMutationChecker(context: RuleContext) {
 		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return true;
 		const fn = getLocalFunction(call.callee);
 		if (!fn) return true;
-		if (!spread) return isParamMutated(fn, index, toMode(toDepth(mode)));
+		if (!spread) return isParamMutated(fn, index, mode === 'eachItem' ? 0 : mode);
 		// e.g. `fn(...v)`. The parameters from there get the elements.
 		const elementMode = toMode(toDepth(mode) - 1);
 		return fn.params.some((_, i) => i >= index && isParamMutated(fn, i, elementMode));
@@ -827,7 +855,7 @@ function createDeepMutationChecker(context: RuleContext) {
 		const withCall = member.parent;
 		if (withCall?.type !== 'CallExpression' || withCall.callee !== member) return true;
 		return withCall.arguments.some((arg) =>
-			isCallbackParamMutated(arg, (index) => (index >= 1 ? toMode(toDepth(mode)) : null))
+			isCallbackParamMutated(arg, (index) => (index >= 1 ? (mode === 'eachItem' ? 0 : mode) : null))
 		);
 	}
 
@@ -881,20 +909,24 @@ function createDeepMutationChecker(context: RuleContext) {
 			if (IGNORE_RETURN_FUNCTIONS.has(name)) return false;
 		}
 		// e.g. `Array.from(v, (item) => item)`
-		if (index === 1 && name === 'Array.from') return isValueMutated(call, toMode(depth + 1));
+		if (index === 1 && name === 'Array.from') {
+			return mode === 'object' || isValueMutated(call, toMode(depth + 1));
+		}
 		const callee = unwrapTS(call.callee);
 		if (index !== 0 || callee.type !== 'MemberExpression' || !isBuiltinReceiver(callee.object)) {
 			return true;
 		}
 		switch (getMethodInfo(callee)?.callback) {
+			// A new object in another container is not followed.
 			case 'map':
-				return isValueMutated(call, toMode(depth + 1));
+				return mode === 'object' || isValueMutated(call, toMode(depth + 1));
 			case 'flatMap':
-				return isValueMutated(call, 1);
+				return mode === 'object' || isValueMutated(call, 1);
 			case 'reduce': {
 				// The returned value becomes the next accumulator and the result.
 				const fn = getLocalFunction(call.arguments[0]);
-				return fn == null || isParamMutated(fn, 0, 0) || isValueMutated(call, 0);
+				const resultMode = mode === 'object' ? 'object' : 0;
+				return fn == null || isParamMutated(fn, 0, resultMode) || isValueMutated(call, resultMode);
 			}
 			case 'other':
 				return false;
@@ -1011,8 +1043,16 @@ function createDeepMutationChecker(context: RuleContext) {
 		let depth = toDepth(mode);
 		// Whether assigning to `node` mutates the object, e.g. `v.a` or an `{#each}` item.
 		let isWritable = mode === 'eachItem';
-		// When `node` is `object.property`: the name of the property and the depth of `object`.
-		let member: { property: string | null; objectDepth: number } | null = null;
+		// Whether `node` is a new object literal (the `object` mode).
+		let isObject = mode === 'object';
+		// When `node` is `object.property`: the name of the property, the depth of `object`
+		// and whether `object` is a new object literal.
+		let member: { property: string | null; objectDepth: number; isObject: boolean } | null = null;
+
+		/** The mode of a value that gets `node`. */
+		function getMode(): Mode {
+			return isObject ? 'object' : toMode(depth);
+		}
 
 		/**
 		 * Whether `node` is a property that may be called as a method with the object as `this`,
@@ -1027,11 +1067,12 @@ function createDeepMutationChecker(context: RuleContext) {
 			);
 		}
 
-		function moveTo(next: TSESTree.Node, nextDepth: number) {
+		function moveTo(next: TSESTree.Node, nextDepth: number, nextIsObject = false) {
 			node = next;
 			depth = toDepth(toMode(nextDepth));
 			isWritable = false;
 			member = null;
+			isObject = nextIsObject;
 		}
 
 		while (node.parent) {
@@ -1047,23 +1088,32 @@ function createDeepMutationChecker(context: RuleContext) {
 					continue;
 				case 'AwaitExpression':
 				case 'LogicalExpression':
+					// e.g. `await { ...v }` calls `then` of the object.
+					if (parent.type === 'AwaitExpression' && isObject) return true;
 					// e.g. `(v || x).a = 1`
-					moveTo(parent, depth);
+					moveTo(parent, depth, isObject);
 					continue;
 				case 'ConditionalExpression':
 					if (parent.test === node) return false;
-					moveTo(parent, depth);
+					moveTo(parent, depth, isObject);
 					continue;
 				case 'SequenceExpression':
 					if (parent.expressions[parent.expressions.length - 1] !== node) return false;
-					moveTo(parent, depth);
+					moveTo(parent, depth, isObject);
 					continue;
 				case 'SpreadElement': {
 					const container = parent.parent as AnyNode;
-					if (container.type === 'ArrayExpression' || container.type === 'ObjectExpression') {
-						// e.g. `[...v]` or `{ ...v }`. A new container whose elements are shared.
-						if (!isPlainLiteral(container as TSESTree.Node)) return true;
-						moveTo(container as TSESTree.Node, 1);
+					if (container.type === 'ObjectExpression') {
+						// e.g. `{ ...v }`. A new object whose properties are shared.
+						if (!isPlainLiteral(container)) return true;
+						moveTo(container, 1, true);
+						continue;
+					}
+					// e.g. `[...{ ...v }]` calls the iterator of the object.
+					if (isObject) return true;
+					if (container.type === 'ArrayExpression') {
+						// e.g. `[...v]`. A new array whose elements are shared.
+						moveTo(container, 1);
 						continue;
 					}
 					if (container.type !== 'CallExpression') return true;
@@ -1075,15 +1125,17 @@ function createDeepMutationChecker(context: RuleContext) {
 						moveTo(container, 1);
 						continue;
 					}
-					return isArgumentMutated(container, index, toMode(depth), true);
+					return isArgumentMutated(container, index, getMode(), true);
 				}
 				case 'MemberExpression':
-					// e.g. `x[v]`
-					if (parent.object !== node) return false;
+					// e.g. `x[v]`. A new object is converted to a key with `toString`.
+					if (parent.object !== node) return isObject;
 					member = {
 						property: getPropertyName(parent, getScope(context, parent)),
-						objectDepth: depth
+						objectDepth: depth,
+						isObject
 					};
+					isObject = false;
 					isWritable = depth === 0;
 					depth = Math.max(depth - 1, 0);
 					node = parent;
@@ -1093,6 +1145,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `v()`. It doesn't get the object as `this`.
 						if (!member) return false;
 						const { property, objectDepth } = member;
+						// e.g. `({ ...v }).map()`. A new object may have any function.
+						if (member.isObject) return true;
 						const info = property == null ? null : METHODS.get(property);
 						// It may be a function stored in the object, which may mutate it.
 						if (!info) return true;
@@ -1125,10 +1179,12 @@ function createDeepMutationChecker(context: RuleContext) {
 					const name = getGlobalName(parent.callee);
 					if (name != null && PASS_THROUGH_RUNES.has(name) && index === 0) {
 						// e.g. `const a = $derived(v)`
-						moveTo(parent, depth);
+						moveTo(parent, depth, isObject);
 						continue;
 					}
-					if (name === '$inspect') return isInspectMutated(parent, toMode(depth));
+					// e.g. `String({ ...v })` calls `toString` of the object.
+					if (isObject && name != null) return true;
+					if (name === '$inspect') return isInspectMutated(parent, getMode());
 					const result = getGlobalFunctionResult(parent.callee, parent);
 					if (result === 'none') return false;
 					if (result === 'newContainer' && index === 0) {
@@ -1154,8 +1210,9 @@ function createDeepMutationChecker(context: RuleContext) {
 						// Other arguments of them (e.g. `thisArg`) may be passed to the callback.
 						if (info.callback) return index !== 0;
 						// e.g. `a.push(v)`
-						if (info.args === 'stored') return isStoredValueMutated(callee.object, toMode(depth));
+						if (info.args === 'stored') return isStoredValueMutated(callee.object, getMode());
 						if (info.args === 'container') {
+							if (isObject) return true;
 							// e.g. `a.concat(v)`
 							moveTo(parent, 1);
 							continue;
@@ -1163,11 +1220,11 @@ function createDeepMutationChecker(context: RuleContext) {
 						return false;
 					}
 					// e.g. `fn(v)` or `{@render snippet(v)}`
-					return isArgumentMutated(parent, index, toMode(depth), false);
+					return isArgumentMutated(parent, index, getMode(), false);
 				}
 				case 'NewExpression':
 					// e.g. `new Date(v)`
-					return parent.callee !== node && getGlobalName(parent.callee) !== 'Date';
+					return parent.callee !== node && (isObject || getGlobalName(parent.callee) !== 'Date');
 				case 'ReturnStatement':
 				case 'ArrowFunctionExpression': {
 					if (parent.type === 'ArrowFunctionExpression' && parent.body !== node) return false;
@@ -1179,7 +1236,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (!isFunction(fn)) return true;
 					// e.g. `v.map((item) => item.a)`. The result is followed from `v`.
 					if (isCallbackParamOfBuiltinMethod(expression, fn)) return false;
-					return isReturnedValueMutated(fn, toMode(depth));
+					return isReturnedValueMutated(fn, getMode());
 				}
 				case 'AssignmentExpression':
 					if (parent.left === node) {
@@ -1191,26 +1248,35 @@ function createDeepMutationChecker(context: RuleContext) {
 					// e.g. `a += v`. The result is a primitive.
 					if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return false;
 					// e.g. `a = v`
-					if (isPatternMutated(parent.left, toMode(depth))) return true;
-					moveTo(parent, depth);
+					if (isPatternMutated(parent.left, getMode())) return true;
+					moveTo(parent, depth, isObject);
 					continue;
 				case 'UpdateExpression':
 					return isWritable;
 				case 'UnaryExpression':
-					return parent.operator === 'delete' && isWritable;
+					if (parent.operator === 'delete') return isWritable;
+					// e.g. `+{ ...v }` calls `valueOf` of the object.
+					return isObject && ['+', '-', '~'].includes(parent.operator);
 				case 'TemplateLiteral':
 					// e.g. tag`${v}`. The tag gets the value.
-					return parent.parent?.type === 'TaggedTemplateExpression';
+					return isObject || parent.parent?.type === 'TaggedTemplateExpression';
 				case 'SvelteMustacheTag': {
+					if (isObject) return true;
 					const attribute = parent.parent as AnyNode | null;
 					return attribute?.type === 'SvelteAttribute' && isAttributeEscaping(attribute);
 				}
 				case 'SvelteShorthandAttribute':
-					return isAttributeEscaping(parent);
+					return isObject || isAttributeEscaping(parent);
+				case 'BinaryExpression':
+					// e.g. `{ ...v } + ''` calls `toString` of the object.
+					return (
+						isObject &&
+						!['===', '!==', 'instanceof'].includes(parent.operator) &&
+						!(parent.operator === 'in' && parent.right === node)
+					);
 				case 'SvelteSpreadAttribute':
 					// e.g. `<Child {...v} />`. It may set any attribute.
 					return true;
-				case 'BinaryExpression':
 				case 'ExpressionStatement':
 				case 'IfStatement':
 				case 'WhileStatement':
@@ -1229,7 +1295,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					return false;
 				case 'VariableDeclarator':
 					// e.g. `const a = v`
-					return parent.init === node && isPatternMutated(parent.id, toMode(depth));
+					return parent.init === node && isPatternMutated(parent.id, getMode());
 				case 'Property':
 					if (parent.parent?.type === 'ObjectPattern') {
 						// e.g. `({ a: v.a } = x)`
@@ -1237,11 +1303,14 @@ function createDeepMutationChecker(context: RuleContext) {
 					}
 					// e.g. `({ [v]: 1 })`
 					if (parent.value !== node) return false;
+					// e.g. `({ a: { ...v } })`. A new object in another container is not followed.
+					if (isObject) return true;
 					// e.g. `({ a: v })`. Methods of the object may get it as `this`.
 					if (!isPlainLiteral(parent.parent)) return true;
-					moveTo(parent.parent, depth + 1);
+					moveTo(parent.parent, depth + 1, true);
 					continue;
 				case 'ArrayExpression':
+					if (isObject) return true;
 					// e.g. `[v]`
 					moveTo(parent, depth + 1);
 					continue;
@@ -1252,11 +1321,13 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'AssignmentPattern':
 					if (parent.left === node) return isWritable || isMethodProperty();
 					// e.g. `const { a = v } = x`
-					return isPatternMutated(parent.left, toMode(depth));
+					return isPatternMutated(parent.left, getMode());
 				case 'ForOfStatement':
 				case 'ForInStatement':
 					if (parent.left === node) return isWritable || isMethodProperty();
 					if (parent.type === 'ForInStatement') return false;
+					// It calls the iterator of the object.
+					if (isObject) return true;
 					// e.g. `for (const item of v)`
 					return isPatternMutated(
 						parent.left.type === 'VariableDeclaration'
@@ -1265,6 +1336,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						toMode(depth - 1)
 					);
 				case 'SvelteEachBlock':
+					if (isObject && parent.expression === node) return true;
 					// e.g. `{#each v as item}`
 					return (
 						parent.expression === node &&
@@ -1275,7 +1347,8 @@ function createDeepMutationChecker(context: RuleContext) {
 					// e.g. `{#await v then value}`. `value` is `v` if it is not a promise.
 					const value = parent.then?.value;
 					return (
-						parent.expression === node && value != null && isPatternMutated(value, toMode(depth))
+						parent.expression === node &&
+						(isObject || (value != null && isPatternMutated(value, getMode())))
 					);
 				}
 				case 'SvelteDirective': {
@@ -1309,7 +1382,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						fn == null ||
 						// An action may return `update`, which gets the new value.
 						(parent.kind === 'Action' && hasReturnValue(fn)) ||
-						isParamMutated(fn, parent.kind === 'Animation' ? 2 : 1, toMode(depth))
+						isParamMutated(fn, parent.kind === 'Animation' ? 2 : 1, getMode())
 					);
 				}
 				default:
