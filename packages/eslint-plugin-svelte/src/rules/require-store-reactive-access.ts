@@ -1,13 +1,12 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import type { Variable } from '@typescript-eslint/scope-manager';
 import {
 	createCallableChecker,
 	createStoreChecker,
 	extractStoreReferences
 } from './reference-helpers/svelte-store.js';
-import { findAttribute, findVariable, getParent } from '../utils/ast-utils.js';
+import { findAttribute, findVariable } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
 import { getTypeScriptTools } from '../utils/ts-utils/index.js';
 
@@ -36,7 +35,7 @@ export default createRule('require-store-reactive-access', {
 		const hasTypeInfo = Boolean(getTypeScriptTools(context));
 		// Svelte 3/4 does not treat `on*` attributes as event handlers.
 		const supportsEventAttributes = getSvelteContext(context)?.svelteVersion !== '3/4';
-		let createdStoreVariables: Set<Variable> | null = null;
+		let storeCreatorCalls: Set<TSESTree.Node> | null = null;
 		const moduleScripts = (context.sourceCode.ast as unknown as AST.SvelteProgram).body.filter(
 			(node): node is AST.SvelteScriptElement =>
 				node.type === 'SvelteScriptElement' && isModuleScript(node)
@@ -272,7 +271,7 @@ export default createRule('require-store-reactive-access', {
 			},
 			TaggedTemplateExpression(node: TSESTree.TaggedTemplateExpression) {
 				// Check for ` store`${foo}` `
-				verifyExpression(node.tag);
+				verifyExpression(node.tag, { allowCallable: true });
 			},
 			'Property, PropertyDefinition, MethodDefinition'(
 				node: TSESTree.Property | TSESTree.PropertyDefinition | TSESTree.MethodDefinition
@@ -298,45 +297,62 @@ export default createRule('require-store-reactive-access', {
 		/**
 		 * Checks whether `left ?? right` (or `left ??= right`) checks whether the store itself exists.
 		 * e.g. `getContext('key') ?? readable(0)`
-		 * The type of the left side may not include `undefined`, so it needs type information.
-		 * A store created with `writable()` etc. always exists, so it is not a check.
+		 * This needs type information, because the type of the left side may not include `undefined`.
 		 */
 		function isStoreExistenceCheck(left: TSESTree.Expression, right: TSESTree.Expression) {
-			if (!hasTypeInfo) {
-				return false;
-			}
-			if (left.type === 'Identifier' && isCreatedStore(left)) {
-				return false;
-			}
-			return isStore(left) && isStore(right);
+			return hasTypeInfo && isMaybeMissingStore(left) && isStore(left) && isStore(right);
 		}
 
 		/**
-		 * Checks whether the given identifier is a variable initialized with `writable()`, `readable()`, or `derived()`.
+		 * Checks whether the given expression gets a store from a function call that may not return it,
+		 * or is a variable initialized with such a call.
+		 * e.g. `getContext('key')`, `const store = getContext('key')`
+		 * `writable()`, `readable()`, and `derived()` always return a store, so they are excluded.
 		 */
-		function isCreatedStore(node: TSESTree.Identifier) {
-			if (!createdStoreVariables) {
-				createdStoreVariables = new Set();
-				for (const { node: call } of extractStoreReferences(context)) {
-					let parent = getParent(call);
-					// e.g. `const store = writable(0) as Writable<number>`
-					while (
-						parent &&
-						(parent.type === 'TSAsExpression' ||
-							parent.type === 'TSSatisfiesExpression' ||
-							parent.type === 'TSNonNullExpression' ||
-							parent.type === 'TSTypeAssertion')
-					) {
-						parent = getParent(parent);
-					}
-					if (parent?.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
-						const variable = findVariable(context, parent.id);
-						if (variable) createdStoreVariables.add(variable);
-					}
+		function isMaybeMissingStore(node: TSESTree.Expression): boolean {
+			const expr = unwrapTypeExpression(node);
+			if (expr.type === 'Identifier') {
+				const variable = findVariable(context, expr);
+				const def = variable?.defs.length === 1 ? variable.defs[0] : null;
+				if (def?.type !== 'Variable' || def.node.id.type !== 'Identifier' || !def.node.init) {
+					return false;
 				}
+				return isMaybeMissingStoreCall(def.node.init);
 			}
-			const variable = findVariable(context, node);
-			return Boolean(variable && createdStoreVariables.has(variable));
+			return isMaybeMissingStoreCall(expr);
+		}
+
+		/**
+		 * Checks whether the given expression is a call other than `writable()`, `readable()`, and `derived()`.
+		 */
+		function isMaybeMissingStoreCall(node: TSESTree.Expression): boolean {
+			let expr = unwrapTypeExpression(node);
+			if (expr.type === 'AwaitExpression') {
+				expr = unwrapTypeExpression(expr.argument);
+			}
+			if (expr.type !== 'CallExpression') {
+				return false;
+			}
+			if (!storeCreatorCalls) {
+				storeCreatorCalls = new Set(Array.from(extractStoreReferences(context), (r) => r.node));
+			}
+			return !storeCreatorCalls.has(expr);
+		}
+
+		/**
+		 * Removes TypeScript type expressions such as `as` and `!`.
+		 */
+		function unwrapTypeExpression(node: TSESTree.Expression): TSESTree.Expression {
+			let expr = node;
+			while (
+				expr.type === 'TSAsExpression' ||
+				expr.type === 'TSSatisfiesExpression' ||
+				expr.type === 'TSNonNullExpression' ||
+				expr.type === 'TSTypeAssertion'
+			) {
+				expr = expr.expression;
+			}
+			return expr;
 		}
 
 		/**

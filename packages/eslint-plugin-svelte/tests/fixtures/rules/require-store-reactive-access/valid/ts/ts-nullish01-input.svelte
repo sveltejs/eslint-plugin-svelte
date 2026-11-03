@@ -16,4 +16,7 @@
 		ctx ??= readable({});
 		return ctx;
 	}
+	export function getStore4(): Readable<Record<string, unknown>> {
+		return (getContext('some_key') as Readable<Record<string, unknown>>) ?? readable({});
+	}
 </script>
