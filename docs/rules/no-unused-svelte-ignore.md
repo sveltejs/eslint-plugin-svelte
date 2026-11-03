@@ -38,6 +38,17 @@ This rule checks only the warning names and ignores the explanatory note.
 <img src="https://example.com/img.png" alt="Foo" />
 ```
 
+### Runtime warnings
+
+Svelte v5 also lets you use `svelte-ignore` to silence some runtime warnings, such as `ownership_invalid_binding`.
+The compiler never reports these warnings, so this rule can't tell whether the comment is used.
+This rule doesn't report these codes, even if the comment is in the wrong place.
+
+But in runes mode, Svelte ignores some of these codes, so this rule still reports them:
+
+- The kebab-case form (e.g. `ownership-invalid-binding`).
+- Codes after a code that isn't followed by a comma. Svelte reads the rest of the comment as prose (e.g. `ownership_invalid_binding` in `svelte-ignore a11y_autofocus ownership_invalid_binding`).
+
 ## :wrench: Options
 
 Nothing.

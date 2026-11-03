@@ -53,6 +53,8 @@ export type SvelteCompileWarnings = {
 	unusedIgnores: IgnoreItem[];
 	kind: 'warn' | 'error';
 	stripStyleElements: AST.SvelteStyleElement[];
+	/** Whether the Svelte v5 compiler compiled the component in runes mode. */
+	runes?: boolean;
 };
 export type Loc = {
 	start?: {
@@ -134,7 +136,8 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 				context
 			),
 			kind: warnings.kind,
-			stripStyleElements
+			stripStyleElements,
+			runes: warnings.runes
 		};
 	}
 
@@ -308,7 +311,8 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	return {
 		...processIgnore(warnings, baseWarnings.kind, stripStyleElements, ignoreComments, context),
 		kind: baseWarnings.kind,
-		stripStyleElements
+		stripStyleElements,
+		runes: baseWarnings.runes
 	};
 }
 
@@ -383,6 +387,17 @@ function* transformScripts(context: RuleContext, text: string) {
 	}
 }
 
+/** Checks whether the component has `<svelte:options runes>` */
+function hasSvelteOptionsRunes(program: AST.SvelteProgram) {
+	return program.body.some(
+		(body) =>
+			body.type === 'SvelteElement' &&
+			body.kind === 'special' &&
+			body.name.name === 'svelte:options' &&
+			Boolean(findAttribute(body, 'runes'))
+	);
+}
+
 function isCustomElement(program: AST.SvelteProgram) {
 	return program.body.some((body) => {
 		if (body.type !== 'SvelteElement' || body.kind !== 'special') {
@@ -420,6 +435,7 @@ function getWarningsFromCode(
 ): {
 	warnings: Warning[];
 	kind: 'warn' | 'error';
+	runes?: boolean;
 } {
 	try {
 		const svelteConfig = context.sourceCode.parserServices.svelteParseContext?.svelteConfig;
@@ -437,7 +453,21 @@ function getWarningsFromCode(
 			...(isCustomElement(context.sourceCode.ast) ? { customElement: true } : {})
 		});
 
-		return { warnings: result.warnings as Warning[], kind: 'warn' };
+		// `metadata.runes` exists only in Svelte v5.
+		const detectedRunes = (result as { metadata?: { runes?: boolean } }).metadata?.runes;
+		const configRunes =
+			typeof compilerOptions.runes === 'function'
+				? compilerOptions.runes({ filename: context.filename })
+				: compilerOptions.runes;
+		return {
+			warnings: result.warnings as Warning[],
+			kind: 'warn',
+			// We don't pass `compilerOptions.runes` to the compiler,
+			// so apply it here. `<svelte:options runes>` wins over it, as in Svelte.
+			runes: hasSvelteOptionsRunes(context.sourceCode.ast)
+				? detectedRunes
+				: (configRunes ?? detectedRunes)
+		};
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ignore
 	} catch (e: any) {
 		return {

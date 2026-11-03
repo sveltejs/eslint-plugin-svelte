@@ -22,6 +22,23 @@ const V5_REPLACEMENTS: Record<string, string | undefined> = {
 	'unused-export-let': 'export_let_unused'
 };
 
+/**
+ * Runtime warnings that Svelte v5 lets you silence with `svelte-ignore`.
+ * The compiler never reports them, so we can't tell whether the comment is used.
+ * Keep in sync with `IGNORABLE_RUNTIME_WARNINGS` in the Svelte compiler:
+ * https://github.com/sveltejs/svelte/blob/70afafe18e48a9973c5f711d62d87d088234655e/packages/svelte/src/constants.js#L47-L56
+ */
+export const RUNTIME_WARNING_CODES = new Set([
+	'await_reactivity_loss',
+	'await_waterfall',
+	'binding_property_non_reactive',
+	'hydration_attribute_changed',
+	'hydration_html_changed',
+	'ownership_invalid_binding',
+	'ownership_invalid_mutation',
+	'state_snapshot_uncloneable'
+]);
+
 export type IgnoreItemWithoutCode = {
 	range: [number, number];
 	code: null;
@@ -31,6 +48,11 @@ export type IgnoreItem = {
 	range: [number, number];
 	code: string;
 	codeForV5: string; // Code targeting Svelte v5.
+	/**
+	 * Whether Svelte v5 reads this code in runes mode.
+	 * In runes mode, codes must be separated by commas, and everything after is prose.
+	 */
+	readInRunesMode: boolean;
 	token: AST.Token | AST.Comment;
 };
 
@@ -95,6 +117,7 @@ function extractSvelteIgnore(
 ): IgnoreItem[] | null {
 	const start = startIndex + ignoreStart;
 	const results: IgnoreItem[] = [];
+	const runesModeCodeStarts = getRunesModeCodeStarts(codeList);
 	// Replace parenthetical notes (e.g., "(because of reasons)") with spaces of the same length
 	// to preserve character positions while preventing note words from being treated as rule names.
 	const processedCodeList = codeList.replace(PARENTHETICAL_NOTE_PATTERN, (match) =>
@@ -109,6 +132,7 @@ function extractSvelteIgnore(
 			results.push({
 				code,
 				codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+				readInRunesMode: runesModeCodeStarts.has(lastSeparatorEnd),
 				range: [start + lastSeparatorEnd, start + separator.index],
 				token
 			});
@@ -120,12 +144,28 @@ function extractSvelteIgnore(
 		results.push({
 			code,
 			codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+			readInRunesMode: runesModeCodeStarts.has(0),
 			range: [start, start + code.length],
 			token
 		});
 	}
 
 	return results;
+}
+
+/**
+ * Get the start indexes of the codes that Svelte v5 reads in runes mode.
+ * See https://github.com/sveltejs/svelte/blob/70afafe18e48a9973c5f711d62d87d088234655e/packages/svelte/src/compiler/utils/extract_svelte_ignore.js#L38-L63
+ */
+function getRunesModeCodeStarts(codeList: string): Set<number> {
+	const starts = new Set<number>();
+	for (const match of codeList.matchAll(/[\w$-]+(,)?/gu)) {
+		starts.add(match.index);
+		if (!match[1]) {
+			break;
+		}
+	}
+	return starts;
 }
 
 /** Checks whether given comment has missing code svelte-ignore */
