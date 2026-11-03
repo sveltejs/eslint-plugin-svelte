@@ -310,27 +310,41 @@ export default createRule('require-store-reactive-access', {
 		 * `writable()`, `readable()`, and `derived()` always return a store, so they are excluded.
 		 */
 		function isMaybeMissingStore(node: TSESTree.Expression): boolean {
-			let expr = unwrapTypeExpression(node);
-			while (expr.type === 'LogicalExpression' && expr.operator === '??') {
-				// e.g. `getContext('a') ?? getContext('b')`
-				expr = unwrapTypeExpression(expr.right);
-			}
+			const expr = unwrapNullishFallback(node);
 			if (expr.type === 'Identifier') {
-				const variable = findVariable(context, expr);
-				const def = variable?.defs.length === 1 ? variable.defs[0] : null;
-				if (def?.type !== 'Variable' || def.node.id.type !== 'Identifier' || !def.node.init) {
-					return false;
-				}
-				return isMaybeMissingStoreCall(def.node.init);
+				const init = getInitializer(expr);
+				return Boolean(init && isMaybeMissingStoreCall(init));
 			}
 			return isMaybeMissingStoreCall(expr);
+		}
+
+		/**
+		 * Gets the initializer of the variable or the parameter default of the given identifier.
+		 * e.g. `const store = init`, `function f(store = init) {}`
+		 */
+		function getInitializer(node: TSESTree.Identifier): TSESTree.Expression | null {
+			const variable = findVariable(context, node);
+			const def = variable?.defs.length === 1 ? variable.defs[0] : null;
+			if (!def) {
+				return null;
+			}
+			if (def.type === 'Variable') {
+				return def.node.id.type === 'Identifier' ? def.node.init : null;
+			}
+			if (def.type === 'Parameter') {
+				const parent = def.name.parent;
+				return parent?.type === 'AssignmentPattern' && parent.left === def.name
+					? parent.right
+					: null;
+			}
+			return null;
 		}
 
 		/**
 		 * Checks whether the given expression is a call other than `writable()`, `readable()`, and `derived()`.
 		 */
 		function isMaybeMissingStoreCall(node: TSESTree.Expression): boolean {
-			let expr = unwrapTypeExpression(node);
+			let expr = unwrapNullishFallback(node);
 			if (expr.type === 'AwaitExpression') {
 				expr = unwrapTypeExpression(expr.argument);
 			}
@@ -345,6 +359,18 @@ export default createRule('require-store-reactive-access', {
 				storeCreatorCalls = new Set(Array.from(extractStoreReferences(context), (r) => r.node));
 			}
 			return !storeCreatorCalls.has(expr);
+		}
+
+		/**
+		 * Gets the last operand of `??` chains, and removes TypeScript type expressions.
+		 * e.g. `getContext('a') ?? getContext('b')` -> `getContext('b')`
+		 */
+		function unwrapNullishFallback(node: TSESTree.Expression): TSESTree.Expression {
+			let expr = unwrapTypeExpression(node);
+			while (expr.type === 'LogicalExpression' && expr.operator === '??') {
+				expr = unwrapTypeExpression(expr.right);
+			}
+			return expr;
 		}
 
 		/**
