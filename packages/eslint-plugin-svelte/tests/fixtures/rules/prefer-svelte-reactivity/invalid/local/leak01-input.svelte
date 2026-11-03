@@ -47,6 +47,12 @@
 			out = self;
 		});
 	}
+
+	function typedEval() {
+		const set = new Set();
+		set.add(1);
+		return (eval as any)('set');
+	}
 </script>
 
 {typeAssertion().size}

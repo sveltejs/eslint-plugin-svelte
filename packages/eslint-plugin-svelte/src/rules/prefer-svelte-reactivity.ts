@@ -236,12 +236,13 @@ function hasDirectEval(scope: Scope): boolean {
 	return (
 		scope.references.some((reference) => {
 			const identifier = reference.identifier as TSESTree.Node;
-			return (
-				identifier.type === 'Identifier' &&
-				identifier.name === 'eval' &&
-				identifier.parent?.type === 'CallExpression' &&
-				identifier.parent.callee === identifier
-			);
+			if (identifier.type !== 'Identifier' || identifier.name !== 'eval') return false;
+			// TS removes wrappers such as `(eval as any)('x')`, so it is still a direct eval.
+			let callee: TSESTree.Node = identifier;
+			while (callee.parent && TS_WRAPPER_TYPES.has(callee.parent.type)) {
+				callee = callee.parent;
+			}
+			return callee.parent?.type === 'CallExpression' && callee.parent.callee === callee;
 		}) || scope.childScopes.some(hasDirectEval)
 	);
 }
