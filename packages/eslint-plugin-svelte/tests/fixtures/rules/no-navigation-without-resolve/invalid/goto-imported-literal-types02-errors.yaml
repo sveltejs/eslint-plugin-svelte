@@ -1,0 +1,8 @@
+- message: "'/plain' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 25
+  column: 7
+  suggestions: null
+- message: "'/plain' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 26
+  column: 7
+  suggestions: null

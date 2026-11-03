@@ -1350,14 +1350,12 @@ class UrlEvaluator {
 		if (!this.tsTools) return false;
 		const target = unwrapTypeScript(node as TSESTree.Expression);
 		if (target.type === 'MemberExpression') {
-			const tsNode = this.tsTools.service.esTreeNodeToTSNodeMap.get(target as never) as TS.Node;
-			const ts = this.tsTools.ts;
-			const name = ts.isPropertyAccessExpression(tsNode)
-				? tsNode.name
-				: ts.isElementAccessExpression(tsNode)
-					? tsNode.argumentExpression
-					: null;
-			return name !== null && this.isDeclaredSymbol(this.checker().getSymbolAtLocation(name));
+			// The property of the object type (`obj[key]` would give the symbol of `key`).
+			const key = getPropertyName(target, scopeOf(this.context, target));
+			const object = this.tsTools.service.esTreeNodeToTSNodeMap.get(target.object as never);
+			if (key === null || !object) return false;
+			const type = this.checker().getTypeAtLocation(object);
+			return this.isDeclaredSymbol(this.checker().getApparentType(type).getProperty(key));
 		}
 		if (target.type !== 'Identifier') return false;
 		const variable = findVariable(this.context, target);
@@ -1388,11 +1386,60 @@ class UrlEvaluator {
 	}
 
 	/** Whether a type annotation is written out (not a type parameter such as `T`). */
-	private isDeclaredTypeNode(node: TS.TypeNode): boolean {
+	private isDeclaredTypeNode(node: TS.TypeNode, depth = 0): boolean {
 		const ts = this.tsTools!.ts;
-		const type = this.checker().getTypeFromTypeNode(node);
-		const types = type.isUnion() ? type.types : [type];
-		return types.every((t) => !(t.flags & ts.TypeFlags.TypeParameter));
+		const checker = this.checker();
+		if (depth > MAX_DEPTH) return false;
+		// `typeof X`: declared only if `X` is.
+		if (ts.isTypeQueryNode(node)) {
+			return this.isDeclaredSymbol(checker.getSymbolAtLocation(node.exprName), depth + 1);
+		}
+		if (ts.isTypeReferenceNode(node)) {
+			const type = checker.getTypeFromTypeNode(node);
+			if (type.flags & ts.TypeFlags.TypeParameter) return false;
+			// `type Route = (typeof ROUTES)[keyof typeof ROUTES]`
+			let symbol = checker.getSymbolAtLocation(node.typeName);
+			if (symbol && symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol);
+			const alias = symbol?.declarations?.find(ts.isTypeAliasDeclaration);
+			if (alias && !this.isDeclaredTypeNode(alias.type, depth + 1)) return false;
+		}
+		let declared = true;
+		ts.forEachChild(node, (child) => {
+			if (declared && ts.isTypeNode(child) && !this.isDeclaredTypeNode(child, depth + 1)) {
+				declared = false;
+			}
+		});
+		return declared;
+	}
+
+	/**
+	 * Whether an object or array literal is written where its type is kept, such as the value of
+	 * a variable, not an argument of a function that may change it.
+	 */
+	private isWrittenOutLiteral(node: TS.Node): boolean {
+		const ts = this.tsTools!.ts;
+		let current = node;
+		for (;;) {
+			const parent = current.parent;
+			if (
+				ts.isParenthesizedExpression(parent) ||
+				ts.isObjectLiteralExpression(parent) ||
+				ts.isArrayLiteralExpression(parent) ||
+				ts.isPropertyAssignment(parent) ||
+				((ts.isAsExpression(parent) || ts.isSatisfiesExpression(parent)) &&
+					ts.isConstTypeReference(parent.type))
+			) {
+				current = parent;
+				continue;
+			}
+			return (
+				(ts.isVariableDeclaration(parent) && parent.initializer === current) ||
+				(ts.isPropertyDeclaration(parent) && parent.initializer === current) ||
+				ts.isReturnStatement(parent) ||
+				(ts.isArrowFunction(parent) && parent.body === current) ||
+				ts.isExportAssignment(parent)
+			);
+		}
 	}
 
 	/** Whether a TypeScript expression is a literal (its type is what is written). */
@@ -1415,7 +1462,8 @@ class UrlEvaluator {
 	}
 
 	/** Whether every declaration of the symbol has a type annotation or a literal value. */
-	private isDeclaredSymbol(symbol: TS.Symbol | undefined): boolean {
+	private isDeclaredSymbol(symbol: TS.Symbol | undefined, depth = 0): boolean {
+		if (depth > MAX_DEPTH) return false;
 		const ts = this.tsTools!.ts;
 		let target = symbol;
 		if (target && target.flags & ts.SymbolFlags.Alias) {
@@ -1431,13 +1479,18 @@ class UrlEvaluator {
 					ts.isPropertyDeclaration(declaration) ||
 					ts.isParameter(declaration)
 				) {
-					if (declaration.type) return this.isDeclaredTypeNode(declaration.type);
+					if (declaration.type) return this.isDeclaredTypeNode(declaration.type, depth + 1);
 					const initializer =
 						'initializer' in declaration ? (declaration.initializer as TS.Expression) : undefined;
 					return initializer !== undefined && this.isLiteralValue(initializer);
 				}
-				if (ts.isPropertyAssignment(declaration))
-					return this.isLiteralValue(declaration.initializer);
+				// `{ a: '/a' }`, but not `f({ a: '/a' })`, whose result may differ.
+				if (ts.isPropertyAssignment(declaration)) {
+					return (
+						this.isLiteralValue(declaration.initializer) &&
+						this.isWrittenOutLiteral(declaration.parent)
+					);
+				}
 				return false;
 			})
 		);
