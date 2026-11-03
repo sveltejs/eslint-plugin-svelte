@@ -465,20 +465,12 @@ function processIgnore(
 		if (!warning.code) {
 			continue;
 		}
+		for (const node of iterateNestedScriptNodes(warning)) {
+			checkComments(warning, node);
+		}
 		let node: IgnoreTargetNode | null = getWarningNode(warning);
 		while (node) {
-			for (const comment of extractLeadingComments(context, node).reverse()) {
-				const ignoreItem = ignoreComments.find(
-					(item) =>
-						item.token === comment &&
-						(item.code === warning.code || item.codeForV5 === warning.code)
-				);
-				if (ignoreItem) {
-					unusedIgnores.delete(ignoreItem);
-					remainingWarning.delete(warning);
-					break;
-				}
-			}
+			checkComments(warning, node);
 			node = getIgnoreParent(node);
 		}
 	}
@@ -501,6 +493,78 @@ function processIgnore(
 		warnings: [...remainingWarning],
 		unusedIgnores: [...unusedIgnores]
 	};
+
+	/** Mark the warning as ignored if a leading comment of the node ignores it */
+	function checkComments(warning: Warning, node: ASTNodeWithParent) {
+		for (const comment of extractLeadingComments(context, node).reverse()) {
+			if (isTrailingComment(comment)) {
+				continue;
+			}
+			const ignoreItem = ignoreComments.find(
+				(item) =>
+					item.token === comment && (item.code === warning.code || item.codeForV5 === warning.code)
+			);
+			if (ignoreItem) {
+				unusedIgnores.delete(ignoreItem);
+				remainingWarning.delete(warning);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Iterate over the JS nodes that contain the warning position, from the innermost node
+	 * up to (but not including) the top-level statement or the template node.
+	 * Svelte 5 honors a svelte-ignore comment on any of these nodes.
+	 * Svelte 3/4 only checks the comments of top-level statements.
+	 */
+	function* iterateNestedScriptNodes(warning: Warning): Iterable<ASTNodeWithParent> {
+		if (svelteVersion !== '5') {
+			return;
+		}
+		const { start } = getWarningIndexes(warning);
+		if (start == null) {
+			return;
+		}
+		let node = sourceCode.getNodeByRangeIndex(start);
+		while (node && isJSNode(node) && node.parent && node.parent.type !== 'Program') {
+			yield node;
+			node = node.parent;
+		}
+	}
+
+	/**
+	 * Checks whether the compiler attaches the given comment as a trailing comment of the
+	 * previous node (e.g. `a, // comment`). Such a comment does not apply to the next node.
+	 * This follows the comment handling of the compiler:
+	 * https://github.com/sveltejs/svelte/blob/db5a999b7114cc92c8923fac0a6a733e934cc264/packages/svelte/src/compiler/phases/1-parse/acorn.js#L230-L274
+	 */
+	function isTrailingComment(comment: AST.Token | AST.Comment): boolean {
+		if (comment.type !== 'Line' && comment.type !== 'Block') {
+			return false;
+		}
+		const text = sourceCode.text;
+		const commentStart = comment.range[0];
+		let index = commentStart;
+		while (index > 0 && /[\t ),]/u.test(text[index - 1])) {
+			index--;
+		}
+		for (; index > 0 && index <= commentStart; index++) {
+			let node = sourceCode.getNodeByRangeIndex(index - 1);
+			while (node && isJSNode(node)) {
+				if (node.range[1] === index) {
+					return true;
+				}
+				node = node.parent;
+			}
+		}
+		return false;
+	}
+
+	/** Checks whether the given node is a JS node */
+	function isJSNode(node: ASTNodeWithParent | AST.SvelteProgram): node is ASTNodeWithParent {
+		return node.type !== 'Program' && !node.type.startsWith('Svelte');
+	}
 
 	/** Get ignore target parent node */
 	function getIgnoreParent(node: IgnoreTargetNode): IgnoreTargetNode | null {
