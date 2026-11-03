@@ -22,6 +22,23 @@ const V5_REPLACEMENTS: Record<string, string | undefined> = {
 	'unused-export-let': 'export_let_unused'
 };
 
+/**
+ * Runtime warnings that Svelte v5 lets you silence with `svelte-ignore`.
+ * The compiler never reports them, so we can't tell whether the comment is used.
+ * Keep in sync with `IGNORABLE_RUNTIME_WARNINGS` in the Svelte compiler:
+ * https://github.com/sveltejs/svelte/blob/70afafe18e48a9973c5f711d62d87d088234655e/packages/svelte/src/constants.js#L46-L55
+ */
+export const RUNTIME_WARNING_CODES = new Set([
+	'await_reactivity_loss',
+	'await_waterfall',
+	'binding_property_non_reactive',
+	'hydration_attribute_changed',
+	'hydration_html_changed',
+	'ownership_invalid_binding',
+	'ownership_invalid_mutation',
+	'state_snapshot_uncloneable'
+]);
+
 export type IgnoreItemWithoutCode = {
 	range: [number, number];
 	code: null;

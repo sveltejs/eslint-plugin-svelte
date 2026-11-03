@@ -5,7 +5,8 @@ import { createRequire } from 'module';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import semver from 'semver';
 import { RuleTester } from '../../utils/eslint-compat.js';
-import rule, { RUNTIME_WARNING_CODES } from '../../../src/rules/no-unused-svelte-ignore.js';
+import rule from '../../../src/rules/no-unused-svelte-ignore.js';
+import { RUNTIME_WARNING_CODES } from '../../../src/shared/svelte-compile-warns/ignore-comment.js';
 import { loadTestCases } from '../../utils/utils.js';
 
 const tester = new RuleTester({

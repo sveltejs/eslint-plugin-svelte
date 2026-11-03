@@ -43,6 +43,7 @@ This rule checks only the warning names and ignores the explanatory note.
 Svelte v5 also lets you use `svelte-ignore` to silence some runtime warnings, such as `ownership_invalid_binding`.
 The compiler never reports these warnings, so this rule can't tell whether the comment is used.
 This rule never reports these codes, even if the comment is in the wrong place.
+In runes mode, Svelte does not accept the kebab-case form of these codes (e.g. `ownership-invalid-binding`), so this rule still reports it.
 
 ## :wrench: Options
 
