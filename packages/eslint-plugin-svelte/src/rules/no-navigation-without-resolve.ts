@@ -65,7 +65,7 @@ function based(label: string): Value {
 
 const MAX_ALTS = 64;
 /** The number of steps to evaluate one URL, to stop on code that is too complex. */
-const MAX_COMPUTATIONS = 20000;
+const MAX_COMPUTATIONS = 5000;
 const OUT_OF_BUDGET = new Error('out of budget');
 const MAX_DEPTH = 64;
 
@@ -412,6 +412,12 @@ class UrlEvaluator {
 	/** The number of computations left for the current URL. */
 	private budget = 0;
 
+	/** Whether the depth limit cut the current evaluation off. */
+	private limited = false;
+
+	/** Results that are valid only for the current URL. */
+	private readonly temporaryCaches = new Map<object, Map<unknown, unknown>>();
+
 	/**
 	 * Run `compute` for `key` once: return the cached result if there is one, `onCycle` when
 	 * `key` is already being computed, and `onLimit` when the stack is too deep.
@@ -424,9 +430,13 @@ class UrlEvaluator {
 		compute: () => T
 	): T {
 		if (state.cache.has(key)) return state.cache.get(key)!;
-		// At the depth limit, give up. The result is still cached: an unknown value can only
-		// hide reports, and caching keeps long chains linear.
-		if (this.depth >= MAX_DEPTH) return onLimit;
+		const temporary = this.temporaryCaches.get(state);
+		if (temporary?.has(key)) return temporary.get(key) as T;
+		// At the depth limit, give up.
+		if (this.depth >= MAX_DEPTH) {
+			this.limited = true;
+			return onLimit;
+		}
 		const active = state.active.get(key);
 		if (active !== undefined) {
 			// A value that depends on itself adds nothing new (the least fixed point).
@@ -436,17 +446,30 @@ class UrlEvaluator {
 		if (--this.budget < 0) throw OUT_OF_BUDGET;
 		const depth = this.depth;
 		const outer = this.lowestCut;
+		const outerLimited = this.limited;
 		state.active.set(key, depth);
 		this.depth++;
 		this.lowestCut = Infinity;
+		this.limited = false;
 		try {
 			const result = compute();
-			if (this.lowestCut >= depth) state.cache.set(key, result);
+			if (this.lowestCut >= depth) {
+				// A result cut by the depth limit depends on where the evaluation started, so it is
+				// reused only for the current URL (this keeps long chains linear).
+				if (!this.limited) {
+					state.cache.set(key, result);
+				} else {
+					let map = this.temporaryCaches.get(state);
+					if (!map) this.temporaryCaches.set(state, (map = new Map()));
+					map.set(key, result);
+				}
+			}
 			return result;
 		} finally {
 			this.depth--;
 			state.active.delete(key);
 			this.lowestCut = Math.min(outer, this.lowestCut);
+			this.limited = outerLimited || this.limited;
 		}
 	}
 
@@ -469,6 +492,7 @@ class UrlEvaluator {
 	/** Evaluate the URL of a sink. Gives up (unknown) on code that is too complex. */
 	public evaluateUrl(node: TSESTree.Node | AST.SvelteLiteral): Value {
 		this.budget = MAX_COMPUTATIONS;
+		this.temporaryCaches.clear();
 		try {
 			return this.evaluate(node);
 		} catch (error) {
@@ -547,14 +571,18 @@ class UrlEvaluator {
 							)
 						: left;
 				}
-				// `&&`
+				// `&&`: the right side is used only when the left side may be truthy.
+				const truthy = left.some((alt) => alt !== null && alt.length > 0);
+				const right = truthy ? this.evaluate(node.right) : [];
 				return mayBeFalsy(left)
 					? union(
 							left.filter((alt) => alt !== null && alt.length === 0),
-							NULLISH,
-							this.evaluate(node.right)
+							left.some((alt) => alt === null || alt.some((part) => part.type === 'unknown'))
+								? NULLISH
+								: [],
+							right
 						)
-					: this.evaluate(node.right);
+					: right;
 			}
 			case 'ConditionalExpression': {
 				const test =
@@ -613,7 +641,7 @@ class UrlEvaluator {
 			return mayBeNullish(this.refine(declared)) ? union(RESOLVED, NULLISH) : RESOLVED;
 		}
 		// `url.pathname = ...` changes the value.
-		if (isMutated(variable, this.holds(variable))) return this.refine(node);
+		if (isMutated(this.context, variable, this.holds(variable))) return this.refine(node);
 		const result = this.guard(
 			this.variableValues,
 			variable,
@@ -786,7 +814,7 @@ class UrlEvaluator {
 			const variable = findVariable(this.context, node);
 			if (variable === null || variable.name !== node.name) return [{ type: 'node', node }];
 			// Its properties or elements may be changed later.
-			if (isMutated(variable, this.holds(variable))) return [UNKNOWN_SOURCE];
+			if (isMutated(this.context, variable, this.holds(variable))) return [UNKNOWN_SOURCE];
 			const sources = this.guard(this.variableCandidates, variable, [], [UNKNOWN_SOURCE], () => {
 				const sources = this.variableSources(variable);
 				if (sources === null) return null;
@@ -811,18 +839,41 @@ class UrlEvaluator {
 
 	/** What the variable is declared with: a URL, an object or array literal, or anything else. */
 	private holds(variable: Variable): 'url' | 'object' | 'other' {
+		const values: TSESTree.Expression[] = [];
 		const def = variable.defs[0];
-		if (def?.type !== 'Variable' || def.node.type !== 'VariableDeclarator' || !def.node.init)
-			return 'other';
-		const init = this.unwrapRune(def.node.init);
-		if (init.type !== 'node') return 'other';
-		const value = unwrapTypeScript(init.node);
-		if (this.isUrlConstructor(value)) return 'url';
-		return value.type === 'ObjectExpression' ||
-			value.type === 'ArrayExpression' ||
-			(value.type as string) === 'NewExpression'
-			? 'object'
-			: 'other';
+		if (def?.type === 'Variable' && def.node.type === 'VariableDeclarator' && def.node.init) {
+			const init = this.unwrapRune(def.node.init);
+			if (init.type === 'node') values.push(init.node);
+		}
+		for (const ref of variable.references) {
+			const parent = ref.identifier.parent;
+			if (
+				ref.isWrite() &&
+				parent?.type === 'AssignmentExpression' &&
+				parent.left === ref.identifier &&
+				parent.operator === '='
+			) {
+				const value = this.unwrapRune(parent.right);
+				if (value.type === 'node') values.push(value.node);
+			}
+		}
+		let url = values.length > 0;
+		let object = false;
+		for (const value of values.map(unwrapTypeScript)) {
+			if (this.isUrlConstructor(value)) {
+				object = true;
+				continue;
+			}
+			url = false;
+			if (
+				value.type === 'ObjectExpression' ||
+				value.type === 'ArrayExpression' ||
+				(value.type as string) === 'NewExpression'
+			) {
+				object = true;
+			}
+		}
+		return url ? 'url' : object ? 'object' : 'other';
 	}
 
 	private idOf(target: TSESTree.Node | Variable): number {
@@ -1035,8 +1086,10 @@ class UrlEvaluator {
 				};
 			}
 		);
-		const value = result.unknown ? union(result.value, this.refine(node)) : result.value;
-		return this.isCallResult(node.object) ? untrustLiterals(value) : value;
+		if (!result.unknown) return result.value;
+		// Only the type is untrusted: values found in the code are real.
+		const refined = this.refine(node);
+		return union(result.value, this.isCallResult(node.object) ? untrustLiterals(refined) : refined);
 	}
 
 	/**
@@ -1055,6 +1108,21 @@ class UrlEvaluator {
 				return this.isCallResult(target.object, depth + 1);
 			case 'Identifier': {
 				const def = findVariable(this.context, target)?.defs[0];
+				// `{#each items as item}`, `for (const item of items)` and callback parameters
+				// such as `items.map((item) => ...)`: their types may come from a function result.
+				if (def?.type === 'Parameter') {
+					return !(def.name as TSESTree.Identifier).typeAnnotation;
+				}
+				if (def && eachBlockOf(def.name as TSESTree.Identifier) !== null) return true;
+				if (def?.type === 'Variable' && def.node.type === 'VariableDeclarator') {
+					const loop = def.node.parent.parent;
+					if (
+						(loop.type === 'ForOfStatement' || loop.type === 'ForInStatement') &&
+						loop.left === def.node.parent
+					) {
+						return true;
+					}
+				}
 				// `{#await promise then value}`
 				for (let n = def?.name.parent; n; n = n.parent) {
 					const type = n.type as string;
@@ -1098,7 +1166,10 @@ class UrlEvaluator {
 		if (base.type === 'SpreadElement') return UNKNOWN;
 		// A path keeps its meaning only against a base of this app, such as `page.url`.
 		// Against an external or unknown base, it may not be a path of this app.
-		const sameApp = this.evaluate(base).every((alt) => alt !== null && alt[0]?.type === 'based');
+		const baseValue = this.evaluate(base);
+		// A base that only depends on itself has no value.
+		if (baseValue.length === 0) return [];
+		const sameApp = baseValue.every((alt) => alt !== null && alt[0]?.type === 'based');
 		if (sameApp) return value;
 		return value.map((alt) => (classify(alt).kind === 'external' ? alt : [UNKNOWN_PART]));
 	}
@@ -1300,120 +1371,254 @@ const MUTATING_METHODS = new Set([
 	'copyWithin',
 	'set',
 	'delete',
-	'clear',
-	// The callback may change the elements.
-	'forEach'
+	'clear'
 ]);
 
-/**
- * Whether a property or an element of the variable is written somewhere, e.g. `x.a = 1`,
- * `x[0]++`, `delete x.a`, `x.push(1)`, `Object.assign(x, ...)` or `bind:value={x.a}`.
- */
-function isMutated(variable: Variable, holds: 'url' | 'object' | 'other'): boolean {
-	return variable.references.some((ref) => {
-		let node: TSESTree.Node = ref.identifier;
-		let parent = node.parent as TSESTree.Node | undefined;
-		// An object can be changed through another name: `const p = o`, `for (const l of o)`,
-		// `f(o)`, `[o]`, `{ a: o }`.
-		if (holds !== 'other' && !ref.init && parent && escapes(node, parent)) return true;
-		if (
-			parent?.type === 'CallExpression' &&
-			parent.arguments[0] === node &&
-			parent.callee.type === 'MemberExpression' &&
-			parent.callee.object.type === 'Identifier' &&
-			parent.callee.object.name === 'Object' &&
-			parent.callee.property.type === 'Identifier' &&
-			parent.callee.property.name === 'assign'
-		) {
-			return true;
-		}
-		let member = false;
-		let last: string | null = null;
-		while (parent?.type === 'MemberExpression' && parent.object === node) {
-			member = true;
-			last =
-				parent.property.type === 'Identifier' && !parent.computed ? parent.property.name : null;
-			// `url.searchParams.set(...)` only changes the query.
-			if (holds === 'url' && last === 'searchParams') return false;
-			node = parent;
-			parent = node.parent as TSESTree.Node | undefined;
-		}
-		if (!member || !parent) return false;
-		// `url.search = ...` / `url.hash = ...` do not change the path.
-		if (
-			holds === 'url' &&
-			parent.type === 'AssignmentExpression' &&
-			(last === 'search' || last === 'hash')
-		)
-			return false;
-		if (parent.type === 'AssignmentExpression' && parent.left === node) return true;
-		if (parent.type === 'UpdateExpression') return true;
-		if (parent.type === 'UnaryExpression' && parent.operator === 'delete') return true;
-		if ((parent.type as string) === 'SvelteDirective') return true;
-		if (parent.type === 'CallExpression' && parent.callee === node) {
-			const callee = node as TSESTree.MemberExpression;
-			return callee.property.type === 'Identifier' && MUTATING_METHODS.has(callee.property.name);
-		}
-		return false;
-	});
-}
+/** Methods that do not change the object and do not give out its elements. */
+const READ_ONLY_METHODS = new Set([
+	'join',
+	'includes',
+	'indexOf',
+	'lastIndexOf',
+	'has',
+	'toString',
+	'toJSON',
+	'startsWith',
+	'endsWith',
+	'trim',
+	'toLowerCase',
+	'toUpperCase'
+]);
 
+/** Functions that only read their arguments and do not give out their elements. */
 const READ_ONLY_FUNCTIONS = new Set([
 	'goto',
 	'pushState',
 	'replaceState',
 	'preloadData',
 	'preloadCode',
+	'resolve',
+	'asset',
 	'String',
+	'Number',
+	'Boolean',
 	'URL',
 	'URLSearchParams',
+	'encodeURIComponent',
+	'encodeURI',
 	'JSON.stringify',
 	'Object.keys',
-	'Object.values',
-	'Object.entries',
 	'Array.isArray',
-	'Array.from',
 	'console.log',
 	'console.warn',
-	'console.error'
+	'console.error',
+	'console.info',
+	'console.debug'
 ]);
 
-/** Whether the object `node` may be changed through another name. */
-function escapes(node: TSESTree.Node, parent: TSESTree.Node): boolean {
-	switch (parent.type) {
-		// `const { a } = o` only reads it.
-		case 'VariableDeclarator':
-			return parent.init === node && parent.id.type === 'Identifier';
-		case 'AssignmentExpression':
+const TRANSPARENT_PARENTS = new Set([
+	'TSAsExpression',
+	'TSSatisfiesExpression',
+	'TSNonNullExpression',
+	'TSTypeAssertion',
+	'ChainExpression',
+	'AwaitExpression'
+]);
+
+/**
+ * Whether a property or an element of the variable may be changed somewhere, e.g. `x.a = 1`,
+ * `x[0]++`, `delete x.a`, `x.push(1)`, `bind:value={x.a}`. For a variable that holds an object,
+ * any use that may give the object (or a part of it) to other code also counts, e.g.
+ * `f(x)`, `x.map(...)` or `const y = x` when `y` is changed.
+ */
+function isMutated(
+	context: RuleContext,
+	variable: Variable,
+	holds: 'url' | 'object' | 'other',
+	visited = new Set<Variable>()
+): boolean {
+	if (visited.has(variable)) return false;
+	visited.add(variable);
+	return variable.references.some((ref) => {
+		if (ref.init || (ref.isWrite() && !ref.isRead())) return false;
+		let node: TSESTree.Node = ref.identifier;
+		let parent = node.parent as TSESTree.Node | undefined;
+		let member = false;
+		let last: string | null = null;
+		while (parent) {
+			if (TRANSPARENT_PARENTS.has(parent.type)) {
+				node = parent;
+			} else if (parent.type === 'MemberExpression' && parent.object === node) {
+				member = true;
+				last =
+					parent.property.type === 'Identifier' && !parent.computed ? parent.property.name : null;
+				// `url.searchParams.set(...)` only changes the query.
+				if (holds === 'url' && last === 'searchParams') return false;
+				node = parent;
+			} else {
+				break;
+			}
+			parent = node.parent as TSESTree.Node | undefined;
+		}
+		if (!parent) return false;
+		if (member) {
+			if (parent.type === 'AssignmentExpression' && parent.left === node) {
+				// `url.search = ...` / `url.hash = ...` do not change the path.
+				return !(holds === 'url' && (last === 'search' || last === 'hash'));
+			}
+			if (parent.type === 'UpdateExpression') return true;
+			if (parent.type === 'UnaryExpression' && parent.operator === 'delete') return true;
+			if ((parent.type as string) === 'SvelteDirective') return true;
+			if (parent.type === 'CallExpression' && parent.callee === node) {
+				if (last !== null && MUTATING_METHODS.has(last)) return true;
+				return holds !== 'other' && (last === null || !READ_ONLY_METHODS.has(last));
+			}
+		}
+		if (holds === 'other') {
+			// `Object.assign(x, ...)`
 			return (
-				parent.right === node &&
-				parent.left.type !== 'ObjectPattern' &&
-				parent.left.type !== 'ArrayPattern'
+				parent.type === 'CallExpression' &&
+				parent.arguments[0] === node &&
+				calleeName(parent) === 'Object.assign'
 			);
-		case 'ForOfStatement':
-		case 'ForInStatement':
-			return parent.right === node;
-		case 'ArrayExpression':
-			return true;
+		}
+		return escapes(context, node, visited, 0);
+	});
+}
+
+function calleeName(call: TSESTree.CallExpression | TSESTree.NewExpression): string | null {
+	const callee = call.callee;
+	if (callee.type === 'Identifier') return callee.name;
+	if (
+		callee.type === 'MemberExpression' &&
+		callee.object.type === 'Identifier' &&
+		callee.property.type === 'Identifier' &&
+		!callee.computed
+	) {
+		return `${callee.object.name}.${callee.property.name}`;
+	}
+	return null;
+}
+
+/** Whether the object `node` (or a part of it) may be given to code that changes it. */
+function escapes(
+	context: RuleContext,
+	node: TSESTree.Node,
+	visited: Set<Variable>,
+	depth: number
+): boolean {
+	if (depth > MAX_DEPTH) return true;
+	const parent = node.parent as TSESTree.Node | undefined;
+	if (!parent) return false;
+
+	/** Whether a variable declared by `target` is changed. */
+	function declared(target: TSESTree.Node) {
+		return context.sourceCode
+			.getDeclaredVariables(target as never)
+			.some((v) => isMutated(context, v, 'object', visited));
+	}
+
+	switch (parent.type as string) {
+		case 'TSAsExpression':
+		case 'TSSatisfiesExpression':
+		case 'TSNonNullExpression':
+		case 'TSTypeAssertion':
+		case 'ChainExpression':
+		case 'AwaitExpression':
+		case 'LogicalExpression':
+			return escapes(context, parent, visited, depth + 1);
+		case 'ConditionalExpression':
+			return (
+				(parent as TSESTree.ConditionalExpression).test !== node &&
+				escapes(context, parent, visited, depth + 1)
+			);
+		case 'SequenceExpression': {
+			const expressions = (parent as TSESTree.SequenceExpression).expressions;
+			return (
+				expressions[expressions.length - 1] === node && escapes(context, parent, visited, depth + 1)
+			);
+		}
+		case 'MemberExpression': {
+			const member = parent as TSESTree.MemberExpression;
+			if (member.object !== node) return false;
+			// `(a ?? b).href = ...`, `(a ?? b).push(...)`
+			const grand = member.parent;
+			if (grand.type === 'AssignmentExpression' && grand.left === member) return true;
+			if (grand.type === 'UpdateExpression') return true;
+			if (grand.type === 'UnaryExpression' && grand.operator === 'delete') return true;
+			if (grand.type === 'CallExpression' && grand.callee === member) {
+				const name =
+					member.property.type === 'Identifier' && !member.computed ? member.property.name : null;
+				return name === null || !READ_ONLY_METHODS.has(name);
+			}
+			return escapes(context, member, visited, depth + 1);
+		}
+		// `{ a: x }`, `[x]`: changed only if the new object is.
 		case 'Property':
-			return parent.value === node;
+			return (
+				(parent as TSESTree.Property).value === node &&
+				parent.parent?.type === 'ObjectExpression' &&
+				escapes(context, parent.parent, visited, depth + 1)
+			);
+		case 'ArrayExpression':
+			return escapes(context, parent, visited, depth + 1);
+		// `y = x`: changed only if `y` is changed.
+		case 'AssignmentExpression': {
+			const assignment = parent as TSESTree.AssignmentExpression;
+			if (assignment.right !== node) return false;
+			if (assignment.left.type !== 'Identifier') return true;
+			const target = findVariableInScope(scopeOf(context, assignment.left), assignment.left);
+			return target === null || isMutated(context, target, 'object', visited);
+		}
+		// `const y = x` / `const { a } = x`: changed only if `y` / `a` is changed.
+		case 'VariableDeclarator':
+			return (parent as TSESTree.VariableDeclarator).init === node && declared(parent);
+		// `for (const y of x)`
+		case 'ForOfStatement':
+		case 'ForInStatement': {
+			const loop = parent as TSESTree.ForOfStatement;
+			if (loop.right !== node) return false;
+			return loop.left.type === 'VariableDeclaration' ? declared(loop.left) : true;
+		}
 		case 'CallExpression':
 		case 'NewExpression': {
-			if (!parent.arguments.includes(node as TSESTree.Expression)) return false;
-			// Functions that only read their arguments.
-			const callee = parent.callee;
-			const name =
-				callee.type === 'Identifier'
-					? callee.name
-					: callee.type === 'MemberExpression' &&
-						  callee.object.type === 'Identifier' &&
-						  callee.property.type === 'Identifier'
-						? `${callee.object.name}.${callee.property.name}`
-						: null;
+			const call = parent as TSESTree.CallExpression;
+			if (call.callee === node) return false;
+			const name = calleeName(call);
 			return name === null || !READ_ONLY_FUNCTIONS.has(name);
 		}
-		default:
+		// Reading it: `a + x`, `` `${x}` ``, `if (x)`, `{x}`, `{#each x as y}`...
+		case 'BinaryExpression':
+		case 'TemplateLiteral':
+		case 'ExpressionStatement':
+		case 'IfStatement':
+		case 'WhileStatement':
+		case 'DoWhileStatement':
+		case 'ForStatement':
+		case 'SwitchStatement':
+		case 'SwitchCase':
+		case 'SpreadElement':
+		case 'SvelteIfBlock':
+		case 'SvelteElseBlock':
+		case 'SvelteKeyBlock':
+		case 'SvelteEachBlock':
 			return false;
+		case 'UnaryExpression':
+			return (parent as TSESTree.UnaryExpression).operator === 'delete';
+		// `{x}` in the template, or an attribute of an HTML element (not a component).
+		case 'SvelteMustacheTag':
+		case 'SvelteShorthandAttribute': {
+			let attribute: TSESTree.Node | undefined = parent;
+			while (attribute && (attribute.type as string) !== 'SvelteStartTag') {
+				attribute = attribute.parent as TSESTree.Node | undefined;
+			}
+			const element = attribute?.parent as AST.SvelteElement | undefined;
+			return element?.kind === 'component';
+		}
+		case 'SvelteAttribute':
+			return false;
+		default:
+			return true;
 	}
 }
 
