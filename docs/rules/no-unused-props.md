@@ -32,6 +32,8 @@ Additionally, this rule checks if index signatures are properly used. When an in
 
 Note: Properties of class types are not checked for usage, as they might be used in other parts of the application.
 
+Note: When the props object is used as a whole (e.g. `$inspect(props)` or `fn(props)`), every property may be read, so no property is reported.
+
 :warning: This rule requires `@typescript-eslint/parser` to work. Make sure you have installed `@typescript-eslint/parser` and configured it in your ESLint configuration. Therefore, the rule violations cannot be seen in the examples on this page because this documentation does not use `@typescript-eslint/parser`.
 
 <!--eslint-skip-->

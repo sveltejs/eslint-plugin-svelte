@@ -149,10 +149,13 @@ export default createRule('no-unused-props', {
 			while (parentNode) {
 				if (parentNode.type === 'MemberExpression' && parentNode.object === currentNode) {
 					const property = parentNode.property;
-					if (property.type === 'Identifier') {
+					if (!parentNode.computed && property.type === 'Identifier') {
 						paths.push(property.name);
 					} else if (property.type === 'Literal' && typeof property.value === 'string') {
 						paths.push(property.value);
+					} else if (parentNode.computed && property.type !== 'Literal') {
+						// A dynamic key like `obj[key]` may read any property of `obj`.
+						break;
 					}
 				} else {
 					if (parentNode.type === 'SvelteSpreadAttribute') {
@@ -254,6 +257,15 @@ export default createRule('no-unused-props', {
 		}
 
 		/**
+		 * Checks if the identifier is in a type query like `typeof props.a`,
+		 * which does not read any value at runtime.
+		 */
+		function isTypeQueryReference(node: TSESTree.Identifier): boolean {
+			const parent = node.parent;
+			return parent?.type === 'TSQualifiedName' || parent?.type === 'TSTypeQuery';
+		}
+
+		/**
 		 * Finds all property access paths for a given variable.
 		 */
 		function getUsedNestedPropertyPathsArray(
@@ -275,7 +287,8 @@ export default createRule('no-unused-props', {
 					'identifier' in reference &&
 					reference.identifier.type === 'Identifier' &&
 					(reference.identifier.range[0] !== node.range[0] ||
-						reference.identifier.range[1] !== node.range[1])
+						reference.identifier.range[1] !== node.range[1]) &&
+					!isTypeQueryReference(reference.identifier)
 				) {
 					const { paths, spread, pattern } = getPropertyPath(reference.identifier);
 					if (pattern) {
@@ -321,13 +334,19 @@ export default createRule('no-unused-props', {
 		}
 
 		/**
-		 * Checks if a property is a private class member like `#foo`.
-		 * It cannot be read from outside the class.
+		 * Checks if a property is a class member that cannot be read from outside
+		 * the class, like `#foo`, `private foo` or `protected foo`.
 		 */
-		function isPrivateNameProperty(prop: ts.Symbol): boolean {
+		function isInaccessibleClassMember(prop: ts.Symbol): boolean {
+			const tsModule = tools!.ts;
 			return (prop.getDeclarations() ?? []).some((decl) => {
-				const name = tools!.ts.getNameOfDeclaration(decl);
-				return name != null && tools!.ts.isPrivateIdentifier(name);
+				const name = tsModule.getNameOfDeclaration(decl);
+				if (name != null && tsModule.isPrivateIdentifier(name)) return true;
+				return (
+					(tsModule.getCombinedModifierFlags(decl) &
+						(tsModule.ModifierFlags.Private | tsModule.ModifierFlags.Protected)) !==
+					0
+				);
 			});
 		}
 
@@ -493,7 +512,7 @@ export default createRule('no-unused-props', {
 
 			for (const prop of properties) {
 				if (isBuiltInProperty(prop)) continue;
-				if (isPrivateNameProperty(prop)) continue;
+				if (isInaccessibleClassMember(prop)) continue;
 				if (!checkImportedTypes && !isInternalProperty(prop)) continue;
 
 				const propName = prop.getName();

@@ -1,0 +1,4 @@
+- message: "'age' in 'user' is an unused property."
+  line: 3
+  column: 8
+  suggestions: null

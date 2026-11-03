@@ -1,0 +1,4 @@
+- message: "'count' is an unused Props property."
+  line: 3
+  column: 6
+  suggestions: null
