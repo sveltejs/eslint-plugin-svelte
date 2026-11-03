@@ -288,8 +288,8 @@ importers:
         specifier: ^7.6.3
         version: 7.7.3
       svelte-eslint-parser:
-        specifier: ^1.7.0
-        version: 1.7.0(svelte@5.56.0(@typescript-eslint/types@8.48.1))
+        specifier: ^1.10.1
+        version: 1.10.1(svelte@5.56.0(@typescript-eslint/types@8.48.1))
     devDependencies:
       '@babel/core':
         specifier: ^7.28.3
@@ -3976,9 +3976,9 @@ packages:
     resolution: {integrity: sha512-VL+lNrEoIXww1coLPOmiEmK/0sGigko5COxI09KzHc2VJXJsQ37UaQ+8quuxjDeA7+KnLGTWRyOXSLLR2Wb4jw==}
     engines: {node: '>=12'}
 
-  svelte-eslint-parser@1.7.0:
-    resolution: {integrity: sha512-TU3DQx7IjUrrxKbET/U639xofp044xLXGGvFaLH9PKQOY5g5iRtmYy2rZB7gOeGRRTP7255AE8fUtIwsp/yOjQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: 10.34.1}
+  svelte-eslint-parser@1.10.1:
+    resolution: {integrity: sha512-owYBhrNRp/m+hDaQCH0S683kc0TMFy2bB+qvsMQQZRsjSFD9xp/3FYgI8FZoOKA3xk62gwkUj1HpVek0p6WgNw==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: 10.34.6}
     peerDependencies:
       svelte: ^3.37.0 || ^4.0.0 || ^5.0.0
     peerDependenciesMeta:
@@ -8234,7 +8234,7 @@ snapshots:
 
   supports-color@9.4.0: {}
 
-  svelte-eslint-parser@1.7.0(svelte@5.56.0(@typescript-eslint/types@8.48.1)):
+  svelte-eslint-parser@1.10.1(svelte@5.56.0(@typescript-eslint/types@8.48.1)):
     dependencies:
       eslint-scope: 8.4.0
       eslint-visitor-keys: 4.2.1
@@ -8242,7 +8242,7 @@ snapshots:
       postcss: 8.5.32
       postcss-scss: 4.0.9(postcss@8.5.32)
       postcss-selector-parser: 7.1.0
-      semver: 7.7.4
+      semver: 7.8.5
     optionalDependencies:
       svelte: 5.56.0(@typescript-eslint/types@8.48.1)
 
