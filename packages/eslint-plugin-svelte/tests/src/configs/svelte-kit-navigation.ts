@@ -35,7 +35,7 @@ describe('SvelteKit navigation version conditions', () => {
 	});
 
 	for (const version of ['1.30.4', '2.62.0', '3.0.0', '3.0.0-next.1', '3.0.0-rc.1']) {
-		it(`reports unresolved navigation with the recommended config on Kit ${version}`, async () => {
+		it(`checks navigation with the recommended config on Kit ${version}`, async () => {
 			const project = path.join(root, version);
 			fs.mkdirSync(project);
 			fs.writeFileSync(
@@ -54,10 +54,13 @@ describe('SvelteKit navigation version conditions', () => {
 			const [badResult] = await linter.lintText(bad, { filePath: 'src/routes/+page.svelte' });
 			assert.deepStrictEqual(
 				badResult.messages.map(({ ruleId, messageId }) => ({ ruleId, messageId })),
-				[
-					{ ruleId: 'svelte/no-navigation-without-resolve', messageId: 'gotoWithoutResolve' },
-					{ ruleId: 'svelte/no-navigation-without-resolve', messageId: 'linkWithoutResolve' }
-				]
+				// `resolve()` does not exist on Kit 1, so the rule does not run there.
+				version.startsWith('1.')
+					? []
+					: [
+							{ ruleId: 'svelte/no-navigation-without-resolve', messageId: 'rootRelative' },
+							{ ruleId: 'svelte/no-navigation-without-resolve', messageId: 'rootRelativeLink' }
+						]
 			);
 			const [goodResult] = await linter.lintText(good, { filePath: 'src/routes/+page.svelte' });
 			assert.deepStrictEqual(goodResult.messages, []);

@@ -1,0 +1,70 @@
+- message: "'/login' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 1
+  column: 21
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <form method="POST" action={resolve('/login')}></form>
+        <form method="POST" action="/login?/signin"></form>
+        <form>
+        	<button formaction="/register">Register</button>
+        	<input type="submit" formaction="/login" />
+        </form>
+- message: "'/login?/signin' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 2
+  column: 21
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <form method="POST" action="/login"></form>
+        <form method="POST" action={resolve('/login?/signin')}></form>
+        <form>
+        	<button formaction="/register">Register</button>
+        	<input type="submit" formaction="/login" />
+        </form>
+- message: "'/register' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 4
+  column: 10
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <form method="POST" action="/login"></form>
+        <form method="POST" action="/login?/signin"></form>
+        <form>
+        	<button formaction={resolve('/register')}>Register</button>
+        	<input type="submit" formaction="/login" />
+        </form>
+- message: "'/login' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 5
+  column: 23
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <form method="POST" action="/login"></form>
+        <form method="POST" action="/login?/signin"></form>
+        <form>
+        	<button formaction="/register">Register</button>
+        	<input type="submit" formaction={resolve('/login')} />
+        </form>

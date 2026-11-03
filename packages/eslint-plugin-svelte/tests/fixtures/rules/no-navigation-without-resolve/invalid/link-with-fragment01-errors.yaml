@@ -1,24 +1,81 @@
-- message: Unexpected href link without resolve().
+- message: "'/foo#section' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 6
   column: 4
-  suggestions: null
-- message: Unexpected href link without resolve().
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        	const value = "/foo#section";
+        	const href = "/foo#section";
+        </script>
+
+        <a href={resolve('/foo#section')}>Click me!</a>
+        <a href={'/foo#section'}>Click me!</a>
+        <a href={'/' + 'foo#section'}>Click me!</a>
+        <a href={value}>Click me!</a>
+        <a {href}>Click me!</a>
+        <a href={'/foo#section:42'}>Click me!</a>
+- message: "'/foo#section' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 7
   column: 4
-  suggestions: null
-- message: Unexpected href link without resolve().
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        	const value = "/foo#section";
+        	const href = "/foo#section";
+        </script>
+
+        <a href="/foo#section">Click me!</a>
+        <a href={resolve('/foo#section')}>Click me!</a>
+        <a href={'/' + 'foo#section'}>Click me!</a>
+        <a href={value}>Click me!</a>
+        <a {href}>Click me!</a>
+        <a href={'/foo#section:42'}>Click me!</a>
+- message: "'/foo#section' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 8
   column: 4
   suggestions: null
-- message: Unexpected href link without resolve().
+- message: "'/foo#section' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 9
   column: 4
   suggestions: null
-- message: Unexpected href link without resolve().
+- message: "'/foo#section' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 10
   column: 4
   suggestions: null
-- message: Unexpected href link without resolve().
+- message: "'/foo#section:42' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 11
   column: 4
-  suggestions: null
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        	const value = "/foo#section";
+        	const href = "/foo#section";
+        </script>
+
+        <a href="/foo#section">Click me!</a>
+        <a href={'/foo#section'}>Click me!</a>
+        <a href={'/' + 'foo#section'}>Click me!</a>
+        <a href={value}>Click me!</a>
+        <a {href}>Click me!</a>
+        <a href={resolve('/foo#section:42')}>Click me!</a>

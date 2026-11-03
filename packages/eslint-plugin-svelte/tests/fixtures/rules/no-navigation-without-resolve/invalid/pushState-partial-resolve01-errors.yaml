@@ -1,8 +1,11 @@
-- message: Unexpected pushState() call without resolve().
+- message: Do not add a path after `resolve()` ('resolve(…)/bar'). Pass the whole
+    path to `resolve()` instead.
   line: 5
   column: 12
   suggestions: null
-- message: Unexpected pushState() call without resolve().
+- message: Do not add anything before `resolve()` ('/fooresolve(…)'). It already
+    includes the base path, and during server rendering it can be a relative
+    path such as `./foo`.
   line: 6
   column: 12
   suggestions: null

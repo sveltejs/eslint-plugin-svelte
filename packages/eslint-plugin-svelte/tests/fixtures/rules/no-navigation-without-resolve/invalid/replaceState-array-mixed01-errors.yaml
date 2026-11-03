@@ -1,4 +1,5 @@
-- message: Unexpected replaceState() call without resolve().
+- message: "`replaceState()` cannot navigate to the external URL
+    'https://example.com'. Use `window.location` or a link instead."
   line: 6
   column: 15
   suggestions: null

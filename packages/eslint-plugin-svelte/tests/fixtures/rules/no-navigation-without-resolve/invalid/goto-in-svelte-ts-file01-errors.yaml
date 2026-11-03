@@ -1,0 +1,19 @@
+- message: "'/home' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 6
+  column: 15
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        import { goto } from '$app/navigation';
+        import { resolve } from '$app/paths';
+
+        export class Router {
+        	go(): Promise<void> {
+        		return goto(resolve('/home'));
+        	}
+
+        	ok(): Promise<void> {
+        		return goto(resolve('/home'));
+        	}
+        }

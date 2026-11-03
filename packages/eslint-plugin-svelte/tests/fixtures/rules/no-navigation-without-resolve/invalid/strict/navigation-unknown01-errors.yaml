@@ -1,0 +1,37 @@
+- message: Cannot verify that this URL includes the base path. Use `resolve()`
+    from `$app/paths`.
+  line: 14
+  column: 7
+  suggestions: null
+- message: Cannot verify that this URL includes the base path. Use `resolve()`
+    from `$app/paths`.
+  line: 15
+  column: 7
+  suggestions: null
+- message: Cannot verify that this URL includes the base path. Use `resolve()`
+    from `$app/paths`.
+  line: 16
+  column: 7
+  suggestions: null
+- message: Cannot verify that the value added after `resolve()` starts with `?` or `#`.
+  line: 17
+  column: 7
+  suggestions: null
+- message: Cannot verify that this URL includes the base path. Use `resolve()`
+    from `$app/paths`.
+  line: 18
+  column: 7
+  suggestions: null
+- message: Cannot verify that this URL includes the base path. Use `resolve()`
+    from `$app/paths`.
+  line: 21
+  column: 4
+  suggestions: null
+- message: Cannot verify that the value added after `resolve()` starts with `?` or `#`.
+  line: 22
+  column: 4
+  suggestions: null
+- message: Cannot verify that the value added after `resolve()` starts with `?` or `#`.
+  line: 23
+  column: 4
+  suggestions: null

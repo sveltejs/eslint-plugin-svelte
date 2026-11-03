@@ -1,0 +1,229 @@
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 8
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto(resolve('/foo'));
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/blog/hello' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 9
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(resolve(`/blog/${slug}`));
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 10
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto(resolve('/foo'), { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 11
+  column: 12
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState(resolve('/foo'), {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 12
+  column: 15
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState(resolve('/foo'), {});
+        	preloadData('/foo');
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 13
+  column: 14
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData(resolve('/foo'));
+        	preloadCode('/foo', '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 14
+  column: 14
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode(resolve('/foo'), '/bar');
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/bar' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 14
+  column: 22
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto, pushState, replaceState, preloadData, preloadCode } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	const slug = 'hello';
+
+        	goto('/foo');
+        	goto(`/blog/${slug}`);
+        	goto('/foo', { replaceState: true });
+        	pushState('/foo', {});
+        	replaceState('/foo', {});
+        	preloadData('/foo');
+        	preloadCode('/foo', resolve('/bar'));
+        	goto(new URL('/foo', page.url));
+        	goto(resolve('/foo') + '/bar');
+        	goto('/foo' + resolve('/bar'));
+        	goto('foo');
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 15
+  column: 7
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)/bar'). Pass the whole
+    path to `resolve()` instead.
+  line: 16
+  column: 7
+  suggestions: null
+- message: Do not add anything before `resolve()` ('/fooresolve(…)'). It already
+    includes the base path, and during server rendering it can be a relative
+    path such as `./foo`.
+  line: 17
+  column: 7
+  suggestions: null
+- message: Relative URL 'foo' depends on the current URL and can point outside the
+    base path. Use `resolve()` from `$app/paths`.
+  line: 18
+  column: 7
+  suggestions: null

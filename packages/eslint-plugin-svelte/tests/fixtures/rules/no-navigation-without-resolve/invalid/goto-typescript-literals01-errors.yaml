@@ -1,0 +1,16 @@
+- message: "'/a' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 14
+  column: 7
+  suggestions: null
+- message: "'/' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 15
+  column: 7
+  suggestions: null
+- message: "'/home' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 16
+  column: 7
+  suggestions: null
+- message: "'/home' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 17
+  column: 7
+  suggestions: null

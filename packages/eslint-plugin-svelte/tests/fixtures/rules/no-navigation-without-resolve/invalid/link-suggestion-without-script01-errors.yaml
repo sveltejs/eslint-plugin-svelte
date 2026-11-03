@@ -1,0 +1,14 @@
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 1
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <a href={resolve('/about')}>Click me!</a>

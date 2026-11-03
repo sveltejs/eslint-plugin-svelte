@@ -1,0 +1,36 @@
+- message: Do not add anything before `resolve()` ('…resolve(…)'). It already
+    includes the base path, and during server rendering it can be a relative
+    path such as `./foo`.
+  line: 9
+  column: 4
+  suggestions: null
+- message: Do not add anything before `resolve()` ('…resolve(…)'). It already
+    includes the base path, and during server rendering it can be a relative
+    path such as `./foo`.
+  line: 10
+  column: 4
+  suggestions: null
+- message: Do not add anything before `resolve()`
+    ('https://example.comresolve(…)'). It already includes the base path, and
+    during server rendering it can be a relative path such as `./foo`.
+  line: 11
+  column: 4
+  suggestions: null
+- message: Do not add anything before `resolve()` ('/enresolve(…)'). It already
+    includes the base path, and during server rendering it can be a relative
+    path such as `./foo`.
+  line: 12
+  column: 4
+  suggestions: null
+- message: Do not add anything before `base` ('…{base}/foo'). It already includes
+    the base path, and during server rendering it can be a relative path such as
+    `./foo`.
+  line: 13
+  column: 4
+  suggestions: null
+- message: Do not add anything before `page.url.pathname`
+    ('/en{page.url.pathname}'). It already includes the base path, and during
+    server rendering it can be a relative path such as `./foo`.
+  line: 14
+  column: 4
+  suggestions: null

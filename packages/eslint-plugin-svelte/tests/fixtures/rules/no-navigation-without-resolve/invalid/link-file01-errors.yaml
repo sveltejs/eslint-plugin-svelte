@@ -1,0 +1,38 @@
+- message: "'/manual.pdf' does not include the base path. Use `asset()` from
+    `$app/paths` for files in `static`, or `resolve()` for routes."
+  line: 1
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `asset()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { asset } from '$app/paths';
+        </script>
+
+        <a href={asset('/manual.pdf')}>Click me!</a>
+        <a href="/files/report.v2.csv?download=1">Click me!</a>
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <a href={resolve('/manual.pdf')}>Click me!</a>
+        <a href="/files/report.v2.csv?download=1">Click me!</a>
+- message: "'/files/report.v2.csv?download=1' does not include the base path. Use
+    `asset()` from `$app/paths` for files in `static`, or `resolve()` for
+    routes."
+  line: 2
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+        <a href="/manual.pdf">Click me!</a>
+        <a href={resolve('/files/report.v2.csv?download=1')}>Click me!</a>

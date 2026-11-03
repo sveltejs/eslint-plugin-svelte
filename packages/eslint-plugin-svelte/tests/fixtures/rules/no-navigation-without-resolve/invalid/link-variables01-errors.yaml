@@ -1,0 +1,66 @@
+- message: "'/default' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 18
+  column: 4
+  suggestions: null
+- message: "'/bindable' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 19
+  column: 4
+  suggestions: null
+- message: "'/state' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 20
+  column: 4
+  suggestions: null
+- message: "'/derived' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 21
+  column: 4
+  suggestions: null
+- message: "'/derived-by' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 22
+  column: 4
+  suggestions: null
+- message: "'/reassigned' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 23
+  column: 4
+  suggestions: null
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 24
+  column: 4
+  suggestions: null
+- message: "'/second' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 25
+  column: 4
+  suggestions: null
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 27
+  column: 5
+  suggestions: null
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 30
+  column: 5
+  suggestions: null
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 34
+  column: 5
+  suggestions: null

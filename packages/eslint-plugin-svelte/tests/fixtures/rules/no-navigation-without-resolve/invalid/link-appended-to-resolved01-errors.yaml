@@ -1,0 +1,40 @@
+- message: Do not add a path after `resolve()` ('resolve(…)/…'). Pass the whole
+    path to `resolve()` instead.
+  line: 8
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)/…'). Pass the whole
+    path to `resolve()` instead.
+  line: 9
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)/…'). Pass the whole
+    path to `resolve()` instead.
+  line: 10
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)about'). Pass the whole
+    path to `resolve()` instead.
+  line: 11
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)resolve(…)'). Pass the
+    whole path to `resolve()` instead.
+  line: 12
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)/edit'). Pass the whole
+    path to `resolve()` instead.
+  line: 13
+  column: 4
+  suggestions: null
+- message: Do not add a path after `asset()` ('asset(…).png'). Pass the whole path
+    to `asset()` instead.
+  line: 14
+  column: 4
+  suggestions: null
+- message: Do not add a path after `resolve()` ('resolve(…)/b'). Pass the whole
+    path to `resolve()` instead.
+  line: 15
+  column: 4
+  suggestions: null

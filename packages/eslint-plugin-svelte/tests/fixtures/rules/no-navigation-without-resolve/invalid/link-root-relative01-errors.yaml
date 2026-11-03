@@ -1,0 +1,402 @@
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 7
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href={resolve('/about')}>Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 8
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={resolve('/about')}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/blog/hello' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 9
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href={resolve(`/blog/${slug}`)}>Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/blog/hello' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 10
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={resolve(`/blog/${slug}`)}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/blog/hello' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 11
+  column: 4
+  suggestions: null
+- message: "'/about?tab=1#top' does not include the base path. Use `resolve()`
+    from `$app/paths`, or add `rel=\"external\"` if another app on this origin
+    serves it."
+  line: 12
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href={resolve('/about?tab=1#top')}>Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 13
+  column: 4
+  suggestions: null
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 14
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href={resolve('/about')} data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 15
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href={resolve('/about')} target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 16
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href={resolve('/about')} download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 17
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href={resolve('/about')} rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 18
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href={resolve('/about')} rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 19
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href={resolve('/about')} />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 20
+  column: 9
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href={resolve('/about')}><text>Click me!</text></a></svg>
+        <svg><a xlink:href="/about"><text>Click me!</text></a></svg>
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 21
+  column: 9
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { resolve } from '$app/paths';
+
+        	const slug = 'hello';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={'/about'}>Click me!</a>
+        <a href="/blog/{slug}">Click me!</a>
+        <a href={`/blog/${slug}`}>Click me!</a>
+        <a href={'/blog/' + slug}>Click me!</a>
+        <a href="/about?tab=1#top">Click me!</a>
+        <a href="  /about">Click me!</a>
+        <a href="/about" data-sveltekit-reload>Click me!</a>
+        <a href="/about" target="_blank">Click me!</a>
+        <a href="/about" download>Click me!</a>
+        <a href="/about" rel="EXTERNAL">Click me!</a>
+        <a href="/about" rel="external-link">Click me!</a>
+        <area href="/about" />
+        <svg><a href="/about"><text>Click me!</text></a></svg>
+        <svg><a xlink:href={resolve('/about')}><text>Click me!</text></a></svg>

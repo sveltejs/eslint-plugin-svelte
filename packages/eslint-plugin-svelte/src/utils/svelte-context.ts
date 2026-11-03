@@ -260,6 +260,33 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 	return null;
 }
 
+const svelteKitInstalledVersionCache = createCache<{ version: string | null }>();
+
+/**
+ * Gets the exact version of the installed `@sveltejs/kit` package (e.g. `2.26.0`).
+ * Returns null if it is not installed or cannot be read (e.g. in the browser).
+ */
+export function getInstalledSvelteKitVersion(filePath: string): string | null {
+	if (isRunInBrowser) return null;
+	const cached = svelteKitInstalledVersionCache.get(filePath);
+	if (cached) return cached.version;
+
+	let version: string | null = null;
+	const nodeModule = getNodeModule('@sveltejs/kit', filePath);
+	if (nodeModule) {
+		try {
+			const packageJson = JSON.parse(
+				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
+			);
+			if (typeof packageJson.version === 'string') version = packageJson.version;
+		} catch {
+			/** do nothing */
+		}
+	}
+	svelteKitInstalledVersionCache.set(filePath, { version });
+	return version;
+}
+
 const projectRootDirCache = createCache<string | null>();
 
 /**

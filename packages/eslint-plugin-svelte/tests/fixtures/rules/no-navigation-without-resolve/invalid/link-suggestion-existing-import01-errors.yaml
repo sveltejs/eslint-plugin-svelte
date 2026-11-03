@@ -1,0 +1,41 @@
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 6
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `paths.resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { base } from '$app/paths';
+        	import * as paths from '$app/paths';
+        </script>
+
+        <a href={paths.resolve('/about')}>Click me!</a>
+        <a href="/manual.pdf">Click me!</a>
+- message: "'/manual.pdf' does not include the base path. Use `asset()` from
+    `$app/paths` for files in `static`, or `resolve()` for routes."
+  line: 7
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `paths.asset()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { base } from '$app/paths';
+        	import * as paths from '$app/paths';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={paths.asset('/manual.pdf')}>Click me!</a>
+    - desc: Wrap the URL with `paths.resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { base } from '$app/paths';
+        	import * as paths from '$app/paths';
+        </script>
+
+        <a href="/about">Click me!</a>
+        <a href={paths.resolve('/manual.pdf')}>Click me!</a>
