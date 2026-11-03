@@ -675,7 +675,8 @@ function isUseTypeScript(context: RuleContext) {
  * Check if using Babel.
  */
 function isUseBabel(context: RuleContext) {
-	const parser = context.parserOptions?.parser;
+	// `context.parserOptions` was removed in ESLint v10.
+	const parser = context.languageOptions?.parserOptions?.parser ?? context.parserOptions?.parser;
 	if (!parser) {
 		return false;
 	}

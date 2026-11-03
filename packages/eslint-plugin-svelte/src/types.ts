@@ -2,7 +2,7 @@ import type { JSONSchema4 } from 'json-schema';
 import type { Linter, Rule, SourceCode as ESLintSourceCode } from 'eslint';
 import type { AST, StyleContext, SvelteConfig } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
-import type { ScopeManager, Scope, Variable } from '@typescript-eslint/scope-manager';
+import type { ScopeManager, Variable } from '@typescript-eslint/scope-manager';
 import type { Rule as StyleRule, Node } from 'postcss';
 import type { Root as SelectorRoot, Node as SelectorNode } from 'postcss-selector-parser';
 import type { ASTNode, ASTNodeWithParent, ASTNodeListener } from './types-for-node.js';
@@ -141,21 +141,18 @@ export type RuleContext = {
 			};
 		};
 	};
-	parserPath: string;
-	parserOptions: Linter.ParserOptions;
-	parserServices: ESLintSourceCode.ParserServices;
-
-	getAncestors(): ASTNode[];
-
-	getDeclaredVariables(node: TSESTree.Node): Variable[];
+	languageOptions?: {
+		parserOptions?: Linter.ParserOptions;
+	};
+	/**
+	 * Only for ESLint v8 with eslintrc config. Removed in ESLint v10.
+	 * Use `languageOptions.parserOptions` instead.
+	 */
+	parserOptions?: Linter.ParserOptions;
 
 	filename: string;
 
-	getScope(): Scope;
-
 	sourceCode: SourceCode;
-
-	markVariableAsUsed(name: string): boolean;
 
 	report(descriptor: ReportDescriptor): void;
 
