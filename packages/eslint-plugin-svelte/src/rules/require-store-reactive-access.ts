@@ -214,7 +214,12 @@ export default createRule('require-store-reactive-access', {
 					}
 					// Check for `store ||= foo`.
 					// Don't fix it, since `$store ||= foo` sets the store value instead.
-					verifyExpression(node.left, { disableFix: true, consistent: true });
+					verifyExpression(node.left, {
+						disableFix: true,
+						// Without type information, `consistent` means "declared with `const`",
+						// but an assignment target is never `const`.
+						consistent: hasTypeInfo
+					});
 					if (!isStore(node.left)) {
 						// Check for `foo ||= store`.
 						// If the left side is a store, assigning a store is fine.
