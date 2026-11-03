@@ -7,6 +7,7 @@ import { findVariable } from '../utils/ast-utils.js';
 import type { RuleContext } from '../types.js';
 import type { Variable } from '@typescript-eslint/scope-manager';
 import type { AST } from 'svelte-eslint-parser';
+import type * as TS from 'typescript';
 import {
 	type TSTools,
 	getTypeScriptTools,
@@ -757,6 +758,32 @@ function resolveVariableInit(
 	return binding.parent.init;
 }
 
+/**
+ * The `ResolvedPathname` type from `$app/types` for each type checker. Looking it up goes through all ambient modules, so it is only done once per program.
+ */
+const resolvedPathnameTypes = new WeakMap<TS.TypeChecker, TS.Type | null>();
+
+/**
+ * Returns the `ResolvedPathname` type from `$app/types`, or null if it isn't available.
+ */
+function getResolvedPathnameType(checker: TS.TypeChecker): TS.Type | null {
+	const cached = resolvedPathnameTypes.get(checker);
+	if (cached !== undefined) {
+		return cached;
+	}
+	const appTypesModule = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
+	const resolvedPathnameSymbol =
+		appTypesModule === undefined
+			? undefined
+			: checker.getExportsOfModule(appTypesModule).find((e) => e.name === 'ResolvedPathname');
+	const resolvedPathnameType =
+		resolvedPathnameSymbol === undefined
+			? null
+			: checker.getDeclaredTypeOfSymbol(resolvedPathnameSymbol);
+	resolvedPathnameTypes.set(checker, resolvedPathnameType);
+	return resolvedPathnameType;
+}
+
 function expressionIsAllowedType(
 	value: TSESTree.CallExpressionArgument | TSESTree.Expression | AST.SvelteLiteral,
 	allowNullish: boolean | undefined,
@@ -779,18 +806,10 @@ function expressionIsAllowedType(
 		nodeType = checker.getNonNullableType(nodeType);
 	}
 
-	const appTypesModule = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
-	if (!appTypesModule) {
+	const resolvedPathnameType = getResolvedPathnameType(checker);
+	if (resolvedPathnameType === null) {
 		return false;
 	}
-
-	const resolvedPathnameSymbol = checker
-		.getExportsOfModule(appTypesModule)
-		.find((e) => e.name === 'ResolvedPathname');
-	if (!resolvedPathnameSymbol) {
-		return false;
-	}
-	const resolvedPathnameType = checker.getDeclaredTypeOfSymbol(resolvedPathnameSymbol);
 
 	// getTypeAtLocation returns the resolved (structural) type without alias information, so we cannot compare aliasSymbols directly. Instead we check structural equivalence by testing assignability in both directions: this correctly rejects strict subtypes like Pathname (Pathname ⊂ ResolvedPathname, so only one direction holds).
 	return (
