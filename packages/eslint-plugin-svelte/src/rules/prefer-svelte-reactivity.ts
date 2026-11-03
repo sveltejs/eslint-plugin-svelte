@@ -26,7 +26,8 @@ export default createRule('prefer-svelte-reactivity', {
 		conditions: [
 			{
 				svelteVersions: ['5'],
-				svelteFileTypes: ['.svelte', '.svelte.[js|ts]']
+				svelteFileTypes: ['.svelte', '.svelte.[js|ts]'],
+				runes: [true, 'undetermined']
 			}
 		]
 	},

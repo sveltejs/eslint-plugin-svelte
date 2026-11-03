@@ -16,6 +16,12 @@ since: 'v3.11.0'
 
 The built-in `Date`, `Map`, `Set`, `URL` and `URLSearchParams` classes are often used in frontend code, however, their properties and methods are not reactive. Because of that, Svelte provides reactive versions of these 5 builtins as part of the "svelte/reactivity" package. This rule reports usage of mutable instances of the built-in versions in Svelte code.
 
+This rule only runs in runes mode (and in `.svelte.js` / `.svelte.ts` files). In legacy (non-runes) components, Svelte does not track the `svelte/reactivity` classes, so switching to them does not help there.
+
+Note that runes mode is detected from `parserOptions.svelteConfig`, `<svelte:options runes />`, or the use of runes such as `$state` or `$props`. If you enable runes with `compilerOptions.runes` in `svelte.config.js`, pass that config as `parserOptions.svelteConfig` (see the [User Guide](../user-guide.md#configuration)). Otherwise, components that use no runes are treated as legacy components and are not checked.
+
+Also, in legacy components, this rule does not report instances that are passed to runes code (for example, as a prop to a runes component). Those instances could still benefit from the reactive classes.
+
 <!--eslint-skip-->
 
 ```svelte
