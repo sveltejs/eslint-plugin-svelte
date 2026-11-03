@@ -672,7 +672,7 @@ class UrlEvaluator {
 		if (variable.name !== node.name) return this.refine(node);
 		// `const href: ResolvedPathname = ...` is a deliberate escape hatch, like a cast.
 		const declared = variable.defs[0].name as TSESTree.Identifier;
-		const annotation = declared.typeAnnotation?.typeAnnotation;
+		const annotation = annotationOf(declared);
 		if (annotation && this.isResolvedPathnameTypeNode(annotation, declared)) {
 			return mayBeNullish(this.refine(declared)) ? union(RESOLVED, NULLISH) : RESOLVED;
 		}
@@ -1586,7 +1586,11 @@ class UrlEvaluator {
 		const module = checker.getAmbientModules().find((m) => m.name === '"$app/types"');
 		const symbol =
 			module && checker.getExportsOfModule(module).find((e) => e.name === 'ResolvedPathname');
-		this.resolvedPathnameType = symbol ? checker.getDeclaredTypeOfSymbol(symbol) : null;
+		const type = symbol ? checker.getDeclaredTypeOfSymbol(symbol) : null;
+		// Without the generated types (e.g. before `svelte-kit sync`), Kit declares it as `string`,
+		// which tells nothing.
+		this.resolvedPathnameType =
+			type && !checker.isTypeAssignableTo(checker.getStringType(), type) ? type : null;
 		return this.resolvedPathnameType;
 	}
 
@@ -1940,6 +1944,33 @@ function isGlobal(context: RuleContext, node: TSESTree.Node, names: string[]): b
 	}
 	const variable = findVariableInScope(scopeOf(context, target), target.name);
 	return variable === null || variable.defs.length === 0;
+}
+
+/**
+ * The type annotation of a declared name: `a: T`, or the annotation of the pattern it is
+ * destructured from (`{ a }: { a: T }` gives `T`, `{ a }: Props` gives `Props`).
+ */
+function annotationOf(name: TSESTree.Identifier): TSESTree.TypeNode | null {
+	if (name.typeAnnotation) return name.typeAnnotation.typeAnnotation;
+	const property = name.parent;
+	if (property?.type !== 'Property' || property.value !== name) return null;
+	const pattern = property.parent;
+	if (pattern.type !== 'ObjectPattern' || !pattern.typeAnnotation) return null;
+	const type = pattern.typeAnnotation.typeAnnotation;
+	if (type.type === 'TSTypeLiteral' && property.key.type === 'Identifier' && !property.computed) {
+		const key = property.key.name;
+		for (const member of type.members) {
+			if (
+				member.type === 'TSPropertySignature' &&
+				member.key.type === 'Identifier' &&
+				member.key.name === key &&
+				member.typeAnnotation
+			) {
+				return member.typeAnnotation.typeAnnotation;
+			}
+		}
+	}
+	return type;
 }
 
 function unwrapTypeScript(node: TSESTree.Expression): TSESTree.Expression {
