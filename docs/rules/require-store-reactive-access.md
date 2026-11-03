@@ -113,6 +113,7 @@ With type information, this rule also allows the following:
 ```
 
 The auto-fix adds the `$` prefix only to stores declared at the top level of the component, and not inside the module script (`<script module>` or `<script context="module">`), because Svelte does not allow it there.
+It also does not fix the left side of `||=`, `&&=`, and `??=`, because `$store ||= value` sets the store value instead.
 
 ## :wrench: Options
 
