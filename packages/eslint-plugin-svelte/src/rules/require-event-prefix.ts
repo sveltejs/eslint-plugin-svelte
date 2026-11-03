@@ -5,9 +5,11 @@ import {
 	isMethodSymbol,
 	isPropertySignatureKind,
 	isFunctionTypeKind,
-	isMethodSignatureKind,
-	isTypeReferenceKind,
-	isIdentifierKind
+	isAnyType,
+	isUndefinedType,
+	isUnknownType,
+	isVoidType,
+	getCallSignaturesOfType
 } from '../utils/ts-utils/index.js';
 import type { Symbol, Type } from 'typescript';
 import type { CallExpression } from 'estree';
@@ -60,8 +62,7 @@ export default createRule('require-event-prefix', {
 					if (
 						isFunctionLike(property, tsTools) &&
 						!property.getName().startsWith('on') &&
-						!property.getName().startsWith('get') &&
-						(checkAsyncFunctions || !isFunctionAsync(property, tsTools))
+						isEventLike(property, tsTools, checkAsyncFunctions)
 					) {
 						const declarationTsNode = property.getDeclarations()?.[0];
 						const declarationEstreeNode =
@@ -106,19 +107,53 @@ function isFunctionLike(functionSymbol: Symbol, tsTools: TSTools): boolean {
 	);
 }
 
-function isFunctionAsync(functionSymbol: Symbol, tsTools: TSTools): boolean {
-	return (
-		functionSymbol.getDeclarations()?.some((declaration) => {
-			if (!isMethodSignatureKind(declaration, tsTools.ts)) {
-				return false;
-			}
-			if (declaration.type === undefined || !isTypeReferenceKind(declaration.type, tsTools.ts)) {
-				return false;
-			}
+/**
+ * Checks whether the function returns nothing (`void` or `undefined`).
+ * `any` and `unknown` are also treated as events because we cannot tell.
+ * Functions that return a value (e.g. `getHref: (item: T) => string`) are not events.
+ * `Promise<void>` is treated as an event only when `checkAsyncFunctions` is enabled.
+ */
+function isEventLike(
+	functionSymbol: Symbol,
+	tsTools: TSTools,
+	checkAsyncFunctions: boolean
+): boolean {
+	const declaration = functionSymbol.valueDeclaration ?? functionSymbol.getDeclarations()?.[0];
+	if (declaration === undefined) {
+		return true;
+	}
+	const checker = tsTools.service.program.getTypeChecker();
+	const signatures = getCallSignaturesOfType(
+		checker.getTypeOfSymbolAtLocation(functionSymbol, declaration)
+	);
+	if (signatures.length === 0) {
+		return true;
+	}
+	return signatures.every((signature) => {
+		const returnType = checker.getReturnTypeOfSignature(signature);
+		if (isVoidOrUnknownType(returnType, tsTools)) {
+			return true;
+		}
+		if (returnType.getSymbol()?.getName() === 'Promise') {
+			const awaitedType = checker.getAwaitedType(returnType);
 			return (
-				isIdentifierKind(declaration.type.typeName, tsTools.ts) &&
-				declaration.type.typeName.escapedText === 'Promise'
+				checkAsyncFunctions &&
+				awaitedType !== undefined &&
+				isVoidOrUnknownType(awaitedType, tsTools)
 			);
-		}) ?? false
+		}
+		return false;
+	});
+}
+
+function isVoidOrUnknownType(type: Type, tsTools: TSTools): boolean {
+	if (type.isUnion()) {
+		return type.types.every((t) => isVoidOrUnknownType(t, tsTools));
+	}
+	return (
+		isVoidType(type, tsTools.ts) ||
+		isUndefinedType(type, tsTools.ts) ||
+		isAnyType(type, tsTools.ts) ||
+		isUnknownType(type, tsTools.ts)
 	);
 }

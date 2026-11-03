@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-fix(require-event-prefix) ignore props start with "get"
+fix(require-event-prefix): ignore function props that return a value
