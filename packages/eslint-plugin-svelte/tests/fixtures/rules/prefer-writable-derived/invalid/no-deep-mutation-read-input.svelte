@@ -1,5 +1,4 @@
 <script>
-	import Child from './Child.svelte';
 	const { data } = $props();
 	let user = $state(data.user);
 	$effect(() => {
@@ -18,5 +17,5 @@
 <p>{show(user)} {json}</p>
 <p>{user.items.map((item) => item.name).join(', ')}</p>
 <p>{user.items.filter(Boolean).sort().length}</p>
-<Child value={user} {...user} />
+<p class={user.className} title={user.name}>{user.name}</p>
 <input bind:value={user} />

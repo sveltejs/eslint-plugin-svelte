@@ -49,9 +49,9 @@ To be safe, the rule reports a variable only when it can see every use of the ob
 
 - If every value assigned to the variable is a primitive (e.g. `count * 2`), the object can't be mutated, so the rule reports it.
 - It follows values that share the object, such as `const { profile } = value`, `{#each value.items as item}`, `value.items.forEach((item) => ...)`, `[...value]`, local functions and snippets, and values returned from them.
-- Reading the object is fine. This includes the template, built-in methods that don't mutate (e.g. `value.items.map(...)`, `value.name.trim()`), built-in functions such as `JSON.stringify(value)` and `$state.snapshot(value)`, and props without `bind:` (components [should not mutate them](https://svelte.dev/docs/svelte/$props#Updating-props)).
+- Reading the object is fine. This includes text and attributes of HTML elements in the template, built-in methods that don't mutate (e.g. `value.items.map(...)`, `value.name.trim()`), and built-in functions such as `JSON.stringify(value)` and `$state.snapshot(value)`.
 - A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not.
-- Any other use is treated as a mutation. For example, passing the object to an imported function (e.g. `setContext('user', value)`), calling a method that is not built in (e.g. `value.save()`), storing it in another object, `bind:` on a component, or returning it to outside of the file.
+- Any other use is treated as a mutation. For example, passing the object to an imported function (e.g. `setContext('user', value)`), calling a method that is not built in (e.g. `value.save()`), storing it in another object, passing it to a component (a component can give it back through a callback, a snippet or a binding), `value` of `<option>` and `<input>` (`bind:value` and `bind:group` give it back), or returning it to outside of the file.
 
 Methods are matched by name, so a method that has the name of a built-in method (e.g. `map` or `toString`) is treated as the built-in method.
 

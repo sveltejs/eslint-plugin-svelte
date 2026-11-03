@@ -1,12 +1,11 @@
 - message: Prefer using writable $derived instead of $state and $effect
-  line: 4
+  line: 3
   column: 6
   suggestions:
     - desc: Rewrite $state and $effect to $derived
       messageId: suggestRewrite
       output: |
         <script>
-        	import Child from './Child.svelte';
         	const { data } = $props();
         	let user = $derived(data.user);
         	;
@@ -23,5 +22,5 @@
         <p>{show(user)} {json}</p>
         <p>{user.items.map((item) => item.name).join(', ')}</p>
         <p>{user.items.filter(Boolean).sort().length}</p>
-        <Child value={user} {...user} />
+        <p class={user.className} title={user.name}>{user.name}</p>
         <input bind:value={user} />

@@ -447,9 +447,22 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/** Returns what the global function returns, or `null` if it may change its arguments. */
-	function getGlobalFunctionResult(callee: TSESTree.Node): Result | null {
+	function getGlobalFunctionResult(
+		callee: TSESTree.Node,
+		call?: TSESTree.CallExpression
+	): Result | null {
 		const name = getGlobalName(callee);
 		if (name == null) return null;
+		// e.g. `JSON.stringify(v, (key, value) => ...)`. The replacer gets parts of the value.
+		if (name === 'JSON.stringify' && call && call.arguments.length >= 2) {
+			const replacer = unwrapTS(call.arguments[1]);
+			if (
+				replacer.type !== 'ArrayExpression' &&
+				!(replacer.type === 'Literal' && replacer.value === null)
+			) {
+				return null;
+			}
+		}
 		const result = GLOBAL_FUNCTIONS.get(name);
 		if (result) return result;
 		const [object, method] = name.split('.');
@@ -486,6 +499,36 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/**
+	 * Checks whether the node is an array literal or an object literal without accessors, methods or
+	 * `__proto__`, so storing a value in it doesn't run any code.
+	 */
+	function isPlainLiteral(expression: TSESTree.Node): boolean {
+		const node = unwrapTS(expression);
+		if (node.type === 'ArrayExpression') return true;
+		if (node.type !== 'ObjectExpression') return false;
+		return node.properties.every(
+			(property) =>
+				property.type === 'SpreadElement' ||
+				(property.kind === 'init' &&
+					!property.method &&
+					getPropertyName(property, getScope(context, property)) !== '__proto__')
+		);
+	}
+
+	/** Checks whether the node points to a local plain object literal, e.g. `const a = { b: 1 }`. */
+	function isLocalObjectLiteral(expression: TSESTree.Node): boolean {
+		const node = unwrapTS(expression);
+		if (node.type === 'ObjectExpression') return true;
+		if (node.type !== 'Identifier') return false;
+		const def = findVariable(node)?.defs[0];
+		return (
+			def?.type === 'Variable' &&
+			def.node.init != null &&
+			unwrapTS(def.node.init).type === 'ObjectExpression'
+		);
+	}
+
+	/**
 	 * Checks a variable declared with a new array or object, e.g. `const a = []`,
 	 * which doesn't share its value with others before.
 	 */
@@ -501,8 +544,7 @@ function createDeepMutationChecker(context: RuleContext) {
 			def?.type !== 'Variable' ||
 			def.node.id.type !== 'Identifier' ||
 			!def.node.init ||
-			(unwrapTS(def.node.init).type !== 'ObjectExpression' &&
-				unwrapTS(def.node.init).type !== 'ArrayExpression') ||
+			!isPlainLiteral(def.node.init) ||
 			variable.references.some((reference) => reference.isWrite() && !reference.init)
 		) {
 			return null;
@@ -559,7 +601,15 @@ function createDeepMutationChecker(context: RuleContext) {
 		const node = unwrapTS(callee);
 		if (isFunction(node)) return node;
 		if (node.type !== 'Identifier') return null;
-		for (const def of findVariable(node)?.defs ?? []) {
+		const variable = findVariable(node);
+		// e.g. `let fn = () => {}; fn = other;`. We can't know which function is called.
+		if (
+			!variable ||
+			variable.references.some((reference) => reference.isWrite() && !reference.init)
+		) {
+			return null;
+		}
+		for (const def of variable.defs) {
 			// A TS overload signature has no body, so it's skipped.
 			if (def.type === 'FunctionName' && isFunction(def.node as AnyNode)) {
 				return def.node as LocalFunction;
@@ -573,8 +623,35 @@ function createDeepMutationChecker(context: RuleContext) {
 		return null;
 	}
 
+	/** Checks whether the function uses `arguments`, which has all arguments. */
+	function usesArguments(fn: LocalFunction): boolean {
+		if (fn.type !== 'FunctionDeclaration' && fn.type !== 'FunctionExpression') return false;
+		const scope = context.sourceCode.scopeManager?.acquire(fn);
+		return (scope?.set.get('arguments')?.references.length ?? 0) > 0;
+	}
+
+	/** Checks whether the function returns a value, e.g. `return { update(param) {} }`. */
+	function hasReturnValue(fn: LocalFunction): boolean {
+		if (fn.type === 'SvelteSnippetBlock') return false;
+		if (fn.body.type !== 'BlockStatement') return true;
+
+		/** Checks the nodes, skipping nested functions. */
+		function visit(node: unknown): boolean {
+			if (!node || typeof node !== 'object') return false;
+			if (Array.isArray(node)) return node.some(visit);
+			const n = node as TSESTree.Node;
+			if (n.type === 'ReturnStatement') return n.argument != null;
+			if (isFunction(n)) return false;
+			return Object.entries(n).some(([key, value]) => key !== 'parent' && visit(value));
+		}
+
+		return visit(fn.body.body);
+	}
+
 	/** Checks the parameter of a local function (or snippet) that gets the value. */
 	function isParamMutated(fn: LocalFunction, index: number, mode: Mode): boolean {
+		// e.g. `function f() { arguments[0].a = 1; }`
+		if (usesArguments(fn)) return true;
 		const params = (fn.params as TSESTree.Parameter[]).filter(
 			// TS `this` parameter, e.g. `function f(this: T, a) {}`
 			(param) => param.type !== 'Identifier' || param.name !== 'this'
@@ -760,6 +837,24 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/**
+	 * Checks whether the value of the attribute may be kept and given back to other code.
+	 * A component may pass a prop back through a callback, a snippet or a binding,
+	 * and `value` of `<option>` and `<input>` is given back by `bind:value` and `bind:group`.
+	 * Custom elements get values as properties.
+	 */
+	function isAttributeEscaping(
+		attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute
+	): boolean {
+		const element = attribute.parent.parent;
+		if (element.type !== 'SvelteElement') return true;
+		if (element.kind === 'component') return true;
+		if (element.kind === 'special') {
+			return ['svelte:component', 'svelte:element', 'svelte:self'].includes(element.name.name);
+		}
+		return element.name.name.includes('-') || attribute.key.name === 'value';
+	}
+
+	/**
 	 * Checks whether the value of the given expression may be mutated.
 	 * `mode` tells how the value relates to the object of the `$state` variable.
 	 */
@@ -812,7 +907,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (container.type !== 'CallExpression') return true;
 					// e.g. `fn(...v)`
 					const index = container.arguments.indexOf(parent);
-					const result = getGlobalFunctionResult(container.callee);
+					const result = getGlobalFunctionResult(container.callee, container);
 					if (result === 'none') return false;
 					if (result === 'newContainer' && index === 0) {
 						moveTo(container, Math.max(depth, 1));
@@ -870,7 +965,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						continue;
 					}
 					if (name === '$inspect') return isInspectMutated(parent, toMode(depth));
-					const result = getGlobalFunctionResult(parent.callee);
+					const result = getGlobalFunctionResult(parent.callee, parent);
 					if (result === 'none') return false;
 					if (result === 'newContainer' && index === 0) {
 						// e.g. `Array.from(v, (item) => ...)`
@@ -885,7 +980,11 @@ function createDeepMutationChecker(context: RuleContext) {
 						continue;
 					}
 					const callee = unwrapTS(parent.callee);
-					const info = callee.type === 'MemberExpression' ? getMethodInfo(callee) : null;
+					// The methods of a local object literal are not built-in methods, e.g. `log.push(v)`.
+					const info =
+						callee.type === 'MemberExpression' && !isLocalObjectLiteral(callee.object)
+							? getMethodInfo(callee)
+							: null;
 					if (callee.type === 'MemberExpression' && info) {
 						// e.g. `a.includes(v)`. The first argument of methods with a callback is the callback.
 						// Other arguments of them (e.g. `thisArg`) may be passed to the callback.
@@ -927,8 +1026,19 @@ function createDeepMutationChecker(context: RuleContext) {
 					return isWritable;
 				case 'UnaryExpression':
 					return parent.operator === 'delete' && isWritable;
-				case 'BinaryExpression':
 				case 'TemplateLiteral':
+					// e.g. tag`${v}`. The tag gets the value.
+					return parent.parent?.type === 'TaggedTemplateExpression';
+				case 'SvelteMustacheTag': {
+					const attribute = parent.parent as AnyNode | null;
+					return attribute?.type === 'SvelteAttribute' && isAttributeEscaping(attribute);
+				}
+				case 'SvelteShorthandAttribute':
+					return isAttributeEscaping(parent);
+				case 'SvelteSpreadAttribute':
+					// e.g. `<Child {...v} />`. It may set any attribute.
+					return true;
+				case 'BinaryExpression':
 				case 'ExpressionStatement':
 				case 'IfStatement':
 				case 'WhileStatement':
@@ -938,12 +1048,6 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'SwitchCase':
 				case 'TSTypeQuery':
 				case 'TSQualifiedName':
-				// Values in the template. Components should not mutate props without `bind:`
-				// (https://svelte.dev/docs/svelte/$props#Updating-props).
-				// falls through
-				case 'SvelteMustacheTag':
-				case 'SvelteShorthandAttribute':
-				case 'SvelteSpreadAttribute':
 				case 'SvelteSpecialDirective':
 				case 'SvelteStyleDirective':
 				case 'SvelteIfBlock':
@@ -1010,7 +1114,9 @@ function createDeepMutationChecker(context: RuleContext) {
 							(parent.key.name as { name?: unknown }).name !== 'this'
 						);
 					}
-					if (parent.kind === 'Class' || parent.kind === 'EventHandler') return false;
+					if (parent.kind === 'Class') return false;
+					// e.g. `on:click={v.handler}`. A component may call it with anything.
+					if (parent.kind === 'EventHandler') return isComponentElement(parent.parent?.parent);
 					if (
 						parent.kind !== 'Action' &&
 						parent.kind !== 'Transition' &&
@@ -1027,7 +1133,10 @@ function createDeepMutationChecker(context: RuleContext) {
 					}
 					const fn = getLocalFunction(name);
 					return (
-						fn == null || isParamMutated(fn, parent.kind === 'Animation' ? 2 : 1, toMode(depth))
+						fn == null ||
+						// An action may return `update`, which gets the new value.
+						(parent.kind === 'Action' && hasReturnValue(fn)) ||
+						isParamMutated(fn, parent.kind === 'Animation' ? 2 : 1, toMode(depth))
 					);
 				}
 				default:
