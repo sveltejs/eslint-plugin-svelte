@@ -1,0 +1,4 @@
+{
+	"FIXME": "@babel/eslint-parser does not support ESLint v10 yet",
+	"eslint": "<10.0.0"
+}

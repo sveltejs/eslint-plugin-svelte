@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           # Same version as the release build (Release.yml)
           node-version: 26
@@ -77,7 +77,7 @@ jobs:
       # Build with the same Node.js version as the release build (Release.yml),
       # then run the tests with the target Node.js version.
       - name: Setup Node.js 26 for build
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26
       - name: Install Packages
@@ -86,7 +86,7 @@ jobs:
         run: pnpm build
         working-directory: ${{ env.project_root_path }}
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
       # Hack: Install `eslint-plugin-svelte` is necessary for `packages/eslint-plugin-svelte/tests/src/configs` tests.
@@ -95,7 +95,14 @@ jobs:
         working-directory: ${{ env.project_root_path }}
       - name: Install ESLint ${{ matrix.eslint }}
         if: matrix.eslint != 9
-        run: pnpm install -D -w eslint@${{ matrix.eslint }}
+        # Install into the package as well. The package has its own auto-installed
+        # `eslint` peer, so installing only at the workspace root is not enough.
+        run: |
+          pnpm install -D -w eslint@${{ matrix.eslint }}
+          pnpm --filter eslint-plugin-svelte add -D eslint@${{ matrix.eslint }}
+      - name: Check ESLint version
+        run: node -p "'eslint ' + require('eslint/package.json').version"
+        working-directory: ${{ env.project_root_path }}
 
       - name: Test
         run: pnpm test
@@ -114,7 +121,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@4
@@ -144,7 +151,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
       - name: Install svelte@3
