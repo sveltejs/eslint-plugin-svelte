@@ -273,6 +273,18 @@ const GLOBAL_FUNCTIONS = new Map<string, Result>([
 	['Object.values', 'newContainer']
 ]);
 
+// Properties that the language may read and call implicitly,
+// e.g. `toString` in `${value}` or `then` in `await value`.
+const PROTOCOL_PROPERTIES = new Set([
+	'__proto__',
+	'constructor',
+	'then',
+	'toJSON',
+	'toLocaleString',
+	'toString',
+	'valueOf'
+]);
+
 // Runes that return the given value itself (or the same proxy).
 const PASS_THROUGH_RUNES = new Set(['$derived', '$state', '$state.eager', '$state.raw']);
 
@@ -499,34 +511,68 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/**
-	 * Checks whether the node is an array literal or an object literal without accessors, methods or
-	 * `__proto__`, so storing a value in it doesn't run any code.
+	 * Checks whether the node is an array literal or an object literal without accessors, methods
+	 * or properties that the language may call (e.g. `toString`), so using it doesn't run any code.
 	 */
 	function isPlainLiteral(expression: TSESTree.Node): boolean {
 		const node = unwrapTS(expression);
 		if (node.type === 'ArrayExpression') return true;
 		if (node.type !== 'ObjectExpression') return false;
-		return node.properties.every(
-			(property) =>
-				property.type === 'SpreadElement' ||
-				(property.kind === 'init' &&
-					!property.method &&
-					getPropertyName(property, getScope(context, property)) !== '__proto__')
+		return node.properties.every((property) => {
+			if (property.type === 'SpreadElement') return true;
+			if (property.kind !== 'init' || property.method) return false;
+			const name = getPropertyName(property, getScope(context, property));
+			return name != null && !PROTOCOL_PROPERTIES.has(name);
+		});
+	}
+
+	/** Checks whether the literal (or a literal in it) has code that may run with it as `this`. */
+	function hasCodeInLiteral(expression: TSESTree.Node): boolean {
+		const node = unwrapTS(expression);
+		if (node.type === 'ArrayExpression') {
+			return node.elements.some((element) => element != null && hasCodeInLiteral(element));
+		}
+		if (node.type !== 'ObjectExpression') return false;
+		return (
+			!isPlainLiteral(node) ||
+			node.properties.some(
+				(property) => property.type === 'Property' && hasCodeInLiteral(property.value)
+			)
 		);
 	}
 
-	/** Checks whether the node points to a local plain object literal, e.g. `const a = { b: 1 }`. */
-	function isLocalObjectLiteral(expression: TSESTree.Node): boolean {
+	/**
+	 * Checks whether the node is a local array literal or a string, whose methods are built-in.
+	 * Other objects may have their own methods with the same names.
+	 */
+	function isBuiltinReceiver(expression: TSESTree.Node): boolean {
 		const node = unwrapTS(expression);
-		if (node.type === 'ObjectExpression') return true;
+		if (node.type === 'ArrayExpression' || node.type === 'TemplateLiteral') return true;
+		if (node.type === 'Literal') return typeof node.value === 'string';
 		if (node.type !== 'Identifier') return false;
-		const def = findVariable(node)?.defs[0];
+		const variable = getNewContainerVariable(node);
+		const def = variable?.defs[0];
 		return (
 			def?.type === 'Variable' &&
 			def.node.init != null &&
-			unwrapTS(def.node.init).type === 'ObjectExpression'
+			unwrapTS(def.node.init).type === 'ArrayExpression' &&
+			// e.g. `a.includes = fn`
+			!variable!.references.some((reference) => {
+				const member = reference.identifier.parent;
+				return (
+					member?.type === 'MemberExpression' &&
+					member.object === reference.identifier &&
+					member.parent?.type === 'AssignmentExpression' &&
+					member.parent.left === member &&
+					!/^\d+$/u.test(getPropertyName(member, getScope(context, member)) ?? '')
+				);
+			})
 		);
 	}
+
+	// Calls of built-in methods on followed values, e.g. `v.map(f)`.
+	// Their callbacks are called by the built-in methods.
+	const builtinCalls = new Set<TSESTree.CallExpression>();
 
 	/**
 	 * Checks a variable declared with a new array or object, e.g. `const a = []`,
@@ -563,7 +609,8 @@ function createDeepMutationChecker(context: RuleContext) {
 	function isPatternMutated(pattern: TSESTree.Node, mode: Mode): boolean {
 		const depth = toDepth(mode);
 		const partMode = mode === 'eachItem' ? 'eachItem' : toMode(depth - 1);
-		const restMode = toMode(Math.max(depth, 1));
+		// A new container. Its elements may be shared at any depth, so `1` is used to be safe.
+		const restMode = 1;
 		switch (pattern.type) {
 			case 'Identifier': {
 				const variable = findVariable(pattern);
@@ -609,8 +656,10 @@ function createDeepMutationChecker(context: RuleContext) {
 		) {
 			return null;
 		}
-		for (const def of variable.defs) {
-			// A TS overload signature has no body, so it's skipped.
+		// e.g. `var fn = a; var fn = b;`. A TS overload signature has no body, so it's skipped.
+		const defs = variable.defs.filter((def) => def.node.type !== 'TSDeclareFunction');
+		if (defs.length !== 1) return null;
+		for (const def of defs) {
 			if (def.type === 'FunctionName' && isFunction(def.node as AnyNode)) {
 				return def.node as LocalFunction;
 			}
@@ -750,12 +799,18 @@ function createDeepMutationChecker(context: RuleContext) {
 		// e.g. `Array.from(v, (item) => item)`
 		if (index === 1 && name === 'Array.from') return isValueMutated(call, toMode(depth + 1));
 		const callee = unwrapTS(call.callee);
-		if (index !== 0 || callee.type !== 'MemberExpression') return true;
+		if (
+			index !== 0 ||
+			callee.type !== 'MemberExpression' ||
+			!(builtinCalls.has(call) || isBuiltinReceiver(callee.object))
+		) {
+			return true;
+		}
 		switch (getMethodInfo(callee)?.callback) {
 			case 'map':
 				return isValueMutated(call, toMode(depth + 1));
 			case 'flatMap':
-				return isValueMutated(call, toMode(Math.max(depth, 1)));
+				return isValueMutated(call, 1);
 			case 'reduce': {
 				// The returned value becomes the next accumulator and the result.
 				const fn = getLocalFunction(call.arguments[0]);
@@ -901,7 +956,8 @@ function createDeepMutationChecker(context: RuleContext) {
 					const container = parent.parent as AnyNode;
 					if (container.type === 'ArrayExpression' || container.type === 'ObjectExpression') {
 						// e.g. `[...v]` or `{ ...v }`. A new container whose elements are shared.
-						moveTo(container as TSESTree.Node, Math.max(depth, 1));
+						if (!isPlainLiteral(container as TSESTree.Node)) return true;
+						moveTo(container as TSESTree.Node, 1);
 						continue;
 					}
 					if (container.type !== 'CallExpression') return true;
@@ -910,7 +966,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					const result = getGlobalFunctionResult(container.callee, container);
 					if (result === 'none') return false;
 					if (result === 'newContainer' && index === 0) {
-						moveTo(container, Math.max(depth, 1));
+						moveTo(container, 1);
 						continue;
 					}
 					return isArgumentMutated(container, index, toMode(depth), true);
@@ -936,6 +992,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (!info) return true;
 						// e.g. `v.push(1)`
 						if (info.mutates && objectDepth === 0) return true;
+						builtinCalls.add(parent);
 						// e.g. `v.forEach((item) => (item.a = 1))`
 						if (
 							info.callback &&
@@ -949,11 +1006,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (info.result === 'none') return false;
 						moveTo(
 							parent,
-							info.result === 'self'
-								? objectDepth
-								: info.result === 'part'
-									? objectDepth - 1
-									: Math.max(objectDepth, 1)
+							info.result === 'self' ? objectDepth : info.result === 'part' ? objectDepth - 1 : 1
 						);
 						continue;
 					}
@@ -976,13 +1029,13 @@ function createDeepMutationChecker(context: RuleContext) {
 						) {
 							return true;
 						}
-						moveTo(parent, Math.max(depth, 1));
+						moveTo(parent, 1);
 						continue;
 					}
 					const callee = unwrapTS(parent.callee);
-					// The methods of a local object literal are not built-in methods, e.g. `log.push(v)`.
+					// Methods are matched by name only when the object is known to be built-in.
 					const info =
-						callee.type === 'MemberExpression' && !isLocalObjectLiteral(callee.object)
+						callee.type === 'MemberExpression' && isBuiltinReceiver(callee.object)
 							? getMethodInfo(callee)
 							: null;
 					if (callee.type === 'MemberExpression' && info) {
@@ -993,7 +1046,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (info.args === 'stored') return isStoredValueMutated(callee.object, toMode(depth));
 						if (info.args === 'container') {
 							// e.g. `a.concat(v)`
-							moveTo(parent, Math.max(depth, 1));
+							moveTo(parent, 1);
 							continue;
 						}
 						return false;
@@ -1015,7 +1068,17 @@ function createDeepMutationChecker(context: RuleContext) {
 					return !isFunction(fn) || isReturnedValueMutated(fn, toMode(depth));
 				}
 				case 'AssignmentExpression':
-					if (parent.left === node) return isWritable;
+					if (parent.left === node) {
+						// e.g. `copy.toString = fn`. The language may call it with the object as `this`.
+						if (
+							member &&
+							(member.property == null || PROTOCOL_PROPERTIES.has(member.property)) &&
+							!isPrimitive(parent.right)
+						) {
+							return true;
+						}
+						return isWritable;
+					}
 					// e.g. `a += v`. The result is a primitive.
 					if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return false;
 					// e.g. `a = v`
@@ -1065,7 +1128,8 @@ function createDeepMutationChecker(context: RuleContext) {
 					}
 					// e.g. `({ [v]: 1 })`
 					if (parent.value !== node) return false;
-					// e.g. `({ a: v })`
+					// e.g. `({ a: v })`. Methods of the object may get it as `this`.
+					if (!isPlainLiteral(parent.parent)) return true;
 					moveTo(parent.parent, depth + 1);
 					continue;
 				case 'ArrayExpression':
@@ -1179,6 +1243,19 @@ function createDeepMutationChecker(context: RuleContext) {
 		}
 	}
 
+	/** Checks whether a value assigned to the variable is a literal with code, e.g. a getter. */
+	function hasAssignedCode(variable: Variable): boolean {
+		return variable.references.some((reference) => {
+			const parent = reference.identifier.parent;
+			return (
+				!reference.init &&
+				parent?.type === 'AssignmentExpression' &&
+				parent.left === reference.identifier &&
+				hasCodeInLiteral(parent.right)
+			);
+		});
+	}
+
 	/** Checks whether every value assigned to the variable is a primitive. */
 	function hasOnlyPrimitives(variable: Variable): boolean {
 		return variable.references.every((reference) => {
@@ -1198,7 +1275,9 @@ function createDeepMutationChecker(context: RuleContext) {
 		visited.clear();
 		stops = 0;
 		depth = 0;
-		return !hasOnlyPrimitives(variable) && isVariableMutated(variable, 0);
+		return (
+			!hasOnlyPrimitives(variable) && (hasAssignedCode(variable) || isVariableMutated(variable, 0))
+		);
 	};
 }
 

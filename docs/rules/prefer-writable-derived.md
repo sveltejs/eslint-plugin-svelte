@@ -53,7 +53,9 @@ To be safe, the rule reports a variable only when it can see every use of the ob
 - A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not.
 - Any other use is treated as a mutation. For example, passing the object to an imported function (e.g. `setContext('user', value)`), calling a method that is not built in (e.g. `value.save()`), storing it in another object, passing it to a component (a component can give it back through a callback, a snippet or a binding), `value` of `<option>` and `<input>` (`bind:value` and `bind:group` give it back), or returning it to outside of the file.
 
-Methods are matched by name, so a method that has the name of a built-in method (e.g. `map` or `toString`) is treated as the built-in method.
+Methods are matched by name only when the object is known to be built-in: a part of the object (`$state` proxies only arrays and plain objects), a local array literal or a string. A method of such an object that has the name of a built-in method (e.g. `map` or `toString`) is treated as the built-in method.
+
+The rule can't see getters or methods (e.g. `toString` or `toJSON`) that the object gets from outside of the file, such as from props. If they change the object, check it yourself before applying the suggestion.
 
 <!--eslint-skip-->
 
