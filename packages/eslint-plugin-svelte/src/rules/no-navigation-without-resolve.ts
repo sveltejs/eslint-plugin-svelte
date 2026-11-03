@@ -454,11 +454,12 @@ function expandReference(
 		return null;
 	}
 	const binding = variable.identifiers[0];
+	const init = variableInit(variable);
 	const values =
 		binding.parent.type === 'VariableDeclarator'
-			? binding.parent.init === null
+			? init === null
 				? null
-				: [binding.parent.init]
+				: [init]
 			: eachItemValues(ctx, binding);
 	if (values === null) {
 		return null;
@@ -507,17 +508,6 @@ function eachItemValues(
 }
 
 // Helper functions
-
-function resolveBindingIdentifier(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier
-): TSESTree.Identifier | null {
-	const variable = ctx.findVariable(node);
-	if (variable === null || variable.identifiers.length === 0) {
-		return null;
-	}
-	return variable.identifiers[0];
-}
 
 /**
  * Resolve an `{#each array as context}` iteration variable to the iterated array and the
@@ -755,11 +745,38 @@ function resolveVariableInit(
 	ctx: FindVariableContext,
 	node: TSESTree.Identifier
 ): TSESTree.Expression | null {
-	const binding = resolveBindingIdentifier(ctx, node);
-	if (binding === null || binding.parent.type !== 'VariableDeclarator') {
+	const variable = ctx.findVariable(node);
+	if (variable === null || variable.identifiers.length === 0) {
+		return null;
+	}
+	return variableInit(variable);
+}
+
+/**
+ * Returns the initializer of a variable, or null if it has none or may hold a different value.
+ */
+function variableInit(variable: Variable): TSESTree.Expression | null {
+	const binding = variable.identifiers[0];
+	if (binding.parent.type !== 'VariableDeclarator' || !isNeverReassigned(variable)) {
 		return null;
 	}
 	return binding.parent.init;
+}
+
+/**
+ * Checks that a variable always holds its initial value, i.e. it is a `const` or is never written to
+ * after initialization. Mirrors `getStaticValue()` from eslint-utils.
+ */
+function isNeverReassigned(variable: Variable): boolean {
+	if (variable.defs.length !== 1 || variable.defs[0].type !== 'Variable') {
+		return false;
+	}
+	if (variable.defs[0].parent.kind === 'const') {
+		return true;
+	}
+	const inits = variable.references.filter((reference) => reference.init).length;
+	const reads = variable.references.filter((reference) => reference.isReadOnly()).length;
+	return inits === 1 && inits + reads === variable.references.length;
 }
 
 /**
