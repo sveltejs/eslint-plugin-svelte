@@ -5,11 +5,16 @@
   suggestions: null
 - message: Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
-  line: 8
+  line: 6
+  column: 16
+  suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead
+    of accessing the raw store.
+  line: 9
   column: 6
   suggestions: null
 - message: Use the $ prefix or the get function to access reactive values instead
     of accessing the raw store.
-  line: 8
+  line: 9
   column: 6
   suggestions: null

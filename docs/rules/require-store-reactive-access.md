@@ -86,8 +86,8 @@ export const storeValue = writable('hello');
 
 With type information, this rule also allows the following:
 
-- A store that is also a function (e.g. [melt-ui](https://www.melt-ui.com/) builders are stores and actions) can be called, and used with `use:`, `transition:`, `in:`, `out:`, `animate:`, `on:`, and event attributes (e.g. `onclick`).
-- A store can be checked with `??` when the fallback is also a store (e.g. `getContext('key') ?? readable(0)`), because the type of the left side may not include `undefined`.
+- A store that is also a function (e.g. [melt-ui](https://www.melt-ui.com/) builders are stores and actions) can be called, and used with `use:`, `transition:`, `in:`, `out:`, `animate:`, `on:`, and event attributes (e.g. `onclick`, Svelte 5 only).
+- A store can be checked with `??` or `??=` when the fallback is also a store (e.g. `getContext('key') ?? readable(0)`), because the type of the left side may not include `undefined`. This does not apply to stores created with `writable()`, `readable()`, or `derived()` in the same file, since they always exist.
 
 <!--eslint-skip-->
 
@@ -95,7 +95,7 @@ With type information, this rule also allows the following:
 <script lang="ts">
   /* eslint svelte/require-store-reactive-access: "error" */
   import { getContext } from 'svelte';
-  import { readable } from 'svelte/store';
+  import { type Readable, readable } from 'svelte/store';
   import { createDropdownMenu } from '@melt-ui/svelte';
 
   const {
@@ -103,7 +103,9 @@ With type information, this rule also allows the following:
   } = createDropdownMenu();
 
   /* ✓ GOOD */
-  const store = getContext('key') ?? readable(0);
+  function getStore(): Readable<number> {
+    return getContext('key') ?? readable(0);
+  }
 </script>
 
 <!-- ✓ GOOD -->
