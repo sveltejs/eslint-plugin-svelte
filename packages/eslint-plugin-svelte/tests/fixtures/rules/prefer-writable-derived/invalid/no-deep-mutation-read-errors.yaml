@@ -1,0 +1,24 @@
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 5
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	import Child from './Child.svelte';
+        	import { format } from './format.js';
+        	const { data } = $props();
+        	let user = $derived(data.user);
+        	;
+        	const show = (u) => u.name;
+        </script>
+
+        {#each user.items as item (item.id)}
+        	<p>{item.name}</p>
+        {/each}
+        <p>{show(user)} {format(user)}</p>
+        <p>{user.items.map((item) => item.name).join(', ')}</p>
+        <p>{user.items.filter(Boolean).sort().length}</p>
+        <Child value={user} />
+        <input bind:value={user} />
