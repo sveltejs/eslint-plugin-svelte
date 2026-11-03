@@ -1,5 +1,25 @@
 # eslint-plugin-svelte
 
+## 3.23.1
+
+### Patch Changes
+
+- [#1592](https://github.com/sveltejs/eslint-plugin-svelte/pull/1592) [`ed67eb7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ed67eb70079a3766e1fcca04717efe67b981a29c) Thanks [@baseballyama](https://github.com/baseballyama)! - Exclude deprecated rules from the `all` configuration while keeping active rules enabled.
+
+- [#1594](https://github.com/sveltejs/eslint-plugin-svelte/pull/1594) [`af288cd`](https://github.com/sveltejs/eslint-plugin-svelte/commit/af288cdadb7a4e9545b67301b9d28da27eb19935) Thanks [@baseballyama](https://github.com/baseballyama)! - Recognize `browser` from SvelteKit's `$app/env` alias as a browser guard in `no-top-level-browser-globals`.
+
+- [#1588](https://github.com/sveltejs/eslint-plugin-svelte/pull/1588) [`9814b51`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9814b51df1f4a9b271b50e9abc312cd0c15e714a) Thanks [@baseballyama](https://github.com/baseballyama)! - Include all active extension rules in the Extension Rules documentation table while preserving their primary-category entries.
+
+- [#1589](https://github.com/sveltejs/eslint-plugin-svelte/pull/1589) [`57863c5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/57863c52b3e9092a15f8432faeac9cb258b5e08d) Thanks [@baseballyama](https://github.com/baseballyama)! - Keep the documented project service configuration consistent across TypeScript and Svelte files to avoid unnecessary project reloads.
+
+- [#1593](https://github.com/sveltejs/eslint-plugin-svelte/pull/1593) [`4ad2c67`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4ad2c67a971a76a6311ef42a091e1da76853578a) Thanks [@baseballyama](https://github.com/baseballyama)! - Limit `require-each-key` diagnostics to the opening each tag instead of the whole block.
+
+- [#1599](https://github.com/sveltejs/eslint-plugin-svelte/pull/1599) [`90d7b09`](https://github.com/sveltejs/eslint-plugin-svelte/commit/90d7b09cc4c075b655dfe8042cfda9158bac02f8) Thanks [@baseballyama](https://github.com/baseballyama)! - Enable no-navigation-without-resolve on SvelteKit 3 so the recommended config reports internal links and navigation calls that omit resolve().
+
+- [#1590](https://github.com/sveltejs/eslint-plugin-svelte/pull/1590) [`a28563f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a28563f337515b6d32010c7f2f32d3adff730929) Thanks [@baseballyama](https://github.com/baseballyama)! - Fix false positives in `no-immutable-reactive-statements` for TypeScript components when `ecmaFeatures.globalReturn` is enabled.
+
+- [#1598](https://github.com/sveltejs/eslint-plugin-svelte/pull/1598) [`4607a2c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4607a2cc4065b3d6e1a10467afeb937f12f4ee55) Thanks [@baseballyama](https://github.com/baseballyama)! - Recognize SvelteKit 3 in rule conditions, including prereleases, and document version detection and routes configuration.
+
 ## 3.23.0
 
 ### Minor Changes

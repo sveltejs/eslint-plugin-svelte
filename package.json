@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "funding": "https://github.com/sponsors/ota-meshi",
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@10.34.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sveltejs/eslint-plugin-svelte.git"
@@ -18,8 +18,8 @@
     "test": "pnpm --recursive run test"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.7.0",
-    "@changesets/cli": "^2.30.0",
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.0",
     "@changesets/get-release-plan": "^4.0.15",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@ota-meshi/eslint-plugin": "^0.19.0",

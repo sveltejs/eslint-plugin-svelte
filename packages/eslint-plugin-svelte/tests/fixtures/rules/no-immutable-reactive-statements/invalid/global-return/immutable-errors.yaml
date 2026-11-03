@@ -1,0 +1,5 @@
+- message: This statement is not reactive because all variables referenced in the
+    reactive statement are immutable.
+  line: 3
+  column: 10
+  suggestions: null

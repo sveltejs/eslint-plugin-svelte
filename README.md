@@ -147,6 +147,10 @@ export default defineConfig(
   svelte.configs.recommended,
   {
     languageOptions: {
+      parserOptions: {
+        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
+        extraFileExtensions: ['.svelte']
+      },
       globals: {
         ...globals.browser,
         // for Sveltekit in non-SPA mode
@@ -161,9 +165,6 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        // Enable typescript parsing for `.svelte` files.
-        extraFileExtensions: ['.svelte'],
-
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,
@@ -269,6 +270,10 @@ export default defineConfig([
   // ...
 ]);
 ```
+
+SvelteKit versions are detected from the installed `@sveltejs/kit` package, falling back to its dependency range in `package.json`. The plugin recognizes SvelteKit 1, 2, and 3, including SvelteKit 3 prereleases. Version-specific rules run only for the versions they support.
+
+For SvelteKit 3 projects using a custom routes directory, set `settings.svelte.kit.files.routes` to match the `files.routes` option passed to the `sveltekit` Vite plugin. SvelteKit 3 no longer uses `svelte.config.js`; see the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#Configuration).
 
 ## Editor Integrations
 
@@ -409,6 +414,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 |:--------|:------------|:---|
 | [svelte/no-inner-declarations](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
 | [svelte/no-trailing-spaces](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
+| [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
 
 ## SvelteKit
 

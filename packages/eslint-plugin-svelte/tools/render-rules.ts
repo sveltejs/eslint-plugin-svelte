@@ -38,7 +38,11 @@ activeRules.forEach((rule) => {
 const categoryRules = categories.map((cat) => {
 	return {
 		title: cat,
-		rules: svelteRules.filter((rule) => rule.meta.docs.category === cat)
+		rules: svelteRules.filter(
+			(rule) =>
+				rule.meta.docs.category === cat ||
+				(cat === 'Extension Rules' && Boolean(rule.meta.docs.extensionRule))
+		)
 	};
 });
 
