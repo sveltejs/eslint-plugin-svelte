@@ -1,0 +1,20 @@
+- message: Unexpected mustache interpolation with a string literal value.
+  line: 1
+  column: 1
+  suggestions: null
+- message: Unexpected mustache interpolation with a string literal value.
+  line: 2
+  column: 1
+  suggestions: null
+- message: Unexpected mustache interpolation with a string literal value.
+  line: 3
+  column: 1
+  suggestions: null
+- message: Unexpected mustache interpolation with a string literal value.
+  line: 4
+  column: 16
+  suggestions: null
+- message: Unexpected mustache interpolation with a string literal value.
+  line: 5
+  column: 18
+  suggestions: null
