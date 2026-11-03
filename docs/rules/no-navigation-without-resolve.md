@@ -111,7 +111,7 @@ These are always fine:
 
 ### TypeScript
 
-With type information, string literal types are checked too. Only types that the code declares are used: imports, `$props()`, and variables or parameters with a type annotation. A literal type inferred from a function result (for example `<T>(path: T) => T`) is not trusted, because the function may add the base path.
+With type information, string literal types are checked too. A literal type is used only when it is written out in the code: as a type annotation (for example of a prop) or as a literal value (for example `export const ABOUT = '/about'`). A literal type that comes from a function result (for example `<T>(path: T) => T`) is not trusted, because the function may add the base path.
 
 <!--eslint-skip-->
 

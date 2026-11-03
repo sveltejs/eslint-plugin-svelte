@@ -78,7 +78,7 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 		assert.deepStrictEqual(lint('2.26.0'), [
 			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/blog/hello'));"] },
 			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
-			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
+			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/') + '?q=1');"] },
 			// `preloadCode()` takes a pathname on SvelteKit 2.
 			{ line: 8, messageId: 'rootRelative', suggestions: [] },
 			// A resolved URL is a pathname, which SvelteKit 2 expects.
@@ -103,7 +103,7 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('blog/hello'));"] },
 			// `/` stays the root route ID.
 			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
-			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
+			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/') + '?q=1');"] },
 			// `preloadCode()` takes a route ID on SvelteKit 3: a route ID is fine, a URL is not.
 			{ line: 9, messageId: 'preloadCodeRouteId', suggestions: [] },
 			{

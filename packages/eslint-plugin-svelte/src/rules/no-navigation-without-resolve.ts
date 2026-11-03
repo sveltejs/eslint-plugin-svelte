@@ -420,6 +420,9 @@ class UrlEvaluator {
 	/** The number of computations left for the current URL. */
 	private budget = 0;
 
+	/** The keys that were found in a cycle with themselves. */
+	private readonly selfHits = new Set<unknown>();
+
 	/** Whether the depth limit cut the current evaluation off. */
 	private limited = false;
 
@@ -456,9 +459,11 @@ class UrlEvaluator {
 			// A value that depends on itself adds nothing new (the least fixed point), or what was
 			// found so far while repeating.
 			this.lowestCut = Math.min(this.lowestCut, active);
+			this.selfHits.add(key);
 			return state.provisional?.has(key) ? state.provisional.get(key)! : onCycle;
 		}
 		if (--this.budget < 0) throw OUT_OF_BUDGET;
+		this.selfHits.delete(key);
 		const depth = this.depth;
 		const outer = this.lowestCut;
 		const outerLimited = this.limited;
@@ -470,7 +475,9 @@ class UrlEvaluator {
 			let result = compute();
 			// `a = b ?? '/x'; b = a`: repeat with the value found so far until it stops growing.
 			if (state.size && state.provisional) {
-				for (let round = 0; round < 4 && this.lowestCut === depth; round++) {
+				// Repeat whenever the value depended on itself, even when an outer value is also cut.
+				for (let round = 0; round < 4 && this.selfHits.has(key); round++) {
+					this.selfHits.delete(key);
 					const size = state.size(result);
 					state.provisional.set(key, result);
 					this.lowestCut = Infinity;
@@ -480,6 +487,7 @@ class UrlEvaluator {
 					if (!grew) break;
 				}
 				state.provisional.delete(key);
+				this.selfHits.delete(key);
 			}
 			if (this.lowestCut >= depth) {
 				// A result cut by the depth limit depends on where the evaluation started, so it is
@@ -960,9 +968,12 @@ class UrlEvaluator {
 		let result = this.propertyNameCache.get(object);
 		if (!result) {
 			const scope = scopeOf(this.context, object);
-			const names = object.properties.map((property) =>
-				property.type === 'SpreadElement' ? null : getPropertyName(property, scope)
-			);
+			const names = object.properties.map((property) => {
+				if (property.type === 'SpreadElement') return null;
+				const name = getPropertyName(property, scope);
+				// `{ __proto__: ... }` sets the prototype.
+				return name === '__proto__' && !property.computed ? null : name;
+			});
 			let index: Map<string, number> | null = new Map();
 			for (const [i, name] of names.entries()) {
 				if (name === null) {
@@ -1084,6 +1095,17 @@ class UrlEvaluator {
 		if (key === 'url' && this.isPage(node.object)) return based('page.url');
 		if ((key === 'pathname' || key === 'href') && this.isPageUrl(node.object)) {
 			return based(`page.url.${key}`);
+		}
+		// `page.url.search`, `url.hash`, `location.search`: empty or starting with `?` / `#`.
+		if (
+			(key === 'search' || key === 'hash') &&
+			(this.isPageUrl(node.object) ||
+				isGlobal(this.context, node.object, ['location']) ||
+				this.evaluateUrlObject(node.object) !== null)
+		) {
+			return union(text(''), [
+				[{ type: 'text', value: key === 'search' ? '?' : '#' }, STRING_PART]
+			]);
 		}
 		if (key === 'origin' && this.isPageUrl(node.object)) {
 			return [[{ type: 'unknown', string: true, origin: true }]];
@@ -1320,15 +1342,22 @@ class UrlEvaluator {
 	}
 
 	/**
-	 * Whether the type of `node` is declared by the code: an import, `$props()`, a parameter or
-	 * a variable with a type annotation (or a property of one of them).
+	 * Whether the literal type of `node` is declared by the code: by a type annotation (for
+	 * example of a prop or an imported constant) or by a literal value. A type that comes from a
+	 * function result is not declared.
 	 */
 	private hasDeclaredType(node: TSESTree.Node): boolean {
-		let target = unwrapTypeScript(node as TSESTree.Expression);
-		while (target.type === 'MemberExpression' || target.type === 'ChainExpression') {
-			target = unwrapTypeScript(
-				target.type === 'MemberExpression' ? target.object : target.expression
-			);
+		if (!this.tsTools) return false;
+		const target = unwrapTypeScript(node as TSESTree.Expression);
+		if (target.type === 'MemberExpression') {
+			const tsNode = this.tsTools.service.esTreeNodeToTSNodeMap.get(target as never) as TS.Node;
+			const ts = this.tsTools.ts;
+			const name = ts.isPropertyAccessExpression(tsNode)
+				? tsNode.name
+				: ts.isElementAccessExpression(tsNode)
+					? tsNode.argumentExpression
+					: null;
+			return name !== null && this.isDeclaredSymbol(this.checker().getSymbolAtLocation(name));
 		}
 		if (target.type !== 'Identifier') return false;
 		const variable = findVariable(this.context, target);
@@ -1336,17 +1365,82 @@ class UrlEvaluator {
 		if (variable === null || variable.name !== target.name) return false;
 		const def = variable.defs[0];
 		if (def === undefined) return false;
-		if (def.type === 'ImportBinding') return true;
-		if (def.type !== 'Parameter' && def.type !== 'Variable') return false;
-		// `{ a }: Props`, `[a]: T`, `a: T`
-		for (let n: TSESTree.Node | undefined = def.name; n; n = n.parent) {
-			if ('typeAnnotation' in n && n.typeAnnotation) return true;
-			if (!PATTERN_PARENTS.has(n.parent?.type ?? '') && n !== def.name) break;
+		if (def.type === 'ImportBinding') {
+			const tsNode = this.tsTools.service.esTreeNodeToTSNodeMap.get(target as never) as TS.Node;
+			return this.isDeclaredSymbol(this.checker().getSymbolAtLocation(tsNode));
 		}
-		if (def.type === 'Variable' && def.node.type === 'VariableDeclarator' && def.node.init) {
-			return isRuneCall(this.context, def.node.init, ['$props']);
+		if (def.type !== 'Parameter' && def.type !== 'Variable') return false;
+		const name = def.name as TSESTree.Identifier;
+		if (name.typeAnnotation) return true;
+		// `let { a }: Props = $props()`: the type of the property `a` of `Props`.
+		const property = name.parent;
+		if (
+			property?.type === 'Property' &&
+			property.value === name &&
+			property.parent.type === 'ObjectPattern'
+		) {
+			const key = getPropertyName(property, scopeOf(this.context, property));
+			const pattern = this.tsTools.service.esTreeNodeToTSNodeMap.get(property.parent as never);
+			const type = pattern ? this.checker().getTypeAtLocation(pattern) : null;
+			return key !== null && this.isDeclaredSymbol(type?.getProperty(key));
 		}
 		return false;
+	}
+
+	/** Whether a type annotation is written out (not a type parameter such as `T`). */
+	private isDeclaredTypeNode(node: TS.TypeNode): boolean {
+		const ts = this.tsTools!.ts;
+		const type = this.checker().getTypeFromTypeNode(node);
+		const types = type.isUnion() ? type.types : [type];
+		return types.every((t) => !(t.flags & ts.TypeFlags.TypeParameter));
+	}
+
+	/** Whether a TypeScript expression is a literal (its type is what is written). */
+	private isLiteralValue(node: TS.Expression): boolean {
+		const ts = this.tsTools!.ts;
+		let current = node;
+		while (ts.isParenthesizedExpression(current)) current = current.expression;
+		if (ts.isAsExpression(current) || ts.isSatisfiesExpression(current)) {
+			// `x as const` keeps the type of `x`. `x as '/a'` declares it, `x as T` does not.
+			return ts.isConstTypeReference(current.type)
+				? this.isLiteralValue(current.expression)
+				: this.isDeclaredTypeNode(current.type);
+		}
+		return (
+			ts.isStringLiteral(current) ||
+			ts.isNoSubstitutionTemplateLiteral(current) ||
+			ts.isObjectLiteralExpression(current) ||
+			ts.isArrayLiteralExpression(current)
+		);
+	}
+
+	/** Whether every declaration of the symbol has a type annotation or a literal value. */
+	private isDeclaredSymbol(symbol: TS.Symbol | undefined): boolean {
+		const ts = this.tsTools!.ts;
+		let target = symbol;
+		if (target && target.flags & ts.SymbolFlags.Alias) {
+			target = this.checker().getAliasedSymbol(target);
+		}
+		const declarations = target?.declarations ?? [];
+		return (
+			declarations.length > 0 &&
+			declarations.every((declaration) => {
+				if (
+					ts.isVariableDeclaration(declaration) ||
+					ts.isPropertySignature(declaration) ||
+					ts.isPropertyDeclaration(declaration) ||
+					ts.isParameter(declaration)
+				) {
+					if (declaration.type) return this.isDeclaredTypeNode(declaration.type);
+					const initializer =
+						'initializer' in declaration ? (declaration.initializer as TS.Expression) : undefined;
+					return initializer !== undefined && this.isLiteralValue(initializer);
+				}
+				if (ts.isPropertyAssignment(declaration))
+					return this.isLiteralValue(declaration.initializer);
+				return false;
+			})
+		);
 	}
 
 	private checker(): TS.TypeChecker {
@@ -1725,6 +1819,25 @@ function collectIdentifiers(pattern: TSESTree.Node | null, result: TSESTree.Iden
 	}
 }
 
+/** Whether `node` is a global such as `location`, `window.location` or `globalThis.location`. */
+function isGlobal(context: RuleContext, node: TSESTree.Node, names: string[]): boolean {
+	let target = node;
+	if (
+		target.type === 'MemberExpression' &&
+		!target.computed &&
+		target.object.type === 'Identifier' &&
+		(target.object.name === 'window' || target.object.name === 'globalThis') &&
+		target.property.type === 'Identifier'
+	) {
+		if (!names.includes(target.property.name)) return false;
+		target = target.object;
+	} else if (target.type !== 'Identifier' || !names.includes(target.name)) {
+		return false;
+	}
+	const variable = findVariableInScope(scopeOf(context, target), target.name);
+	return variable === null || variable.defs.length === 0;
+}
+
 function unwrapTypeScript(node: TSESTree.Expression): TSESTree.Expression {
 	let current = node;
 	while (
@@ -2034,7 +2147,22 @@ export default createRule('no-navigation-without-resolve', {
 				.join('')}\``;
 		}
 
-		/** Convert a root-relative URL to the argument form of `resolve()` / `asset()`. */
+		/** Split the segments at the first `?` or `#`. */
+		function splitQuery(segments: Segment[]): [Segment[], Segment[]] {
+			const index = segments.findIndex((s) => s.type === 'text' && /[#?]/u.test(s.value));
+			if (index === -1) return [segments, []];
+			const text = segments[index].value;
+			const at = text.search(/[#?]/u);
+			const before: Segment[] = text.slice(0, at)
+				? [{ type: 'text', value: text.slice(0, at) }]
+				: [];
+			return [
+				[...segments.slice(0, index), ...before],
+				[{ type: 'text', value: text.slice(at) }, ...segments.slice(index + 1)]
+			];
+		}
+
+		/** Convert a root-relative pathname to the argument form of `resolve()` / `asset()`. */
 		function adjustForKit(segments: Segment[], fn: 'resolve' | 'asset'): Segment[] | null {
 			const [first, ...rest] = segments;
 			if (
@@ -2045,7 +2173,7 @@ export default createRule('no-navigation-without-resolve', {
 				return null;
 			}
 			// `[` would turn a pathname into a route ID, and `(group)` is a route ID segment.
-			// `resolve()` drops empty segments, so `//` (even in the query) would change the URL.
+			// `resolve()` drops empty segments, so `//` would change the URL.
 			if (
 				segments.some((s) => s.type === 'text' && (s.value.includes('[') || s.value.includes('//')))
 			) {
@@ -2060,8 +2188,7 @@ export default createRule('no-navigation-without-resolve', {
 			if (path.includes('(')) return null;
 			if (!isKit3) return segments;
 			// SvelteKit 3: pathnames are written without the leading slash (`/` stays as the root route ID).
-			const isRoot = first.value === '/' ? rest.length === 0 : /^\/[#?]/u.test(first.value);
-			if (fn === 'resolve' && isRoot) return segments;
+			if (fn === 'resolve' && first.value === '/' && rest.length === 0) return segments;
 			return [{ type: 'text', value: first.value.slice(1) }, ...rest];
 		}
 
@@ -2196,8 +2323,9 @@ export default createRule('no-navigation-without-resolve', {
 					: ['resolve'];
 			const suggestions: SuggestionReportDescriptor[] = [];
 			const imports = findPathsImport(at);
+			const [pathname, query] = splitQuery(segments);
 			for (const fn of fns) {
-				const adjusted = adjustForKit(segments, fn);
+				const adjusted = adjustForKit(pathname, fn);
 				if (adjusted === null) continue;
 				let callee: string | null = null;
 				let needsImport = false;
@@ -2212,7 +2340,16 @@ export default createRule('no-navigation-without-resolve', {
 					callee = fn;
 					needsImport = true;
 				}
-				const call = `${callee}(${toArgument(adjusted)})`;
+				// `resolve()` takes a pathname: the query and the hash go after it.
+				const call =
+					query.length === 0
+						? `${callee}(${toArgument(adjusted)})`
+						: query.every((s) => s.type === 'text')
+							? `${callee}(${toArgument(adjusted)}) + ${toArgument(query)}`
+							: toArgument([
+									{ type: 'code', value: `${callee}(${toArgument(adjusted)})` },
+									...query
+								]);
 				suggestions.push({
 					messageId: 'suggestWrap',
 					data: { call: `${callee}()` },

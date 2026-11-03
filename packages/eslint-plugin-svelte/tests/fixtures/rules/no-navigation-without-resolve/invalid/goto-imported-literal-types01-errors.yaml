@@ -1,0 +1,16 @@
+- message: "'/about' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 9
+  column: 7
+  suggestions: null
+- message: "'/typed' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 10
+  column: 7
+  suggestions: null
+- message: "'/la' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 11
+  column: 7
+  suggestions: null
+- message: "'/plain' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 15
+  column: 7
+  suggestions: null

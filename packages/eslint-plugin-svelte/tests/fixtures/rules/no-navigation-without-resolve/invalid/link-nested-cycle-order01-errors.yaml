@@ -1,0 +1,12 @@
+- message: "'/home' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 18
+  column: 4
+  suggestions: null
+- message: "'/home' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 19
+  column: 4
+  suggestions: null

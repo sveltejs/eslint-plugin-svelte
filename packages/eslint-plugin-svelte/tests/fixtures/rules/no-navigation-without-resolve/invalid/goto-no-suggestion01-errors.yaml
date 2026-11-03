@@ -2,7 +2,18 @@
     path. Use `resolve()` from `$app/paths`."
   line: 4
   column: 7
-  suggestions: null
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { goto } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+
+        	goto(resolve('/login') + '?redirect=https://example.com/x');
+        	goto('/a//b');
+        	goto('/(app)/settings');
+        </script>
 - message: "'/a//b' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 5
   column: 7

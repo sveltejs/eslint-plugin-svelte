@@ -11,7 +11,7 @@
   suggestions:
     - desc: Wrap the URL with `resolve()`.
       messageId: suggestWrap
-      output: |
+      output: >
         <script>
         	import { goto } from '$app/navigation';
         	import { resolve } from '$app/paths';
@@ -20,5 +20,8 @@
         	goto('/login?next=' + page.url.pathname);
         </script>
 
+
         <!-- The path itself has no base path. -->
-        <a href={resolve(`/login?next=${resolve('/dashboard')}`)}>Click me!</a>
+
+        <a href={`${resolve('/login')}?next=${resolve('/dashboard')}`}>Click
+        me!</a>

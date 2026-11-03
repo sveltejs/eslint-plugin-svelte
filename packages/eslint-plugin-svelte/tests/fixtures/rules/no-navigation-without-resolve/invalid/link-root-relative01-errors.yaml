@@ -144,7 +144,7 @@
         <a href="/blog/{slug}">Click me!</a>
         <a href={`/blog/${slug}`}>Click me!</a>
         <a href={'/blog/' + slug}>Click me!</a>
-        <a href={resolve('/about?tab=1#top')}>Click me!</a>
+        <a href={resolve('/about') + '?tab=1#top'}>Click me!</a>
         <a href="  /about">Click me!</a>
         <a href="/about" data-sveltekit-reload>Click me!</a>
         <a href="/about" target="_blank">Click me!</a>
