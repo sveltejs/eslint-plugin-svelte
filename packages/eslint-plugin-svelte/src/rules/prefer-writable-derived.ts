@@ -119,9 +119,10 @@ const NEW_ARRAY_METHODS = new Set([
 	'toSorted',
 	'toSpliced',
 	'with',
-	// Their elements are new, too.
+	// String methods. Their elements are new, too.
 	'match',
 	'split',
+	// Iterator method.
 	'toArray'
 ]);
 
@@ -250,8 +251,10 @@ function createDeepMutationChecker(context: RuleContext) {
 	/** Checks whether the variable (which gets the object or a part of it) is mutated. */
 	function isVariableMutated(variable: Variable, mode: Mode): boolean {
 		return withCache(variable, mode, () =>
-			variable.references.some((reference) =>
-				isValueMutated(reference.identifier as TSESTree.Identifier, mode)
+			variable.references.some(
+				(reference) =>
+					// Skip the declaration itself, e.g. `{ a = 1 }` in `{#each v as { a = 1 }}`.
+					!reference.init && isValueMutated(reference.identifier as TSESTree.Identifier, mode)
 			)
 		);
 	}
@@ -291,9 +294,10 @@ function createDeepMutationChecker(context: RuleContext) {
 
 	/** Returns the local function (or snippet) that the given callee points to. */
 	function getLocalFunction(callee: TSESTree.Node): LocalFunction | null {
-		if (isFunction(callee)) return callee;
-		if (callee.type !== 'Identifier') return null;
-		for (const def of findVariable(callee)?.defs ?? []) {
+		const node = unwrapTS(callee);
+		if (isFunction(node)) return node;
+		if (node.type !== 'Identifier') return null;
+		for (const def of findVariable(node)?.defs ?? []) {
 			// A TS overload signature has no body, so it's skipped.
 			if (def.type === 'FunctionName' && isFunction(def.node as AnyNode)) {
 				return def.node as LocalFunction;
