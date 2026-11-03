@@ -3,6 +3,7 @@ import { createRule } from '../utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import { findVariable, isIn } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
+import type { RuleContext } from '../types.js';
 
 export default createRule('prefer-svelte-reactivity', {
 	meta: {
@@ -89,6 +90,11 @@ export default createRule('prefer-svelte-reactivity', {
 									: path[0] === 'URL'
 										? 'mutableURLUsed'
 										: 'mutableURLSearchParamsUsed';
+					if (isLocalToFunction(context, node as TSESTree.Expression)) {
+						// The instance can't be observed after the function returns,
+						// so it doesn't need to be reactive.
+						continue;
+					}
 					for (const exportedVar of exportedVars) {
 						if (isIn(node, exportedVar)) {
 							context.report({
@@ -135,6 +141,87 @@ export default createRule('prefer-svelte-reactivity', {
 		};
 	}
 });
+
+type FunctionNode =
+	| TSESTree.FunctionDeclaration
+	| TSESTree.FunctionExpression
+	| TSESTree.ArrowFunctionExpression;
+
+function getEnclosingFunction(node: TSESTree.Node): FunctionNode | null {
+	let current = node.parent;
+	while (current) {
+		if (
+			current.type === 'FunctionDeclaration' ||
+			current.type === 'FunctionExpression' ||
+			current.type === 'ArrowFunctionExpression'
+		) {
+			return current;
+		}
+		current = current.parent;
+	}
+	return null;
+}
+
+/**
+ * Checks whether the instance is created inside a function and never leaves it,
+ * e.g. it is not returned, stored outside, or used by a nested function.
+ */
+function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression): boolean {
+	const fn = getEnclosingFunction(ctorNode);
+	if (!fn) return false;
+
+	const parent = ctorNode.parent;
+	// A temporary instance, e.g. `new Date(date).setHours(0)`
+	if (parent.type === 'MemberExpression' && parent.object === ctorNode) {
+		return true;
+	}
+	if (
+		parent.type !== 'VariableDeclarator' ||
+		parent.init !== ctorNode ||
+		parent.id.type !== 'Identifier'
+	) {
+		return false;
+	}
+	const variable = findVariable(context, parent.id);
+	if (!variable) return false;
+	return variable.references.every((reference) => {
+		if (reference.init) return true;
+		const identifier = reference.identifier as TSESTree.Identifier;
+		if (getEnclosingFunction(identifier) !== fn) return false;
+		return reference.isWrite() || !isLeaked(identifier);
+	});
+}
+
+/**
+ * Checks whether the value of the node may be stored or returned.
+ */
+function isLeaked(node: TSESTree.Node): boolean {
+	const parent = node.parent;
+	if (!parent) return false;
+	switch (parent.type) {
+		case 'ReturnStatement':
+		case 'YieldExpression':
+		case 'ArrayExpression':
+		case 'Property':
+		case 'VariableDeclarator':
+			return true;
+		case 'ArrowFunctionExpression':
+			return parent.body === node;
+		case 'AssignmentExpression':
+			return parent.right === node;
+		case 'AwaitExpression':
+		case 'ChainExpression':
+		case 'ConditionalExpression':
+		case 'LogicalExpression':
+		case 'SequenceExpression':
+		case 'TSAsExpression':
+		case 'TSNonNullExpression':
+		case 'TSSatisfiesExpression':
+			return isLeaked(parent);
+		default:
+			return false;
+	}
+}
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
 	return !referenceTracker

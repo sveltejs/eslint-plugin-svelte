@@ -22,6 +22,31 @@ Note that runes mode is detected from `parserOptions.svelteConfig`, `<svelte:opt
 
 Also, in legacy components, this rule does not report instances that are passed to runes code (for example, as a prop to a runes component). Those instances could still benefit from the reactive classes.
 
+This rule does not report an instance that is created inside a function and never leaves it, because nothing can observe it after the function returns. An instance leaves the function when it is returned, stored outside the function (e.g. assigned to an outer variable or put in an object or array), or used by a nested function. Passing it to a function call does not count as leaving.
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/prefer-svelte-reactivity: "error" */
+  const { page } = $props();
+
+  /* ✓ GOOD */
+  function getNextPage() {
+    const url = new URL(page.url);
+    url.searchParams.set('p', '2');
+    return url.toString();
+  }
+
+  /* ✗ BAD */
+  function createSet() {
+    const set = new Set();
+    set.add(1);
+    return set;
+  }
+</script>
+```
+
 <!--eslint-skip-->
 
 ```svelte
