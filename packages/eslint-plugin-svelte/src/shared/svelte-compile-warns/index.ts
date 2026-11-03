@@ -408,7 +408,7 @@ function resolveRunes(runes: unknown, filename: string): boolean | undefined {
 		typeof runes === 'function'
 			? (runes as (options: { filename: string }) => unknown)({ filename })
 			: runes;
-	return typeof value === 'boolean' ? value : undefined;
+	return value == null ? undefined : Boolean(value);
 }
 
 /**
