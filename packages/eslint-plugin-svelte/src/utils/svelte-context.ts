@@ -280,6 +280,25 @@ export function getInstalledSvelteKitVersion(filePath: string): string | null {
 	return version;
 }
 
+/**
+ * Gets the `@sveltejs/kit` version range declared in the nearest package.json that has it
+ * (e.g. `^2.20.0`). Returns null if there is none.
+ */
+export function getDeclaredSvelteKitVersionRange(filePath: string): string | null {
+	if (isRunInBrowser) return null;
+	try {
+		for (const packageJson of getPackageJsons(filePath)) {
+			const range =
+				packageJson.dependencies?.['@sveltejs/kit'] ??
+				packageJson.devDependencies?.['@sveltejs/kit'];
+			if (typeof range === 'string') return range;
+		}
+	} catch {
+		/** do nothing */
+	}
+	return null;
+}
+
 const projectRootDirCache = createCache<string | null>();
 
 /**

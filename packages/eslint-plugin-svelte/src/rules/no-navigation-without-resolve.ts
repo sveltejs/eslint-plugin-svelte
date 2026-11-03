@@ -12,7 +12,11 @@ import {
 import semver from 'semver';
 import { createRule } from '../utils/index.js';
 import { findVariable, getScope } from '../utils/ast-utils.js';
-import { getInstalledSvelteKitVersion, getSvelteContext } from '../utils/svelte-context.js';
+import {
+	getDeclaredSvelteKitVersionRange,
+	getInstalledSvelteKitVersion,
+	getSvelteContext
+} from '../utils/svelte-context.js';
 import {
 	type TSTools,
 	getTypeScriptTools,
@@ -2130,7 +2134,13 @@ export default createRule('no-navigation-without-resolve', {
 	},
 	create(context) {
 		const installedKitVersion = getInstalledSvelteKitVersion(context.filename);
-		const coerced = installedKitVersion ? semver.coerce(installedKitVersion) : null;
+		// Without an installed package (e.g. Yarn PnP), use the lowest version of the declared range.
+		const declaredRange = installedKitVersion
+			? null
+			: getDeclaredSvelteKitVersionRange(context.filename);
+		let coerced = installedKitVersion ? semver.coerce(installedKitVersion) : null;
+		if (declaredRange && semver.validRange(declaredRange))
+			coerced = semver.minVersion(declaredRange);
 		// `resolve()` was added in SvelteKit 2.26.
 		if (coerced && semver.lt(coerced, '2.26.0')) return {};
 		const isKit3 =

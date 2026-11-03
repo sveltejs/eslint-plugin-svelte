@@ -127,7 +127,7 @@ With type information, string literal types are checked too. A literal type is u
 </script>
 ```
 
-If you really need to build a URL by hand (for example a path that has no route, handled in a hook), cast it with `as ResolvedPathname` or use an `eslint-disable` comment.
+If you really need to build a URL by hand (for example a path that has no route, handled in a hook), cast it with `as ResolvedPathname` or use an `eslint-disable` comment. In JavaScript, JSDoc casts such as `/** @type {ResolvedPathname} */ (url)` are not recognized, so use an `eslint-disable` comment there.
 
 ### `.ts` / `.js` files
 

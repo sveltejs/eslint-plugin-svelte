@@ -34,15 +34,18 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 		fs.rmSync(root, { recursive: true, force: true });
 	});
 
-	function lint(version: string): Result[] {
-		const project = path.join(root, version);
-		const kit = path.join(project, 'node_modules/@sveltejs/kit');
-		fs.mkdirSync(kit, { recursive: true });
+	function lint(version: string, installed = true): Result[] {
+		const project = path.join(root, `${version}-${installed}`);
+		fs.mkdirSync(project, { recursive: true });
 		fs.writeFileSync(
 			path.join(project, 'package.json'),
-			JSON.stringify({ devDependencies: { '@sveltejs/kit': `^${version}` } })
+			JSON.stringify({ devDependencies: { '@sveltejs/kit': `~${version}` } })
 		);
-		fs.writeFileSync(path.join(kit, 'package.json'), JSON.stringify({ version }));
+		if (installed) {
+			const kit = path.join(project, 'node_modules/@sveltejs/kit');
+			fs.mkdirSync(kit, { recursive: true });
+			fs.writeFileSync(path.join(kit, 'package.json'), JSON.stringify({ version }));
+		}
 
 		const filename = path.join(project, 'src/routes/+page.svelte');
 		const linter = new Linter({ cwd: project });
@@ -72,6 +75,11 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 
 	it('does not run before SvelteKit 2.26 (no `resolve()`)', () => {
 		assert.deepStrictEqual(lint('2.25.0'), []);
+	});
+
+	it('uses the declared version when the package is not in node_modules (e.g. Yarn PnP)', () => {
+		assert.deepStrictEqual(lint('2.20.0', false), []);
+		assert.deepStrictEqual(lint('2.26.0', false).length, 6);
 	});
 
 	it('suggests route IDs / pathnames with a leading slash on SvelteKit 2', () => {
