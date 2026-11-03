@@ -320,6 +320,17 @@ export default createRule('no-unused-props', {
 			return sourceFile.fileName.includes('node_modules/typescript/lib/');
 		}
 
+		/**
+		 * Checks if a property is a private class member like `#foo`.
+		 * It cannot be read from outside the class.
+		 */
+		function isPrivateNameProperty(prop: ts.Symbol): boolean {
+			return (prop.getDeclarations() ?? []).some((decl) => {
+				const name = tools!.ts.getNameOfDeclaration(decl);
+				return name != null && tools!.ts.isPrivateIdentifier(name);
+			});
+		}
+
 		function getUsedPropertyNamesFromPattern(
 			pattern: TSESTree.ObjectPattern
 		): DeclaredPropertyNames {
@@ -482,6 +493,7 @@ export default createRule('no-unused-props', {
 
 			for (const prop of properties) {
 				if (isBuiltInProperty(prop)) continue;
+				if (isPrivateNameProperty(prop)) continue;
 				if (!checkImportedTypes && !isInternalProperty(prop)) continue;
 
 				const propName = prop.getName();
@@ -661,6 +673,10 @@ export default createRule('no-unused-props', {
 					usedObjectSpreadPropertyPathsArray.push(...objectSpreadPaths);
 					usedIterableSpreadPropertyPathsArray.push(...iterableSpreadPaths);
 				}
+
+				// An empty path means the props object itself was used as a whole,
+				// e.g. `$inspect(props)` or `fn(props)`, so any property may be read.
+				if (usedPropertyPathsArray.some((path) => path.length === 0)) return;
 
 				function runNormalizeUsedPaths(paths: PropertyPathArray[]) {
 					return normalizeUsedPaths(paths, options.allowUnusedNestedProperties);

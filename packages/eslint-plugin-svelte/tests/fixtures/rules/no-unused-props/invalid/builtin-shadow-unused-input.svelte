@@ -3,5 +3,5 @@
 		toString: () => string;
 	}
 	let props: Props = $props();
-	console.log(props);
+	void props.valueOf;
 </script>
