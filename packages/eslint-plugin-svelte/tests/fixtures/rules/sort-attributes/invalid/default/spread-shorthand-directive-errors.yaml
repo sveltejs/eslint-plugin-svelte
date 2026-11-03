@@ -3,10 +3,18 @@
   column: 29
   suggestions: null
 - message: Attribute 'a' should go before 'bind:value'.
-  line: 7
+  line: 6
   column: 40
   suggestions: null
 - message: Attribute 'class:visible' should go before 'components'.
-  line: 8
+  line: 7
   column: 36
+  suggestions: null
+- message: Attribute 'b' should go before 'c'.
+  line: 8
+  column: 15
+  suggestions: null
+- message: Attribute 'y' should go before 'z'.
+  line: 8
+  column: 28
   suggestions: null
