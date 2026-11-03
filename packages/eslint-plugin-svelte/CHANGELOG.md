@@ -1,5 +1,48 @@
 # eslint-plugin-svelte
 
+## 3.24.0
+
+### Minor Changes
+
+- [#1553](https://github.com/sveltejs/eslint-plugin-svelte/pull/1553) [`8cca2e0`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8cca2e0db0f58a121dfa22f1cb8f1bdda4cfbdd1) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): track resolve() through array elements, object properties and {#each} iteration variables
+
+### Patch Changes
+
+- [#1380](https://github.com/sveltejs/eslint-plugin-svelte/pull/1380) [`9944910`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9944910f4957118ce65b07103f47366dfce56fa8) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-navigation-without-resolve): check complete `rel` tokens before exempting external links
+
+- [#1566](https://github.com/sveltejs/eslint-plugin-svelte/pull/1566) [`e49015d`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e49015da617f6683ad5f9878690ed4f7b050eac8) Thanks [@arpitjain099](https://github.com/arpitjain099)! - fix(no-unused-props): fix false positives and negatives around spreads, aliases, dotted keys, and props that share a type
+
+- [#1516](https://github.com/sveltejs/eslint-plugin-svelte/pull/1516) [`7538afa`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7538afa76d6f0661e28fa295c85d23990ecdc658) Thanks [@kevin-easygo](https://github.com/kevin-easygo)! - fix(no-reactive-functions): use `isSpaceBetween` instead of `isSpaceBetweenTokens`, which was removed in ESLint v10
+
+- [#1618](https://github.com/sveltejs/eslint-plugin-svelte/pull/1618) [`7999ad4`](https://github.com/sveltejs/eslint-plugin-svelte/commit/7999ad4e60dde9abf6b4969007b672c7f37480ef) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(valid-compile): read the parser from `context.languageOptions.parserOptions`, since `context.parserOptions` was removed in ESLint v10
+
+- [#1606](https://github.com/sveltejs/eslint-plugin-svelte/pull/1606) [`78def78`](https://github.com/sveltejs/eslint-plugin-svelte/commit/78def781262e4d947d9dbd797c7614d363fd552d) Thanks [@ozenyunus35](https://github.com/ozenyunus35)! - Allow a comment before a closing token in `svelte/indent` to be aligned with the previous line instead of requiring the indentation of the closing token.
+
+- [#1581](https://github.com/sveltejs/eslint-plugin-svelte/pull/1581) [`3b308f3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/3b308f3979a3538b7e11364910a78ae5943d6dca) Thanks [@badreddinesaadioui](https://github.com/badreddinesaadioui)! - fix(prefer-svelte-reactivity): stop reporting in legacy (non-runes) components, where the `svelte/reactivity` classes are not tracked
+
+- [#1627](https://github.com/sveltejs/eslint-plugin-svelte/pull/1627) [`36abd30`](https://github.com/sveltejs/eslint-plugin-svelte/commit/36abd30a4e541b85980d392c9c4e22887371bc6d) Thanks [@baseballyama](https://github.com/baseballyama)! - Fix false positives in `svelte/no-unused-props`:
+  - The props object is destructured (e.g. `const { a } = props`). A destructured key now counts as used when its binding is used, and an unused one is reported. Nested destructuring (e.g. `const { name } = user`) can now report unused nested properties, the same as `user.name`.
+  - The props object is used as a whole (e.g. `$inspect(props)` or `fn(props)`). Every property now counts as used. A type query like `typeof props.a` is not counted as a use.
+  - A dynamic key like `user[key]` now counts as using every property of `user`.
+  - Numeric and template literal keys like `props[0].a` and ``props[`a`]``, and wrapped values like `props!.a`, `(props as Props).a` and `(props satisfies Props).a` are now tracked.
+  - Instances of generic classes are now skipped like other class instances.
+  - With `allowUnusedNestedProperties`, nested properties are never reported.
+  - Class members that cannot be read from outside (`#foo`, `private`, `protected`) are no longer reported, e.g. in intersections.
+
+- [#1629](https://github.com/sveltejs/eslint-plugin-svelte/pull/1629) [`5e0c7bf`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5e0c7bfb8b58693df6c5115803d6e60dcee59a95) Thanks [@baseballyama](https://github.com/baseballyama)! - Stop `svelte/no-unused-svelte-ignore` from reporting `svelte-ignore` comments for runtime warnings (e.g. `ownership_invalid_binding`), which the compiler can't report.
+
+- [#1626](https://github.com/sveltejs/eslint-plugin-svelte/pull/1626) [`9aa3a7a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9aa3a7a37e44001b0133335f289111a2718d3d0a) Thanks [@baseballyama](https://github.com/baseballyama)! - Require `postcss@^8.5.10` to avoid GHSA-qx2v-qp2m-jg93.
+
+- [#1613](https://github.com/sveltejs/eslint-plugin-svelte/pull/1613) [`80e66ec`](https://github.com/sveltejs/eslint-plugin-svelte/commit/80e66ec8db99e9ff8e3bbc39a76b7f631746cb6d) Thanks [@smile-alive](https://github.com/smile-alive)! - fix(sort-attributes): do not report or move shorthand attributes and directives across spread attributes
+
+- [#1635](https://github.com/sveltejs/eslint-plugin-svelte/pull/1635) [`cf11995`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cf1199538dfd1e0e528fc1ee146c9c640a977d72) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(require-store-reactive-access): with type information, don't report callable stores used as functions, actions, transitions, or event handlers, and stores from function calls such as `getContext()` checked with `??` / `??=` with a store fallback. Don't auto-fix stores that are not declared at the top level, are used in the module script, or are on the left side of `||=` / `&&=` / `??=`.
+
+- [#1616](https://github.com/sveltejs/eslint-plugin-svelte/pull/1616) [`a972353`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a972353352d2fa675db34fe445160965847dcb6e) Thanks [@eknathdj](https://github.com/eknathdj)! - Honor `svelte-ignore` comments on nested script nodes in `svelte/no-unused-svelte-ignore` and `svelte/valid-compile` (Svelte 5), and no longer treat a comment at the end of the previous line as an ignore comment for the next node.
+
+- [#1648](https://github.com/sveltejs/eslint-plugin-svelte/pull/1648) [`ae85b36`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ae85b366b4485006fa5e9a18a4b5626cb156815e) Thanks [@baseballyama](https://github.com/baseballyama)! - chore: update `svelte-eslint-parser` to 1.10.1
+
+- [#1625](https://github.com/sveltejs/eslint-plugin-svelte/pull/1625) [`9b859e3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9b859e3793ddc2a581ac36163ec868bf9f17e6eb) Thanks [@baseballyama](https://github.com/baseballyama)! - Pass `compilerOptions.runes` from the Svelte config to the compiler in `svelte/valid-compile` and `svelte/no-unused-svelte-ignore`, so runes-mode warnings are reported for files that rely on `runes: true`. The function form (`runes: ({ filename }) => ...`) is also supported.
+
 ## 3.23.1
 
 ### Patch Changes
