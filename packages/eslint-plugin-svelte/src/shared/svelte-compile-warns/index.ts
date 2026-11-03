@@ -399,6 +399,19 @@ function isCustomElement(program: AST.SvelteProgram) {
 const svelteVersion = getSvelteVersion();
 
 /**
+ * Resolve `compilerOptions.runes`.
+ * Call the function form here with the real filename,
+ * because `compile()` gets no filename and Svelte < 5.54 accepts only a boolean.
+ */
+function resolveRunes(runes: unknown, filename: string): boolean | undefined {
+	const value =
+		typeof runes === 'function'
+			? (runes as (options: { filename: string }) => unknown)({ filename })
+			: runes;
+	return value == null ? undefined : Boolean(value);
+}
+
+/**
  * Get compile warnings
  */
 function getWarningsFromCode(
@@ -414,6 +427,7 @@ function getWarningsFromCode(
 		const result = compiler.compile(code, {
 			...(svelteVersion === '5'
 				? {
+						runes: resolveRunes(compilerOptions.runes, context.filename),
 						experimental: {
 							async: compilerOptions.experimental?.async
 						}
