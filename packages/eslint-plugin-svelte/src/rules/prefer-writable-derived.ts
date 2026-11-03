@@ -76,7 +76,8 @@ function isStateVariable(init: TSESTree.Expression | null): init is TSESTree.Cal
 }
 
 // Methods that mutate the object they are called on.
-// Map / Set methods are included too, since a custom class may have methods with these names.
+// `$state` does not proxy Map / Set, but their method names are included to be safe,
+// since the rule can't know the type of the object.
 const MUTATING_METHODS = new Set([
 	// Array
 	'copyWithin',
@@ -96,10 +97,16 @@ const MUTATING_METHODS = new Set([
 ]);
 
 // Static methods that mutate their first argument.
-const MUTATING_STATIC_METHODS: Record<string, Set<string>> = {
-	Object: new Set(['assign', 'defineProperties', 'defineProperty', 'setPrototypeOf']),
-	Reflect: new Set(['defineProperty', 'deleteProperty', 'set', 'setPrototypeOf'])
-};
+const MUTATING_STATIC_METHODS = new Map([
+	['Object', new Set(['assign', 'defineProperties', 'defineProperty', 'setPrototypeOf'])],
+	['Reflect', new Set(['defineProperty', 'deleteProperty', 'set', 'setPrototypeOf'])]
+]);
+
+// Parameters of callbacks that get the elements. For other methods, all parameters are checked.
+const ELEMENT_PARAMS = new Map([
+	['reduce', [1, 3]],
+	['reduceRight', [1, 3]]
+]);
 
 // Methods that return a new array. The array itself is new, but its elements are still shared.
 const NEW_ARRAY_METHODS = new Set([
@@ -119,6 +126,20 @@ const NEW_ARRAY_METHODS = new Set([
 const PASS_THROUGH_RUNES = new Set(['$derived', '$state', '$state.raw']);
 
 type AnyNode = TSESTree.Node | AST.SvelteNode;
+type LocalFunction =
+	| TSESTree.FunctionDeclaration
+	| TSESTree.FunctionExpression
+	| TSESTree.ArrowFunctionExpression
+	| AST.SvelteSnippetBlock;
+
+function isFunction(node: AnyNode | null | undefined): node is LocalFunction {
+	return (
+		node?.type === 'FunctionDeclaration' ||
+		node?.type === 'FunctionExpression' ||
+		node?.type === 'ArrowFunctionExpression' ||
+		node?.type === 'SvelteSnippetBlock'
+	);
+}
 
 function getCalleeName(callee: TSESTree.Node): string | null {
 	if (callee.type === 'Identifier') return callee.name;
@@ -152,6 +173,8 @@ function isComponentElement(element: AnyNode | undefined): boolean {
  */
 function createDeepMutationChecker(context: RuleContext) {
 	const visited = new Set<Variable>();
+	const visitedEachItems = new Set<Variable>();
+	const visitedFunctions = new Set<LocalFunction>();
 	const findVariableContext = new FindVariableContext(context);
 	const variables = new Map<TSESTree.Identifier, Variable | null>();
 
@@ -165,8 +188,9 @@ function createDeepMutationChecker(context: RuleContext) {
 	 * `isEachItem` is `true` for an `{#each}` item, since assigning to it changes the array.
 	 */
 	function isVariableMutated(variable: Variable, isEachItem: boolean): boolean {
-		if (visited.has(variable)) return false;
-		visited.add(variable);
+		const visitedSet = isEachItem ? visitedEachItems : visited;
+		if (visitedSet.has(variable)) return false;
+		visitedSet.add(variable);
 		return variable.references.some((reference) =>
 			isValueMutated(reference.identifier as TSESTree.Identifier, isEachItem)
 		);
@@ -199,33 +223,84 @@ function createDeepMutationChecker(context: RuleContext) {
 		}
 	}
 
-	/** Checks the parameters of a local function or snippet that gets the value as an argument. */
-	function isPassedToMutatingFunction(call: TSESTree.CallExpression, index: number): boolean {
-		if (call.callee.type !== 'Identifier') return false;
-		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return false;
-		const def = findVariable(call.callee)?.defs[0];
-		if (!def) return false;
-		let fn: AnyNode | null = null;
+	/** Returns the local function (or snippet) that the given callee points to. */
+	function getLocalFunction(callee: TSESTree.Node): LocalFunction | null {
+		if (isFunction(callee)) return callee;
+		if (callee.type !== 'Identifier') return null;
+		const def = findVariable(callee)?.defs[0];
+		if (!def) return null;
 		if (def.type === 'FunctionName') {
-			fn = def.node as AnyNode;
-		} else if (def.type === 'Variable' && def.node.type === 'VariableDeclarator') {
-			fn = def.node.init;
+			const fn = def.node as AnyNode;
+			return isFunction(fn) ? fn : null;
 		}
-		if (
-			fn?.type !== 'FunctionDeclaration' &&
-			fn?.type !== 'FunctionExpression' &&
-			fn?.type !== 'ArrowFunctionExpression' &&
-			fn?.type !== 'SvelteSnippetBlock'
-		) {
-			return false;
+		if (def.type === 'Variable' && def.node.type === 'VariableDeclarator') {
+			return isFunction(def.node.init) ? def.node.init : null;
 		}
-		const params = fn.params as TSESTree.Parameter[];
+		return null;
+	}
+
+	/** Checks the parameter of a local function (or snippet) that gets the value. */
+	function isParamMutated(fn: LocalFunction, index: number): boolean {
+		const params = (fn.params as TSESTree.Parameter[]).filter(
+			// TS `this` parameter, e.g. `function f(this: T, a) {}`
+			(param) => param.type !== 'Identifier' || param.name !== 'this'
+		);
 		for (let i = 0; i < params.length; i++) {
 			const param = params[i];
 			if (param.type === 'RestElement') return isPatternMutated(param, false);
 			if (i === index) return isPatternMutated(param, false);
 		}
 		return false;
+	}
+
+	/** Checks a local function (or snippet) that gets the value as an argument, e.g. `fn(v)`. */
+	function isPassedToMutatingFunction(call: TSESTree.CallExpression, index: number): boolean {
+		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return false;
+		const fn = getLocalFunction(call.callee);
+		return fn != null && isParamMutated(fn, index);
+	}
+
+	/** Checks the callbacks of a method call on the object, e.g. `v.forEach((item) => ...)`. */
+	function isMutatedInCallbacks(call: TSESTree.CallExpression, method: string | null): boolean {
+		return call.arguments.some((arg) => {
+			const fn = getLocalFunction(arg);
+			if (!fn) return false;
+			const indexes = (method != null && ELEMENT_PARAMS.get(method)) || fn.params.map((_, i) => i);
+			return indexes.some((index) => isParamMutated(fn, index));
+		});
+	}
+
+	/**
+	 * Checks the values returned by the function, e.g. `get().a = 1` for `const get = () => v`.
+	 * Returns `null` if the function is not a local function.
+	 */
+	function isReturnedValueMutated(fn: LocalFunction): boolean | null {
+		if (fn.type === 'SvelteSnippetBlock') return null;
+		const parent = fn.parent as AnyNode;
+		// e.g. `$derived.by(() => v)` or `(() => v)()`
+		if (parent.type === 'CallExpression') {
+			if (parent.callee === fn) return isValueMutated(parent, false);
+			if (parent.arguments[0] === fn && getCalleeName(parent.callee) === '$derived.by') {
+				return isValueMutated(parent, false);
+			}
+			return null;
+		}
+		let id: TSESTree.Identifier | null = null;
+		if (fn.type === 'FunctionDeclaration') id = fn.id;
+		else if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier')
+			id = parent.id;
+		const variable = id && findVariable(id);
+		if (!variable) return null;
+		if (visitedFunctions.has(fn)) return false;
+		visitedFunctions.add(fn);
+		return variable.references.some((reference) => {
+			const call = reference.identifier.parent;
+			return (
+				call?.type === 'CallExpression' &&
+				call.callee === reference.identifier &&
+				isValueMutated(call, false)
+			);
+		});
 	}
 
 	/**
@@ -279,14 +354,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `v.push(1)`
 						if (property != null && MUTATING_METHODS.has(property) && isShared()) return true;
 						// e.g. `v.forEach((item) => (item.a = 1))`
-						for (const arg of parent.arguments) {
-							if (
-								(arg.type === 'ArrowFunctionExpression' || arg.type === 'FunctionExpression') &&
-								arg.params.some((param) => isPatternMutated(param, false))
-							) {
-								return true;
-							}
-						}
+						if (isMutatedInCallbacks(parent, property)) return true;
 						// The returned value may be a part of the object, e.g. `v.find(...).a = 1`.
 						newArrayMembers = property != null && NEW_ARRAY_METHODS.has(property) ? 0 : null;
 						node = parent;
@@ -303,7 +371,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (parent.callee.type === 'MemberExpression' && calleeName != null && index === 0) {
 						const [object, method] = calleeName.split('.');
 						// e.g. `Object.assign(v, x)`
-						if (MUTATING_STATIC_METHODS[object]?.has(method)) return true;
+						if (MUTATING_STATIC_METHODS.get(object)?.has(method)) return true;
 					}
 					// e.g. `fn(v)` or `{@render snippet(v)}`
 					return isPassedToMutatingFunction(parent, index);
@@ -311,26 +379,12 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'ReturnStatement':
 				case 'ArrowFunctionExpression': {
 					if (parent.type === 'ArrowFunctionExpression' && parent.body !== node) return false;
-					// e.g. `$derived.by(() => v)`
+					// e.g. `$derived.by(() => v)` or `const get = () => v`
 					let fn: AnyNode | undefined = parent;
-					while (
-						fn &&
-						fn.type !== 'ArrowFunctionExpression' &&
-						fn.type !== 'FunctionExpression' &&
-						fn.type !== 'FunctionDeclaration'
-					) {
+					while (fn && !isFunction(fn)) {
 						fn = fn.parent as AnyNode | undefined;
 					}
-					const call = fn?.parent;
-					if (
-						call?.type === 'CallExpression' &&
-						call.arguments[0] === fn &&
-						getCalleeName(call.callee) === '$derived.by'
-					) {
-						node = call;
-						continue;
-					}
-					return false;
+					return isFunction(fn) ? (isReturnedValueMutated(fn) ?? false) : false;
 				}
 				case 'AssignmentExpression':
 					if (parent.left === node) return isShared() || isEachItem;
@@ -376,6 +430,15 @@ function createDeepMutationChecker(context: RuleContext) {
 						isPatternMutated(parent.context, true)
 					);
 				case 'SvelteDirective':
+					if (parent.kind === 'Action') {
+						// e.g. `use:action={v}`
+						const name = parent.key.name;
+						const fn =
+							parent.expression === node && name.type === 'Identifier'
+								? getLocalFunction(name)
+								: null;
+						return fn != null && isParamMutated(fn, 1);
+					}
 					if (parent.kind !== 'Binding') return false;
 					// e.g. `bind:value={v.a}`, or `<Child bind:value={v} />` that may mutate it.
 					return isShared() || isEachItem || isComponentElement(parent.parent?.parent);
@@ -386,7 +449,12 @@ function createDeepMutationChecker(context: RuleContext) {
 		return false;
 	}
 
-	return (variable: Variable) => isVariableMutated(variable, false);
+	return (variable: Variable) => {
+		visited.clear();
+		visitedEachItems.clear();
+		visitedFunctions.clear();
+		return isVariableMutated(variable, false);
+	};
 }
 
 export default createRule('prefer-writable-derived', {
@@ -414,6 +482,7 @@ export default createRule('prefer-writable-derived', {
 		if (!shouldRun) {
 			return {};
 		}
+		const isDeeplyMutated = createDeepMutationChecker(context);
 		return {
 			CallExpression: (node: TSESTree.CallExpression) => {
 				if (!isEffectOrEffectPre(node) || node.arguments.length !== 1) {
@@ -446,7 +515,7 @@ export default createRule('prefer-writable-derived', {
 					return;
 				}
 
-				if (createDeepMutationChecker(context)(reference.resolved!)) {
+				if (isDeeplyMutated(reference.resolved!)) {
 					return;
 				}
 

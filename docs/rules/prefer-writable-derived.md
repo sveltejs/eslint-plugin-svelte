@@ -45,7 +45,7 @@ When this pattern is detected, the rule suggests refactoring to use `$derived()`
 
 The rule does not report a variable that is mutated through its properties (e.g. `value.name = 'foo'`, `bind:value={value.name}`, `value.push(item)` or `Object.assign(value, other)`). `$state` makes objects and arrays [deeply reactive](https://svelte.dev/docs/svelte/$state#Deep-state), but [`$derived` does not](https://svelte.dev/docs/svelte/$derived#Deriveds-and-reactivity), so such mutations would no longer update the UI.
 
-The rule also follows values that share the same object, such as `{#each value.items as item}`, `const { profile } = value`, `value.items.forEach((item) => ...)`, `<Child bind:value />` and arguments of local functions and snippets. It does not follow values passed to imported functions, passed to components as props without `bind:`, or stored in other objects.
+The rule also follows values that share the same object, such as `{#each value.items as item}`, `const { profile } = value`, `value.items.forEach((item) => ...)`, `<Child bind:value />`, `use:action={value}`, arguments of local functions and snippets, and values returned from local functions. It does not follow values passed to imported or global functions (e.g. `Object.values(value)`), passed to components as props without `bind:`, or stored in other objects (including methods of objects).
 
 <!--eslint-skip-->
 
