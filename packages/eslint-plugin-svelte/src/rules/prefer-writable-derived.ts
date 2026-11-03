@@ -102,11 +102,10 @@ const MUTATING_STATIC_METHODS = new Map([
 	['Reflect', new Set(['defineProperty', 'deleteProperty', 'set', 'setPrototypeOf'])]
 ]);
 
-// Parameters of callbacks that get the elements. For other methods, all parameters are checked.
-const ELEMENT_PARAMS = new Map([
-	['reduce', [1, 3]],
-	['reduceRight', [1, 3]]
-]);
+// Methods whose callbacks get an accumulator as the first parameter.
+// It is an element only when no initial value is given.
+// For other methods, all parameters of callbacks are treated as elements.
+const REDUCE_METHODS = new Set(['reduce', 'reduceRight']);
 
 // Methods that return a new array. The array itself is new, but its elements are still shared.
 const NEW_ARRAY_METHODS = new Set([
@@ -314,9 +313,25 @@ function createDeepMutationChecker(context: RuleContext) {
 		return call.arguments.some((arg) => {
 			const fn = getLocalFunction(arg);
 			if (!fn) return false;
-			const indexes = (method != null && ELEMENT_PARAMS.get(method)) || fn.params.map((_, i) => i);
+			const indexes =
+				method != null && REDUCE_METHODS.has(method) && call.arguments.length >= 2
+					? [1, 3]
+					: fn.params.map((_, i) => i);
 			return indexes.some((index) => isParamMutated(fn, index, 'shared'));
 		});
+	}
+
+	/** Checks whether the node is the getter of a function binding on a component. */
+	function isComponentGetterBinding(parent: AnyNode | null | undefined, node: AnyNode): boolean {
+		if ((parent?.type as string) !== 'SvelteFunctionBindingsExpression') return false;
+		const bindings = parent as unknown as TSESTree.SequenceExpression;
+		const directive = bindings.parent as AnyNode | undefined;
+		return (
+			bindings.expressions[0] === node &&
+			directive?.type === 'SvelteDirective' &&
+			directive.kind === 'Binding' &&
+			isComponentElement(directive.parent?.parent)
+		);
 	}
 
 	/**
@@ -335,16 +350,8 @@ function createDeepMutationChecker(context: RuleContext) {
 			}
 			return false;
 		}
-		const directive = parent.parent as AnyNode | undefined;
-		if (
-			(parent.type === 'SequenceExpression' ||
-				(parent.type as string) === 'SvelteFunctionBindingsExpression') &&
-			(parent as TSESTree.SequenceExpression).expressions[0] === fn &&
-			directive?.type === 'SvelteDirective'
-		) {
-			// e.g. `<Child bind:value={() => v, (x) => (v = x)} />`
-			return directive.kind === 'Binding' && isComponentElement(directive.parent?.parent);
-		}
+		// e.g. `<Child bind:value={() => v, (x) => (v = x)} />`
+		if (isComponentGetterBinding(parent, fn)) return true;
 		let id: TSESTree.Identifier | null = null;
 		if (fn.type === 'FunctionDeclaration') id = fn.id;
 		else if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
@@ -355,6 +362,8 @@ function createDeepMutationChecker(context: RuleContext) {
 		return withCache(fn, mode, () =>
 			variable.references.some((reference) => {
 				const call = reference.identifier.parent;
+				// e.g. `<Child bind:value={get, set} />`
+				if (isComponentGetterBinding(call, reference.identifier)) return true;
 				return (
 					call?.type === 'CallExpression' &&
 					// e.g. `get()` or `$derived.by(get)`
@@ -417,6 +426,29 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (parent.expressions[parent.expressions.length - 1] !== node) return false;
 					node = parent;
 					continue;
+				case 'SpreadElement': {
+					const container = parent.parent as AnyNode;
+					if (container.type === 'ArrayExpression' || container.type === 'ObjectExpression') {
+						// e.g. `[...v]` or `{ ...v }`. A new container whose elements are shared.
+						node = container as TSESTree.Node;
+						isMember = true;
+						newContainerMembers = 0;
+						property = null;
+						continue;
+					}
+					if (container.type === 'CallExpression') {
+						// e.g. `fn(...v)`. The parameters from there get the elements.
+						const index = container.arguments.indexOf(parent);
+						if (container.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) {
+							return false;
+						}
+						const fn = getLocalFunction(container.callee);
+						return (
+							fn != null && fn.params.some((_, i) => i >= index && isParamMutated(fn, i, 'shared'))
+						);
+					}
+					return false;
+				}
 				case 'MemberExpression':
 					if (parent.object !== node) return false;
 					node = parent;
