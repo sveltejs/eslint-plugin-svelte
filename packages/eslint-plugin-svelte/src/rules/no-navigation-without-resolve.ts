@@ -405,6 +405,12 @@ function urlStartSatisfies(
 			urlStartSatisfies(context, [first.alternate, ...rest], visited, predicate)
 		);
 	}
+	if (isTypeWrapper(first)) {
+		return (
+			predicate(first, rest) ||
+			urlStartSatisfies(context, [first.expression, ...rest], visited, predicate)
+		);
+	}
 	if (first.type === 'Identifier' || first.type === 'MemberExpression') {
 		if (predicate(first, rest)) {
 			return true;
@@ -738,7 +744,28 @@ function resolveToLiteralSource(
 		const key = getPropertyName(node, ctx.scopeFor(node));
 		return key === null ? null : accessKey(ctx, node.object, key);
 	}
+	if (isTypeWrapper(node)) {
+		return node.expression;
+	}
 	return null;
+}
+
+/**
+ * Checks for TypeScript wrappers that don't change the runtime value: `x as T`, `x satisfies T`, `x!` and `<T>x`.
+ */
+function isTypeWrapper(
+	node: UrlPart
+): node is
+	| TSESTree.TSAsExpression
+	| TSESTree.TSSatisfiesExpression
+	| TSESTree.TSNonNullExpression
+	| TSESTree.TSTypeAssertion {
+	return (
+		node.type === 'TSAsExpression' ||
+		node.type === 'TSSatisfiesExpression' ||
+		node.type === 'TSNonNullExpression' ||
+		node.type === 'TSTypeAssertion'
+	);
 }
 
 function resolveVariableInit(
