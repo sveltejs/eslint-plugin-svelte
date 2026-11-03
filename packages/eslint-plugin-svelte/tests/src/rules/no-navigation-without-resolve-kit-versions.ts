@@ -8,11 +8,13 @@ import plugin from '../../../src/index.js';
 
 const CODE = `<script>
 	import { goto, preloadCode } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	goto('/blog/hello');
 	goto('/');
 	goto('/?q=1');
 	preloadCode('/blog/[slug]');
+	preloadCode(resolve('/blog/hello'));
 </script>
 
 <a href="/about">Click me!</a>
@@ -62,8 +64,8 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 					CODE.slice(0, suggestion.fix.range[0]) +
 					suggestion.fix.text +
 					CODE.slice(suggestion.fix.range[1]);
-				// The changed line only.
-				return output.split('\n')[message.line] ?? '';
+				// The changed line only (the existing `$app/paths` import is reused).
+				return output.split('\n')[message.line - 1] ?? '';
 			})
 		}));
 	}
@@ -74,18 +76,19 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 
 	it('suggests route IDs / pathnames with a leading slash on SvelteKit 2', () => {
 		assert.deepStrictEqual(lint('2.26.0'), [
-			{ line: 4, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/blog/hello'));"] },
-			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
-			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
+			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/blog/hello'));"] },
+			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
+			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
 			// `preloadCode()` takes a pathname on SvelteKit 2.
-			{ line: 7, messageId: 'rootRelative', suggestions: [] },
+			{ line: 8, messageId: 'rootRelative', suggestions: [] },
+			// A resolved URL is a pathname, which SvelteKit 2 expects.
 			{
-				line: 10,
+				line: 12,
 				messageId: 'rootRelativeLink',
 				suggestions: ["<a href={resolve('/about')}>Click me!</a>"]
 			},
 			{
-				line: 11,
+				line: 13,
 				messageId: 'rootRelativeFile',
 				suggestions: [
 					"<a href={asset('/manual.pdf')}>Click me!</a>",
@@ -97,18 +100,19 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 
 	it('suggests pathnames without a leading slash on SvelteKit 3', () => {
 		assert.deepStrictEqual(lint('3.1.1'), [
-			{ line: 4, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('blog/hello'));"] },
+			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('blog/hello'));"] },
 			// `/` stays the root route ID.
-			{ line: 5, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
-			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
-			// `preloadCode()` takes a route ID on SvelteKit 3, so it is not checked.
+			{ line: 6, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/'));"] },
+			{ line: 7, messageId: 'rootRelative', suggestions: ["\tgoto(resolve('/?q=1'));"] },
+			// `preloadCode()` takes a route ID on SvelteKit 3: a route ID is fine, a URL is not.
+			{ line: 9, messageId: 'preloadCodeRouteId', suggestions: [] },
 			{
-				line: 10,
+				line: 12,
 				messageId: 'rootRelativeLink',
 				suggestions: ["<a href={resolve('about')}>Click me!</a>"]
 			},
 			{
-				line: 11,
+				line: 13,
 				messageId: 'rootRelativeFile',
 				suggestions: [
 					"<a href={asset('manual.pdf')}>Click me!</a>",

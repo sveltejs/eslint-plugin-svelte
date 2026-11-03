@@ -39,13 +39,16 @@ type Part =
 	| { readonly type: 'resolved'; readonly label: string }
 	/** A value that already starts with the base path and may be extended, e.g. `base` or `page.url`. */
 	| { readonly type: 'based'; readonly label: string }
-	/** Anything else. */
-	| { readonly type: 'unknown' };
+	/** Anything else. `string` means it is known not to be nullish. */
+	| { readonly type: 'unknown'; readonly string?: true };
 type Alt = readonly Part[] | null;
 type Value = readonly Alt[];
 
 const UNKNOWN_PART: Part = { type: 'unknown' };
+const STRING_PART: Part = { type: 'unknown', string: true };
 const UNKNOWN: Value = [[UNKNOWN_PART]];
+/** An unknown string (never nullish). */
+const UNKNOWN_STRING: Value = [[STRING_PART]];
 const NULLISH: Value = [null];
 const RESOLVED: Value = [[{ type: 'resolved', label: 'resolve()' }]];
 
@@ -99,27 +102,32 @@ function union(...values: Value[]): Value {
 }
 
 function concat(values: Value[]): Value {
-	let result: Value = [[]];
+	let result: Part[][] = [[]];
 	for (const value of values) {
-		const next: Alt[] = [];
+		const next: Part[][] = [];
 		// In a string concatenation, a nullish value becomes `"null"` / `"undefined"`.
 		const right = value.map((alt) => alt ?? [UNKNOWN_PART]);
 		if (result.length * right.length > MAX_ALTS) {
 			// Too many combinations: keep the heads, which decide the classification.
-			for (const left of result) next.push(normalize([...(left ?? []), UNKNOWN_PART]));
+			for (const left of result) next.push(normalize([...left, UNKNOWN_PART]));
 		} else {
 			for (const left of result) {
-				for (const r of right) next.push(normalize([...(left ?? []), ...r]));
+				for (const r of right) next.push(normalize([...left, ...r]));
 			}
 		}
-		result = union(next);
+		result = union(next) as Part[][];
 	}
-	return result;
+	// The result of a concatenation is always a string.
+	return union(
+		result.map((alt) => (alt.length === 1 && alt[0].type === 'unknown' ? [STRING_PART] : alt))
+	);
 }
 
 /** Whether the value may be `null` / `undefined`. */
 function mayBeNullish(value: Value): boolean {
-	return value.some((alt) => alt === null || (alt.length === 1 && alt[0].type === 'unknown'));
+	return value.some(
+		(alt) => alt === null || (alt.length === 1 && alt[0].type === 'unknown' && !alt[0].string)
+	);
 }
 
 /** Whether the value may be falsy. */
@@ -199,7 +207,11 @@ function classify(alt: Alt): Finding {
 	const value = render(parts);
 	const anchorIndex = parts.findIndex((part) => part.type === 'resolved' || part.type === 'based');
 	const anchor = parts[anchorIndex] as Extract<Part, { type: 'resolved' | 'based' }> | undefined;
-	if (anchor && anchorIndex > 0) {
+	// `?next={resolve('/x')}`: an anchor inside the query or the hash does not decide the path.
+	const insideQueryOrHash = parts
+		.slice(0, Math.max(anchorIndex, 0))
+		.some((part) => part.type === 'text' && /[#?]/u.test(part.value));
+	if (anchor && anchorIndex > 0 && !insideQueryOrHash) {
 		const head = parts[0];
 		return {
 			kind: 'prefix',
@@ -212,7 +224,7 @@ function classify(alt: Alt): Finding {
 			head: head.type !== 'text' ? 'unknown' : isExternalText(head.value) ? 'external' : 'text'
 		};
 	}
-	if (anchor) {
+	if (anchor && anchorIndex === 0) {
 		if (anchor.type === 'based') return OK;
 		const next = parts[1];
 		if (next === undefined) return OK;
@@ -314,6 +326,18 @@ class UrlEvaluator {
 
 	private depth = 0;
 
+	/** The number of times a guard cut the evaluation off. */
+	private cutoffs = 0;
+
+	private readonly cache = new Map<unknown, Value>();
+
+	private readonly candidateCache = new Map<TSESTree.Node, SourceRef[]>();
+
+	private readonly propertyNameCache = new Map<
+		TSESTree.ObjectExpression,
+		{ names: (string | null)[]; index: Map<string, number> | null }
+	>();
+
 	private resolvedPathnameType: TS.Type | null | undefined = undefined;
 
 	private readonly context: RuleContext;
@@ -326,15 +350,30 @@ class UrlEvaluator {
 	}
 
 	public evaluate(node: TSESTree.Node | AST.SvelteLiteral): Value {
-		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) return UNKNOWN;
+		const cached = this.cache.get(node);
+		if (cached) return cached;
+		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) return this.cutoff();
 		this.activeNodes.add(node);
 		this.depth++;
+		const cutoffs = this.cutoffs;
 		try {
-			return this.evaluateNode(node);
+			const value = this.evaluateNode(node);
+			// A result cut off by a guard depends on the call stack, so it is not reused.
+			if (this.cutoffs === cutoffs) this.cache.set(node, value);
+			return value;
 		} finally {
 			this.depth--;
 			this.activeNodes.delete(node);
 		}
+	}
+
+	/**
+	 * Give up because of a cycle or the depth limit. The value is treated as a non-nullish
+	 * unknown so that `??` / `||` fallbacks are not reported because of the limit.
+	 */
+	private cutoff(): Value {
+		this.cutoffs++;
+		return UNKNOWN_STRING;
 	}
 
 	private evaluateNode(node: TSESTree.Node | AST.SvelteLiteral): Value {
@@ -374,6 +413,18 @@ class UrlEvaluator {
 				return this.refine(node);
 			}
 			case 'LogicalExpression': {
+				// `0 || x`, `false || x`, `null ?? x`
+				const known = getStaticValue(node.left, scopeOf(this.context, node.left));
+				if (known !== null) {
+					const value = known.value;
+					const useRight =
+						node.operator === '??'
+							? value == null
+							: node.operator === '||'
+								? !value
+								: Boolean(value);
+					return this.evaluate(useRight ? node.right : node.left);
+				}
 				const left = this.evaluate(node.left);
 				if (node.operator === '??') {
 					return mayBeNullish(left) ? union(withoutNullish(left), this.evaluate(node.right)) : left;
@@ -441,7 +492,7 @@ class UrlEvaluator {
 		if (annotation && this.isResolvedPathnameTypeNode(annotation, declared)) {
 			return mayBeNullish(this.refine(declared)) ? union(RESOLVED, NULLISH) : RESOLVED;
 		}
-		if (this.activeVariables.has(variable)) return UNKNOWN;
+		if (this.activeVariables.has(variable)) return this.cutoff();
 		this.activeVariables.add(variable);
 		try {
 			const sources = this.variableSources(variable);
@@ -463,7 +514,8 @@ class UrlEvaluator {
 	 */
 	private variableSources(variable: Variable): SourceRef[] | null {
 		const def = variable.defs[0];
-		if (def === undefined || def.type === 'ImportBinding') return null;
+		// `var x = ...; var x = ...` declares it more than once.
+		if (def === undefined || def.type === 'ImportBinding' || variable.defs.length > 1) return null;
 		const name = def.name as TSESTree.Identifier;
 		const each = eachBlockOf(name);
 		if (each !== null) return this.eachSources(each, name);
@@ -471,6 +523,8 @@ class UrlEvaluator {
 
 		const declarator = def.node;
 		const declaration = declarator.parent;
+		// `declare const x: '/a'` has no value in this file.
+		if (declaration.declare) return null;
 		const loop = declaration.parent;
 		if (
 			(loop.type === 'ForOfStatement' || loop.type === 'ForInStatement') &&
@@ -588,19 +642,31 @@ class UrlEvaluator {
 
 	/** The expressions that `node` may evaluate to, following local variables and literals. */
 	private candidates(node: TSESTree.Expression): SourceRef[] {
-		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) return [UNKNOWN_SOURCE];
+		const cached = this.candidateCache.get(node);
+		if (cached) return cached;
+		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) {
+			this.cutoffs++;
+			return [UNKNOWN_SOURCE];
+		}
+		const cutoffs = this.cutoffs;
+		const result = this.candidatesOf(node);
+		if (this.cutoffs === cutoffs) this.candidateCache.set(node, result);
+		return result;
+	}
+
+	private candidatesOf(node: TSESTree.Expression): SourceRef[] {
 		this.activeNodes.add(node);
 		this.depth++;
 		try {
 			if (node.type === 'Identifier') {
 				const variable = findVariable(this.context, node);
-				if (
-					variable === null ||
-					variable.name !== node.name ||
-					this.activeVariables.has(variable)
-				) {
+				if (variable === null || variable.name !== node.name) return [{ type: 'node', node }];
+				if (this.activeVariables.has(variable)) {
+					this.cutoffs++;
 					return [{ type: 'node', node }];
 				}
+				// Its properties or elements may be changed later.
+				if (isMutated(variable)) return [UNKNOWN_SOURCE];
 				this.activeVariables.add(variable);
 				try {
 					const sources = this.variableSources(variable);
@@ -646,10 +712,51 @@ class UrlEvaluator {
 		return results.slice(0, MAX_ALTS);
 	}
 
+	/**
+	 * The property names of the object (null for an unknown name or a spread), and the index of
+	 * the last property for each name when every name is known.
+	 */
+	private propertyNames(object: TSESTree.ObjectExpression): {
+		names: (string | null)[];
+		index: Map<string, number> | null;
+	} {
+		let result = this.propertyNameCache.get(object);
+		if (!result) {
+			const scope = scopeOf(this.context, object);
+			const names = object.properties.map((property) =>
+				property.type === 'SpreadElement' ? null : getPropertyName(property, scope)
+			);
+			let index: Map<string, number> | null = new Map();
+			for (const [i, name] of names.entries()) {
+				if (name === null) {
+					index = null;
+					break;
+				}
+				index.set(name, i);
+			}
+			result = { names, index };
+			this.propertyNameCache.set(object, result);
+		}
+		return result;
+	}
+
+	private propertySource(property: TSESTree.Property): SourceRef[] {
+		return property.kind === 'init' && property.value.type !== 'AssignmentPattern'
+			? [{ type: 'node', node: property.value as TSESTree.Expression }]
+			: [UNKNOWN_SOURCE];
+	}
+
 	private lookupInObject(object: TSESTree.ObjectExpression, key: string): SourceRef[] {
 		// Last write wins.
+		const { names, index } = this.propertyNames(object);
+		if (index !== null) {
+			// Every name is known: only the last property with the key matters.
+			const i = index.get(key);
+			if (i !== undefined) return this.propertySource(object.properties[i] as TSESTree.Property);
+			return key in Object.prototype ? [UNKNOWN_SOURCE] : [ABSENT_SOURCE];
+		}
 		let result: SourceRef[] = [ABSENT_SOURCE];
-		for (const property of object.properties) {
+		for (const [i, property] of object.properties.entries()) {
 			if (property.type === 'SpreadElement') {
 				const spread = this.lookup(property.argument, key);
 				const defined = spread.filter((s) => s.type !== 'absent');
@@ -661,14 +768,11 @@ class UrlEvaluator {
 				}
 				continue;
 			}
-			const name = getPropertyName(property, scopeOf(this.context, property));
+			const name = names[i];
 			if (name === null) {
 				result = [UNKNOWN_SOURCE];
 			} else if (name === key) {
-				result =
-					property.kind === 'init' && property.value.type !== 'AssignmentPattern'
-						? [{ type: 'node', node: property.value as TSESTree.Expression }]
-						: [UNKNOWN_SOURCE];
+				result = this.propertySource(property);
 			}
 		}
 		// Properties such as `toString` live on the prototype.
@@ -718,9 +822,14 @@ class UrlEvaluator {
 			} else if (element.type === 'SpreadElement') {
 				const spread = this.depth < MAX_DEPTH ? this.arrayItems(element.argument) : null;
 				if (spread === null) return { items, complete: false };
-				items.push(...spread.items);
+				for (const item of spread.items) {
+					if (items.length >= MAX_ALTS) return { items, complete: false };
+					items.push(item);
+				}
 				if (!spread.complete) return { items, complete: false };
 			} else {
+				// Only the first items matter: alternatives are capped anyway.
+				if (items.length >= MAX_ALTS) return { items, complete: false };
 				items.push(element);
 			}
 		}
@@ -731,6 +840,9 @@ class UrlEvaluator {
 		const key = getPropertyName(node, scopeOf(this.context, node));
 		if (key === null) return this.refine(node);
 
+		// `paths.base` with `import * as paths from '$app/paths'`
+		const path = this.pathsMember(node, ['base', 'assets']);
+		if (path !== null) return based(path);
 		// `page.url`, `page.url.pathname`, `page.url.href`
 		if (key === 'url' && this.isPage(node.object)) return based('page.url');
 		if ((key === 'pathname' || key === 'href') && this.isPageUrl(node.object)) {
@@ -869,9 +981,10 @@ class UrlEvaluator {
 	 * type is described by the annotation.
 	 */
 	private isResolvedPathnameTypeNode(annotation: TSESTree.TypeNode, typed: TSESTree.Node): boolean {
-		if (this.tsTools) {
+		// Without the generated `$app/types` (e.g. before `svelte-kit sync`), check the syntax.
+		if (this.tsTools && this.getResolvedPathnameType() !== null) {
 			const type = this.typeOf(typed);
-			if (type !== null)
+			if (type !== null && !isAnyType(type, this.tsTools.ts))
 				return this.isResolvedPathnameType(this.checker().getNonNullableType(type));
 		}
 		if (annotation.type !== 'TSTypeReference' || annotation.typeName.type !== 'Identifier') {
@@ -917,7 +1030,8 @@ class UrlEvaluator {
 		if (others.every((t) => t.isStringLiteral())) {
 			return union(...nullish, ...others.map((t) => text(t.value)));
 		}
-		return union(...nullish, UNKNOWN);
+		const stringLike = others.every((t) => t.flags & ts.TypeFlags.StringLike);
+		return union(...nullish, stringLike ? UNKNOWN_STRING : UNKNOWN);
 	}
 
 	private getResolvedPathnameType(): TS.Type | null {
@@ -959,6 +1073,59 @@ class UrlEvaluator {
 	}
 }
 
+const MUTATING_METHODS = new Set([
+	'push',
+	'pop',
+	'shift',
+	'unshift',
+	'splice',
+	'sort',
+	'reverse',
+	'fill',
+	'copyWithin',
+	'set',
+	'delete',
+	'clear'
+]);
+
+/**
+ * Whether a property or an element of the variable is written somewhere, e.g. `x.a = 1`,
+ * `x[0]++`, `delete x.a`, `x.push(1)`, `Object.assign(x, ...)` or `bind:value={x.a}`.
+ */
+function isMutated(variable: Variable): boolean {
+	return variable.references.some((ref) => {
+		let node: TSESTree.Node = ref.identifier;
+		let parent = node.parent as TSESTree.Node | undefined;
+		if (
+			parent?.type === 'CallExpression' &&
+			parent.arguments[0] === node &&
+			parent.callee.type === 'MemberExpression' &&
+			parent.callee.object.type === 'Identifier' &&
+			parent.callee.object.name === 'Object' &&
+			parent.callee.property.type === 'Identifier' &&
+			parent.callee.property.name === 'assign'
+		) {
+			return true;
+		}
+		let member = false;
+		while (parent?.type === 'MemberExpression' && parent.object === node) {
+			member = true;
+			node = parent;
+			parent = node.parent as TSESTree.Node | undefined;
+		}
+		if (!member || !parent) return false;
+		if (parent.type === 'AssignmentExpression' && parent.left === node) return true;
+		if (parent.type === 'UpdateExpression') return true;
+		if (parent.type === 'UnaryExpression' && parent.operator === 'delete') return true;
+		if ((parent.type as string) === 'SvelteDirective') return true;
+		if (parent.type === 'CallExpression' && parent.callee === node) {
+			const callee = node as TSESTree.MemberExpression;
+			return callee.property.type === 'Identifier' && MUTATING_METHODS.has(callee.property.name);
+		}
+		return false;
+	});
+}
+
 function unwrapTypeScript(node: TSESTree.Expression): TSESTree.Expression {
 	let current = node;
 	while (
@@ -994,6 +1161,8 @@ type MessageId =
 	| 'pathRelative'
 	| 'externalUrl'
 	| 'prefixBeforeResolved'
+	| 'prefixBeforeBase'
+	| 'preloadCodeRouteId'
 	| 'appendedToResolved'
 	| 'strictUnknown'
 	| 'strictUnknownSuffix';
@@ -1008,6 +1177,7 @@ type Report = {
 
 const PRIORITY: MessageId[] = [
 	'prefixBeforeResolved',
+	'prefixBeforeBase',
 	'appendedToResolved',
 	'externalUrl',
 	'rootRelativeFile',
@@ -1090,6 +1260,10 @@ export default createRule('no-navigation-without-resolve', {
 				"Relative URL '{{value}}' depends on the current URL and can point outside the base path. Use `resolve()` from `$app/paths`.",
 			externalUrl:
 				"`{{name}}()` cannot navigate to the external URL '{{value}}'. Use `window.location` or a link instead.",
+			prefixBeforeBase:
+				"Do not add anything before `{{name}}` ('{{value}}'). It already includes the base path.",
+			preloadCodeRouteId:
+				"On SvelteKit 3, `preloadCode()` takes a route ID such as '/blog/[slug]', not a URL.",
 			prefixBeforeResolved:
 				"Do not add anything before `{{name}}` ('{{value}}'). It already includes the base path, and during server rendering it can be a relative path such as `./foo`.",
 			appendedToResolved:
@@ -1125,8 +1299,7 @@ export default createRule('no-navigation-without-resolve', {
 			pushState: options.ignorePushState ?? false,
 			replaceState: options.ignoreReplaceState ?? false,
 			preloadData: false,
-			// In SvelteKit 3, `preloadCode()` takes a route ID.
-			preloadCode: isKit3
+			preloadCode: false
 		};
 
 		const evaluator = new UrlEvaluator(context, getTypeScriptTools(context));
@@ -1175,7 +1348,11 @@ export default createRule('no-navigation-without-resolve', {
 						}
 					}
 					return {
-						messageId: 'prefixBeforeResolved',
+						// Only links are rendered on the server, where the value can be relative.
+						messageId:
+							sink !== 'call' && finding.relativeInSsr
+								? 'prefixBeforeResolved'
+								: 'prefixBeforeBase',
 						data: { value: finding.value, name: finding.name },
 						finding
 					};
@@ -1265,6 +1442,12 @@ export default createRule('no-navigation-without-resolve', {
 			}
 			// `[` would turn a pathname into a route ID.
 			if (segments.some((s) => s.type === 'text' && s.value.includes('['))) return null;
+			// `resolve('/foo/')` is a type error with the default `trailingSlash`.
+			const path = segments
+				.map((s) => (s.type === 'text' ? s.value : 'x'))
+				.join('')
+				.split(/[#?]/u)[0];
+			if (path.length > 1 && path.endsWith('/')) return null;
 			if (!isKit3) return segments;
 			// SvelteKit 3: pathnames are written without the leading slash (`/` stays as the root route ID).
 			const isRoot = first.value === '/' ? rest.length === 0 : /^\/[#?]/u.test(first.value);
@@ -1272,26 +1455,51 @@ export default createRule('no-navigation-without-resolve', {
 			return [{ type: 'text', value: first.value.slice(1) }, ...rest];
 		}
 
-		function findPathsImport(): {
+		const scripts = (
+			sourceCode.ast.body as unknown as (TSESTree.Node | AST.SvelteScriptElement)[]
+		).filter((node): node is AST.SvelteScriptElement => node.type === 'SvelteScriptElement');
+
+		/** Whether it is `<script module>` / `<script context="module">`. */
+		function isModuleScript(node: AST.SvelteScriptElement) {
+			return node.startTag.attributes.some(
+				(attr) =>
+					attr.type === 'SvelteAttribute' &&
+					(attr.key.name === 'module' || attr.key.name === 'context')
+			);
+		}
+
+		/** The script element that contains `node` (null in the template). */
+		function scriptOf(node: TSESTree.Node): AST.SvelteScriptElement | null {
+			return (
+				scripts.find(
+					(script) => script.range[0] <= node.range[0] && node.range[1] <= script.range[1]
+				) ?? null
+			);
+		}
+
+		/** The top-level statements whose imports are visible from `node`. */
+		function visibleStatements(node: TSESTree.Node): TSESTree.Node[] {
+			if (!sourceCode.parserServices.isSvelte)
+				return sourceCode.ast.body as unknown as TSESTree.Node[];
+			const own = scriptOf(node);
+			// Imports of the instance script are not visible from the module script.
+			const visible = own && isModuleScript(own) ? [own] : scripts;
+			return visible.flatMap((script) => script.body as TSESTree.Node[]);
+		}
+
+		function findPathsImport(node: TSESTree.Node): {
 			declaration: TSESTree.ImportDeclaration;
 			namespace: string | null;
 			named: Map<string, string>;
 		}[] {
 			const result = [];
-			const body: TSESTree.Node[] = [];
-			for (const node of sourceCode.ast.body as unknown as (
-				| TSESTree.Node
-				| AST.SvelteScriptElement
-			)[]) {
-				if (node.type === 'SvelteScriptElement') body.push(...(node.body as TSESTree.Node[]));
-				else body.push(node);
-			}
-			for (const node of body) {
-				if (node.type !== 'ImportDeclaration' || node.source.value !== '$app/paths') continue;
-				if (node.importKind === 'type') continue;
+			for (const statement of visibleStatements(node)) {
+				if (statement.type !== 'ImportDeclaration' || statement.source.value !== '$app/paths')
+					continue;
+				if (statement.importKind === 'type') continue;
 				let namespace: string | null = null;
 				const named = new Map<string, string>();
-				for (const specifier of node.specifiers) {
+				for (const specifier of statement.specifiers) {
 					if (specifier.type === 'ImportNamespaceSpecifier') namespace = specifier.local.name;
 					else if (specifier.type === 'ImportSpecifier' && specifier.importKind !== 'type') {
 						const imported =
@@ -1301,7 +1509,7 @@ export default createRule('no-navigation-without-resolve', {
 						named.set(imported, specifier.local.name);
 					}
 				}
-				result.push({ declaration: node, namespace, named });
+				result.push({ declaration: statement, namespace, named });
 			}
 			return result;
 		}
@@ -1322,9 +1530,8 @@ export default createRule('no-navigation-without-resolve', {
 			return info?.source === '$app/paths' && info.imported === (namespace ? '*' : fn);
 		}
 
-		function importFix(fixer: RuleFixer, fn: string) {
-			const imports = findPathsImport();
-			const named = imports.find(
+		function importFix(fixer: RuleFixer, fn: string, at: TSESTree.Node) {
+			const named = findPathsImport(at).find(
 				(i) =>
 					i.namespace === null && i.declaration.specifiers.some((s) => s.type === 'ImportSpecifier')
 			);
@@ -1332,41 +1539,34 @@ export default createRule('no-navigation-without-resolve', {
 				const specifiers = named.declaration.specifiers;
 				return fixer.insertTextAfter(specifiers[specifiers.length - 1] as never, `, ${fn}`);
 			}
+			const eol = sourceCode.text.includes('\r\n') ? '\r\n' : '\n';
 			const statement = `import { ${fn} } from '$app/paths';`;
-			const scripts = (
-				sourceCode.ast.body as unknown as (TSESTree.Node | AST.SvelteScriptElement)[]
-			).filter((node): node is AST.SvelteScriptElement => node.type === 'SvelteScriptElement');
-
-			/** Whether it is `<script module>` / `<script context="module">`. */
-			function isModuleScript(node: AST.SvelteScriptElement) {
-				return node.startTag.attributes.some(
-					(attr) =>
-						attr.type === 'SvelteAttribute' &&
-						(attr.key.name === 'module' || attr.key.name === 'context')
-				);
-			}
-
-			const script =
-				scripts.find((node) => !isModuleScript(node)) ?? scripts.find(isModuleScript) ?? null;
-			const programImports = (sourceCode.ast.body as unknown as TSESTree.Node[]).filter(
-				(node) => node.type === 'ImportDeclaration'
-			);
-			const target =
+			const own = scriptOf(at);
+			const script = sourceCode.parserServices.isSvelte
+				? (own ?? scripts.find((node) => !isModuleScript(node)) ?? scripts[0] ?? null)
+				: null;
+			const target = (
 				script !== null
-					? (script.body as TSESTree.Node[]).filter((n) => n.type === 'ImportDeclaration').pop()
-					: programImports.pop();
+					? (script.body as TSESTree.Node[])
+					: (sourceCode.ast.body as unknown as TSESTree.Node[])
+			)
+				.filter((node) => node.type === 'ImportDeclaration')
+				.pop();
 			if (target) {
 				const line = sourceCode.lines[target.loc.start.line - 1];
 				const indent = /^\s*/u.exec(line)![0];
-				return fixer.insertTextAfterRange(target.range, `\n${indent}${statement}`);
+				return fixer.insertTextAfterRange(target.range, `${eol}${indent}${statement}`);
 			}
 			if (script !== null) {
-				return fixer.insertTextAfterRange(script.startTag.range, `\n\t${statement}`);
+				return fixer.insertTextAfterRange(script.startTag.range, `${eol}\t${statement}`);
 			}
 			if (sourceCode.parserServices.isSvelte) {
-				return fixer.insertTextBeforeRange([0, 0], `<script>\n\t${statement}\n</script>\n\n`);
+				return fixer.insertTextBeforeRange(
+					[0, 0],
+					`<script>${eol}\t${statement}${eol}</script>${eol}${eol}`
+				);
 			}
-			return fixer.insertTextBeforeRange([0, 0], `${statement}\n`);
+			return fixer.insertTextBeforeRange([0, 0], `${statement}${eol}`);
 		}
 
 		function buildSuggestions(
@@ -1385,7 +1585,7 @@ export default createRule('no-navigation-without-resolve', {
 					? ['asset', 'resolve']
 					: ['resolve'];
 			const suggestions: SuggestionReportDescriptor[] = [];
-			const imports = findPathsImport();
+			const imports = findPathsImport(at);
 			for (const fn of fns) {
 				const adjusted = adjustForKit(segments, fn);
 				if (adjusted === null) continue;
@@ -1408,7 +1608,7 @@ export default createRule('no-navigation-without-resolve', {
 					data: { call: `${callee}()` },
 					fix(fixer) {
 						const fixes = [fixer.replaceTextRange(range, wrap(call))];
-						if (needsImport) fixes.push(importFix(fixer, fn));
+						if (needsImport) fixes.push(importFix(fixer, fn, at));
 						return fixes;
 					}
 				});
@@ -1419,6 +1619,10 @@ export default createRule('no-navigation-without-resolve', {
 		// --- Sinks ----------------------------------------------------------------
 
 		function checkCall(name: NavigationFunction, call: TSESTree.CallExpression) {
+			if (name === 'preloadCode' && isKit3) {
+				checkKit3PreloadCode(call);
+				return;
+			}
 			const args = name === 'preloadCode' ? call.arguments : call.arguments.slice(0, 1);
 			for (const arg of args) {
 				if (arg.type === 'SpreadElement') continue;
@@ -1439,6 +1643,18 @@ export default createRule('no-navigation-without-resolve', {
 					)
 				});
 			}
+		}
+
+		/** SvelteKit 3 `preloadCode()` takes a route ID, so a resolved URL is a mistake. */
+		function checkKit3PreloadCode(call: TSESTree.CallExpression) {
+			const [arg] = call.arguments;
+			if (arg === undefined || arg.type === 'SpreadElement') return;
+			const value = evaluator.evaluate(arg);
+			const isUrl = value.every((alt) => {
+				const first = alt?.find((part) => part.type !== 'text' || part.value.trim() !== '');
+				return first !== undefined && (first.type === 'resolved' || first.type === 'based');
+			});
+			if (value.length > 0 && isUrl) context.report({ node: arg, messageId: 'preloadCodeRouteId' });
 		}
 
 		function attributeValue(attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute): Value {
@@ -1533,6 +1749,9 @@ export default createRule('no-navigation-without-resolve', {
 				const config = LINK_ATTRIBUTES[element.name.name.toLowerCase()];
 				if (config === undefined) return;
 				if (config.kind === 'link' && (ignoreLinks || hasRelExternal(element.startTag))) return;
+				// A spread may set `rel="external"` or replace the URL, so nothing can be proven.
+				if (!strict && element.startTag.attributes.some((a) => a.type === 'SvelteSpreadAttribute'))
+					return;
 				for (const attribute of element.startTag.attributes) {
 					if (
 						(attribute.type === 'SvelteAttribute' ||

@@ -29,8 +29,7 @@
   column: 4
   suggestions: null
 - message: Do not add anything before `page.url.pathname`
-    ('/en{page.url.pathname}'). It already includes the base path, and during
-    server rendering it can be a relative path such as `./foo`.
+    ('/en{page.url.pathname}'). It already includes the base path.
   line: 14
   column: 4
   suggestions: null

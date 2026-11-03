@@ -1,0 +1,22 @@
+- message: "'/from-module' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 5
+  column: 8
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script module>
+        	import { goto } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+
+        	export function go() {
+        		goto(resolve('/from-module'));
+        	}
+        </script>
+
+        <script>
+        	import { base } from '$app/paths';
+        </script>
+
+        <a href="{base}/x">X</a>

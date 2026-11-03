@@ -4,8 +4,7 @@
   column: 7
   suggestions: null
 - message: Do not add anything before `resolve()` ('/fooresolve(…)'). It already
-    includes the base path, and during server rendering it can be a relative
-    path such as `./foo`.
+    includes the base path.
   line: 6
   column: 7
   suggestions: null

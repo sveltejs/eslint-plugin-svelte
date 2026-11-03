@@ -19,14 +19,14 @@ This rule runs on SvelteKit 2.26 or later (where `resolve()` exists) and on Svel
 
 When your app sets [`paths.base`](https://svelte.dev/docs/kit/configuration#paths), every internal URL must include it. `resolve()` from `$app/paths` adds it for you. A URL like `/about` skips the base path and leads to a 404 page.
 
-This rule reports URLs that are **known** to skip the base path or to break `resolve()`. It only reports what it can prove. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or an import), it does not report it. Use the `strict` option if you want to report those values too.
+This rule reports URLs that are **known** to skip the base path or to bypass `resolve()`. It only reports what it can prove. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or an import), it does not report it. Use the `strict` option if you want to report those values too.
 
 The rule checks these places:
 
 - `href` of `<a>` (including SVG `<a>` and `xlink:href`) and `<area>`
 - `action` of `<form>` and `formaction` of `<button>` / `<input>`
 - the URL argument of `goto()`, `pushState()`, `replaceState()` and `preloadData()`
-- the arguments of `preloadCode()` on SvelteKit 2 (on SvelteKit 3 it takes a route ID)
+- the argument of `preloadCode()` on SvelteKit 2 (on SvelteKit 3 it takes a route ID, so passing a resolved URL is reported)
 
 It follows values through string concatenation, template literals, `? :`, `||`, `??`, local variables (including reassignments), `$state()`, `$derived()`, default values of `$props()`, arrays, objects and `{#each}` blocks. With TypeScript type information, it also uses string literal types and `ResolvedPathname`.
 
@@ -35,7 +35,7 @@ The rule reports:
 - **Root-relative URLs** like `/about`. Use `resolve('/about')`. For files in `static`, use `asset()`.
 - **Relative URLs** like `about`, `./about` and `../about`. They depend on the current URL (and its trailing slash) and can point outside the base path. You can allow them with `allowRelativePaths`.
 - **Anything before `resolve()`**, like `` `${origin}${resolve('/about')}` ``. During server rendering, `resolve()` can return a relative path such as `./about`, so the result breaks.
-- **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine.
+- **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. It bypasses the route type checks of `resolve()`, and `resolve('/') + '/about'` even becomes `//about` (another host) when there is no base path. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine.
 - **External URLs in `goto()`, `pushState()`, `replaceState()` and `preloadData()`**. They cannot navigate to other sites. Use `window.location` or a link.
 
 These are always fine:
@@ -60,7 +60,7 @@ These are always fine:
 
   let { href } = $props();
 
-  goto(resolve('/foo/'));
+  goto(resolve('/foo'));
   goto(resolve('/blog/[slug]', { slug: 'hello' }));
   goto(resolve('/search') + '?q=svelte');
   goto(href); // unknown value: not reported by default
@@ -71,9 +71,10 @@ These are always fine:
   replaceState('?tab=info', {});
 </script>
 
-<a href={resolve('/foo/')}>Click me!</a>
+<a href={resolve('/foo')}>Click me!</a>
 <a href="{resolve('/search')}?q={query}">Click me!</a>
 <a href={asset('/manual.pdf')}>Click me!</a>
+<!-- SvelteKit 3: asset('manual.pdf') -->
 <a href="https://svelte.dev">Click me!</a>
 <a href="/other-app" rel="external">Click me!</a>
 <a href="#top">Click me!</a>
@@ -130,25 +131,14 @@ If you really need to build a URL by hand (for example a path that has no route,
 
 ### `.ts` / `.js` files
 
-The `recommended` config only applies to `.svelte`, `.svelte.js` and `.svelte.ts` files. To also check `goto()` calls in other files, enable the rule for them:
-
-```js
-// eslint.config.js
-export default [
-  // ...
-  {
-    files: ['src/**/*.js', 'src/**/*.ts'],
-    rules: {
-      'svelte/no-navigation-without-resolve': 'error'
-    }
-  }
-];
-```
+The rule also checks `goto()` and other calls in plain `.js` / `.ts` files (for example in `src/lib`) when ESLint lints them.
 
 ### Limitations
 
 - The rule does not know what imported functions return. For example, a helper that builds a localized URL without the base path is not reported. Use `strict` if you need to catch those.
-- The rule does not know your router type. On SvelteKit 3 with `router.type: 'hash'`, `goto('#foo')` is not reported, although it does not work there.
+- The rule does not know your router type. On SvelteKit 3 with `router.type: 'hash'`, `goto('#foo')` is not reported, although it does not work there. On SvelteKit 2 with `router.type: 'hash'` and a base path, `resolve()` itself returns a broken URL ([sveltejs/kit#14894](https://github.com/sveltejs/kit/issues/14894)).
+- An element with a spread attribute (`<a {...props} href="/about">`) is not checked, because the spread may set `rel` or replace the URL. `strict` checks it.
+- When a variable is changed after it is declared (e.g. `link.href = ...`, `links.push(...)`), its value is treated as unknown.
 - `redirect()` is not checked yet.
 
 ## :wrench: Options

@@ -215,18 +215,11 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 		return '2';
 	}
 
-	const nodeModule = getNodeModule('@sveltejs/kit', filePath);
-	if (nodeModule) {
-		try {
-			const packageJson = JSON.parse(
-				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
-			);
-			const result = checkAndSetSvelteKitVersion(packageJson.version, filePath);
-			if (result != null) {
-				return result;
-			}
-		} catch {
-			/** do nothing */
+	const installed = getInstalledSvelteKitVersion(filePath);
+	if (installed) {
+		const result = checkAndSetSvelteKitVersion(installed, filePath);
+		if (result != null) {
+			return result;
 		}
 	}
 
