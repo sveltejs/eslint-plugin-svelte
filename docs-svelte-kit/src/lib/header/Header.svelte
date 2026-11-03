@@ -1,7 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import { isActive } from '../utils.js';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import logo from './logo.svg';
 	import { resolve } from '$app/paths';
 
@@ -44,13 +44,13 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li class:active={isActive('/', $page)}>
+			<li class:active={isActive('/', page)}>
 				<a href={resolve('/')}>Home</a>
 			</li>
-			<li class:active={isActive('/user-guide/', $page)}>
+			<li class:active={isActive('/user-guide/', page)}>
 				<a href={resolve('/user-guide/')}>User Guide</a>
 			</li>
-			<li class:active={isActive('/rules/', $page)}>
+			<li class:active={isActive('/rules/', page)}>
 				<a href={resolve('/rules/')}>Rules</a>
 			</li>
 			<li>

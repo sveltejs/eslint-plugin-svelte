@@ -20,7 +20,7 @@
     "@shikijs/twoslash": "^3.12.2",
     "@sindresorhus/slugify": "^3.0.0",
     "@sveltejs/adapter-static": "^4.0.0",
-    "@sveltejs/kit": "^2.43.1",
+    "@sveltejs/kit": "^3.1.1",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@types/babel__core": "^7.20.5",
     "@types/cross-spawn": "^6.0.6",
@@ -56,11 +56,14 @@
     "sass": "^1.92.0",
     "source-map-js": "^1.2.1",
     "stylus": "^0.64.0",
-    "svelte": "^5.38.6",
+    "svelte": "^5.57.3",
     "twoslash-eslint": "^0.3.4",
     "twoslash-protocol": "^0.3.4",
     "util": "^0.12.5",
-    "vite": "^7.1.4",
+    "vite": "^8.3.5",
     "vite-plugin-svelte-md": "^0.8.0"
+  },
+  "imports": {
+    "#lib/*": "./src/lib/*"
   }
 }

@@ -1,12 +1,10 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": "$app/tsconfig",
 	"compilerOptions": {
 		"target": "es2020",
 		"module": "NodeNext",
 		"moduleResolution": "Node16",
 		"lib": ["es2020", "dom"],
-		"allowJs": true,
-		"checkJs": true,
 		"declaration": true,
 		"strict": true,
 		"noImplicitAny": true,
@@ -16,10 +14,7 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"baseUrl": ".",
-		"esModuleInterop": true,
-		"outDir": "lib",
-		"skipLibCheck": true,
-		"resolveJsonModule": true
+		"outDir": "lib"
 	},
 	"include": ["vite.config.ts", "**/*.mts", "**/*.ts"]
 }

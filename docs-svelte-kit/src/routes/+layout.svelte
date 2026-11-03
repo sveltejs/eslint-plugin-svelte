@@ -1,11 +1,11 @@
 <script>
-	import Header from '$lib/header/Header.svelte';
-	import SideMenu from '$lib/sidemenu/SideMenu.svelte';
-	import Footer from '$lib/footer/Footer.svelte';
+	import Header from '#lib/header/Header.svelte';
+	import SideMenu from '#lib/sidemenu/SideMenu.svelte';
+	import Footer from '#lib/footer/Footer.svelte';
 
 	import '../reset.css';
 	import '../app.css';
-	import { tocStore } from '$lib/utils.js';
+	import { tocStore } from '#lib/utils.js';
 
 	/** @type {import('./$types').PageData */
 	export let data;

@@ -1,29 +1,27 @@
 <script>
-	import { page } from '$app/stores';
-	import { markdownPath, menuItems, isActive } from '../utils.js';
+	import { page } from '$app/state';
+	import { generateMenu, markdownPath, isActive, tocStore } from '../utils.js';
 	import { resolve } from '$app/paths';
-	export let fileInfo = {};
-	export let frontmatter = {};
 
-	let prev, next;
-	$: {
+	let { fileInfo = {}, frontmatter = {} } = $props();
+
+	const { prev, next } = $derived.by(() => {
 		let prevItem, currItem;
-		for (const item of iterateMenuItem($menuItems)) {
+		for (const item of iterateMenuItem(generateMenu(page, $tocStore))) {
 			if (!item.path) {
 				continue;
 			}
 			if (currItem) {
-				next = item;
-				break;
+				return { prev: prevItem, next: item };
 			}
-			if (isActive(item.path, $page)) {
-				prev = prevItem;
+			if (isActive(item.path, page)) {
 				currItem = item;
 				continue;
 			}
 			prevItem = item;
 		}
-	}
+		return { prev: currItem ? prevItem : undefined, next: undefined };
+	});
 
 	/** Iterate */
 	function* iterateMenuItem(children) {
@@ -42,7 +40,7 @@
 		<div class="edit-link">
 			<a
 				href="https://github.com/sveltejs/eslint-plugin-svelte/edit/main/docs/{markdownPath(
-					$page.url.pathname
+					page.url.pathname
 				)}"
 				target="_blank"
 				rel="noopener noreferrer">Edit this page</a

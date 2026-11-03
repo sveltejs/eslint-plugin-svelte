@@ -1,13 +1,11 @@
-/* globals RULES_META -- ignore */
-import { readable, writable } from 'svelte/store';
-import { page } from '$app/stores';
-import { base as baseUrl } from '$app/paths';
+/* globals RULES_META, BASE_PATH -- ignore */
+import { writable } from 'svelte/store';
 
 const rules = RULES_META;
 
 export function stripBaseUrl(path) {
-	if (path.startsWith(baseUrl)) {
-		return path.slice(baseUrl.length);
+	if (path.startsWith(BASE_PATH)) {
+		return path.slice(BASE_PATH.length);
 	}
 	return path;
 }
@@ -80,25 +78,7 @@ export function markdownPath(path) {
 
 export const tocStore = writable({ children: [] });
 
-export const menuItems = readable([], function start(set) {
-	let pageData = {};
-	let tocData = { children: [] };
-	const pageUnsubscriber = page.subscribe(($page) => {
-		pageData = $page;
-		set(generateMenu(pageData, tocData));
-	});
-	const tocUnsubscriber = tocStore.subscribe((toc) => {
-		tocData = toc;
-		set(generateMenu(pageData, tocData));
-	});
-
-	return function stop() {
-		pageUnsubscriber();
-		tocUnsubscriber();
-	};
-});
-
-function generateMenu($page, toc) {
+export function generateMenu($page, toc) {
 	const result = [];
 	const [, menus] = Object.entries(SIDE_MENU).find(([k]) =>
 		stripBaseUrl($page.url.pathname).startsWith(k)

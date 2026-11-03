@@ -1,4 +1,4 @@
-import { markdownPath } from '$lib/utils.js';
+import { markdownPath } from '#lib/utils.js';
 const docs = import.meta.glob('../../../docs/**/*.md');
 
 export const prerender = true;
