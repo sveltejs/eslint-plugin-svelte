@@ -50,9 +50,7 @@ export default createRule('no-unused-svelte-ignore', {
 			return {};
 		}
 
-		// The parser knows `svelte.config.js` and `<svelte:options>`,
-		// and the compiler also turns on runes mode for top-level `await`.
-		const runes = Boolean(sourceCode.parserServices.svelteParseContext?.runes || warnings.runes);
+		const runes = Boolean(warnings.runes);
 		for (const unused of warnings.unusedIgnores) {
 			if (unused.code === 'reactive-component' && semver.satisfies(SVELTE_VERSION, '<5')) {
 				// Svelte v4 `reactive-component` warnings are not emitted
