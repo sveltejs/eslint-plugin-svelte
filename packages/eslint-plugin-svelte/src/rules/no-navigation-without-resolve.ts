@@ -379,12 +379,17 @@ class UrlEvaluator {
 
 	private readonly evaluating = {
 		active: new Map<unknown, number>(),
-		cache: new Map<unknown, Value>()
+		cache: new Map<unknown, Value>(),
+		size: (value: Value) => value.length,
+		provisional: new Map<unknown, Value>()
 	};
 
 	private readonly variableValues = {
 		active: new Map<Variable, number>(),
-		cache: new Map<Variable, { value: Value; unknown: boolean }>()
+		cache: new Map<Variable, { value: Value; unknown: boolean }>(),
+		size: (result: { value: Value; unknown: boolean }) =>
+			result.value.length + Number(result.unknown),
+		provisional: new Map<Variable, { value: Value; unknown: boolean }>()
 	};
 
 	private readonly candidateSearch = {
@@ -399,7 +404,10 @@ class UrlEvaluator {
 
 	private readonly memberValues = {
 		active: new Map<string, number>(),
-		cache: new Map<string, { value: Value; unknown: boolean }>()
+		cache: new Map<string, { value: Value; unknown: boolean }>(),
+		size: (result: { value: Value; unknown: boolean }) =>
+			result.value.length + Number(result.unknown),
+		provisional: new Map<string, { value: Value; unknown: boolean }>()
 	};
 
 	private readonly lookups = {
@@ -423,7 +431,13 @@ class UrlEvaluator {
 	 * `key` is already being computed, and `onLimit` when the stack is too deep.
 	 */
 	private guard<K, T>(
-		state: { active: Map<K, number>; cache: Map<K, T> },
+		state: {
+			active: Map<K, number>;
+			cache: Map<K, T>;
+			/** For a value that depends on itself: the size, to repeat until it stops growing. */
+			size?: (value: T) => number;
+			provisional?: Map<K, T>;
+		},
 		key: K,
 		onCycle: T,
 		onLimit: T,
@@ -439,9 +453,10 @@ class UrlEvaluator {
 		}
 		const active = state.active.get(key);
 		if (active !== undefined) {
-			// A value that depends on itself adds nothing new (the least fixed point).
+			// A value that depends on itself adds nothing new (the least fixed point), or what was
+			// found so far while repeating.
 			this.lowestCut = Math.min(this.lowestCut, active);
-			return onCycle;
+			return state.provisional?.has(key) ? state.provisional.get(key)! : onCycle;
 		}
 		if (--this.budget < 0) throw OUT_OF_BUDGET;
 		const depth = this.depth;
@@ -452,7 +467,20 @@ class UrlEvaluator {
 		this.lowestCut = Infinity;
 		this.limited = false;
 		try {
-			const result = compute();
+			let result = compute();
+			// `a = b ?? '/x'; b = a`: repeat with the value found so far until it stops growing.
+			if (state.size && state.provisional) {
+				for (let round = 0; round < 4 && this.lowestCut === depth; round++) {
+					const size = state.size(result);
+					state.provisional.set(key, result);
+					this.lowestCut = Infinity;
+					const next = compute();
+					const grew = state.size(next) > size;
+					result = next;
+					if (!grew) break;
+				}
+				state.provisional.delete(key);
+			}
 			if (this.lowestCut >= depth) {
 				// A result cut by the depth limit depends on where the evaluation started, so it is
 				// reused only for the current URL (this keeps long chains linear).
@@ -1284,7 +1312,41 @@ class UrlEvaluator {
 	/** Use the TypeScript type to learn more about a value the AST cannot tell. */
 	private refine(node: TSESTree.Node): Value {
 		const type = this.typeOf(node);
-		return type === null ? UNKNOWN : this.fromType(type);
+		if (type === null) return UNKNOWN;
+		const value = this.fromType(type);
+		// A literal type is trusted only where it is declared. Elsewhere it may come from a helper
+		// such as `<T>(path: T) => T`, which returns the type of its argument.
+		return this.hasDeclaredType(node) ? value : untrustLiterals(value);
+	}
+
+	/**
+	 * Whether the type of `node` is declared by the code: an import, `$props()`, a parameter or
+	 * a variable with a type annotation (or a property of one of them).
+	 */
+	private hasDeclaredType(node: TSESTree.Node): boolean {
+		let target = unwrapTypeScript(node as TSESTree.Expression);
+		while (target.type === 'MemberExpression' || target.type === 'ChainExpression') {
+			target = unwrapTypeScript(
+				target.type === 'MemberExpression' ? target.object : target.expression
+			);
+		}
+		if (target.type !== 'Identifier') return false;
+		const variable = findVariable(this.context, target);
+		// `$store` is the value of a store: its type comes from the store.
+		if (variable === null || variable.name !== target.name) return false;
+		const def = variable.defs[0];
+		if (def === undefined) return false;
+		if (def.type === 'ImportBinding') return true;
+		if (def.type !== 'Parameter' && def.type !== 'Variable') return false;
+		// `{ a }: Props`, `[a]: T`, `a: T`
+		for (let n: TSESTree.Node | undefined = def.name; n; n = n.parent) {
+			if ('typeAnnotation' in n && n.typeAnnotation) return true;
+			if (!PATTERN_PARENTS.has(n.parent?.type ?? '') && n !== def.name) break;
+		}
+		if (def.type === 'Variable' && def.node.type === 'VariableDeclarator' && def.node.init) {
+			return isRuneCall(this.context, def.node.init, ['$props']);
+		}
+		return false;
 	}
 
 	private checker(): TS.TypeChecker {
@@ -1597,12 +1659,26 @@ function escapes(
 		case 'ForStatement':
 		case 'SwitchStatement':
 		case 'SwitchCase':
-		case 'SpreadElement':
 		case 'SvelteIfBlock':
 		case 'SvelteElseBlock':
 		case 'SvelteKeyBlock':
-		case 'SvelteEachBlock':
 			return false;
+		// `[...x]` / `{ ...x }` copies the elements, which are still shared.
+		case 'SpreadElement':
+		case 'ObjectExpression':
+			return escapes(context, parent, visited, depth + 1);
+		// `{#each x as y}`: changed only if `y` is changed.
+		case 'SvelteEachBlock': {
+			const each = parent as unknown as AST.SvelteEachBlock;
+			if ((each.expression as TSESTree.Node) !== node) return false;
+			const names: TSESTree.Identifier[] = [];
+			collectIdentifiers(each.context as TSESTree.Node, names);
+			if (each.index) names.push(each.index);
+			return names.some((name) => {
+				const variable = findVariableInScope(scopeOf(context, name), name);
+				return variable === null || isMutated(context, variable, 'object', visited);
+			});
+		}
 		case 'UnaryExpression':
 			return (parent as TSESTree.UnaryExpression).operator === 'delete';
 		// `{x}` in the template, or an attribute of an HTML element (not a component).
@@ -1613,12 +1689,39 @@ function escapes(
 				attribute = attribute.parent as TSESTree.Node | undefined;
 			}
 			const element = attribute?.parent as AST.SvelteElement | undefined;
-			return element?.kind === 'component';
+			// Components, `<svelte:component>` and `<svelte:self>` may change their props.
+			return element !== undefined && element.kind !== 'html';
 		}
 		case 'SvelteAttribute':
 			return false;
 		default:
 			return true;
+	}
+}
+
+/** Collect the identifiers that a pattern declares. */
+function collectIdentifiers(pattern: TSESTree.Node | null, result: TSESTree.Identifier[]): void {
+	if (!pattern) return;
+	switch (pattern.type) {
+		case 'Identifier':
+			result.push(pattern);
+			break;
+		case 'ObjectPattern':
+			for (const property of pattern.properties) {
+				collectIdentifiers(property.type === 'Property' ? property.value : property, result);
+			}
+			break;
+		case 'ArrayPattern':
+			for (const element of pattern.elements) collectIdentifiers(element, result);
+			break;
+		case 'RestElement':
+			collectIdentifiers(pattern.argument, result);
+			break;
+		case 'AssignmentPattern':
+			collectIdentifiers(pattern.left, result);
+			break;
+		default:
+			break;
 	}
 }
 

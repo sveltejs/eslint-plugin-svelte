@@ -19,7 +19,7 @@ This rule runs on SvelteKit 2.26 or later (where `resolve()` exists) and on Svel
 
 When your app sets [`paths.base`](https://svelte.dev/docs/kit/configuration#paths), every internal URL must include it. `resolve()` from `$app/paths` adds it for you. A URL like `/about` skips the base path and leads to a 404 page.
 
-This rule reports URLs that are **known** to skip the base path or to bypass `resolve()`. It only reports what it can prove. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or a function result), it does not report it. With type information, a value whose type is a string literal (for example an imported `as const` constant) is known, so it can be reported. Use the `strict` option if you want to report those values too.
+This rule reports URLs that are **known** to skip the base path or to bypass `resolve()`. It only reports what it can prove. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or a function result), it does not report it. Use the `strict` option if you want to report those values too. With type information, a value with a declared string literal type (for example a typed prop or an imported `as const` constant) is known, so it can be reported.
 
 The rule checks these places:
 
@@ -28,7 +28,7 @@ The rule checks these places:
 - the URL argument of `goto()`, `pushState()`, `replaceState()` and `preloadData()`
 - the argument of `preloadCode()` on SvelteKit 2 (on SvelteKit 3 it takes a route ID, so passing a resolved URL is reported)
 
-It follows values through string concatenation, template literals, `? :`, `||`, `??`, local variables (every value assigned to them, in any order), `$state()`, `$derived()`, default values of `$props()`, arrays, objects and `{#each}` blocks. With TypeScript type information, it also uses string literal types and `ResolvedPathname`.
+It follows values through string concatenation, template literals, `? :`, `||`, `??`, local variables (every value assigned to them, in any order), `$state()`, `$derived()`, default values of `$props()`, arrays, objects and `{#each}` blocks. With TypeScript type information, it also uses declared string literal types and `ResolvedPathname`.
 
 The rule reports:
 
@@ -111,7 +111,7 @@ These are always fine:
 
 ### TypeScript
 
-With type information, string literal types are checked too:
+With type information, string literal types are checked too. Only types that the code declares are used: imports, `$props()`, and variables or parameters with a type annotation. A literal type inferred from a function result (for example `<T>(path: T) => T`) is not trusted, because the function may add the base path.
 
 <!--eslint-skip-->
 
