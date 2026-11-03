@@ -180,7 +180,7 @@ export default createRule('no-unused-props', {
 				parentNode = (currentNode.parent as TSESTree.Node | SvAST.SvelteSpreadAttribute) ?? null;
 			}
 
-			return { paths, spread, pattern: spread ? null : getDestructuringPattern(currentNode) };
+			return { paths, spread, pattern: getDestructuringPattern(currentNode) };
 		}
 
 		/**
@@ -227,16 +227,7 @@ export default createRule('no-unused-props', {
 					result.objectSpreadPaths.push(prefix);
 					continue;
 				}
-				const key =
-					prop.key.type === 'Identifier'
-						? prop.key.name
-						: prop.key.type === 'Literal'
-							? String(prop.key.value)
-							: null;
-				if (key == null) {
-					result.objectSpreadPaths.push(prefix);
-					continue;
-				}
+				const key = prop.key.type === 'Identifier' ? prop.key.name : String(prop.key.value);
 				const path = [...prefix, key];
 				const value =
 					prop.value.type === 'AssignmentPattern' ? prop.value.left : (prop.value as TSESTree.Node);
@@ -452,6 +443,9 @@ export default createRule('no-unused-props', {
 			checkingPropsTypes: Set<string>;
 			reportedPropertyPaths: Set<string>;
 		}) {
+			// With `allowUnusedNestedProperties`, nothing below the top level is reported.
+			if (options.allowUnusedNestedProperties && parentPath.length > 0) return;
+
 			// Skip checking if the type itself is a class
 			if (isClassType(propsType)) return;
 
