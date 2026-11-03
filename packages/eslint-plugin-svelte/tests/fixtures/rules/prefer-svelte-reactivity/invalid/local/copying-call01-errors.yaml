@@ -1,0 +1,16 @@
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 4
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 13
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 25
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 31
+  column: 14
+  suggestions: null

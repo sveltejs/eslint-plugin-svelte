@@ -8,13 +8,14 @@
 		const array = Array.from(set);
 		const cloned = new Set(set);
 		cloned.add('x');
-		const json = JSON.stringify(array);
+		const json = JSON.stringify(set, null, 2) + JSON.stringify(array, ['a']);
+		const mapped = Array.from(set, (value) => value.length);
 		const text = `${set.size} ${String(set)}`;
 		if (set.has('a') && set.size > 0) {
 			set.delete('a');
 		}
 		set.forEach((value) => console.log(value));
-		return { copy, array, size: cloned.size, json, text };
+		return { copy, array, mapped, size: cloned.size, json, text };
 	}
 
 	function nextUrl() {

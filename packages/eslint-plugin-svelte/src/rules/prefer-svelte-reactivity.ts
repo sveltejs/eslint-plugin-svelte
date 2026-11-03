@@ -212,7 +212,8 @@ function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression):
 		return false;
 	}
 	const variable = findVariable(context, parent.id);
-	if (!variable) return false;
+	// A direct `eval()` can use the variable without a visible reference.
+	if (!variable || hasDirectEval(variable.scope)) return false;
 	return variable.references.every((reference) => {
 		if (reference.init) return true;
 		const identifier = reference.identifier as TSESTree.Identifier;
@@ -224,6 +225,25 @@ function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression):
 		}
 		return !isLeaked(context, identifier);
 	});
+}
+
+type Scope = NonNullable<ReturnType<typeof findVariable>>['scope'];
+
+/**
+ * Checks whether the scope or its child scopes call `eval()` directly.
+ */
+function hasDirectEval(scope: Scope): boolean {
+	return (
+		scope.references.some((reference) => {
+			const identifier = reference.identifier as TSESTree.Node;
+			return (
+				identifier.type === 'Identifier' &&
+				identifier.name === 'eval' &&
+				identifier.parent?.type === 'CallExpression' &&
+				identifier.parent.callee === identifier
+			);
+		}) || scope.childScopes.some(hasDirectEval)
+	);
 }
 
 /**
@@ -291,7 +311,7 @@ function isLeaked(context: RuleContext, node: TSESTree.Node): boolean {
 			return isMemberLeaked(context, parent);
 		case 'CallExpression':
 		case 'NewExpression':
-			return parent.callee === node || !isCopyingCall(context, parent);
+			return parent.callee === node || !isCopyingCall(context, parent, node);
 		default:
 			return TS_WRAPPER_TYPES.has(parent.type) ? isLeaked(context, parent) : true;
 	}
@@ -347,28 +367,49 @@ function isMemberLeaked(context: RuleContext, member: TSESTree.MemberExpression)
 }
 
 /**
- * Checks whether the call only reads or copies its arguments, e.g. `Array.from(set)`.
+ * Checks whether the call only reads or copies the node, e.g. `Array.from(set)`.
+ * The node must be the first argument, and the other arguments must not get the node,
+ * e.g. through the `JSON.stringify()` replacer or the `Array.from()` `thisArg`.
  */
 function isCopyingCall(
 	context: RuleContext,
-	call: TSESTree.CallExpression | TSESTree.NewExpression
+	call: TSESTree.CallExpression | TSESTree.NewExpression,
+	node: TSESTree.Node
 ): boolean {
+	if (call.arguments[0] !== node) return false;
 	const callee = call.callee;
 	if (callee.type === 'Identifier') {
 		const names = call.type === 'NewExpression' ? COPYING_CONSTRUCTORS : COPYING_FUNCTIONS;
-		return names.has(callee.name) && isGlobal(context, callee);
+		return (
+			names.has(callee.name) &&
+			isGlobal(context, callee) &&
+			call.arguments.slice(1).every((arg) => arg.type === 'Literal')
+		);
 	}
 	if (
-		call.type === 'CallExpression' &&
-		callee.type === 'MemberExpression' &&
-		!callee.computed &&
-		callee.object.type === 'Identifier' &&
-		callee.property.type === 'Identifier'
+		call.type !== 'CallExpression' ||
+		callee.type !== 'MemberExpression' ||
+		callee.computed ||
+		callee.object.type !== 'Identifier' ||
+		callee.property.type !== 'Identifier' ||
+		!COPYING_STATIC_METHODS.get(callee.object.name)?.has(callee.property.name) ||
+		!isGlobal(context, callee.object)
 	) {
-		const methods = COPYING_STATIC_METHODS.get(callee.object.name);
-		return Boolean(methods?.has(callee.property.name)) && isGlobal(context, callee.object);
+		return false;
 	}
-	return false;
+	const [, second, ...rest] = call.arguments;
+	if (!second) return true;
+	if (callee.object.name === 'Array') {
+		// `Array.from(set, (v) => v)`: an arrow function can't get the `thisArg`, and there is no `thisArg`.
+		return second.type === 'ArrowFunctionExpression' && rest.length === 0;
+	}
+	// `JSON.stringify(set, null, 2)` or `JSON.stringify(set, ['a'], 2)`
+	return (
+		(second.type === 'Literal' ||
+			(second.type === 'ArrayExpression' &&
+				second.elements.every((element) => element?.type === 'Literal'))) &&
+		rest.every((arg) => arg.type === 'Literal')
+	);
 }
 
 function isGlobal(context: RuleContext, node: TSESTree.Identifier): boolean {
