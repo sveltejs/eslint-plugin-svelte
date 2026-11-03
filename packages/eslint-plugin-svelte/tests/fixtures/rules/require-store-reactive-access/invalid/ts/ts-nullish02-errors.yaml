@@ -38,3 +38,13 @@
   line: 17
   column: 14
   suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead
+    of accessing the raw store.
+  line: 18
+  column: 14
+  suggestions: null
+- message: Use the $ prefix or the get function to access reactive values instead
+    of accessing the raw store.
+  line: 18
+  column: 14
+  suggestions: null

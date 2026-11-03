@@ -15,4 +15,5 @@
 	console.log((created as Readable<number>) ?? readable(0));
 	console.log(wrapped ?? readable(0));
 	console.log(writable(0) ?? readable(0));
+	console.log(created ?? alias ?? readable(0));
 </script>

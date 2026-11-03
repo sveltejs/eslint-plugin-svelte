@@ -19,4 +19,15 @@
 	export function getStore4(): Readable<Record<string, unknown>> {
 		return (getContext('some_key') as Readable<Record<string, unknown>>) ?? readable({});
 	}
+	export function getStore5(): Readable<Record<string, unknown>> {
+		return getContext('a') ?? getContext('b') ?? readable({});
+	}
+	class Ctx {
+		get(): Readable<Record<string, unknown>> {
+			return readable({});
+		}
+	}
+	export function getStore6(ctx: Ctx): Readable<Record<string, unknown>> {
+		return ctx?.get() ?? readable({});
+	}
 </script>

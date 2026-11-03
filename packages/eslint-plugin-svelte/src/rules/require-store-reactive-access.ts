@@ -310,7 +310,11 @@ export default createRule('require-store-reactive-access', {
 		 * `writable()`, `readable()`, and `derived()` always return a store, so they are excluded.
 		 */
 		function isMaybeMissingStore(node: TSESTree.Expression): boolean {
-			const expr = unwrapTypeExpression(node);
+			let expr = unwrapTypeExpression(node);
+			while (expr.type === 'LogicalExpression' && expr.operator === '??') {
+				// e.g. `getContext('a') ?? getContext('b')`
+				expr = unwrapTypeExpression(expr.right);
+			}
 			if (expr.type === 'Identifier') {
 				const variable = findVariable(context, expr);
 				const def = variable?.defs.length === 1 ? variable.defs[0] : null;
@@ -329,6 +333,10 @@ export default createRule('require-store-reactive-access', {
 			let expr = unwrapTypeExpression(node);
 			if (expr.type === 'AwaitExpression') {
 				expr = unwrapTypeExpression(expr.argument);
+			}
+			if (expr.type === 'ChainExpression') {
+				// e.g. `ctx?.get()`
+				expr = expr.expression;
 			}
 			if (expr.type !== 'CallExpression') {
 				return false;
