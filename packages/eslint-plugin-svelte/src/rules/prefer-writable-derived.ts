@@ -118,8 +118,31 @@ const NEW_ARRAY_METHODS = new Set([
 	'toReversed',
 	'toSorted',
 	'toSpliced',
-	'with'
+	'with',
+	// Their elements are new, too.
+	'match',
+	'split',
+	'toArray'
 ]);
+
+// Methods that return the array they are called on.
+const RETURN_THIS_METHODS = new Set(['copyWithin', 'fill', 'reverse', 'sort']);
+
+const TS_WRAPPERS = new Set([
+	'TSAsExpression',
+	'TSNonNullExpression',
+	'TSSatisfiesExpression',
+	'TSTypeAssertion'
+]);
+
+/** Removes TS wrappers like `x as T`. */
+function unwrapTS(node: TSESTree.Node): TSESTree.Node {
+	let result = node;
+	while (TS_WRAPPERS.has(result.type)) {
+		result = (result as TSESTree.TSAsExpression).expression;
+	}
+	return result;
+}
 
 // Runes that return the given value itself (or the same proxy).
 const PASS_THROUGH_RUNES = new Set(['$derived', '$state', '$state.raw']);
@@ -270,14 +293,16 @@ function createDeepMutationChecker(context: RuleContext) {
 	function getLocalFunction(callee: TSESTree.Node): LocalFunction | null {
 		if (isFunction(callee)) return callee;
 		if (callee.type !== 'Identifier') return null;
-		const def = findVariable(callee)?.defs[0];
-		if (!def) return null;
-		if (def.type === 'FunctionName') {
-			const fn = def.node as AnyNode;
-			return isFunction(fn) ? fn : null;
-		}
-		if (def.type === 'Variable' && def.node.type === 'VariableDeclarator') {
-			return isFunction(def.node.init) ? def.node.init : null;
+		for (const def of findVariable(callee)?.defs ?? []) {
+			// A TS overload signature has no body, so it's skipped.
+			if (def.type === 'FunctionName' && isFunction(def.node as AnyNode)) {
+				return def.node as LocalFunction;
+			}
+			if (def.type === 'Variable' && def.node.type === 'VariableDeclarator' && def.node.init) {
+				// e.g. `const fn = ((a) => {}) as Fn`
+				const init = unwrapTS(def.node.init);
+				if (isFunction(init)) return init;
+			}
 		}
 		return null;
 	}
@@ -354,8 +379,13 @@ function createDeepMutationChecker(context: RuleContext) {
 		if (isComponentGetterBinding(parent, fn)) return true;
 		let id: TSESTree.Identifier | null = null;
 		if (fn.type === 'FunctionDeclaration') id = fn.id;
-		else if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
-			id = parent.id;
+		else {
+			// e.g. `const get = (() => v) as Getter`
+			let declarator: AnyNode = parent;
+			while (TS_WRAPPERS.has(declarator.type)) declarator = declarator.parent as AnyNode;
+			if (declarator.type === 'VariableDeclarator' && declarator.id.type === 'Identifier') {
+				id = declarator.id;
+			}
 		}
 		const variable = id && findVariable(id);
 		if (!variable) return false;
@@ -464,7 +494,13 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `v.forEach((item) => (item.a = 1))`
 						if (isMutatedInCallbacks(parent, property)) return true;
 						// The returned value may be a part of the object, e.g. `v.find(...).a = 1`.
-						newContainerMembers = property != null && NEW_ARRAY_METHODS.has(property) ? 0 : null;
+						// `[...v].sort()` returns the new array itself. Results of other methods may be shared.
+						newContainerMembers =
+							property != null &&
+							(NEW_ARRAY_METHODS.has(property) ||
+								(RETURN_THIS_METHODS.has(property) && newContainerMembers === 1))
+								? 0
+								: null;
 						node = parent;
 						property = null;
 						continue;
@@ -556,7 +592,6 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (isWrite()) return true;
 					// e.g. `<Child bind:value={v} />` that may mutate it. `bind:this` never does.
 					return (
-						getMode() === 'shared' &&
 						isComponentElement(parent.parent?.parent) &&
 						(parent.key.name as { name?: unknown }).name !== 'this'
 					);

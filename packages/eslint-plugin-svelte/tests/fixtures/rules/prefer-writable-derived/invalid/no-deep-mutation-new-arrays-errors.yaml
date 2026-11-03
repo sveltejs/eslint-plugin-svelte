@@ -1,0 +1,21 @@
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 3
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: >
+        <script>
+        	const { data } = $props();
+        	let user = $derived(data.user);
+        	;
+        	const sorted = $derived([...user.items].sort((a, b) => a.order - b.order).reverse());
+        	const words = $derived(user.name.split(' ').reverse().join(' '));
+        	function last() {
+        		const segments = user.path.split('/');
+        		return segments.pop();
+        	}
+        </script>
+
+
+        <p>{sorted.length} {words} {last()}</p>

@@ -47,7 +47,7 @@ The rule does not report a variable that is mutated through its properties (e.g.
 
 The rule also follows values that share the same object, such as `{#each value.items as item}`, `const { profile } = value`, `value.items.forEach((item) => ...)`, `<Child bind:value />`, `use:action={value}`, arguments of local functions and snippets, and values returned from local functions. A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not. Method names of `Map` and `Set` (e.g. `value.set(key, item)`) are also treated as mutations, and `<Child bind:value />` is treated as a mutation even for a primitive value, since the rule can't know the type.
 
-The rule does not follow values passed to imported or global functions (e.g. `Object.values(value)`), passed to components as props without `bind:`, stored in other objects (including methods of objects), passed through a function parameter (e.g. a callback given to a local helper), or returned to outside of the file (e.g. a getter in a `.svelte.js` file). Check such cases yourself before applying the suggestion.
+The rule does not follow values passed to imported or global functions (e.g. `Object.values(value)`), passed to components as props without `bind:`, stored in other objects (including methods of objects and values returned from callbacks, e.g. `ids.map((id) => value[id])`), returned from a returned function, passed through a function parameter (e.g. a callback given to a local helper), or returned to outside of the file (e.g. a getter in a `.svelte.js` file). Check such cases yourself before applying the suggestion.
 
 <!--eslint-skip-->
 
