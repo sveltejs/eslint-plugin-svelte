@@ -2,7 +2,7 @@ import { createRule } from '../utils/index.js';
 import { getTypeScriptTools, isAnyType } from '../utils/ts-utils/index.js';
 import type { TSESTree } from '@typescript-eslint/types';
 import type ts from 'typescript';
-import { findVariable } from '../utils/ast-utils.js';
+import { FindVariableContext } from '../utils/ast-utils.js';
 import { toRegExp } from '../utils/regexp.js';
 import { normalize } from 'path';
 import type { AST as SvAST } from 'svelte-eslint-parser';
@@ -139,6 +139,7 @@ export default createRule('no-unused-props', {
 		function getPropertyPath(node: TSESTree.Identifier): {
 			paths: PropertyPathArray;
 			spread: 'object' | 'iterable' | null;
+			pattern: TSESTree.ObjectPattern | null;
 		} {
 			const paths: PropertyPathArray = [];
 			let spread: 'object' | 'iterable' | null = null;
@@ -166,18 +167,104 @@ export default createRule('no-unused-props', {
 				parentNode = (currentNode.parent as TSESTree.Node | SvAST.SvelteSpreadAttribute) ?? null;
 			}
 
-			return { paths, spread };
+			return { paths, spread, pattern: spread ? null : getDestructuringPattern(currentNode) };
+		}
+
+		/**
+		 * Returns the object pattern when the node is destructured,
+		 * e.g. `const { a } = node` or `const { a } = $derived(node)`.
+		 */
+		function getDestructuringPattern(
+			node: TSESTree.Node | SvAST.SvelteSpreadAttribute
+		): TSESTree.ObjectPattern | null {
+			let target = node as TSESTree.Node;
+			const parent = target.parent;
+			if (
+				parent?.type === 'CallExpression' &&
+				parent.callee.type === 'Identifier' &&
+				parent.callee.name === '$derived' &&
+				parent.arguments[0] === target
+			) {
+				target = parent;
+			}
+			const declarator = target.parent;
+			if (
+				declarator?.type === 'VariableDeclarator' &&
+				declarator.init === target &&
+				declarator.id.type === 'ObjectPattern'
+			) {
+				return declarator.id;
+			}
+			return null;
+		}
+
+		/**
+		 * Collects the property paths read by an object pattern, e.g.
+		 * `const { a, b: { c } } = props` reads `a` and `b.c`.
+		 */
+		function collectPatternPaths(
+			pattern: TSESTree.ObjectPattern,
+			prefix: PropertyPathArray,
+			result: ReturnType<typeof getUsedNestedPropertyPathsArray>,
+			findVariableContext: FindVariableContext
+		): void {
+			for (const prop of pattern.properties) {
+				if (prop.type === 'RestElement' || prop.computed) {
+					// The rest element or a computed key may read any property.
+					result.objectSpreadPaths.push(prefix);
+					continue;
+				}
+				const key =
+					prop.key.type === 'Identifier'
+						? prop.key.name
+						: prop.key.type === 'Literal'
+							? String(prop.key.value)
+							: null;
+				if (key == null) {
+					result.objectSpreadPaths.push(prefix);
+					continue;
+				}
+				const path = [...prefix, key];
+				const value =
+					prop.value.type === 'AssignmentPattern' ? prop.value.left : (prop.value as TSESTree.Node);
+				if (value.type === 'ObjectPattern') {
+					collectPatternPaths(value, path, result, findVariableContext);
+				} else if (value.type === 'Identifier') {
+					const nested = getUsedNestedPropertyPathsArray(value, findVariableContext);
+
+					/** Prepends the destructured path */
+					function prefixed(paths: PropertyPathArray[]) {
+						return paths.map((p) => [...path, ...p]);
+					}
+
+					if (
+						nested.paths.length === 0 &&
+						nested.objectSpreadPaths.length === 0 &&
+						nested.iterableSpreadPaths.length === 0
+					) {
+						result.paths.push(path);
+					}
+					result.paths.push(...prefixed(nested.paths));
+					result.objectSpreadPaths.push(...prefixed(nested.objectSpreadPaths));
+					result.iterableSpreadPaths.push(...prefixed(nested.iterableSpreadPaths));
+				} else {
+					result.paths.push(path);
+				}
+			}
 		}
 
 		/**
 		 * Finds all property access paths for a given variable.
 		 */
-		function getUsedNestedPropertyPathsArray(node: TSESTree.Identifier): {
+		function getUsedNestedPropertyPathsArray(
+			node: TSESTree.Identifier,
+			findVariableContext: FindVariableContext
+		): {
 			paths: PropertyPathArray[];
 			objectSpreadPaths: PropertyPathArray[];
 			iterableSpreadPaths: PropertyPathArray[];
 		} {
-			const variable = findVariable(context, node);
+			const variable = findVariableContext.findVariable(node);
 			if (!variable) return { paths: [], objectSpreadPaths: [], iterableSpreadPaths: [] };
 
 			const pathsArray: PropertyPathArray[] = [];
@@ -190,8 +277,19 @@ export default createRule('no-unused-props', {
 					(reference.identifier.range[0] !== node.range[0] ||
 						reference.identifier.range[1] !== node.range[1])
 				) {
-					const { paths, spread } = getPropertyPath(reference.identifier);
-					if (spread === 'object') {
+					const { paths, spread, pattern } = getPropertyPath(reference.identifier);
+					if (pattern) {
+						collectPatternPaths(
+							pattern,
+							paths,
+							{
+								paths: pathsArray,
+								objectSpreadPaths: objectSpreadPathsArray,
+								iterableSpreadPaths: iterableSpreadPathsArray
+							},
+							findVariableContext
+						);
+					} else if (spread === 'object') {
 						objectSpreadPathsArray.push(paths);
 					} else if (spread === 'iterable') {
 						iterableSpreadPathsArray.push(paths);
@@ -254,6 +352,15 @@ export default createRule('no-unused-props', {
 
 			// Check if it's a class instance type
 			if (type.isClass()) return true;
+
+			// An instance of a generic class, e.g. `Foo<string>`, is a reference to the class type
+			if (
+				type.flags & tools!.ts.TypeFlags.Object &&
+				(type as ts.ObjectType).objectFlags & tools!.ts.ObjectFlags.Reference &&
+				(type as ts.TypeReference).target.isClass()
+			) {
+				return true;
+			}
 
 			// Check for constructor signatures
 			const constructorType = type.getConstructSignatures();
@@ -508,6 +615,7 @@ export default createRule('no-unused-props', {
 				const usedPropertyPathsArray: PropertyPathArray[] = [];
 				const usedObjectSpreadPropertyPathsArray: PropertyPathArray[] = [];
 				const usedIterableSpreadPropertyPathsArray: PropertyPathArray[] = [];
+				const findVariableContext = new FindVariableContext(context);
 				let declaredPropertyNames: DeclaredPropertyNames = new Set();
 
 				if (node.id.type === 'ObjectPattern') {
@@ -535,7 +643,7 @@ export default createRule('no-unused-props', {
 					}
 					for (const { identifier, propName } of identifiers) {
 						const { paths, objectSpreadPaths, iterableSpreadPaths } =
-							getUsedNestedPropertyPathsArray(identifier);
+							getUsedNestedPropertyPathsArray(identifier, findVariableContext);
 						usedPropertyPathsArray.push(...paths.map((path) => [propName, ...path]));
 						usedObjectSpreadPropertyPathsArray.push(
 							...objectSpreadPaths.map((path) => [propName, ...path])
@@ -546,7 +654,8 @@ export default createRule('no-unused-props', {
 					}
 				} else if (node.id.type === 'Identifier') {
 					const { paths, objectSpreadPaths, iterableSpreadPaths } = getUsedNestedPropertyPathsArray(
-						node.id
+						node.id,
+						findVariableContext
 					);
 					usedPropertyPathsArray.push(...paths);
 					usedObjectSpreadPropertyPathsArray.push(...objectSpreadPaths);
