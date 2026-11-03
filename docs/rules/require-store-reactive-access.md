@@ -86,8 +86,8 @@ export const storeValue = writable('hello');
 
 With type information, this rule also allows the following:
 
-- A store that is also a function (e.g. [melt-ui](https://www.melt-ui.com/) builders are stores and actions) can be called, and used with `use:`, `transition:`, `in:`, `out:`, `animate:`, and event handlers.
-- A store can be checked with `??` or `||` when the fallback is also a store (e.g. `getContext('key') ?? readable(0)`).
+- A store that is also a function (e.g. [melt-ui](https://www.melt-ui.com/) builders are stores and actions) can be called, and used with `use:`, `transition:`, `in:`, `out:`, `animate:`, `on:`, and event attributes (e.g. `onclick`).
+- A store can be checked with `??` when the fallback is also a store (e.g. `getContext('key') ?? readable(0)`), because the type of the left side may not include `undefined`.
 
 <!--eslint-skip-->
 
@@ -110,7 +110,7 @@ With type information, this rule also allows the following:
 <button {...$trigger} use:trigger>open menu</button>
 ```
 
-The auto-fix adds the `$` prefix only to stores declared at the top level of the component, because Svelte does not allow it for other stores.
+The auto-fix adds the `$` prefix only to stores declared at the top level of the component, and not inside the module script (`<script module>` or `<script context="module">`), because Svelte does not allow it there.
 
 ## :wrench: Options
 

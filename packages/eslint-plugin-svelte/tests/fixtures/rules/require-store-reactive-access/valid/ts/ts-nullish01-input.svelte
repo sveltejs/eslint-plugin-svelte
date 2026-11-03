@@ -11,7 +11,4 @@
 		const ctx = getContext<Readable<Record<string, unknown>>>('some_key');
 		return ctx ?? fallback;
 	}
-	export function getStore3(): Readable<Record<string, unknown>> {
-		return getContext('some_key') || readable({});
-	}
 </script>

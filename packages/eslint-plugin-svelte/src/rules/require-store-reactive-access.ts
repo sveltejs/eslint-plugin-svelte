@@ -2,7 +2,8 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import { createCallableChecker, createStoreChecker } from './reference-helpers/svelte-store.js';
-import { findVariable } from '../utils/ast-utils.js';
+import { findAttribute, findVariable } from '../utils/ast-utils.js';
+import { getTypeScriptTools } from '../utils/ts-utils/index.js';
 
 export default createRule('require-store-reactive-access', {
 	meta: {
@@ -26,6 +27,11 @@ export default createRule('require-store-reactive-access', {
 		}
 		const isStore = createStoreChecker(context);
 		const isCallable = createCallableChecker(context);
+		const hasTypeInfo = Boolean(getTypeScriptTools(context));
+		const moduleScripts = (context.sourceCode.ast as unknown as AST.SvelteProgram).body.filter(
+			(node): node is AST.SvelteScriptElement =>
+				node.type === 'SvelteScriptElement' && isModuleScript(node)
+		);
 
 		/** Verify for expression node */
 		function verifyExpression(
@@ -53,12 +59,16 @@ export default createRule('require-store-reactive-access', {
 
 		/**
 		 * Checks whether the `$` prefix can be used for the given identifier.
-		 * Svelte only allows it for stores declared at the top level of the component.
+		 * Svelte only allows it for stores declared at the top level of the component,
+		 * and not inside the module script.
 		 */
 		function canUseStorePrefix(node: TSESTree.Identifier) {
 			const variable = findVariable(context, node);
-			return Boolean(
-				variable && (variable.scope.type === 'module' || variable.scope.type === 'global')
+			if (!variable || variable.scope.type !== 'module') {
+				return false;
+			}
+			return !moduleScripts.some(
+				(script) => script.range[0] <= node.range[0] && node.range[1] <= script.range[1]
 			);
 		}
 
@@ -78,7 +88,11 @@ export default createRule('require-store-reactive-access', {
 					return;
 				}
 				// Check for <div {store} />
-				verifyExpression(node.value, { disableFix: true });
+				verifyExpression(node.value, {
+					disableFix: true,
+					// e.g. <button {onclick} />
+					allowCallable: isEventAttributeName(node.key.name)
+				});
 			},
 			SvelteSpreadAttribute(node) {
 				// Check for <Foo {...store} />
@@ -214,9 +228,10 @@ export default createRule('require-store-reactive-access', {
 				});
 			},
 			LogicalExpression(node: TSESTree.LogicalExpression) {
-				if ((node.operator === '??' || node.operator === '||') && isStore(node.right)) {
+				if (hasTypeInfo && node.operator === '??' && isStore(node.right)) {
 					// The fallback is a store, so this checks whether the store itself exists.
-					// e.g. `getContext('key') ?? readable(0)`
+					// The type of the left side may not include `undefined`,
+					// e.g. `getContext('key') ?? readable(0)`.
 					return;
 				}
 				// Check for `store && foo`
@@ -263,7 +278,30 @@ export default createRule('require-store-reactive-access', {
 			return (
 				node.parent.type === 'SvelteAttribute' &&
 				node.parent.value.length === 1 &&
-				node.parent.key.name.startsWith('on')
+				isEventAttributeName(node.parent.key.name)
+			);
+		}
+
+		/**
+		 * Checks whether the given attribute name is an event attribute name.
+		 * Svelte treats all attributes starting with `on` as event attributes.
+		 */
+		function isEventAttributeName(name: string) {
+			return name.startsWith('on');
+		}
+
+		/**
+		 * Checks whether the given script element is the module script.
+		 * e.g. <script module>, <script context="module">
+		 */
+		function isModuleScript(node: AST.SvelteScriptElement) {
+			if (findAttribute(node, 'module')) {
+				return true;
+			}
+			const contextAttr = findAttribute(node, 'context');
+			const contextValue = contextAttr?.value.length === 1 && contextAttr.value[0];
+			return Boolean(
+				contextValue && contextValue.type === 'SvelteLiteral' && contextValue.value === 'module'
 			);
 		}
 
