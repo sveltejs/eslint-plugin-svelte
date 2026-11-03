@@ -1,8 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { createStoreChecker } from './reference-helpers/svelte-store.js';
-import { getTypeScriptTools } from '../utils/ts-utils/index.js';
+import { createCallableChecker, createStoreChecker } from './reference-helpers/svelte-store.js';
+import { findVariable } from '../utils/ast-utils.js';
 
 export default createRule('require-store-reactive-access', {
 	meta: {
@@ -25,38 +25,41 @@ export default createRule('require-store-reactive-access', {
 			return {};
 		}
 		const isStore = createStoreChecker(context);
-		const tsTools = getTypeScriptTools(context);
-
-		/**
-		 * Checks whether the given node is a function, by its type.
-		 * Some stores are also functions (e.g. melt-ui builders are stores and actions),
-		 * so calling them or using them with `use:` is fine.
-		 */
-		function isCallable(node: TSESTree.Expression): boolean {
-			if (!tsTools) return false;
-			const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(node);
-			if (!tsNode) return false;
-			const checker = tsTools.service.program.getTypeChecker();
-			const type = checker.getApparentType(checker.getTypeAtLocation(tsNode));
-			return type.getCallSignatures().length > 0;
-		}
+		const isCallable = createCallableChecker(context);
 
 		/** Verify for expression node */
 		function verifyExpression(
 			node: TSESTree.Expression | null | undefined,
-			options?: { disableFix?: boolean; consistent?: boolean }
+			options?: { disableFix?: boolean; consistent?: boolean; allowCallable?: boolean }
 		) {
 			if (!node) return;
-			if (isStore(node, { consistent: options?.consistent })) {
-				context.report({
-					node,
-					messageId: 'usingRawStoreInText',
-					fix:
-						node.type === 'Identifier' && !options?.disableFix
-							? (fixer) => fixer.insertTextBefore(node, '$')
-							: null
-				});
+			if (!isStore(node, { consistent: options?.consistent })) {
+				return;
 			}
+			if (options?.allowCallable && isCallable(node)) {
+				// Some stores are also functions (e.g. melt-ui builders are stores and actions).
+				// Using them as functions is fine.
+				return;
+			}
+			context.report({
+				node,
+				messageId: 'usingRawStoreInText',
+				fix:
+					node.type === 'Identifier' && !options?.disableFix && canUseStorePrefix(node)
+						? (fixer) => fixer.insertTextBefore(node, '$')
+						: null
+			});
+		}
+
+		/**
+		 * Checks whether the `$` prefix can be used for the given identifier.
+		 * Svelte only allows it for stores declared at the top level of the component.
+		 */
+		function canUseStorePrefix(node: TSESTree.Identifier) {
+			const variable = findVariable(context, node);
+			return Boolean(
+				variable && (variable.scope.type === 'module' || variable.scope.type === 'global')
+			);
 		}
 
 		return {
@@ -65,7 +68,10 @@ export default createRule('require-store-reactive-access', {
 					return;
 				}
 				// Check for <p>{store}<p/>, etc.
-				verifyExpression(node.expression);
+				verifyExpression(node.expression, {
+					// e.g. <button onclick={store} />
+					allowCallable: isEventAttributeValue(node)
+				});
 			},
 			SvelteShorthandAttribute(node) {
 				if (canAcceptStoreAttributeElement(node.parent.parent)) {
@@ -83,11 +89,8 @@ export default createRule('require-store-reactive-access', {
 					if (node.key.name.type !== 'Identifier') {
 						return;
 					}
-					if (isCallable(node.key.name)) {
-						return;
-					}
 					// Check for <button use:store />, <div animate:store />, or <div transition:store />
-					verifyExpression(node.key.name);
+					verifyExpression(node.key.name, { allowCallable: true });
 				} else if (node.kind === 'Binding') {
 					if (node.key.name.name !== 'this' && canAcceptStoreAttributeElement(node.parent.parent)) {
 						return;
@@ -113,7 +116,7 @@ export default createRule('require-store-reactive-access', {
 					});
 				} else if (node.kind === 'EventHandler') {
 					// Check for <button on:click={store} />
-					verifyExpression(node.expression);
+					verifyExpression(node.expression, { allowCallable: true });
 				}
 			},
 			SvelteStyleDirective(node) {
@@ -164,11 +167,11 @@ export default createRule('require-store-reactive-access', {
 				verifyExpression(node.discriminant);
 			},
 			'CallExpression, NewExpression'(node: TSESTree.CallExpression) {
-				if (node.callee.type === 'Super' || isCallable(node.callee)) {
+				if (node.callee.type === 'Super') {
 					return;
 				}
 				// Check for `store()`
-				verifyExpression(node.callee);
+				verifyExpression(node.callee, { allowCallable: node.type === 'CallExpression' });
 			},
 			UnaryExpression(node: TSESTree.UnaryExpression) {
 				// Check for `-store`, `+store`, `!store`, `~store`, `typeof store`
@@ -211,9 +214,9 @@ export default createRule('require-store-reactive-access', {
 				});
 			},
 			LogicalExpression(node: TSESTree.LogicalExpression) {
-				if (node.operator === '??' && node.left.type !== 'Identifier') {
+				if ((node.operator === '??' || node.operator === '||') && isStore(node.right)) {
+					// The fallback is a store, so this checks whether the store itself exists.
 					// e.g. `getContext('key') ?? readable(0)`
-					// This checks whether the store itself exists, and the `$` prefix can't be used here.
 					return;
 				}
 				// Check for `store && foo`
@@ -251,6 +254,18 @@ export default createRule('require-store-reactive-access', {
 				});
 			}
 		};
+
+		/**
+		 * Checks whether the given mustache node is the value of an event attribute.
+		 * e.g. <button onclick={handler} />
+		 */
+		function isEventAttributeValue(node: AST.SvelteMustacheTag) {
+			return (
+				node.parent.type === 'SvelteAttribute' &&
+				node.parent.value.length === 1 &&
+				node.parent.key.name.startsWith('on')
+			);
+		}
 
 		/**
 		 * Checks whether the given mustache node accepts a store instance.

@@ -165,6 +165,33 @@ function createStoreCheckerForTS(tools: TSTools): StoreCheckerWithOptions {
 }
 
 /**
+ * Creates a function that checks whether the given expression node may be a function, by its type.
+ * For union types, it matches if any type is a function.
+ * Without type information, it always returns `false`.
+ */
+export function createCallableChecker(
+	context: RuleContext
+): (node: TSESTree.Expression) => boolean {
+	const tools = getTypeScriptTools(context);
+	if (!tools) {
+		return () => false;
+	}
+	const { service } = tools;
+	const checker = service.program.getTypeChecker();
+	return (node) => {
+		const tsNode = service.esTreeNodeToTSNodeMap.get(node);
+		if (!tsNode) {
+			return false;
+		}
+		return eachTypeCheck(
+			checker.getApparentType(checker.getTypeAtLocation(tsNode)),
+			{ consistent: false },
+			(type) => checker.getApparentType(type).getCallSignatures().length > 0
+		);
+	};
+}
+
+/**
  * Check the given type with the given check function.
  * For union types, `options.consistent: true` requires all types to pass the check function.
  * `options.consistent: false` considers a match if any type passes the check function.

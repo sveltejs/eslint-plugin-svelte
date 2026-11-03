@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-fix(require-store-reactive-access): don't report callable stores used as functions or actions, and `??` on non-identifier stores
+fix(require-store-reactive-access): don't report callable stores used as functions, actions, transitions, or event handlers, and stores checked with `??` / `||` with a store fallback. Don't auto-fix stores that are not declared at the top level.

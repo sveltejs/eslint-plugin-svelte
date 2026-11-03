@@ -1,0 +1,5 @@
+- message: Use the $ prefix or the get function to access reactive values instead
+    of accessing the raw store.
+  line: 8
+  column: 6
+  suggestions: null
