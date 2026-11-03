@@ -1,5 +1,5 @@
 - message: Prefer using writable $derived instead of $state and $effect
-  line: 11
+  line: 15
   column: 6
   suggestions:
     - desc: Rewrite $state and $effect to $derived
@@ -9,7 +9,11 @@
         	const { data } = $props();
         	const identity = (value) => value;
         	function count(node) {
-        		return node.children ? node.children.map(count).length : 1;
+        		let result = 1;
+        		node.children?.forEach((child) => {
+        			result += count(child);
+        		});
+        		return result;
         	}
         	function rename(value) {
         		value.name = 'foo';
@@ -41,7 +45,7 @@
 
         <p>{x.name} {y.name} {total} {[...c].length}</p>
 - message: Prefer using writable $derived instead of $state and $effect
-  line: 17
+  line: 21
   column: 6
   suggestions:
     - desc: Rewrite $state and $effect to $derived
@@ -51,7 +55,11 @@
         	const { data } = $props();
         	const identity = (value) => value;
         	function count(node) {
-        		return node.children ? node.children.map(count).length : 1;
+        		let result = 1;
+        		node.children?.forEach((child) => {
+        			result += count(child);
+        		});
+        		return result;
         	}
         	function rename(value) {
         		value.name = 'foo';
@@ -83,7 +91,7 @@
 
         <p>{x.name} {y.name} {total} {[...c].length}</p>
 - message: Prefer using writable $derived instead of $state and $effect
-  line: 23
+  line: 27
   column: 6
   suggestions:
     - desc: Rewrite $state and $effect to $derived
@@ -93,7 +101,11 @@
         	const { data } = $props();
         	const identity = (value) => value;
         	function count(node) {
-        		return node.children ? node.children.map(count).length : 1;
+        		let result = 1;
+        		node.children?.forEach((child) => {
+        			result += count(child);
+        		});
+        		return result;
         	}
         	function rename(value) {
         		value.name = 'foo';

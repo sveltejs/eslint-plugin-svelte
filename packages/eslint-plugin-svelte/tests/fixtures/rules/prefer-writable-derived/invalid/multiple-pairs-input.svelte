@@ -2,7 +2,11 @@
 	const { data } = $props();
 	const identity = (value) => value;
 	function count(node) {
-		return node.children ? node.children.map(count).length : 1;
+		let result = 1;
+		node.children?.forEach((child) => {
+			result += count(child);
+		});
+		return result;
 	}
 	function rename(value) {
 		value.name = 'foo';

@@ -124,19 +124,20 @@ const ARRAY_METHODS: [string, MethodInfo][] = [
 	['findLast', { result: 'part', callback: 'other' }],
 	['findLastIndex', { result: 'none', callback: 'other' }],
 	['flat', { result: 'newContainer' }],
-	// The result comes from the returned values of the callback.
-	['flatMap', { result: 'none', callback: 'flatMap' }],
+	// The result has the returned values of the callback.
+	['flatMap', { result: 'newContainer', callback: 'flatMap' }],
 	['forEach', { result: 'none', callback: 'other' }],
 	['includes', { result: 'none' }],
 	['indexOf', { result: 'none' }],
 	['join', { result: 'none' }],
 	['keys', { result: 'none' }],
 	['lastIndexOf', { result: 'none' }],
-	['map', { result: 'none', callback: 'map' }],
+	['map', { result: 'newContainer', callback: 'map' }],
 	['pop', { result: 'part', mutates: true }],
 	['push', { result: 'none', mutates: true, args: 'stored' }],
-	['reduce', { result: 'part', callback: 'reduce' }],
-	['reduceRight', { result: 'part', callback: 'reduce' }],
+	// The result may be the returned value of the callback.
+	['reduce', { result: 'self', callback: 'reduce' }],
+	['reduceRight', { result: 'self', callback: 'reduce' }],
 	['reverse', { result: 'self', mutates: true }],
 	['shift', { result: 'part', mutates: true }],
 	['slice', { result: 'newContainer' }],
@@ -283,6 +284,16 @@ const PROTOCOL_PROPERTIES = new Set([
 	'toLocaleString',
 	'toString',
 	'valueOf'
+]);
+
+// Global functions that return a new array.
+const ARRAY_GLOBAL_FUNCTIONS = new Set([
+	'Array.from',
+	'Array.of',
+	'Object.entries',
+	'Object.getOwnPropertyNames',
+	'Object.keys',
+	'Object.values'
 ]);
 
 // Runes that return the given value itself (or the same proxy).
@@ -521,6 +532,16 @@ function createDeepMutationChecker(context: RuleContext) {
 		return node.properties.every((property) => {
 			if (property.type === 'SpreadElement') return true;
 			if (property.kind !== 'init' || property.method) return false;
+			// e.g. `{ at: function () {} }`. It may be called with the object as `this`.
+			const value = unwrapTS(property.value);
+			if (
+				value.type === 'FunctionExpression' ||
+				value.type === 'ArrowFunctionExpression' ||
+				value.type === 'ClassExpression' ||
+				getLocalFunction(value) != null
+			) {
+				return false;
+			}
 			const name = getPropertyName(property, getScope(context, property));
 			return name != null && !PROTOCOL_PROPERTIES.has(name);
 		});
@@ -541,38 +562,49 @@ function createDeepMutationChecker(context: RuleContext) {
 		);
 	}
 
+	const builtinArrays = new Map<Variable, boolean>();
+
 	/**
-	 * Checks whether the node is a local array literal or a string, whose methods are built-in.
+	 * Checks whether the node is an array or a string whose methods are built-in:
+	 * an array literal, a string, a result of a built-in function that returns a new array
+	 * (e.g. `Object.keys(x)`), or a local variable of an array literal that is only used
+	 * with indexes and built-in methods.
 	 * Other objects may have their own methods with the same names.
 	 */
 	function isBuiltinReceiver(expression: TSESTree.Node): boolean {
 		const node = unwrapTS(expression);
 		if (node.type === 'ArrayExpression' || node.type === 'TemplateLiteral') return true;
 		if (node.type === 'Literal') return typeof node.value === 'string';
+		if (node.type === 'CallExpression') {
+			const name = getGlobalName(node.callee);
+			return name != null && ARRAY_GLOBAL_FUNCTIONS.has(name);
+		}
 		if (node.type !== 'Identifier') return false;
 		const variable = getNewContainerVariable(node);
 		const def = variable?.defs[0];
-		return (
-			def?.type === 'Variable' &&
-			def.node.init != null &&
-			unwrapTS(def.node.init).type === 'ArrayExpression' &&
-			// e.g. `a.includes = fn`
-			!variable!.references.some((reference) => {
+		const init = def?.type === 'Variable' ? def.node.init : null;
+		if (!variable || !init || unwrapTS(init).type !== 'ArrayExpression') return false;
+		let result = builtinArrays.get(variable);
+		if (result == null) {
+			result = variable.references.every((reference) => {
+				if (reference.init) return true;
 				const member = reference.identifier.parent;
-				return (
-					member?.type === 'MemberExpression' &&
-					member.object === reference.identifier &&
-					member.parent?.type === 'AssignmentExpression' &&
-					member.parent.left === member &&
-					!/^\d+$/u.test(getPropertyName(member, getScope(context, member)) ?? '')
-				);
-			})
-		);
+				if (member?.type !== 'MemberExpression' || member.object !== reference.identifier) {
+					return false;
+				}
+				const name = getPropertyName(member, getScope(context, member));
+				if (name != null && /^\d+$/u.test(name)) return true;
+				// e.g. `a[i] = x`
+				if (name == null) return member.computed;
+				// e.g. `a.push(x)` or `a.length`
+				const isAssigned =
+					member.parent?.type === 'AssignmentExpression' && member.parent.left === member;
+				return !isAssigned && (name === 'length' || METHODS.has(name));
+			});
+			builtinArrays.set(variable, result);
+		}
+		return result;
 	}
-
-	// Calls of built-in methods on followed values, e.g. `v.map(f)`.
-	// Their callbacks are called by the built-in methods.
-	const builtinCalls = new Set<TSESTree.CallExpression>();
 
 	/**
 	 * Checks a variable declared with a new array or object, e.g. `const a = []`,
@@ -736,16 +768,13 @@ function createDeepMutationChecker(context: RuleContext) {
 	/** Returns the modes of the parameters of a callback for an array method. */
 	function getArrayCallbackModes(
 		method: string,
-		call: TSESTree.CallExpression,
 		objectDepth: number
 	): (index: number) => Mode | null {
 		const element = toMode(objectDepth - 1);
 		const array = toMode(objectDepth);
 		if (method === 'reduce' || method === 'reduceRight') {
-			// The accumulator is the first element only when no initial value is given.
-			const hasInitialValue = call.arguments.length >= 2;
-			return (index) =>
-				index === 1 || (index === 0 && !hasInitialValue) ? element : index === 3 ? array : null;
+			// The accumulator may be an element or a part of it returned by the callback.
+			return (index) => (index === 0 ? 0 : index === 1 ? element : index === 3 ? array : null);
 		}
 		if (method === 'sort' || method === 'toSorted') {
 			return (index) => (index <= 1 ? element : null);
@@ -782,6 +811,27 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/**
+	 * Checks whether the node is a parameter of an inline callback of a built-in method,
+	 * e.g. `item` in `v.map((item) => item)`. Such a parameter is followed only from the object
+	 * the method is called on, and the result of the method is followed from there, too.
+	 * If the object is not built-in, the parameter doesn't get the value, so returning it is fine.
+	 */
+	function isCallbackParamOfBuiltinMethod(node: TSESTree.Node, fn: LocalFunction): boolean {
+		if (node.type !== 'Identifier') return false;
+		const def = findVariable(node)?.defs[0];
+		const call = fn.parent as AnyNode | null;
+		if (def?.type !== 'Parameter' || def.node !== fn || call?.type !== 'CallExpression') {
+			return false;
+		}
+		const index = call.arguments.indexOf(fn as TSESTree.CallExpressionArgument);
+		if (index === 1 && getGlobalName(call.callee) === 'Array.from') return true;
+		const callee = unwrapTS(call.callee);
+		return (
+			index === 0 && callee.type === 'MemberExpression' && getMethodInfo(callee)?.callback != null
+		);
+	}
+
+	/**
 	 * Checks what is done with the value returned by a function that is passed as an argument,
 	 * e.g. `$derived.by(() => v)` or `v.map((item) => item)`.
 	 */
@@ -799,11 +849,7 @@ function createDeepMutationChecker(context: RuleContext) {
 		// e.g. `Array.from(v, (item) => item)`
 		if (index === 1 && name === 'Array.from') return isValueMutated(call, toMode(depth + 1));
 		const callee = unwrapTS(call.callee);
-		if (
-			index !== 0 ||
-			callee.type !== 'MemberExpression' ||
-			!(builtinCalls.has(call) || isBuiltinReceiver(callee.object))
-		) {
+		if (index !== 0 || callee.type !== 'MemberExpression' || !isBuiltinReceiver(callee.object)) {
 			return true;
 		}
 		switch (getMethodInfo(callee)?.callback) {
@@ -814,7 +860,7 @@ function createDeepMutationChecker(context: RuleContext) {
 			case 'reduce': {
 				// The returned value becomes the next accumulator and the result.
 				const fn = getLocalFunction(call.arguments[0]);
-				return fn == null || isParamMutated(fn, 0, mode) || isValueMutated(call, mode);
+				return fn == null || isParamMutated(fn, 0, 0) || isValueMutated(call, 0);
 			}
 			case 'other':
 				return false;
@@ -906,7 +952,13 @@ function createDeepMutationChecker(context: RuleContext) {
 		if (element.kind === 'special') {
 			return ['svelte:component', 'svelte:element', 'svelte:self'].includes(element.name.name);
 		}
-		return element.name.name.includes('-') || attribute.key.name === 'value';
+		// Custom elements get values as properties.
+		const isCustomElement =
+			element.name.name.includes('-') ||
+			element.startTag.attributes.some(
+				(attr) => attr.type === 'SvelteAttribute' && attr.key.name === 'is'
+			);
+		return isCustomElement || attribute.key.name === 'value';
 	}
 
 	/**
@@ -992,13 +1044,12 @@ function createDeepMutationChecker(context: RuleContext) {
 						if (!info) return true;
 						// e.g. `v.push(1)`
 						if (info.mutates && objectDepth === 0) return true;
-						builtinCalls.add(parent);
 						// e.g. `v.forEach((item) => (item.a = 1))`
 						if (
 							info.callback &&
 							isCallbackParamMutated(
 								parent.arguments[0],
-								getArrayCallbackModes(property!, parent, objectDepth)
+								getArrayCallbackModes(property!, objectDepth)
 							)
 						) {
 							return true;
@@ -1065,15 +1116,21 @@ function createDeepMutationChecker(context: RuleContext) {
 					while (fn && !isFunction(fn)) {
 						fn = fn.parent as AnyNode | undefined;
 					}
-					return !isFunction(fn) || isReturnedValueMutated(fn, toMode(depth));
+					if (!isFunction(fn)) return true;
+					// e.g. `v.map((item) => item.a)`. The result is followed from `v`.
+					if (isCallbackParamOfBuiltinMethod(expression, fn)) return false;
+					return isReturnedValueMutated(fn, toMode(depth));
 				}
 				case 'AssignmentExpression':
 					if (parent.left === node) {
-						// e.g. `copy.toString = fn`. The language may call it with the object as `this`.
+						// e.g. `copy.forEach = fn`. It may be called with the object as `this`,
+						// since methods with built-in names are trusted.
 						if (
 							member &&
-							(member.property == null || PROTOCOL_PROPERTIES.has(member.property)) &&
-							!isPrimitive(parent.right)
+							!isPrimitive(parent.right) &&
+							(member.property == null ||
+								METHODS.has(member.property) ||
+								PROTOCOL_PROPERTIES.has(member.property))
 						) {
 							return true;
 						}

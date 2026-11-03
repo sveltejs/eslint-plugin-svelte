@@ -8,7 +8,7 @@
 	const names = $derived.by(() => {
 		const result = [];
 		for (const item of user.items) result.push(item.name);
-		return result;
+		return result.join(', ');
 	});
 	function getUser() {
 		return user;
@@ -18,7 +18,7 @@
 	}
 </script>
 
-<p use:show={user}>{getUser().name} {total} {names.length}</p>
+<p use:show={user}>{getUser().name} {total} {names}</p>
 {#each user.items}
 	<p>item</p>
 {/each}
