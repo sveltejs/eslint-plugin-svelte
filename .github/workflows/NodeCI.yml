@@ -18,6 +18,10 @@ defaults:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -27,6 +31,13 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       - name: Install Packages
         run: pnpm install --frozen-lockfile
+      - name: Update resources
+        run: pnpm run update
+        working-directory: ${{ env.project_root_path }}
+      - name: Check changes
+        run: |
+          git add --all && \
+          git diff-index --cached HEAD --stat --exit-code
       - name: Lint eslint-plugin-svelte
         run: |
           pnpm run build
@@ -41,37 +52,21 @@ jobs:
         run: pnpm run typecov
         working-directory: ${{ env.project_root_path }}
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-      - name: Install Packages
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: |
-          pnpm run update
-          pnpm run build
-        working-directory: ${{ env.project_root_path }}
-
   test:
     name: 'Test for ESLint ${{ matrix.eslint }} on Node.js: ${{ matrix.node }} OS: ${{matrix.os}}'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        eslint: [8, 9, 10]
-        node: [20.x, 22.x, 24.x, 26.x]
         include:
-          # ESLint v9 and Node.js 18.x
-          - os: ubuntu-latest
-            eslint: 9
-            node: 18.x
-          # ESLint v8 and Node.js 18.x
-          - os: ubuntu-latest
-            eslint: 8
-            node: 18.x
+          - { os: ubuntu-latest, eslint: 8, node: 18.x }
+          - { os: ubuntu-latest, eslint: 8, node: 26.x }
+          - { os: ubuntu-latest, eslint: 9, node: 18.x }
+          - { os: ubuntu-latest, eslint: 9, node: 26.x }
+          - { os: ubuntu-latest, eslint: 10, node: 20.x }
+          - { os: ubuntu-latest, eslint: 10, node: 22.x }
+          - { os: ubuntu-latest, eslint: 10, node: 24.x }
+          - { os: ubuntu-latest, eslint: 10, node: 26.x }
+          - { os: windows-latest, eslint: 10, node: 26.x }
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -102,9 +97,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        eslint: [9]
-        node: [18, 20, 22, 24, 26]
+        include:
+          - { os: ubuntu-latest, eslint: 9, node: 18 }
+          - { os: windows-latest, eslint: 9, node: 26 }
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -133,7 +128,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         node: [18]
     steps:
       - name: Checkout
@@ -156,19 +151,3 @@ jobs:
       - name: Test
         run: pnpm run test
         working-directory: ${{ env.project_root_path }}
-
-  update-resources:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-      - name: Install Packages
-        run: pnpm install --frozen-lockfile
-      - name: Update resources
-        run: pnpm run update
-        working-directory: ${{ env.project_root_path }}
-      - name: Check changes
-        run: |
-          git add --all && \
-          git diff-index --cached HEAD --stat --exit-code
