@@ -164,6 +164,17 @@ function isComponentElement(element: AnyNode | undefined): boolean {
 }
 
 /**
+ * How a followed value relates to the object of the `$state` variable.
+ * - `shared`: the object itself or a part of it (e.g. `const a = v.a`).
+ * - `eachItem`: an `{#each}` item. Assigning to it changes the array.
+ * - `newContainer`: a new array or object whose elements are shared (e.g. `v.slice()` or `...rest`).
+ */
+type Mode = 'shared' | 'eachItem' | 'newContainer';
+
+// Gives up following values when they go deeper than this, and treats them as mutated.
+const MAX_DEPTH = 100;
+
+/**
  * Checks whether the variable is mutated through one of its properties,
  * e.g. `v.a = 1`, `v.a++`, `delete v.a`, `bind:value={v.a}`, `v.push(1)` or `Object.assign(v, x)`.
  * It also follows values that point to the same object,
@@ -172,53 +183,86 @@ function isComponentElement(element: AnyNode | undefined): boolean {
  * so such a variable can't be rewritten to `$derived`.
  */
 function createDeepMutationChecker(context: RuleContext) {
-	const visited = new Set<Variable>();
-	const visitedEachItems = new Set<Variable>();
-	const visitedFunctions = new Set<LocalFunction>();
 	const findVariableContext = new FindVariableContext(context);
 	const variables = new Map<TSESTree.Identifier, Variable | null>();
+	// The results that don't depend on where the check started. Kept for the whole file.
+	const cache = new Map<Variable | LocalFunction, Map<Mode, boolean>>();
+	// The variables and functions being checked in the current check.
+	const visited = new Map<Variable | LocalFunction, Set<Mode>>();
+	// The number of times a check stopped early because of `visited` or `MAX_DEPTH`.
+	// A result is cached only when it didn't stop early.
+	let stops = 0;
+	let depth = 0;
 
 	function findVariable(node: TSESTree.Identifier): Variable | null {
 		if (!variables.has(node)) variables.set(node, findVariableContext.findVariable(node));
 		return variables.get(node)!;
 	}
 
-	/**
-	 * Checks whether the variable (which points to the object or to a part of it) is mutated.
-	 * `isEachItem` is `true` for an `{#each}` item, since assigning to it changes the array.
-	 */
-	function isVariableMutated(variable: Variable, isEachItem: boolean): boolean {
-		const visitedSet = isEachItem ? visitedEachItems : visited;
-		if (visitedSet.has(variable)) return false;
-		visitedSet.add(variable);
-		return variable.references.some((reference) =>
-			isValueMutated(reference.identifier as TSESTree.Identifier, isEachItem)
+	function withCache(key: Variable | LocalFunction, mode: Mode, check: () => boolean): boolean {
+		const cached = cache.get(key)?.get(mode);
+		if (cached != null) return cached;
+		const visitedModes = visited.get(key) ?? new Set<Mode>();
+		visited.set(key, visitedModes);
+		if (visitedModes.has(mode) || depth >= MAX_DEPTH) {
+			stops++;
+			return depth >= MAX_DEPTH;
+		}
+		visitedModes.add(mode);
+		const stopsBefore = stops;
+		depth++;
+		let result: boolean;
+		try {
+			result = check();
+		} finally {
+			depth--;
+		}
+		if (stops === stopsBefore) {
+			const modes = cache.get(key) ?? new Map<Mode, boolean>();
+			modes.set(mode, result);
+			cache.set(key, modes);
+		}
+		return result;
+	}
+
+	/** Checks whether the variable (which gets the object or a part of it) is mutated. */
+	function isVariableMutated(variable: Variable, mode: Mode): boolean {
+		return withCache(variable, mode, () =>
+			variable.references.some((reference) =>
+				isValueMutated(reference.identifier as TSESTree.Identifier, mode)
+			)
 		);
 	}
 
 	/** Checks the variables declared by the pattern, which get the object or a part of it. */
-	function isPatternMutated(pattern: TSESTree.Node, isEachItem: boolean): boolean {
+	function isPatternMutated(pattern: TSESTree.Node, mode: Mode): boolean {
+		const partMode = mode === 'eachItem' ? 'eachItem' : 'shared';
 		switch (pattern.type) {
 			case 'Identifier': {
 				const variable = findVariable(pattern);
-				return variable != null && isVariableMutated(variable, isEachItem);
+				return variable != null && isVariableMutated(variable, mode);
 			}
 			case 'ObjectPattern':
 				return pattern.properties.some((property) =>
-					isPatternMutated(property.type === 'Property' ? property.value : property, isEachItem)
+					property.type === 'Property'
+						? isPatternMutated(property.value, partMode)
+						: isPatternMutated(property, mode)
 				);
 			case 'ArrayPattern':
 				return pattern.elements.some(
-					(element) => element != null && isPatternMutated(element, isEachItem)
+					(element) =>
+						element != null &&
+						(element.type === 'RestElement'
+							? isPatternMutated(element, mode)
+							: isPatternMutated(element, partMode))
 				);
 			case 'RestElement':
-				return isPatternMutated(pattern.argument, isEachItem);
+				// e.g. `const [...rest] = v`
+				return isPatternMutated(pattern.argument, 'newContainer');
 			case 'AssignmentPattern':
-				return isPatternMutated(pattern.left, isEachItem);
-			case 'MemberExpression':
-				// e.g. `a.b = v`. We don't follow values stored in other objects.
-				return false;
+				return isPatternMutated(pattern.left, mode);
 			default:
+				// e.g. `a.b = v`. We don't follow values stored in other objects.
 				return false;
 		}
 	}
@@ -240,24 +284,29 @@ function createDeepMutationChecker(context: RuleContext) {
 	}
 
 	/** Checks the parameter of a local function (or snippet) that gets the value. */
-	function isParamMutated(fn: LocalFunction, index: number): boolean {
+	function isParamMutated(fn: LocalFunction, index: number, mode: Mode): boolean {
 		const params = (fn.params as TSESTree.Parameter[]).filter(
 			// TS `this` parameter, e.g. `function f(this: T, a) {}`
 			(param) => param.type !== 'Identifier' || param.name !== 'this'
 		);
 		for (let i = 0; i < params.length; i++) {
 			const param = params[i];
-			if (param.type === 'RestElement') return isPatternMutated(param, false);
-			if (i === index) return isPatternMutated(param, false);
+			// e.g. `function f(...args) {}`. `args` is a new array that has the value.
+			if (param.type === 'RestElement') return isPatternMutated(param, mode);
+			if (i === index) return isPatternMutated(param, mode);
 		}
 		return false;
 	}
 
 	/** Checks a local function (or snippet) that gets the value as an argument, e.g. `fn(v)`. */
-	function isPassedToMutatingFunction(call: TSESTree.CallExpression, index: number): boolean {
+	function isPassedToMutatingFunction(
+		call: TSESTree.CallExpression,
+		index: number,
+		mode: Mode
+	): boolean {
 		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return false;
 		const fn = getLocalFunction(call.callee);
-		return fn != null && isParamMutated(fn, index);
+		return fn != null && isParamMutated(fn, index, mode);
 	}
 
 	/** Checks the callbacks of a method call on the object, e.g. `v.forEach((item) => ...)`. */
@@ -266,57 +315,84 @@ function createDeepMutationChecker(context: RuleContext) {
 			const fn = getLocalFunction(arg);
 			if (!fn) return false;
 			const indexes = (method != null && ELEMENT_PARAMS.get(method)) || fn.params.map((_, i) => i);
-			return indexes.some((index) => isParamMutated(fn, index));
+			return indexes.some((index) => isParamMutated(fn, index, 'shared'));
 		});
 	}
 
 	/**
 	 * Checks the values returned by the function, e.g. `get().a = 1` for `const get = () => v`.
-	 * Returns `null` if the function is not a local function.
 	 */
-	function isReturnedValueMutated(fn: LocalFunction): boolean | null {
-		if (fn.type === 'SvelteSnippetBlock') return null;
+	function isReturnedValueMutated(fn: LocalFunction, mode: Mode): boolean {
+		if (fn.type === 'SvelteSnippetBlock') return false;
 		const parent = fn.parent as AnyNode;
-		// e.g. `$derived.by(() => v)` or `(() => v)()`
 		if (parent.type === 'CallExpression') {
-			if (parent.callee === fn) return isValueMutated(parent, false);
-			if (parent.arguments[0] === fn && getCalleeName(parent.callee) === '$derived.by') {
-				return isValueMutated(parent, false);
+			// e.g. `(() => v)()` or `$derived.by(() => v)`
+			if (
+				parent.callee === fn ||
+				(parent.arguments[0] === fn && getCalleeName(parent.callee) === '$derived.by')
+			) {
+				return isValueMutated(parent, mode);
 			}
-			return null;
+			return false;
+		}
+		const directive = parent.parent as AnyNode | undefined;
+		if (
+			(parent.type === 'SequenceExpression' ||
+				(parent.type as string) === 'SvelteFunctionBindingsExpression') &&
+			(parent as TSESTree.SequenceExpression).expressions[0] === fn &&
+			directive?.type === 'SvelteDirective'
+		) {
+			// e.g. `<Child bind:value={() => v, (x) => (v = x)} />`
+			return directive.kind === 'Binding' && isComponentElement(directive.parent?.parent);
 		}
 		let id: TSESTree.Identifier | null = null;
 		if (fn.type === 'FunctionDeclaration') id = fn.id;
-		else if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier')
+		else if (parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
 			id = parent.id;
+		}
 		const variable = id && findVariable(id);
-		if (!variable) return null;
-		if (visitedFunctions.has(fn)) return false;
-		visitedFunctions.add(fn);
-		return variable.references.some((reference) => {
-			const call = reference.identifier.parent;
-			return (
-				call?.type === 'CallExpression' &&
-				call.callee === reference.identifier &&
-				isValueMutated(call, false)
-			);
-		});
+		if (!variable) return false;
+		return withCache(fn, mode, () =>
+			variable.references.some((reference) => {
+				const call = reference.identifier.parent;
+				return (
+					call?.type === 'CallExpression' &&
+					// e.g. `get()` or `$derived.by(get)`
+					(call.callee === reference.identifier ||
+						(call.arguments[0] === reference.identifier &&
+							getCalleeName(call.callee) === '$derived.by')) &&
+					isValueMutated(call, mode)
+				);
+			})
+		);
 	}
 
 	/**
 	 * Checks whether the value of the given expression (the object or a part of it) is mutated.
 	 */
-	function isValueMutated(expression: TSESTree.Node, isEachItem: boolean): boolean {
+	function isValueMutated(expression: TSESTree.Node, mode: Mode): boolean {
 		let node: TSESTree.Node = expression;
-		// Whether `node` is a part of the object (e.g. `v.a`) rather than the variable itself.
-		let isMember = false;
+		// Whether `node` is a part of the object (e.g. `v.a`) rather than the value itself.
+		let isMember = mode === 'newContainer';
 		let property: string | null = null;
-		// The number of member accesses after a method that returns a new array (e.g. `v.filter(f)`).
-		// When it is `1`, `node` is a property of the new array, so changing it is not a mutation of `v`.
-		let newArrayMembers: number | null = null;
+		// The number of member accesses after a new container (e.g. `v.filter(f)`).
+		// When it is `0`, `node` is the new container, and when it is `1`, `node` is its property.
+		// Changing them is not a mutation of the object.
+		let newContainerMembers: number | null = mode === 'newContainer' ? 0 : null;
 
+		/** Whether `node` is shared with the object, so changing it mutates the object. */
 		function isShared() {
-			return isMember && newArrayMembers !== 1;
+			return isMember && (newContainerMembers == null || newContainerMembers >= 2);
+		}
+
+		/** Whether assigning to `node` mutates the object. */
+		function isWrite() {
+			return isShared() || (mode === 'eachItem' && !isMember);
+		}
+
+		/** The mode of a value that gets `node`. */
+		function getMode(): Mode {
+			return isMember && newContainerMembers === 0 ? 'newContainer' : 'shared';
 		}
 
 		while (node.parent) {
@@ -345,7 +421,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					if (parent.object !== node) return false;
 					node = parent;
 					isMember = true;
-					if (newArrayMembers != null) newArrayMembers++;
+					if (newContainerMembers != null) newContainerMembers++;
 					property = getPropertyName(parent, getScope(context, parent));
 					continue;
 				case 'CallExpression': {
@@ -356,7 +432,7 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `v.forEach((item) => (item.a = 1))`
 						if (isMutatedInCallbacks(parent, property)) return true;
 						// The returned value may be a part of the object, e.g. `v.find(...).a = 1`.
-						newArrayMembers = property != null && NEW_ARRAY_METHODS.has(property) ? 0 : null;
+						newContainerMembers = property != null && NEW_ARRAY_METHODS.has(property) ? 0 : null;
 						node = parent;
 						property = null;
 						continue;
@@ -368,13 +444,18 @@ function createDeepMutationChecker(context: RuleContext) {
 						node = parent;
 						continue;
 					}
-					if (parent.callee.type === 'MemberExpression' && calleeName != null && index === 0) {
+					if (
+						parent.callee.type === 'MemberExpression' &&
+						calleeName != null &&
+						index === 0 &&
+						getMode() === 'shared'
+					) {
 						const [object, method] = calleeName.split('.');
 						// e.g. `Object.assign(v, x)`
 						if (MUTATING_STATIC_METHODS.get(object)?.has(method)) return true;
 					}
 					// e.g. `fn(v)` or `{@render snippet(v)}`
-					return isPassedToMutatingFunction(parent, index);
+					return isPassedToMutatingFunction(parent, index, getMode());
 				}
 				case 'ReturnStatement':
 				case 'ArrowFunctionExpression': {
@@ -384,50 +465,50 @@ function createDeepMutationChecker(context: RuleContext) {
 					while (fn && !isFunction(fn)) {
 						fn = fn.parent as AnyNode | undefined;
 					}
-					return isFunction(fn) ? (isReturnedValueMutated(fn) ?? false) : false;
+					return isFunction(fn) && isReturnedValueMutated(fn, getMode());
 				}
 				case 'AssignmentExpression':
-					if (parent.left === node) return isShared() || isEachItem;
+					if (parent.left === node) return isWrite();
 					// e.g. `a = v`
-					if (isPatternMutated(parent.left, false)) return true;
+					if (isPatternMutated(parent.left, getMode())) return true;
 					node = parent;
 					continue;
 				case 'UpdateExpression':
-					return isShared() || isEachItem;
+					return isWrite();
 				case 'UnaryExpression':
 					return parent.operator === 'delete' && isShared();
 				case 'VariableDeclarator':
 					// e.g. `const a = v`
-					return parent.init === node && isPatternMutated(parent.id, false);
+					return parent.init === node && isPatternMutated(parent.id, getMode());
 				case 'Property':
 					// e.g. `({ a: v.a } = x)`
 					if (parent.parent?.type !== 'ObjectPattern') return false;
-					return parent.value === node && (isShared() || isEachItem);
+					return parent.value === node && isWrite();
 				case 'ArrayPattern':
 				case 'RestElement':
 					// e.g. `[v.a] = x`
-					return isShared() || isEachItem;
+					return isWrite();
 				case 'AssignmentPattern':
-					if (parent.left === node) return isShared() || isEachItem;
+					if (parent.left === node) return isWrite();
 					// e.g. `const { a = v } = x`
-					return isPatternMutated(parent.left, false);
+					return isPatternMutated(parent.left, getMode());
 				case 'ForOfStatement':
 				case 'ForInStatement':
-					if (parent.left === node) return isShared() || isEachItem;
+					if (parent.left === node) return isWrite();
 					if (parent.type === 'ForInStatement') return false;
 					// e.g. `for (const item of v)`
 					return isPatternMutated(
 						parent.left.type === 'VariableDeclaration'
 							? parent.left.declarations[0].id
 							: parent.left,
-						false
+						'shared'
 					);
 				case 'SvelteEachBlock':
 					// e.g. `{#each v as item}`
 					return (
 						parent.expression === node &&
 						parent.context != null &&
-						isPatternMutated(parent.context, true)
+						isPatternMutated(parent.context, 'eachItem')
 					);
 				case 'SvelteDirective':
 					if (parent.kind === 'Action') {
@@ -437,11 +518,16 @@ function createDeepMutationChecker(context: RuleContext) {
 							parent.expression === node && name.type === 'Identifier'
 								? getLocalFunction(name)
 								: null;
-						return fn != null && isParamMutated(fn, 1);
+						return fn != null && isParamMutated(fn, 1, getMode());
 					}
 					if (parent.kind !== 'Binding') return false;
-					// e.g. `bind:value={v.a}`, or `<Child bind:value={v} />` that may mutate it.
-					return isShared() || isEachItem || isComponentElement(parent.parent?.parent);
+					if (isWrite()) return true;
+					// e.g. `<Child bind:value={v} />` that may mutate it. `bind:this` never does.
+					return (
+						getMode() === 'shared' &&
+						isComponentElement(parent.parent?.parent) &&
+						(parent.key.name as { name?: unknown }).name !== 'this'
+					);
 				default:
 					return false;
 			}
@@ -451,9 +537,9 @@ function createDeepMutationChecker(context: RuleContext) {
 
 	return (variable: Variable) => {
 		visited.clear();
-		visitedEachItems.clear();
-		visitedFunctions.clear();
-		return isVariableMutated(variable, false);
+		stops = 0;
+		depth = 0;
+		return isVariableMutated(variable, 'shared');
 	};
 }
 
