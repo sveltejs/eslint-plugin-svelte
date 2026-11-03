@@ -1,14 +1,16 @@
 <script>
+	import { page } from '$app/state';
 	import UlMenu from './UlMenu.svelte';
-	import { menuItems } from '../utils.js';
+	import { generateMenu, tocStore } from '../utils.js';
 
-	export let sidebarOpen = false;
-	export let hiddenMenu = false;
+	let { sidebarOpen = false, hiddenMenu = false } = $props();
+
+	const menuItems = $derived(generateMenu(page, $tocStore));
 </script>
 
 {#if !hiddenMenu || sidebarOpen}
 	<aside class:sidebar-open={sidebarOpen}>
-		<UlMenu children={$menuItems} />
+		<UlMenu children={menuItems} />
 	</aside>
 {/if}
 

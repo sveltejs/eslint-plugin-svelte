@@ -1,10 +1,10 @@
 <script>
 	import { resolve } from '$app/paths';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 </script>
 
-<h1>{$page.status}</h1>
+<h1>{page.status}</h1>
 <blockquote>
-	<p>{$page.error.message}</p>
+	<p>{page.error.message}</p>
 	<p>Take me <a href={resolve('/')}>home</a></p>
 </blockquote>

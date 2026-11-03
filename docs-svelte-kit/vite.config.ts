@@ -1,3 +1,4 @@
+import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import path from 'path';
 import svelteMd from 'vite-plugin-svelte-md';
@@ -8,9 +9,16 @@ import generateRoutes from './tools/generate-routes.mjs';
 import { createLogger, type UserConfig } from 'vite';
 import { fileURLToPath } from 'url';
 
+// Some dependencies of the docs expect `self` to exist.
+if (typeof self === 'undefined') {
+	globalThis.self = globalThis;
+}
+
 generateRoutes();
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const BASE_PATH = '/eslint-plugin-svelte';
 
 const logger = createLogger();
 
@@ -19,13 +27,25 @@ const config: UserConfig = {
 	plugins: [
 		svelteMd(
 			svelteMdOption({
-				baseUrl: '/eslint-plugin-svelte',
+				baseUrl: BASE_PATH,
 				root: path.join(dirname, '../docs')
 			})
 		),
-		sveltekit()
+		sveltekit({
+			compilerOptions: {
+				preserveWhitespace: true,
+				warningFilter: (warning) => {
+					if (warning.code === 'a11y_no_noninteractive_tabindex') return false;
+					return true;
+				}
+			},
+			extensions: ['.svelte', '.md'],
+			adapter: adapter({ fallback: '404.html' }),
+			paths: { base: BASE_PATH }
+		})
 	],
 	define: {
+		BASE_PATH: JSON.stringify(BASE_PATH),
 		RULES_META: JSON.stringify(Object.values(pluginRules).map((rule) => ({ meta: rule.meta })))
 	},
 	ssr: {

@@ -1,5 +1,5 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { isActive, stripBaseUrl } from '../utils.js';
 	import { resolve } from '$app/paths';
 	export let children;
@@ -10,13 +10,13 @@
 	{#each children as item (item.path || item.id || item.title)}
 		<li
 			class="sidebar-menu-item"
-			class:active={item.active || (item.path && isActive(item.path, $page))}
+			class:active={item.active || (item.path && isActive(item.path, page))}
 		>
 			{#if item.path || item.id}
 				<a
 					class="sidebar-menu-item-title"
-					class:active={item.active || (item.path && isActive(item.path, $page))}
-					href={resolve(item.path || `${stripBaseUrl($page.url.pathname)}#${item.id}`)}
+					class:active={item.active || (item.path && isActive(item.path, page))}
+					href={resolve(item.path || `${stripBaseUrl(page.url.pathname)}#${item.id}`)}
 				>
 					{item.title}
 				</a>
