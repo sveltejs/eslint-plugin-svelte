@@ -38,6 +38,12 @@ This rule checks only the warning names and ignores the explanatory note.
 <img src="https://example.com/img.png" alt="Foo" />
 ```
 
+### Runtime warnings
+
+Svelte v5 also lets you use `svelte-ignore` to silence some runtime warnings, such as `ownership_invalid_binding`.
+The compiler never reports these warnings, so this rule can't tell whether the comment is used.
+This rule never reports these codes, even if the comment is in the wrong place.
+
 ## :wrench: Options
 
 Nothing.

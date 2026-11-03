@@ -8,9 +8,10 @@ import semver from 'semver';
 /**
  * Runtime warnings that Svelte v5 lets you silence with `svelte-ignore`.
  * The compiler never reports them, so we can't tell whether the comment is used.
- * See the `is_ignored()` calls in the Svelte compiler.
+ * Keep in sync with `IGNORABLE_RUNTIME_WARNINGS` in the Svelte compiler:
+ * https://github.com/sveltejs/svelte/blob/70afafe18e48a9973c5f711d62d87d088234655e/packages/svelte/src/constants.js#L47-L56
  */
-const RUNTIME_WARNING_CODES = new Set([
+export const RUNTIME_WARNING_CODES = new Set([
 	'await_reactivity_loss',
 	'await_waterfall',
 	'binding_property_non_reactive',
@@ -72,7 +73,9 @@ export default createRule('no-unused-svelte-ignore', {
 				// See https://github.com/sveltejs/eslint-plugin-svelte/issues/1192
 				continue;
 			}
-			if (RUNTIME_WARNING_CODES.has(unused.codeForV5) && semver.satisfies(SVELTE_VERSION, '>=5')) {
+			if (RUNTIME_WARNING_CODES.has(unused.code) && semver.satisfies(SVELTE_VERSION, '>=5')) {
+				// Check `code`, not `codeForV5`: in runes mode, Svelte does not accept
+				// the kebab-case form (e.g. `ownership-invalid-binding`), so that comment does nothing.
 				continue;
 			}
 			context.report({
