@@ -5,6 +5,22 @@ import { getSvelteIgnoreItems } from '../shared/svelte-compile-warns/ignore-comm
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import semver from 'semver';
 
+/**
+ * Runtime warnings that Svelte v5 lets you silence with `svelte-ignore`.
+ * The compiler never reports them, so we can't tell whether the comment is used.
+ * See the `is_ignored()` calls in the Svelte compiler.
+ */
+const RUNTIME_WARNING_CODES = new Set([
+	'await_reactivity_loss',
+	'await_waterfall',
+	'binding_property_non_reactive',
+	'hydration_attribute_changed',
+	'hydration_html_changed',
+	'ownership_invalid_binding',
+	'ownership_invalid_mutation',
+	'state_snapshot_uncloneable'
+]);
+
 export default createRule('no-unused-svelte-ignore', {
 	meta: {
 		docs: {
@@ -54,6 +70,9 @@ export default createRule('no-unused-svelte-ignore', {
 				// This is probably not the intended behavior of Svelte v4, but it's not going to be fixed,
 				// so as a workaround we'll ignore the `reactive-component` warnings.
 				// See https://github.com/sveltejs/eslint-plugin-svelte/issues/1192
+				continue;
+			}
+			if (RUNTIME_WARNING_CODES.has(unused.codeForV5) && semver.satisfies(SVELTE_VERSION, '>=5')) {
 				continue;
 			}
 			context.report({
