@@ -20,7 +20,7 @@
     "@shikijs/twoslash": "^3.12.2",
     "@sindresorhus/slugify": "^3.0.0",
     "@sveltejs/adapter-static": "^4.0.0",
-    "@sveltejs/kit": "^2.43.1",
+    "@sveltejs/kit": "^3.0.0",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@types/babel__core": "^7.20.5",
     "@types/cross-spawn": "^6.0.6",
