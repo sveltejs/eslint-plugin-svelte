@@ -28,14 +28,14 @@ The rule checks these places:
 - the URL argument of `goto()`, `pushState()`, `replaceState()` and `preloadData()`
 - the argument of `preloadCode()` on SvelteKit 2 (on SvelteKit 3 it takes a route ID, so passing a resolved URL is reported)
 
-It follows values through string concatenation, template literals, `? :`, `||`, `??`, local variables (including reassignments), `$state()`, `$derived()`, default values of `$props()`, arrays, objects and `{#each}` blocks. With TypeScript type information, it also uses string literal types and `ResolvedPathname`.
+It follows values through string concatenation, template literals, `? :`, `||`, `??`, local variables (every value assigned to them, in any order), `$state()`, `$derived()`, default values of `$props()`, arrays, objects and `{#each}` blocks. With TypeScript type information, it also uses string literal types and `ResolvedPathname`.
 
 The rule reports:
 
 - **Root-relative URLs** like `/about`. Use `resolve('/about')`. For files in `static`, use `asset()`.
 - **Relative URLs** like `about`, `./about` and `../about`. They depend on the current URL (and its trailing slash) and can point outside the base path. You can allow them with `allowRelativePaths`.
-- **Anything before `resolve()`**, like `` `${origin}${resolve('/about')}` ``. During server rendering, `resolve()` can return a relative path such as `./about`, so the result breaks. `` `${base}${resolve('/about')}` `` adds the base path twice.
-- **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. It bypasses the route type checks of `resolve()`, and `resolve('/') + '/about'` even becomes `//about` (another host) when there is no base path. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine.
+- **Anything before `resolve()`**, like `` `${page.url.origin}${resolve('/about')}` ``. During server rendering, `resolve()` can return a relative path such as `./about`, so the result breaks. `` `${base}${resolve('/about')}` `` adds the base path twice. An unknown value before `resolve()` (which may be empty) is reported only with `strict`.
+- **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. It bypasses the route type checks of `resolve()`, and `resolve('/') + '/about'` even becomes `//about` (another host) when there is no base path. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine. A path after `asset()` is fine too.
 - **External URLs in `goto()`, `pushState()`, `replaceState()` and `preloadData()`**. They cannot navigate to other sites. Use `window.location` or a link.
 
 These are always fine:
@@ -138,7 +138,7 @@ The rule also checks `goto()` and other calls in plain `.js` / `.ts` files (for 
 - The rule does not know what functions return. For example, a helper that builds a localized URL without the base path is not reported. Use `strict` if you need to catch those.
 - The rule does not know your router type. On SvelteKit 3 with `router.type: 'hash'`, `goto('#foo')` is not reported, although it does not work there. On SvelteKit 2 with `router.type: 'hash'` and a base path, `resolve()` itself returns a broken URL ([sveltejs/kit#14894](https://github.com/sveltejs/kit/issues/14894)).
 - An element with a spread attribute (`<a {...props} href="/about">`) is not checked, because the spread may set `rel` or replace the URL. `strict` checks it.
-- When a variable is changed after it is declared (e.g. `link.href = ...`, `links.push(...)`), its value is treated as unknown.
+- When a property of a variable is changed after it is declared (e.g. `link.href = ...`, `links.push(...)`, `url.pathname = ...`), its value is treated as unknown.
 - `<svelte:element this="a">` is not checked.
 - `redirect()` is not checked yet.
 

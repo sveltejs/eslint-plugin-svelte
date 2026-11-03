@@ -28,11 +28,6 @@
   line: 13
   column: 4
   suggestions: null
-- message: Do not add a path after `asset()` ('asset(…).png'). Pass the whole path
-    to `asset()` instead.
-  line: 14
-  column: 4
-  suggestions: null
 - message: Do not add a path after `resolve()` ('resolve(…)/b'). Pass the whole
     path to `resolve()` instead.
   line: 15

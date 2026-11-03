@@ -39,8 +39,11 @@ type Part =
 	| { readonly type: 'resolved'; readonly label: string }
 	/** A value that already starts with the base path and may be extended, e.g. `base` or `page.url`. */
 	| { readonly type: 'based'; readonly label: string }
-	/** Anything else. `string` means it is known not to be nullish. */
-	| { readonly type: 'unknown'; readonly string?: true };
+	/**
+	 * Anything else. `string` means it is known not to be nullish, and `origin` that it is the
+	 * origin of the page (never empty).
+	 */
+	| { readonly type: 'unknown'; readonly string?: true; readonly origin?: true };
 type Alt = readonly Part[] | null;
 type Value = readonly Alt[];
 
@@ -123,6 +126,13 @@ function concat(values: Value[]): Value {
 	);
 }
 
+/** Forget the literal values learned from types. */
+function untrustLiterals(value: Value): Value {
+	return union(
+		value.map((alt) => (alt?.length === 1 && alt[0].type === 'text' ? [STRING_PART] : alt))
+	);
+}
+
 /** Whether the value may be `null` / `undefined`. */
 function mayBeNullish(value: Value): boolean {
 	return value.some(
@@ -159,7 +169,8 @@ type Finding =
 			readonly relativeInSsr: boolean;
 			readonly value: string;
 			/** What comes before `resolve()`. */
-			readonly head: 'text' | 'external' | 'unknown';
+			/** `origin` is the origin of the page: absolute, but never empty. */
+			readonly head: 'text' | 'external' | 'origin' | 'unknown';
 	  }
 	| { readonly kind: 'appended'; readonly value: string; readonly name: string };
 
@@ -170,6 +181,8 @@ const PROTOCOL_RELATIVE = /^[/\\]{2}/u;
 // Browsers ignore leading C0 control characters and spaces in URLs.
 // eslint-disable-next-line no-control-regex -- U+0000 to U+0020 is intended
 const LEADING_IGNORED = /^[\u0000-\u0020]+/u;
+// eslint-disable-next-line no-control-regex -- U+0000 to U+0020 is intended
+const TRAILING_IGNORED = /[\u0000-\u0020]+$/u;
 
 function isExternalText(value: string): boolean {
 	return SCHEME.test(value) || PROTOCOL_RELATIVE.test(value);
@@ -192,7 +205,20 @@ function render(parts: readonly Part[]): string {
 
 function classify(alt: Alt): Finding {
 	if (alt === null) return OK;
-	const parts = [...alt];
+	// Browsers remove tabs and newlines anywhere, and spaces at the end.
+	const parts = alt
+		.map((part, index) =>
+			part.type === 'text'
+				? {
+						type: 'text' as const,
+						value:
+							index === alt.length - 1
+								? part.value.replace(/[\t\n\r]/gu, '').replace(TRAILING_IGNORED, '')
+								: part.value.replace(/[\t\n\r]/gu, '')
+					}
+				: part
+		)
+		.filter((part) => part.type !== 'text' || part.value !== '');
 	while (parts.length > 0 && parts[0].type === 'text') {
 		const value = parts[0].value.replace(LEADING_IGNORED, '');
 		if (value !== '') {
@@ -221,7 +247,14 @@ function classify(alt: Alt): Finding {
 			// relative during server rendering.
 			relativeInSsr:
 				anchor.type === 'resolved' || anchor.label === 'base' || anchor.label === 'assets',
-			head: head.type !== 'text' ? 'unknown' : isExternalText(head.value) ? 'external' : 'text'
+			head:
+				head.type === 'text'
+					? isExternalText(head.value)
+						? 'external'
+						: 'text'
+					: head.type === 'unknown' && head.origin
+						? 'origin'
+						: 'unknown'
 		};
 	}
 	if (anchor && anchorIndex === 0) {
@@ -237,6 +270,8 @@ function classify(alt: Alt): Finding {
 		}
 		const next = parts[1];
 		if (next === undefined) return OK;
+		// `asset()` only adds a prefix: there is no route check to bypass.
+		if (anchor.label === 'asset()') return OK;
 		if (next.type === 'text') {
 			return /^[#?]/u.test(next.value) ? OK : { kind: 'appended', value, name: anchor.label };
 		}
@@ -330,20 +365,76 @@ function isRuneCall(context: RuleContext, node: TSESTree.Node, names: string[]):
 }
 
 class UrlEvaluator {
-	private readonly activeNodes = new Set<unknown>();
-
-	private readonly activeVariables = new Set<Variable>();
-
 	private depth = 0;
 
-	/** The number of times a guard cut the evaluation off. */
-	private cutoffs = 0;
+	/**
+	 * The lowest stack depth that a guard cut the current evaluation off at. A result that was
+	 * cut off only at its own frame or deeper does not depend on the frames above, so it can be
+	 * cached.
+	 */
+	private lowestCut = Infinity;
 
-	private readonly cache = new Map<unknown, Value>();
+	private readonly evaluating = {
+		active: new Map<unknown, number>(),
+		cache: new Map<unknown, Value>()
+	};
 
-	private readonly candidateCache = new Map<TSESTree.Node, SourceRef[]>();
+	private readonly variableValues = {
+		active: new Map<Variable, number>(),
+		cache: new Map<Variable, { value: Value; unknown: boolean }>()
+	};
 
-	private readonly lookupCache = new Map<TSESTree.Expression, Map<string, SourceRef[]>>();
+	private readonly candidateSearch = {
+		active: new Map<TSESTree.Node, number>(),
+		cache: new Map<TSESTree.Node, SourceRef[]>()
+	};
+
+	private readonly variableCandidates = {
+		active: new Map<Variable, number>(),
+		cache: new Map<Variable, SourceRef[] | null>()
+	};
+
+	private readonly lookups = {
+		active: new Map<string, number>(),
+		cache: new Map<string, SourceRef[]>()
+	};
+
+	private readonly nodeIds = new Map<TSESTree.Node, number>();
+
+	/**
+	 * Run `compute` for `key` once: return the cached result if there is one, and `onCut` when
+	 * `key` is already being computed (a cycle) or the stack is too deep.
+	 */
+	private guard<K, T>(
+		state: { active: Map<K, number>; cache: Map<K, T> },
+		key: K,
+		onCut: T,
+		compute: () => T
+	): T {
+		if (state.cache.has(key)) return state.cache.get(key)!;
+		// At the depth limit, give up. The result is still cached: an unknown value can only
+		// hide reports, and caching keeps long chains linear.
+		if (this.depth >= MAX_DEPTH) return onCut;
+		const active = state.active.get(key);
+		if (active !== undefined) {
+			this.lowestCut = Math.min(this.lowestCut, active);
+			return onCut;
+		}
+		const depth = this.depth;
+		const outer = this.lowestCut;
+		state.active.set(key, depth);
+		this.depth++;
+		this.lowestCut = Infinity;
+		try {
+			const result = compute();
+			if (this.lowestCut >= depth) state.cache.set(key, result);
+			return result;
+		} finally {
+			this.depth--;
+			state.active.delete(key);
+			this.lowestCut = Math.min(outer, this.lowestCut);
+		}
+	}
 
 	private readonly propertyNameCache = new Map<
 		TSESTree.ObjectExpression,
@@ -362,30 +453,9 @@ class UrlEvaluator {
 	}
 
 	public evaluate(node: TSESTree.Node | AST.SvelteLiteral): Value {
-		const cached = this.cache.get(node);
-		if (cached) return cached;
-		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) return this.cutoff();
-		this.activeNodes.add(node);
-		this.depth++;
-		const cutoffs = this.cutoffs;
-		try {
-			const value = this.evaluateNode(node);
-			// A result cut off by a guard depends on the call stack, so it is not reused.
-			if (this.cutoffs === cutoffs) this.cache.set(node, value);
-			return value;
-		} finally {
-			this.depth--;
-			this.activeNodes.delete(node);
-		}
-	}
-
-	/**
-	 * Give up because of a cycle or the depth limit. The value is treated as a non-nullish
-	 * unknown so that `??` / `||` fallbacks are not reported because of the limit.
-	 */
-	private cutoff(): Value {
-		this.cutoffs++;
-		return UNKNOWN_STRING;
+		// On a cycle or at the depth limit, the value is a non-nullish unknown so that
+		// `??` / `||` fallbacks are not reported because of the limit.
+		return this.guard(this.evaluating, node, UNKNOWN_STRING, () => this.evaluateNode(node));
 	}
 
 	private evaluateNode(node: TSESTree.Node | AST.SvelteLiteral): Value {
@@ -504,15 +574,33 @@ class UrlEvaluator {
 		if (annotation && this.isResolvedPathnameTypeNode(annotation, declared)) {
 			return mayBeNullish(this.refine(declared)) ? union(RESOLVED, NULLISH) : RESOLVED;
 		}
-		if (this.activeVariables.has(variable)) return this.cutoff();
-		this.activeVariables.add(variable);
-		try {
-			const sources = this.variableSources(variable);
-			if (sources === null) return this.refine(node);
-			return union(...sources.map((source) => this.evaluateSource(source, node)));
-		} finally {
-			this.activeVariables.delete(variable);
-		}
+		// `url.pathname = ...` changes the value.
+		if (isMutated(variable)) return this.refine(node);
+		const result = this.guard(
+			this.variableValues,
+			variable,
+			{ value: UNKNOWN_STRING, unknown: false },
+			() => {
+				const sources = this.variableSources(variable);
+				if (sources === null) return { value: [], unknown: true };
+				return {
+					value: union(
+						...sources.map((source) =>
+							source.type === 'node'
+								? this.evaluate(source.node)
+								: source.type === 'absent'
+									? NULLISH
+									: []
+						)
+					),
+					unknown: sources.some((source) => source.type === 'unknown')
+				};
+			}
+		);
+		// The type at this reference (which may be narrowed) tells more about unknown values.
+		if (!result.unknown) return result.value;
+		const refined = this.refine(node);
+		return union(result.value, this.isCallResult(node) ? untrustLiterals(refined) : refined);
 	}
 
 	private evaluateSource(source: SourceRef, fallback: TSESTree.Node): Value {
@@ -654,70 +742,48 @@ class UrlEvaluator {
 
 	/** The expressions that `node` may evaluate to, following local variables and literals. */
 	private candidates(node: TSESTree.Expression): SourceRef[] {
-		const cached = this.candidateCache.get(node);
-		if (cached) return cached;
-		if (this.depth >= MAX_DEPTH || this.activeNodes.has(node)) {
-			this.cutoffs++;
-			return [UNKNOWN_SOURCE];
-		}
-		const cutoffs = this.cutoffs;
-		const result = this.candidatesOf(node);
-		if (this.cutoffs === cutoffs) this.candidateCache.set(node, result);
-		return result;
+		return this.guard(this.candidateSearch, node, [UNKNOWN_SOURCE], () => this.candidatesOf(node));
 	}
 
 	private candidatesOf(node: TSESTree.Expression): SourceRef[] {
-		this.activeNodes.add(node);
-		this.depth++;
-		try {
-			if (node.type === 'Identifier') {
-				const variable = findVariable(this.context, node);
-				if (variable === null || variable.name !== node.name) return [{ type: 'node', node }];
-				if (this.activeVariables.has(variable)) {
-					this.cutoffs++;
-					return [{ type: 'node', node }];
-				}
-				// Its properties or elements may be changed later.
-				if (isMutated(variable)) return [UNKNOWN_SOURCE];
-				this.activeVariables.add(variable);
-				try {
-					const sources = this.variableSources(variable);
-					if (sources === null) return [{ type: 'node', node }];
-					return sources
-						.flatMap((s) => (s.type === 'node' ? this.candidates(s.node) : [s]))
-						.slice(0, MAX_ALTS);
-				} finally {
-					this.activeVariables.delete(variable);
-				}
-			}
-			if (node.type === 'MemberExpression') {
-				const key = getPropertyName(node, scopeOf(this.context, node));
-				if (key === null) return [{ type: 'node', node }];
-				const found = this.lookup(node.object, key);
-				if (found.every((s) => s.type === 'unknown')) return [{ type: 'node', node }];
-				return found
+		if (node.type === 'Identifier') {
+			const variable = findVariable(this.context, node);
+			if (variable === null || variable.name !== node.name) return [{ type: 'node', node }];
+			// Its properties or elements may be changed later.
+			if (isMutated(variable)) return [UNKNOWN_SOURCE];
+			const sources = this.guard(this.variableCandidates, variable, [UNKNOWN_SOURCE], () => {
+				const sources = this.variableSources(variable);
+				if (sources === null) return null;
+				return sources
 					.flatMap((s) => (s.type === 'node' ? this.candidates(s.node) : [s]))
 					.slice(0, MAX_ALTS);
-			}
-			return [{ type: 'node', node }];
-		} finally {
-			this.depth--;
-			this.activeNodes.delete(node);
+			});
+			return sources ?? [{ type: 'node', node }];
 		}
+		if (node.type === 'MemberExpression') {
+			const key = getPropertyName(node, scopeOf(this.context, node));
+			if (key === null) return [{ type: 'node', node }];
+			const found = this.lookup(node.object, key);
+			if (found.every((s) => s.type === 'unknown')) return [{ type: 'node', node }];
+			return found
+				.flatMap((s) => (s.type === 'node' ? this.candidates(s.node) : [s]))
+				.slice(0, MAX_ALTS);
+		}
+		return [{ type: 'node', node }];
+	}
+
+	private nodeId(node: TSESTree.Node): number {
+		let id = this.nodeIds.get(node);
+		if (id === undefined) this.nodeIds.set(node, (id = this.nodeIds.size));
+		return id;
 	}
 
 	/** Find the values of `object[key]` where `object` is an object or array literal. */
 	private lookup(object: TSESTree.Expression, key: string): SourceRef[] {
-		let byKey = this.lookupCache.get(object);
-		const cached = byKey?.get(key);
-		if (cached) return cached;
-		const cutoffs = this.cutoffs;
-		const result = this.lookupUncached(object, key);
-		if (this.cutoffs === cutoffs) {
-			if (!byKey) this.lookupCache.set(object, (byKey = new Map()));
-			byKey.set(key, result);
-		}
-		return result;
+		// `x = { ...x, a: 1 }` looks itself up.
+		return this.guard(this.lookups, `${this.nodeId(object)}:${key}`, [UNKNOWN_SOURCE], () =>
+			this.lookupUncached(object, key)
+		);
 	}
 
 	private lookupUncached(object: TSESTree.Expression, key: string): SourceRef[] {
@@ -873,14 +939,43 @@ class UrlEvaluator {
 		if ((key === 'pathname' || key === 'href') && this.isPageUrl(node.object)) {
 			return based(`page.url.${key}`);
 		}
+		if (key === 'origin' && this.isPageUrl(node.object)) {
+			return [[{ type: 'unknown', string: true, origin: true }]];
+		}
 		// `new URL(...).href`
 		if (key === 'href') {
 			const url = this.evaluateUrlObject(node.object);
 			if (url !== null) return url;
 		}
-		return union(
+		const value = union(
 			...this.lookup(node.object, key).map((source) => this.evaluateSource(source, node))
 		);
+		return this.isCallResult(node.object) ? untrustLiterals(value) : value;
+	}
+
+	/**
+	 * Whether the value comes from a function call (other than runes), such as `f().a` or
+	 * `const { a } = f()`. Its literal type may describe the argument, not the result.
+	 */
+	private isCallResult(node: TSESTree.Node, depth = 0): boolean {
+		if (depth > MAX_DEPTH) return false;
+		const target = unwrapTypeScript(node as TSESTree.Expression);
+		switch (target.type) {
+			case 'CallExpression':
+				return !(target.callee.type === 'Identifier' && target.callee.name.startsWith('$'));
+			case 'AwaitExpression':
+				return this.isCallResult(target.argument, depth + 1);
+			case 'MemberExpression':
+				return this.isCallResult(target.object, depth + 1);
+			case 'Identifier': {
+				const def = findVariable(this.context, target)?.defs[0];
+				if (def?.type !== 'Variable' || def.node.type !== 'VariableDeclarator') return false;
+				const init = def.node.init;
+				return init !== null && this.isCallResult(init, depth + 1);
+			}
+			default:
+				return false;
+		}
 	}
 
 	private evaluateCall(node: TSESTree.CallExpression): Value {
@@ -899,8 +994,7 @@ class UrlEvaluator {
 		}
 		// What a function returns is not known: a helper such as `<T>(href: T) => T` returns
 		// the literal type of its argument even when it adds the base path.
-		const value = this.refine(node);
-		return value.map((alt) => (alt?.length === 1 && alt[0].type === 'text' ? [STRING_PART] : alt));
+		return untrustLiterals(this.refine(node));
 	}
 
 	private evaluateNew(node: TSESTree.NewExpression): Value {
@@ -1137,12 +1231,20 @@ function isMutated(variable: Variable): boolean {
 			return true;
 		}
 		let member = false;
+		let last: string | null = null;
 		while (parent?.type === 'MemberExpression' && parent.object === node) {
 			member = true;
+			last =
+				parent.property.type === 'Identifier' && !parent.computed ? parent.property.name : null;
+			// `url.searchParams.set(...)` only changes the query.
+			if (last === 'searchParams') return false;
 			node = parent;
 			parent = node.parent as TSESTree.Node | undefined;
 		}
 		if (!member || !parent) return false;
+		// `url.search = ...` / `url.hash = ...` do not change the path.
+		if (parent.type === 'AssignmentExpression' && (last === 'search' || last === 'hash'))
+			return false;
 		if (parent.type === 'AssignmentExpression' && parent.left === node) return true;
 		if (parent.type === 'UpdateExpression') return true;
 		if (parent.type === 'UnaryExpression' && parent.operator === 'delete') return true;
@@ -1366,8 +1468,13 @@ export default createRule('no-navigation-without-resolve', {
 				case 'prefix':
 					// `goto()` runs only in the browser, where `resolve()` returns an absolute path, so
 					// `location.origin + resolve(...)` works there. `page.url` is absolute everywhere.
+					// An unknown prefix may be empty.
+					if (finding.head === 'unknown') {
+						return strict ? { messageId: 'strictUnknown', data: {}, finding } : null;
+					}
 					if (sink === 'call' || !finding.relativeInSsr) {
-						if (finding.head === 'unknown') {
+						// `page.url.origin + resolve(...)` is a full URL of this app in the browser.
+						if (finding.head === 'origin') {
 							return strict ? { messageId: 'strictUnknown', data: {}, finding } : null;
 						}
 						if (finding.head === 'external') {
@@ -1469,14 +1576,20 @@ export default createRule('no-navigation-without-resolve', {
 			) {
 				return null;
 			}
-			// `[` would turn a pathname into a route ID.
-			if (segments.some((s) => s.type === 'text' && s.value.includes('['))) return null;
+			// `[` would turn a pathname into a route ID, and `(group)` is a route ID segment.
+			// `resolve()` drops empty segments, so `//` (even in the query) would change the URL.
+			if (
+				segments.some((s) => s.type === 'text' && (s.value.includes('[') || s.value.includes('//')))
+			) {
+				return null;
+			}
 			// `resolve('/foo/')` is a type error with the default `trailingSlash`.
 			const path = segments
 				.map((s) => (s.type === 'text' ? s.value : 'x'))
 				.join('')
 				.split(/[#?]/u)[0];
 			if (path.length > 1 && path.endsWith('/')) return null;
+			if (path.includes('(')) return null;
 			if (!isKit3) return segments;
 			// SvelteKit 3: pathnames are written without the leading slash (`/` stays as the root route ID).
 			const isRoot = first.value === '/' ? rest.length === 0 : /^\/[#?]/u.test(first.value);

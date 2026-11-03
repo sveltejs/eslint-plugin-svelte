@@ -1,8 +1,3 @@
-- message: Do not add a path after `asset()` ('asset(…)/bar'). Pass the whole path
-    to `asset()` instead.
-  line: 5
-  column: 4
-  suggestions: null
 - message: Do not add anything before `asset()` ('/fooasset(…)'). It already
     includes the base path, and during server rendering it can be a relative
     path such as `./foo`.
