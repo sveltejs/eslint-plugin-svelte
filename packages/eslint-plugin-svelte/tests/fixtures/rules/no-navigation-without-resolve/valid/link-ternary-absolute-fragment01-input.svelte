@@ -1,5 +1,5 @@
 <script>
-	const condition = true;
+	let { condition } = $props();
 	const url = condition ? 'https://example.com' : '#section';
 	const absUrl = 'https://example.com';
 </script>

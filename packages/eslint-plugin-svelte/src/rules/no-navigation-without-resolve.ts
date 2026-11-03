@@ -64,6 +64,9 @@ function based(label: string): Value {
 }
 
 const MAX_ALTS = 64;
+/** The number of steps to evaluate one URL, to stop on code that is too complex. */
+const MAX_COMPUTATIONS = 20000;
+const OUT_OF_BUDGET = new Error('out of budget');
 const MAX_DEPTH = 64;
 
 function text(value: string): Value {
@@ -394,32 +397,43 @@ class UrlEvaluator {
 		cache: new Map<Variable, SourceRef[] | null>()
 	};
 
+	private readonly memberValues = {
+		active: new Map<string, number>(),
+		cache: new Map<string, { value: Value; unknown: boolean }>()
+	};
+
 	private readonly lookups = {
 		active: new Map<string, number>(),
 		cache: new Map<string, SourceRef[]>()
 	};
 
-	private readonly nodeIds = new Map<TSESTree.Node, number>();
+	private readonly ids = new Map<TSESTree.Node | Variable, number>();
+
+	/** The number of computations left for the current URL. */
+	private budget = 0;
 
 	/**
-	 * Run `compute` for `key` once: return the cached result if there is one, and `onCut` when
-	 * `key` is already being computed (a cycle) or the stack is too deep.
+	 * Run `compute` for `key` once: return the cached result if there is one, `onCycle` when
+	 * `key` is already being computed, and `onLimit` when the stack is too deep.
 	 */
 	private guard<K, T>(
 		state: { active: Map<K, number>; cache: Map<K, T> },
 		key: K,
-		onCut: T,
+		onCycle: T,
+		onLimit: T,
 		compute: () => T
 	): T {
 		if (state.cache.has(key)) return state.cache.get(key)!;
 		// At the depth limit, give up. The result is still cached: an unknown value can only
 		// hide reports, and caching keeps long chains linear.
-		if (this.depth >= MAX_DEPTH) return onCut;
+		if (this.depth >= MAX_DEPTH) return onLimit;
 		const active = state.active.get(key);
 		if (active !== undefined) {
+			// A value that depends on itself adds nothing new (the least fixed point).
 			this.lowestCut = Math.min(this.lowestCut, active);
-			return onCut;
+			return onCycle;
 		}
+		if (--this.budget < 0) throw OUT_OF_BUDGET;
 		const depth = this.depth;
 		const outer = this.lowestCut;
 		state.active.set(key, depth);
@@ -452,10 +466,21 @@ class UrlEvaluator {
 		this.tsTools = tsTools;
 	}
 
-	public evaluate(node: TSESTree.Node | AST.SvelteLiteral): Value {
-		// On a cycle or at the depth limit, the value is a non-nullish unknown so that
-		// `??` / `||` fallbacks are not reported because of the limit.
-		return this.guard(this.evaluating, node, UNKNOWN_STRING, () => this.evaluateNode(node));
+	/** Evaluate the URL of a sink. Gives up (unknown) on code that is too complex. */
+	public evaluateUrl(node: TSESTree.Node | AST.SvelteLiteral): Value {
+		this.budget = MAX_COMPUTATIONS;
+		try {
+			return this.evaluate(node);
+		} catch (error) {
+			if (error !== OUT_OF_BUDGET) throw error;
+			return UNKNOWN_STRING;
+		}
+	}
+
+	private evaluate(node: TSESTree.Node | AST.SvelteLiteral): Value {
+		// At the depth limit, the value is a non-nullish unknown so that `??` / `||` fallbacks
+		// are not reported because of the limit.
+		return this.guard(this.evaluating, node, [], UNKNOWN_STRING, () => this.evaluateNode(node));
 	}
 
 	private evaluateNode(node: TSESTree.Node | AST.SvelteLiteral): Value {
@@ -495,8 +520,11 @@ class UrlEvaluator {
 				return this.refine(node);
 			}
 			case 'LogicalExpression': {
-				// `0 || x`, `false || x`, `null ?? x`
-				const known = getStaticValue(node.left, scopeOf(this.context, node.left));
+				// `0 || x`, `false || x`, `null ?? x` (a member may be changed later)
+				const known =
+					node.left.type === 'MemberExpression' || node.left.type === 'ChainExpression'
+						? null
+						: getStaticValue(node.left, scopeOf(this.context, node.left));
 				if (known !== null) {
 					const value = known.value;
 					const useRight =
@@ -528,8 +556,18 @@ class UrlEvaluator {
 						)
 					: this.evaluate(node.right);
 			}
-			case 'ConditionalExpression':
+			case 'ConditionalExpression': {
+				const test =
+					node.test.type === 'MemberExpression' || node.test.type === 'ChainExpression'
+						? null
+						: getStaticValue(node.test, scopeOf(this.context, node.test));
+				if (test !== null) return this.evaluate(test.value ? node.consequent : node.alternate);
 				return union(this.evaluate(node.consequent), this.evaluate(node.alternate));
+			}
+			case 'AwaitExpression': {
+				const value = this.refine(node);
+				return this.isCallResult(node) ? untrustLiterals(value) : value;
+			}
 			case 'SequenceExpression':
 				return this.evaluate(node.expressions[node.expressions.length - 1]);
 			case 'TSAsExpression':
@@ -575,10 +613,11 @@ class UrlEvaluator {
 			return mayBeNullish(this.refine(declared)) ? union(RESOLVED, NULLISH) : RESOLVED;
 		}
 		// `url.pathname = ...` changes the value.
-		if (isMutated(variable)) return this.refine(node);
+		if (isMutated(variable, this.holds(variable))) return this.refine(node);
 		const result = this.guard(
 			this.variableValues,
 			variable,
+			{ value: [], unknown: false },
 			{ value: UNKNOWN_STRING, unknown: false },
 			() => {
 				const sources = this.variableSources(variable);
@@ -601,11 +640,6 @@ class UrlEvaluator {
 		if (!result.unknown) return result.value;
 		const refined = this.refine(node);
 		return union(result.value, this.isCallResult(node) ? untrustLiterals(refined) : refined);
-	}
-
-	private evaluateSource(source: SourceRef, fallback: TSESTree.Node): Value {
-		if (source.type === 'node') return this.evaluate(source.node);
-		return source.type === 'absent' ? NULLISH : this.refine(fallback);
 	}
 
 	/**
@@ -742,7 +776,9 @@ class UrlEvaluator {
 
 	/** The expressions that `node` may evaluate to, following local variables and literals. */
 	private candidates(node: TSESTree.Expression): SourceRef[] {
-		return this.guard(this.candidateSearch, node, [UNKNOWN_SOURCE], () => this.candidatesOf(node));
+		return this.guard(this.candidateSearch, node, [], [UNKNOWN_SOURCE], () =>
+			this.candidatesOf(node)
+		);
 	}
 
 	private candidatesOf(node: TSESTree.Expression): SourceRef[] {
@@ -750,8 +786,8 @@ class UrlEvaluator {
 			const variable = findVariable(this.context, node);
 			if (variable === null || variable.name !== node.name) return [{ type: 'node', node }];
 			// Its properties or elements may be changed later.
-			if (isMutated(variable)) return [UNKNOWN_SOURCE];
-			const sources = this.guard(this.variableCandidates, variable, [UNKNOWN_SOURCE], () => {
+			if (isMutated(variable, this.holds(variable))) return [UNKNOWN_SOURCE];
+			const sources = this.guard(this.variableCandidates, variable, [], [UNKNOWN_SOURCE], () => {
 				const sources = this.variableSources(variable);
 				if (sources === null) return null;
 				return sources
@@ -764,7 +800,8 @@ class UrlEvaluator {
 			const key = getPropertyName(node, scopeOf(this.context, node));
 			if (key === null) return [{ type: 'node', node }];
 			const found = this.lookup(node.object, key);
-			if (found.every((s) => s.type === 'unknown')) return [{ type: 'node', node }];
+			if (found.length > 0 && found.every((s) => s.type === 'unknown'))
+				return [{ type: 'node', node }];
 			return found
 				.flatMap((s) => (s.type === 'node' ? this.candidates(s.node) : [s]))
 				.slice(0, MAX_ALTS);
@@ -772,18 +809,48 @@ class UrlEvaluator {
 		return [{ type: 'node', node }];
 	}
 
-	private nodeId(node: TSESTree.Node): number {
-		let id = this.nodeIds.get(node);
-		if (id === undefined) this.nodeIds.set(node, (id = this.nodeIds.size));
+	/** What the variable is declared with: a URL, an object or array literal, or anything else. */
+	private holds(variable: Variable): 'url' | 'object' | 'other' {
+		const def = variable.defs[0];
+		if (def?.type !== 'Variable' || def.node.type !== 'VariableDeclarator' || !def.node.init)
+			return 'other';
+		const init = this.unwrapRune(def.node.init);
+		if (init.type !== 'node') return 'other';
+		const value = unwrapTypeScript(init.node);
+		if (this.isUrlConstructor(value)) return 'url';
+		return value.type === 'ObjectExpression' ||
+			value.type === 'ArrayExpression' ||
+			(value.type as string) === 'NewExpression'
+			? 'object'
+			: 'other';
+	}
+
+	private idOf(target: TSESTree.Node | Variable): number {
+		let id = this.ids.get(target);
+		if (id === undefined) this.ids.set(target, (id = this.ids.size));
 		return id;
 	}
 
 	/** Find the values of `object[key]` where `object` is an object or array literal. */
 	private lookup(object: TSESTree.Expression, key: string): SourceRef[] {
 		// `x = { ...x, a: 1 }` looks itself up.
-		return this.guard(this.lookups, `${this.nodeId(object)}:${key}`, [UNKNOWN_SOURCE], () =>
+		return this.guard(this.lookups, this.lookupKey(object, key), [], [UNKNOWN_SOURCE], () =>
 			this.lookupUncached(object, key)
 		);
+	}
+
+	/**
+	 * The key of `object[key]`. A local variable is one key for all its references, so that a
+	 * cycle such as `x = { ...x, a: 1 }` is found at once.
+	 */
+	private lookupKey(object: TSESTree.Expression, key: string): string {
+		const target = unwrapTypeScript(object);
+		const variable = target.type === 'Identifier' ? findVariable(this.context, target) : null;
+		const id =
+			variable !== null && variable.name === (target as TSESTree.Identifier).name
+				? `v${this.idOf(variable)}`
+				: `n${this.idOf(object)}`;
+		return `${id}:${key}`;
 	}
 
 	private lookupUncached(object: TSESTree.Expression, key: string): SourceRef[] {
@@ -947,9 +1014,28 @@ class UrlEvaluator {
 			const url = this.evaluateUrlObject(node.object);
 			if (url !== null) return url;
 		}
-		const value = union(
-			...this.lookup(node.object, key).map((source) => this.evaluateSource(source, node))
+		const result = this.guard(
+			this.memberValues,
+			this.lookupKey(node.object, key),
+			{ value: [], unknown: false },
+			{ value: UNKNOWN_STRING, unknown: false },
+			() => {
+				const sources = this.lookup(node.object, key);
+				return {
+					value: union(
+						...sources.map((source) =>
+							source.type === 'node'
+								? this.evaluate(source.node)
+								: source.type === 'absent'
+									? NULLISH
+									: []
+						)
+					),
+					unknown: sources.some((source) => source.type === 'unknown')
+				};
+			}
 		);
+		const value = result.unknown ? union(result.value, this.refine(node)) : result.value;
 		return this.isCallResult(node.object) ? untrustLiterals(value) : value;
 	}
 
@@ -969,6 +1055,12 @@ class UrlEvaluator {
 				return this.isCallResult(target.object, depth + 1);
 			case 'Identifier': {
 				const def = findVariable(this.context, target)?.defs[0];
+				// `{#await promise then value}`
+				for (let n = def?.name.parent; n; n = n.parent) {
+					const type = n.type as string;
+					if (type === 'SvelteAwaitThenBlock' || type === 'SvelteAwaitBlock') return true;
+					if (!PATTERN_PARENTS.has(type)) break;
+				}
 				if (def?.type !== 'Variable' || def.node.type !== 'VariableDeclarator') return false;
 				const init = def.node.init;
 				return init !== null && this.isCallResult(init, depth + 1);
@@ -1208,17 +1300,22 @@ const MUTATING_METHODS = new Set([
 	'copyWithin',
 	'set',
 	'delete',
-	'clear'
+	'clear',
+	// The callback may change the elements.
+	'forEach'
 ]);
 
 /**
  * Whether a property or an element of the variable is written somewhere, e.g. `x.a = 1`,
  * `x[0]++`, `delete x.a`, `x.push(1)`, `Object.assign(x, ...)` or `bind:value={x.a}`.
  */
-function isMutated(variable: Variable): boolean {
+function isMutated(variable: Variable, holds: 'url' | 'object' | 'other'): boolean {
 	return variable.references.some((ref) => {
 		let node: TSESTree.Node = ref.identifier;
 		let parent = node.parent as TSESTree.Node | undefined;
+		// An object can be changed through another name: `const p = o`, `for (const l of o)`,
+		// `f(o)`, `[o]`, `{ a: o }`.
+		if (holds !== 'other' && !ref.init && parent && escapes(node, parent)) return true;
 		if (
 			parent?.type === 'CallExpression' &&
 			parent.arguments[0] === node &&
@@ -1237,13 +1334,17 @@ function isMutated(variable: Variable): boolean {
 			last =
 				parent.property.type === 'Identifier' && !parent.computed ? parent.property.name : null;
 			// `url.searchParams.set(...)` only changes the query.
-			if (last === 'searchParams') return false;
+			if (holds === 'url' && last === 'searchParams') return false;
 			node = parent;
 			parent = node.parent as TSESTree.Node | undefined;
 		}
 		if (!member || !parent) return false;
 		// `url.search = ...` / `url.hash = ...` do not change the path.
-		if (parent.type === 'AssignmentExpression' && (last === 'search' || last === 'hash'))
+		if (
+			holds === 'url' &&
+			parent.type === 'AssignmentExpression' &&
+			(last === 'search' || last === 'hash')
+		)
 			return false;
 		if (parent.type === 'AssignmentExpression' && parent.left === node) return true;
 		if (parent.type === 'UpdateExpression') return true;
@@ -1255,6 +1356,65 @@ function isMutated(variable: Variable): boolean {
 		}
 		return false;
 	});
+}
+
+const READ_ONLY_FUNCTIONS = new Set([
+	'goto',
+	'pushState',
+	'replaceState',
+	'preloadData',
+	'preloadCode',
+	'String',
+	'URL',
+	'URLSearchParams',
+	'JSON.stringify',
+	'Object.keys',
+	'Object.values',
+	'Object.entries',
+	'Array.isArray',
+	'Array.from',
+	'console.log',
+	'console.warn',
+	'console.error'
+]);
+
+/** Whether the object `node` may be changed through another name. */
+function escapes(node: TSESTree.Node, parent: TSESTree.Node): boolean {
+	switch (parent.type) {
+		// `const { a } = o` only reads it.
+		case 'VariableDeclarator':
+			return parent.init === node && parent.id.type === 'Identifier';
+		case 'AssignmentExpression':
+			return (
+				parent.right === node &&
+				parent.left.type !== 'ObjectPattern' &&
+				parent.left.type !== 'ArrayPattern'
+			);
+		case 'ForOfStatement':
+		case 'ForInStatement':
+			return parent.right === node;
+		case 'ArrayExpression':
+			return true;
+		case 'Property':
+			return parent.value === node;
+		case 'CallExpression':
+		case 'NewExpression': {
+			if (!parent.arguments.includes(node as TSESTree.Expression)) return false;
+			// Functions that only read their arguments.
+			const callee = parent.callee;
+			const name =
+				callee.type === 'Identifier'
+					? callee.name
+					: callee.type === 'MemberExpression' &&
+						  callee.object.type === 'Identifier' &&
+						  callee.property.type === 'Identifier'
+						? `${callee.object.name}.${callee.property.name}`
+						: null;
+			return name === null || !READ_ONLY_FUNCTIONS.has(name);
+		}
+		default:
+			return false;
+	}
 }
 
 function unwrapTypeScript(node: TSESTree.Expression): TSESTree.Expression {
@@ -1768,7 +1928,7 @@ export default createRule('no-navigation-without-resolve', {
 			const args = name === 'preloadCode' ? call.arguments : call.arguments.slice(0, 1);
 			for (const arg of args) {
 				if (arg.type === 'SpreadElement') continue;
-				const value = evaluator.evaluate(arg);
+				const value = evaluator.evaluateUrl(arg);
 				const report = check(value, 'call', name);
 				if (report === null) continue;
 				context.report({
@@ -1791,7 +1951,7 @@ export default createRule('no-navigation-without-resolve', {
 		function checkKit3PreloadCode(call: TSESTree.CallExpression) {
 			const [arg] = call.arguments;
 			if (arg === undefined || arg.type === 'SpreadElement') return;
-			const value = evaluator.evaluate(arg);
+			const value = evaluator.evaluateUrl(arg);
 			const isUrl = value.every((alt) => {
 				const first = alt?.find((part) => part.type !== 'text' || part.value.trim() !== '');
 				return first !== undefined && (first.type === 'resolved' || first.type === 'based');
@@ -1800,19 +1960,20 @@ export default createRule('no-navigation-without-resolve', {
 		}
 
 		function attributeValue(attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute): Value {
-			if (attribute.type === 'SvelteShorthandAttribute') return evaluator.evaluate(attribute.value);
+			if (attribute.type === 'SvelteShorthandAttribute')
+				return evaluator.evaluateUrl(attribute.value);
 			// `<a href>` is the same as `href=""`.
 			if (attribute.value.length === 0) return text('');
 			// `href={x}` and `href="{x}"` pass `x` as is (`null` removes the attribute).
 			const [first] = attribute.value;
 			if (attribute.value.length === 1 && first.type === 'SvelteMustacheTag') {
-				return evaluator.evaluate(first.expression);
+				return evaluator.evaluateUrl(first.expression);
 			}
 			return concat(
 				attribute.value.map((part) =>
 					part.type === 'SvelteLiteral'
-						? evaluator.evaluate(part)
-						: evaluator.evaluate(part.expression)
+						? evaluator.evaluateUrl(part)
+						: evaluator.evaluateUrl(part.expression)
 				)
 			);
 		}
@@ -1825,9 +1986,11 @@ export default createRule('no-navigation-without-resolve', {
 			);
 			if (rel === undefined) return false;
 			const value = attributeValue(rel);
-			// Every possible value must contain the complete `external` token.
-			return value.every((alt) => {
+			// In strict mode, every possible value must contain the complete `external` token.
+			// Otherwise, a value that may contain it (e.g. `rel={rel}`) is enough.
+			return value[strict ? 'every' : 'some']((alt) => {
 				if (alt === null) return false;
+				if (!strict && alt.some((part) => part.type !== 'text')) return true;
 				return alt.some(
 					(part, index) =>
 						part.type === 'text' &&

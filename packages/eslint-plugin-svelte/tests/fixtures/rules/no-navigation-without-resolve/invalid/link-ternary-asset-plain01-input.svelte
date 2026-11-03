@@ -1,7 +1,7 @@
 <script>
 	import { asset } from '$app/paths';
 
-	const condition = true;
+	let { condition } = $props();
 </script>
 
 <a href={condition ? asset('/foo') : '/bar'}>Click me!</a>

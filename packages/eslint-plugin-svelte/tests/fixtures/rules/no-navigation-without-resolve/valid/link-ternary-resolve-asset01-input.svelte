@@ -1,7 +1,7 @@
 <script>
 	import { resolve, asset } from '$app/paths';
 
-	const condition = true;
+	let { condition } = $props();
 	const url = condition ? resolve('/foo') : asset('/bar');
 	const assetUrl = asset('/bar');
 </script>

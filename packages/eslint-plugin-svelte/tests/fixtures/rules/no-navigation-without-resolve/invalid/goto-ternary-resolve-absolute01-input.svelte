@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 
-	const condition = true;
+	let { condition } = $props();
 
 	goto(condition ? resolve('/foo') : 'https://example.com');
 	goto(condition ? 'https://example.com' : resolve('/foo'));

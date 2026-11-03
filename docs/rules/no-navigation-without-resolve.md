@@ -42,7 +42,7 @@ These are always fine:
 
 - external URLs in links, like `https://svelte.dev`, `//cdn.example.com` and `mailto:…`
 - `''`, `?query` and `#hash`
-- links with the `external` token in `rel` (the URL is served by another app on the same origin)
+- links with the `external` token in `rel` (the URL is served by another app on the same origin). When `rel` is not known (e.g. `rel={rel}`), the link is not checked unless `strict` is on.
 - `page.url` from `$app/state`, and the deprecated `base` / `assets` from `$app/paths`
 
 `data-sveltekit-reload`, `target` and `download` do not exempt a link: the base path is still needed.
@@ -138,7 +138,7 @@ The rule also checks `goto()` and other calls in plain `.js` / `.ts` files (for 
 - The rule does not know what functions return. For example, a helper that builds a localized URL without the base path is not reported. Use `strict` if you need to catch those.
 - The rule does not know your router type. On SvelteKit 3 with `router.type: 'hash'`, `goto('#foo')` is not reported, although it does not work there. On SvelteKit 2 with `router.type: 'hash'` and a base path, `resolve()` itself returns a broken URL ([sveltejs/kit#14894](https://github.com/sveltejs/kit/issues/14894)).
 - An element with a spread attribute (`<a {...props} href="/about">`) is not checked, because the spread may set `rel` or replace the URL. `strict` checks it.
-- When a property of a variable is changed after it is declared (e.g. `link.href = ...`, `links.push(...)`, `url.pathname = ...`), its value is treated as unknown.
+- When an object or array may be changed after it is declared (e.g. `link.href = ...`, `links.push(...)`, `url.pathname = ...`, or passing it to a function), its value is treated as unknown.
 - `<svelte:element this="a">` is not checked.
 - `redirect()` is not checked yet.
 

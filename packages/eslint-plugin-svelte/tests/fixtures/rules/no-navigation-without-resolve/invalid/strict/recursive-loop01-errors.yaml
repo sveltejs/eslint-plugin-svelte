@@ -1,5 +1,0 @@
-- message: Cannot verify that this URL includes the base path. Use `resolve()`
-    from `$app/paths`.
-  line: 6
-  column: 4
-  suggestions: null

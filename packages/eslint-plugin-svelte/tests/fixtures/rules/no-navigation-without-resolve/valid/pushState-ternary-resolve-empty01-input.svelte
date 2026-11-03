@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { pushState } from '$app/navigation';
 
-	const condition = true;
+	let { condition } = $props();
 
 	pushState(condition ? resolve('/foo') : '');
 	pushState(condition ? '' : resolve('/foo'));
