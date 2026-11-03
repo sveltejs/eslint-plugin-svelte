@@ -389,6 +389,10 @@ function isWriteTarget(node: TSESTree.Node): boolean {
 	}
 }
 
+function isOptionElement(node: AnyNode | null | undefined): boolean {
+	return node?.type === 'SvelteElement' && node.kind === 'html' && node.name.name === 'option';
+}
+
 function isExportDeclaration(node: AnyNode | null | undefined): boolean {
 	return node?.type === 'ExportNamedDeclaration' || node?.type === 'ExportDefaultDeclaration';
 }
@@ -975,9 +979,11 @@ function createDeepMutationChecker(context: RuleContext) {
 			}
 			case 'SvelteMustacheTag': {
 				// e.g. `<button onclick={() => v}>`. Elements ignore the returned value,
-				// but components may call it and change the value.
+				// but components and custom elements may call it and change the value.
 				const attribute = parent.parent as AnyNode;
-				return attribute.type === 'SvelteAttribute' && isComponentElement(attribute.parent?.parent);
+				if (attribute.type === 'SvelteAttribute') return isAttributeEscaping(attribute);
+				// e.g. `<option>{() => v}</option>`
+				return isOptionElement(attribute);
 			}
 			case 'SvelteDirective':
 				// e.g. `on:click={() => v}`
@@ -1037,6 +1043,8 @@ function createDeepMutationChecker(context: RuleContext) {
 		const element = attribute.parent.parent;
 		if (element.type !== 'SvelteElement') return true;
 		if (element.kind === 'component') return true;
+		// e.g. `<slot item={v} />`. The parent gets it with `let:item`.
+		if (element.kind === 'html' && element.name.name === 'slot') return true;
 		if (element.kind === 'special') {
 			return ['svelte:component', 'svelte:element', 'svelte:self'].includes(element.name.name);
 		}
@@ -1286,13 +1294,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					const attribute = parent.parent as AnyNode | null;
 					// e.g. `<option>{v}</option>`. Svelte uses it as the value of the option,
 					// and `bind:value` of the `<select>` gives it back.
-					if (
-						attribute?.type === 'SvelteElement' &&
-						attribute.kind === 'html' &&
-						attribute.name.name === 'option'
-					) {
-						return true;
-					}
+					if (isOptionElement(attribute)) return true;
 					return attribute?.type === 'SvelteAttribute' && isAttributeEscaping(attribute);
 				}
 				case 'SvelteShorthandAttribute':
@@ -1304,7 +1306,11 @@ function createDeepMutationChecker(context: RuleContext) {
 					// e.g. `v instanceof C` passes it to `C[Symbol.hasInstance]`.
 					// Global classes use the built-in one.
 					if (parent.operator === 'instanceof') {
-						return parent.left === node && getGlobalName(parent.right) == null;
+						// e.g. `x instanceof { ...v }` calls `Symbol.hasInstance` of the new object.
+						if (parent.right === node) return isObject;
+						// `window.C` may be set by the user, so only global identifiers are trusted.
+						const right = unwrapTS(parent.right);
+						return right.type !== 'Identifier' || getGlobalName(right) == null;
 					}
 					// e.g. `{ ...v } + ''` calls `toString` of the object.
 					return (
