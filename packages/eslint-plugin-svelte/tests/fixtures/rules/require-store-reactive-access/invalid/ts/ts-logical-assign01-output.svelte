@@ -8,4 +8,6 @@
 	flag &&= false;
 	let total = 0;
 	total ||= $flag;
+	let x: unknown;
+	x ??= $flag;
 </script>

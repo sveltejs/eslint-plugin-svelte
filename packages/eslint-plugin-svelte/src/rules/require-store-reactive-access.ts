@@ -296,11 +296,14 @@ export default createRule('require-store-reactive-access', {
 		 * The type of the left side may not include `undefined`, so it needs type information.
 		 * A store created with `writable()` etc. always exists, so it is not a check.
 		 */
-		function isStoreExistenceCheck(left: TSESTree.Node, right: TSESTree.Expression) {
-			if (!hasTypeInfo || !isStore(right)) {
+		function isStoreExistenceCheck(left: TSESTree.Expression, right: TSESTree.Expression) {
+			if (!hasTypeInfo) {
 				return false;
 			}
-			return !(left.type === 'Identifier' && isCreatedStore(left));
+			if (left.type === 'Identifier' && isCreatedStore(left)) {
+				return false;
+			}
+			return isStore(left) && isStore(right);
 		}
 
 		/**
@@ -310,7 +313,17 @@ export default createRule('require-store-reactive-access', {
 			if (!createdStoreVariables) {
 				createdStoreVariables = new Set();
 				for (const { node: call } of extractStoreReferences(context)) {
-					const parent = getParent(call);
+					let parent = getParent(call);
+					// e.g. `const store = writable(0) as Writable<number>`
+					while (
+						parent &&
+						(parent.type === 'TSAsExpression' ||
+							parent.type === 'TSSatisfiesExpression' ||
+							parent.type === 'TSNonNullExpression' ||
+							parent.type === 'TSTypeAssertion')
+					) {
+						parent = getParent(parent);
+					}
 					if (parent?.type === 'VariableDeclarator' && parent.id.type === 'Identifier') {
 						const variable = findVariable(context, parent.id);
 						if (variable) createdStoreVariables.add(variable);

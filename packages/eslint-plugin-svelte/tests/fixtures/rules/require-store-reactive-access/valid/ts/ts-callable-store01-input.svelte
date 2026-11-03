@@ -8,7 +8,6 @@
 	export let trigger: MeltElement;
 	export let optionalTrigger: MeltElement | undefined;
 	export let handler: Readable<number> & ((e: MouseEvent) => void);
-	export let onclick: Readable<number> & ((e: MouseEvent) => void);
 	export let fade: Readable<number> & ((node: HTMLElement) => TransitionConfig);
 
 	trigger(document.body);
@@ -18,6 +17,4 @@
 <button {...$trigger} use:trigger>open menu</button>
 <button use:optionalTrigger>open menu</button>
 <button on:click={handler}>click</button>
-<button onclick={handler}>click</button>
-<button {onclick}>click</button>
 <div transition:fade></div>
