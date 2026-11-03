@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import { createStoreChecker } from './reference-helpers/svelte-store.js';
+import { getTypeScriptTools } from '../utils/ts-utils/index.js';
 
 export default createRule('require-store-reactive-access', {
 	meta: {
@@ -24,6 +25,21 @@ export default createRule('require-store-reactive-access', {
 			return {};
 		}
 		const isStore = createStoreChecker(context);
+		const tsTools = getTypeScriptTools(context);
+
+		/**
+		 * Checks whether the given node is a function, by its type.
+		 * Some stores are also functions (e.g. melt-ui builders are stores and actions),
+		 * so calling them or using them with `use:` is fine.
+		 */
+		function isCallable(node: TSESTree.Expression): boolean {
+			if (!tsTools) return false;
+			const tsNode = tsTools.service.esTreeNodeToTSNodeMap.get(node);
+			if (!tsNode) return false;
+			const checker = tsTools.service.program.getTypeChecker();
+			const type = checker.getApparentType(checker.getTypeAtLocation(tsNode));
+			return type.getCallSignatures().length > 0;
+		}
 
 		/** Verify for expression node */
 		function verifyExpression(
@@ -65,6 +81,9 @@ export default createRule('require-store-reactive-access', {
 			SvelteDirective(node) {
 				if (node.kind === 'Action' || node.kind === 'Animation' || node.kind === 'Transition') {
 					if (node.key.name.type !== 'Identifier') {
+						return;
+					}
+					if (isCallable(node.key.name)) {
 						return;
 					}
 					// Check for <button use:store />, <div animate:store />, or <div transition:store />
@@ -145,7 +164,7 @@ export default createRule('require-store-reactive-access', {
 				verifyExpression(node.discriminant);
 			},
 			'CallExpression, NewExpression'(node: TSESTree.CallExpression) {
-				if (node.callee.type === 'Super') {
+				if (node.callee.type === 'Super' || isCallable(node.callee)) {
 					return;
 				}
 				// Check for `store()`
@@ -192,6 +211,11 @@ export default createRule('require-store-reactive-access', {
 				});
 			},
 			LogicalExpression(node: TSESTree.LogicalExpression) {
+				if (node.operator === '??' && node.left.type !== 'Identifier') {
+					// e.g. `getContext('key') ?? readable(0)`
+					// This checks whether the store itself exists, and the `$` prefix can't be used here.
+					return;
+				}
 				// Check for `store && foo`
 				verifyExpression(node.left, {
 					consistent: true
