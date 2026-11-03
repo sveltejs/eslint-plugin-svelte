@@ -1,0 +1,4 @@
+- message: "'user' is an unused Props property."
+  line: 3
+  column: 8
+  suggestions: null

@@ -151,12 +151,22 @@ export default createRule('no-unused-props', {
 					const property = parentNode.property;
 					if (!parentNode.computed && property.type === 'Identifier') {
 						paths.push(property.name);
-					} else if (property.type === 'Literal' && typeof property.value === 'string') {
-						paths.push(property.value);
+					} else if (
+						property.type === 'Literal' &&
+						(typeof property.value === 'string' || typeof property.value === 'number')
+					) {
+						paths.push(String(property.value));
 					} else if (parentNode.computed && property.type !== 'Literal') {
 						// A dynamic key like `obj[key]` may read any property of `obj`.
 						break;
 					}
+				} else if (
+					(parentNode.type === 'TSNonNullExpression' ||
+						parentNode.type === 'TSAsExpression' ||
+						parentNode.type === 'TSSatisfiesExpression') &&
+					parentNode.expression === currentNode
+				) {
+					// `props!`, `props as T` and `props satisfies T` are the same value.
 				} else {
 					if (parentNode.type === 'SvelteSpreadAttribute') {
 						spread = 'object';
@@ -240,13 +250,7 @@ export default createRule('no-unused-props', {
 						return paths.map((p) => [...path, ...p]);
 					}
 
-					if (
-						nested.paths.length === 0 &&
-						nested.objectSpreadPaths.length === 0 &&
-						nested.iterableSpreadPaths.length === 0
-					) {
-						result.paths.push(path);
-					}
+					// A binding that is never read adds no path, so the key is reported.
 					result.paths.push(...prefixed(nested.paths));
 					result.objectSpreadPaths.push(...prefixed(nested.objectSpreadPaths));
 					result.iterableSpreadPaths.push(...prefixed(nested.iterableSpreadPaths));

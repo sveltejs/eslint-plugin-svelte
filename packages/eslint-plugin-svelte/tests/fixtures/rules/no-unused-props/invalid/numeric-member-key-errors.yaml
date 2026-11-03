@@ -1,0 +1,8 @@
+- message: "'b' in '0' is an unused property."
+  line: 3
+  column: 8
+  suggestions: null
+- message: "'z' is an unused Props property."
+  line: 3
+  column: 8
+  suggestions: null
