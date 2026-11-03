@@ -1,0 +1,8 @@
+- message: "'d' in 'a.b' is an unused property."
+  line: 3
+  column: 8
+  suggestions: null
+- message: "'e' in 'a' is an unused property."
+  line: 3
+  column: 8
+  suggestions: null
