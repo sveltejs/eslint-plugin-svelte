@@ -1369,7 +1369,13 @@ class UrlEvaluator {
 		}
 		if (def.type !== 'Parameter' && def.type !== 'Variable') return false;
 		const name = def.name as TSESTree.Identifier;
-		if (name.typeAnnotation) return true;
+		if (name.typeAnnotation) {
+			// `h: typeof HOME` is declared only if `HOME` is.
+			const annotation = this.tsTools.service.esTreeNodeToTSNodeMap.get(
+				name.typeAnnotation.typeAnnotation as never
+			);
+			return annotation !== undefined && this.isDeclaredTypeNode(annotation as TS.TypeNode);
+		}
 		// `let { a }: Props = $props()`: the type of the property `a` of `Props`.
 		const property = name.parent;
 		if (
@@ -1447,17 +1453,32 @@ class UrlEvaluator {
 		const ts = this.tsTools!.ts;
 		let current = node;
 		while (ts.isParenthesizedExpression(current)) current = current.expression;
-		if (ts.isAsExpression(current) || ts.isSatisfiesExpression(current)) {
+		// `x satisfies T` keeps the type of `x`.
+		if (ts.isSatisfiesExpression(current)) return this.isLiteralValue(current.expression);
+		if (ts.isAsExpression(current)) {
 			// `x as const` keeps the type of `x`. `x as '/a'` declares it, `x as T` does not.
 			return ts.isConstTypeReference(current.type)
 				? this.isLiteralValue(current.expression)
 				: this.isDeclaredTypeNode(current.type);
 		}
+		// Every value inside must be written out too.
+		if (ts.isObjectLiteralExpression(current)) {
+			return current.properties.every(
+				(property) => ts.isPropertyAssignment(property) && this.isLiteralValue(property.initializer)
+			);
+		}
+		if (ts.isArrayLiteralExpression(current)) {
+			return current.elements.every(
+				(element) => !ts.isSpreadElement(element) && this.isLiteralValue(element)
+			);
+		}
 		return (
 			ts.isStringLiteral(current) ||
 			ts.isNoSubstitutionTemplateLiteral(current) ||
-			ts.isObjectLiteralExpression(current) ||
-			ts.isArrayLiteralExpression(current)
+			ts.isNumericLiteral(current) ||
+			current.kind === ts.SyntaxKind.TrueKeyword ||
+			current.kind === ts.SyntaxKind.FalseKeyword ||
+			current.kind === ts.SyntaxKind.NullKeyword
 		);
 	}
 

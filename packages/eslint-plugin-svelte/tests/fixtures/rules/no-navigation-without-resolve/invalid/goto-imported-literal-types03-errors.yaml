@@ -1,0 +1,4 @@
+- message: "'/docs' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 23
+  column: 7
+  suggestions: null
