@@ -62,7 +62,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         eslint: [8, 9, 10]
-        node: [20.x, 22.x, latest]
+        node: [20.x, 22.x, 24.x, 26.x]
         include:
           # ESLint v9 and Node.js 18.x
           - os: ubuntu-latest
@@ -104,7 +104,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         eslint: [9]
-        node: [18, 20, 22]
+        node: [18, 20, 22, 24, 26]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
