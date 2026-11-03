@@ -1,7 +1,14 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
-import { createStoreChecker } from './reference-helpers/svelte-store.js';
+import {
+	createCallableChecker,
+	createStoreChecker,
+	extractStoreReferences
+} from './reference-helpers/svelte-store.js';
+import { findAttribute, findVariable } from '../utils/ast-utils.js';
+import { getSvelteContext } from '../utils/svelte-context.js';
+import { getTypeScriptTools } from '../utils/ts-utils/index.js';
 
 export default createRule('require-store-reactive-access', {
 	meta: {
@@ -24,23 +31,53 @@ export default createRule('require-store-reactive-access', {
 			return {};
 		}
 		const isStore = createStoreChecker(context);
+		const isCallable = createCallableChecker(context);
+		const hasTypeInfo = Boolean(getTypeScriptTools(context));
+		// Svelte 3/4 does not treat `on*` attributes as event handlers.
+		const supportsEventAttributes = getSvelteContext(context)?.svelteVersion !== '3/4';
+		let storeCreatorCalls: Set<TSESTree.Node> | null = null;
+		const moduleScripts = (context.sourceCode.ast as unknown as AST.SvelteProgram).body.filter(
+			(node): node is AST.SvelteScriptElement =>
+				node.type === 'SvelteScriptElement' && isModuleScript(node)
+		);
 
 		/** Verify for expression node */
 		function verifyExpression(
 			node: TSESTree.Expression | null | undefined,
-			options?: { disableFix?: boolean; consistent?: boolean }
+			options?: { disableFix?: boolean; consistent?: boolean; allowCallable?: boolean }
 		) {
 			if (!node) return;
-			if (isStore(node, { consistent: options?.consistent })) {
-				context.report({
-					node,
-					messageId: 'usingRawStoreInText',
-					fix:
-						node.type === 'Identifier' && !options?.disableFix
-							? (fixer) => fixer.insertTextBefore(node, '$')
-							: null
-				});
+			if (!isStore(node, { consistent: options?.consistent })) {
+				return;
 			}
+			if (options?.allowCallable && isCallable(node)) {
+				// Some stores are also functions (e.g. melt-ui builders are stores and actions).
+				// Using them as functions is fine.
+				return;
+			}
+			context.report({
+				node,
+				messageId: 'usingRawStoreInText',
+				fix:
+					node.type === 'Identifier' && !options?.disableFix && canUseStorePrefix(node)
+						? (fixer) => fixer.insertTextBefore(node, '$')
+						: null
+			});
+		}
+
+		/**
+		 * Checks whether the `$` prefix can be used for the given identifier.
+		 * Svelte only allows it for stores declared at the top level of the component,
+		 * and not inside the module script.
+		 */
+		function canUseStorePrefix(node: TSESTree.Identifier) {
+			const variable = findVariable(context, node);
+			if (!variable || variable.scope.type !== 'module') {
+				return false;
+			}
+			return !moduleScripts.some(
+				(script) => script.range[0] <= node.range[0] && node.range[1] <= script.range[1]
+			);
 		}
 
 		return {
@@ -49,14 +86,21 @@ export default createRule('require-store-reactive-access', {
 					return;
 				}
 				// Check for <p>{store}<p/>, etc.
-				verifyExpression(node.expression);
+				verifyExpression(node.expression, {
+					// e.g. <button onclick={store} />
+					allowCallable: isEventAttributeValue(node)
+				});
 			},
 			SvelteShorthandAttribute(node) {
 				if (canAcceptStoreAttributeElement(node.parent.parent)) {
 					return;
 				}
 				// Check for <div {store} />
-				verifyExpression(node.value, { disableFix: true });
+				verifyExpression(node.value, {
+					disableFix: true,
+					// e.g. <button {onclick} />
+					allowCallable: isEventAttributeName(node.key.name)
+				});
 			},
 			SvelteSpreadAttribute(node) {
 				// Check for <Foo {...store} />
@@ -68,7 +112,7 @@ export default createRule('require-store-reactive-access', {
 						return;
 					}
 					// Check for <button use:store />, <div animate:store />, or <div transition:store />
-					verifyExpression(node.key.name);
+					verifyExpression(node.key.name, { allowCallable: true });
 				} else if (node.kind === 'Binding') {
 					if (node.key.name.name !== 'this' && canAcceptStoreAttributeElement(node.parent.parent)) {
 						return;
@@ -94,7 +138,7 @@ export default createRule('require-store-reactive-access', {
 					});
 				} else if (node.kind === 'EventHandler') {
 					// Check for <button on:click={store} />
-					verifyExpression(node.expression);
+					verifyExpression(node.expression, { allowCallable: true });
 				}
 			},
 			SvelteStyleDirective(node) {
@@ -149,7 +193,7 @@ export default createRule('require-store-reactive-access', {
 					return;
 				}
 				// Check for `store()`
-				verifyExpression(node.callee);
+				verifyExpression(node.callee, { allowCallable: node.type === 'CallExpression' });
 			},
 			UnaryExpression(node: TSESTree.UnaryExpression) {
 				// Check for `-store`, `+store`, `!store`, `~store`, `typeof store`
@@ -162,7 +206,25 @@ export default createRule('require-store-reactive-access', {
 				verifyExpression(node.argument);
 			},
 			AssignmentExpression(node: TSESTree.AssignmentExpression) {
-				if (node.operator !== '=') {
+				if (node.operator === '??=' || node.operator === '||=' || node.operator === '&&=') {
+					if (node.operator === '??=' && isStoreExistenceCheck(node.left, node.right)) {
+						// e.g. `ctx ??= readable(0)`
+						return;
+					}
+					// Check for `store ||= foo`.
+					// Don't fix it, since `$store ||= foo` sets the store value instead.
+					verifyExpression(node.left, {
+						disableFix: true,
+						// Without type information, `consistent` means "declared with `const`",
+						// but an assignment target is never `const`.
+						consistent: hasTypeInfo
+					});
+					if (!isStore(node.left)) {
+						// Check for `foo ||= store`.
+						// If the left side is a store, assigning a store is fine.
+						verifyExpression(node.right);
+					}
+				} else if (node.operator !== '=') {
 					if (node.left.type !== 'ObjectPattern' && node.left.type !== 'ArrayPattern') {
 						// Check for `store += 1`
 						verifyExpression(node.left);
@@ -192,6 +254,10 @@ export default createRule('require-store-reactive-access', {
 				});
 			},
 			LogicalExpression(node: TSESTree.LogicalExpression) {
+				if (node.operator === '??' && isStoreExistenceCheck(node.left, node.right)) {
+					// e.g. `getContext('key') ?? readable(0)`
+					return;
+				}
 				// Check for `store && foo`
 				verifyExpression(node.left, {
 					consistent: true
@@ -205,7 +271,7 @@ export default createRule('require-store-reactive-access', {
 			},
 			TaggedTemplateExpression(node: TSESTree.TaggedTemplateExpression) {
 				// Check for ` store`${foo}` `
-				verifyExpression(node.tag);
+				verifyExpression(node.tag, { allowCallable: true });
 			},
 			'Property, PropertyDefinition, MethodDefinition'(
 				node: TSESTree.Property | TSESTree.PropertyDefinition | TSESTree.MethodDefinition
@@ -227,6 +293,136 @@ export default createRule('require-store-reactive-access', {
 				});
 			}
 		};
+
+		/**
+		 * Checks whether `left ?? right` (or `left ??= right`) checks whether the store itself exists.
+		 * e.g. `getContext('key') ?? readable(0)`
+		 * This needs type information, because the type of the left side may not include `undefined`.
+		 */
+		function isStoreExistenceCheck(left: TSESTree.Expression, right: TSESTree.Expression) {
+			return hasTypeInfo && isMaybeMissingStore(left) && isStore(left) && isStore(right);
+		}
+
+		/**
+		 * Checks whether the given expression gets a store from a function call that may not return it,
+		 * or is a variable initialized with such a call.
+		 * e.g. `getContext('key')`, `const store = getContext('key')`
+		 * `writable()`, `readable()`, and `derived()` always return a store, so they are excluded.
+		 */
+		function isMaybeMissingStore(node: TSESTree.Expression): boolean {
+			const expr = unwrapNullishFallback(node);
+			if (expr.type === 'Identifier') {
+				const init = getInitializer(expr);
+				return Boolean(init && isMaybeMissingStoreCall(init));
+			}
+			return isMaybeMissingStoreCall(expr);
+		}
+
+		/**
+		 * Gets the initializer of the variable or the parameter default of the given identifier.
+		 * e.g. `const store = init`, `function f(store = init) {}`
+		 */
+		function getInitializer(node: TSESTree.Identifier): TSESTree.Expression | null {
+			const variable = findVariable(context, node);
+			const def = variable?.defs.length === 1 ? variable.defs[0] : null;
+			if (!def) {
+				return null;
+			}
+			if (def.type === 'Variable') {
+				return def.node.id.type === 'Identifier' ? def.node.init : null;
+			}
+			if (def.type === 'Parameter') {
+				const parent = def.name.parent;
+				return parent?.type === 'AssignmentPattern' && parent.left === def.name
+					? parent.right
+					: null;
+			}
+			return null;
+		}
+
+		/**
+		 * Checks whether the given expression is a call other than `writable()`, `readable()`, and `derived()`.
+		 */
+		function isMaybeMissingStoreCall(node: TSESTree.Expression): boolean {
+			let expr = unwrapNullishFallback(node);
+			if (expr.type === 'AwaitExpression') {
+				expr = unwrapTypeExpression(expr.argument);
+			}
+			if (expr.type === 'ChainExpression') {
+				// e.g. `ctx?.get()`
+				expr = expr.expression;
+			}
+			if (expr.type !== 'CallExpression') {
+				return false;
+			}
+			if (!storeCreatorCalls) {
+				storeCreatorCalls = new Set(Array.from(extractStoreReferences(context), (r) => r.node));
+			}
+			return !storeCreatorCalls.has(expr);
+		}
+
+		/**
+		 * Gets the last operand of `??` chains, and removes TypeScript type expressions.
+		 * e.g. `getContext('a') ?? getContext('b')` -> `getContext('b')`
+		 */
+		function unwrapNullishFallback(node: TSESTree.Expression): TSESTree.Expression {
+			let expr = unwrapTypeExpression(node);
+			while (expr.type === 'LogicalExpression' && expr.operator === '??') {
+				expr = unwrapTypeExpression(expr.right);
+			}
+			return expr;
+		}
+
+		/**
+		 * Removes TypeScript type expressions such as `as` and `!`.
+		 */
+		function unwrapTypeExpression(node: TSESTree.Expression): TSESTree.Expression {
+			let expr = node;
+			while (
+				expr.type === 'TSAsExpression' ||
+				expr.type === 'TSSatisfiesExpression' ||
+				expr.type === 'TSNonNullExpression' ||
+				expr.type === 'TSTypeAssertion'
+			) {
+				expr = expr.expression;
+			}
+			return expr;
+		}
+
+		/**
+		 * Checks whether the given mustache node is the value of an event attribute.
+		 * e.g. <button onclick={handler} />
+		 */
+		function isEventAttributeValue(node: AST.SvelteMustacheTag) {
+			return (
+				node.parent.type === 'SvelteAttribute' &&
+				node.parent.value.length === 1 &&
+				isEventAttributeName(node.parent.key.name)
+			);
+		}
+
+		/**
+		 * Checks whether the given attribute name is an event attribute name.
+		 * Svelte 5 treats all attributes starting with `on` as event attributes.
+		 */
+		function isEventAttributeName(name: string) {
+			return supportsEventAttributes && name.startsWith('on');
+		}
+
+		/**
+		 * Checks whether the given script element is the module script.
+		 * e.g. <script module>, <script context="module">
+		 */
+		function isModuleScript(node: AST.SvelteScriptElement) {
+			if (findAttribute(node, 'module')) {
+				return true;
+			}
+			const contextAttr = findAttribute(node, 'context');
+			const contextValue = contextAttr?.value.length === 1 && contextAttr.value[0];
+			return Boolean(
+				contextValue && contextValue.type === 'SvelteLiteral' && contextValue.value === 'module'
+			);
+		}
 
 		/**
 		 * Checks whether the given mustache node accepts a store instance.

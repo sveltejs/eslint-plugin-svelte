@@ -84,6 +84,37 @@ export const storeValue = writable('hello');
 <p>{storeValue}</p>
 ```
 
+With type information, this rule also allows the following:
+
+- A store that is also a function (e.g. [melt-ui](https://www.melt-ui.com/) builders are stores and actions) can be called (including tagged templates), and used with `use:`, `transition:`, `in:`, `out:`, `animate:`, `on:`, and event attributes (e.g. `onclick`, Svelte 5 only).
+- A store from a function call (e.g. `getContext('key')`), or a variable or parameter initialized with one, can be checked with `??` or `??=` when the fallback is also a store (e.g. `getContext('key') ?? readable(0)`), because the type of the call may not include `undefined`. This does not apply to `writable()`, `readable()`, and `derived()`, since they always return a store.
+
+<!--eslint-skip-->
+
+```svelte
+<script lang="ts">
+  /* eslint svelte/require-store-reactive-access: "error" */
+  import { getContext } from 'svelte';
+  import { type Readable, readable } from 'svelte/store';
+  import { createDropdownMenu } from '@melt-ui/svelte';
+
+  const {
+    elements: { trigger }
+  } = createDropdownMenu();
+
+  /* ✓ GOOD */
+  function getStore(): Readable<number> {
+    return getContext('key') ?? readable(0);
+  }
+</script>
+
+<!-- ✓ GOOD -->
+<button {...$trigger} use:trigger>open menu</button>
+```
+
+The auto-fix adds the `$` prefix only to stores declared at the top level of the component, and not inside the module script (`<script module>` or `<script context="module">`), because Svelte does not allow it there.
+It also does not fix the left side of `||=`, `&&=`, and `??=`, because `$store ||= value` sets the store value instead.
+
 ## :wrench: Options
 
 Nothing.
