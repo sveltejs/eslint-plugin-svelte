@@ -6,7 +6,8 @@ feat(no-navigation-without-resolve): rebuild the rule to report only URLs that a
 
 - Values that the rule cannot understand (props, `data`, function results, `any`) are no longer reported. Use the new `strict` option to report them.
 - `?query`, `#hash`, `''`, `page.url`, query/hash after `resolve()`, and nullable `ResolvedPathname` values are allowed.
-- New reports: relative URLs (allow them with `allowRelativePaths`), anything before `resolve()`, a path after `resolve()`, external URLs in `goto()` / `pushState()` / `replaceState()` / `preloadData()`, `<area>`, SVG `<a>`, `<form action>`, `formaction`, `preloadData()`, `preloadCode()` (SvelteKit 2) and a URL passed to `preloadCode()` on SvelteKit 3.
+- Newly checked: `<area>`, SVG `<a>`, `<form action>`, `formaction`, `preloadData()` and `preloadCode()`.
+- New reports: relative URLs (allow them with `allowRelativePaths`), anything before `resolve()`, a path after `resolve()`, external URLs in `goto()` / `pushState()` / `replaceState()` / `preloadData()`, and a URL passed to `preloadCode()` on SvelteKit 3 (it takes a route ID).
 - Values are followed through reassignments, `$state()`, `$derived()`, `$props()` defaults, `{#each}` and declared TypeScript string literal types.
 - Messages explain the problem, and suggestions wrap the URL with `resolve()` / `asset()` (SvelteKit 3 pathnames have no leading slash).
 - The rule no longer runs on SvelteKit 1 and SvelteKit 2 before 2.26, where `resolve()` does not exist.

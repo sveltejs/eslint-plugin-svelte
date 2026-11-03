@@ -39,7 +39,10 @@ import type { RuleContext, RuleFixer, SuggestionReportDescriptor } from '../type
 type Part =
 	/** A known piece of text. */
 	| { readonly type: 'text'; readonly value: string }
-	/** The result of `resolve()` / `asset()`: only `?…` or `#…` may follow it. */
+	/**
+	 * The result of `resolve()` / `asset()`. Only `?…` or `#…` may follow `resolve()`; anything
+	 * may follow `asset()`.
+	 */
 	| { readonly type: 'resolved'; readonly label: string }
 	/** A value that already starts with the base path and may be extended, e.g. `base` or `page.url`. */
 	| { readonly type: 'based'; readonly label: string }
@@ -175,8 +178,10 @@ type Finding =
 			readonly name: string;
 			readonly relativeInSsr: boolean;
 			readonly value: string;
-			/** What comes before `resolve()`. */
-			/** `origin` is the origin of the page: absolute, but never empty. */
+			/**
+			 * What comes before the anchor (`resolve()`, `base`, `page.url`...). `origin` is the
+			 * origin of the page: absolute, but never empty.
+			 */
 			readonly head: 'text' | 'external' | 'origin' | 'unknown';
 	  }
 	| { readonly kind: 'appended'; readonly value: string; readonly name: string };
@@ -301,7 +306,8 @@ function classify(alt: Alt): Finding {
 // Evaluator
 // ---------------------------------------------------------------------------
 
-type ImportInfo = { source: string; imported: string | '*' };
+/** `imported` is `'*'` for a namespace import and `'default'` for a default import. */
+type ImportInfo = { source: string; imported: string };
 
 type SourceRef =
 	| { readonly type: 'node'; readonly node: TSESTree.Expression }
@@ -1242,6 +1248,7 @@ class UrlEvaluator {
 		);
 	}
 
+	// A type guard: in the `false` branch, TypeScript removes every `NewExpression`.
 	private isUrlConstructor(node: TSESTree.Node): node is TSESTree.NewExpression {
 		if (
 			node.type !== 'NewExpression' ||
@@ -1475,8 +1482,8 @@ class UrlEvaluator {
 		}
 	}
 
-	/** Whether a TypeScript expression is a literal (its type is what is written). */
 	/**
+	 * Whether a TypeScript expression is a literal (its type is what is written).
 	 * @param asObject Only check that it is an object or array literal: its properties are
 	 * checked one by one.
 	 */
@@ -1737,6 +1744,18 @@ function isMutated(
 			if (parent.type === 'UpdateExpression') return true;
 			if (parent.type === 'UnaryExpression' && parent.operator === 'delete') return true;
 			if ((parent.type as string) === 'SvelteDirective') return true;
+			// `({ a: x.a } = ...)`, `[x.a] = ...`, `for (x.a of ...)`
+			if (parent.type === 'Property' && parent.value === node) {
+				if (parent.parent.type === 'ObjectPattern') return true;
+			}
+			if (parent.type === 'ArrayPattern' || parent.type === 'RestElement') return true;
+			if (parent.type === 'AssignmentPattern' && parent.left === node) return true;
+			if (
+				(parent.type === 'ForOfStatement' || parent.type === 'ForInStatement') &&
+				parent.left === node
+			) {
+				return true;
+			}
 			if (parent.type === 'CallExpression' && parent.callee === node) {
 				if (last !== null && MUTATING_METHODS.has(last)) return true;
 				return holds !== 'other' && (last === null || !READ_ONLY_METHODS.has(last));
@@ -2138,9 +2157,11 @@ export default createRule('no-navigation-without-resolve', {
 		const declaredRange = installedKitVersion
 			? null
 			: getDeclaredSvelteKitVersionRange(context.filename);
-		let coerced = installedKitVersion ? semver.coerce(installedKitVersion) : null;
-		if (declaredRange && semver.validRange(declaredRange))
-			coerced = semver.minVersion(declaredRange);
+		const coerced = installedKitVersion
+			? semver.coerce(installedKitVersion)
+			: declaredRange && semver.validRange(declaredRange)
+				? semver.minVersion(declaredRange)
+				: null;
 		// `resolve()` was added in SvelteKit 2.26.
 		if (coerced && semver.lt(coerced, '2.26.0')) return {};
 		const isKit3 =

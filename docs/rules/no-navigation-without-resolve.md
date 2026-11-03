@@ -13,7 +13,7 @@ since: 'v3.12.0'
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 - :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
-This rule runs on SvelteKit 2.26 or later (where `resolve()` exists) and on SvelteKit 3. SvelteKit 3 removed the `base` export, so the deprecated `no-navigation-without-base` and `no-goto-without-base` rules do not run on Kit 3. See the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#app-paths).
+This rule runs on SvelteKit 2.26 or later, where `resolve()` exists. SvelteKit 3 removed the `base` export, so the deprecated `no-navigation-without-base` and `no-goto-without-base` rules do not run on Kit 3. See the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#app-paths).
 
 ## :book: Rule Details
 
@@ -43,7 +43,7 @@ These are always fine:
 - external URLs in links, like `https://svelte.dev`, `//cdn.example.com` and `mailto:…`
 - `''`, `?query` and `#hash`
 - links with the `external` token in `rel` (the URL is served by another app on the same origin). When `rel` is not known (e.g. `rel={rel}`), the link is not checked unless `strict` is on.
-- `page.url` from `$app/state`, and the deprecated `base` / `assets` from `$app/paths`
+- `page.url` from `$app/state` (or `$page.url` from `$app/stores`), and the deprecated `base` / `assets` from `$app/paths`
 
 `data-sveltekit-reload`, `target` and `download` do not exempt a link: the base path is still needed.
 

@@ -23,4 +23,12 @@
 	// eslint-disable-next-line no-var, no-redeclare
 	var h = resolve('/e');
 	goto(h);
+
+	const link2 = { href: '/f' };
+	({ href: link2.href } = { href: resolve('/f') });
+	goto(link2.href);
+
+	const link3 = { href: '/g' };
+	for (link3.href of [resolve('/g')]);
+	goto(link3.href);
 </script>
