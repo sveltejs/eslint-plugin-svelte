@@ -10,7 +10,7 @@
         	;
         	return {
         		get name() {
-        			return user.name;
+        			return `${user.name}`;
         		}
         	};
         }

@@ -43,11 +43,17 @@ The rule specifically looks for patterns where:
 
 When this pattern is detected, the rule suggests refactoring to use `$derived()` instead, which provides the same functionality in a more concise way.
 
-The rule does not report a variable that is mutated through its properties (e.g. `value.name = 'foo'`, `bind:value={value.name}`, `value.push(item)` or `Object.assign(value, other)`). `$state` makes objects and arrays [deeply reactive](https://svelte.dev/docs/svelte/$state#Deep-state), but [`$derived` does not](https://svelte.dev/docs/svelte/$derived#Deriveds-and-reactivity), so such mutations would no longer update the UI.
+The rule does not report a variable whose object may be mutated (e.g. `value.name = 'foo'`, `bind:value={value.name}` or `value.push(item)`). `$state` makes arrays and plain objects [deeply reactive](https://svelte.dev/docs/svelte/$state#Deep-state), but [`$derived` does not](https://svelte.dev/docs/svelte/$derived#Deriveds-and-reactivity), so such mutations would no longer update the UI.
 
-The rule also follows values that share the same object, such as `{#each value.items as item}`, `const { profile } = value`, `value.items.forEach((item) => ...)`, `<Child bind:value />`, `use:action={value}`, arguments of local functions and snippets, and values returned from local functions. A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not. Method names of `Map` and `Set` (e.g. `value.set(key, item)`) are also treated as mutations, and `<Child bind:value />` is treated as a mutation even for a primitive value, since the rule can't know the type.
+To be safe, the rule reports a variable only when it can see every use of the object:
 
-The rule does not follow values passed to imported or global functions (e.g. `Object.values(value)`), passed to components as props without `bind:`, stored in other objects (including methods of objects and values returned from callbacks, e.g. `ids.map((id) => value[id])`), returned from a returned function, passed through a function parameter (e.g. a callback given to a local helper), or returned to outside of the file (e.g. a getter in a `.svelte.js` file). Check such cases yourself before applying the suggestion.
+- If every value assigned to the variable is a primitive (e.g. `count * 2`), the object can't be mutated, so the rule reports it.
+- It follows values that share the object, such as `const { profile } = value`, `{#each value.items as item}`, `value.items.forEach((item) => ...)`, `[...value]`, local functions and snippets, and values returned from them.
+- Reading the object is fine. This includes the template, built-in methods that don't mutate (e.g. `value.items.map(...)`, `value.name.trim()`), built-in functions such as `JSON.stringify(value)` and `$state.snapshot(value)`, and props without `bind:` (components [should not mutate them](https://svelte.dev/docs/svelte/$props#Updating-props)).
+- A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not.
+- Any other use is treated as a mutation. For example, passing the object to an imported function (e.g. `setContext('user', value)`), calling a method that is not built in (e.g. `value.save()`), storing it in another object, `bind:` on a component, or returning it to outside of the file.
+
+Methods are matched by name, so a method that has the name of a built-in method (e.g. `map` or `toString`) is treated as the built-in method.
 
 <!--eslint-skip-->
 

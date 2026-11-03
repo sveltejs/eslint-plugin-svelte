@@ -75,62 +75,229 @@ function isStateVariable(init: TSESTree.Expression | null): init is TSESTree.Cal
 	);
 }
 
-// Methods that mutate the object they are called on.
-// `$state` does not proxy Map / Set, but their method names are included to be safe,
-// since the rule can't know the type of the object.
-const MUTATING_METHODS = new Set([
-	// Array
-	'copyWithin',
-	'fill',
-	'pop',
-	'push',
-	'reverse',
-	'shift',
-	'sort',
-	'splice',
-	'unshift',
-	// Map / Set
-	'add',
-	'clear',
-	'delete',
-	'set'
-]);
+type AnyNode = TSESTree.Node | AST.SvelteNode;
+type LocalFunction =
+	| TSESTree.FunctionDeclaration
+	| TSESTree.FunctionExpression
+	| TSESTree.ArrowFunctionExpression
+	| AST.SvelteSnippetBlock;
 
-// Static methods that mutate their first argument.
-const MUTATING_STATIC_METHODS = new Map([
-	['Object', new Set(['assign', 'defineProperties', 'defineProperty', 'setPrototypeOf'])],
-	['Reflect', new Set(['defineProperty', 'deleteProperty', 'set', 'setPrototypeOf'])]
-]);
+/**
+ * What a method or function returns, compared with the value it gets.
+ * - `none`: something not shared with the value, e.g. `v.includes(x)` or `JSON.stringify(v)`.
+ * - `self`: the value itself, e.g. `v.sort()`.
+ * - `part`: a part of the value, e.g. `v.find(f)`.
+ * - `newContainer`: a new array or object whose elements are shared with the value, e.g. `v.slice()`.
+ */
+type Result = 'none' | 'self' | 'part' | 'newContainer';
 
-// Methods whose callbacks get an accumulator as the first parameter.
-// It is an element only when no initial value is given.
-// For other methods, all parameters of callbacks are treated as elements.
-const REDUCE_METHODS = new Set(['reduce', 'reduceRight']);
+type MethodInfo = {
+	result: Result;
+	// Whether the method mutates the object it is called on.
+	mutates?: boolean;
+	// How the method uses its callback (the first argument).
+	// `map` and `flatMap`: the returned values become the elements of the result.
+	// `reduce`: the returned value becomes the accumulator and the result.
+	// `other`: the returned value is not shared.
+	callback?: 'map' | 'flatMap' | 'reduce' | 'other';
+	// What the method does with its arguments.
+	// `container`: they become elements of the result. `stored`: they are stored in the object.
+	args?: 'container' | 'stored';
+};
 
-// Methods that return a new array. The array itself is new, but its elements are still shared.
-const NEW_ARRAY_METHODS = new Set([
-	'concat',
-	'filter',
-	'flat',
-	'flatMap',
-	'map',
-	'slice',
-	'toReversed',
-	'toSorted',
-	'toSpliced',
-	'with',
-	// String methods. Their elements are new, too.
+// `$state` makes only arrays and plain objects deeply reactive
+// (https://svelte.dev/docs/svelte/$state#Deep-state).
+// So the methods called on a part of the `$state` object are the methods of `Array.prototype`
+// and `Object.prototype`, methods of primitives, methods of class instances (which are not proxied),
+// or functions stored in the object. The methods below are classified by the spec.
+// The others may be functions stored in the object, so they are treated as mutating it.
+const ARRAY_METHODS: [string, MethodInfo][] = [
+	['at', { result: 'part' }],
+	['concat', { result: 'newContainer', args: 'container' }],
+	['copyWithin', { result: 'self', mutates: true }],
+	['entries', { result: 'newContainer' }],
+	['every', { result: 'none', callback: 'other' }],
+	['fill', { result: 'self', mutates: true, args: 'stored' }],
+	['filter', { result: 'newContainer', callback: 'other' }],
+	['find', { result: 'part', callback: 'other' }],
+	['findIndex', { result: 'none', callback: 'other' }],
+	['findLast', { result: 'part', callback: 'other' }],
+	['findLastIndex', { result: 'none', callback: 'other' }],
+	['flat', { result: 'newContainer' }],
+	// The result comes from the returned values of the callback.
+	['flatMap', { result: 'none', callback: 'flatMap' }],
+	['forEach', { result: 'none', callback: 'other' }],
+	['includes', { result: 'none' }],
+	['indexOf', { result: 'none' }],
+	['join', { result: 'none' }],
+	['keys', { result: 'none' }],
+	['lastIndexOf', { result: 'none' }],
+	['map', { result: 'none', callback: 'map' }],
+	['pop', { result: 'part', mutates: true }],
+	['push', { result: 'none', mutates: true, args: 'stored' }],
+	['reduce', { result: 'part', callback: 'reduce' }],
+	['reduceRight', { result: 'part', callback: 'reduce' }],
+	['reverse', { result: 'self', mutates: true }],
+	['shift', { result: 'part', mutates: true }],
+	['slice', { result: 'newContainer' }],
+	['some', { result: 'none', callback: 'other' }],
+	['sort', { result: 'self', mutates: true, callback: 'other' }],
+	['splice', { result: 'newContainer', mutates: true, args: 'stored' }],
+	['toLocaleString', { result: 'none' }],
+	['toReversed', { result: 'newContainer' }],
+	['toSorted', { result: 'newContainer', callback: 'other' }],
+	['toSpliced', { result: 'newContainer', args: 'container' }],
+	['toString', { result: 'none' }],
+	['unshift', { result: 'none', mutates: true, args: 'stored' }],
+	['values', { result: 'newContainer' }],
+	['with', { result: 'newContainer', args: 'container' }],
+	// Object.prototype
+	['hasOwnProperty', { result: 'none' }],
+	['isPrototypeOf', { result: 'none' }],
+	['propertyIsEnumerable', { result: 'none' }],
+	['valueOf', { result: 'self' }]
+];
+
+// Methods that only read primitives (String.prototype and Number.prototype)
+// or class instances that `$state` doesn't proxy (Date.prototype).
+const READ_ONLY_METHODS = [
+	// String
+	'charAt',
+	'charCodeAt',
+	'codePointAt',
+	'endsWith',
+	'isWellFormed',
+	'localeCompare',
 	'match',
+	'matchAll',
+	'normalize',
+	'padEnd',
+	'padStart',
+	'repeat',
+	'replace',
+	'replaceAll',
+	'search',
 	'split',
-	// Iterator method.
-	'toArray'
+	'startsWith',
+	'substr',
+	'substring',
+	'toLocaleLowerCase',
+	'toLocaleUpperCase',
+	'toLowerCase',
+	'toUpperCase',
+	'toWellFormed',
+	'trim',
+	'trimEnd',
+	'trimStart',
+	// Number
+	'toExponential',
+	'toFixed',
+	'toPrecision',
+	// Date
+	'getDate',
+	'getDay',
+	'getFullYear',
+	'getHours',
+	'getMilliseconds',
+	'getMinutes',
+	'getMonth',
+	'getSeconds',
+	'getTime',
+	'getTimezoneOffset',
+	'getUTCDate',
+	'getUTCDay',
+	'getUTCFullYear',
+	'getUTCHours',
+	'getUTCMilliseconds',
+	'getUTCMinutes',
+	'getUTCMonth',
+	'getUTCSeconds',
+	'toDateString',
+	'toISOString',
+	'toJSON',
+	'toLocaleDateString',
+	'toLocaleTimeString',
+	'toTimeString',
+	'toUTCString'
+];
+
+const METHODS = new Map<string, MethodInfo>([
+	...READ_ONLY_METHODS.map((name): [string, MethodInfo] => [name, { result: 'none' }]),
+	...ARRAY_METHODS
 ]);
 
-// Methods that return the array they are called on.
-const RETURN_THIS_METHODS = new Set(['copyWithin', 'fill', 'reverse', 'sort']);
+// Global functions that return primitives and don't change their arguments.
+const PRIMITIVE_GLOBAL_FUNCTIONS = new Set([
+	'Array.isArray',
+	'BigInt',
+	'Boolean',
+	'JSON.stringify',
+	'Number',
+	'Number.isFinite',
+	'Number.isInteger',
+	'Number.isNaN',
+	'Number.isSafeInteger',
+	'Number.parseFloat',
+	'Number.parseInt',
+	'Object.hasOwn',
+	'Object.is',
+	'Object.isExtensible',
+	'Object.isFrozen',
+	'Object.isSealed',
+	'String',
+	'decodeURI',
+	'decodeURIComponent',
+	'encodeURI',
+	'encodeURIComponent',
+	'isFinite',
+	'isNaN',
+	'parseFloat',
+	'parseInt'
+]);
+
+// Global objects whose methods don't change their arguments and don't return them.
+const READ_ONLY_GLOBAL_OBJECTS = new Set(['Math', 'console']);
+
+// Global functions (and runes) that don't change their arguments.
+const GLOBAL_FUNCTIONS = new Map<string, Result>([
+	...[...PRIMITIVE_GLOBAL_FUNCTIONS].map((name): [string, Result] => [name, 'none']),
+	['Object.getOwnPropertyNames', 'none'],
+	['Object.keys', 'none'],
+	// Deep copies.
+	['$state.snapshot', 'none'],
+	['structuredClone', 'none'],
+	['Array.from', 'newContainer'],
+	['Array.of', 'newContainer'],
+	['Object.entries', 'newContainer'],
+	['Object.fromEntries', 'newContainer'],
+	['Object.values', 'newContainer']
+]);
+
+// Runes that return the given value itself (or the same proxy).
+const PASS_THROUGH_RUNES = new Set(['$derived', '$state', '$state.eager', '$state.raw']);
+
+// Functions that ignore what their callback returns (or only call it when it is a function).
+const IGNORE_RETURN_FUNCTIONS = new Set([
+	'$effect',
+	'$effect.pre',
+	'$effect.root',
+	'queueMicrotask',
+	'requestAnimationFrame',
+	'setInterval',
+	'setTimeout',
+	'svelte#onDestroy',
+	'svelte#onMount'
+]);
+
+// Functions that return what their callback returns.
+const RETURN_CALLBACK_RESULT_FUNCTIONS = new Set(['$derived.by', 'svelte#untrack']);
+
+// Modules whose transition and animation functions don't change their parameters.
+const SVELTE_MOTION_MODULES = new Set(['svelte/animate', 'svelte/transition']);
 
 const TS_WRAPPERS = new Set([
 	'TSAsExpression',
+	'TSInstantiationExpression',
 	'TSNonNullExpression',
 	'TSSatisfiesExpression',
 	'TSTypeAssertion'
@@ -144,16 +311,6 @@ function unwrapTS(node: TSESTree.Node): TSESTree.Node {
 	}
 	return result;
 }
-
-// Runes that return the given value itself (or the same proxy).
-const PASS_THROUGH_RUNES = new Set(['$derived', '$state', '$state.raw']);
-
-type AnyNode = TSESTree.Node | AST.SvelteNode;
-type LocalFunction =
-	| TSESTree.FunctionDeclaration
-	| TSESTree.FunctionExpression
-	| TSESTree.ArrowFunctionExpression
-	| AST.SvelteSnippetBlock;
 
 function isFunction(node: AnyNode | null | undefined): node is LocalFunction {
 	return (
@@ -177,7 +334,7 @@ function getCalleeName(callee: TSESTree.Node): string | null {
 	return null;
 }
 
-function isComponentElement(element: AnyNode | undefined): boolean {
+function isComponentElement(element: AnyNode | null | undefined): boolean {
 	if (element?.type !== 'SvelteElement') return false;
 	return (
 		element.kind === 'component' ||
@@ -186,22 +343,38 @@ function isComponentElement(element: AnyNode | undefined): boolean {
 	);
 }
 
+function isExportDeclaration(node: AnyNode | null | undefined): boolean {
+	return node?.type === 'ExportNamedDeclaration' || node?.type === 'ExportDefaultDeclaration';
+}
+
 /**
- * How a followed value relates to the object of the `$state` variable.
- * - `shared`: the object itself or a part of it (e.g. `const a = v.a`).
- * - `eachItem`: an `{#each}` item. Assigning to it changes the array.
- * - `newContainer`: a new array or object whose elements are shared (e.g. `v.slice()` or `...rest`).
+ * How deep the shared parts are in a followed value.
+ * - `0`: the object of the `$state` variable or a part of it, e.g. `v` or `v.a`.
+ *   Changing its properties mutates the object.
+ * - `1`: a new array or object whose elements are shared, e.g. `v.slice()` or `[...v]`.
+ * - `2`: a new container of such containers.
+ * - `eachItem`: an `{#each}` item. Like `0`, and assigning to it also mutates the array.
  */
-type Mode = 'shared' | 'eachItem' | 'newContainer';
+type Mode = 0 | 1 | 2 | 'eachItem';
+
+function toDepth(mode: Mode): number {
+	return mode === 'eachItem' ? 0 : mode;
+}
+
+/** Converts a depth to a mode. Deeper values are treated as `2`, which is safe. */
+function toMode(depth: number): Mode {
+	return Math.max(0, Math.min(depth, 2)) as 0 | 1 | 2;
+}
 
 // Gives up following values when they go deeper than this, and treats them as mutated.
 const MAX_DEPTH = 100;
 
 /**
- * Checks whether the variable is mutated through one of its properties,
- * e.g. `v.a = 1`, `v.a++`, `delete v.a`, `bind:value={v.a}`, `v.push(1)` or `Object.assign(v, x)`.
- * It also follows values that point to the same object,
- * e.g. `const a = v`, `{#each v as item}`, `v.forEach((item) => ...)` or `fn(v)` for a local function.
+ * Checks whether the object of the variable may be mutated, e.g. `v.a = 1`, `v.push(1)`,
+ * `bind:value={v.a}` or passing it to a function that may change it.
+ * It follows values that point to the same object, e.g. `const a = v`, `{#each v as item}`,
+ * `v.forEach((item) => ...)` or `fn(v)` for a local function.
+ * Any use that it can't follow is treated as a mutation.
  * `$state` makes objects deeply reactive but `$derived` does not,
  * so such a variable can't be rewritten to `$derived`.
  */
@@ -209,9 +382,9 @@ function createDeepMutationChecker(context: RuleContext) {
 	const findVariableContext = new FindVariableContext(context);
 	const variables = new Map<TSESTree.Identifier, Variable | null>();
 	// The results that don't depend on where the check started. Kept for the whole file.
-	const cache = new Map<Variable | LocalFunction, Map<Mode, boolean>>();
-	// The variables and functions being checked in the current check.
-	const visited = new Map<Variable | LocalFunction, Set<Mode>>();
+	const cache = new Map<object, Map<string, boolean>>();
+	// The checks running in the current check.
+	const visited = new Map<object, Set<string>>();
 	// The number of times a check stopped early because of `visited` or `MAX_DEPTH`.
 	// A result is cached only when it didn't stop early.
 	let stops = 0;
@@ -222,10 +395,10 @@ function createDeepMutationChecker(context: RuleContext) {
 		return variables.get(node)!;
 	}
 
-	function withCache(key: Variable | LocalFunction, mode: Mode, check: () => boolean): boolean {
+	function withCache(key: object, mode: string, check: () => boolean): boolean {
 		const cached = cache.get(key)?.get(mode);
 		if (cached != null) return cached;
-		const visitedModes = visited.get(key) ?? new Set<Mode>();
+		const visitedModes = visited.get(key) ?? new Set<string>();
 		visited.set(key, visitedModes);
 		if (visitedModes.has(mode) || depth >= MAX_DEPTH) {
 			stops++;
@@ -241,54 +414,143 @@ function createDeepMutationChecker(context: RuleContext) {
 			depth--;
 		}
 		if (stops === stopsBefore) {
-			const modes = cache.get(key) ?? new Map<Mode, boolean>();
+			const modes = cache.get(key) ?? new Map<string, boolean>();
 			modes.set(mode, result);
 			cache.set(key, modes);
 		}
 		return result;
 	}
 
-	/** Checks whether the variable (which gets the object or a part of it) is mutated. */
-	function isVariableMutated(variable: Variable, mode: Mode): boolean {
-		return withCache(variable, mode, () =>
-			variable.references.some(
-				(reference) =>
-					// Skip the declaration itself, e.g. `{ a = 1 }` in `{#each v as { a = 1 }}`.
-					!reference.init && isValueMutated(reference.identifier as TSESTree.Identifier, mode)
+	/** Returns the name of the global function or rune, e.g. `JSON.stringify` or `$state.snapshot`. */
+	function getGlobalName(callee: TSESTree.Node): string | null {
+		const node = unwrapTS(callee);
+		const name = getCalleeName(node);
+		if (name == null) return null;
+		const root = (node.type === 'MemberExpression' ? node.object : node) as TSESTree.Identifier;
+		const variable = findVariable(root);
+		return variable == null || variable.defs.length === 0 ? name : null;
+	}
+
+	/** Returns the name of the imported function, e.g. `svelte#untrack`. */
+	function getImportName(callee: TSESTree.Node): string | null {
+		const node = unwrapTS(callee);
+		if (node.type !== 'Identifier') return null;
+		const def = findVariable(node)?.defs[0];
+		if (def?.type !== 'ImportBinding' || def.node.type !== 'ImportSpecifier') return null;
+		const imported = def.node.imported;
+		const name = imported.type === 'Identifier' ? imported.name : String(imported.value);
+		return `${(def.parent as TSESTree.ImportDeclaration).source.value}#${name}`;
+	}
+
+	function getFunctionName(callee: TSESTree.Node): string | null {
+		return getGlobalName(callee) ?? getImportName(callee);
+	}
+
+	/** Returns what the global function returns, or `null` if it may change its arguments. */
+	function getGlobalFunctionResult(callee: TSESTree.Node): Result | null {
+		const name = getGlobalName(callee);
+		if (name == null) return null;
+		const result = GLOBAL_FUNCTIONS.get(name);
+		if (result) return result;
+		const [object, method] = name.split('.');
+		return method != null && READ_ONLY_GLOBAL_OBJECTS.has(object) ? 'none' : null;
+	}
+
+	function getMethodInfo(member: TSESTree.MemberExpression): MethodInfo | null {
+		const name = getPropertyName(member, getScope(context, member));
+		return name == null ? null : (METHODS.get(name) ?? null);
+	}
+
+	/** Checks whether the variable is exported, so it may be used in other files. */
+	function isExported(variable: Variable): boolean {
+		return variable.defs.some((def) =>
+			isExportDeclaration(
+				def.node.type === 'VariableDeclarator' ? def.node.parent?.parent : def.node.parent
 			)
 		);
 	}
 
+	/** Checks whether the variable (which gets the object or a part of it) is mutated. */
+	function isVariableMutated(variable: Variable, mode: Mode): boolean {
+		return withCache(
+			variable,
+			String(mode),
+			() =>
+				isExported(variable) ||
+				variable.references.some(
+					(reference) =>
+						// Skip the declaration itself, e.g. `{ a = 1 }` in `{#each v as { a = 1 }}`.
+						!reference.init && isValueMutated(reference.identifier as TSESTree.Identifier, mode)
+				)
+		);
+	}
+
+	/**
+	 * Checks a variable declared with a new array or object, e.g. `const a = []`,
+	 * which doesn't share its value with others before.
+	 */
+	function getNewContainerVariable(node: TSESTree.Node): Variable | null {
+		let root = unwrapTS(node);
+		while (root.type === 'MemberExpression') root = unwrapTS(root.object);
+		if (root.type !== 'Identifier') return null;
+		const variable = findVariable(root);
+		const def = variable?.defs[0];
+		if (
+			!variable ||
+			variable.defs.length !== 1 ||
+			def?.type !== 'Variable' ||
+			def.node.id.type !== 'Identifier' ||
+			!def.node.init ||
+			(unwrapTS(def.node.init).type !== 'ObjectExpression' &&
+				unwrapTS(def.node.init).type !== 'ArrayExpression') ||
+			variable.references.some((reference) => reference.isWrite() && !reference.init)
+		) {
+			return null;
+		}
+		return variable;
+	}
+
+	/** Checks the value stored in another object, e.g. `a.b = v` or `a.push(v)`. */
+	function isStoredValueMutated(container: TSESTree.Node, mode: Mode): boolean {
+		// We follow only new local arrays and objects. Others may be shared with any code.
+		const variable = getNewContainerVariable(container);
+		return variable == null || isVariableMutated(variable, toMode(toDepth(mode) + 1));
+	}
+
 	/** Checks the variables declared by the pattern, which get the object or a part of it. */
 	function isPatternMutated(pattern: TSESTree.Node, mode: Mode): boolean {
-		const partMode = mode === 'eachItem' ? 'eachItem' : 'shared';
+		const depth = toDepth(mode);
+		const partMode = mode === 'eachItem' ? 'eachItem' : toMode(depth - 1);
+		const restMode = toMode(Math.max(depth, 1));
 		switch (pattern.type) {
 			case 'Identifier': {
 				const variable = findVariable(pattern);
-				return variable != null && isVariableMutated(variable, mode);
+				return variable == null || isVariableMutated(variable, mode);
 			}
 			case 'ObjectPattern':
 				return pattern.properties.some((property) =>
 					property.type === 'Property'
 						? isPatternMutated(property.value, partMode)
-						: isPatternMutated(property, mode)
+						: isPatternMutated(property.argument, restMode)
 				);
 			case 'ArrayPattern':
 				return pattern.elements.some(
 					(element) =>
 						element != null &&
 						(element.type === 'RestElement'
-							? isPatternMutated(element, mode)
+							? isPatternMutated(element.argument, restMode)
 							: isPatternMutated(element, partMode))
 				);
 			case 'RestElement':
-				// e.g. `const [...rest] = v`
-				return isPatternMutated(pattern.argument, 'newContainer');
+				// e.g. `function f(...args) {}`. `args` is a new array that has the value.
+				return isPatternMutated(pattern.argument, toMode(depth + 1));
 			case 'AssignmentPattern':
 				return isPatternMutated(pattern.left, mode);
+			case 'MemberExpression':
+				// e.g. `a.b = v`
+				return isStoredValueMutated(pattern.object, mode);
 			default:
-				// e.g. `a.b = v`. We don't follow values stored in other objects.
-				return false;
+				return true;
 		}
 	}
 
@@ -319,123 +581,201 @@ function createDeepMutationChecker(context: RuleContext) {
 		);
 		for (let i = 0; i < params.length; i++) {
 			const param = params[i];
-			// e.g. `function f(...args) {}`. `args` is a new array that has the value.
 			if (param.type === 'RestElement') return isPatternMutated(param, mode);
 			if (i === index) return isPatternMutated(param, mode);
 		}
 		return false;
 	}
 
-	/** Checks a local function (or snippet) that gets the value as an argument, e.g. `fn(v)`. */
-	function isPassedToMutatingFunction(
+	/**
+	 * Checks the parameters of a callback.
+	 * `getMode` returns the mode of the value that the parameter gets, or `null` if it is not shared.
+	 */
+	function isCallbackParamMutated(
+		callback: TSESTree.Node | undefined,
+		getMode: (index: number) => Mode | null
+	): boolean {
+		if (!callback) return false;
+		const fn = getLocalFunction(callback);
+		if (fn) {
+			return [0, 1, 2, 3].some((index) => {
+				const mode = getMode(index);
+				return mode != null && isParamMutated(fn, index, mode);
+			});
+		}
+		// e.g. `v.filter(Boolean)`
+		return getGlobalFunctionResult(callback) !== 'none';
+	}
+
+	/** Returns the modes of the parameters of a callback for an array method. */
+	function getArrayCallbackModes(
+		method: string,
+		call: TSESTree.CallExpression,
+		objectDepth: number
+	): (index: number) => Mode | null {
+		const element = toMode(objectDepth - 1);
+		const array = toMode(objectDepth);
+		if (method === 'reduce' || method === 'reduceRight') {
+			// The accumulator is the first element only when no initial value is given.
+			const hasInitialValue = call.arguments.length >= 2;
+			return (index) =>
+				index === 1 || (index === 0 && !hasInitialValue) ? element : index === 3 ? array : null;
+		}
+		if (method === 'sort' || method === 'toSorted') {
+			return (index) => (index <= 1 ? element : null);
+		}
+		return (index) => (index === 0 ? element : index === 2 ? array : null);
+	}
+
+	/** Checks a function that gets the value as an argument, e.g. `fn(v)` or `fn(...v)`. */
+	function isArgumentMutated(
+		call: TSESTree.CallExpression,
+		index: number,
+		mode: Mode,
+		spread: boolean
+	): boolean {
+		// We can't know which parameter gets the value.
+		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return true;
+		const fn = getLocalFunction(call.callee);
+		if (!fn) return true;
+		if (!spread) return isParamMutated(fn, index, toMode(toDepth(mode)));
+		// e.g. `fn(...v)`. The parameters from there get the elements.
+		const elementMode = toMode(toDepth(mode) - 1);
+		return fn.params.some((_, i) => i >= index && isParamMutated(fn, i, elementMode));
+	}
+
+	/** Checks `$inspect(v).with(callback)`. The callback gets the value. */
+	function isInspectMutated(call: TSESTree.CallExpression, mode: Mode): boolean {
+		const member = call.parent;
+		if (member?.type !== 'MemberExpression' || member.object !== call) return false;
+		const withCall = member.parent;
+		if (withCall?.type !== 'CallExpression' || withCall.callee !== member) return true;
+		return withCall.arguments.some((arg) =>
+			isCallbackParamMutated(arg, (index) => (index >= 1 ? toMode(toDepth(mode)) : null))
+		);
+	}
+
+	/**
+	 * Checks what is done with the value returned by a function that is passed as an argument,
+	 * e.g. `$derived.by(() => v)` or `v.map((item) => item)`.
+	 */
+	function isCallbackResultMutated(
 		call: TSESTree.CallExpression,
 		index: number,
 		mode: Mode
 	): boolean {
-		if (call.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) return false;
-		const fn = getLocalFunction(call.callee);
-		return fn != null && isParamMutated(fn, index, mode);
+		const depth = toDepth(mode);
+		const name = getFunctionName(call.callee);
+		if (index === 0 && name != null) {
+			if (RETURN_CALLBACK_RESULT_FUNCTIONS.has(name)) return isValueMutated(call, mode);
+			if (IGNORE_RETURN_FUNCTIONS.has(name)) return false;
+		}
+		// e.g. `Array.from(v, (item) => item)`
+		if (index === 1 && name === 'Array.from') return isValueMutated(call, toMode(depth + 1));
+		const callee = unwrapTS(call.callee);
+		if (index !== 0 || callee.type !== 'MemberExpression') return true;
+		switch (getMethodInfo(callee)?.callback) {
+			case 'map':
+				return isValueMutated(call, toMode(depth + 1));
+			case 'flatMap':
+				return isValueMutated(call, toMode(Math.max(depth, 1)));
+			case 'reduce': {
+				// The returned value becomes the next accumulator and the result.
+				const fn = getLocalFunction(call.arguments[0]);
+				return fn == null || isParamMutated(fn, 0, mode) || isValueMutated(call, mode);
+			}
+			case 'other':
+				return false;
+			default:
+				return true;
+		}
 	}
 
-	/** Checks the callbacks of a method call on the object, e.g. `v.forEach((item) => ...)`. */
-	function isMutatedInCallbacks(call: TSESTree.CallExpression, method: string | null): boolean {
-		return call.arguments.some((arg) => {
-			const fn = getLocalFunction(arg);
-			if (!fn) return false;
-			const indexes =
-				method != null && REDUCE_METHODS.has(method) && call.arguments.length >= 2
-					? [1, 3]
-					: fn.params.map((_, i) => i);
-			return indexes.some((index) => isParamMutated(fn, index, 'shared'));
+	/**
+	 * Checks what is done with the value returned by the function,
+	 * through the given node that has the function, e.g. `get()` for `const get = () => v`.
+	 */
+	function isFunctionResultMutated(use: TSESTree.Node, mode: Mode): boolean {
+		let node = use;
+		while (node.parent && TS_WRAPPERS.has(node.parent.type)) node = node.parent;
+		const parent = node.parent as AnyNode | undefined;
+		switch (parent?.type) {
+			case 'CallExpression':
+				// e.g. `get()`
+				if (parent.callee === node) return isValueMutated(parent, mode);
+				return isCallbackResultMutated(
+					parent,
+					parent.arguments.indexOf(node as TSESTree.CallExpressionArgument),
+					mode
+				);
+			case 'VariableDeclarator': {
+				// e.g. `const get = () => v`
+				if (parent.init !== node || parent.id.type !== 'Identifier') return true;
+				const variable = findVariable(parent.id);
+				return variable == null || isFunctionVariableResultMutated(variable, mode);
+			}
+			case 'SvelteMustacheTag': {
+				// e.g. `<button onclick={() => v}>`. Elements ignore the returned value,
+				// but components may call it and change the value.
+				const attribute = parent.parent as AnyNode;
+				return attribute.type === 'SvelteAttribute' && isComponentElement(attribute.parent?.parent);
+			}
+			case 'SvelteDirective':
+				// e.g. `on:click={() => v}`
+				return parent.kind !== 'EventHandler';
+			default:
+				break;
+		}
+		if ((parent?.type as string) === 'SvelteFunctionBindingsExpression') {
+			// e.g. `bind:value={() => v, (x) => (v = x)}`. A component may change the value of the getter.
+			const bindings = parent as unknown as TSESTree.SequenceExpression;
+			const directive = bindings.parent as AnyNode | undefined;
+			return bindings.expressions[0] === node && isComponentElement(directive?.parent?.parent);
+		}
+		return true;
+	}
+
+	/** Checks the calls through the references of the variable that has the function. */
+	function isFunctionVariableResultMutated(variable: Variable, mode: Mode): boolean {
+		return withCache(
+			variable,
+			`function:${mode}`,
+			() =>
+				isExported(variable) ||
+				variable.references.some(
+					(reference) => !reference.init && isFunctionResultMutated(reference.identifier, mode)
+				)
+		);
+	}
+
+	/** Checks the values returned by the function, e.g. `get().a = 1` for `const get = () => v`. */
+	function isReturnedValueMutated(fn: LocalFunction, mode: Mode): boolean {
+		if (fn.type === 'SvelteSnippetBlock') return false;
+		return withCache(fn, `return:${mode}`, () => {
+			if (fn.type !== 'FunctionDeclaration') return isFunctionResultMutated(fn, mode);
+			if (isExportDeclaration(fn.parent)) return true;
+			const variable = fn.id && findVariable(fn.id);
+			return variable == null || isFunctionVariableResultMutated(variable, mode);
 		});
 	}
 
-	/** Checks whether the node is the getter of a function binding on a component. */
-	function isComponentGetterBinding(parent: AnyNode | null | undefined, node: AnyNode): boolean {
-		if ((parent?.type as string) !== 'SvelteFunctionBindingsExpression') return false;
-		const bindings = parent as unknown as TSESTree.SequenceExpression;
-		const directive = bindings.parent as AnyNode | undefined;
-		return (
-			bindings.expressions[0] === node &&
-			directive?.type === 'SvelteDirective' &&
-			directive.kind === 'Binding' &&
-			isComponentElement(directive.parent?.parent)
-		);
-	}
-
 	/**
-	 * Checks the values returned by the function, e.g. `get().a = 1` for `const get = () => v`.
-	 */
-	function isReturnedValueMutated(fn: LocalFunction, mode: Mode): boolean {
-		if (fn.type === 'SvelteSnippetBlock') return false;
-		const parent = fn.parent as AnyNode;
-		if (parent.type === 'CallExpression') {
-			// e.g. `(() => v)()` or `$derived.by(() => v)`
-			if (
-				parent.callee === fn ||
-				(parent.arguments[0] === fn && getCalleeName(parent.callee) === '$derived.by')
-			) {
-				return isValueMutated(parent, mode);
-			}
-			return false;
-		}
-		// e.g. `<Child bind:value={() => v, (x) => (v = x)} />`
-		if (isComponentGetterBinding(parent, fn)) return true;
-		let id: TSESTree.Identifier | null = null;
-		if (fn.type === 'FunctionDeclaration') id = fn.id;
-		else {
-			// e.g. `const get = (() => v) as Getter`
-			let declarator: AnyNode = parent;
-			while (TS_WRAPPERS.has(declarator.type)) declarator = declarator.parent as AnyNode;
-			if (declarator.type === 'VariableDeclarator' && declarator.id.type === 'Identifier') {
-				id = declarator.id;
-			}
-		}
-		const variable = id && findVariable(id);
-		if (!variable) return false;
-		return withCache(fn, mode, () =>
-			variable.references.some((reference) => {
-				const call = reference.identifier.parent;
-				// e.g. `<Child bind:value={get, set} />`
-				if (isComponentGetterBinding(call, reference.identifier)) return true;
-				return (
-					call?.type === 'CallExpression' &&
-					// e.g. `get()` or `$derived.by(get)`
-					(call.callee === reference.identifier ||
-						(call.arguments[0] === reference.identifier &&
-							getCalleeName(call.callee) === '$derived.by')) &&
-					isValueMutated(call, mode)
-				);
-			})
-		);
-	}
-
-	/**
-	 * Checks whether the value of the given expression (the object or a part of it) is mutated.
+	 * Checks whether the value of the given expression may be mutated.
+	 * `mode` tells how the value relates to the object of the `$state` variable.
 	 */
 	function isValueMutated(expression: TSESTree.Node, mode: Mode): boolean {
 		let node: TSESTree.Node = expression;
-		// Whether `node` is a part of the object (e.g. `v.a`) rather than the value itself.
-		let isMember = mode === 'newContainer';
-		let property: string | null = null;
-		// The number of member accesses after a new container (e.g. `v.filter(f)`).
-		// When it is `0`, `node` is the new container, and when it is `1`, `node` is its property.
-		// Changing them is not a mutation of the object.
-		let newContainerMembers: number | null = mode === 'newContainer' ? 0 : null;
+		let depth = toDepth(mode);
+		// Whether assigning to `node` mutates the object, e.g. `v.a` or an `{#each}` item.
+		let isWritable = mode === 'eachItem';
+		// When `node` is `object.property`: the name of the property and the depth of `object`.
+		let member: { property: string | null; objectDepth: number } | null = null;
 
-		/** Whether `node` is shared with the object, so changing it mutates the object. */
-		function isShared() {
-			return isMember && (newContainerMembers == null || newContainerMembers >= 2);
-		}
-
-		/** Whether assigning to `node` mutates the object. */
-		function isWrite() {
-			return isShared() || (mode === 'eachItem' && !isMember);
-		}
-
-		/** The mode of a value that gets `node`. */
-		function getMode(): Mode {
-			return isMember && newContainerMembers === 0 ? 'newContainer' : 'shared';
+		function moveTo(next: TSESTree.Node, nextDepth: number) {
+			node = next;
+			depth = toDepth(toMode(nextDepth));
+			isWritable = false;
+			member = null;
 		}
 
 		while (node.parent) {
@@ -447,88 +787,124 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'TSTypeAssertion':
 				case 'TSInstantiationExpression':
 				case 'ChainExpression':
-				case 'AwaitExpression':
 					node = parent;
 					continue;
+				case 'AwaitExpression':
 				case 'LogicalExpression':
-				case 'ConditionalExpression':
-					if (parent.type === 'ConditionalExpression' && parent.test === node) return false;
 					// e.g. `(v || x).a = 1`
-					node = parent;
+					moveTo(parent, depth);
+					continue;
+				case 'ConditionalExpression':
+					if (parent.test === node) return false;
+					moveTo(parent, depth);
 					continue;
 				case 'SequenceExpression':
 					if (parent.expressions[parent.expressions.length - 1] !== node) return false;
-					node = parent;
+					moveTo(parent, depth);
 					continue;
 				case 'SpreadElement': {
 					const container = parent.parent as AnyNode;
 					if (container.type === 'ArrayExpression' || container.type === 'ObjectExpression') {
 						// e.g. `[...v]` or `{ ...v }`. A new container whose elements are shared.
-						node = container as TSESTree.Node;
-						isMember = true;
-						newContainerMembers = 0;
-						property = null;
+						moveTo(container as TSESTree.Node, Math.max(depth, 1));
 						continue;
 					}
-					if (container.type === 'CallExpression') {
-						// e.g. `fn(...v)`. The parameters from there get the elements.
-						const index = container.arguments.indexOf(parent);
-						if (container.arguments.slice(0, index).some((arg) => arg.type === 'SpreadElement')) {
-							return false;
-						}
-						const fn = getLocalFunction(container.callee);
-						return (
-							fn != null && fn.params.some((_, i) => i >= index && isParamMutated(fn, i, 'shared'))
-						);
+					if (container.type !== 'CallExpression') return true;
+					// e.g. `fn(...v)`
+					const index = container.arguments.indexOf(parent);
+					const result = getGlobalFunctionResult(container.callee);
+					if (result === 'none') return false;
+					if (result === 'newContainer' && index === 0) {
+						moveTo(container, Math.max(depth, 1));
+						continue;
 					}
-					return false;
+					return isArgumentMutated(container, index, toMode(depth), true);
 				}
 				case 'MemberExpression':
+					// e.g. `x[v]`
 					if (parent.object !== node) return false;
+					member = {
+						property: getPropertyName(parent, getScope(context, parent)),
+						objectDepth: depth
+					};
+					isWritable = depth === 0;
+					depth = Math.max(depth - 1, 0);
 					node = parent;
-					isMember = true;
-					if (newContainerMembers != null) newContainerMembers++;
-					property = getPropertyName(parent, getScope(context, parent));
 					continue;
 				case 'CallExpression': {
 					if (parent.callee === node) {
-						if (!isMember) return false;
+						// e.g. `v()`. It doesn't get the object as `this`.
+						if (!member) return false;
+						const { property, objectDepth } = member;
+						const info = property == null ? null : METHODS.get(property);
+						// It may be a function stored in the object, which may mutate it.
+						if (!info) return true;
 						// e.g. `v.push(1)`
-						if (property != null && MUTATING_METHODS.has(property) && isShared()) return true;
+						if (info.mutates && objectDepth === 0) return true;
 						// e.g. `v.forEach((item) => (item.a = 1))`
-						if (isMutatedInCallbacks(parent, property)) return true;
-						// The returned value may be a part of the object, e.g. `v.find(...).a = 1`.
-						// `[...v].sort()` returns the new array itself. Results of other methods may be shared.
-						newContainerMembers =
-							property != null &&
-							(NEW_ARRAY_METHODS.has(property) ||
-								(RETURN_THIS_METHODS.has(property) && newContainerMembers === 1))
-								? 0
-								: null;
-						node = parent;
-						property = null;
+						if (
+							info.callback &&
+							isCallbackParamMutated(
+								parent.arguments[0],
+								getArrayCallbackModes(property!, parent, objectDepth)
+							)
+						) {
+							return true;
+						}
+						if (info.result === 'none') return false;
+						moveTo(
+							parent,
+							info.result === 'self'
+								? objectDepth
+								: info.result === 'part'
+									? objectDepth - 1
+									: Math.max(objectDepth, 1)
+						);
 						continue;
 					}
 					const index = parent.arguments.indexOf(node as TSESTree.CallExpressionArgument);
-					const calleeName = getCalleeName(parent.callee);
-					if (calleeName != null && PASS_THROUGH_RUNES.has(calleeName) && index === 0) {
+					const name = getGlobalName(parent.callee);
+					if (name != null && PASS_THROUGH_RUNES.has(name) && index === 0) {
 						// e.g. `const a = $derived(v)`
-						node = parent;
+						moveTo(parent, depth);
 						continue;
 					}
-					if (
-						parent.callee.type === 'MemberExpression' &&
-						calleeName != null &&
-						index === 0 &&
-						getMode() === 'shared'
-					) {
-						const [object, method] = calleeName.split('.');
-						// e.g. `Object.assign(v, x)`
-						if (MUTATING_STATIC_METHODS.get(object)?.has(method)) return true;
+					if (name === '$inspect') return isInspectMutated(parent, toMode(depth));
+					const result = getGlobalFunctionResult(parent.callee);
+					if (result === 'none') return false;
+					if (result === 'newContainer' && index === 0) {
+						// e.g. `Array.from(v, (item) => ...)`
+						const elementMode = toMode(depth - 1);
+						if (
+							name === 'Array.from' &&
+							isCallbackParamMutated(parent.arguments[1], (i) => (i === 0 ? elementMode : null))
+						) {
+							return true;
+						}
+						moveTo(parent, Math.max(depth, 1));
+						continue;
+					}
+					const callee = unwrapTS(parent.callee);
+					const info = callee.type === 'MemberExpression' ? getMethodInfo(callee) : null;
+					if (callee.type === 'MemberExpression' && info) {
+						// e.g. `a.includes(v)`. The first argument of methods with a callback is the callback.
+						// Other arguments of them (e.g. `thisArg`) may be passed to the callback.
+						if (info.callback) return index !== 0;
+						// e.g. `a.push(v)`
+						if (info.args === 'stored') return isStoredValueMutated(callee.object, toMode(depth));
+						if (info.args === 'container') {
+							// e.g. `a.concat(v)`
+							moveTo(parent, Math.max(depth, 1));
+							continue;
+						}
+						return false;
 					}
 					// e.g. `fn(v)` or `{@render snippet(v)}`
-					return isPassedToMutatingFunction(parent, index, getMode());
+					return isArgumentMutated(parent, index, toMode(depth), false);
 				}
+				case 'NewExpression':
+					// e.g. `new Date(v)`
+					return parent.callee !== node && getGlobalName(parent.callee) !== 'Date';
 				case 'ReturnStatement':
 				case 'ArrowFunctionExpression': {
 					if (parent.type === 'ArrowFunctionExpression' && parent.body !== node) return false;
@@ -537,80 +913,183 @@ function createDeepMutationChecker(context: RuleContext) {
 					while (fn && !isFunction(fn)) {
 						fn = fn.parent as AnyNode | undefined;
 					}
-					return isFunction(fn) && isReturnedValueMutated(fn, getMode());
+					return !isFunction(fn) || isReturnedValueMutated(fn, toMode(depth));
 				}
 				case 'AssignmentExpression':
-					if (parent.left === node) return isWrite();
+					if (parent.left === node) return isWritable;
+					// e.g. `a += v`. The result is a primitive.
+					if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return false;
 					// e.g. `a = v`
-					if (isPatternMutated(parent.left, getMode())) return true;
-					node = parent;
+					if (isPatternMutated(parent.left, toMode(depth))) return true;
+					moveTo(parent, depth);
 					continue;
 				case 'UpdateExpression':
-					return isWrite();
+					return isWritable;
 				case 'UnaryExpression':
-					return parent.operator === 'delete' && isShared();
+					return parent.operator === 'delete' && isWritable;
+				case 'BinaryExpression':
+				case 'TemplateLiteral':
+				case 'ExpressionStatement':
+				case 'IfStatement':
+				case 'WhileStatement':
+				case 'DoWhileStatement':
+				case 'ForStatement':
+				case 'SwitchStatement':
+				case 'SwitchCase':
+				case 'TSTypeQuery':
+				case 'TSQualifiedName':
+				// Values in the template. Components should not mutate props without `bind:`
+				// (https://svelte.dev/docs/svelte/$props#Updating-props).
+				// falls through
+				case 'SvelteMustacheTag':
+				case 'SvelteShorthandAttribute':
+				case 'SvelteSpreadAttribute':
+				case 'SvelteSpecialDirective':
+				case 'SvelteStyleDirective':
+				case 'SvelteIfBlock':
+				case 'SvelteKeyBlock':
+				case 'SvelteDebugTag':
+				case 'SvelteRenderTag':
+					return false;
 				case 'VariableDeclarator':
 					// e.g. `const a = v`
-					return parent.init === node && isPatternMutated(parent.id, getMode());
+					return parent.init === node && isPatternMutated(parent.id, toMode(depth));
 				case 'Property':
-					// e.g. `({ a: v.a } = x)`
-					if (parent.parent?.type !== 'ObjectPattern') return false;
-					return parent.value === node && isWrite();
+					if (parent.parent?.type === 'ObjectPattern') {
+						// e.g. `({ a: v.a } = x)`
+						return parent.value === node && isWritable;
+					}
+					// e.g. `({ [v]: 1 })`
+					if (parent.value !== node) return false;
+					// e.g. `({ a: v })`
+					moveTo(parent.parent, depth + 1);
+					continue;
+				case 'ArrayExpression':
+					// e.g. `[v]`
+					moveTo(parent, depth + 1);
+					continue;
 				case 'ArrayPattern':
 				case 'RestElement':
 					// e.g. `[v.a] = x`
-					return isWrite();
+					return isWritable;
 				case 'AssignmentPattern':
-					if (parent.left === node) return isWrite();
+					if (parent.left === node) return isWritable;
 					// e.g. `const { a = v } = x`
-					return isPatternMutated(parent.left, getMode());
+					return isPatternMutated(parent.left, toMode(depth));
 				case 'ForOfStatement':
 				case 'ForInStatement':
-					if (parent.left === node) return isWrite();
+					if (parent.left === node) return isWritable;
 					if (parent.type === 'ForInStatement') return false;
 					// e.g. `for (const item of v)`
 					return isPatternMutated(
 						parent.left.type === 'VariableDeclaration'
 							? parent.left.declarations[0].id
 							: parent.left,
-						'shared'
+						toMode(depth - 1)
 					);
 				case 'SvelteEachBlock':
 					// e.g. `{#each v as item}`
 					return (
 						parent.expression === node &&
 						parent.context != null &&
-						isPatternMutated(parent.context, 'eachItem')
+						isPatternMutated(parent.context, depth === 0 ? 'eachItem' : toMode(depth - 1))
 					);
-				case 'SvelteDirective':
-					if (parent.kind === 'Action') {
-						// e.g. `use:action={v}`
-						const name = parent.key.name;
-						const fn =
-							parent.expression === node && name.type === 'Identifier'
-								? getLocalFunction(name)
-								: null;
-						return fn != null && isParamMutated(fn, 1, getMode());
-					}
-					if (parent.kind !== 'Binding') return false;
-					if (isWrite()) return true;
-					// e.g. `<Child bind:value={v} />` that may mutate it. `bind:this` never does.
+				case 'SvelteAwaitBlock': {
+					// e.g. `{#await v then value}`. `value` is `v` if it is not a promise.
+					const value = parent.then?.value;
 					return (
-						isComponentElement(parent.parent?.parent) &&
-						(parent.key.name as { name?: unknown }).name !== 'this'
+						parent.expression === node && value != null && isPatternMutated(value, toMode(depth))
 					);
+				}
+				case 'SvelteDirective': {
+					if (parent.kind === 'Binding') {
+						if (isWritable) return true;
+						// e.g. `<Child bind:value={v} />` may mutate it. `bind:this` never does.
+						return (
+							isComponentElement(parent.parent?.parent) &&
+							(parent.key.name as { name?: unknown }).name !== 'this'
+						);
+					}
+					if (parent.kind === 'Class' || parent.kind === 'EventHandler') return false;
+					if (
+						parent.kind !== 'Action' &&
+						parent.kind !== 'Transition' &&
+						parent.kind !== 'Animation'
+					) {
+						return true;
+					}
+					// e.g. `use:action={v}`
+					const name = parent.key.name;
+					if (name.type !== 'Identifier') return true;
+					const importName = getImportName(name);
+					if (importName != null && SVELTE_MOTION_MODULES.has(importName.split('#')[0])) {
+						return false;
+					}
+					const fn = getLocalFunction(name);
+					return (
+						fn == null || isParamMutated(fn, parent.kind === 'Animation' ? 2 : 1, toMode(depth))
+					);
+				}
 				default:
-					return false;
+					return true;
 			}
 		}
-		return false;
+		return true;
+	}
+
+	/** Checks whether the expression always has a primitive value, which can't be mutated. */
+	function isPrimitive(expression: TSESTree.Node): boolean {
+		const node = unwrapTS(expression);
+		switch (node.type) {
+			case 'Literal':
+				return !('regex' in node && node.regex);
+			case 'TemplateLiteral':
+			case 'BinaryExpression':
+			case 'UnaryExpression':
+			case 'UpdateExpression':
+				return true;
+			case 'LogicalExpression':
+				return isPrimitive(node.left) && isPrimitive(node.right);
+			case 'ConditionalExpression':
+				return isPrimitive(node.consequent) && isPrimitive(node.alternate);
+			case 'SequenceExpression':
+				return isPrimitive(node.expressions[node.expressions.length - 1]);
+			case 'Identifier':
+				return node.name === 'undefined' && getGlobalName(node) != null;
+			case 'CallExpression': {
+				const name = getGlobalName(node.callee);
+				if (name == null) return false;
+				const [object, method] = name.split('.');
+				return (
+					PRIMITIVE_GLOBAL_FUNCTIONS.has(name) ||
+					(method != null && READ_ONLY_GLOBAL_OBJECTS.has(object))
+				);
+			}
+			default:
+				return false;
+		}
+	}
+
+	/** Checks whether every value assigned to the variable is a primitive. */
+	function hasOnlyPrimitives(variable: Variable): boolean {
+		return variable.references.every((reference) => {
+			// The initial value of `$state()` is removed by the rewrite.
+			if (reference.init || !reference.isWrite()) return true;
+			const id = reference.identifier;
+			const parent = id.parent;
+			if (parent?.type === 'UpdateExpression') return true;
+			if (parent?.type !== 'AssignmentExpression' || parent.left !== id) return false;
+			// e.g. `v += 1`
+			if (!['=', '||=', '&&=', '??='].includes(parent.operator)) return true;
+			return isPrimitive(parent.right);
+		});
 	}
 
 	return (variable: Variable) => {
 		visited.clear();
 		stops = 0;
 		depth = 0;
-		return isVariableMutated(variable, 'shared');
+		return !hasOnlyPrimitives(variable) && isVariableMutated(variable, 0);
 	};
 }
 

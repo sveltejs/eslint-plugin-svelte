@@ -5,7 +5,7 @@ export function createUser(data: { user: { name: string } }) {
 	});
 	return {
 		get name() {
-			return user.name;
+			return `${user.name}`;
 		}
 	};
 }

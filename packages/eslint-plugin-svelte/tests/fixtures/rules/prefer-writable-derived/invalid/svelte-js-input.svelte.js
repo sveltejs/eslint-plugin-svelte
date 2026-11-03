@@ -4,8 +4,8 @@ export function createUser(data) {
 		user = data.user;
 	});
 	return {
-		get user() {
-			return user;
+		get json() {
+			return JSON.stringify(user);
 		}
 	};
 }

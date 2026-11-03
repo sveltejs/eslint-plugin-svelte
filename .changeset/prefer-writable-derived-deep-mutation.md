@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-Stop `svelte/prefer-writable-derived` from reporting a `$state` variable that is mutated through its properties (including through `{#each}` items, aliases and `bind:` on components), since `$derived` is not deeply reactive.
+Stop `svelte/prefer-writable-derived` from reporting a `$state` variable whose object may be mutated, since `$derived` is not deeply reactive. The rule now reports only when every use of the object is known to be safe.

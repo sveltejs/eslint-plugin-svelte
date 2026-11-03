@@ -1,19 +1,22 @@
 <script>
 	import Child from './Child.svelte';
-	import { format } from './format.js';
 	const { data } = $props();
 	let user = $state(data.user);
 	$effect(() => {
 		user = data.user;
 	});
 	const show = (u) => u.name;
+	const json = $derived(JSON.stringify($state.snapshot(user)));
 </script>
 
 {#each user.items as item (item.id)}
-	<p>{item.name}</p>
+	<p>{item.name.toUpperCase()}</p>
 {/each}
-<p>{show(user)} {format(user)}</p>
+{#each Object.entries(user) as [key, value]}
+	<p>{key}: {String(value)}</p>
+{/each}
+<p>{show(user)} {json}</p>
 <p>{user.items.map((item) => item.name).join(', ')}</p>
 <p>{user.items.filter(Boolean).sort().length}</p>
-<Child value={user} />
+<Child value={user} {...user} />
 <input bind:value={user} />
