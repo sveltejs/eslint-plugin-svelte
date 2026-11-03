@@ -1,0 +1,4 @@
+- message: Component event name must start with "on".
+  line: 7
+  column: 5
+  suggestions: null

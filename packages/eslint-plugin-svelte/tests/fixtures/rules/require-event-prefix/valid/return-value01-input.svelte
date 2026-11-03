@@ -4,9 +4,8 @@
     formatDate: (date: Date) => string;
     isVisible: (index: number) => boolean;
     validate: (value: string) => boolean | void;
-    fail: () => never;
     load(): Promise<string>;
   }
 
-  let { getHref, formatDate, isVisible, validate, fail, load }: Props = $props();
+  let { getHref, formatDate, isVisible, validate, load }: Props = $props();
 </script>

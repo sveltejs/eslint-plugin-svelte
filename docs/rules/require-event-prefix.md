@@ -16,9 +16,17 @@ Starting with Svelte 5, component events are just component props that are funct
 
 Function props that return a value (e.g. `getHref: (item: Item) => string`) are not events, so this rule ignores them. The rule checks a function prop only if it returns:
 
-- `void` or `undefined`, including unions like `void | Promise<void>`.
-- `any` or `unknown`, written directly as the return type. A type that only resolves to `unknown`, like an unconstrained generic `T`, counts as a value.
+- No value: `void`, `undefined`, `null`, or `never`.
+- `any` or `unknown`, because the rule cannot tell.
+- A union of the above, or a union of the above and a Promise of the above (e.g. `void | Promise<void>`).
 - A Promise of one of the above (e.g. `Promise<void>`), only when `checkAsyncFunctions` is enabled.
+
+These count as a value:
+
+- A union with a value (e.g. `boolean | void`).
+- A return type that uses a generic, like `T` in `<script generics="T">` or `U` in `pick<U>(value: U): U` (e.g. `T`, `keyof T`, `Promise<T>`, or a type alias that uses `T`). This does not apply if the constraint of the generic is `void`, `undefined`, `null`, or a Promise of them (e.g. `V extends void`). A default type of a generic (e.g. `generics="T = void"`) is not used.
+- `any` or `unknown` that comes from a type parameter of the props type (e.g. `getItem: () => X` with `Props<unknown>`).
+- A function with overloads, if one of the overloads returns a value.
 
 <!--eslint-skip-->
 
@@ -65,7 +73,7 @@ Function props that return a value (e.g. `getHref: (item: Item) => string`) are 
 }
 ```
 
-- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return a Promise of `void`, `undefined`, `any`, or `unknown` (e.g. `Promise<void>`). Default `false`.
+- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return a Promise of no value, `any`, or `unknown` (e.g. `Promise<void>`). Default `false`.
 
 ## :books: Further Reading
 
