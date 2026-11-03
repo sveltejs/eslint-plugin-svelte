@@ -559,10 +559,21 @@ function createDeepMutationChecker(context: RuleContext) {
 	 * Checks whether the node is an array literal or an object literal without accessors, methods
 	 * or properties that the language may call (e.g. `toString`), so using it doesn't run any code.
 	 */
+	const plainLiterals = new Map<TSESTree.ObjectExpression, boolean>();
+
 	function isPlainLiteral(expression: TSESTree.Node): boolean {
 		const node = unwrapTS(expression);
 		if (node.type === 'ArrayExpression') return true;
 		if (node.type !== 'ObjectExpression') return false;
+		let result = plainLiterals.get(node);
+		if (result == null) {
+			result = checkPlainObject(node);
+			plainLiterals.set(node, result);
+		}
+		return result;
+	}
+
+	function checkPlainObject(node: TSESTree.ObjectExpression): boolean {
 		return node.properties.every((property) => {
 			if (property.type === 'SpreadElement') return true;
 			if (property.kind !== 'init' || property.method) return false;
@@ -1126,7 +1137,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					const result = getGlobalFunctionResult(container.callee, container);
 					if (result === 'none') return false;
 					if (result === 'newContainer' && index === 0) {
-						moveTo(container, 1);
+						moveTo(container, 1, getGlobalName(container.callee) === 'Object.fromEntries');
 						continue;
 					}
 					return isArgumentMutated(container, index, getMode(), true);
@@ -1200,7 +1211,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						) {
 							return true;
 						}
-						moveTo(parent, 1);
+						// `Object.fromEntries()` returns a new object, which may get functions from the entries.
+						moveTo(parent, 1, name === 'Object.fromEntries');
 						continue;
 					}
 					const callee = unwrapTS(parent.callee);
@@ -1239,6 +1251,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						fn = fn.parent as AnyNode | undefined;
 					}
 					if (!isFunction(fn)) return true;
+					// e.g. `async () => ({ ...v })`. The promise calls `then` of the object.
+					if (isObject && fn.type !== 'SvelteSnippetBlock' && fn.async) return true;
 					// e.g. `v.map((item) => item.a)`. The result is followed from `v`.
 					if (!isObject && isCallbackParamOfBuiltinMethod(expression, fn)) return false;
 					return isReturnedValueMutated(fn, getMode());
@@ -1248,6 +1262,8 @@ function createDeepMutationChecker(context: RuleContext) {
 						// e.g. `copy.forEach = fn`. It may be called with the object as `this`,
 						// since methods with built-in names are trusted.
 						if (isMethodProperty() && !isPrimitive(parent.right)) return true;
+						// e.g. `o += 1` converts the new object with `valueOf`.
+						if (isObject && parent.operator !== '=') return true;
 						return isWritable;
 					}
 					// e.g. `a += v`. The result is a primitive, but a new object is converted with `valueOf`.
@@ -1257,7 +1273,7 @@ function createDeepMutationChecker(context: RuleContext) {
 					moveTo(parent, depth, isObject);
 					continue;
 				case 'UpdateExpression':
-					return isWritable;
+					return isWritable || isObject;
 				case 'UnaryExpression':
 					if (parent.operator === 'delete') return isWritable;
 					// e.g. `+{ ...v }` calls `valueOf` of the object.
@@ -1268,6 +1284,15 @@ function createDeepMutationChecker(context: RuleContext) {
 				case 'SvelteMustacheTag': {
 					if (isObject) return true;
 					const attribute = parent.parent as AnyNode | null;
+					// e.g. `<option>{v}</option>`. Svelte uses it as the value of the option,
+					// and `bind:value` of the `<select>` gives it back.
+					if (
+						attribute?.type === 'SvelteElement' &&
+						attribute.kind === 'html' &&
+						attribute.name.name === 'option'
+					) {
+						return true;
+					}
 					return attribute?.type === 'SvelteAttribute' && isAttributeEscaping(attribute);
 				}
 				case 'SvelteShorthandAttribute':
@@ -1276,6 +1301,11 @@ function createDeepMutationChecker(context: RuleContext) {
 					// e.g. `<svelte:element this={{ ...v }}>` converts it with `toString`.
 					return isObject;
 				case 'BinaryExpression':
+					// e.g. `v instanceof C` passes it to `C[Symbol.hasInstance]`.
+					// Global classes use the built-in one.
+					if (parent.operator === 'instanceof') {
+						return parent.left === node && getGlobalName(parent.right) == null;
+					}
 					// e.g. `{ ...v } + ''` calls `toString` of the object.
 					return (
 						isObject &&
@@ -1305,8 +1335,10 @@ function createDeepMutationChecker(context: RuleContext) {
 					return parent.init === node && isPatternMutated(parent.id, getMode());
 				case 'Property':
 					if (parent.parent?.type === 'ObjectPattern') {
+						// e.g. `({ [o]: a } = x)` converts the new object to a key.
+						if (parent.value !== node) return isObject;
 						// e.g. `({ a: v.a } = x)`
-						return parent.value === node && (isWritable || isMethodProperty());
+						return isWritable || isMethodProperty();
 					}
 					// e.g. `({ [v]: 1 })`. A new object is converted to a key with `toString`.
 					if (parent.value !== node) return isObject;
