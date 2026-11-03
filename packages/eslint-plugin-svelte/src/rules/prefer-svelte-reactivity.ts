@@ -162,24 +162,53 @@ function getEnclosingFunction(node: TSESTree.Node): FunctionNode | null {
 	return null;
 }
 
+const TS_WRAPPER_TYPES = new Set<string>([
+	'TSAsExpression',
+	'TSNonNullExpression',
+	'TSSatisfiesExpression',
+	'TSTypeAssertion',
+	'TSInstantiationExpression'
+]);
+
+/**
+ * Methods that return the instance itself, e.g. `set.add(1)` returns `set`.
+ */
+const SELF_RETURNING_METHODS = new Set(['add', 'set']);
+
+/**
+ * Properties that return an object linked to the instance, e.g. `url.searchParams`.
+ */
+const LINKED_PROPERTIES = new Set(['searchParams']);
+
+/**
+ * Global functions that only read or copy their arguments and never keep them.
+ */
+const COPYING_FUNCTIONS = new Set(['String', 'Number', 'Boolean']);
+const COPYING_CONSTRUCTORS = new Set(['Date', 'Map', 'Set', 'URL', 'URLSearchParams']);
+const COPYING_STATIC_METHODS = new Map([
+	['Array', new Set(['from'])],
+	['JSON', new Set(['stringify'])]
+]);
+
 /**
  * Checks whether the instance is created inside a function and never leaves it,
- * e.g. it is not returned, stored outside, or used by a nested function.
+ * e.g. it is not returned, stored outside, passed to a function, or used by a nested function or a rune.
+ * When we are not sure, we treat it as leaving the function.
  */
 function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression): boolean {
 	const fn = getEnclosingFunction(ctorNode);
 	if (!fn) return false;
 
-	const parent = ctorNode.parent;
-	// A temporary instance, e.g. `new Date(date).setHours(0)`
-	if (parent.type === 'MemberExpression' && parent.object === ctorNode) {
-		return true;
+	let expr: TSESTree.Node = ctorNode;
+	while (TS_WRAPPER_TYPES.has(expr.parent!.type)) {
+		expr = expr.parent!;
 	}
-	if (
-		parent.type !== 'VariableDeclarator' ||
-		parent.init !== ctorNode ||
-		parent.id.type !== 'Identifier'
-	) {
+	const parent = expr.parent!;
+	if (parent.type !== 'VariableDeclarator' || parent.init !== expr) {
+		// A temporary instance, e.g. `new Date(date).setHours(0)`
+		return !isLeaked(context, ctorNode);
+	}
+	if (parent.id.type !== 'Identifier') {
 		return false;
 	}
 	const variable = findVariable(context, parent.id);
@@ -188,39 +217,163 @@ function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression):
 		if (reference.init) return true;
 		const identifier = reference.identifier as TSESTree.Identifier;
 		if (getEnclosingFunction(identifier) !== fn) return false;
-		return reference.isWrite() || !isLeaked(identifier);
+		if (isInRuneArguments(identifier, fn)) return false;
+		if (reference.isWrite()) {
+			// `set ||= other` evaluates to `set`.
+			return !reference.isRead() || !isLeaked(context, identifier.parent);
+		}
+		return !isLeaked(context, identifier);
 	});
 }
 
 /**
- * Checks whether the value of the node may be stored or returned.
+ * Checks whether the node is in the arguments of a rune call such as `$derived(set.size)`.
+ * The compiler turns the arguments into a closure, so they may be evaluated after the function returns.
  */
-function isLeaked(node: TSESTree.Node): boolean {
+function isInRuneArguments(node: TSESTree.Node, fn: FunctionNode): boolean {
+	let current: TSESTree.Node = node;
+	while (current.parent && current.parent !== fn) {
+		const parent: TSESTree.Node = current.parent;
+		if (
+			(parent.type === 'CallExpression' || parent.type === 'NewExpression') &&
+			parent.callee !== current
+		) {
+			let callee: TSESTree.Node = parent.callee;
+			while (callee.type === 'MemberExpression') {
+				callee = callee.object;
+			}
+			if (callee.type === 'Identifier' && callee.name.startsWith('$')) {
+				return true;
+			}
+		}
+		current = parent;
+	}
+	return false;
+}
+
+/**
+ * Checks whether the value of the node may leave the function.
+ * It returns `true` unless the value is surely only read in place.
+ */
+function isLeaked(context: RuleContext, node: TSESTree.Node): boolean {
 	const parent = node.parent;
-	if (!parent) return false;
+	if (!parent) return true;
 	switch (parent.type) {
-		case 'ReturnStatement':
-		case 'YieldExpression':
-		case 'ArrayExpression':
-		case 'Property':
-		case 'VariableDeclarator':
-			return true;
-		case 'ArrowFunctionExpression':
-			return parent.body === node;
-		case 'AssignmentExpression':
-			return parent.right === node;
+		case 'ExpressionStatement':
+		case 'BinaryExpression':
+		case 'UnaryExpression':
+		case 'SpreadElement':
+		case 'IfStatement':
+		case 'WhileStatement':
+		case 'DoWhileStatement':
+		case 'ForStatement':
+		case 'ForInStatement':
+		case 'ForOfStatement':
+		case 'SwitchStatement':
+		case 'SwitchCase':
+			return false;
+		case 'TemplateLiteral':
+			// The tag function of a tagged template receives the value.
+			return parent.parent?.type === 'TaggedTemplateExpression';
+		case 'ConditionalExpression':
+			return parent.test !== node && isLeaked(context, parent);
+		case 'SequenceExpression':
+			return parent.expressions.at(-1) === node && isLeaked(context, parent);
+		case 'LogicalExpression':
 		case 'AwaitExpression':
 		case 'ChainExpression':
-		case 'ConditionalExpression':
-		case 'LogicalExpression':
-		case 'SequenceExpression':
-		case 'TSAsExpression':
-		case 'TSNonNullExpression':
-		case 'TSSatisfiesExpression':
-			return isLeaked(parent);
+			return isLeaked(context, parent);
+		case 'MemberExpression':
+			if (parent.object !== node) {
+				// Used as a computed key, e.g. `obj[set]`
+				return false;
+			}
+			return isMemberLeaked(context, parent);
+		case 'CallExpression':
+		case 'NewExpression':
+			return parent.callee === node || !isCopyingCall(context, parent);
 		default:
-			return false;
+			return TS_WRAPPER_TYPES.has(parent.type) ? isLeaked(context, parent) : true;
 	}
+}
+
+/**
+ * Checks whether a member access on the instance may let the instance leave the function.
+ */
+function isMemberLeaked(context: RuleContext, member: TSESTree.MemberExpression): boolean {
+	const parent = member.parent;
+	if (
+		(parent.type === 'AssignmentExpression' && parent.left === member) ||
+		(parent.type === 'UpdateExpression' && parent.argument === member)
+	) {
+		// Mutation, e.g. `url.pathname = '/'`
+		return false;
+	}
+	let name: string | null = null;
+	if (!member.computed) {
+		name = member.property.type === 'Identifier' ? member.property.name : null;
+	} else if (member.property.type === 'Literal') {
+		name = String(member.property.value);
+	}
+	if (name === null) {
+		// We don't know which member is used.
+		return true;
+	}
+	if (SELF_RETURNING_METHODS.has(name)) {
+		if (parent.type === 'CallExpression' && parent.callee === member) {
+			return isLeaked(context, parent);
+		}
+		// e.g. `const add = set.add`
+		return isLeaked(context, member);
+	}
+	if (LINKED_PROPERTIES.has(name)) {
+		return isLeaked(context, member);
+	}
+	if (name === 'forEach') {
+		// The callback receives the instance as the third parameter.
+		// (A non-arrow function can also get it through `arguments`.)
+		return !(
+			parent.type === 'CallExpression' &&
+			parent.callee === member &&
+			parent.arguments.every(
+				(arg) =>
+					arg.type === 'ArrowFunctionExpression' &&
+					arg.params.length < 3 &&
+					arg.params.every((param) => param.type !== 'RestElement')
+			)
+		);
+	}
+	return false;
+}
+
+/**
+ * Checks whether the call only reads or copies its arguments, e.g. `Array.from(set)`.
+ */
+function isCopyingCall(
+	context: RuleContext,
+	call: TSESTree.CallExpression | TSESTree.NewExpression
+): boolean {
+	const callee = call.callee;
+	if (callee.type === 'Identifier') {
+		const names = call.type === 'NewExpression' ? COPYING_CONSTRUCTORS : COPYING_FUNCTIONS;
+		return names.has(callee.name) && isGlobal(context, callee);
+	}
+	if (
+		call.type === 'CallExpression' &&
+		callee.type === 'MemberExpression' &&
+		!callee.computed &&
+		callee.object.type === 'Identifier' &&
+		callee.property.type === 'Identifier'
+	) {
+		const methods = COPYING_STATIC_METHODS.get(callee.object.name);
+		return Boolean(methods?.has(callee.property.name)) && isGlobal(context, callee.object);
+	}
+	return false;
+}
+
+function isGlobal(context: RuleContext, node: TSESTree.Identifier): boolean {
+	const variable = findVariable(context, node);
+	return !variable || variable.defs.length === 0;
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {

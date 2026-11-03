@@ -15,7 +15,7 @@
 
 	const href = $derived.by(() => {
 		const url = new URL(base);
-		url.searchParams.set('q', 'x');
+		url.pathname = '/search';
 		return url.href;
 	});
 </script>
