@@ -2,7 +2,8 @@
   interface Props {
     custom: () => any;
     other(): unknown;
+    wrapped: () => (unknown);
   }
 
-  let { custom, other }: Props = $props();
+  let { custom, other, wrapped }: Props = $props();
 </script>

@@ -14,7 +14,11 @@ since: 'v3.6.0'
 
 Starting with Svelte 5, component events are just component props that are functions and so can be called like any function. Events for HTML elements all have their name begin with "on" (e.g. `onclick`). This rule enforces that all component events (i.e. function props) also begin with "on".
 
-Function props that return a value (e.g. `getHref: (item: Item) => string`) are not events, so this rule ignores them. Only functions that return `void`, `undefined`, `any`, or `unknown` are checked (and `Promise<void>` when `checkAsyncFunctions` is enabled).
+Function props that return a value (e.g. `getHref: (item: Item) => string`) are not events, so this rule ignores them. The rule checks a function prop only if it returns:
+
+- `void` or `undefined`, including unions like `void | Promise<void>`.
+- `any` or `unknown`, written directly as the return type. A type that only resolves to `unknown`, like an unconstrained generic `T`, counts as a value.
+- A Promise of one of the above (e.g. `Promise<void>`), only when `checkAsyncFunctions` is enabled.
 
 <!--eslint-skip-->
 
@@ -61,7 +65,7 @@ Function props that return a value (e.g. `getHref: (item: Item) => string`) are 
 }
 ```
 
-- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return `Promise<void>`. Default `false`.
+- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return a Promise of `void`, `undefined`, `any`, or `unknown` (e.g. `Promise<void>`). Default `false`.
 
 ## :books: Further Reading
 

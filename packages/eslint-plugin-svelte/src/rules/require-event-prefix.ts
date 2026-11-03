@@ -11,7 +11,7 @@ import {
 	isVoidType,
 	getCallSignaturesOfType
 } from '../utils/ts-utils/index.js';
-import type { Symbol, Type } from 'typescript';
+import type { Symbol, Type, TypeNode } from 'typescript';
 import type { CallExpression } from 'estree';
 
 export default createRule('require-event-prefix', {
@@ -108,10 +108,12 @@ function isFunctionLike(functionSymbol: Symbol, tsTools: TSTools): boolean {
 }
 
 /**
- * Checks whether the function returns nothing (`void` or `undefined`).
- * `any` and `unknown` are also treated as events because we cannot tell.
- * Functions that return a value (e.g. `getHref: (item: T) => string`) are not events.
- * `Promise<void>` is treated as an event only when `checkAsyncFunctions` is enabled.
+ * Checks whether the function looks like an event handler, based on its return type.
+ * - `void` / `undefined` (and unions such as `void | Promise<void>`): event.
+ * - `any` / `unknown` written as a keyword: event, because we cannot tell.
+ *   A type that only resolves to `unknown` (e.g. an unconstrained generic `T`) is a value.
+ * - Promise-like of the above (e.g. `Promise<void>`): event only when `checkAsyncFunctions` is enabled.
+ * - Anything else (e.g. `getHref: (item: T) => string`): not an event.
  */
 function isEventLike(
 	functionSymbol: Symbol,
@@ -130,30 +132,61 @@ function isEventLike(
 		return true;
 	}
 	return signatures.every((signature) => {
-		const returnType = checker.getReturnTypeOfSignature(signature);
-		if (isVoidOrUnknownType(returnType, tsTools)) {
-			return true;
-		}
-		if (returnType.getSymbol()?.getName() === 'Promise') {
-			const awaitedType = checker.getAwaitedType(returnType);
-			return (
-				checkAsyncFunctions &&
-				awaitedType !== undefined &&
-				isVoidOrUnknownType(awaitedType, tsTools)
-			);
-		}
-		return false;
+		const kind = getReturnKind(
+			checker.getReturnTypeOfSignature(signature),
+			signature.getDeclaration()?.type,
+			tsTools
+		);
+		return kind === 'void' || (kind === 'async' && checkAsyncFunctions);
 	});
 }
 
-function isVoidOrUnknownType(type: Type, tsTools: TSTools): boolean {
+type ReturnKind = 'void' | 'async' | 'value';
+
+function getReturnKind(type: Type, typeNode: TypeNode | undefined, tsTools: TSTools): ReturnKind {
+	const { ts } = tsTools;
+	if (isVoidType(type, ts) || isUndefinedType(type, ts)) {
+		return 'void';
+	}
+	if (isAnyType(type, ts) || isUnknownType(type, ts)) {
+		return isAnyOrUnknownKeyword(typeNode, tsTools) ? 'void' : 'value';
+	}
 	if (type.isUnion()) {
-		return type.types.every((t) => isVoidOrUnknownType(t, tsTools));
+		// Union members are never `any` / `unknown`, so we don't need their type nodes.
+		const kinds = type.types.map((t) => getReturnKind(t, undefined, tsTools));
+		if (kinds.includes('value')) {
+			return 'value';
+		}
+		// e.g. `void | Promise<void>` may return synchronously, so it is treated like `void`.
+		return kinds.includes('void') ? 'void' : 'async';
+	}
+	const checker = tsTools.service.program.getTypeChecker();
+	if (checker.getPropertyOfType(checker.getApparentType(type), 'then') === undefined) {
+		return 'value';
+	}
+	const awaitedType = checker.getAwaitedType(type);
+	if (awaitedType === undefined || awaitedType === type) {
+		return 'value';
+	}
+	const awaitedTypeNode =
+		typeNode !== undefined && ts.isTypeReferenceNode(typeNode)
+			? typeNode.typeArguments?.[0]
+			: undefined;
+	return getReturnKind(awaitedType, awaitedTypeNode, tsTools) === 'value' ? 'value' : 'async';
+}
+
+/**
+ * Returns `true` if the type node is `any` / `unknown` written as a keyword, or if there is no type node.
+ */
+function isAnyOrUnknownKeyword(typeNode: TypeNode | undefined, tsTools: TSTools): boolean {
+	const { ts } = tsTools;
+	let node = typeNode;
+	while (node !== undefined && ts.isParenthesizedTypeNode(node)) {
+		node = node.type;
 	}
 	return (
-		isVoidType(type, tsTools.ts) ||
-		isUndefinedType(type, tsTools.ts) ||
-		isAnyType(type, tsTools.ts) ||
-		isUnknownType(type, tsTools.ts)
+		node === undefined ||
+		node.kind === ts.SyntaxKind.AnyKeyword ||
+		node.kind === ts.SyntaxKind.UnknownKeyword
 	);
 }
