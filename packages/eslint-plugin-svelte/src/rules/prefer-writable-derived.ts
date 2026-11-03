@@ -1,4 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types';
+import type { Variable } from '@typescript-eslint/scope-manager';
+import type { AST } from 'svelte-eslint-parser';
 import { createRule } from '../utils/index.js';
 import { getScope } from '../utils/ast-utils.js';
 import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
@@ -71,6 +73,59 @@ function isStateVariable(init: TSESTree.Expression | null): init is TSESTree.Cal
 	);
 }
 
+const MUTATING_METHODS = new Set([
+	// Array
+	'copyWithin',
+	'fill',
+	'pop',
+	'push',
+	'reverse',
+	'shift',
+	'sort',
+	'splice',
+	'unshift',
+	// Map / Set
+	'add',
+	'clear',
+	'delete',
+	'set'
+]);
+
+/**
+ * Checks whether the variable is mutated through one of its properties,
+ * e.g. `v.a = 1`, `v.a++`, `delete v.a`, `bind:value={v.a}` or `v.push(1)`.
+ * `$state` makes objects deeply reactive but `$derived` does not,
+ * so such a variable can't be rewritten to `$derived`.
+ */
+function isDeeplyMutated(variable: Variable): boolean {
+	return variable.references.some((reference) => {
+		let node: TSESTree.Node = reference.identifier as TSESTree.Node;
+		let property: string | null = null;
+		while (node.parent?.type === 'MemberExpression' && node.parent.object === node) {
+			node = node.parent;
+			property = !node.computed && node.property.type === 'Identifier' ? node.property.name : null;
+		}
+		if (node === reference.identifier) return false;
+
+		const parent = node.parent as TSESTree.Node | AST.SvelteDirective | undefined;
+		if (!parent) return false;
+		switch (parent.type) {
+			case 'AssignmentExpression':
+				return parent.left === node;
+			case 'UpdateExpression':
+				return true;
+			case 'UnaryExpression':
+				return parent.operator === 'delete';
+			case 'CallExpression':
+				return parent.callee === node && property != null && MUTATING_METHODS.has(property);
+			case 'SvelteDirective':
+				return parent.kind === 'Binding';
+			default:
+				return false;
+		}
+	});
+}
+
 export default createRule('prefer-writable-derived', {
 	meta: {
 		docs: {
@@ -125,6 +180,10 @@ export default createRule('prefer-writable-derived', {
 
 				const { init } = def.node;
 				if (!isStateVariable(init)) {
+					return;
+				}
+
+				if (isDeeplyMutated(reference.resolved!)) {
 					return;
 				}
 

@@ -43,6 +43,25 @@ The rule specifically looks for patterns where:
 
 When this pattern is detected, the rule suggests refactoring to use `$derived()` instead, which provides the same functionality in a more concise way.
 
+The rule does not report a variable that is mutated through its properties (e.g. `value.name = 'foo'`, `bind:value={value.name}` or `value.push(item)`). `$state` makes objects and arrays [deeply reactive](https://svelte.dev/docs/svelte/$state#Deep-state), but [`$derived` does not](https://svelte.dev/docs/svelte/$derived#Deriveds-and-reactivity), so such mutations would no longer update the UI.
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/prefer-writable-derived: "error" */
+  const { data } = $props();
+
+  // ✓ GOOD
+  let user = $state(data.user);
+  $effect(() => {
+    user = data.user;
+  });
+</script>
+
+<input bind:value={user.name} />
+```
+
 ## :wrench: Options
 
 Nothing.
