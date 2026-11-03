@@ -2,20 +2,26 @@
 pageClass: 'rule-details'
 sidebarDepth: 0
 title: 'svelte/valid-prop-names-in-kit-pages'
-description: 'disallow props other than data or errors in SvelteKit page components.'
+description: 'disallow invalid props in SvelteKit route components.'
 since: 'v2.12.0'
 ---
 
 # svelte/valid-prop-names-in-kit-pages
 
-> disallow props other than data or errors in SvelteKit page components.
+> disallow invalid props in SvelteKit route components.
 
 - :gear: This rule is included in `"plugin:svelte/recommended"`.
 
 ## :book: Rule Details
 
-This rule reports unexpected exported variables at `<script>`.<br>
-At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to the props returned from a load function, page components now have a single data prop.
+This rule reports unexpected exported variables in `<script>`.<br>
+As of SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to the props returned from a load function, page components now have a single data prop.
+
+The valid props depend on the file type:
+
+- `+page.svelte` and `+layout.svelte`: `data`, `errors`, `form`, `params`, `snapshot`
+- `+layout.svelte` (Svelte 5): additionally allows `children`
+- `+error.svelte` (Svelte 5.53): `error`
 
 <!--eslint-skip-->
 
@@ -28,13 +34,13 @@ At SvelteKit v1.0.0-next.405, instead of having multiple props corresponding to 
   export let form;
   export let params;
   export let snapshot;
-  // export let { data, errors } = { data: {}, errors: {} }
+  // export let { data } = { data: {} }
 
   /** ✗ BAD */
   export let foo;
   export let bar;
   export let { baz, qux } = data;
-  export let { data: data2, errors: errors2 } = { data: {}, errors: {} };
+  export let { data: data2 } = { data: {} };
 </script>
 
 {foo}, {bar}

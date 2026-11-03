@@ -18,16 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
       - name: Install Dependencies
@@ -35,14 +35,14 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           # this expects you to have a npm script called version that runs some logic and then calls `changeset version`.
-          version: pnpm run version:ci
+          version-script: pnpm run version:ci
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: pnpm run release
-          commit: 'chore: release eslint-plugin-svelte'
-          title: 'chore: release eslint-plugin-svelte'
+          publish-script: pnpm run release
+          commit-message: 'chore: release eslint-plugin-svelte'
+          pr-title: 'chore: release eslint-plugin-svelte'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

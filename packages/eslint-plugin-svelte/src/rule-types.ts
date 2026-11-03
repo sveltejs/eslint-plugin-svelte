@@ -111,6 +111,11 @@ export interface RuleOptions {
    */
   'svelte/no-add-event-listener'?: Linter.RuleEntry<[]>
   /**
+   * disallow the use of `{@const}` in favor of `{const ...}` declaration tags
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags/
+   */
+  'svelte/no-at-const-tags'?: Linter.RuleEntry<[]>
+  /**
    * disallow the use of `{@debug}`
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/
    */
@@ -120,6 +125,16 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/
    */
   'svelte/no-at-html-tags'?: Linter.RuleEntry<[]>
+  /**
+   * disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs/
+   */
+  'svelte/no-bind-value-on-checkable-inputs'?: Linter.RuleEntry<[]>
+  /**
+   * disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-conflicting-module-names/
+   */
+  'svelte/no-conflicting-module-names'?: Linter.RuleEntry<[]>
   /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
@@ -203,6 +218,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/
    */
   'svelte/no-navigation-without-resolve'?: Linter.RuleEntry<SvelteNoNavigationWithoutResolve>
+  /**
+   * disallow `<style>` elements nested inside other elements or blocks
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-nested-style-tag/
+   */
+  'svelte/no-nested-style-tag'?: Linter.RuleEntry<[]>
   /**
    * disallow use of not function in event handler
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/
@@ -309,6 +329,11 @@ export interface RuleOptions {
    */
   'svelte/no-useless-mustaches'?: Linter.RuleEntry<SvelteNoUselessMustaches>
   /**
+   * require attribute interpolation instead of template literals
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-attribute-interpolation/
+   */
+  'svelte/prefer-attribute-interpolation'?: Linter.RuleEntry<[]>
+  /**
    * require class directives instead of ternary expressions
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/
    */
@@ -318,6 +343,11 @@ export interface RuleOptions {
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/
    */
   'svelte/prefer-const'?: Linter.RuleEntry<SveltePreferConst>
+  /**
+   * disallow unnecessary `$derived.by()` when `$derived()` is sufficient
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by/
+   */
+  'svelte/prefer-derived-over-derived-by'?: Linter.RuleEntry<[]>
   /**
    * destructure values from object stores for better change tracking & fewer redraws
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/
@@ -409,7 +439,7 @@ export interface RuleOptions {
    */
   'svelte/valid-each-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow props other than data or errors in SvelteKit page components.
+   * disallow invalid props in SvelteKit route components.
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/
    */
   'svelte/valid-prop-names-in-kit-pages'?: Linter.RuleEntry<[]>

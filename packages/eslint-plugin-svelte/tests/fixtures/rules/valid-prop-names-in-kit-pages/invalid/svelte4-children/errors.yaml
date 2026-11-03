@@ -1,4 +1,4 @@
-- message: disallow props other than data or errors in SvelteKit page components.
+- message: disallow invalid props in SvelteKit route components.
   line: 2
   column: 13
   suggestions: null

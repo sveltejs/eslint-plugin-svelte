@@ -147,6 +147,10 @@ export default defineConfig(
   svelte.configs.recommended,
   {
     languageOptions: {
+      parserOptions: {
+        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
+        extraFileExtensions: ['.svelte']
+      },
       globals: {
         ...globals.browser,
         // for Sveltekit in non-SPA mode
@@ -161,9 +165,6 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        // Enable typescript parsing for `.svelte` files.
-        extraFileExtensions: ['.svelte'],
-
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,
@@ -200,6 +201,17 @@ export default defineConfig(
 > The TypeScript parser uses a singleton internally, meaning it only respects the options provided during its initial initialization.
 > If you try to change the options for a different file or override them later, the parser will ignore the new options, which may lead to errors.
 > For more context, see [typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778).
+
+#### Svelte config inside `vite.config.js`
+
+The Svelte config can also be passed to the `sveltekit()` or `svelte()` plugin in `vite.config.js`; SvelteKit 3 projects do this by default. Use [`@sveltejs/load-config`](https://www.npmjs.com/package/@sveltejs/load-config) to load it:
+
+```js
+// eslint.config.js
+import { loadConfig } from '@sveltejs/load-config';
+
+const svelteConfig = (await loadConfig('./', { traverse: false }))?.config;
+```
 
 ### Available Configurations
 
@@ -259,6 +271,10 @@ export default defineConfig([
 ]);
 ```
 
+SvelteKit versions are detected from the installed `@sveltejs/kit` package, falling back to its dependency range in `package.json`. The plugin recognizes SvelteKit 1, 2, and 3, including SvelteKit 3 prereleases. Version-specific rules run only for the versions they support.
+
+For SvelteKit 3 projects using a custom routes directory, set `settings.svelte.kit.files.routes` to match the `files.routes` option passed to the `sveltekit` Vite plugin. SvelteKit 3 no longer uses `svelte.config.js`; see the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#Configuration).
+
 ## Editor Integrations
 
 **Visual Studio Code**\
@@ -296,11 +312,14 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID | Description |    |
 |:--------|:------------|:---|
 | [svelte/infinite-reactive-loop](https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/) | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. | :star: |
+| [svelte/no-bind-value-on-checkable-inputs](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs/) | disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">` | :bulb: |
+| [svelte/no-conflicting-module-names](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-conflicting-module-names/) | disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting |  |
 | [svelte/no-dom-manipulating](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/) | disallow DOM manipulating | :star: |
 | [svelte/no-dupe-else-if-blocks](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/) | disallow duplicate conditions in `{#if}` / `{:else if}` chains | :star: |
 | [svelte/no-dupe-on-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/) | disallow duplicate `on:` directives | :star: |
 | [svelte/no-dupe-style-properties](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/) | disallow duplicate style properties | :star: |
 | [svelte/no-dupe-use-directives](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/) | disallow duplicate `use:` directives | :star: |
+| [svelte/no-nested-style-tag](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-nested-style-tag/) | disallow `<style>` elements nested inside other elements or blocks |  |
 | [svelte/no-not-function-handler](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/) | disallow use of not function in event handler | :star: |
 | [svelte/no-object-in-text-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/) | disallow objects in text mustache interpolation | :star: |
 | [svelte/no-raw-special-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/) | Checks for invalid raw HTML elements | :star::wrench: |
@@ -333,6 +352,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/block-lang](https://sveltejs.github.io/eslint-plugin-svelte/rules/block-lang/) | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. | :bulb: |
 | [svelte/button-has-type](https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/) | disallow usage of button without an explicit type attribute |  |
 | [svelte/no-add-event-listener](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener/) | Warns against the use of `addEventListener` | :bulb: |
+| [svelte/no-at-const-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags/) | disallow the use of `{@const}` in favor of `{const ...}` declaration tags | :wrench: |
 | [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star::bulb: |
 | [svelte/no-ignored-unsubscribe](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/) | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores. |  |
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. | :star: |
@@ -348,6 +368,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-useless-children-snippet](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/) | disallow explicit children snippet where it's not needed | :star: |
 | [svelte/no-useless-mustaches](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/) | disallow unnecessary mustache interpolations | :star::wrench: |
 | [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
+| [svelte/prefer-derived-over-derived-by](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by/) | disallow unnecessary `$derived.by()` when `$derived()` is sufficient | :wrench: |
 | [svelte/prefer-destructured-store-props](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/) | destructure values from object stores for better change tracking & fewer redraws | :bulb: |
 | [svelte/prefer-writable-derived](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/) | Prefer using writable $derived instead of $state and $effect | :star::bulb: |
 | [svelte/require-each-key](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/) | require keyed `{#each}` block | :star: |
@@ -376,6 +397,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/no-extra-reactive-curlies](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies/) | disallow wrapping single reactive statements in curly braces | :bulb: |
 | [svelte/no-restricted-html-elements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/) | disallow specific HTML elements |  |
 | [svelte/no-spaces-around-equal-signs-in-attribute](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-spaces-around-equal-signs-in-attribute/) | disallow spaces around equal signs in attribute | :wrench: |
+| [svelte/prefer-attribute-interpolation](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-attribute-interpolation/) | require attribute interpolation instead of template literals |  |
 | [svelte/prefer-class-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/) | require class directives instead of ternary expressions | :wrench: |
 | [svelte/prefer-style-directive](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/) | require style directives instead of style attribute | :wrench: |
 | [svelte/require-event-prefix](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix/) | require component event names to start with "on" |  |
@@ -392,6 +414,7 @@ These rules extend the rules provided by ESLint itself, or other plugins to work
 |:--------|:------------|:---|
 | [svelte/no-inner-declarations](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/) | disallow variable or `function` declarations in nested blocks | :star: |
 | [svelte/no-trailing-spaces](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/) | disallow trailing whitespace at the end of lines | :wrench: |
+| [svelte/prefer-const](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/) | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
 
 ## SvelteKit
 
@@ -401,7 +424,7 @@ These rules relate to SvelteKit and its best Practices.
 |:--------|:------------|:---|
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/) | disallow exporting load functions in `*.svelte` module in SvelteKit page components. | :star: |
 | [svelte/no-navigation-without-resolve](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/) | disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()` | :star: |
-| [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow props other than data or errors in SvelteKit page components. | :star: |
+| [svelte/valid-prop-names-in-kit-pages](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/) | disallow invalid props in SvelteKit route components. | :star: |
 
 ## Experimental
 

@@ -12,6 +12,8 @@ since: 'v2.36.0-next.9'
 
 - :warning: This rule was **deprecated** and replaced by [svelte/no-navigation-without-resolve](no-navigation-without-resolve.md) rule.
 
+This rule applies to SvelteKit 1 and 2. SvelteKit 3 removed the `base` export from `$app/paths`; use `resolve()` instead, as described in the [migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#app-paths).
+
 ## :book: Rule Details
 
 This rule reports navigation using HTML `<a>` tags, SvelteKit's `goto()`, `pushState()` and `replaceState()` functions without prefixing a relative URL with the base path. All four of these may be used for navigation, with `goto()`, `pushState()` and `replaceState()` being intended solely for internal navigation (i.e. not leaving the site), while `<a>` tags may be used for both internal and external navigation. When using any way of internal navigation, the base path must be prepended, otherwise the site may break. For programmatic navigation to external URLs, using `window.location` is advised.

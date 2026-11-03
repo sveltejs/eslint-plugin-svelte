@@ -109,6 +109,10 @@ export default defineConfig(
   svelte.configs.recommended,
   {
     languageOptions: {
+      parserOptions: {
+        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
+        extraFileExtensions: ['.svelte']
+      },
       globals: {
         ...globals.browser,
         // for Sveltekit in non-SPA mode
@@ -123,9 +127,6 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        // Enable typescript parsing for `.svelte` files.
-        extraFileExtensions: ['.svelte'],
-
         // Specify a parser for each language, if needed:
         // parser: {
         //   ts: ts.parser,
@@ -162,6 +163,17 @@ export default defineConfig(
 > The TypeScript parser uses a singleton internally, meaning it only respects the options provided during its initial initialization.
 > If you try to change the options for a different file or override them later, the parser will ignore the new options, which may lead to errors.
 > For more context, see [typescript-eslint/typescript-eslint#6778](https://github.com/typescript-eslint/typescript-eslint/issues/6778).
+
+#### Svelte config inside `vite.config.js`
+
+The Svelte config can also be passed to the `sveltekit()` or `svelte()` plugin in `vite.config.js`; SvelteKit 3 projects do this by default. Use [`@sveltejs/load-config`](https://www.npmjs.com/package/@sveltejs/load-config) to load it:
+
+```js
+// eslint.config.js
+import { loadConfig } from '@sveltejs/load-config';
+
+const svelteConfig = (await loadConfig('./', { traverse: false }))?.config;
+```
 
 ### Available Configurations
 
@@ -220,6 +232,10 @@ export default defineConfig([
   // ...
 ]);
 ```
+
+SvelteKit versions are detected from the installed `@sveltejs/kit` package, falling back to its dependency range in `package.json`. The plugin recognizes SvelteKit 1, 2, and 3, including SvelteKit 3 prereleases. Version-specific rules run only for the versions they support.
+
+For SvelteKit 3 projects using a custom routes directory, set `settings.svelte.kit.files.routes` to match the `files.routes` option passed to the `sveltekit` Vite plugin. SvelteKit 3 no longer uses `svelte.config.js`; see the [official migration guide](https://svelte.dev/docs/kit/migrating-to-sveltekit-3#Configuration).
 
 ## Editor Integrations
 

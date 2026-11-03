@@ -156,7 +156,8 @@ export default createRule('mustache-spacing', {
 				| AST.SvelteDirective
 				| AST.SvelteSpecialDirective
 				| AST.SvelteShorthandAttribute
-				| AST.SvelteSpreadAttribute,
+				| AST.SvelteSpreadAttribute
+				| AST.SvelteDeclarationTag,
 			option: OptionValue
 		) {
 			const mustacheTokens = getMustacheTokens(node, sourceCode);
@@ -203,6 +204,16 @@ export default createRule('mustache-spacing', {
 				verifyExpression(node, options.directiveExpressions);
 			},
 			SvelteDebugTag(node) {
+				const mustacheTokens = getMustacheTokens(node, sourceCode);
+				verifyBraces(
+					mustacheTokens.openToken,
+					mustacheTokens.closeToken,
+					options.tags.openingBrace,
+					options.tags.closingBrace,
+					true
+				);
+			},
+			SvelteDeclarationTag(node) {
 				const mustacheTokens = getMustacheTokens(node, sourceCode);
 				verifyBraces(
 					mustacheTokens.openToken,

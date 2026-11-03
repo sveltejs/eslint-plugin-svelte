@@ -1,0 +1,5 @@
+- message: Nested `<style>` elements are not scoped and may lead to unintended
+    styles being applied.
+  line: 2
+  column: 2
+  suggestions: null

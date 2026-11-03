@@ -40,9 +40,17 @@ If configuration is needed, include a JSON file:
 - For a specific test file (e.g., `my-test-input.svelte`), add `my-test-config.json`.
 - For all fixtures in a directory, add `_config.json`.
 
-Verifying output for invalid tests requires `*-errors.json` and `*-output.svelte` (for auto-fix). These files are auto-generated if missing—delete them to recreate.
+Verifying output for invalid tests requires `*-errors.yaml` and `*-output.svelte` (for auto-fix). These files are auto-generated if missing—delete them to recreate.
 
 **Tips**:
+
+To regenerate expected diagnostics and fix output after an intentional rule change, run from `packages/eslint-plugin-svelte`:
+
+```sh
+pnpm run test:update-fixtures
+```
+
+This sets `UPDATE_FIXTURES=1`. Review the generated changes and rerun `pnpm run test` without that environment variable to verify them.
 
 To test only one rule (e.g., `indent`), run:
 

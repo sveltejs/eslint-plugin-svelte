@@ -1,5 +1,77 @@
 # eslint-plugin-svelte
 
+## 3.23.1
+
+### Patch Changes
+
+- [#1592](https://github.com/sveltejs/eslint-plugin-svelte/pull/1592) [`ed67eb7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/ed67eb70079a3766e1fcca04717efe67b981a29c) Thanks [@baseballyama](https://github.com/baseballyama)! - Exclude deprecated rules from the `all` configuration while keeping active rules enabled.
+
+- [#1594](https://github.com/sveltejs/eslint-plugin-svelte/pull/1594) [`af288cd`](https://github.com/sveltejs/eslint-plugin-svelte/commit/af288cdadb7a4e9545b67301b9d28da27eb19935) Thanks [@baseballyama](https://github.com/baseballyama)! - Recognize `browser` from SvelteKit's `$app/env` alias as a browser guard in `no-top-level-browser-globals`.
+
+- [#1588](https://github.com/sveltejs/eslint-plugin-svelte/pull/1588) [`9814b51`](https://github.com/sveltejs/eslint-plugin-svelte/commit/9814b51df1f4a9b271b50e9abc312cd0c15e714a) Thanks [@baseballyama](https://github.com/baseballyama)! - Include all active extension rules in the Extension Rules documentation table while preserving their primary-category entries.
+
+- [#1589](https://github.com/sveltejs/eslint-plugin-svelte/pull/1589) [`57863c5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/57863c52b3e9092a15f8432faeac9cb258b5e08d) Thanks [@baseballyama](https://github.com/baseballyama)! - Keep the documented project service configuration consistent across TypeScript and Svelte files to avoid unnecessary project reloads.
+
+- [#1593](https://github.com/sveltejs/eslint-plugin-svelte/pull/1593) [`4ad2c67`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4ad2c67a971a76a6311ef42a091e1da76853578a) Thanks [@baseballyama](https://github.com/baseballyama)! - Limit `require-each-key` diagnostics to the opening each tag instead of the whole block.
+
+- [#1599](https://github.com/sveltejs/eslint-plugin-svelte/pull/1599) [`90d7b09`](https://github.com/sveltejs/eslint-plugin-svelte/commit/90d7b09cc4c075b655dfe8042cfda9158bac02f8) Thanks [@baseballyama](https://github.com/baseballyama)! - Enable no-navigation-without-resolve on SvelteKit 3 so the recommended config reports internal links and navigation calls that omit resolve().
+
+- [#1590](https://github.com/sveltejs/eslint-plugin-svelte/pull/1590) [`a28563f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a28563f337515b6d32010c7f2f32d3adff730929) Thanks [@baseballyama](https://github.com/baseballyama)! - Fix false positives in `no-immutable-reactive-statements` for TypeScript components when `ecmaFeatures.globalReturn` is enabled.
+
+- [#1598](https://github.com/sveltejs/eslint-plugin-svelte/pull/1598) [`4607a2c`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4607a2cc4065b3d6e1a10467afeb937f12f4ee55) Thanks [@baseballyama](https://github.com/baseballyama)! - Recognize SvelteKit 3 in rule conditions, including prereleases, and document version detection and routes configuration.
+
+## 3.23.0
+
+### Minor Changes
+
+- [#1565](https://github.com/sveltejs/eslint-plugin-svelte/pull/1565) [`1ec3cf5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/1ec3cf5edd561cb92b02c69e3bb9edb22773f278) Thanks [@ColumbusLabs](https://github.com/ColumbusLabs)! - feat: add prefer-attribute-interpolation rule
+
+## 3.22.0
+
+### Minor Changes
+
+- [#1563](https://github.com/sveltejs/eslint-plugin-svelte/pull/1563) [`cdad05a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/cdad05a463d2ae7c8fe57c1a4e7cdd820723526c) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add no-conflicting-module-names rule
+
+## 3.21.0
+
+### Minor Changes
+
+- [#1559](https://github.com/sveltejs/eslint-plugin-svelte/pull/1559) [`4138a57`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4138a571f1d51f46fbc485cf0f89013119ee9187) Thanks [@knrdl](https://github.com/knrdl)! - feat: add no-bind-value-on-checkable-inputs rule
+
+## 3.20.0
+
+### Minor Changes
+
+- [#1545](https://github.com/sveltejs/eslint-plugin-svelte/pull/1545) [`32ba915`](https://github.com/sveltejs/eslint-plugin-svelte/commit/32ba9159b00bf65ef8fc9a4bf0897dfaf33e8cea) Thanks [@baseballyama](https://github.com/baseballyama)! - feat: add `svelte/no-at-const-tags` rule
+
+### Patch Changes
+
+- [#1503](https://github.com/sveltejs/eslint-plugin-svelte/pull/1503) [`989bfa5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/989bfa5beecc495f38fc563498c39e755668c457) Thanks [@teemingc](https://github.com/teemingc)! - fix(valid-prop-names-in-kit-pages): drop `errors` from allowed page props in Svelte 5 to follow SvelteKit
+
+## 3.19.0
+
+### Minor Changes
+
+- [#1533](https://github.com/sveltejs/eslint-plugin-svelte/pull/1533) [`f0416be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f0416be2623d01dd2af410cf10a74f65303722fd) Thanks [@dummdidumm](https://github.com/dummdidumm)! - feat: support Svelte 5 declaration tags
+
+- [#1533](https://github.com/sveltejs/eslint-plugin-svelte/pull/1533) [`f0416be`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f0416be2623d01dd2af410cf10a74f65303722fd) Thanks [@dummdidumm](https://github.com/dummdidumm)! - feat: update svelte-eslint-parser to 1.7.0
+
+## 3.18.0
+
+### Minor Changes
+
+- [#1530](https://github.com/sveltejs/eslint-plugin-svelte/pull/1530) [`f110d75`](https://github.com/sveltejs/eslint-plugin-svelte/commit/f110d753d64440d37d061644a3a41c09614828ba) Thanks [@SAY-5](https://github.com/SAY-5)! - feat: add `no-nested-style-tag` rule
+
+- [#1531](https://github.com/sveltejs/eslint-plugin-svelte/pull/1531) [`d3043d3`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d3043d30b8b772ef3f3b4fc65df5c3bb7ad4af12) Thanks [@SAY-5](https://github.com/SAY-5)! - feat: add `prefer-derived-over-derived-by` rule
+
+- [#1532](https://github.com/sveltejs/eslint-plugin-svelte/pull/1532) [`aa8fe83`](https://github.com/sveltejs/eslint-plugin-svelte/commit/aa8fe83b2664d9af1e11040eea9f8ff4418a4315) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): recognizing nullish TS types as allowed
+
+## 3.17.1
+
+### Patch Changes
+
+- [#1321](https://github.com/sveltejs/eslint-plugin-svelte/pull/1321) [`97d89f7`](https://github.com/sveltejs/eslint-plugin-svelte/commit/97d89f7d068321d4f79399c6c695ca4c0de2bd82) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): added support for ResolvedPathname types
+
 ## 3.17.0
 
 ### Minor Changes

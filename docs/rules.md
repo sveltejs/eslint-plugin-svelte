@@ -17,11 +17,14 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | Rule ID                                                                                          | Description                                                                                                                            |                |
 | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
 | [svelte/infinite-reactive-loop](./rules/infinite-reactive-loop.md)                               | Svelte runtime prevents calling the same reactive statement twice in a microtask. But between different microtask, it doesn't prevent. | :star:         |
+| [svelte/no-bind-value-on-checkable-inputs](./rules/no-bind-value-on-checkable-inputs.md)         | disallow useless `bind:value` on `<input type="checkbox">` and `<input type="radio">`                                                  | :bulb:         |
+| [svelte/no-conflicting-module-names](./rules/no-conflicting-module-names.md)                     | disallow a `.svelte` component and a same-named runes module (e.g. `Foo.svelte` and `Foo.svelte.ts`) from coexisting                   |                |
 | [svelte/no-dom-manipulating](./rules/no-dom-manipulating.md)                                     | disallow DOM manipulating                                                                                                              | :star:         |
 | [svelte/no-dupe-else-if-blocks](./rules/no-dupe-else-if-blocks.md)                               | disallow duplicate conditions in `{#if}` / `{:else if}` chains                                                                         | :star:         |
 | [svelte/no-dupe-on-directives](./rules/no-dupe-on-directives.md)                                 | disallow duplicate `on:` directives                                                                                                    | :star:         |
 | [svelte/no-dupe-style-properties](./rules/no-dupe-style-properties.md)                           | disallow duplicate style properties                                                                                                    | :star:         |
 | [svelte/no-dupe-use-directives](./rules/no-dupe-use-directives.md)                               | disallow duplicate `use:` directives                                                                                                   | :star:         |
+| [svelte/no-nested-style-tag](./rules/no-nested-style-tag.md)                                     | disallow `<style>` elements nested inside other elements or blocks                                                                     |                |
 | [svelte/no-not-function-handler](./rules/no-not-function-handler.md)                             | disallow use of not function in event handler                                                                                          | :star:         |
 | [svelte/no-object-in-text-mustaches](./rules/no-object-in-text-mustaches.md)                     | disallow objects in text mustache interpolation                                                                                        | :star:         |
 | [svelte/no-raw-special-elements](./rules/no-raw-special-elements.md)                             | Checks for invalid raw HTML elements                                                                                                   | :star::wrench: |
@@ -54,6 +57,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/block-lang](./rules/block-lang.md)                                               | disallows the use of languages other than those specified in the configuration for the lang attribute of `<script>` and `<style>` blocks. | :bulb:         |
 | [svelte/button-has-type](./rules/button-has-type.md)                                     | disallow usage of button without an explicit type attribute                                                                               |                |
 | [svelte/no-add-event-listener](./rules/no-add-event-listener.md)                         | Warns against the use of `addEventListener`                                                                                               | :bulb:         |
+| [svelte/no-at-const-tags](./rules/no-at-const-tags.md)                                   | disallow the use of `{@const}` in favor of `{const ...}` declaration tags                                                                 | :wrench:       |
 | [svelte/no-at-debug-tags](./rules/no-at-debug-tags.md)                                   | disallow the use of `{@debug}`                                                                                                            | :star::bulb:   |
 | [svelte/no-ignored-unsubscribe](./rules/no-ignored-unsubscribe.md)                       | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores.                                                  |                |
 | [svelte/no-immutable-reactive-statements](./rules/no-immutable-reactive-statements.md)   | disallow reactive statements that don't reference reactive values.                                                                        | :star:         |
@@ -69,6 +73,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-useless-children-snippet](./rules/no-useless-children-snippet.md)             | disallow explicit children snippet where it's not needed                                                                                  | :star:         |
 | [svelte/no-useless-mustaches](./rules/no-useless-mustaches.md)                           | disallow unnecessary mustache interpolations                                                                                              | :star::wrench: |
 | [svelte/prefer-const](./rules/prefer-const.md)                                           | Require `const` declarations for variables that are never reassigned after declared                                                       | :wrench:       |
+| [svelte/prefer-derived-over-derived-by](./rules/prefer-derived-over-derived-by.md)       | disallow unnecessary `$derived.by()` when `$derived()` is sufficient                                                                      | :wrench:       |
 | [svelte/prefer-destructured-store-props](./rules/prefer-destructured-store-props.md)     | destructure values from object stores for better change tracking & fewer redraws                                                          | :bulb:         |
 | [svelte/prefer-writable-derived](./rules/prefer-writable-derived.md)                     | Prefer using writable $derived instead of $state and $effect                                                                              | :star::bulb:   |
 | [svelte/require-each-key](./rules/require-each-key.md)                                   | require keyed `{#each}` block                                                                                                             | :star:         |
@@ -97,6 +102,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
 | [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
 | [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
+| [svelte/prefer-attribute-interpolation](./rules/prefer-attribute-interpolation.md)                       | require attribute interpolation instead of template literals                       |          |
 | [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
 | [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
 | [svelte/require-event-prefix](./rules/require-event-prefix.md)                                           | require component event names to start with "on"                                   |          |
@@ -109,10 +115,11 @@ These rules relate to style guidelines, and are therefore quite subjective:
 
 These rules extend the rules provided by ESLint itself, or other plugins to work well in Svelte:
 
-| Rule ID                                                          | Description                                                   |          |
-| :--------------------------------------------------------------- | :------------------------------------------------------------ | :------- |
-| [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks | :star:   |
-| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)       | disallow trailing whitespace at the end of lines              | :wrench: |
+| Rule ID                                                          | Description                                                                         |          |
+| :--------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------- |
+| [svelte/no-inner-declarations](./rules/no-inner-declarations.md) | disallow variable or `function` declarations in nested blocks                       | :star:   |
+| [svelte/no-trailing-spaces](./rules/no-trailing-spaces.md)       | disallow trailing whitespace at the end of lines                                    | :wrench: |
+| [svelte/prefer-const](./rules/prefer-const.md)                   | Require `const` declarations for variables that are never reassigned after declared | :wrench: |
 
 ## SvelteKit
 
@@ -122,7 +129,7 @@ These rules relate to SvelteKit and its best Practices.
 | :------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- | :----- |
 | [svelte/no-export-load-in-svelte-module-in-kit-pages](./rules/no-export-load-in-svelte-module-in-kit-pages.md) | disallow exporting load functions in `*.svelte` module in SvelteKit page components.                  | :star: |
 | [svelte/no-navigation-without-resolve](./rules/no-navigation-without-resolve.md)                               | disallow internal navigation (links, `goto()`, `pushState()`, `replaceState()`) without a `resolve()` | :star: |
-| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow props other than data or errors in SvelteKit page components.                                | :star: |
+| [svelte/valid-prop-names-in-kit-pages](./rules/valid-prop-names-in-kit-pages.md)                               | disallow invalid props in SvelteKit route components.                                                 | :star: |
 
 ## Experimental
 

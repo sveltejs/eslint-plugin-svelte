@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-svelte",
-  "version": "3.17.0",
+  "version": "3.23.1",
   "description": "ESLint plugin for Svelte using AST",
   "repository": {
     "type": "git",
@@ -69,7 +69,7 @@
     "postcss-load-config": "^3.1.4",
     "postcss-safe-parser": "^7.0.0",
     "semver": "^7.6.3",
-    "svelte-eslint-parser": "^1.4.0"
+    "svelte-eslint-parser": "^1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.3",
@@ -97,13 +97,13 @@
     "espree": "^11.0.0",
     "jiti": "^2.5.1",
     "less": "^4.4.1",
-    "mocha": "~11.7.2",
+    "mocha": "~11.8.0",
     "postcss-nested": "^7.0.2",
     "postcss-selector-parser": "^7.1.0",
     "sass": "^1.92.0",
     "source-map-js": "^1.2.1",
     "stylus": "^0.64.0",
-    "svelte": "^5.41.0",
+    "svelte": "^5.56.0",
     "svelte-i18n": "^4.0.1",
     "tsx": "^4.20.5",
     "type-coverage": "^2.29.7",

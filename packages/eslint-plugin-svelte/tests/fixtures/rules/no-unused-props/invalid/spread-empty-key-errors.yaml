@@ -1,0 +1,4 @@
+- message: "'b' is an unused Props property."
+  line: 5
+  column: 8
+  suggestions: null

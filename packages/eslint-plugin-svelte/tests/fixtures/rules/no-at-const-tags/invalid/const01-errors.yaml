@@ -1,0 +1,4 @@
+- message: Use `{const ...}` declaration tag instead of legacy `{@const ...}`.
+  line: 9
+  column: 2
+  suggestions: null

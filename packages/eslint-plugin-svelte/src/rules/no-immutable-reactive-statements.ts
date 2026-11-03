@@ -31,7 +31,7 @@ export default createRule('no-immutable-reactive-statements', {
 		const scopeManager = context.sourceCode.scopeManager;
 		const globalScope = scopeManager.globalScope;
 		const toplevelScope =
-			globalScope?.childScopes.find((scope) => scope.type === 'module') || globalScope;
+			scopeManager.scopes.find((scope) => scope.type === 'module') || globalScope;
 		if (!globalScope || !toplevelScope) {
 			return {};
 		}

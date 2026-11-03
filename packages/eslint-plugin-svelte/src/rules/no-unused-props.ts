@@ -130,13 +130,18 @@ export default createRule('no-unused-props', {
 
 		/**
 		 * Extracts property paths from member expressions.
+		 *
+		 * `spread` is `'object'` when the value is spread into an object literal or
+		 * onto a Svelte element/component, which copies every property of it, and
+		 * `'iterable'` when it is spread into an array literal or call arguments,
+		 * which only iterates it.
 		 */
 		function getPropertyPath(node: TSESTree.Identifier): {
 			paths: PropertyPathArray;
-			isSpread: boolean;
+			spread: 'object' | 'iterable' | null;
 		} {
 			const paths: PropertyPathArray = [];
-			let isSpread = false;
+			let spread: 'object' | 'iterable' | null = null;
 			let currentNode: TSESTree.Node | SvAST.SvelteSpreadAttribute = node;
 			let parentNode: TSESTree.Node | SvAST.SvelteSpreadAttribute | null =
 				currentNode.parent ?? null;
@@ -149,8 +154,10 @@ export default createRule('no-unused-props', {
 						paths.push(property.value);
 					}
 				} else {
-					if (parentNode.type === 'SpreadElement' || parentNode.type === 'SvelteSpreadAttribute') {
-						isSpread = true;
+					if (parentNode.type === 'SvelteSpreadAttribute') {
+						spread = 'object';
+					} else if (parentNode.type === 'SpreadElement') {
+						spread = parentNode.parent?.type === 'ObjectExpression' ? 'object' : 'iterable';
 					}
 					break;
 				}
@@ -159,7 +166,7 @@ export default createRule('no-unused-props', {
 				parentNode = (currentNode.parent as TSESTree.Node | SvAST.SvelteSpreadAttribute) ?? null;
 			}
 
-			return { paths, isSpread };
+			return { paths, spread };
 		}
 
 		/**
@@ -167,13 +174,15 @@ export default createRule('no-unused-props', {
 		 */
 		function getUsedNestedPropertyPathsArray(node: TSESTree.Identifier): {
 			paths: PropertyPathArray[];
-			spreadPaths: PropertyPathArray[];
+			objectSpreadPaths: PropertyPathArray[];
+			iterableSpreadPaths: PropertyPathArray[];
 		} {
 			const variable = findVariable(context, node);
-			if (!variable) return { paths: [], spreadPaths: [] };
+			if (!variable) return { paths: [], objectSpreadPaths: [], iterableSpreadPaths: [] };
 
 			const pathsArray: PropertyPathArray[] = [];
-			const spreadPathsArray: PropertyPathArray[] = [];
+			const objectSpreadPathsArray: PropertyPathArray[] = [];
+			const iterableSpreadPathsArray: PropertyPathArray[] = [];
 			for (const reference of variable.references) {
 				if (
 					'identifier' in reference &&
@@ -181,16 +190,22 @@ export default createRule('no-unused-props', {
 					(reference.identifier.range[0] !== node.range[0] ||
 						reference.identifier.range[1] !== node.range[1])
 				) {
-					const { paths, isSpread } = getPropertyPath(reference.identifier);
-					if (isSpread) {
-						spreadPathsArray.push(paths);
+					const { paths, spread } = getPropertyPath(reference.identifier);
+					if (spread === 'object') {
+						objectSpreadPathsArray.push(paths);
+					} else if (spread === 'iterable') {
+						iterableSpreadPathsArray.push(paths);
 					} else {
 						pathsArray.push(paths);
 					}
 				}
 			}
 
-			return { paths: pathsArray, spreadPaths: spreadPathsArray };
+			return {
+				paths: pathsArray,
+				objectSpreadPaths: objectSpreadPathsArray,
+				iterableSpreadPaths: iterableSpreadPathsArray
+			};
 		}
 
 		/**
@@ -252,35 +267,89 @@ export default createRule('no-unused-props', {
 		}
 
 		/**
+		 * Checks whether `path` is `prefix` itself or sits beneath it. Segments are
+		 * compared one by one, so a property name that contains a dot is not read as
+		 * a nested path.
+		 */
+		function isPathAtOrUnder(path: string[], prefix: string[]): boolean {
+			if (prefix.length > path.length) return false;
+			return prefix.every((segment, index) => segment === path[index]);
+		}
+
+		/**
+		 * Checks whether `path` sits strictly beneath `prefix`.
+		 */
+		function isPathUnder(path: string[], prefix: string[]): boolean {
+			return path.length > prefix.length && isPathAtOrUnder(path, prefix);
+		}
+
+		function isSamePath(a: string[], b: string[]): boolean {
+			return a.length === b.length && isPathAtOrUnder(a, b);
+		}
+
+		/**
 		 * Recursively checks for unused properties in a type.
 		 */
 		function checkUnusedProperties({
 			propsType,
 			usedPropertyPaths,
-			usedSpreadPropertyPaths,
+			usedObjectSpreadPropertyPaths,
+			usedIterableSpreadPropertyPaths,
 			declaredPropertyNames,
 			reportNode,
 			parentPath,
-			checkedPropsTypes,
+			checkingPropsTypes,
 			reportedPropertyPaths
 		}: {
 			propsType: ts.Type;
-			usedPropertyPaths: string[];
-			usedSpreadPropertyPaths: string[];
+			usedPropertyPaths: PropertyPathArray[];
+			usedObjectSpreadPropertyPaths: PropertyPathArray[];
+			usedIterableSpreadPropertyPaths: PropertyPathArray[];
 			declaredPropertyNames: DeclaredPropertyNames;
 			reportNode: TSESTree.Node;
 			parentPath: string[];
-			checkedPropsTypes: Set<string>;
+			checkingPropsTypes: Set<string>;
 			reportedPropertyPaths: Set<string>;
 		}) {
 			// Skip checking if the type itself is a class
 			if (isClassType(propsType)) return;
 
+			// Only types that are being checked further up the current path are skipped,
+			// which stops recursive types from looping while still checking two sibling
+			// properties that share a type.
 			const typeStr = typeChecker.typeToString(propsType);
-			if (checkedPropsTypes.has(typeStr)) return;
-			checkedPropsTypes.add(typeStr);
+			if (checkingPropsTypes.has(typeStr)) return;
 			if (shouldIgnoreType(propsType)) return;
 
+			checkingPropsTypes.add(typeStr);
+			try {
+				checkPropertiesOfType({
+					propsType,
+					usedPropertyPaths,
+					usedObjectSpreadPropertyPaths,
+					usedIterableSpreadPropertyPaths,
+					declaredPropertyNames,
+					reportNode,
+					parentPath,
+					checkingPropsTypes,
+					reportedPropertyPaths
+				});
+			} finally {
+				checkingPropsTypes.delete(typeStr);
+			}
+		}
+
+		function checkPropertiesOfType({
+			propsType,
+			usedPropertyPaths,
+			usedObjectSpreadPropertyPaths,
+			usedIterableSpreadPropertyPaths,
+			declaredPropertyNames,
+			reportNode,
+			parentPath,
+			checkingPropsTypes,
+			reportedPropertyPaths
+		}: Parameters<typeof checkUnusedProperties>[0]) {
 			const properties = typeChecker.getPropertiesOfType(propsType);
 			const propsBaseTypes = propsType.getBaseTypes();
 
@@ -293,11 +362,12 @@ export default createRule('no-unused-props', {
 					checkUnusedProperties({
 						propsType: propsBaseType,
 						usedPropertyPaths,
-						usedSpreadPropertyPaths,
+						usedObjectSpreadPropertyPaths,
+						usedIterableSpreadPropertyPaths,
 						declaredPropertyNames,
 						reportNode,
 						parentPath,
-						checkedPropsTypes,
+						checkingPropsTypes,
 						reportedPropertyPaths
 					});
 				}
@@ -311,31 +381,46 @@ export default createRule('no-unused-props', {
 				if (shouldIgnoreProperty(propName)) continue;
 
 				const currentPath = [...parentPath, propName];
-				const currentPathStr = currentPath.join('.');
+				// Serialized so that a property name containing a dot cannot collide with a
+				// nested path.
+				const currentPathKey = JSON.stringify(currentPath);
 
-				if (reportedPropertyPaths.has(currentPathStr)) continue;
+				if (reportedPropertyPaths.has(currentPathKey)) continue;
+
+				// Spreading this property, or any of its ancestors, into an object consumes
+				// everything beneath it, so nothing under it can be reported -- even when
+				// some of those properties are also read by name.
+				const isCoveredByObjectSpread = usedObjectSpreadPropertyPaths.some((path) => {
+					return isPathAtOrUnder(currentPath, path);
+				});
+				if (isCoveredByObjectSpread) continue;
 
 				const propType = typeChecker.getTypeOfSymbol(prop);
 
 				const isUsedThisInPath =
-					usedPropertyPaths.includes(currentPathStr) ||
-					usedSpreadPropertyPaths.some((path) => {
-						return path === '' || path === currentPathStr || path.startsWith(`${currentPathStr}.`);
+					usedPropertyPaths.some((path) => isSamePath(path, currentPath)) ||
+					// A spread deeper inside this property counts as using the property itself.
+					usedObjectSpreadPropertyPaths.some((path) => isPathUnder(path, currentPath)) ||
+					// Spreading into an array or call arguments only iterates the value, so it
+					// does not consume properties that are also read by name.
+					usedIterableSpreadPropertyPaths.some((path) => {
+						return path.length === 0 || isPathAtOrUnder(path, currentPath);
 					});
-				const isUsedInPath = usedPropertyPaths.some((path) => {
-					return path.startsWith(`${currentPathStr}.`);
-				});
+				const isUsedInPath = usedPropertyPaths.some((path) => isPathUnder(path, currentPath));
 
 				if (isUsedThisInPath && !isUsedInPath) {
 					continue;
 				}
 
-				const isUsedInProps = Array.from(declaredPropertyNames).some((p) => {
-					return p.originalName === propName;
-				});
+				// Destructured names only refer to top level properties.
+				const isUsedInProps =
+					parentPath.length === 0 &&
+					Array.from(declaredPropertyNames).some((p) => {
+						return p.originalName === propName;
+					});
 
 				if (!isUsedInPath && !isUsedInProps) {
-					reportedPropertyPaths.add(currentPathStr);
+					reportedPropertyPaths.add(currentPathKey);
 					context.report({
 						node: reportNode,
 						messageId: parentPath.length ? 'unusedNestedProp' : 'unusedProp',
@@ -347,22 +432,17 @@ export default createRule('no-unused-props', {
 					continue;
 				}
 
-				const isUsedNested = usedPropertyPaths.some((path) => {
-					return path.startsWith(`${currentPathStr}.`);
+				checkUnusedProperties({
+					propsType: propType,
+					usedPropertyPaths,
+					usedObjectSpreadPropertyPaths,
+					usedIterableSpreadPropertyPaths,
+					declaredPropertyNames,
+					reportNode,
+					parentPath: currentPath,
+					checkingPropsTypes,
+					reportedPropertyPaths
 				});
-
-				if (isUsedNested || isUsedInProps) {
-					checkUnusedProperties({
-						propsType: propType,
-						usedPropertyPaths,
-						usedSpreadPropertyPaths,
-						declaredPropertyNames,
-						reportNode,
-						parentPath: currentPath,
-						checkedPropsTypes,
-						reportedPropertyPaths
-					});
-				}
 			}
 
 			// Check for unused index signatures only at the root level
@@ -396,14 +476,16 @@ export default createRule('no-unused-props', {
 		): PropertyPathArray[] {
 			const normalized: PropertyPathArray[] = [];
 			for (const path of paths.sort((a, b) => a.length - b.length)) {
-				if (normalized.some((p) => p.every((part, idx) => part === path[idx]))) {
+				if (normalized.some((p) => isPathAtOrUnder(path, p))) {
 					continue;
 				}
 				normalized.push(path);
 			}
 			return normalized.map((path) => {
-				// If we allow unused nested properties, only return first level properties
-				if (allowUnusedNestedProperties) return [path[0]];
+				// If we allow unused nested properties, only return first level properties.
+				// An empty path means the whole object was used, so it has no first level
+				// to narrow to and must stay empty.
+				if (allowUnusedNestedProperties && path.length > 0) return [path[0]];
 				return path;
 			});
 		}
@@ -424,50 +506,68 @@ export default createRule('no-unused-props', {
 
 				const propsType = typeChecker.getTypeFromTypeNode(tsNode.type);
 				const usedPropertyPathsArray: PropertyPathArray[] = [];
-				const usedSpreadPropertyPathsArray: PropertyPathArray[] = [];
+				const usedObjectSpreadPropertyPathsArray: PropertyPathArray[] = [];
+				const usedIterableSpreadPropertyPathsArray: PropertyPathArray[] = [];
 				let declaredPropertyNames: DeclaredPropertyNames = new Set();
 
 				if (node.id.type === 'ObjectPattern') {
 					declaredPropertyNames = getUsedPropertyNamesFromPattern(node.id);
 					if (declaredPropertyNames.size === 0) return;
-					const identifiers: TSESTree.Identifier[] = [];
+					// Each local variable paired with the name of the prop it holds, so that
+					// `{ app: a }` records `a.name` as `app.name`.
+					const identifiers: { identifier: TSESTree.Identifier; propName: string }[] = [];
 					for (const p of node.id.properties) {
-						if (p.type !== 'Property') {
+						if (p.type !== 'Property' || p.computed) {
 							continue;
 						}
+						const propName =
+							p.key.type === 'Identifier'
+								? p.key.name
+								: p.key.type === 'Literal' && typeof p.key.value === 'string'
+									? p.key.value
+									: null;
+						if (propName == null) continue;
 						if (p.value.type === 'Identifier') {
-							identifiers.push(p.value);
+							identifiers.push({ identifier: p.value, propName });
 						} else if (p.value.type === 'AssignmentPattern' && p.value.left.type === 'Identifier') {
-							identifiers.push(p.value.left);
+							identifiers.push({ identifier: p.value.left, propName });
 						}
 					}
-					for (const identifier of identifiers) {
-						const { paths, spreadPaths } = getUsedNestedPropertyPathsArray(identifier);
-						usedPropertyPathsArray.push(...paths.map((path) => [identifier.name, ...path]));
-						usedSpreadPropertyPathsArray.push(
-							...spreadPaths.map((path) => [identifier.name, ...path])
+					for (const { identifier, propName } of identifiers) {
+						const { paths, objectSpreadPaths, iterableSpreadPaths } =
+							getUsedNestedPropertyPathsArray(identifier);
+						usedPropertyPathsArray.push(...paths.map((path) => [propName, ...path]));
+						usedObjectSpreadPropertyPathsArray.push(
+							...objectSpreadPaths.map((path) => [propName, ...path])
+						);
+						usedIterableSpreadPropertyPathsArray.push(
+							...iterableSpreadPaths.map((path) => [propName, ...path])
 						);
 					}
 				} else if (node.id.type === 'Identifier') {
-					const { paths, spreadPaths } = getUsedNestedPropertyPathsArray(node.id);
+					const { paths, objectSpreadPaths, iterableSpreadPaths } = getUsedNestedPropertyPathsArray(
+						node.id
+					);
 					usedPropertyPathsArray.push(...paths);
-					usedSpreadPropertyPathsArray.push(...spreadPaths);
+					usedObjectSpreadPropertyPathsArray.push(...objectSpreadPaths);
+					usedIterableSpreadPropertyPathsArray.push(...iterableSpreadPaths);
 				}
 
 				function runNormalizeUsedPaths(paths: PropertyPathArray[]) {
-					return normalizeUsedPaths(paths, options.allowUnusedNestedProperties).map((pathArray) => {
-						return pathArray.join('.');
-					});
+					return normalizeUsedPaths(paths, options.allowUnusedNestedProperties);
 				}
 
 				checkUnusedProperties({
 					propsType,
 					usedPropertyPaths: runNormalizeUsedPaths(usedPropertyPathsArray),
-					usedSpreadPropertyPaths: runNormalizeUsedPaths(usedSpreadPropertyPathsArray),
+					usedObjectSpreadPropertyPaths: runNormalizeUsedPaths(usedObjectSpreadPropertyPathsArray),
+					usedIterableSpreadPropertyPaths: runNormalizeUsedPaths(
+						usedIterableSpreadPropertyPathsArray
+					),
 					declaredPropertyNames,
 					reportNode: node.id,
 					parentPath: [],
-					checkedPropsTypes: new Set<string>(),
+					checkingPropsTypes: new Set<string>(),
 					reportedPropertyPaths: new Set<string>()
 				});
 			}

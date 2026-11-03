@@ -21,11 +21,11 @@
     "@sindresorhus/slugify": "^3.0.0",
     "@sveltejs/adapter-static": "^3.0.9",
     "@sveltejs/kit": "^2.43.1",
-    "@sveltejs/vite-plugin-svelte": "^6.1.4",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@types/babel__core": "^7.20.5",
     "@types/cross-spawn": "^6.0.6",
     "@types/escape-html": "^1.0.4",
-    "@types/eslint-scope": "^8.3.2",
+    "@types/eslint-scope": "^9.0.0",
     "@types/eslint-visitor-keys": "^3.3.2",
     "@types/less": "^3.0.8",
     "@types/markdown-it": "^14.1.2",
@@ -61,6 +61,6 @@
     "twoslash-protocol": "^0.3.4",
     "util": "^0.12.5",
     "vite": "^7.1.4",
-    "vite-plugin-svelte-md": "^0.6.0"
+    "vite-plugin-svelte-md": "^0.8.0"
   }
 }

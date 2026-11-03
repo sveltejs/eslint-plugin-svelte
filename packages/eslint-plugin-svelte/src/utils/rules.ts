@@ -21,8 +21,11 @@ import maxAttributesPerLine from '../rules/max-attributes-per-line.js';
 import maxLinesPerBlock from '../rules/max-lines-per-block.js';
 import mustacheSpacing from '../rules/mustache-spacing.js';
 import noAddEventListener from '../rules/no-add-event-listener.js';
+import noAtConstTags from '../rules/no-at-const-tags.js';
 import noAtDebugTags from '../rules/no-at-debug-tags.js';
 import noAtHtmlTags from '../rules/no-at-html-tags.js';
+import noBindValueOnCheckableInputs from '../rules/no-bind-value-on-checkable-inputs.js';
+import noConflictingModuleNames from '../rules/no-conflicting-module-names.js';
 import noDomManipulating from '../rules/no-dom-manipulating.js';
 import noDupeElseIfBlocks from '../rules/no-dupe-else-if-blocks.js';
 import noDupeOnDirectives from '../rules/no-dupe-on-directives.js';
@@ -39,6 +42,7 @@ import noInnerDeclarations from '../rules/no-inner-declarations.js';
 import noInspect from '../rules/no-inspect.js';
 import noNavigationWithoutBase from '../rules/no-navigation-without-base.js';
 import noNavigationWithoutResolve from '../rules/no-navigation-without-resolve.js';
+import noNestedStyleTag from '../rules/no-nested-style-tag.js';
 import noNotFunctionHandler from '../rules/no-not-function-handler.js';
 import noObjectInTextMustaches from '../rules/no-object-in-text-mustaches.js';
 import noRawSpecialElements from '../rules/no-raw-special-elements.js';
@@ -60,8 +64,10 @@ import noUnusedProps from '../rules/no-unused-props.js';
 import noUnusedSvelteIgnore from '../rules/no-unused-svelte-ignore.js';
 import noUselessChildrenSnippet from '../rules/no-useless-children-snippet.js';
 import noUselessMustaches from '../rules/no-useless-mustaches.js';
+import preferAttributeInterpolation from '../rules/prefer-attribute-interpolation.js';
 import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
+import preferDerivedOverDerivedBy from '../rules/prefer-derived-over-derived-by.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import preferSvelteReactivity from '../rules/prefer-svelte-reactivity.js';
@@ -103,8 +109,11 @@ export const rules = [
 	maxLinesPerBlock,
 	mustacheSpacing,
 	noAddEventListener,
+	noAtConstTags,
 	noAtDebugTags,
 	noAtHtmlTags,
+	noBindValueOnCheckableInputs,
+	noConflictingModuleNames,
 	noDomManipulating,
 	noDupeElseIfBlocks,
 	noDupeOnDirectives,
@@ -121,6 +130,7 @@ export const rules = [
 	noInspect,
 	noNavigationWithoutBase,
 	noNavigationWithoutResolve,
+	noNestedStyleTag,
 	noNotFunctionHandler,
 	noObjectInTextMustaches,
 	noRawSpecialElements,
@@ -142,8 +152,10 @@ export const rules = [
 	noUnusedSvelteIgnore,
 	noUselessChildrenSnippet,
 	noUselessMustaches,
+	preferAttributeInterpolation,
 	preferClassDirective,
 	preferConst,
+	preferDerivedOverDerivedBy,
 	preferDestructuredStoreProps,
 	preferStyleDirective,
 	preferSvelteReactivity,
