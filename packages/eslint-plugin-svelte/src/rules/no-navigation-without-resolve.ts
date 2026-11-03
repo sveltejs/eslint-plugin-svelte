@@ -1,4 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types';
+import type { Variable } from '@typescript-eslint/scope-manager';
 
 import { createRule } from '../utils/index.js';
 import { getPropertyName, ReferenceTracker, getStaticValue } from '@eslint-community/eslint-utils';
@@ -319,10 +320,11 @@ function isValueAllowed(
 	config: AllowedValueConfig
 ): boolean {
 	if (value.type === 'Identifier') {
-		const binding = resolveBindingIdentifier(ctx, value);
-		if (binding !== null) {
+		const variable = resolveVariable(ctx, value);
+		if (variable !== null) {
+			const binding = variable.identifiers[0];
 			if (binding.parent.type === 'VariableDeclarator') {
-				return variableValueIsAllowed(ctx, binding, resolveReferences, tsTools, config);
+				return variableValueIsAllowed(ctx, variable, resolveReferences, tsTools, config);
 			}
 			if (eachItemValueIsAllowed(ctx, binding, undefined, resolveReferences, tsTools, config)) {
 				return true;
@@ -356,21 +358,16 @@ function isValueAllowed(
 
 function variableValueIsAllowed(
 	ctx: FindVariableContext,
-	binding: TSESTree.Identifier,
+	variable: Variable,
 	resolveReferences: Set<TSESTree.Identifier>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
-	if (expressionIsAllowedType(binding, config.allowNullish, tsTools)) {
+	if (expressionIsAllowedType(variable.identifiers[0], config.allowNullish, tsTools)) {
 		return true;
 	}
-	if (binding.parent.type !== 'VariableDeclarator') {
-		return false;
-	}
-	return (
-		binding.parent.init !== null &&
-		isValueAllowed(ctx, binding.parent.init, resolveReferences, tsTools, config)
-	);
+	const init = variableInit(variable);
+	return init !== null && isValueAllowed(ctx, init, resolveReferences, tsTools, config);
 }
 
 function eachItemValueIsAllowed(
@@ -420,17 +417,20 @@ function memberValueIsAllowed(
 		const target = accessKey(ctx, value.object, key);
 		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
 	}
-	const binding = resolveBindingIdentifier(ctx, value.object);
-	if (binding === null) {
+	const variable = resolveVariable(ctx, value.object);
+	if (variable === null) {
 		return false;
 	}
 	// `item.url` where `item` is an `{#each}` iteration variable.
-	if (eachItemValueIsAllowed(ctx, binding, key, resolveReferences, tsTools, config)) {
+	if (
+		eachItemValueIsAllowed(ctx, variable.identifiers[0], key, resolveReferences, tsTools, config)
+	) {
 		return true;
 	}
 	// `paths[0]` where `paths` is a `const` array/object literal.
-	if (binding.parent.type === 'VariableDeclarator' && binding.parent.init !== null) {
-		const target = accessKey(ctx, binding.parent.init, key);
+	const init = variableInit(variable);
+	if (init !== null) {
+		const target = accessKey(ctx, init, key);
 		return target !== null && isValueAllowed(ctx, target, resolveReferences, tsTools, config);
 	}
 	return false;
@@ -438,15 +438,12 @@ function memberValueIsAllowed(
 
 // Helper functions
 
-function resolveBindingIdentifier(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier
-): TSESTree.Identifier | null {
+function resolveVariable(ctx: FindVariableContext, node: TSESTree.Identifier): Variable | null {
 	const variable = ctx.findVariable(node);
 	if (variable === null || variable.identifiers.length === 0) {
 		return null;
 	}
-	return variable.identifiers[0];
+	return variable;
 }
 
 /**
@@ -685,11 +682,35 @@ function resolveVariableInit(
 	ctx: FindVariableContext,
 	node: TSESTree.Identifier
 ): TSESTree.Expression | null {
-	const binding = resolveBindingIdentifier(ctx, node);
-	if (binding === null || binding.parent.type !== 'VariableDeclarator') {
+	const variable = resolveVariable(ctx, node);
+	return variable === null ? null : variableInit(variable);
+}
+
+/**
+ * Returns the initializer of a variable, or null if it has none or may hold a different value.
+ */
+function variableInit(variable: Variable): TSESTree.Expression | null {
+	const binding = variable.identifiers[0];
+	if (binding.parent.type !== 'VariableDeclarator' || !isNeverReassigned(variable)) {
 		return null;
 	}
 	return binding.parent.init;
+}
+
+/**
+ * Checks that a variable always holds its initial value, i.e. it is a `const` or is never written to
+ * after initialization. Mirrors `getStaticValue()` from eslint-utils.
+ */
+function isNeverReassigned(variable: Variable): boolean {
+	if (variable.defs.length !== 1 || variable.defs[0].type !== 'Variable') {
+		return false;
+	}
+	if (variable.defs[0].parent.kind === 'const') {
+		return true;
+	}
+	const inits = variable.references.filter((reference) => reference.init).length;
+	const reads = variable.references.filter((reference) => reference.isReadOnly()).length;
+	return inits === 1 && inits + reads === variable.references.length;
 }
 
 function expressionIsAllowedType(
