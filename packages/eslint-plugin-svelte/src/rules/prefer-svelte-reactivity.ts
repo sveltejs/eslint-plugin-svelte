@@ -172,8 +172,9 @@ const TS_WRAPPER_TYPES = new Set<string>([
 
 /**
  * Methods that return the instance itself, e.g. `set.add(1)` returns `set`.
+ * `valueOf()` returns the instance for all classes except `Date`, but we treat it the same for simplicity.
  */
-const SELF_RETURNING_METHODS = new Set(['add', 'set']);
+const SELF_RETURNING_METHODS = new Set(['add', 'set', 'valueOf']);
 
 /**
  * Properties that return an object linked to the instance, e.g. `url.searchParams`.

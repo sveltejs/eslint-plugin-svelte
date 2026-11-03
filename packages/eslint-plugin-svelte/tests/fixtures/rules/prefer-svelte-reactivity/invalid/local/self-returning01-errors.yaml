@@ -14,3 +14,7 @@
   line: 19
   column: 15
   suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 25
+  column: 15
+  suggestions: null

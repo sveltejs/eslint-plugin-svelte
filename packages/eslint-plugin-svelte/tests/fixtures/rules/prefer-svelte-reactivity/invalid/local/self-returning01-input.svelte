@@ -21,9 +21,16 @@
 		return url.searchParams;
 	}
 
+	function valueOf() {
+		const url = new URL(base);
+		url.pathname = '/x';
+		return url.valueOf();
+	}
+
 	const set = createSet();
 	const map = createMap();
 	const params = getParams();
+	const url = valueOf();
 </script>
 
-<button onclick={reset}>{set.size} {map.size} {current?.size} {params.get('q')}</button>
+<button onclick={reset}>{set.size} {map.size} {current?.size} {params.get('q')} {url.href}</button>
