@@ -225,7 +225,16 @@ function classify(alt: Alt): Finding {
 		};
 	}
 	if (anchor && anchorIndex === 0) {
-		if (anchor.type === 'based') return OK;
+		if (anchor.type === 'based') {
+			// `{base}{resolve('/x')}`: the base path is added twice.
+			for (const part of parts.slice(1)) {
+				if (part.type === 'text' && /[#?]/u.test(part.value)) break;
+				if (part.type === 'resolved') {
+					return { kind: 'prefix', value, name: part.label, relativeInSsr: false, head: 'text' };
+				}
+			}
+			return OK;
+		}
 		const next = parts[1];
 		if (next === undefined) return OK;
 		if (next.type === 'text') {
@@ -270,8 +279,9 @@ const PATTERN_PARENTS = new Set([
 
 function getImportInfo(variable: Variable): ImportInfo | null {
 	const def = variable.defs[0];
-	if (def?.type !== 'ImportBinding') return null;
-	const declaration = def.parent as TSESTree.ImportDeclaration;
+	// `import x = require('...')` / `import x = NS.y` is also an `ImportBinding`.
+	if (def?.type !== 'ImportBinding' || def.parent?.type !== 'ImportDeclaration') return null;
+	const declaration = def.parent;
 	const node = def.node as TSESTree.ImportClause;
 	const source = declaration.source.value;
 	if (node.type === 'ImportNamespaceSpecifier') return { source, imported: '*' };
@@ -332,6 +342,8 @@ class UrlEvaluator {
 	private readonly cache = new Map<unknown, Value>();
 
 	private readonly candidateCache = new Map<TSESTree.Node, SourceRef[]>();
+
+	private readonly lookupCache = new Map<TSESTree.Expression, Map<string, SourceRef[]>>();
 
 	private readonly propertyNameCache = new Map<
 		TSESTree.ObjectExpression,
@@ -696,6 +708,19 @@ class UrlEvaluator {
 
 	/** Find the values of `object[key]` where `object` is an object or array literal. */
 	private lookup(object: TSESTree.Expression, key: string): SourceRef[] {
+		let byKey = this.lookupCache.get(object);
+		const cached = byKey?.get(key);
+		if (cached) return cached;
+		const cutoffs = this.cutoffs;
+		const result = this.lookupUncached(object, key);
+		if (this.cutoffs === cutoffs) {
+			if (!byKey) this.lookupCache.set(object, (byKey = new Map()));
+			byKey.set(key, result);
+		}
+		return result;
+	}
+
+	private lookupUncached(object: TSESTree.Expression, key: string): SourceRef[] {
 		const index = arrayIndex(key);
 		const results: SourceRef[] = [];
 		for (const candidate of this.candidates(unwrapTypeScript(object))) {
@@ -872,7 +897,10 @@ class UrlEvaluator {
 			const url = this.evaluateUrlObject(object);
 			if (url !== null) return url;
 		}
-		return this.refine(node);
+		// What a function returns is not known: a helper such as `<T>(href: T) => T` returns
+		// the literal type of its argument even when it adds the base path.
+		const value = this.refine(node);
+		return value.map((alt) => (alt?.length === 1 && alt[0].type === 'text' ? [STRING_PART] : alt));
 	}
 
 	private evaluateNew(node: TSESTree.NewExpression): Value {
@@ -882,9 +910,10 @@ class UrlEvaluator {
 		const value = this.evaluate(input);
 		if (base === undefined) return value;
 		if (base.type === 'SpreadElement') return UNKNOWN;
-		// Against an external base, a path is no longer a path of this app.
-		const externalBase = this.evaluate(base).some((alt) => classify(alt).kind === 'external');
-		if (!externalBase) return value;
+		// A path keeps its meaning only against a base of this app, such as `page.url`.
+		// Against an external or unknown base, it may not be a path of this app.
+		const sameApp = this.evaluate(base).every((alt) => alt !== null && alt[0]?.type === 'based');
+		if (sameApp) return value;
 		return value.map((alt) => (classify(alt).kind === 'external' ? alt : [UNKNOWN_PART]));
 	}
 
