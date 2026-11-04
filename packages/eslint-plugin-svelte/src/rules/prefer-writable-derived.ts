@@ -389,6 +389,30 @@ function isWriteTarget(node: TSESTree.Node): boolean {
 	}
 }
 
+/** Checks whether the pattern is in the destructuring of `$props()`. */
+function isPropsPattern(pattern: TSESTree.Node): boolean {
+	let node: TSESTree.Node = pattern;
+	while (
+		node.parent?.type === 'Property' ||
+		node.parent?.type === 'ObjectPattern' ||
+		node.parent?.type === 'ArrayPattern' ||
+		node.parent?.type === 'AssignmentPattern' ||
+		node.parent?.type === 'RestElement'
+	) {
+		node = node.parent;
+	}
+	const declarator = node.parent;
+	if (declarator?.type !== 'VariableDeclarator' || declarator.id !== node || !declarator.init) {
+		return false;
+	}
+	const init = unwrapTS(declarator.init);
+	return (
+		init.type === 'CallExpression' &&
+		init.callee.type === 'Identifier' &&
+		init.callee.name === '$props'
+	);
+}
+
 function isOptionElement(node: AnyNode | null | undefined): boolean {
 	return node?.type === 'SvelteElement' && node.kind === 'html' && node.name.name === 'option';
 }
@@ -859,8 +883,13 @@ function createDeepMutationChecker(context: RuleContext) {
 		if (!fn) return true;
 		if (!spread) return isParamMutated(fn, index, mode === 'eachItem' ? 0 : mode);
 		// e.g. `fn(...v)`. The parameters from there get the elements.
+		// This also checks a rest parameter before that position and `arguments`.
 		const elementMode = toMode(toDepth(mode) - 1);
-		return fn.params.some((_, i) => i >= index && isParamMutated(fn, i, elementMode));
+		const count = Math.max(fn.params.length, index + 1);
+		for (let i = index; i < count; i++) {
+			if (isParamMutated(fn, i, elementMode)) return true;
+		}
+		return false;
 	}
 
 	/** Checks `$inspect(v).with(callback)`. The callback gets the value. */
@@ -1365,6 +1394,8 @@ function createDeepMutationChecker(context: RuleContext) {
 					return isWritable || isMethodProperty();
 				case 'AssignmentPattern':
 					if (parent.left === node) return isWritable || isMethodProperty();
+					// e.g. `let { items = v } = $props()`. A custom element exposes it as a property.
+					if (isPropsPattern(parent)) return true;
 					// e.g. `const { a = v } = x`
 					return isPatternMutated(parent.left, getMode());
 				case 'ForOfStatement':
