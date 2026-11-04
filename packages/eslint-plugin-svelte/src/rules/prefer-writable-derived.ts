@@ -731,7 +731,10 @@ function createDeepMutationChecker(context: RuleContext) {
 		switch (pattern.type) {
 			case 'Identifier': {
 				const variable = findVariable(pattern);
-				return variable == null || isVariableMutated(variable, mode);
+				if (variable == null) return true;
+				// e.g. `picked = v` with `let { picked } = $props()`. A custom element exposes it.
+				if (variable.defs.some((def) => isPropsPattern(def.name))) return true;
+				return isVariableMutated(variable, mode);
 			}
 			case 'ObjectPattern':
 				return pattern.properties.some((property) =>
@@ -796,7 +799,12 @@ function createDeepMutationChecker(context: RuleContext) {
 	function usesArguments(fn: LocalFunction): boolean {
 		if (fn.type !== 'FunctionDeclaration' && fn.type !== 'FunctionExpression') return false;
 		const scope = context.sourceCode.scopeManager?.acquire(fn);
-		return (scope?.set.get('arguments')?.references.length ?? 0) > 0;
+		if (!scope) return true;
+		return (
+			(scope.set.get('arguments')?.references.length ?? 0) > 0 ||
+			// e.g. `function f(a, g = () => arguments[0]) {}`. The reference is not resolved.
+			scope.through.some((reference) => reference.identifier.name === 'arguments')
+		);
 	}
 
 	/** Checks whether the function returns a value, e.g. `return { update(param) {} }`. */
