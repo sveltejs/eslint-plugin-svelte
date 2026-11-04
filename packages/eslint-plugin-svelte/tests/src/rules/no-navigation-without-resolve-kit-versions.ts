@@ -48,7 +48,7 @@ describe('no-navigation-without-resolve with different SvelteKit versions', () =
 		}
 
 		const filename = path.join(project, 'src/routes/+page.svelte');
-		const linter = new Linter({ cwd: project });
+		const linter = new Linter({ configType: 'flat', cwd: project });
 		const messages = linter.verify(
 			CODE,
 			{

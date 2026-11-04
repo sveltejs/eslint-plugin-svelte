@@ -58,7 +58,7 @@ describe('no-navigation-without-resolve without generated $app/types', () => {
 	function lint(strict: boolean) {
 		const filename = path.join(root, 'src/page.svelte');
 		fs.writeFileSync(filename, CODE);
-		return new Linter({ cwd: root })
+		return new Linter({ configType: 'flat', cwd: root })
 			.verify(
 				CODE,
 				{
