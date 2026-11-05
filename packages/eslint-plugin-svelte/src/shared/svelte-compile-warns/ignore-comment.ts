@@ -139,13 +139,13 @@ function extractSvelteIgnore(
 		}
 		lastSeparatorEnd = separator.index + separator[0].length;
 	}
-	if (results.length === 0) {
-		const code = processedCodeList;
+	const trailingCode = processedCodeList.slice(lastSeparatorEnd);
+	if (trailingCode) {
 		results.push({
-			code,
-			codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
-			readInRunesMode: runesModeCodeStarts.has(0),
-			range: [start, start + code.length],
+			code: trailingCode,
+			codeForV5: V5_REPLACEMENTS[trailingCode] || trailingCode.replace(/-/gu, '_'),
+			readInRunesMode: runesModeCodeStarts.has(lastSeparatorEnd),
+			range: [start + lastSeparatorEnd, start + lastSeparatorEnd + trailingCode.length],
 			token
 		});
 	}
