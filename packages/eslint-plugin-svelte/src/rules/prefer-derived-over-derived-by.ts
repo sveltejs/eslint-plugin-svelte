@@ -64,8 +64,39 @@ export default createRule('prefer-derived-over-derived-by', {
 					node,
 					messageId: 'unnecessary',
 					fix(fixer) {
-						const expressionText = context.sourceCode.getText(expressionNode);
-						return fixer.replaceText(node, `$derived(${expressionText})`);
+						const { sourceCode } = context;
+						const typeArguments =
+							node.typeArguments ??
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Support old typescript-eslint
+							((node as any).typeParameters as TSESTree.TSTypeParameterInstantiation | undefined);
+						const returnType = arg.returnType?.typeAnnotation;
+						if (
+							// `$derived()` has no place for a type parameter of the function itself,
+							// and only one of the two type annotations can be kept.
+							arg.typeParameters ||
+							(typeArguments && returnType) ||
+							// Comments outside the expression would be lost.
+							sourceCode.getCommentsInside(node).length !==
+								sourceCode.getCommentsInside(expressionNode).length
+						) {
+							return null;
+						}
+
+						const typeText = typeArguments
+							? sourceCode.getText(typeArguments)
+							: returnType
+								? `<${sourceCode.getText(returnType)}>`
+								: '';
+						const expressionText = sourceCode.getText(expressionNode);
+						return fixer.replaceText(
+							node,
+							`$derived${typeText}(${
+								// A sequence expression would otherwise become multiple arguments.
+								expressionNode.type === 'SequenceExpression'
+									? `(${expressionText})`
+									: expressionText
+							})`
+						);
 					}
 				});
 			}
