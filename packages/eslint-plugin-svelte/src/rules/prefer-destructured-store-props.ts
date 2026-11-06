@@ -4,7 +4,7 @@ import type { AST } from 'svelte-eslint-parser';
 import { keyword } from 'esutils';
 import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
-import { findAttribute, isExpressionIdentifier, findVariable } from '../utils/ast-utils.js';
+import { isExpressionIdentifier, isModuleScript, findVariable } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
 import { SVELTE_RUNES } from '../shared/runes.js';
 
@@ -128,14 +128,7 @@ export default createRule('prefer-destructured-store-props', {
 		return {
 			SvelteScriptElement(node) {
 				inScriptElement = true;
-				const scriptContext = findAttribute(node, 'context');
-				const contextValue = scriptContext?.value.length === 1 && scriptContext.value[0];
-				if (
-					contextValue &&
-					contextValue.type === 'SvelteLiteral' &&
-					contextValue.value === 'module'
-				) {
-					// It is <script context="module">
+				if (isModuleScript(node)) {
 					return;
 				}
 				mainScript = node;

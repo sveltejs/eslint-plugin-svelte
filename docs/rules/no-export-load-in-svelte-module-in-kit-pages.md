@@ -14,7 +14,7 @@ since: 'v2.12.0'
 
 ## :book: Rule Details
 
-This rule reports unexpected exported `load` function at `<script context="module">`.
+This rule reports unexpected exported `load` function at `<script module>` or `<script context="module">`.
 At SvelteKit v1.0.0-next.405, `load` function has been moved into a separate file — `+page.js` for pages, `+layout.js` for layouts.
 And the API has changed.
 

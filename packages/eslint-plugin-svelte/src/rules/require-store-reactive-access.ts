@@ -6,7 +6,7 @@ import {
 	createStoreChecker,
 	extractStoreReferences
 } from './reference-helpers/svelte-store.js';
-import { findAttribute, findVariable } from '../utils/ast-utils.js';
+import { findVariable, isModuleScript } from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
 import { getTypeScriptTools } from '../utils/ts-utils/index.js';
 
@@ -407,21 +407,6 @@ export default createRule('require-store-reactive-access', {
 		 */
 		function isEventAttributeName(name: string) {
 			return supportsEventAttributes && name.startsWith('on');
-		}
-
-		/**
-		 * Checks whether the given script element is the module script.
-		 * e.g. <script module>, <script context="module">
-		 */
-		function isModuleScript(node: AST.SvelteScriptElement) {
-			if (findAttribute(node, 'module')) {
-				return true;
-			}
-			const contextAttr = findAttribute(node, 'context');
-			const contextValue = contextAttr?.value.length === 1 && contextAttr.value[0];
-			return Boolean(
-				contextValue && contextValue.type === 'SvelteLiteral' && contextValue.value === 'module'
-			);
 		}
 
 		/**

@@ -3,6 +3,7 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { getSvelteContext, getSvelteVersion } from '../utils/svelte-context.js';
+import { isModuleScript } from '../utils/ast-utils.js';
 
 const PAGE_PROP_NAMES = ['data', 'form', 'params', 'snapshot'];
 const LEGACY_PAGE_PROP_NAMES = [...PAGE_PROP_NAMES, 'errors'];
@@ -28,23 +29,6 @@ function checkProp(
 			});
 		}
 	}
-}
-
-function isModuleScript(node: AST.SvelteAttribute) {
-	// <script context="module">
-	if (
-		node.key.name === 'context' &&
-		node.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')
-	) {
-		return true;
-	}
-
-	// <script module>
-	if (node.key.name === 'module' && node.value.length === 0) {
-		return true;
-	}
-
-	return false;
 }
 
 export default createRule('valid-prop-names-in-kit-pages', {
@@ -82,9 +66,9 @@ export default createRule('valid-prop-names-in-kit-pages', {
 
 		return {
 			// <script>
-			'Program > SvelteScriptElement > SvelteStartTag': (node: AST.SvelteStartTag) => {
-				// except for <script context="module">
-				isScript = !node.attributes.some((a) => a.type === 'SvelteAttribute' && isModuleScript(a));
+			'Program > SvelteScriptElement': (node: AST.SvelteScriptElement) => {
+				// except for <script module>, <script context="module">
+				isScript = !isModuleScript(node);
 			},
 
 			// </script>

@@ -1,5 +1,7 @@
+import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
+import { isModuleScript } from '../utils/ast-utils.js';
 
 export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	meta: {
@@ -24,11 +26,10 @@ export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	create(context) {
 		let isModule = false;
 		return {
-			// <script context="module">
-			[`Program > SvelteScriptElement > SvelteStartTag > SvelteAttribute[key.name="context"] > SvelteLiteral[value="module"]`]:
-				() => {
-					isModule = true;
-				},
+			// <script module>, <script context="module">
+			'Program > SvelteScriptElement': (node: AST.SvelteScriptElement) => {
+				isModule = isModuleScript(node);
+			},
 
 			// </script>
 			'Program > SvelteScriptElement:exit': () => {
