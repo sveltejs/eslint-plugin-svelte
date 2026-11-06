@@ -1,0 +1,13 @@
+<script>
+	class A {
+		#variable = new Set([1, 2, 1, 3, 3]);
+
+		fn() {
+			return this.#variable;
+		}
+	}
+
+	const a = new A();
+</script>
+
+{a.fn().has(42)}
