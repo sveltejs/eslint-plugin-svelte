@@ -160,6 +160,7 @@ export default createRule('prefer-destructured-store-props', {
 			) {
 				if (storeMemberAccessStack[0]?.node !== node) return;
 				const { identifiers } = storeMemberAccessStack.shift()!;
+				if (isWriteTarget(node)) return;
 
 				for (const id of identifiers) {
 					if (!isExpressionIdentifier(id)) continue;
@@ -262,3 +263,42 @@ export default createRule('prefer-destructured-store-props', {
 		};
 	}
 });
+
+/** Checks whether replacing this access would redirect a store write. */
+function isWriteTarget(node: TSESTree.Node): boolean {
+	const parent = node.parent as TSESTree.Node | AST.SvelteNode;
+	switch (parent.type) {
+		case 'AssignmentExpression':
+		case 'ForInStatement':
+		case 'ForOfStatement':
+			return parent.left === node;
+		case 'UpdateExpression':
+			return parent.argument === node;
+		case 'UnaryExpression':
+			return parent.operator === 'delete' && parent.argument === node;
+		case 'SvelteDirective':
+			return parent.kind === 'Binding' && parent.expression === node;
+		case 'MemberExpression':
+			return parent.object === node && isWriteTarget(parent);
+		case 'TSAsExpression':
+		case 'TSTypeAssertion':
+		case 'TSNonNullExpression':
+		case 'TSSatisfiesExpression':
+		case 'ChainExpression':
+			return isWriteTarget(parent);
+		case 'Property':
+			return (
+				parent.parent.type === 'ObjectPattern' &&
+				parent.value === node &&
+				isWriteTarget(parent.parent)
+			);
+		case 'ArrayPattern':
+		case 'ObjectPattern':
+		case 'RestElement':
+			return isWriteTarget(parent);
+		case 'AssignmentPattern':
+			return parent.left === node && isWriteTarget(parent);
+		default:
+			return false;
+	}
+}
