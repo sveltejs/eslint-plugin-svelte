@@ -1,7 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
-import { isModuleScript } from '../utils/ast-utils.js';
+import { findVariable, isModuleScript } from '../utils/ast-utils.js';
 
 export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 	meta: {
@@ -59,11 +59,20 @@ export default createRule('no-export-load-in-svelte-module-in-kit-pages', {
 					}
 				} else if (
 					declaration?.type === 'FunctionDeclaration' ||
-					declaration?.type === 'ClassDeclaration'
+					declaration?.type === 'ClassDeclaration' ||
+					(declaration?.type === 'TSImportEqualsDeclaration' && declaration.importKind !== 'type')
 				) {
 					verify(declaration.id);
 				}
 				for (const specifier of node.specifiers) {
+					// A local type can be exported without an explicit `type` modifier.
+					if (
+						!node.source &&
+						specifier.local.type === 'Identifier' &&
+						findVariable(context, specifier.local)?.isValueVariable === false
+					) {
+						continue;
+					}
 					if (specifier.exportKind !== 'type') verify(specifier.exported);
 				}
 			},
