@@ -90,7 +90,7 @@ export default createRule('prefer-svelte-reactivity', {
 									: path[0] === 'URL'
 										? 'mutableURLUsed'
 										: 'mutableURLSearchParamsUsed';
-					if (isLocalToFunction(context, node as TSESTree.Expression)) {
+					if (isLocalToFunction(context, node as TSESTree.Expression, path[0])) {
 						// The instance can't be observed after the function returns,
 						// so it doesn't need to be reactive.
 						continue;
@@ -174,12 +174,133 @@ const TS_WRAPPER_TYPES = new Set<string>([
  * Methods that return the instance itself, e.g. `set.add(1)` returns `set`.
  * `valueOf()` returns the instance for all classes except `Date`, but we treat it the same for simplicity.
  */
-const SELF_RETURNING_METHODS = new Set(['add', 'set', 'valueOf']);
+const SELF_RETURNING_METHODS = new Map([
+	['Set', 'add'],
+	['Map', 'set']
+]);
 
-/**
- * Properties that return an object linked to the instance, e.g. `url.searchParams`.
- */
-const LINKED_PROPERTIES = new Set(['searchParams']);
+/** Native properties that can be assigned without replacing a method or hook. */
+const URL_SETTABLE_PROPERTIES = new Set([
+	'hash',
+	'host',
+	'hostname',
+	'href',
+	'password',
+	'pathname',
+	'port',
+	'protocol',
+	'search',
+	'username'
+]);
+
+/** Known built-in members that do not expose the receiver. */
+const LOCAL_MEMBERS = new Map([
+	[
+		'Date',
+		new Set([
+			'getDate',
+			'getDay',
+			'getFullYear',
+			'getHours',
+			'getMilliseconds',
+			'getMinutes',
+			'getMonth',
+			'getSeconds',
+			'getTime',
+			'getTimezoneOffset',
+			'getUTCDate',
+			'getUTCDay',
+			'getUTCFullYear',
+			'getUTCHours',
+			'getUTCMilliseconds',
+			'getUTCMinutes',
+			'getUTCMonth',
+			'getUTCSeconds',
+			'getYear',
+			'setDate',
+			'setFullYear',
+			'setHours',
+			'setMilliseconds',
+			'setMinutes',
+			'setMonth',
+			'setSeconds',
+			'setTime',
+			'setUTCDate',
+			'setUTCFullYear',
+			'setUTCHours',
+			'setUTCMilliseconds',
+			'setUTCMinutes',
+			'setUTCMonth',
+			'setUTCSeconds',
+			'setYear',
+			'toDateString',
+			'toGMTString',
+			'toISOString',
+			'toJSON',
+			'toLocaleDateString',
+			'toLocaleString',
+			'toLocaleTimeString',
+			'toString',
+			'toTimeString',
+			'toUTCString'
+		])
+	],
+	[
+		'Map',
+		new Set([
+			'size',
+			'clear',
+			'delete',
+			'get',
+			'has',
+			'keys',
+			'values',
+			'entries',
+			'toString',
+			'toLocaleString'
+		])
+	],
+	[
+		'Set',
+		new Set([
+			'size',
+			'clear',
+			'delete',
+			'has',
+			'keys',
+			'values',
+			'entries',
+			'difference',
+			'intersection',
+			'union',
+			'symmetricDifference',
+			'isDisjointFrom',
+			'isSubsetOf',
+			'isSupersetOf',
+			'toString',
+			'toLocaleString'
+		])
+	],
+	['URL', new Set([...URL_SETTABLE_PROPERTIES, 'origin', 'toString', 'toJSON'])],
+	[
+		'URLSearchParams',
+		new Set([
+			'size',
+			'append',
+			'delete',
+			'get',
+			'getAll',
+			'has',
+			'sort',
+			'set',
+			'keys',
+			'values',
+			'entries',
+			'toString',
+			'toLocaleString'
+		])
+	]
+]);
 
 /**
  * Global functions that only read or copy their arguments and never keep them.
@@ -196,7 +317,11 @@ const COPYING_STATIC_METHODS = new Map([
  * e.g. it is not returned, stored outside, passed to a function, or used by a nested function or a rune.
  * When we are not sure, we treat it as leaving the function.
  */
-function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression): boolean {
+function isLocalToFunction(
+	context: RuleContext,
+	ctorNode: TSESTree.Expression,
+	className: string
+): boolean {
 	const fn = getEnclosingFunction(ctorNode);
 	if (!fn) return false;
 
@@ -207,7 +332,7 @@ function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression):
 	const parent = expr.parent!;
 	if (parent.type !== 'VariableDeclarator' || parent.init !== expr) {
 		// A temporary instance, e.g. `new Date(date).setHours(0)`
-		return !isLeaked(context, ctorNode);
+		return !isLeaked(context, ctorNode, className);
 	}
 	if (parent.id.type !== 'Identifier') {
 		return false;
@@ -222,9 +347,9 @@ function isLocalToFunction(context: RuleContext, ctorNode: TSESTree.Expression):
 		if (isInRuneArguments(identifier, fn)) return false;
 		if (reference.isWrite()) {
 			// `set ||= other` evaluates to `set`.
-			return !reference.isRead() || !isLeaked(context, identifier.parent);
+			return !reference.isRead() || !isLeaked(context, identifier.parent, className);
 		}
-		return !isLeaked(context, identifier);
+		return !isLeaked(context, identifier, className);
 	});
 }
 
@@ -277,7 +402,7 @@ function isInRuneArguments(node: TSESTree.Node, fn: FunctionNode): boolean {
  * Checks whether the value of the node may leave the function.
  * It returns `true` unless the value is surely only read in place.
  */
-function isLeaked(context: RuleContext, node: TSESTree.Node): boolean {
+function isLeaked(context: RuleContext, node: TSESTree.Node, className: string): boolean {
 	const parent = node.parent;
 	if (!parent) return true;
 	switch (parent.type) {
@@ -298,39 +423,40 @@ function isLeaked(context: RuleContext, node: TSESTree.Node): boolean {
 			// The tag function of a tagged template receives the value.
 			return parent.parent?.type === 'TaggedTemplateExpression';
 		case 'ConditionalExpression':
-			return parent.test !== node && isLeaked(context, parent);
+			return parent.test !== node && isLeaked(context, parent, className);
 		case 'SequenceExpression':
-			return parent.expressions.at(-1) === node && isLeaked(context, parent);
+			return parent.expressions.at(-1) === node && isLeaked(context, parent, className);
 		case 'LogicalExpression':
 		case 'AwaitExpression':
 		case 'ChainExpression':
-			return isLeaked(context, parent);
+			return isLeaked(context, parent, className);
 		case 'MemberExpression':
 			if (parent.object !== node) {
 				// Used as a computed key, e.g. `obj[set]`
 				return false;
 			}
-			return isMemberLeaked(context, parent);
+			return isMemberLeaked(context, parent, className);
 		case 'CallExpression':
 		case 'NewExpression':
 			return parent.callee === node || !isCopyingCall(context, parent, node);
 		default:
-			return TS_WRAPPER_TYPES.has(parent.type) ? isLeaked(context, parent) : true;
+			return TS_WRAPPER_TYPES.has(parent.type) ? isLeaked(context, parent, className) : true;
 	}
 }
 
 /**
  * Checks whether a member access on the instance may let the instance leave the function.
  */
-function isMemberLeaked(context: RuleContext, member: TSESTree.MemberExpression): boolean {
-	const parent = member.parent;
-	if (
-		(parent.type === 'AssignmentExpression' && parent.left === member) ||
-		(parent.type === 'UpdateExpression' && parent.argument === member)
-	) {
-		// Mutation, e.g. `url.pathname = '/'`
-		return false;
+function isMemberLeaked(
+	context: RuleContext,
+	member: TSESTree.MemberExpression,
+	className: string
+): boolean {
+	let target: TSESTree.Node = member;
+	while (target.parent && TS_WRAPPER_TYPES.has(target.parent.type)) {
+		target = target.parent;
 	}
+	const parent = target.parent!;
 	let name: string | null = null;
 	if (!member.computed) {
 		name = member.property.type === 'Identifier' ? member.property.name : null;
@@ -341,22 +467,33 @@ function isMemberLeaked(context: RuleContext, member: TSESTree.MemberExpression)
 		// We don't know which member is used.
 		return true;
 	}
-	if (SELF_RETURNING_METHODS.has(name)) {
-		if (parent.type === 'CallExpression' && parent.callee === member) {
-			return isLeaked(context, parent);
+	if (
+		(parent.type === 'AssignmentExpression' && parent.left === target) ||
+		(parent.type === 'UpdateExpression' && parent.argument === target)
+	) {
+		// Only native URL setters preserve the assumptions about built-in behavior.
+		// Replacing a method or hook can expose `this`, even through String() or JSON.stringify().
+		return className !== 'URL' || !URL_SETTABLE_PROPERTIES.has(name);
+	}
+	if (name === 'valueOf' || SELF_RETURNING_METHODS.get(className) === name) {
+		if (parent.type === 'CallExpression' && parent.callee === target) {
+			return isLeaked(context, parent, className);
 		}
 		// e.g. `const add = set.add`
-		return isLeaked(context, member);
+		return isLeaked(context, member, className);
 	}
-	if (LINKED_PROPERTIES.has(name)) {
-		return isLeaked(context, member);
+	if (className === 'URL' && name === 'searchParams') {
+		return isLeaked(context, member, 'URLSearchParams');
 	}
-	if (name === 'forEach') {
+	if (
+		name === 'forEach' &&
+		(className === 'Set' || className === 'Map' || className === 'URLSearchParams')
+	) {
 		// The callback receives the instance as the third parameter.
 		// (A non-arrow function can also get it through `arguments`.)
 		return !(
 			parent.type === 'CallExpression' &&
-			parent.callee === member &&
+			parent.callee === target &&
 			parent.arguments.every(
 				(arg) =>
 					arg.type === 'ArrowFunctionExpression' &&
@@ -365,7 +502,7 @@ function isMemberLeaked(context: RuleContext, member: TSESTree.MemberExpression)
 			)
 		);
 	}
-	return false;
+	return !LOCAL_MEMBERS.get(className)?.has(name);
 }
 
 /**
