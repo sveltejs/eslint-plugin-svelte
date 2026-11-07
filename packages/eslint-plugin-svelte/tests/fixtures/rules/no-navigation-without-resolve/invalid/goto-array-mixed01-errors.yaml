@@ -1,5 +1,0 @@
-- message: "`goto()` cannot navigate to the external URL 'https://example.com'.
-    Use `window.location` or a link instead."
-  line: 6
-  column: 7
-  suggestions: null

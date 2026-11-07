@@ -2194,6 +2194,8 @@ export default createRule('no-navigation-without-resolve', {
 				"`{{name}}()` cannot navigate to the external URL '{{value}}'. Use `window.location` or a link instead.",
 			prefixBeforeBase:
 				"Do not add anything before `{{name}}` ('{{value}}'). It already includes the base path.",
+			preloadCodePathname:
+				'On SvelteKit 2, `preloadCode()` takes a base-prefixed pathname, not an absolute URL, relative URL, query, or fragment.',
 			preloadCodeRouteId:
 				"On SvelteKit 3, `preloadCode()` takes a route ID such as '/blog/[slug]', not a URL.",
 			prefixBeforeResolved:
@@ -2245,6 +2247,19 @@ export default createRule('no-navigation-without-resolve', {
 		const evaluator = new UrlEvaluator(context, getTypeScriptTools(context));
 		const sourceCode = context.sourceCode;
 
+		function externalReport(
+			finding: Extract<Finding, { kind: 'external' | 'prefix' }>,
+			sink: SinkKind,
+			name: string
+		): Report | null {
+			if (sink !== 'call') return null;
+			// A full HTTP(S) URL may belong to this app. The deployment origin is unknown.
+			if (name !== 'preloadCode' && /^(?:https?:|[/\\]{2})/iu.test(finding.value)) {
+				return strict ? { messageId: 'strictUnknown', data: {}, finding } : null;
+			}
+			return { messageId: 'externalUrl', data: { name, value: finding.value }, finding };
+		}
+
 		function decide(finding: Finding, sink: SinkKind, name: string): Report | null {
 			switch (finding.kind) {
 				case 'ok':
@@ -2256,9 +2271,7 @@ export default createRule('no-navigation-without-resolve', {
 						? { messageId: 'strictUnknownSuffix', data: { name: finding.name }, finding }
 						: null;
 				case 'external':
-					return sink === 'call'
-						? { messageId: 'externalUrl', data: { name, value: finding.value }, finding }
-						: null;
+					return externalReport(finding, sink, name);
 				case 'rootRelative':
 					return {
 						messageId:
@@ -2287,9 +2300,7 @@ export default createRule('no-navigation-without-resolve', {
 							return strict ? { messageId: 'strictUnknown', data: {}, finding } : null;
 						}
 						if (finding.head === 'external') {
-							return sink === 'call'
-								? { messageId: 'externalUrl', data: { name, value: finding.value }, finding }
-								: null;
+							return externalReport(finding, sink, name);
 						}
 					}
 					return {
@@ -2600,10 +2611,26 @@ export default createRule('no-navigation-without-resolve', {
 				checkKit3PreloadCode(call);
 				return;
 			}
-			const args = name === 'preloadCode' ? call.arguments : call.arguments.slice(0, 1);
+			const args = call.arguments.slice(0, 1);
 			for (const arg of args) {
 				if (arg.type === 'SpreadElement') continue;
 				const value = evaluator.evaluateUrl(arg);
+				if (
+					name === 'preloadCode' &&
+					value.length > 0 &&
+					value.every((alt) => {
+						if (alt == null) return false;
+						const first = alt.find((part) => part.type !== 'text' || part.value !== '');
+						if (!first) return true;
+						if (first.type === 'unknown') return Boolean(first.origin);
+						return (
+							first.type === 'text' && (isExternalText(first.value) || !first.value.startsWith('/'))
+						);
+					})
+				) {
+					context.report({ node: arg, messageId: 'preloadCodePathname' });
+					continue;
+				}
 				const report = check(value, 'call', name);
 				if (report === null) continue;
 				context.report({
@@ -2651,6 +2678,51 @@ export default createRule('no-navigation-without-resolve', {
 						: evaluator.evaluateUrl(part.expression)
 				)
 			);
+		}
+
+		function getAttribute(element: AST.SvelteElement, name: string) {
+			return element.startTag.attributes.find(
+				(attr): attr is AST.SvelteAttribute | AST.SvelteShorthandAttribute =>
+					(attr.type === 'SvelteAttribute' || attr.type === 'SvelteShorthandAttribute') &&
+					attr.key.name.toLowerCase() === name
+			);
+		}
+
+		function literalAttribute(element: AST.SvelteElement, name: string): string | undefined {
+			const attr = getAttribute(element, name);
+			if (!attr) return undefined;
+			const value = attributeValue(attr);
+			if (value.length !== 1 || value[0]?.some((part) => part.type !== 'text')) return undefined;
+			return value[0]?.map((part) => (part.type === 'text' ? part.value : '')).join('');
+		}
+
+		const elements: AST.SvelteElement[] = [];
+
+		function formOwner(element: AST.SvelteElement): AST.SvelteElement | undefined {
+			if (getAttribute(element, 'form')) {
+				const id = literalAttribute(element, 'form');
+				return id
+					? elements.find(
+							(candidate) =>
+								candidate.kind === 'html' &&
+								candidate.name.type === 'SvelteName' &&
+								candidate.name.name === 'form' &&
+								literalAttribute(candidate, 'id') === id
+						)
+					: undefined;
+			}
+			let parent: AST.SvelteNode | null = element.parent;
+			while (parent) {
+				if (
+					parent.type === 'SvelteElement' &&
+					parent.kind === 'html' &&
+					parent.name.type === 'SvelteName' &&
+					parent.name.name === 'form'
+				)
+					return parent;
+				parent = parent.parent;
+			}
+			return undefined;
 		}
 
 		function hasRelExternal(startTag: AST.SvelteStartTag): boolean {
@@ -2725,23 +2797,48 @@ export default createRule('no-navigation-without-resolve', {
 				}
 			},
 			SvelteElement(element: AST.SvelteElement) {
-				if (element.kind !== 'html' || element.name.type !== 'SvelteName') return;
-				const config = LINK_ATTRIBUTES[element.name.name.toLowerCase()];
-				if (config === undefined) return;
-				if (config.kind === 'link' && (ignoreLinks || hasRelExternal(element.startTag))) return;
-				// A spread may set `rel="external"` or replace the URL, so nothing can be proven.
-				if (!strict && element.startTag.attributes.some((a) => a.type === 'SvelteSpreadAttribute'))
-					return;
-				for (const attribute of element.startTag.attributes) {
-					if (
-						(attribute.type === 'SvelteAttribute' ||
-							attribute.type === 'SvelteShorthandAttribute') &&
-						config.attributes.includes(attribute.key.name.toLowerCase())
-					) {
-						checkAttribute(element, attribute, config.kind);
-					}
-				}
+				elements.push(element);
+			},
+			'Program:exit'() {
+				elements.forEach(checkElement);
 			}
 		};
+
+		function checkElement(element: AST.SvelteElement) {
+			if (element.kind !== 'html' || element.name.type !== 'SvelteName') return;
+			const config = LINK_ATTRIBUTES[element.name.name.toLowerCase()];
+			if (config === undefined) return;
+			if (config.kind === 'link' && ignoreLinks) return;
+			const tag = element.name.name.toLowerCase();
+			if ((config.kind === 'link' || tag === 'form') && hasRelExternal(element.startTag)) return;
+			if (tag === 'form' && literalAttribute(element, 'method')?.toLowerCase() === 'dialog') return;
+			if (tag === 'button' || tag === 'input') {
+				const type = literalAttribute(element, 'type')?.toLowerCase();
+				if (tag === 'button' && (type === 'button' || type === 'reset')) return;
+				if (
+					tag === 'input' &&
+					(!getAttribute(element, 'type') ||
+						(type !== undefined && type !== 'submit' && type !== 'image'))
+				)
+					return;
+				const form = formOwner(element);
+				if (form && hasRelExternal(form.startTag)) return;
+				const method = getAttribute(element, 'formmethod')
+					? literalAttribute(element, 'formmethod')
+					: form && literalAttribute(form, 'method');
+				if (method?.toLowerCase() === 'dialog') return;
+			}
+			// A spread may set `rel="external"` or replace the URL, so nothing can be proven.
+			if (!strict && element.startTag.attributes.some((a) => a.type === 'SvelteSpreadAttribute'))
+				return;
+			for (const attribute of element.startTag.attributes) {
+				if (
+					(attribute.type === 'SvelteAttribute' || attribute.type === 'SvelteShorthandAttribute') &&
+					config.attributes.includes(attribute.key.name.toLowerCase())
+				) {
+					checkAttribute(element, attribute, config.kind);
+				}
+			}
+		}
 	}
 });

@@ -17,9 +17,9 @@ This rule runs on SvelteKit 2.26 or later, where `resolve()` exists. SvelteKit 3
 
 ## :book: Rule Details
 
-When your app sets [`paths.base`](https://svelte.dev/docs/kit/configuration#paths), every internal URL must include it. `resolve()` from `$app/paths` adds it for you. A URL like `/about` skips the base path and leads to a 404 page.
+When your app sets [`paths.base`](https://svelte.dev/docs/kit/configuration#paths), internal destinations must resolve within that base path. `resolve()` from `$app/paths` adds it for you. A hard-coded URL like `/about` does not adapt when the base path changes and may lead to a 404 page.
 
-This rule reports URLs that are **known** to skip the base path or to bypass `resolve()`. It only reports what it can prove. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or a function result), it does not report it. Use the `strict` option if you want to report those values too. With type information, a value with a declared string literal type (for example a typed prop or an imported `as const` constant) is known, so it can be reported.
+This rule encourages base-path-aware internal navigation. It reports statically identifiable URL patterns that do not adapt to the base path or bypass `resolve()`. This is a policy check, not proof that a URL is broken: the rule does not know your deployment origin, routing configuration, or whether a hard-coded path intentionally targets another application. If it cannot tell what a value is (for example a prop, `data` from a `load` function, or a function result), it does not report it. Use the `strict` option if you want to report those values too. With type information, a value with a declared string literal type (for example a typed prop or an imported `as const` constant) is known, so it can be reported.
 
 The rule checks these places:
 
@@ -33,19 +33,25 @@ It follows values through string concatenation, template literals, `? :`, `||`, 
 The rule reports:
 
 - **Root-relative URLs** like `/about`. Use `resolve('/about')`. For files in `static`, use `asset()`.
-- **Relative URLs** like `about`, `./about` and `../about`. They depend on the current URL (and its trailing slash) and can point outside the base path. You can allow them with `allowRelativePaths`.
+- **Relative URLs** like `about`, `./about` and `../about`. They depend on the current URL (and its trailing slash) and can point outside the base path. You can allow them with `allowRelativePaths` (except SvelteKit 2 `preloadCode()`, which requires a root-relative pathname).
 - **Anything before `resolve()`**, like `` `${page.url.origin}${resolve('/about')}` ``. During server rendering, `resolve()` can return a relative path such as `./about`, so the result breaks. `` `${base}${resolve('/about')}` `` adds the base path twice. An unknown value before `resolve()` (which may be empty) is reported only with `strict`.
 - **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. It bypasses the route type checks of `resolve()`, and `resolve('/') + '/about'` even becomes `//about` (another host) when there is no base path. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine. A path after `asset()` is fine too.
-- **External URLs in `goto()`, `pushState()`, `replaceState()` and `preloadData()`**. They cannot navigate to other sites. Use `window.location` or a link.
+- **Non-HTTP(S) URLs in navigation calls**, such as `goto('mailto:hello@example.com')`. HTTP(S) and protocol-relative URLs may be same-origin, so they are skipped by default and reported as unverifiable with `strict`. SvelteKit 2 `preloadCode()` requires a pathname, so absolute URLs are reported there.
 
-These are always fine:
+For URL-taking sinks (excluding `preloadCode()`), these are accepted:
 
 - external URLs in links, like `https://svelte.dev`, `//cdn.example.com` and `mailto:…`
 - `''`, `?query` and `#hash`
-- links with the `external` token in `rel` (the URL is served by another app on the same origin). When `rel` is not known (e.g. `rel={rel}`), the link is not checked unless `strict` is on.
+- links and forms with the `external` token in `rel` (the URL is served by another app on the same origin). When `rel` is not known (e.g. `rel={rel}`), the element is not checked unless `strict` is on.
 - `page.url` from `$app/state` (or `$page.url` from `$app/stores`), and the deprecated `base` / `assets` from `$app/paths`
 
-`data-sveltekit-reload`, `target` and `download` do not exempt a link: the base path is still needed.
+`data-sveltekit-reload`, `target` and `download` do not exempt a link: changing how navigation happens does not make an internal URL adapt to the base path. This also applies to `<area>` and SVG links, regardless of whether the client router intercepts them.
+
+For forms, the exemption for `rel="external"` also applies to submit controls owned by that form (including a statically known `form="id"`). This follows the [HTML meaning of `external`](https://html.spec.whatwg.org/multipage/links.html#link-type-external); it is not a guarantee that SvelteKit will bypass its router or `use:enhance`. Use `data-sveltekit-reload` when a GET form must bypass the router, and do not use `use:enhance` for an endpoint that is not a SvelteKit form action. If a submit control intentionally targets a different application from its form, use an ESLint disable comment on that control.
+
+Non-submit buttons/inputs and submissions whose effective method is `dialog` are skipped. A submit control's `formmethod` overrides its owner's `method`. Empty actions and named actions such as `?/login` remain valid; an action on another route still needs a base-aware path.
+
+See SvelteKit's [link options](https://svelte.dev/docs/kit/link-options), [form actions](https://svelte.dev/docs/kit/form-actions), and [`$app/navigation`](https://svelte.dev/docs/kit/$app-navigation). `preloadCode()` takes one pathname on Kit 2 and one route ID on Kit 3; extra arguments are not URL sinks.
 
 <!--eslint-skip-->
 
@@ -97,7 +103,7 @@ These are always fine:
   goto(`/blog/${slug}`);
   goto('/foo' + resolve('/bar'));
   goto(resolve('/blog') + '/' + slug);
-  goto('https://svelte.dev');
+  goto('mailto:hello@example.com');
   pushState('/foo', {});
 </script>
 
