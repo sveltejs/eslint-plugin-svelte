@@ -267,7 +267,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
 				leftBraceToken
 			);
 			offsets.setOffsetElementList(
-				[node.key, node.constraint, node.typeParameter, node.nameType],
+				// `typeParameter` is a deprecated alias of `key` + `constraint`.
+				// Only use it with old typescript-eslint, which has no `key`.
+				node.key ? [node.key, node.constraint, node.nameType] : [node.typeParameter, node.nameType],
 				leftBracketToken,
 				rightBracketToken,
 				1
@@ -447,7 +449,9 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			const leftBraceToken = sourceCode.getTokenAfter(idTokens.lastToken)!;
 			const rightBraceToken = sourceCode.getLastToken(node);
 			offsets.setOffsetToken(leftBraceToken, 0, firstToken);
-			if (node.members)
+			// `members` is a deprecated alias of `body.members`.
+			// `TSEnumBody` handles them when `body` exists.
+			if (!node.body && node.members)
 				offsets.setOffsetElementList(node.members, leftBraceToken, rightBraceToken, 1);
 		},
 		TSEnumBody(node: TSESTree.TSEnumBody) {
