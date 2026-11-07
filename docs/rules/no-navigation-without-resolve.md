@@ -162,7 +162,7 @@ The rule also checks `goto()` and other calls in plain `.js` / `.ts` files (for 
 }
 ```
 
-- `strict` ... Also report every URL that the rule cannot prove to be resolved, such as props, `data`, imports and function results, and values added after `resolve()` that are not known to start with `?` or `#`. Values typed as `ResolvedPathname` (or `URL & { pathname: ResolvedPathname }`) and `page.url` are accepted. Default `false`.
+- `strict` ... Also report URL values that the analysis cannot verify, such as props, `data`, imports and function results, and values added after `resolve()` that are not known to start with `?` or `#`. Values typed as `ResolvedPathname` (or `URL & { pathname: ResolvedPathname }`) and `page.url` are accepted. Default `false`.
 - `allowRelativePaths` ... Allow relative URLs such as `foo`, `./foo` and `../foo`. Default `false`.
 
 The following options are **deprecated** and will be removed in the next major version. The rule no longer reports values it cannot understand, so they are rarely needed. Use `eslint-disable` comments instead.
