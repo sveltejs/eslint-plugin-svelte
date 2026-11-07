@@ -175,36 +175,32 @@ function isEventLike(functionSymbol: TS.Symbol, ctx: CheckContext): boolean {
 	if (signatures.length === 0) {
 		return true;
 	}
-	return signatures.every((signature) => {
+	const kinds = signatures.map((signature): ReturnKind => {
 		const signatureDeclaration = signature.getDeclaration() as TS.SignatureDeclaration | undefined;
 		const returnTypeNode = signatureDeclaration?.type;
 		const type = checker.getReturnTypeOfSignature(signature);
 		if (returnTypeNode === undefined) {
-			return isEventKind(
-				getReturnKind(type, ctx, () => false),
-				ctx
-			);
+			return getReturnKind(type, ctx, () => false);
 		}
 		const kind = getReturnKind(type, ctx, () =>
 			[...collectGenerics(returnTypeNode, ctx)].some((generic) =>
 				isGenericInScope(generic, returnTypeNode, ctx)
 			)
 		);
-		if (!isEventKind(kind, ctx)) {
-			return false;
+		if (kind === 'value') {
+			return kind;
 		}
 		// A generic can only turn an event into a value, so check it last.
-		return !(
-			(ctx.genericDeclarations.size > 0 || signatureDeclaration?.typeParameters !== undefined) &&
+		return (ctx.genericDeclarations.size > 0 ||
+			signatureDeclaration?.typeParameters !== undefined) &&
 			[...collectGenerics(returnTypeNode, ctx)].some((generic) =>
 				isValueGeneric(generic, returnTypeNode, ctx)
 			)
-		);
+			? 'value'
+			: kind;
 	});
-}
-
-function isEventKind(kind: ReturnKind, ctx: CheckContext): boolean {
-	return kind === 'void' || (kind === 'async' && ctx.checkAsyncFunctions);
+	// Like a union, overloads are synchronous if any signature can return synchronously.
+	return !kinds.includes('value') && (kinds.includes('void') || ctx.checkAsyncFunctions);
 }
 
 type ReturnKind = 'void' | 'async' | 'value';
@@ -398,6 +394,11 @@ function getGenericEdges(
 	const generics: TS.Node[] = [];
 	const children: TS.Node[] = [];
 
+	// Type arguments and conditional checks need not contribute to the returned value.
+	if (ts.isTypeNode(node) && isDefinitelyNoValue(node, ctx)) {
+		return { generics, children };
+	}
+
 	/** Adds a type node in a declaration, if it is in user code. */
 	function addDeclared(child: TS.Node | undefined): void {
 		const sourceFile = child?.getSourceFile();
@@ -446,9 +447,14 @@ function getGenericEdges(
 				ts.isPropertyDeclaration(declaration)
 			) {
 				addDeclared(declaration.type);
+				if (ts.isVariableDeclaration(declaration) || ts.isPropertyDeclaration(declaration)) {
+					if (declaration.type === undefined) addDeclared(declaration.initializer);
+				}
+			} else if (ts.isFunctionDeclaration(declaration) || ts.isMethodDeclaration(declaration)) {
+				addDeclared(declaration.type ?? declaration.body);
 			}
 		}
-	} else if (ts.isIndexedAccessTypeNode(node) && ts.isTypeReferenceNode(node.objectType)) {
+	} else if (ts.isIndexedAccessTypeNode(node)) {
 		// e.g. `Props['value']`: only the type of the property matters, not the other properties.
 		const indexType = checker.getTypeFromTypeNode(node.indexType);
 		const property =
@@ -467,8 +473,10 @@ function getGenericEdges(
 			propertyTypes.forEach(addDeclared);
 			// The object type may be a generic (e.g. `R['value']`) or have generic type arguments
 			// (e.g. `Row<T>['value']`).
-			addReference(node.objectType.typeName, false);
-			children.push(...(node.objectType.typeArguments ?? []));
+			if (ts.isTypeReferenceNode(node.objectType)) {
+				addReference(node.objectType.typeName, false);
+				children.push(...(node.objectType.typeArguments ?? []));
+			}
 			return { generics, children };
 		}
 	}
@@ -476,4 +484,64 @@ function getGenericEdges(
 		children.push(child);
 	});
 	return { generics, children };
+}
+
+/** Whether a type cannot produce a value, independently of component generic substitution. */
+function isDefinitelyNoValue(node: TS.TypeNode, ctx: CheckContext): boolean {
+	const { ts } = ctx.tsTools;
+	const checker = ctx.tsTools.service.program.getTypeChecker();
+	const pending = [node];
+	const seen = new Set<TS.TypeNode>();
+	while (pending.length > 0) {
+		const current = pending.pop()!;
+		if (seen.has(current)) continue;
+		seen.add(current);
+		if (ts.isConditionalTypeNode(current)) {
+			pending.push(current.trueType, current.falseType);
+			continue;
+		}
+		if (ts.isParenthesizedTypeNode(current)) {
+			pending.push(current.type);
+			continue;
+		}
+		if (ts.isUnionTypeNode(current)) {
+			pending.push(...current.types);
+			continue;
+		}
+		if (ts.isTypeQueryNode(current)) return false;
+		if (ts.isIndexedAccessTypeNode(current)) {
+			const index = checker.getTypeFromTypeNode(current.indexType);
+			if (!index.isStringLiteral() && !index.isNumberLiteral()) return false;
+			const property = checker.getPropertyOfType(
+				checker.getTypeFromTypeNode(current.objectType),
+				String(index.value)
+			);
+			const declarations = property?.getDeclarations() ?? [];
+			if (declarations.length === 0) return false;
+			for (const declaration of declarations) {
+				if (!ts.isPropertySignature(declaration) || declaration.type === undefined) return false;
+				pending.push(declaration.type);
+			}
+			continue;
+		}
+		if (ts.isTypeReferenceNode(current)) {
+			let symbol = checker.getSymbolAtLocation(current.typeName);
+			if (symbol && (symbol.flags & ts.SymbolFlags.Alias) !== 0)
+				symbol = checker.getAliasedSymbol(symbol);
+			const alias = symbol?.getDeclarations()?.find(ts.isTypeAliasDeclaration);
+			if (alias && !ctx.genericDeclarations.has(alias)) {
+				// Inspect the uninstantiated alias: a component generic may have selected only
+				// the void branch of a conditional, even though another branch returns a value.
+				pending.push(alias.type);
+				continue;
+			}
+			// In particular, Promise<keyof T> must not lose T when keyof T becomes never.
+			pending.push(...(current.typeArguments ?? []));
+		}
+		const type = checker.getTypeFromTypeNode(current);
+		// `keyof T` can become never when the parser replaces T with unknown.
+		if (isNeverType(type, ts) && current.kind !== ts.SyntaxKind.NeverKeyword) return false;
+		if (getReturnKind(type, ctx, () => true) === 'value') return false;
+	}
+	return true;
 }

@@ -24,9 +24,9 @@ Function props that return a value (e.g. `getHref: (item: Item) => string`) are 
 These count as a value:
 
 - A union with a value (e.g. `boolean | void`).
-- A return type that uses a generic, like `T` in `<script generics="T">` or `U` in `pick<U>(value: U): U` (e.g. `T`, `keyof T`, `Promise<T>`, or a type alias that uses `T`). This does not apply if the constraint of the generic is `void`, `undefined`, `null`, or a Promise of them (e.g. `V extends void`). A default type of a generic (e.g. `generics="T = void"`) is not used.
+- A return type that uses a generic, like `T` in `<script generics="T">` or `U` in `pick<U>(value: U): U` (e.g. `T`, `keyof T`, `Promise<T>`, or a type alias that uses `T`). This does not apply if the constraint of the generic is `void`, `undefined`, `null`, or a Promise of them (e.g. `V extends void`). A default type of a generic (e.g. `generics="T = void"`) is not used. Generics that do not affect the returned value do not exempt the function: for example, `Row<T>['done']` is checked when `done` is always `void`, as is a conditional type whose branches both return no value.
 - `any` or `unknown` that comes from a type parameter of the props type (e.g. `getItem: () => X` with `Props<unknown>`).
-- A function with overloads, if one of the overloads returns a value.
+- A function with overloads, if one of the overloads returns a value. When all overloads return no value, the function is checked if any overload returns synchronously; otherwise, `checkAsyncFunctions` applies.
 
 <!--eslint-skip-->
 
