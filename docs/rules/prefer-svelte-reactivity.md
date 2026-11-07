@@ -22,6 +22,38 @@ Note that runes mode is detected from `parserOptions.svelteConfig`, `<svelte:opt
 
 Also, in legacy components, this rule does not report instances that are passed to runes code (for example, as a prop to a runes component). Those instances could still benefit from the reactive classes.
 
+This rule does not report an instance that is created inside a function and never leaves it, because nothing can observe it after the function returns. An instance leaves the function when it is returned, stored (e.g. assigned to another variable or put in an object or array), passed to a function, or used by a nested function or a rune such as `$derived(...)`. A few built-in functions that only copy the value do not count when the instance is their first argument: `Array.from()`, `JSON.stringify()`, `String()`, `Number()`, `Boolean()` and `new Date()` / `new Map()` / `new Set()` / `new URL()` / `new URLSearchParams()` (with a `JSON.stringify()` replacer function or an `Array.from()` `thisArg`, they count). Replacing instance methods or hooks (such as `toJSON` or `toString`), accessing unknown members, or writing properties other than native URL setters also prevents this exemption. If the rule cannot tell whether the instance leaves the function, it reports it.
+
+<!--eslint-skip-->
+
+```svelte
+<script>
+  /* eslint svelte/prefer-svelte-reactivity: "error" */
+  const { page } = $props();
+
+  /* ✓ GOOD */
+  function getNextPage() {
+    const url = new URL(page.url);
+    url.pathname = '/next';
+    return url.toString();
+  }
+
+  /* ✗ BAD */
+  function createSet() {
+    const set = new Set();
+    set.add(1);
+    return set;
+  }
+
+  const groups = $state([]);
+  function addGroup() {
+    const set = new Set();
+    set.add(1);
+    groups.push(set);
+  }
+</script>
+```
+
 <!--eslint-skip-->
 
 ```svelte
