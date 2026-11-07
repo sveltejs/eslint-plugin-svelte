@@ -1,7 +1,18 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { RuleContext } from '../../types.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
+import semver from 'semver';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore\s+/;
+
+/**
+ * Matches the characters between codes.
+ * Svelte v5 reads codes with `/[\w$-]+/`, so any other character is a separator.
+ * Svelte v3/v4 splits codes on whitespace only, but we also split on commas.
+ */
+const SEPARATOR_PATTERN = semver.satisfies(SVELTE_VERSION, '>=5.0.0-0')
+	? /[^\w$-]+/g
+	: /\s*[\s,]\s*/g;
 
 /** Matches parenthetical notes in svelte-ignore comments, e.g. "(because of reasons)" */
 const PARENTHETICAL_NOTE_PATTERN = /\([^)]*\)/gu;
@@ -123,8 +134,7 @@ function extractSvelteIgnore(
 	const processedCodeList = codeList.replace(PARENTHETICAL_NOTE_PATTERN, (match) =>
 		' '.repeat(match.length)
 	);
-	const separatorPattern = /\s*[\s,]\s*/g;
-	const separators = processedCodeList.matchAll(separatorPattern);
+	const separators = processedCodeList.matchAll(SEPARATOR_PATTERN);
 	let lastSeparatorEnd = 0;
 	for (const separator of separators) {
 		const code = processedCodeList.slice(lastSeparatorEnd, separator.index);
