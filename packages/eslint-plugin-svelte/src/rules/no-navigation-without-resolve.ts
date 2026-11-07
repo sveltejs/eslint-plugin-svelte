@@ -2234,7 +2234,8 @@ export default createRule('no-navigation-without-resolve', {
 
 		const options = context.options[0] ?? {};
 		const strict: boolean = options.strict ?? false;
-		const allowRelativePaths: boolean = options.allowRelativePaths ?? false;
+		// Relative URLs follow the base path and often work, so only `strict` reports them by default.
+		const allowRelativePaths: boolean = options.allowRelativePaths ?? !strict;
 		const ignoreLinks: boolean = options.ignoreLinks ?? false;
 		const ignored: Record<NavigationFunction, boolean> = {
 			goto: options.ignoreGoto ?? false,

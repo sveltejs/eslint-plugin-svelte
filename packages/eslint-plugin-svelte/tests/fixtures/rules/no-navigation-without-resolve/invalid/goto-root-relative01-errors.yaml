@@ -22,7 +22,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/blog/hello' does not include the base path. Use `resolve()` from
     `$app/paths`."
@@ -49,7 +48,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 10
@@ -75,7 +73,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 11
@@ -101,7 +98,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 12
@@ -127,7 +123,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 13
@@ -153,7 +148,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 14
@@ -179,7 +173,6 @@
         	goto(new URL('/foo', page.url));
         	goto(resolve('/foo') + '/bar');
         	goto('/foo' + resolve('/bar'));
-        	goto('foo');
         </script>
 - message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 15
@@ -193,10 +186,5 @@
 - message: Do not add anything before `resolve()` ('/fooresolve(…)'). It already
     includes the base path.
   line: 17
-  column: 7
-  suggestions: null
-- message: Relative URL 'foo' depends on the current URL and can point outside the
-    base path. Use `resolve()` from `$app/paths`.
-  line: 18
   column: 7
   suggestions: null

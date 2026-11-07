@@ -15,5 +15,4 @@
 	goto(new URL('/foo', page.url));
 	goto(resolve('/foo') + '/bar');
 	goto('/foo' + resolve('/bar'));
-	goto('foo');
 </script>

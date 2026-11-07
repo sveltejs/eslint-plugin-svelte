@@ -33,7 +33,7 @@ It follows values through string concatenation, template literals, `? :`, `||`, 
 The rule reports:
 
 - **Root-relative URLs** like `/about`. Use `resolve('/about')`. For files in `static`, use `asset()`.
-- **Relative URLs** like `about`, `./about` and `../about`. They depend on the current URL (and its trailing slash) and can point outside the base path. You can allow them with `allowRelativePaths` (except SvelteKit 2 `preloadCode()`, which requires a root-relative pathname).
+- **Relative URLs** like `about`, `./about` and `../about`, only with `strict` or `allowRelativePaths: false`. They usually keep the base path, but depend on the current URL (and its trailing slash), so they may point to the wrong page or outside the base path. SvelteKit 2 `preloadCode()` requires a root-relative pathname, so relative URLs are always reported there.
 - **Anything before `resolve()`**, like `` `${page.url.origin}${resolve('/about')}` ``. During server rendering, `resolve()` can return a relative path such as `./about`, so the result breaks. `` `${base}${resolve('/about')}` `` adds the base path twice. An unknown value before `resolve()` (which may be empty) is reported only with `strict`.
 - **A path after `resolve()`**, like `resolve('/blog') + '/' + slug`. It bypasses the route type checks of `resolve()`, and `resolve('/') + '/about'` even becomes `//about` (another host) when there is no base path. Pass the whole path to `resolve()` instead: `resolve('/blog/[slug]', { slug })`. A query (`?…`) or a hash (`#…`) after `resolve()` is fine. A path after `asset()` is fine too.
 - **Non-HTTP(S) URLs in navigation calls**, such as `goto('mailto:hello@example.com')`. HTTP(S) and protocol-relative URLs may be same-origin, so they are skipped by default and reported as unverifiable with `strict`. SvelteKit 2 `preloadCode()` requires a pathname, so absolute URLs are reported there.
@@ -156,14 +156,14 @@ The rule also checks `goto()` and other calls in plain `.js` / `.ts` files (for 
     "error",
     {
       "strict": false,
-      "allowRelativePaths": false
+      "allowRelativePaths": true
     }
   ]
 }
 ```
 
-- `strict` ... Also report URL values that the analysis cannot verify, such as props, `data`, imports and function results, and values added after `resolve()` that are not known to start with `?` or `#`. Values typed as `ResolvedPathname` (or `URL & { pathname: ResolvedPathname }`) and `page.url` are accepted. Default `false`.
-- `allowRelativePaths` ... Allow relative URLs such as `foo`, `./foo` and `../foo`. Default `false`.
+- `strict` ... Also report URL values that the analysis cannot verify, such as props, `data`, imports and function results, values added after `resolve()` that are not known to start with `?` or `#`, and relative URLs (unless `allowRelativePaths` is `true`). Values typed as `ResolvedPathname` (or `URL & { pathname: ResolvedPathname }`) and `page.url` are accepted. Default `false`.
+- `allowRelativePaths` ... Allow relative URLs such as `foo`, `./foo` and `../foo`. Default `true`, or `false` when `strict` is on.
 
 The following options are **deprecated** and will be removed in the next major version. The rule no longer reports values it cannot understand, so they are rarely needed. Use `eslint-disable` comments instead.
 

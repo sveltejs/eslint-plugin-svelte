@@ -1,6 +1,7 @@
 {
 	"options": [
 		{
+			"strict": true,
 			"allowRelativePaths": true
 		}
 	]

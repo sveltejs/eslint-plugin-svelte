@@ -8,7 +8,8 @@ feat(no-navigation-without-resolve): rebuild the rule to check statically identi
 - This is a base-path navigation policy check, not proof that a URL is broken; the rule does not know the deployment origin or routing configuration.
 - `?query`, `#hash`, `''`, `page.url`, query/hash after `resolve()`, and nullable `ResolvedPathname` values are allowed.
 - Newly checked: `<area>`, SVG `<a>`, `<form action>`, `formaction`, `preloadData()` and `preloadCode()`.
-- New reports: relative URLs (allow them with `allowRelativePaths`), anything before `resolve()`, a path after `resolve()`, non-HTTP(S) URLs in `goto()` / `pushState()` / `replaceState()` / `preloadData()`, and a URL passed to `preloadCode()` on SvelteKit 3 (it takes a route ID).
+- New reports: anything before `resolve()`, a path after `resolve()`, non-HTTP(S) URLs in `goto()` / `pushState()` / `replaceState()` / `preloadData()`, and a URL passed to `preloadCode()` on SvelteKit 3 (it takes a route ID).
+- Relative URLs are reported only with `strict` or `allowRelativePaths: false`.
 - HTTP(S) and protocol-relative URLs in navigation calls may be same-origin; they are skipped by default and reported as unverifiable with `strict`. SvelteKit 2 `preloadCode()` requires a root-relative pathname, while SvelteKit 3 requires a route ID. Only its first argument is checked.
 - Forms marked `rel="external"`, non-submitting controls and dialog submissions are exempt. Submit controls use their form owner and effective method, including `form` and `formmethod` overrides. The form exemption is a lint policy, not a guarantee that SvelteKit routing or `use:enhance` is bypassed.
 - Values are followed through reassignments, `$state()`, `$derived()`, `$props()` defaults, `{#each}` and declared TypeScript string literal types.
