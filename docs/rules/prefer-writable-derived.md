@@ -53,7 +53,7 @@ To be safe, the rule reports a variable only when it can see every use of the ob
 - Any other use is treated as a mutation. This includes:
   - calling a mutating or unknown method (e.g. `value.push(item)` or `value.save()`), also on a copy such as `[...value].sort()`;
   - passing the object to any other function, including local functions and snippets (e.g. `setContext('user', value)` or `{@render row(value)}`);
-  - returning it from a function, except from `$derived.by()`, or returning the parameter of a callback of a built-in array method (or a part of it) from that callback;
+  - returning it from a function. The exceptions are `$derived.by()` and returning a callback parameter (or a part of it) from a callback of a built-in array method;
   - storing it in an object (e.g. `{ ...value }` or `box.user = value`);
   - giving it to a component, a custom element, `<svelte:element>` or `<slot>`, or as `value` (or the only text) of `<option>` or `value` of `<input>`;
   - `bind:` of a part of it, or of an `{#each}` item;

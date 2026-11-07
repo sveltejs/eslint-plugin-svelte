@@ -44,7 +44,10 @@ function isEffectOrEffectPre(node: TSESTree.CallExpression) {
 function isValidFunctionArgument(argument: TSESTree.Node): argument is ValidFunction {
 	if (
 		(argument.type !== 'FunctionExpression' && argument.type !== 'ArrowFunctionExpression') ||
-		argument.params.length !== 0
+		argument.params.length !== 0 ||
+		// e.g. `$effect(async () => { v = await f() })`. `$derived(await f())` needs experimental async.
+		argument.async ||
+		argument.generator
 	) {
 		return false;
 	}
@@ -286,7 +289,10 @@ function getCalleeName(callee: TSESTree.Node): string | null {
 }
 
 /** Checks whether the node is a target of an assignment, e.g. `a.b` in `a.b = 1` or `[a.b] = x`. */
-function isWriteTarget(node: TSESTree.Node): boolean {
+function isWriteTarget(target: TSESTree.Node): boolean {
+	// e.g. `v.a! = 1` or `(v.a as T)++`
+	let node = target;
+	while (node.parent && TS_WRAPPERS.has(node.parent.type)) node = node.parent;
 	const parent = node.parent as AnyNode | null;
 	switch (parent?.type) {
 		case 'AssignmentExpression':
@@ -620,9 +626,11 @@ function createMutationChecker(context: RuleContext) {
 					return parent.operator === 'delete';
 				case 'UpdateExpression':
 					// e.g. `a++`. It makes a number.
-					return false;
+					return unwrapTS(node).type !== 'Identifier';
 				case 'AssignmentExpression':
 					if (parent.left === node) {
+						// e.g. `(a as T) = 1` is a write to a part only when it isn't a variable.
+						if (unwrapTS(node).type !== 'Identifier') return true;
 						// e.g. `a += 1`
 						if (!['||=', '&&=', '??='].includes(parent.operator)) return false;
 						node = parent;
@@ -844,7 +852,13 @@ export default createRule('prefer-writable-derived', {
 				);
 
 				const def = reference?.resolved?.defs?.[0];
-				if (!def || def.type !== 'Variable' || def.node.type !== 'VariableDeclarator') {
+				if (
+					!def ||
+					def.type !== 'Variable' ||
+					def.node.type !== 'VariableDeclarator' ||
+					// e.g. `let { a } = $state(x)`. `$derived` would destructure the new value.
+					def.node.id.type !== 'Identifier'
+				) {
 					return;
 				}
 
