@@ -14,19 +14,15 @@ since: 'v3.6.0'
 
 Starting with Svelte 5, component events are just component props that are functions and so can be called like any function. Events for HTML elements all have their name begin with "on" (e.g. `onclick`). This rule enforces that all component events (i.e. function props) also begin with "on".
 
-Function props that return a value (e.g. `getHref: (item: Item) => string`) are not events, so this rule ignores them. The rule checks a function prop only if it returns:
+Function props that return a value (e.g. `getHref: (item: Item) => string`) are not events, so this rule ignores them. It only checks return types known to produce no value:
 
-- No value: `void`, `undefined`, `null`, or `never`.
-- `any` or `unknown`, because the rule cannot tell.
-- A union of the above, or a union of the above and a Promise of the above (e.g. `void | Promise<void>`).
-- A Promise of one of the above (e.g. `Promise<void>`), only when `checkAsyncFunctions` is enabled.
+- `void`, `undefined`, or `null`.
+- A union of these types, optionally including Promises of these types (e.g. `void | Promise<void>`).
+- A Promise or Promise-like of these types, only when `checkAsyncFunctions` is enabled.
 
-These count as a value:
+The rule ignores `any`, `unknown`, `never`, and unresolved generic return types. If any union member or overload returns a value or an uncertain type, the function is ignored. Otherwise, a synchronous overload is checked even if another overload is asynchronous.
 
-- A union with a value (e.g. `boolean | void`).
-- A return type that uses a generic, like `T` in `<script generics="T">` or `U` in `pick<U>(value: U): U` (e.g. `T`, `keyof T`, `Promise<T>`, or a type alias that uses `T`). This does not apply if the constraint of the generic is `void`, `undefined`, `null`, or a Promise of them (e.g. `V extends void`). A default type of a generic (e.g. `generics="T = void"`) is not used. Generics that do not affect the returned value do not exempt the function: for example, `Row<T>['done']` is checked when `done` is always `void`, as is a conditional type whose branches both return no value.
-- `any` or `unknown` that comes from a type parameter of the props type (e.g. `getItem: () => X` with `Props<unknown>`).
-- A function with overloads, if one of the overloads returns a value. When all overloads return no value, the function is checked if any overload returns synchronously; otherwise, `checkAsyncFunctions` applies.
+In components with `<script generics="...">`, the parser can erase information about generic return types. To avoid false positives, this rule only checks explicit `void`, `undefined`, or `null` return annotations, unions of them, and `Promise` / `PromiseLike` wrappers around them. Aliases, indexed access types, conditional types, and generic constraints are not followed in these components, even when they ultimately return no value. A callback such as `select: (item: T) => void` is still checked.
 
 <!--eslint-skip-->
 
@@ -73,7 +69,7 @@ These count as a value:
 }
 ```
 
-- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return a Promise of no value, `any`, or `unknown` (e.g. `Promise<void>`). Default `false`.
+- `checkAsyncFunctions` ... Whether to also report asynchronous function properties that return a Promise of `void`, `undefined`, or `null` (e.g. `Promise<void>`). Default `false`.
 
 ## :books: Further Reading
 
