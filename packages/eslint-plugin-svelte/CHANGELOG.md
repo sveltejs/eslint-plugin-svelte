@@ -1,5 +1,25 @@
 # eslint-plugin-svelte
 
+## 3.25.0
+
+### Minor Changes
+
+- [#1202](https://github.com/sveltejs/eslint-plugin-svelte/pull/1202) [`5459c78`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5459c78f1fa28fafb5b3f0e97b457d42d52b88d7) Thanks [@baseballyama](https://github.com/baseballyama)! - feat(no-unnecessary-state-wrap): default `allowReassign` to `true`, accept an array of class names, and stop suggesting to remove `$state` from reassigned variables
+
+### Patch Changes
+
+- [#1677](https://github.com/sveltejs/eslint-plugin-svelte/pull/1677) [`8ba0f97`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8ba0f977216b65837f984ea3261c54247b0f7d02) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(valid-compile): do not pass the `experimental` compiler option to Svelte older than 5.36 unless it is set
+
+- [#1671](https://github.com/sveltejs/eslint-plugin-svelte/pull/1671) [`2d0d19a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2d0d19accbfbfdd81e76f8f708fc0a19e6d5f664) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(prefer-destructured-store-props): suggest `$derived` instead of `$:` in runes mode
+
+- [#1672](https://github.com/sveltejs/eslint-plugin-svelte/pull/1672) [`afa3042`](https://github.com/sveltejs/eslint-plugin-svelte/commit/afa304239747a7350019b1d2802a8efc1e52d7da) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-export-load-in-svelte-module-in-kit-pages): report `load` exported with `export { load }`, `export * as load`, destructuring, or `export class load`, including TypeScript import aliases while ignoring local type-only bindings.
+
+- [#970](https://github.com/sveltejs/eslint-plugin-svelte/pull/970) [`a1e546e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a1e546e373c97773307c617d0c7d61b5e7ab4241) Thanks [@BlankParenthesis](https://github.com/BlankParenthesis)! - fix(indent): fix crash on TS enums and mapped types when the script uses store access (`$store`)
+
+- [#1675](https://github.com/sveltejs/eslint-plugin-svelte/pull/1675) [`e7c3e59`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e7c3e597b46a18cc6a89361771daaf7730b79db5) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: read `svelte-ignore` codes followed by punctuation (e.g. `a11y_autofocus:`) like Svelte does
+
+- [#1676](https://github.com/sveltejs/eslint-plugin-svelte/pull/1676) [`0639294`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0639294be364e6ce2921ae7d2ade0c4f8cce713d) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(valid-compile): in runes mode, do not hide warnings for `svelte-ignore` codes that Svelte reads as prose
+
 ## 3.24.1
 
 ### Patch Changes
