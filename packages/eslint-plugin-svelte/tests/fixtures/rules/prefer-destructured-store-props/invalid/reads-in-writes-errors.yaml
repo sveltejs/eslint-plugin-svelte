@@ -1,0 +1,105 @@
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 8
+  column: 15
+  suggestions:
+    - desc: Using destructuring like const { foo } = $derived($store); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+        <script>
+        	import { writable } from 'svelte/store';
+        	const store = writable({ foo: 1, key: 'foo' });
+        	let target = {};
+        const { foo } = $derived($store);
+        </script>
+        <button onclick={() => {
+        	$store.foo = foo + 1;
+        	target[$store.key] = 1;
+        	({ [$store.key]: target.foo } = {});
+        	[target.foo = $store.foo] = [];
+        	for (target.foo of [$store.foo]) {}
+        }}>Update</button>
+- message: Destructure key from $store for better change tracking & fewer redraws
+  line: 9
+  column: 9
+  suggestions:
+    - desc: Using destructuring like const { key } = $derived($store); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+        <script>
+        	import { writable } from 'svelte/store';
+        	const store = writable({ foo: 1, key: 'foo' });
+        	let target = {};
+        const { key } = $derived($store);
+        </script>
+        <button onclick={() => {
+        	$store.foo = $store.foo + 1;
+        	target[key] = 1;
+        	({ [$store.key]: target.foo } = {});
+        	[target.foo = $store.foo] = [];
+        	for (target.foo of [$store.foo]) {}
+        }}>Update</button>
+- message: Destructure key from $store for better change tracking & fewer redraws
+  line: 10
+  column: 6
+  suggestions:
+    - desc: Using destructuring like const { key } = $derived($store); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+        <script>
+        	import { writable } from 'svelte/store';
+        	const store = writable({ foo: 1, key: 'foo' });
+        	let target = {};
+        const { key } = $derived($store);
+        </script>
+        <button onclick={() => {
+        	$store.foo = $store.foo + 1;
+        	target[$store.key] = 1;
+        	({ [key]: target.foo } = {});
+        	[target.foo = $store.foo] = [];
+        	for (target.foo of [$store.foo]) {}
+        }}>Update</button>
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 11
+  column: 16
+  suggestions:
+    - desc: Using destructuring like const { foo } = $derived($store); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+        <script>
+        	import { writable } from 'svelte/store';
+        	const store = writable({ foo: 1, key: 'foo' });
+        	let target = {};
+        const { foo } = $derived($store);
+        </script>
+        <button onclick={() => {
+        	$store.foo = $store.foo + 1;
+        	target[$store.key] = 1;
+        	({ [$store.key]: target.foo } = {});
+        	[target.foo = foo] = [];
+        	for (target.foo of [$store.foo]) {}
+        }}>Update</button>
+- message: Destructure foo from $store for better change tracking & fewer redraws
+  line: 12
+  column: 22
+  suggestions:
+    - desc: Using destructuring like const { foo } = $derived($store); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+        <script>
+        	import { writable } from 'svelte/store';
+        	const store = writable({ foo: 1, key: 'foo' });
+        	let target = {};
+        const { foo } = $derived($store);
+        </script>
+        <button onclick={() => {
+        	$store.foo = $store.foo + 1;
+        	target[$store.key] = 1;
+        	({ [$store.key]: target.foo } = {});
+        	[target.foo = $store.foo] = [];
+        	for (target.foo of [foo]) {}
+        }}>Update</button>
