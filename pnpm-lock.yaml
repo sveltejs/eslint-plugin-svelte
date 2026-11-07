@@ -21,8 +21,8 @@ importers:
         specifier: ^4.7.1
         version: 4.7.1(eslint@10.14.0(jiti@2.6.1))
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))
+        specifier: ^0.21.0
+        version: 0.21.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
@@ -114,8 +114,8 @@ importers:
         specifier: ^5.2.6
         version: 5.2.7
       '@ota-meshi/eslint-plugin':
-        specifier: ^0.19.0
-        version: 0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))
+        specifier: ^0.21.0
+        version: 0.21.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))
       '@shikijs/markdown-it':
         specifier: ^4.0.0
         version: 4.6.0
@@ -1301,8 +1301,8 @@ packages:
     resolution: {integrity: sha512-XRO0zi2NIUKq2lUk3T1ecFSld1fMWRKE6naRFGkgkdeosx7IslyUKNv5Dcb5PJTja9tHJoFu0v/7yEpAkrkrTg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@ota-meshi/eslint-plugin@0.19.0':
-    resolution: {integrity: sha512-pumFXOvJFoto805a4taS07Et7dJ/OU5TGNRqt8pgGOa3/nx5kWlxp5Q3liHow4MU99t2J4T+U7NRqpyj87tBOg==}
+  '@ota-meshi/eslint-plugin@0.21.0':
+    resolution: {integrity: sha512-Mp5fGXKmSAMCKpZLF1PW4/mSu0tZgNDapRxtm4k3jvyXorWoMnGLj5nvF3AwH581Lag++pmmXqePsmL+bf/ggA==}
     engines: {node: ^18.18.0||^20.9.0||>=21.1.0}
     peerDependencies:
       '@eslint-community/eslint-plugin-eslint-comments': ^4.3.0
@@ -3905,11 +3905,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.5:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
@@ -5291,13 +5286,13 @@ snapshots:
 
   '@ota-meshi/ast-token-store@0.3.0': {}
 
-  '@ota-meshi/eslint-plugin@0.19.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))':
+  '@ota-meshi/eslint-plugin@0.21.0(@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.14.0(jiti@2.6.1)))(eslint-plugin-regexp@3.3.3(eslint@10.14.0(jiti@2.6.1)))(eslint@10.14.0(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.7.1(eslint@10.14.0(jiti@2.6.1))
       '@eslint/js': 9.39.4
       eslint: 10.14.0(jiti@2.6.1)
       eslint-plugin-regexp: 3.3.3(eslint@10.14.0(jiti@2.6.1))
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@oxc-project/types@0.156.0': {}
 
@@ -8188,8 +8183,6 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.3: {}
-
-  semver@7.7.4: {}
 
   semver@7.8.5: {}
 
