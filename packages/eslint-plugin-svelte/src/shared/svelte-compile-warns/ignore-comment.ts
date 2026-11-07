@@ -1,5 +1,7 @@
 import type { AST } from 'svelte-eslint-parser';
 import type { RuleContext } from '../../types.js';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
+import semver from 'semver';
 
 const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore\s+/;
 
@@ -29,8 +31,10 @@ const V5_REPLACEMENTS: Record<string, string | undefined> = {
  * https://github.com/sveltejs/svelte/blob/70afafe18e48a9973c5f711d62d87d088234655e/packages/svelte/src/constants.js#L47-L56
  */
 export const RUNTIME_WARNING_CODES = new Set([
-	'await_reactivity_loss',
-	'await_waterfall',
+	// Added in Svelte v5.36.0
+	...(semver.satisfies(SVELTE_VERSION, '>=5.36.0')
+		? ['await_reactivity_loss', 'await_waterfall']
+		: []),
 	'binding_property_non_reactive',
 	'hydration_attribute_changed',
 	'hydration_html_changed',
