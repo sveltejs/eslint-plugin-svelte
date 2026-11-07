@@ -32,8 +32,8 @@ import type { RuleContext, RuleFixer, SuggestionReportDescriptor } from '../type
 // Abstract URL values
 //
 // A URL expression is evaluated to a list of alternatives (one per possible
-// branch). Each alternative is a sequence of parts. `null` stands for a
-// nullish value (no URL at all).
+// branch). Each alternative is a sequence of parts, or `null` / `undefined`
+// for no URL. Keep those distinct: only `undefined` triggers destructuring defaults.
 // ---------------------------------------------------------------------------
 
 type Part =
@@ -50,8 +50,13 @@ type Part =
 	 * Anything else. `string` means it is known not to be nullish, and `origin` that it is the
 	 * origin of the page (never empty).
 	 */
-	| { readonly type: 'unknown'; readonly string?: true; readonly origin?: true };
-type Alt = readonly Part[] | null;
+	| {
+			readonly type: 'unknown';
+			readonly string?: true;
+			readonly origin?: true;
+			readonly truncated?: true;
+	  };
+type Alt = readonly Part[] | null | undefined;
 type Value = readonly Alt[];
 
 const UNKNOWN_PART: Part = { type: 'unknown' };
@@ -59,7 +64,9 @@ const STRING_PART: Part = { type: 'unknown', string: true };
 const UNKNOWN: Value = [[UNKNOWN_PART]];
 /** An unknown string (never nullish). */
 const UNKNOWN_STRING: Value = [[STRING_PART]];
-const NULLISH: Value = [null];
+const NULLISH: Value = [null, undefined];
+/** An analysis limit must not invent a reachable fallback. */
+const TRUNCATED: Value = [[{ type: 'unknown', string: true, truncated: true }]];
 const RESOLVED: Value = [[{ type: 'resolved', label: 'resolve()' }]];
 
 function resolved(label: string): Value {
@@ -103,7 +110,7 @@ function union(...values: Value[]): Value {
 	const seen = new Set<string>();
 	for (const value of values) {
 		for (const alt of value) {
-			const key = JSON.stringify(alt);
+			const key = JSON.stringify(alt) ?? 'undefined';
 			if (seen.has(key)) continue;
 			// Dropping alternatives can only hide problems, never invent them.
 			if (result.length >= MAX_ALTS) return result;
@@ -146,17 +153,25 @@ function untrustLiterals(value: Value): Value {
 /** Whether the value may be `null` / `undefined`. */
 function mayBeNullish(value: Value): boolean {
 	return value.some(
-		(alt) => alt === null || (alt.length === 1 && alt[0].type === 'unknown' && !alt[0].string)
+		(alt) => alt == null || (alt.length === 1 && alt[0].type === 'unknown' && !alt[0].string)
 	);
 }
 
 /** Whether the value may be falsy. */
 function mayBeFalsy(value: Value): boolean {
-	return mayBeNullish(value) || value.some((alt) => alt !== null && alt.length === 0);
+	return value.some(
+		(alt) =>
+			alt == null ||
+			alt.every(
+				(part) =>
+					(part.type === 'unknown' && !part.origin && !part.truncated) ||
+					(part.type === 'based' && (part.label === 'base' || part.label === 'assets'))
+			)
+	);
 }
 
 function withoutNullish(value: Value): Value {
-	return value.filter((alt) => alt !== null);
+	return value.filter((alt) => alt != null);
 }
 
 // ---------------------------------------------------------------------------
@@ -216,7 +231,7 @@ function render(parts: readonly Part[]): string {
 }
 
 function classify(alt: Alt): Finding {
-	if (alt === null) return OK;
+	if (alt == null) return OK;
 	// Browsers remove tabs and newlines anywhere, and spaces at the end.
 	const parts = alt
 		.map((part, index) =>
@@ -425,6 +440,14 @@ class UrlEvaluator {
 		cache: new Map<string, SourceRef[]>()
 	};
 
+	private readonly arrayElements = {
+		active: new Map<TSESTree.Expression, number>(),
+		cache: new Map<
+			TSESTree.Expression,
+			{ items: (TSESTree.Expression | null)[]; complete: boolean } | null
+		>()
+	};
+
 	private readonly ids = new Map<TSESTree.Node | Variable, number>();
 
 	/** The number of computations left for the current URL. */
@@ -550,7 +573,7 @@ class UrlEvaluator {
 	private evaluate(node: TSESTree.Node | AST.SvelteLiteral): Value {
 		// At the depth limit, the value is a non-nullish unknown so that `??` / `||` fallbacks
 		// are not reported because of the limit.
-		return this.guard(this.evaluating, node, [], UNKNOWN_STRING, () => this.evaluateNode(node));
+		return this.guard(this.evaluating, node, [], TRUNCATED, () => this.evaluateNode(node));
 	}
 
 	private evaluateNode(node: TSESTree.Node | AST.SvelteLiteral): Value {
@@ -559,7 +582,7 @@ class UrlEvaluator {
 				return text(node.value);
 			case 'Literal':
 				if (typeof node.value === 'string') return text(node.value);
-				if (node.raw === 'null') return NULLISH;
+				if (node.raw === 'null') return [null];
 				if (
 					typeof node.value === 'number' ||
 					typeof node.value === 'boolean' ||
@@ -583,7 +606,7 @@ class UrlEvaluator {
 				const result = getStaticValue(node, scopeOf(this.context, node));
 				if (result !== null) {
 					const value = result.value;
-					if (value === null || value === undefined) return NULLISH;
+					if (value === null || value === undefined) return [value];
 					if (['string', 'number', 'boolean', 'bigint'].includes(typeof value))
 						return text(String(value));
 				}
@@ -612,18 +635,18 @@ class UrlEvaluator {
 				if (node.operator === '||') {
 					return mayBeFalsy(left)
 						? union(
-								left.filter((alt) => alt !== null && alt.length > 0),
+								left.filter((alt) => alt != null && alt.length > 0),
 								this.evaluate(node.right)
 							)
 						: left;
 				}
 				// `&&`: the right side is used only when the left side may be truthy.
-				const truthy = left.some((alt) => alt !== null && alt.length > 0);
+				const truthy = left.some((alt) => alt != null && alt.length > 0);
 				const right = truthy ? this.evaluate(node.right) : [];
 				return mayBeFalsy(left)
 					? union(
-							left.filter((alt) => alt !== null && alt.length === 0),
-							left.some((alt) => alt === null || alt.some((part) => part.type === 'unknown'))
+							left.filter((alt) => alt != null && alt.length === 0),
+							left.some((alt) => alt == null || alt.some((part) => part.type === 'unknown'))
 								? NULLISH
 								: [],
 							right
@@ -672,7 +695,7 @@ class UrlEvaluator {
 	private evaluateIdentifier(node: TSESTree.Identifier): Value {
 		const variable = findVariable(this.context, node);
 		if (variable === null || variable.defs.length === 0) {
-			return node.name === 'undefined' ? NULLISH : this.refine(node);
+			return node.name === 'undefined' ? [undefined] : this.refine(node);
 		}
 		const info = getImportInfo(variable);
 		if (info?.source === '$app/paths' && (info.imported === 'base' || info.imported === 'assets')) {
@@ -692,7 +715,7 @@ class UrlEvaluator {
 			this.variableValues,
 			variable,
 			{ value: [], unknown: false },
-			{ value: UNKNOWN_STRING, unknown: false },
+			{ value: TRUNCATED, unknown: false },
 			() => {
 				const sources = this.variableSources(variable);
 				if (sources === null) return { value: [], unknown: true };
@@ -702,7 +725,7 @@ class UrlEvaluator {
 							source.type === 'node'
 								? this.evaluate(source.node)
 								: source.type === 'absent'
-									? NULLISH
+									? [undefined]
 									: []
 						)
 					),
@@ -831,7 +854,11 @@ class UrlEvaluator {
 	private mayBeUndefined(node: TSESTree.Expression): boolean {
 		const target = unwrapTypeScript(node);
 		if (target.type === 'ObjectExpression' || target.type === 'ArrayExpression') return false;
-		return mayBeNullish(this.evaluate(node));
+		return this.evaluate(node).some(
+			(alt) =>
+				alt === undefined ||
+				(alt !== null && alt.length === 1 && alt[0].type === 'unknown' && !alt[0].string)
+		);
 	}
 
 	private eachSources(each: AST.SvelteEachBlock, target: TSESTree.Identifier): SourceRef[] {
@@ -1069,6 +1096,12 @@ class UrlEvaluator {
 	private arrayItems(
 		node: TSESTree.Expression
 	): { items: (TSESTree.Expression | null)[]; complete: boolean } | null {
+		return this.guard(this.arrayElements, node, null, null, () => this.arrayItemsUncached(node));
+	}
+
+	private arrayItemsUncached(
+		node: TSESTree.Expression
+	): { items: (TSESTree.Expression | null)[]; complete: boolean } | null {
 		const candidates = this.candidates(unwrapTypeScript(node));
 		if (candidates.length !== 1 || candidates[0].type !== 'node') return null;
 		const array = unwrapTypeScript(candidates[0].node);
@@ -1078,7 +1111,7 @@ class UrlEvaluator {
 			if (element === null) {
 				items.push(null);
 			} else if (element.type === 'SpreadElement') {
-				const spread = this.depth < MAX_DEPTH ? this.arrayItems(element.argument) : null;
+				const spread = this.arrayItems(element.argument);
 				if (spread === null) return { items, complete: false };
 				for (const item of spread.items) {
 					if (items.length >= MAX_ALTS) return { items, complete: false };
@@ -1129,7 +1162,7 @@ class UrlEvaluator {
 			this.memberValues,
 			this.lookupKey(node.object, key),
 			{ value: [], unknown: false },
-			{ value: UNKNOWN_STRING, unknown: false },
+			{ value: TRUNCATED, unknown: false },
 			() => {
 				const sources = this.lookup(node.object, key);
 				return {
@@ -1138,7 +1171,7 @@ class UrlEvaluator {
 							source.type === 'node'
 								? this.evaluate(source.node)
 								: source.type === 'absent'
-									? NULLISH
+									? [undefined]
 									: []
 						)
 					),
@@ -1229,7 +1262,7 @@ class UrlEvaluator {
 		const baseValue = this.evaluate(base);
 		// A base that only depends on itself has no value.
 		if (baseValue.length === 0) return [];
-		const sameApp = baseValue.every((alt) => alt !== null && alt[0]?.type === 'based');
+		const sameApp = baseValue.every((alt) => alt != null && alt[0]?.type === 'based');
 		if (sameApp) return value;
 		return value.map((alt) => (classify(alt).kind === 'external' ? alt : [UNKNOWN_PART]));
 	}
@@ -1575,7 +1608,8 @@ class UrlEvaluator {
 		const nullish: Value[] = [];
 		const others: TS.Type[] = [];
 		for (const t of type.isUnion() ? type.types : [type]) {
-			if (isNullType(t, ts) || isUndefinedType(t, ts) || isVoidType(t, ts)) nullish.push(NULLISH);
+			if (isNullType(t, ts)) nullish.push([null]);
+			else if (isUndefinedType(t, ts) || isVoidType(t, ts)) nullish.push([undefined]);
 			else others.push(t);
 		}
 		if (others.length === 0) return union(...nullish);
@@ -1666,14 +1700,15 @@ const READ_ONLY_METHODS = new Set([
 ]);
 
 /** Functions that only read their arguments and do not give out their elements. */
-const READ_ONLY_FUNCTIONS = new Set([
+const READ_ONLY_NAVIGATION_FUNCTIONS = new Set([
 	'goto',
 	'pushState',
 	'replaceState',
 	'preloadData',
-	'preloadCode',
-	'resolve',
-	'asset',
+	'preloadCode'
+]);
+
+const READ_ONLY_FUNCTIONS = new Set([
 	'String',
 	'Number',
 	'Boolean',
@@ -1787,6 +1822,34 @@ function calleeName(call: TSESTree.CallExpression | TSESTree.NewExpression): str
 	return null;
 }
 
+/** Recognize trusted functions by their binding, including aliased and namespace imports. */
+function isReadOnlyCall(
+	context: RuleContext,
+	call: TSESTree.CallExpression | TSESTree.NewExpression
+): boolean {
+	const callee = unwrapTypeScript(call.callee);
+	const root = callee.type === 'MemberExpression' ? callee.object : callee;
+	if (root.type !== 'Identifier') return false;
+	const variable = findVariable(context, root);
+	const info = variable && getImportInfo(variable);
+	if (info) {
+		const name =
+			callee.type === 'Identifier'
+				? info.imported
+				: info.imported === '*' && callee.type === 'MemberExpression'
+					? getPropertyName(callee, scopeOf(context, callee))
+					: null;
+		return (
+			name !== null &&
+			((info.source === '$app/paths' && (name === 'resolve' || name === 'asset')) ||
+				(info.source === '$app/navigation' && READ_ONLY_NAVIGATION_FUNCTIONS.has(name)))
+		);
+	}
+	if (variable && variable.defs.length > 0) return false;
+	const name = calleeName(call);
+	return name !== null && READ_ONLY_FUNCTIONS.has(name);
+}
+
 /** Whether the object `node` (or a part of it) may be given to code that changes it. */
 function escapes(
 	context: RuleContext,
@@ -1871,8 +1934,7 @@ function escapes(
 		case 'NewExpression': {
 			const call = parent as TSESTree.CallExpression;
 			if (call.callee === node) return false;
-			const name = calleeName(call);
-			return name === null || !READ_ONLY_FUNCTIONS.has(name);
+			return !isReadOnlyCall(context, call);
 		}
 		// Reading it: `a + x`, `` `${x}` ``, `if (x)`, `{x}`, `{#each x as y}`...
 		case 'BinaryExpression':
@@ -2602,7 +2664,7 @@ export default createRule('no-navigation-without-resolve', {
 			// In strict mode, every possible value must contain the complete `external` token.
 			// Otherwise, a value that may contain it (e.g. `rel={rel}`) is enough.
 			return value[strict ? 'every' : 'some']((alt) => {
-				if (alt === null) return false;
+				if (alt == null) return false;
 				if (!strict && alt.some((part) => part.type !== 'text')) return true;
 				return alt.some(
 					(part, index) =>
