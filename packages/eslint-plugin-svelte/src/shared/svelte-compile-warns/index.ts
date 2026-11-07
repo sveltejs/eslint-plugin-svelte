@@ -444,9 +444,10 @@ function getWarningsFromCode(
 			...(svelteVersion === '5'
 				? {
 						runes: resolveRunes(compilerOptions.runes, context.filename),
-						experimental: {
-							async: compilerOptions.experimental?.async
-						}
+						// Svelte < 5.36 throws on the unknown `experimental` option, so pass it only when set.
+						...(compilerOptions.experimental?.async != null
+							? { experimental: { async: compilerOptions.experimental.async } }
+							: {})
 					}
 				: {}),
 			generate: false,
