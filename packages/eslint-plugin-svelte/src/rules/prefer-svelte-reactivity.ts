@@ -89,13 +89,12 @@ export default createRule('prefer-svelte-reactivity', {
 									: path[0] === 'URL'
 										? 'mutableURLUsed'
 										: 'mutableURLSearchParamsUsed';
-					for (const exportedVar of exportedVars) {
-						if (isIn(node, exportedVar)) {
-							context.report({
-								messageId,
-								node
-							});
-						}
+					if (exportedVars.some((exportedVar) => isIn(node, exportedVar))) {
+						context.report({
+							messageId,
+							node
+						});
+						continue;
 					}
 					if (path[0] === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
 						context.report({
