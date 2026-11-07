@@ -1,5 +1,17 @@
 # eslint-plugin-svelte
 
+## 3.24.1
+
+### Patch Changes
+
+- [#1665](https://github.com/sveltejs/eslint-plugin-svelte/pull/1665) [`4b06717`](https://github.com/sveltejs/eslint-plugin-svelte/commit/4b06717073886233988a45acfbb21b4bae743091) Thanks [@officialasishkumar](https://github.com/officialasishkumar)! - fix(prefer-derived-over-derived-by): keep type annotations, comments and sequence expressions in the autofix, and skip it when it would change the code
+
+- [#1414](https://github.com/sveltejs/eslint-plugin-svelte/pull/1414) [`fbae40a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/fbae40a620aababf9f8dc95ba5caf20619368894) Thanks [@ai](https://github.com/ai)! - fix(require-event-prefix): ignore function props that return a value (e.g. `getHref: (item: T) => string`). This also changes two cases: `() => Promise<void>` is now ignored unless `checkAsyncFunctions` is enabled, and functions that return a Promise of a value (e.g. `Promise<string>`) are now ignored even when `checkAsyncFunctions` is enabled.
+
+  Only known no-value returns are checked; `any`, `unknown`, `never`, and unresolved generic returns are ignored. In generic components, only explicit no-value annotations and their Promise wrappers are checked to avoid false positives from parser substitutions.
+
+- [#1666](https://github.com/sveltejs/eslint-plugin-svelte/pull/1666) [`d5ad32a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/d5ad32ad7af04443bcd9e7770e2f3a769049a553) Thanks [@officialasishkumar](https://github.com/officialasishkumar)! - fix: recognize `<script module>` in `no-export-load-in-svelte-module-in-kit-pages` and `prefer-destructured-store-props`
+
 ## 3.24.0
 
 ### Minor Changes
