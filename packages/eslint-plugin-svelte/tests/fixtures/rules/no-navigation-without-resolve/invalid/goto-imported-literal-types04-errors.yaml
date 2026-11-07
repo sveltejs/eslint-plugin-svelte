@@ -1,0 +1,4 @@
+- message: "'/src-a' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 15
+  column: 7
+  suggestions: null

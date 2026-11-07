@@ -1,0 +1,25 @@
+- message: "'/login?redirect=https://example.com/x' does not include the base
+    path. Use `resolve()` from `$app/paths`."
+  line: 4
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { goto } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+
+        	goto(resolve('/login') + '?redirect=https://example.com/x');
+        	goto('/a//b');
+        	goto('/(app)/settings');
+        </script>
+- message: "'/a//b' does not include the base path. Use `resolve()` from `$app/paths`."
+  line: 5
+  column: 7
+  suggestions: null
+- message: "'/(app)/settings' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 6
+  column: 7
+  suggestions: null

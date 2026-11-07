@@ -1,0 +1,11 @@
+- message: "'/about' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 8
+  column: 4
+  suggestions: null
+- message: "'/manual.pdf' does not include the base path. Use `asset()` from
+    `$app/paths` for files in `static`, or `resolve()` for routes."
+  line: 9
+  column: 4
+  suggestions: null

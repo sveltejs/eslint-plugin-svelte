@@ -1,7 +1,7 @@
 <script>
 	import { resolve } from '$app/paths';
 
-	const condition = true;
+	let { condition } = $props();
 	const url = condition ? resolve('/foo') : null;
 	const nullish = null;
 </script>

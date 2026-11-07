@@ -215,18 +215,11 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 		return '2';
 	}
 
-	const nodeModule = getNodeModule('@sveltejs/kit', filePath);
-	if (nodeModule) {
-		try {
-			const packageJson = JSON.parse(
-				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
-			);
-			const result = checkAndSetSvelteKitVersion(packageJson.version, filePath);
-			if (result != null) {
-				return result;
-			}
-		} catch {
-			/** do nothing */
+	const installed = getInstalledSvelteKitVersion(filePath);
+	if (installed) {
+		const result = checkAndSetSvelteKitVersion(installed, filePath);
+		if (result != null) {
+			return result;
 		}
 	}
 
@@ -257,6 +250,52 @@ function getSvelteKitVersion(filePath: string): SvelteContext['svelteKitVersion'
 	}
 
 	svelteKitVersionCache.set(filePath, null);
+	return null;
+}
+
+const svelteKitInstalledVersionCache = createCache<{ version: string | null }>();
+
+/**
+ * Gets the exact version of the installed `@sveltejs/kit` package (e.g. `2.26.0`).
+ * Returns null if it is not installed or cannot be read (e.g. in the browser).
+ */
+export function getInstalledSvelteKitVersion(filePath: string): string | null {
+	if (isRunInBrowser) return null;
+	const cached = svelteKitInstalledVersionCache.get(filePath);
+	if (cached) return cached.version;
+
+	let version: string | null = null;
+	const nodeModule = getNodeModule('@sveltejs/kit', filePath);
+	if (nodeModule) {
+		try {
+			const packageJson = JSON.parse(
+				fs.readFileSync(path.join(nodeModule, 'package.json'), 'utf8')
+			);
+			if (typeof packageJson.version === 'string') version = packageJson.version;
+		} catch {
+			/** do nothing */
+		}
+	}
+	svelteKitInstalledVersionCache.set(filePath, { version });
+	return version;
+}
+
+/**
+ * Gets the `@sveltejs/kit` version range declared in the nearest package.json that has it
+ * (e.g. `^2.20.0`). Returns null if there is none.
+ */
+export function getDeclaredSvelteKitVersionRange(filePath: string): string | null {
+	if (isRunInBrowser) return null;
+	try {
+		for (const packageJson of getPackageJsons(filePath)) {
+			const range =
+				packageJson.dependencies?.['@sveltejs/kit'] ??
+				packageJson.devDependencies?.['@sveltejs/kit'];
+			if (typeof range === 'string') return range;
+		}
+	} catch {
+		/** do nothing */
+	}
 	return null;
 }
 

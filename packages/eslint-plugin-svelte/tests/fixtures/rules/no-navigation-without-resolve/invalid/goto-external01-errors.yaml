@@ -1,0 +1,5 @@
+- message: "`goto()` cannot navigate to the external URL 'mailto:a@example.com'.
+    Use `window.location` or a link instead."
+  line: 7
+  column: 7
+  suggestions: null

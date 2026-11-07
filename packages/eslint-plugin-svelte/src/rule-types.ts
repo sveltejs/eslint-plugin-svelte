@@ -570,6 +570,8 @@ type SvelteNoNavigationWithoutBase = []|[{
 }]
 // ----- svelte/no-navigation-without-resolve -----
 type SvelteNoNavigationWithoutResolve = []|[{
+  strict?: boolean
+  allowRelativePaths?: boolean
   ignoreGoto?: boolean
   ignoreLinks?: boolean
   ignorePushState?: boolean
