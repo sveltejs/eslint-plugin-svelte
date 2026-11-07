@@ -1,0 +1,10 @@
+export const variable1 = new Date(8.64e15);
+variable1.setFullYear(2000);
+export const variable2 = new Map();
+variable2.set(1, 'one');
+export const variable3 = new Set();
+variable3.add(1);
+export const variable4 = new URLSearchParams();
+variable4.append('foo', '1');
+export const variable5 = new URL('https://svelte.dev/');
+variable5.hash = 'foo';
