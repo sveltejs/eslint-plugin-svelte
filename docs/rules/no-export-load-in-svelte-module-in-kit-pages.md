@@ -29,6 +29,7 @@ And the API has changed.
   /* ✗ BAD  */
   export function load() {}
   // export const load = () => {}
+  // export { load }
 </script>
 ```
 
