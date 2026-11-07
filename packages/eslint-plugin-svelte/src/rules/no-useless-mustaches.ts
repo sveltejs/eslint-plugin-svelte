@@ -131,7 +131,9 @@ export default createRule('no-useless-mustaches', {
 						return null;
 					}
 
-					const unescaped = text.replace(/\\([\s\S])/g, '$1');
+					// Escape `&` that would otherwise start a character reference,
+					// since mustache values are not decoded but static text is.
+					const unescaped = text.replace(/\\([\s\S])/g, '$1').replace(/&(?=[\d#a-z])/giu, '&amp;');
 
 					if (
 						node.parent.type === 'SvelteAttribute' ||
