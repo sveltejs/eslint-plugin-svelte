@@ -1,0 +1,16 @@
+- message: Destructure bar from $foo for better change tracking & fewer redraws
+  line: 8
+  column: 2
+  suggestions:
+    - desc: "Using destructuring like $: ({ bar } = $foo); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+        	let baz = 1;
+        $: ({ bar } = $foo);
+        </script>
+
+        <script module>
+        </script>
+
+        {bar}{baz}

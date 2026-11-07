@@ -138,6 +138,20 @@ export function findAttribute<N extends string>(
 	return null;
 }
 /**
+ * Checks whether the given script element is the module script.
+ * e.g. <script module>, <script context="module">
+ */
+export function isModuleScript(node: SvAST.SvelteScriptElement): boolean {
+	if (findAttribute(node, 'module')) {
+		return true;
+	}
+	const contextAttr = findAttribute(node, 'context');
+	const contextValue = contextAttr?.value.length === 1 && contextAttr.value[0];
+	return Boolean(
+		contextValue && contextValue.type === 'SvelteLiteral' && contextValue.value === 'module'
+	);
+}
+/**
  * Find the shorthand attribute from the given element node
  */
 export function findShorthandAttribute<N extends string>(
