@@ -1,0 +1,35 @@
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 3
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 6
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 9
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 12
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 15
+  column: 15
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 18
+  column: 16
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 21
+  column: 17
+  suggestions: null

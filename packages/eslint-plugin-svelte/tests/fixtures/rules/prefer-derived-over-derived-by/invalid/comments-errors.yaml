@@ -13,3 +13,28 @@
   line: 8
   column: 14
   suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 9
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 10
+  column: 15
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 13
+  column: 16
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 14
+  column: 17
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 17
+  column: 17
+  suggestions: null

@@ -4,6 +4,12 @@
 	const bar = $derived.by(() => {
 		return a.b, 2;
 	});
+	const baz = $derived.by(() => {
+		return (a.b, 3);
+	});
+	const qux = $derived.by(() => {
+		return /* kept */ a.b, 4;
+	});
 </script>
 
-{foo}{bar}
+{foo}{bar}{baz}{qux}

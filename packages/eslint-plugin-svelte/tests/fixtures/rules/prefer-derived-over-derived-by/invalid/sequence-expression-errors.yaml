@@ -8,3 +8,13 @@
   line: 4
   column: 14
   suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 7
+  column: 14
+  suggestions: null
+- message: Unnecessary use of `$derived.by()`. Use `$derived()` directly for
+    simple expressions.
+  line: 10
+  column: 14
+  suggestions: null

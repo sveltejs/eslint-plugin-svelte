@@ -18,7 +18,7 @@ since: 'v3.18.0'
 
 This rule reports `$derived.by()` calls whose argument is a zero-parameter, non-async, non-generator function that either uses a concise arrow body or a block body containing only a single `return` statement, and offers an autofix that converts them to `$derived()`.
 
-The autofix moves type arguments and a return type annotation onto `$derived()`. It is not offered when the call has both, when the function declares its own type parameters, or when a comment would be lost. These calls are still reported.
+The autofix moves type arguments or a return type annotation onto `$derived()`. It is not offered when the call has different type arguments and return type, when the function declares its own type parameters or a type predicate, when a `function` expression uses `this`, `arguments`, `new.target` or its own name, or when a comment would be lost. These calls are still reported.
 
 <!--eslint-skip-->
 
