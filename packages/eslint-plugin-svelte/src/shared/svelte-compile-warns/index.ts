@@ -133,7 +133,8 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 				warnings.kind,
 				stripStyleElements,
 				ignoreComments,
-				context
+				context,
+				warnings.runes
 			),
 			kind: warnings.kind,
 			stripStyleElements,
@@ -309,7 +310,14 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	}
 
 	return {
-		...processIgnore(warnings, baseWarnings.kind, stripStyleElements, ignoreComments, context),
+		...processIgnore(
+			warnings,
+			baseWarnings.kind,
+			stripStyleElements,
+			ignoreComments,
+			context,
+			baseWarnings.runes
+		),
 		kind: baseWarnings.kind,
 		stripStyleElements,
 		runes: baseWarnings.runes
@@ -491,7 +499,8 @@ function processIgnore(
 	kind: 'warn' | 'error',
 	stripStyleElements: AST.SvelteStyleElement[],
 	ignoreComments: IgnoreItem[],
-	context: RuleContext
+	context: RuleContext,
+	runes: boolean | undefined
 ): {
 	warnings: Warning[];
 	unusedIgnores: IgnoreItem[];
@@ -505,6 +514,10 @@ function processIgnore(
 	const sourceCode = context.sourceCode;
 	const unusedIgnores = new Set(ignoreComments);
 	const remainingWarning = new Set(warnings);
+	// In runes mode, Svelte reads the codes after the first one without a comma as prose.
+	const readIgnores = runes
+		? ignoreComments.filter((item) => item.readInRunesMode)
+		: ignoreComments;
 
 	for (const warning of warnings) {
 		if (!warning.code) {
@@ -523,7 +536,7 @@ function processIgnore(
 	// Stripped styles are ignored from compilation and cannot determine css errors.
 	for (const node of stripStyleElements) {
 		for (const comment of extractLeadingComments(context, node).reverse()) {
-			const ignoreItem = ignoreComments.find(
+			const ignoreItem = readIgnores.find(
 				(item) =>
 					item.token === comment &&
 					(CSS_WARN_CODES.has(item.code) || CSS_WARN_CODES.has(item.codeForV5))
@@ -545,7 +558,7 @@ function processIgnore(
 			if (isTrailingComment(comment)) {
 				continue;
 			}
-			const ignoreItem = ignoreComments.find(
+			const ignoreItem = readIgnores.find(
 				(item) =>
 					item.token === comment && (item.code === warning.code || item.codeForV5 === warning.code)
 			);
