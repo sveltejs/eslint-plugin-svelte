@@ -1,0 +1,17 @@
+- message: Destructure bar from $foo for better change tracking & fewer redraws
+  line: 9
+  column: 2
+  suggestions:
+    - desc: Using destructuring like const { bar } = $derived($foo); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <svelte:options runes />
+
+        <script>
+        	import { writable } from 'svelte/store';
+        	const foo = writable({ bar: 1 });
+        	const bar = 1;
+        const { bar: bar1 } = $derived($foo);
+        </script>
+
+        {bar1}{bar}

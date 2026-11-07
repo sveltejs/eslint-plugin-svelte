@@ -25,6 +25,7 @@ export default createRule('prefer-destructured-store-props', {
 		messages: {
 			useDestructuring: `Destructure {{property}} from {{store}} for better change tracking & fewer redraws`,
 			fixUseDestructuring: `Using destructuring like $: ({ {{property}} } = {{store}}); will run faster`,
+			fixUseDerivedDestructuring: `Using destructuring like const { {{property}} } = $derived({{store}}); will run faster`,
 			fixUseVariable: `Using the predefined reactive variable {{variable}}`
 		},
 		type: 'suggestion'
@@ -32,6 +33,7 @@ export default createRule('prefer-destructured-store-props', {
 	create(context) {
 		let mainScript: AST.SvelteScriptElement | null = null;
 		const svelteContext = getSvelteContext(context);
+		const runes = svelteContext?.runes === true;
 
 		// Store off instances of probably-destructurable statements
 		const reports: StoreMemberExpression[] = [];
@@ -147,7 +149,7 @@ export default createRule('prefer-destructured-store-props', {
 			) {
 				if (inScriptElement) return; // Within a script tag
 				// Skip Svelte 5 runes (e.g., $derived.by, $state.raw, $effect.pre)
-				if (svelteContext?.runes === true && SVELTE_RUNES.has(node.object.name)) return;
+				if (runes && SVELTE_RUNES.has(node.object.name)) return;
 				storeMemberAccessStack.unshift({ node, identifiers: [] });
 			},
 			Identifier(node: TSESTree.Identifier) {
@@ -203,7 +205,7 @@ export default createRule('prefer-destructured-store-props', {
 							scriptEndTag
 						) {
 							suggest.push({
-								messageId: 'fixUseDestructuring',
+								messageId: runes ? 'fixUseDerivedDestructuring' : 'fixUseDestructuring',
 								data: {
 									store,
 									property: node.property.name
@@ -228,12 +230,13 @@ export default createRule('prefer-destructured-store-props', {
 										varName = `${baseName}${++suffix}`;
 									}
 
+									const pattern = `{ ${propName}${propName !== varName ? `: ${varName}` : ''} }`;
 									return [
 										fixer.insertTextAfterRange(
 											[scriptEndTag.range[0], scriptEndTag.range[0]],
-											`$: ({ ${propName}${
-												propName !== varName ? `: ${varName}` : ''
-											} } = ${store});\n`
+											runes
+												? `const ${pattern} = $derived(${store});\n`
+												: `$: (${pattern} = ${store});\n`
 										),
 										fixer.replaceText(node, varName)
 									];
