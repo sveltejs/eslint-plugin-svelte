@@ -48,13 +48,17 @@ The rule does not report a variable whose object may be mutated (e.g. `value.nam
 To be safe, the rule reports a variable only when it can see every use of the object:
 
 - If every value assigned to the variable is a primitive (e.g. `count * 2`), the object can't be mutated, so the rule reports it.
-- It follows values that share the object, such as `const { profile } = value`, `{#each value.items as item}`, `value.items.forEach((item) => ...)`, `[...value]`, local functions and snippets, and values returned from them.
-- Reading the object is fine. This includes text and attributes of HTML elements in the template, built-in methods that don't mutate (e.g. `value.items.map(...)`, `value.name.trim()`), and built-in functions such as `JSON.stringify(value)` and `$state.snapshot(value)`.
-- A copy such as `value.slice()`, `[...value]` or `...rest` is new, so changing the copy itself is fine, but changing its elements is not.
-- A value stored in a new local array or object (e.g. `const list = []; list.push(value)`) is followed through that array or object.
-- Any other use is treated as a mutation. For example, passing the object to an imported function (e.g. `setContext('user', value)`), calling a method that is not built in (e.g. `value.save()`), storing it in another existing object, passing it to a component (including `<svelte:component>` and `<svelte:self>`), a custom element, `<svelte:element>` or `<slot>` (they can give it back, e.g. through a callback, a snippet or a binding), `value` (or the only text) of `<option>` and `value` of `<input>` (`bind:value` and `bind:group` give it back), `instanceof` with a class that is not a global identifier, a default value of a prop or an assignment to a prop (a custom element exposes it), or returning it to outside of the file.
-
-Methods are matched by name only when the object is known to be built-in: a part of the object, a new array made from it (e.g. `[...value]` or `value.slice()`), an array literal, a string, an array returned by a built-in function such as `Object.keys()`, or a local array that is only used with indexes and built-in methods. Other objects, including new objects such as `{ ...value }` and `Object.fromEntries()`, may have their own methods with the same names, so calling their methods or converting them (e.g. `` `${obj}` `` or `String(obj)`) is treated as a mutation.
+- It follows values that share the object or a part of it: `const { profile } = value`, `{#each value.items as item}`, parameters of callbacks of built-in array methods (e.g. `value.items.filter((item) => ...)`), results of such methods (e.g. `value.items.slice()` or `[...value.items]`), and `$derived(...)`.
+- Reading is fine: text and attributes of HTML elements in the template, built-in methods that don't mutate (e.g. `value.items.includes(x)`, `value.name.trim()`), and functions such as `JSON.stringify(value)`, `$state.snapshot(value)` and `console.log(value)`.
+- Any other use is treated as a mutation. This includes:
+  - calling a mutating or unknown method (e.g. `value.push(item)` or `value.save()`), also on a copy such as `[...value].sort()`;
+  - passing the object to any other function, including local functions and snippets (e.g. `setContext('user', value)` or `{@render row(value)}`);
+  - returning it from a function, except from `$derived.by()`, or returning the parameter of a callback of a built-in array method (or a part of it) from that callback;
+  - storing it in an object (e.g. `{ ...value }` or `box.user = value`);
+  - giving it to a component, a custom element, `<svelte:element>` or `<slot>`, or as `value` (or the only text) of `<option>` or `value` of `<input>`;
+  - `bind:` of a part of it, or of an `{#each}` item;
+  - `instanceof` with a class that is not a global identifier;
+  - a default value of a prop or an assignment to a prop (a custom element exposes it).
 
 The rule assumes that the object is data: it doesn't have getters, setters or methods that change it (e.g. `{ get first() { this.items[0].done = true } }`). `$state` proxies such plain objects too, so if the object has them, check it yourself before applying the suggestion. It also assumes that global names such as `JSON`, `console` and `Array` are the built-in ones.
 

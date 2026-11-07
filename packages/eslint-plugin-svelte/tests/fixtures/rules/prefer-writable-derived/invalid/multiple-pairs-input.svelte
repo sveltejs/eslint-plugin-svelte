@@ -1,41 +1,28 @@
 <script>
 	const { data } = $props();
-	const identity = (value) => value;
-	function count(node) {
-		let result = 1;
-		node.children?.forEach((child) => {
-			result += count(child);
-		});
-		return result;
-	}
-	function rename(value) {
-		value.name = 'foo';
-	}
 
 	let a = $state(data.a);
 	$effect(() => {
 		a = data.a;
 	});
-	const x = identity(a);
 
 	let b = $state(data.b);
 	$effect(() => {
 		b = data.b;
 	});
-	const y = identity(b);
+	const names = $derived(b.items.map((item) => item.name));
 
 	let c = $state(data.c);
 	$effect(() => {
 		c = data.c;
 	});
-	const total = $derived(count(c));
 	c = c.filter(Boolean);
 
 	let d = $state(data.d);
 	$effect(() => {
 		d = data.d;
 	});
-	rename(d);
+	d.name = 'foo';
 </script>
 
-<p>{x.name} {y.name} {total} {[...c].length}</p>
+<p>{a.name} {names.join(', ')} {[...c].length} {d.name}</p>

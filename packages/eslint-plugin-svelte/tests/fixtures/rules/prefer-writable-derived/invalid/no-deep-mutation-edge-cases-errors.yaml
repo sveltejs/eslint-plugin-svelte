@@ -11,23 +11,18 @@
         	;
         	const total = $derived(user.items.reduce((sum, item) => sum + item.price, 0));
         	const names = $derived.by(() => {
-        		const result = [];
-        		for (const item of user.items) result.push(item.name);
-        		return result.join(', ');
+        		let result = '';
+        		for (const item of user.items) result += item.name;
+        		return result;
         	});
-        	function getUser() {
-        		return user;
-        	}
-        	function show(node, u) {
-        		node.textContent = String(u.name);
-        	}
+        	const first = $derived.by(() => user.items[0]);
         </script>
 
 
-        <p use:show={user}>{getUser().name} {total} {names}</p>
+        <p>{total} {names} {first?.name}</p>
 
         {#each user.items}
         	<p>item</p>
         {/each}
 
-        <button onclick={() => user}>button</button>
+        <button onclick={() => console.log(user.name)}>button</button>
