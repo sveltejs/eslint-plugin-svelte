@@ -14,7 +14,7 @@ since: 'v2.10.0'
 
 ## :book: Rule Details
 
-This rule reports on directly accessing properties of a store containing an object in templates. These usages can instead be written as a reactive statement using destructuring to allow for more granular change-tracking and reduced redraws in the component.
+This rule reports on directly accessing properties of a store containing an object in templates. These usages can instead be written as a reactive statement (or `$derived` in runes mode) using destructuring to allow for more granular change-tracking and reduced redraws in the component.
 
 An example of the improvements can be see in this [REPL](https://svelte.dev/repl/7de86fea94ff40c48abb82da534dfb89)
 
@@ -27,7 +27,7 @@ An example of the improvements can be see in this [REPL](https://svelte.dev/repl
   // Svelte3/4
   $: ({ foo } = $store);
   // Svelte5 with Runes
-  let foo = $derived($store.foo);
+  const { foo } = $derived($store);
 </script>
 
 <!-- ✓ GOOD -->
