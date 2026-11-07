@@ -1,0 +1,8 @@
+{
+	"options": [
+		{
+			"additionalReactiveClasses": ["CustomReactiveClass"],
+			"allowReassign": ["SvelteSet", "CustomReactiveClass"]
+		}
+	]
+}

@@ -30,7 +30,18 @@ export default createRule('no-unnecessary-state-wrap', {
 						uniqueItems: true
 					},
 					allowReassign: {
-						type: 'boolean'
+						oneOf: [
+							{
+								type: 'boolean'
+							},
+							{
+								type: 'array',
+								items: {
+									type: 'string'
+								},
+								uniqueItems: true
+							}
+						]
 					}
 				},
 				additionalProperties: false
@@ -52,7 +63,7 @@ export default createRule('no-unnecessary-state-wrap', {
 	create(context) {
 		const options = context.options[0] ?? {};
 		const additionalReactiveClasses = options.additionalReactiveClasses ?? [];
-		const allowReassign = options.allowReassign ?? false;
+		const allowReassign = options.allowReassign ?? true;
 		const { globalScope } = context.sourceCode.scopeManager;
 		if (globalScope == null) {
 			return {};
@@ -91,13 +102,18 @@ export default createRule('no-unnecessary-state-wrap', {
 			});
 		}
 
+		function isReassignAllowed(className: string): boolean {
+			return typeof allowReassign === 'boolean' ? allowReassign : allowReassign.includes(className);
+		}
+
 		function reportUnnecessaryStateWrap(
 			stateNode: TSESTree.Node,
 			targetNode: TSESTree.Node,
 			className: string,
-			identifier?: TSESTree.Identifier
+			identifier: TSESTree.Identifier
 		) {
-			if (allowReassign && identifier && isReassigned(identifier)) {
+			const reassigned = isReassigned(identifier);
+			if (reassigned && isReassignAllowed(className)) {
 				return;
 			}
 
@@ -107,14 +123,18 @@ export default createRule('no-unnecessary-state-wrap', {
 				data: {
 					className
 				},
-				suggest: [
-					{
-						messageId: 'suggestRemoveStateWrap',
-						fix(fixer) {
-							return fixer.replaceText(stateNode, context.sourceCode.getText(targetNode));
-						}
-					}
-				]
+				// Removing `$state` from a reassigned variable makes the reassignments
+				// non-reactive, so the suggestion is only offered when it is never reassigned.
+				suggest: reassigned
+					? []
+					: [
+							{
+								messageId: 'suggestRemoveStateWrap',
+								fix(fixer) {
+									return fixer.replaceText(stateNode, context.sourceCode.getText(targetNode));
+								}
+							}
+						]
 			});
 		}
 

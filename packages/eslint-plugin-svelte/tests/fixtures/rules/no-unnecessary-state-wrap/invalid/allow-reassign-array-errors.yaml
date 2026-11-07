@@ -1,0 +1,4 @@
+- message: SvelteMap is already reactive, $state wrapping is unnecessary.
+  line: 11
+  column: 19
+  suggestions: null
