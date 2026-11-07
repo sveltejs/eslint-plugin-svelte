@@ -66,17 +66,17 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
     "error",
     {
       "additionalReactiveClasses": [],
-      "allowReassign": ["SvelteSet"]
+      "allowReassign": true
     }
   ]
 }
 ```
 
 - `additionalReactiveClasses` ... An array of class names that should also be considered reactive. This is useful when you have custom classes that are inherently reactive. Default is `[]`.
-- `allowReassign` ... Can be either a boolean or an array of class names:
-  - If `true`, allows `$state` wrapping of any reactive classes when the variable is reassigned.
-  - If an array, allows `$state` wrapping for the specified reactive classes when the variable is reassigned.
-  - Default is `["SvelteSet"]`.
+- `allowReassign` ... Allows `$state` wrapping when the variable is reassigned (including `bind:`). Can be a boolean or an array of class names. Default is `true`.
+  - `true` ... Allows it for all reactive classes.
+  - `false` ... Never allows it. Update the value with its methods (e.g. `set.clear()`) instead of reassigning it.
+  - An array ... Allows it only for the listed classes. Use the original export name (e.g. `SvelteSet`) even if the import is aliased.
 
 ### Examples with Options
 
@@ -107,7 +107,7 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
   set1 = new SvelteSet([1, 2, 3]); // Variable is reassigned
 
   let map1 = $state(new SvelteMap());
-  map1 = new SvelteMap(); // Variable is reassigned
+  map1 = new SvelteMap([['key', 'value']]); // Variable is reassigned
 
   // ✗ BAD
   const set2 = $state(new SvelteSet()); // const cannot be reassigned
@@ -115,7 +115,20 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
 </script>
 ```
 
-#### `allowReassign` as array
+```svelte
+<script>
+  /* eslint svelte/no-unnecessary-state-wrap: ["error", { "allowReassign": false }] */
+  import { SvelteSet } from 'svelte/reactivity';
+
+  // ✓ GOOD
+  const set1 = new SvelteSet();
+  set1.clear(); // Update with methods instead of reassigning
+
+  // ✗ BAD
+  let set2 = $state(new SvelteSet());
+  set2 = new SvelteSet(); // Reassignment is not allowed
+</script>
+```
 
 ```svelte
 <script>

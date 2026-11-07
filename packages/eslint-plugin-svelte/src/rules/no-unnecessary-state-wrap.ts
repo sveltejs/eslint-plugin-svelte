@@ -48,10 +48,8 @@ export default createRule('no-unnecessary-state-wrap', {
 			}
 		],
 		messages: {
-			unnecessaryStateWrap:
-				'{{className}} is already reactive. `$state` wrapping is unnecessary. Update it with mutations (e.g., .add(), .delete(), .push(), .splice()).',
-			suggestRemoveStateWrap:
-				'Remove the unnecessary `$state` and update the value via mutations (e.g., .add(), .delete(), .push(), .splice()).'
+			unnecessaryStateWrap: '{{className}} is already reactive, $state wrapping is unnecessary.',
+			suggestRemoveStateWrap: 'Remove unnecessary $state wrapping'
 		},
 		type: 'suggestion',
 		hasSuggestions: true,
@@ -65,7 +63,7 @@ export default createRule('no-unnecessary-state-wrap', {
 	create(context) {
 		const options = context.options[0] ?? {};
 		const additionalReactiveClasses = options.additionalReactiveClasses ?? [];
-		const allowReassign = options.allowReassign ?? ['SvelteSet'];
+		const allowReassign = options.allowReassign ?? true;
 		const { globalScope } = context.sourceCode.scopeManager;
 		if (globalScope == null) {
 			return {};
@@ -104,27 +102,18 @@ export default createRule('no-unnecessary-state-wrap', {
 			});
 		}
 
-		function isAllowedReassign(className: string, identifier?: TSESTree.Identifier): boolean {
-			if (!identifier) return false;
-
-			if (typeof allowReassign === 'boolean') {
-				return allowReassign && isReassigned(identifier);
-			}
-
-			return (
-				Array.isArray(allowReassign) &&
-				allowReassign.includes(className) &&
-				isReassigned(identifier)
-			);
+		function isReassignAllowed(className: string): boolean {
+			return typeof allowReassign === 'boolean' ? allowReassign : allowReassign.includes(className);
 		}
 
 		function reportUnnecessaryStateWrap(
 			stateNode: TSESTree.Node,
 			targetNode: TSESTree.Node,
 			className: string,
-			identifier?: TSESTree.Identifier
+			identifier: TSESTree.Identifier
 		) {
-			if (isAllowedReassign(className, identifier)) {
+			const reassigned = isReassigned(identifier);
+			if (reassigned && isReassignAllowed(className)) {
 				return;
 			}
 
@@ -134,14 +123,18 @@ export default createRule('no-unnecessary-state-wrap', {
 				data: {
 					className
 				},
-				suggest: [
-					{
-						messageId: 'suggestRemoveStateWrap',
-						fix(fixer) {
-							return fixer.replaceText(stateNode, context.sourceCode.getText(targetNode));
-						}
-					}
-				]
+				// Removing `$state` from a reassigned variable makes the reassignments
+				// non-reactive, so the suggestion is only offered when it is never reassigned.
+				suggest: reassigned
+					? []
+					: [
+							{
+								messageId: 'suggestRemoveStateWrap',
+								fix(fixer) {
+									return fixer.replaceText(stateNode, context.sourceCode.getText(targetNode));
+								}
+							}
+						]
 			});
 		}
 
