@@ -158,6 +158,16 @@ function mayBeNullish(value: Value): boolean {
 }
 
 /** Whether the value may be falsy. */
+/** `base` / `assets` alone: empty only when the app has no base path. */
+function isBasePathOnly(alt: Alt): boolean {
+	return (
+		alt != null &&
+		alt.length === 1 &&
+		alt[0].type === 'based' &&
+		(alt[0].label === 'base' || alt[0].label === 'assets')
+	);
+}
+
 function mayBeFalsy(value: Value): boolean {
 	return value.some(
 		(alt) =>
@@ -633,12 +643,25 @@ class UrlEvaluator {
 					return mayBeNullish(left) ? union(withoutNullish(left), this.evaluate(node.right)) : left;
 				}
 				if (node.operator === '||') {
-					return mayBeFalsy(left)
-						? union(
-								left.filter((alt) => alt != null && alt.length > 0),
-								this.evaluate(node.right)
-							)
-						: left;
+					if (!mayBeFalsy(left)) return left;
+					let right = this.evaluate(node.right);
+					// `base || '/'`, `x || base || '/'`: the right side is used only when the last
+					// operand on the left is falsy. If that is `base`, the base path is empty, so a
+					// root-relative path there already includes it.
+					let last: TSESTree.Expression = node.left;
+					while (last.type === 'LogicalExpression' && last.operator === '||') last = last.right;
+					const lastValue = last === node.left ? left : this.evaluate(last);
+					if (lastValue.every((alt) => isBasePathOnly(alt) || !mayBeFalsy([alt]))) {
+						right = right.map((alt) =>
+							alt != null && alt[0]?.type === 'text' && /^\/(?![/\\])/u.test(alt[0].value)
+								? [{ type: 'based', label: 'base' }, ...alt]
+								: alt
+						);
+					}
+					return union(
+						left.filter((alt) => alt != null && alt.length > 0),
+						right
+					);
 				}
 				// `&&`: the right side is used only when the left side may be truthy.
 				const truthy = left.some((alt) => alt != null && alt.length > 0);
