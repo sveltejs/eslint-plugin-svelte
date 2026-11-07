@@ -1,0 +1,4 @@
+- message: Alias is already reactive, $state wrapping is unnecessary.
+  line: 4
+  column: 21
+  suggestions: null

@@ -72,11 +72,11 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
 }
 ```
 
-- `additionalReactiveClasses` ... An array of class names that should also be considered reactive. This is useful when you have custom classes that are inherently reactive. Default is `[]`.
+- `additionalReactiveClasses` ... An array of class names that should also be considered reactive. This is useful when you have custom classes that are inherently reactive. Use the local name used to construct the class, including any import alias. Default is `[]`.
 - `allowReassign` ... Allows `$state` wrapping when the variable is reassigned (including `bind:`). Can be a boolean or an array of class names. Default is `true`.
   - `true` ... Allows it for all reactive classes.
   - `false` ... Never allows it. Update the value with its methods (e.g. `set.clear()`) instead of reassigning it.
-  - An array ... Allows it only for the listed classes. Use the original export name (e.g. `SvelteSet`) even if the import is aliased.
+  - An array ... Allows it only for the listed classes. For built-in classes from `svelte/reactivity`, use the original export name (e.g. `SvelteSet`) even if the import is aliased. For custom classes, use the same local name as in `additionalReactiveClasses`.
 
 ### Examples with Options
 
@@ -145,6 +145,19 @@ Therefore, wrapping them with `$state` is unnecessary and can lead to confusion.
 
   const set2 = $state(new SvelteSet()); // const cannot be reassigned
   let set3 = $state(new SvelteSet()); // Variable is never reassigned
+</script>
+```
+
+For example, when a custom class is imported with an alias, use the alias in both options:
+
+```svelte
+<script>
+  /* eslint svelte/no-unnecessary-state-wrap: ["error", { "additionalReactiveClasses": ["Alias"], "allowReassign": ["Alias"] }] */
+  import { CustomReactiveClass as Alias } from './custom';
+
+  // ✓ GOOD
+  let value = $state(new Alias());
+  value = new Alias();
 </script>
 ```
 
