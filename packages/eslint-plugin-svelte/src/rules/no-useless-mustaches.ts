@@ -131,9 +131,10 @@ export default createRule('no-useless-mustaches', {
 						return null;
 					}
 
-					// Escape `&` that would otherwise start a character reference,
-					// since mustache values are not decoded but static text is.
-					const unescaped = text.replace(/\\([\s\S])/g, '$1').replace(/&(?=[\d#a-z])/giu, '&amp;');
+					// Escape every `&`, since mustache values are not decoded but static text is.
+					// A lookahead is not enough: the text that follows the mustache can complete
+					// a character reference (e.g. `{'&'}copy;`).
+					const unescaped = text.replace(/\\([\s\S])/g, '$1').replace(/&/gu, '&amp;');
 
 					if (
 						node.parent.type === 'SvelteAttribute' ||
