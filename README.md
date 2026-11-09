@@ -354,6 +354,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-add-event-listener](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener/) | Warns against the use of `addEventListener` | :bulb: |
 | [svelte/no-at-const-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags/) | disallow the use of `{@const}` in favor of `{const ...}` declaration tags | :wrench: |
 | [svelte/no-at-debug-tags](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/) | disallow the use of `{@debug}` | :star::bulb: |
+| [svelte/no-constant-derived](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-constant-derived/) | disallow `$derived()` with an argument that never changes | :bulb: |
 | [svelte/no-ignored-unsubscribe](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/) | disallow ignoring the unsubscribe method returned by the `subscribe()` on Svelte stores. |  |
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. | :star: |
 | [svelte/no-inline-styles](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/) | disallow attributes and directives that produce inline styles |  |

@@ -1,0 +1,42 @@
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 4
+  column: 30
+  suggestions: null
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 5
+  column: 23
+  suggestions: null
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 6
+  column: 23
+  suggestions: null
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 7
+  column: 38
+  suggestions: null
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 8
+  column: 23
+  suggestions:
+    - desc: Use `$derived.by()` instead.
+      messageId: useDerivedBy
+      output: |
+        <script lang="ts">
+        	const SIZES = ['s', 'm'] as const;
+
+        	let size = $derived<string>('s');
+        	let sizes = $derived(SIZES satisfies readonly string[]);
+        	let maybe = $derived(null as string | null);
+        	let getter = $derived<() => number>(() => 1);
+        	let typed = $derived.by((): number => 1);
+        </script>
+
+        {size}{sizes}{maybe}{getter()}{typed()}
