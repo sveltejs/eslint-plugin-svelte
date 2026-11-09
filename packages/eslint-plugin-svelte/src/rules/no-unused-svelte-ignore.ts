@@ -52,6 +52,11 @@ export default createRule('no-unused-svelte-ignore', {
 
 		const runes = Boolean(warnings.runes);
 		for (const unused of warnings.unusedIgnores) {
+			if (runes && !unused.readInRunesMode) {
+				// In runes mode Svelte reads only comma-separated codes,
+				// so an ignore item outside the comma chain is prose, never a code.
+				continue;
+			}
 			if (unused.code === 'reactive-component' && semver.satisfies(SVELTE_VERSION, '<5')) {
 				// Svelte v4 `reactive-component` warnings are not emitted
 				// when we use the `generate: false` compiler option.

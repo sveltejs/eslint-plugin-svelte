@@ -131,6 +131,7 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 			...processIgnore(
 				warnings.warnings,
 				warnings.kind,
+				warnings.runes,
 				stripStyleElements,
 				ignoreComments,
 				context
@@ -309,7 +310,7 @@ function getSvelteCompileWarningsWithoutCache(context: RuleContext): SvelteCompi
 	}
 
 	return {
-		...processIgnore(warnings, baseWarnings.kind, stripStyleElements, ignoreComments, context),
+		...processIgnore(warnings, baseWarnings.kind, baseWarnings.runes, stripStyleElements, ignoreComments, context),
 		kind: baseWarnings.kind,
 		stripStyleElements,
 		runes: baseWarnings.runes
@@ -488,6 +489,7 @@ function getWarningsFromCode(
 function processIgnore(
 	warnings: Warning[],
 	kind: 'warn' | 'error',
+	runes: boolean,
 	stripStyleElements: AST.SvelteStyleElement[],
 	ignoreComments: IgnoreItem[],
 	context: RuleContext
@@ -522,9 +524,12 @@ function processIgnore(
 	// Stripped styles are ignored from compilation and cannot determine css errors.
 	for (const node of stripStyleElements) {
 		for (const comment of extractLeadingComments(context, node).reverse()) {
+			// In runes mode the compiler reads only comma-chained codes,
+			// so non-chained items are prose and match nothing.
 			const ignoreItem = ignoreComments.find(
 				(item) =>
 					item.token === comment &&
+					!(runes && !item.readInRunesMode) &&
 					(CSS_WARN_CODES.has(item.code) || CSS_WARN_CODES.has(item.codeForV5))
 			);
 			if (ignoreItem) {
@@ -544,9 +549,13 @@ function processIgnore(
 			if (isTrailingComment(comment)) {
 				continue;
 			}
+			// In runes mode the compiler reads only comma-chained codes,
+			// so non-chained items are prose and match nothing.
 			const ignoreItem = ignoreComments.find(
 				(item) =>
-					item.token === comment && (item.code === warning.code || item.codeForV5 === warning.code)
+					item.token === comment &&
+					!(runes && !item.readInRunesMode) &&
+					(item.code === warning.code || item.codeForV5 === warning.code)
 			);
 			if (ignoreItem) {
 				unusedIgnores.delete(ignoreItem);
