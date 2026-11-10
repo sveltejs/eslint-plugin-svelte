@@ -1,0 +1,18 @@
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 2
+  column: 23
+  suggestions: null
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 3
+  column: 24
+  suggestions: null
+- message: This `$derived()` does not read any reactive values, so it never
+    updates. Use `$state()` instead, or no rune at all if the value is never
+    reassigned.
+  line: 4
+  column: 26
+  suggestions: null
