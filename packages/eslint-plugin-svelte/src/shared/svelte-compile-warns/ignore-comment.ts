@@ -137,18 +137,11 @@ function extractSvelteIgnore(
 	const separators = processedCodeList.matchAll(SEPARATOR_PATTERN);
 	let lastSeparatorEnd = 0;
 	for (const separator of separators) {
-		const code = processedCodeList.slice(lastSeparatorEnd, separator.index);
-		if (code) {
-			results.push({
-				code,
-				codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
-				readInRunesMode: runesModeCodeStarts.has(lastSeparatorEnd),
-				range: [start + lastSeparatorEnd, start + separator.index],
-				token
-			});
-		}
+		pushCode(lastSeparatorEnd, separator.index);
 		lastSeparatorEnd = separator.index + separator[0].length;
 	}
+	// The last code is not followed by a separator when it ends the comment.
+	pushCode(lastSeparatorEnd, processedCodeList.length);
 	if (results.length === 0) {
 		const code = processedCodeList;
 		results.push({
@@ -161,6 +154,21 @@ function extractSvelteIgnore(
 	}
 
 	return results;
+
+	/** Push the code between the given indexes of the code list, if any */
+	function pushCode(codeStart: number, codeEnd: number) {
+		const code = processedCodeList.slice(codeStart, codeEnd);
+		if (!code) {
+			return;
+		}
+		results.push({
+			code,
+			codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+			readInRunesMode: runesModeCodeStarts.has(codeStart),
+			range: [start + codeStart, start + codeEnd],
+			token
+		});
+	}
 }
 
 /**
