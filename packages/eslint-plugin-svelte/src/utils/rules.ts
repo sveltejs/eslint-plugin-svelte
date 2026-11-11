@@ -69,6 +69,7 @@ import preferClassDirective from '../rules/prefer-class-directive.js';
 import preferConst from '../rules/prefer-const.js';
 import preferDerivedOverDerivedBy from '../rules/prefer-derived-over-derived-by.js';
 import preferDestructuredStoreProps from '../rules/prefer-destructured-store-props.js';
+import preferEachElse from '../rules/prefer-each-else.js';
 import preferStyleDirective from '../rules/prefer-style-directive.js';
 import preferSvelteReactivity from '../rules/prefer-svelte-reactivity.js';
 import preferWritableDerived from '../rules/prefer-writable-derived.js';
@@ -157,6 +158,7 @@ export const rules = [
 	preferConst,
 	preferDerivedOverDerivedBy,
 	preferDestructuredStoreProps,
+	preferEachElse,
 	preferStyleDirective,
 	preferSvelteReactivity,
 	preferWritableDerived,
