@@ -102,8 +102,10 @@ export default createRule('consistent-selector-style', {
 			} catch {
 				// Svelte treats `<!-- ... -->` in CSS as a comment, but the selector parser does not.
 				// Replace it with spaces (keeping line breaks so that locations stay the same) and try again.
-				const selector = rule.selector.replace(/<!--[\s\S]*?-->/gu, (comment) =>
-					comment.replace(/[^\n\r]/gu, ' ')
+				// Quoted strings (e.g. `[title="<!--"]`) are matched too, so that they are kept as they are.
+				const selector = rule.selector.replace(
+					/(["'])(?:\\[\s\S]|(?!\1)[^\\])*\1|<!--[\s\S]*?-->/gu,
+					(match) => (match.startsWith('<!--') ? match.replace(/[^\n\r]/gu, ' ') : match)
 				);
 				if (selector === rule.selector) {
 					return null;
