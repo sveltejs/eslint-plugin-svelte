@@ -50,7 +50,7 @@ export default createRule('no-not-function-handler', {
 			}
 			const def = variable.defs[0];
 			if (def.type === 'Variable') {
-				if (def.parent.kind === 'const' && def.node.init) {
+				if (def.parent.kind === 'const' && def.node.init && def.node.id.type === 'Identifier') {
 					const init = def.node.init;
 					return findRootExpression(ctx, init);
 				}
