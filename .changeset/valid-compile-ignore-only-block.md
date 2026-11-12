@@ -2,4 +2,4 @@
 'eslint-plugin-svelte': patch
 ---
 
-fix(valid-compile): do not report `block_empty` for a block that only holds a `svelte-ignore` comment
+fix(valid-compile): keep `svelte-ignore` comments as comments when compiling, so a block that only holds one is not reported as empty
