@@ -1,0 +1,6 @@
+- message: |-
+    Empty block
+    https://svelte.dev/e/block_empty(block_empty)
+  line: 9
+  column: 9
+  suggestions: null

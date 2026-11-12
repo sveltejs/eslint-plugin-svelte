@@ -362,9 +362,14 @@ function buildStrippedText(
 	let code = '';
 	let start = 0;
 	for (const token of [...stripTokens].sort((a, b) => a.range[0] - b.range[0])) {
+		const tokenText = baseText.slice(...token.range);
 		code +=
 			baseText.slice(start, token.range[0]) +
-			baseText.slice(...token.range).replace(/[^\t\n\r ]/g, ' ');
+			(token.type === 'HTMLComment'
+				? // Keep an empty HTML comment, so the compiler still sees a node there
+					// (e.g. a block that holds only a `svelte-ignore` comment is not empty).
+					`<!--${tokenText.slice(4, -3).replace(/[^\t\n\r ]/g, ' ')}-->`
+				: tokenText.replace(/[^\t\n\r ]/g, ' '));
 		start = token.range[1];
 	}
 	code += baseText.slice(start);
