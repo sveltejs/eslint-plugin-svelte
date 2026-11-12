@@ -55,7 +55,8 @@ export default createRule('shorthand-directive', {
 				node,
 				messageId: 'expectedRegular',
 				*fix(fixer) {
-					yield fixer.insertTextAfter(node.key.name, `={${node.key.name.name}}`);
+					// Insert after the modifiers too, e.g. `style:color|important`.
+					yield fixer.insertTextAfter(node.key, `={${node.key.name.name}}`);
 				}
 			});
 		}
