@@ -50,9 +50,22 @@ export default createRule('no-not-function-handler', {
 			}
 			const def = variable.defs[0];
 			if (def.type === 'Variable') {
-				if (def.parent.kind === 'const' && def.node.init && def.node.id.type === 'Identifier') {
-					const init = def.node.init;
-					return findRootExpression(ctx, init);
+				if (def.parent.kind === 'const' && def.node.init) {
+					const { id, init } = def.node;
+					if (id.type === 'Identifier') {
+						return findRootExpression(ctx, init);
+					}
+					// `const { ...rest } = {}` is always an object, and `const [...rest] = []` is always an array.
+					const last = id.type === 'ObjectPattern' ? id.properties.at(-1) : id.elements.at(-1);
+					if (last?.type === 'RestElement' && last.argument === def.name) {
+						const root = findRootExpression(ctx, init);
+						if (
+							(id.type === 'ObjectPattern' && root.type === 'ObjectExpression') ||
+							(id.type === 'ArrayPattern' && root.type === 'ArrayExpression')
+						) {
+							return root;
+						}
+					}
 				}
 			}
 			return node;
