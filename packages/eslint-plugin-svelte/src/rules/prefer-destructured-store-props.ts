@@ -203,6 +203,8 @@ export default createRule('prefer-destructured-store-props', {
 						!node.computed
 					) {
 						for (const variable of new Set(findReactiveVariable(node.object, node.property.name))) {
+							// The name may be shadowed at the node, e.g. by an `{#each}` item.
+							if (hasLocalVariableAt(variable.name, node)) continue;
 							suggest.push({
 								messageId: 'fixUseVariable',
 								data: {
