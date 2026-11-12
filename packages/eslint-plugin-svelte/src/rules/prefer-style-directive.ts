@@ -46,13 +46,33 @@ function getPropNames(root: SvelteStyleRoot<AST.SvelteMustacheTagText>): string[
  */
 const EXTRA_SHORTHAND_PROPERTIES = new Map<string, string[]>([
 	['gap', ['row-gap', 'column-gap']],
-	['grid-gap', ['row-gap', 'column-gap']],
 	['inset', ['top', 'right', 'bottom', 'left']],
 	['place-content', ['align-content', 'justify-content']],
 	['place-items', ['align-items', 'justify-items']],
 	['place-self', ['align-self', 'justify-self']],
-	['white-space', ['white-space-collapse', 'text-wrap-mode']]
+	['white-space', ['white-space-collapse', 'text-wrap-mode']],
+	['text-wrap', ['text-wrap-mode', 'text-wrap-style']]
 ]);
+
+/** Legacy names that set the same property as another name */
+const PROPERTY_ALIASES = new Map<string, string>([
+	['word-wrap', 'overflow-wrap'],
+	['grid-gap', 'gap'],
+	['grid-row-gap', 'row-gap'],
+	['grid-column-gap', 'column-gap'],
+	['page-break-before', 'break-before'],
+	['page-break-after', 'break-after'],
+	['page-break-inside', 'break-inside']
+]);
+
+/**
+ * Get the name to compare, without the vendor prefix and with aliases resolved,
+ * e.g. `transform` for `-webkit-transform`.
+ */
+function normalizeOverlapName(name: string): string {
+	const unprefixed = name.toLowerCase().replace(/^-(?:webkit|moz|ms|o)-/u, '');
+	return PROPERTY_ALIASES.get(unprefixed) ?? unprefixed;
+}
 
 /** Get the longhands that the given property sets */
 function getLonghands(name: string): string[] {
@@ -60,7 +80,7 @@ function getLonghands(name: string): string[] {
 		name,
 		...(SHORTHAND_PROPERTIES.get(name) ?? []),
 		...(EXTRA_SHORTHAND_PROPERTIES.get(name) ?? [])
-	];
+	].map(normalizeOverlapName);
 }
 
 const PHYSICAL_KEYWORDS = new Set(['top', 'right', 'bottom', 'left', 'x', 'y']);
@@ -94,15 +114,17 @@ function parseFlowRelative(name: string) {
 }
 
 /**
- * Checks whether the given physical and logical properties can set the same value,
- * e.g. `margin-left` and `margin-inline-start`.
+ * Checks whether the given properties with different side or axis keywords can set the same value,
+ * e.g. `margin-left` and `margin-inline-start` (the same side in some writing modes),
+ * and `contain-intrinsic-size` and `contain-intrinsic-width` (a shorthand and its longhand).
+ * Properties with the same kind of keywords, like `margin-left` and `margin-top`, do not overlap.
  */
 function isSameFlowRelativeProperty(a: string, b: string): boolean {
 	const parsedA = parseFlowRelative(a);
 	const parsedB = parseFlowRelative(b);
 	return (
 		parsedA.base === parsedB.base &&
-		((parsedA.physical && parsedB.logical) || (parsedA.logical && parsedB.physical))
+		(parsedA.physical !== parsedB.physical || parsedA.logical !== parsedB.logical)
 	);
 }
 
@@ -115,10 +137,15 @@ function isOverlappingProperty(a: string, b: string): boolean {
 		// Custom properties
 		return false;
 	}
-	const nameA = a.toLowerCase();
-	const nameB = b.toLowerCase();
-	if (nameA === nameB) {
+	if (a.toLowerCase() === b.toLowerCase()) {
+		// The same property is checked by `isDuplicated()`.
 		return false;
+	}
+	const nameA = normalizeOverlapName(a);
+	const nameB = normalizeOverlapName(b);
+	if (nameA === nameB) {
+		// e.g. `transform` and `-webkit-transform`, `word-wrap` and `overflow-wrap`
+		return true;
 	}
 	if (nameA === 'all' || nameB === 'all') {
 		// `all` resets all properties except `direction` and `unicode-bidi`.
@@ -135,6 +162,23 @@ function isOverlappingProperty(a: string, b: string): boolean {
 	return longhandsA.some((la) =>
 		longhandsB.some((lb) => la === lb || isSameFlowRelativeProperty(la, lb))
 	);
+}
+
+/**
+ * Checks whether all the styles that the given expression can give are known,
+ * e.g. `c ? 'color: red' : ''` and `c && 'color: red'`.
+ */
+function isKnownInlineStyle(node: TSESTree.Expression): boolean {
+	if (isStringLiteral(node)) return true;
+	if (node.type === 'TemplateLiteral') return node.expressions.length === 0;
+	if (node.type === 'ConditionalExpression') {
+		return isKnownInlineStyle(node.consequent) && isKnownInlineStyle(node.alternate);
+	}
+	// The left side is used only when it is falsy, so it is not a style.
+	if (node.type === 'LogicalExpression' && node.operator === '&&') {
+		return isKnownInlineStyle(node.right);
+	}
+	return false;
 }
 
 /**
@@ -158,8 +202,12 @@ function hasOverlappingProperty(
 	for (const other of root.nodes) {
 		if (other === node || (!dynamic && root.nodes.indexOf(other) < index)) continue;
 		if (other.type === 'decl') {
+			// The property name or a part of the declaration is unknown, e.g. `{name}: 1px`.
+			if (other.prop.interpolations.length || other.unknownInterpolations.length) return true;
 			if (isOverlappingProperty(propName, other.prop.name)) return true;
 		} else if (other.type === 'inline') {
+			// The expression can set any property, e.g. `{style}`.
+			if (!isKnownInlineStyle(other.node.expression)) return true;
 			for (const inlineRoot of other.getAllInlineStyles().values()) {
 				for (const inlineNode of inlineRoot.nodes) {
 					if (inlineNode.type === 'decl' && isOverlappingProperty(propName, inlineNode.prop.name))
