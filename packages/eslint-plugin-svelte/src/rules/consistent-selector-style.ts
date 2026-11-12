@@ -103,7 +103,7 @@ export default createRule('consistent-selector-style', {
 			if (
 				(node.type === 'root' ||
 					(node.type === 'rule' && (node.selector !== ':global' || checkGlobal)) ||
-					node.type === 'atrule') &&
+					(node.type === 'atrule' && !isKeyframesAtRule(node.name))) &&
 				node.nodes !== undefined
 			) {
 				node.nodes.flatMap((node) => checkSelectorsInPostCSSNode(node));
@@ -271,6 +271,13 @@ export default createRule('consistent-selector-style', {
 		};
 	}
 });
+
+/**
+ * Checks whether an at-rule is `@keyframes` (also with a vendor prefix). Keyframe selectors such as `from` or `50%` don't select elements.
+ */
+function isKeyframesAtRule(name: string): boolean {
+	return /^(?:-(?:webkit|moz|o|ms)-)?keyframes$/iu.test(name);
+}
 
 /**
  * Helper function to add a value to a Map of arrays
