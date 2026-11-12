@@ -1,5 +1,21 @@
 import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
+import type { RuleContext } from '../types.js';
+import { findVariable, iterateIdentifiers } from '../utils/ast-utils.js';
+
+/**
+ * Checks whether a name on the left side is already declared (e.g. by `let`, `import` or `function`).
+ * Names that only come from `$: name = ...` have a `ComputedVariable` def.
+ */
+function hasDeclaredName(context: RuleContext, node: TSESTree.AssignmentExpression): boolean {
+	for (const id of iterateIdentifiers(node.left as TSESTree.DestructuringPattern)) {
+		const variable = findVariable(context, id);
+		if (variable?.defs.some((def) => (def.type as string) !== 'ComputedVariable')) {
+			return true;
+		}
+	}
+	return false;
+}
 
 export default createRule('no-reactive-literals', {
 	meta: {
@@ -46,6 +62,15 @@ export default createRule('no-reactive-literals', {
 				}
 
 				const source = context.sourceCode;
+
+				// `let` would declare the name a second time, so do not give a suggestion.
+				if (hasDeclaredName(context, node)) {
+					return context.report({
+						node: parent,
+						loc: parent.loc,
+						messageId: 'noReactiveLiterals'
+					});
+				}
 
 				return context.report({
 					node: parent,
