@@ -3,7 +3,8 @@ import type { TSESTree } from '@typescript-eslint/types';
 import { createRule } from '../utils/index.js';
 import type { RuleContext } from '../types.js';
 import { getSvelteContext, getSvelteVersion } from '../utils/svelte-context.js';
-import { isModuleScript } from '../utils/ast-utils.js';
+import { getScope, isModuleScript } from '../utils/ast-utils.js';
+import { getPropertyName } from '@eslint-community/eslint-utils';
 
 const PAGE_PROP_NAMES = ['data', 'form', 'params', 'snapshot'];
 const LEGACY_PAGE_PROP_NAMES = [...PAGE_PROP_NAMES, 'errors'];
@@ -17,11 +18,16 @@ function checkProp(
 ) {
 	if (node.id.type !== 'ObjectPattern') return;
 	for (const p of node.id.properties) {
-		if (
-			p.type === 'Property' &&
-			p.key.type === 'Identifier' &&
-			!expectedPropNames.includes(p.key.name)
-		) {
+		if (p.type !== 'Property') continue;
+		let name: string | null = null;
+		if (p.computed) {
+			// let { [key]: foo } = $props();
+			// Skip if the key cannot be resolved statically.
+			name = getPropertyName(p, getScope(context, p.key));
+		} else if (p.key.type === 'Identifier') {
+			name = p.key.name;
+		}
+		if (name != null && !expectedPropNames.includes(name)) {
 			context.report({
 				node: p.key,
 				loc: p.key.loc,
