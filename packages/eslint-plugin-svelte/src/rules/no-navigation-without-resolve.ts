@@ -57,7 +57,7 @@ export default createRule('no-navigation-without-resolve', {
 	create(context) {
 		const tsTools = getTypeScriptTools(context);
 
-		let resolveReferences: Set<TSESTree.Identifier> = new Set<TSESTree.Identifier>();
+		let resolveReferences: Set<TSESTree.Node> = new Set<TSESTree.Node>();
 
 		const ignoreGoto = context.options[0]?.ignoreGoto ?? false;
 		const ignorePushState = context.options[0]?.ignorePushState ?? false;
@@ -121,13 +121,31 @@ export default createRule('no-navigation-without-resolve', {
 	}
 });
 
-// Extract all imports of the resolve() function
+// Extract all references to the resolve() and asset() functions
+
+function addReadReferences(
+	context: RuleContext,
+	set: Set<TSESTree.Node>,
+	identifier: TSESTree.Identifier
+): void {
+	const variable = findVariable(context, identifier);
+	if (variable === null) {
+		return;
+	}
+	// The variable may hold another function after a reassignment.
+	if (variable.references.some((reference) => reference.isWrite() && !reference.init)) {
+		return;
+	}
+	for (const reference of variable.references) {
+		if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
+	}
+}
 
 function extractResolveReferences(
 	referenceTracker: ReferenceTracker,
 	context: RuleContext
-): Set<TSESTree.Identifier> {
-	const set = new Set<TSESTree.Identifier>();
+): Set<TSESTree.Node> {
+	const set = new Set<TSESTree.Node>();
 	for (const { node } of referenceTracker.iterateEsmReferences({
 		'$app/paths': {
 			[ReferenceTracker.ESM]: true,
@@ -140,19 +158,19 @@ function extractResolveReferences(
 		}
 	})) {
 		if (node.type === 'ImportSpecifier') {
-			const variable = findVariable(context, node.local);
-			if (variable === null) {
-				continue;
-			}
-			for (const reference of variable.references) {
-				if (reference.identifier.type === 'Identifier') set.add(reference.identifier);
-			}
+			addReadReferences(context, set, node.local);
+		} else if (node.type === 'MemberExpression') {
+			// `paths.resolve`, `paths.asset`, `paths['asset']`
+			set.add(node);
 		} else if (
-			node.type === 'MemberExpression' &&
-			node.property.type === 'Identifier' &&
-			node.property.name === 'resolve'
+			// `const { resolve: r } = paths`
+			node.type === 'Property' &&
+			node.value.type === 'Identifier' &&
+			node.parent.type === 'ObjectPattern' &&
+			node.parent.parent.type === 'VariableDeclarator' &&
+			node.parent.parent.init?.type === 'Identifier'
 		) {
-			set.add(node.property);
+			addReadReferences(context, set, node.value);
 		}
 	}
 	return set;
@@ -199,7 +217,7 @@ function extractFunctionCallReferences(referenceTracker: ReferenceTracker): {
 function checkGotoCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null
 ): void {
 	if (
@@ -219,7 +237,7 @@ function checkGotoCall(
 function checkShallowNavigationCall(
 	context: RuleContext,
 	call: TSESTree.CallExpression,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null,
 	messageId: string
 ): void {
@@ -243,7 +261,7 @@ function checkLinkAttribute(
 	context: RuleContext,
 	attribute: AST.SvelteAttribute | AST.SvelteShorthandAttribute,
 	value: TSESTree.Expression | AST.SvelteLiteral,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null
 ): void {
 	if (
@@ -310,7 +328,7 @@ interface AllowedValueConfig {
 function isValueAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -353,7 +371,7 @@ function isValueAllowed(
 function variableValueIsAllowed(
 	ctx: FindVariableContext,
 	binding: TSESTree.Identifier,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -373,7 +391,7 @@ function eachItemValueIsAllowed(
 	ctx: FindVariableContext,
 	binding: TSESTree.Identifier,
 	key: string | undefined,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -403,7 +421,7 @@ function eachItemValueIsAllowed(
 function memberValueIsAllowed(
 	ctx: FindVariableContext,
 	value: TSESTree.MemberExpression,
-	resolveReferences: Set<TSESTree.Identifier>,
+	resolveReferences: Set<TSESTree.Node>,
 	tsTools: TSTools | null,
 	config: AllowedValueConfig
 ): boolean {
@@ -733,14 +751,11 @@ function expressionIsAllowedType(
 function expressionIsResolveCall(
 	ctx: FindVariableContext,
 	node: TSESTree.CallExpressionArgument | AST.SvelteLiteral,
-	resolveReferences: Set<TSESTree.Identifier>
+	resolveReferences: Set<TSESTree.Node>
 ): boolean {
 	if (
 		node.type === 'CallExpression' &&
-		((node.callee.type === 'Identifier' && resolveReferences.has(node.callee)) ||
-			(node.callee.type === 'MemberExpression' &&
-				node.callee.property.type === 'Identifier' &&
-				resolveReferences.has(node.callee.property)))
+		expressionIsResolveFunction(ctx, node.callee, resolveReferences)
 	) {
 		return true;
 	}
@@ -752,6 +767,33 @@ function expressionIsResolveCall(
 		return false;
 	}
 	return expressionIsResolveCall(ctx, init, resolveReferences);
+}
+
+function expressionIsResolveFunction(
+	ctx: FindVariableContext,
+	node: TSESTree.Expression,
+	resolveReferences: Set<TSESTree.Node>
+): boolean {
+	if (resolveReferences.has(node)) {
+		return true;
+	}
+	if (node.type !== 'Identifier') {
+		return false;
+	}
+	// `const r = resolve;`
+	const variable = ctx.findVariable(node);
+	if (variable === null || variable.identifiers.length !== 1) {
+		return false;
+	}
+	const binding = variable.identifiers[0];
+	if (
+		binding.parent.type !== 'VariableDeclarator' ||
+		binding.parent.init === null ||
+		variable.references.some((reference) => reference.isWrite() && !reference.init)
+	) {
+		return false;
+	}
+	return expressionIsResolveFunction(ctx, binding.parent.init, resolveReferences);
 }
 
 function expressionIsEmpty(
