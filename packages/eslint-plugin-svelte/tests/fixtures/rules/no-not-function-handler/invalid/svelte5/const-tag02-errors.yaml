@@ -1,0 +1,4 @@
+- message: Unexpected number value in event handler.
+  line: 7
+  column: 19
+  suggestions: null
