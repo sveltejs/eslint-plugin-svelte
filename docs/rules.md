@@ -99,6 +99,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 | [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
 | [svelte/max-lines-per-block](./rules/max-lines-per-block.md)                                             | enforce maximum number of lines in svelte component blocks                         |          |
 | [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
+| [svelte/no-component-import-rename](./rules/no-component-import-rename.md)                               | disallow importing components under a name that does not match their file name     |          |
 | [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
 | [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
 | [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |

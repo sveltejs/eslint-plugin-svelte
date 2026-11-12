@@ -1,0 +1,16 @@
+- message: Component 'Button' should be named 'MyButton' to match its file name.
+  line: 2
+  column: 9
+  suggestions: null
+- message: Component 'UserProfile' should be named 'UserCard' to match its file name.
+  line: 3
+  column: 9
+  suggestions: null
+- message: Component 'PageComponent' should be named 'Page' to match its file name.
+  line: 4
+  column: 9
+  suggestions: null
+- message: Component 'myButton' should be named 'MyButton' to match its file name.
+  line: 5
+  column: 9
+  suggestions: null
