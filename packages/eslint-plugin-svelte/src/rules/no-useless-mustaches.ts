@@ -99,7 +99,7 @@ export default createRule('no-useless-mustaches', {
 						if (
 							c == null ||
 							// ignore "\\", '"', "'", "`" and "$"
-							'nrvtbfux'.includes(c)
+							'nrvtbfux0'.includes(c)
 						) {
 							// has useful escape.
 							hasEscape = true;
