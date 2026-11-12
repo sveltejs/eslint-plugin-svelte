@@ -609,7 +609,7 @@ export function findClassesInAttribute(
 ): string[] {
 	if (attribute.type === 'SvelteAttribute' && attribute.key.name === 'class') {
 		return attribute.value.flatMap((value) =>
-			value.type === 'SvelteLiteral' ? value.value.trim().split(/\s+/u) : []
+			value.type === 'SvelteLiteral' ? value.value.split(/\s+/u).filter(Boolean) : []
 		);
 	}
 	if (attribute.type === 'SvelteDirective' && attribute.kind === 'Class') {
