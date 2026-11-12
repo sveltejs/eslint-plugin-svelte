@@ -1,5 +1,5 @@
 import type { AST } from 'svelte-eslint-parser';
-import type { AnyNode } from 'postcss';
+import type { AnyNode, Rule } from 'postcss';
 import type {
 	ClassName as SelectorClass,
 	Identifier as SelectorIdentifier,
@@ -94,11 +94,37 @@ export default createRule('consistent-selector-style', {
 		};
 
 		/**
+		 * Parses the selector of a PostCSS rule. Returns null if it can't be parsed.
+		 */
+		function parseSelector(rule: Rule): SelectorNode | null {
+			try {
+				return getStyleSelectorAST(rule);
+			} catch {
+				// Svelte treats `<!-- ... -->` in CSS as a comment, but the selector parser does not.
+				// Replace it with spaces (keeping line breaks so that locations stay the same) and try again.
+				const selector = rule.selector.replace(/<!--[\s\S]*?-->/gu, (comment) =>
+					comment.replace(/[^\n\r]/gu, ' ')
+				);
+				if (selector === rule.selector) {
+					return null;
+				}
+				try {
+					return getStyleSelectorAST(rule.clone({ selector }));
+				} catch {
+					return null;
+				}
+			}
+		}
+
+		/**
 		 * Checks selectors in a given PostCSS node
 		 */
 		function checkSelectorsInPostCSSNode(node: AnyNode): void {
 			if (node.type === 'rule') {
-				checkSelector(getStyleSelectorAST(node));
+				const selectorAST = parseSelector(node);
+				if (selectorAST !== null) {
+					checkSelector(selectorAST);
+				}
 			}
 			if (
 				(node.type === 'root' ||
