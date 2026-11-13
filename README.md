@@ -358,6 +358,7 @@ These rules relate to better ways of doing things to help you avoid problems:
 | [svelte/no-immutable-reactive-statements](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/) | disallow reactive statements that don't reference reactive values. | :star: |
 | [svelte/no-inline-styles](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/) | disallow attributes and directives that produce inline styles |  |
 | [svelte/no-inspect](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/) | Warns against the use of `$inspect` directive | :star: |
+| [svelte/no-legacy-svelte-ignore](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-legacy-svelte-ignore/) | disallow legacy kebab-case codes in svelte-ignore comments | :wrench: |
 | [svelte/no-reactive-functions](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/) | it's not necessary to define functions in reactive statements | :star::bulb: |
 | [svelte/no-reactive-literals](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/) | don't assign literal values in reactive statements | :star::bulb: |
 | [svelte/no-svelte-internal](https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/) | svelte/internal will be removed in Svelte 6. | :star: |
