@@ -1,0 +1,8 @@
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 1
+  column: 20
+  suggestions: null
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 4
+  column: 20
+  suggestions: null
