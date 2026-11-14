@@ -1,0 +1,4 @@
+- message: disallow invalid props in SvelteKit route components.
+  line: 3
+  column: 9
+  suggestions: null
