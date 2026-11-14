@@ -1,0 +1,28 @@
+- message: Expected regular directive syntax.
+  line: 8
+  column: 6
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 9
+  column: 6
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 9
+  column: 28
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 10
+  column: 6
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 10
+  column: 28
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 11
+  column: 8
+  suggestions: null
+- message: Expected regular directive syntax.
+  line: 11
+  column: 19
+  suggestions: null
