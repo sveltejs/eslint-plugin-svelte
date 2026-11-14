@@ -1,0 +1,20 @@
+- message: Can use style directives instead.
+  line: 5
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 6
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 7
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 8
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 8
+  column: 25
+  suggestions: null

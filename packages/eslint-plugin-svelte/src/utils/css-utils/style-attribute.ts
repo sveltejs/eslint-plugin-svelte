@@ -282,7 +282,7 @@ function convertChild<E extends SvelteStyleInterpolation>(
 		const declValueStartIndex = propRange[1] + (node.raws.between || '').length;
 		const valueRange: AST.Range = [
 			declValueStartIndex,
-			declValueStartIndex + (node.raws.value?.value || node.value).length
+			declValueStartIndex + (node.raws.value?.raw ?? node.value).length
 		];
 		const prop: SvelteStyleDeclaration<E>['prop'] = {
 			name: node.prop,
