@@ -1,10 +1,19 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import { getPropertyName } from '@eslint-community/eslint-utils';
+import {
+	getPropertyName,
+	getInnermostScope,
+	findVariable as findVariableByName
+} from '@eslint-community/eslint-utils';
 import type { AST } from 'svelte-eslint-parser';
 import { keyword } from 'esutils';
 import type { SuggestionReportDescriptor } from '../types.js';
 import { createRule } from '../utils/index.js';
-import { isExpressionIdentifier, isModuleScript, findVariable } from '../utils/ast-utils.js';
+import {
+	isExpressionIdentifier,
+	isModuleScript,
+	findVariable,
+	getScope
+} from '../utils/ast-utils.js';
 import { getSvelteContext } from '../utils/svelte-context.js';
 import { SVELTE_RUNES } from '../shared/runes.js';
 
@@ -127,6 +136,14 @@ export default createRule('prefer-destructured-store-props', {
 			return moduleScope?.set.has(name) || false;
 		}
 
+		/** Checks whether the given name refers to a local variable (e.g. an `{#each}` item) at the given node. */
+		function hasLocalVariableAt(name: string, node: TSESTree.Node) {
+			const variable = findVariableByName(getInnermostScope(getScope(context, node), node), name);
+			return Boolean(
+				variable && variable.scope.type !== 'module' && variable.scope.type !== 'global'
+			);
+		}
+
 		return {
 			SvelteScriptElement(node) {
 				inScriptElement = true;
@@ -186,6 +203,8 @@ export default createRule('prefer-destructured-store-props', {
 						!node.computed
 					) {
 						for (const variable of new Set(findReactiveVariable(node.object, node.property.name))) {
+							// The name may be shadowed at the node, e.g. by an `{#each}` item.
+							if (hasLocalVariableAt(variable.name, node)) continue;
 							suggest.push({
 								messageId: 'fixUseVariable',
 								data: {
@@ -226,7 +245,7 @@ export default createRule('prefer-destructured-store-props', {
 									) {
 										varName = `${baseName}${++suffix}`;
 									}
-									while (hasTopLevelVariable(varName)) {
+									while (hasTopLevelVariable(varName) || hasLocalVariableAt(varName, node)) {
 										varName = `${baseName}${++suffix}`;
 									}
 

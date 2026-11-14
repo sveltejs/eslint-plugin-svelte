@@ -1,0 +1,17 @@
+- message: Destructure a from $s for better change tracking & fewer redraws
+  line: 9
+  column: 20
+  suggestions:
+    - desc: "Using destructuring like $: ({ a } = $s); will run faster"
+      messageId: fixUseDestructuring
+      output: |
+        <script>
+        	import { writable } from 'svelte/store';
+        	const s = writable({});
+        	const items = [];
+        	$: a = $s.a;
+        $: ({ a: a1 } = $s);
+        </script>
+
+        {a}
+        {#each items as a}{a1}{/each}
