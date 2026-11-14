@@ -1,0 +1,8 @@
+- message: Component 'Alias' should be named 'Bar' to match its file name.
+  line: 2
+  column: 22
+  suggestions: null
+- message: Component 'Foo' should be named 'Bar' to match its file name.
+  line: 6
+  column: 9
+  suggestions: null
