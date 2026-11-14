@@ -1,10 +1,4 @@
 - message: |-
-    Empty block
-    https://svelte.dev/e/block_empty(block_empty)
-  line: 2
-  column: 30
-  suggestions: null
-- message: |-
     noninteractive element cannot have nonnegative tabIndex value
     https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 5
@@ -39,12 +33,6 @@
     https://svelte.dev/e/a11y_no_noninteractive_tabindex(a11y_no_noninteractive_tabindex)
   line: 10
   column: 3
-  suggestions: null
-- message: |-
-    Empty block
-    https://svelte.dev/e/block_empty(block_empty)
-  line: 14
-  column: 30
   suggestions: null
 - message: |-
     noninteractive element cannot have nonnegative tabIndex value
