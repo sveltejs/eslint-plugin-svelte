@@ -1,0 +1,15 @@
+- message: Expected the store `update` callback to return a value. Otherwise, the
+    store is set to `undefined`.
+  line: 7
+  column: 25
+  suggestions: null
+- message: Expected the store `update` callback to return a value. Otherwise, the
+    store is set to `undefined`.
+  line: 13
+  column: 25
+  suggestions: null
+- message: Expected the store `update` callback to return a value. Otherwise, the
+    store is set to `undefined`.
+  line: 24
+  column: 47
+  suggestions: null

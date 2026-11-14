@@ -331,6 +331,7 @@ These rules relate to possible syntax or logic errors in Svelte code:
 | [svelte/prefer-svelte-reactivity](https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/) | disallow using mutable instances of built-in classes where a reactive alternative is provided by svelte/reactivity | :star: |
 | [svelte/require-store-callbacks-use-set-param](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/) | store callbacks must use `set` param | :bulb: |
 | [svelte/require-store-reactive-access](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/) | disallow to use of the store itself as an operand. Need to use $ prefix or get function. | :star::wrench: |
+| [svelte/require-store-update-return](https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-update-return/) | require store `update` callbacks to return a value |  |
 | [svelte/valid-compile](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/) | disallow warnings when compiling. |  |
 | [svelte/valid-style-parse](https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse/) | require valid style element parsing |  |
 
