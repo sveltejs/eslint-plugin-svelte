@@ -483,13 +483,15 @@ export function defineVisitor(context: IndentContext): NodeListener {
 			const snippetName = sourceCode.getTokenAfter(snippetToken)!;
 			offsets.setOffsetToken(snippetName, 1, snippetToken);
 
-			const leftParenToken = sourceCode.getTokenBefore(
-				node.params[0] || sourceCode.getLastToken(node),
-				{
-					filter: isOpeningParenToken,
-					includeComments: false
-				}
-			)!;
+			const leftParenToken = node.params[0]
+				? sourceCode.getTokenBefore(node.params[0], {
+						filter: isOpeningParenToken,
+						includeComments: false
+					})!
+				: sourceCode.getTokenAfter(snippetName, {
+						filter: isOpeningParenToken,
+						includeComments: false
+					})!;
 
 			const rightParenToken = sourceCode.getTokenAfter(
 				node.params[node.params.length - 1] || leftParenToken,
