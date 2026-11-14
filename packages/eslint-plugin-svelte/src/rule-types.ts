@@ -354,6 +354,11 @@ export interface RuleOptions {
    */
   'svelte/prefer-destructured-store-props'?: Linter.RuleEntry<[]>
   /**
+   * require `{:else}` blocks in `{#each}` blocks instead of checking the length in `{#if}` blocks
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-each-else/
+   */
+  'svelte/prefer-each-else'?: Linter.RuleEntry<[]>
+  /**
    * require style directives instead of style attribute
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/
    */

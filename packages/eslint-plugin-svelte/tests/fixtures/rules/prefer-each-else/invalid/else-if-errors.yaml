@@ -1,0 +1,15 @@
+- message: Use an `{:else}` block in the `{#each}` block instead of checking its
+    length in an `{#if}` block.
+  line: 8
+  column: 11
+  suggestions: null
+- message: Use an `{:else}` block in the `{#each}` block instead of checking its
+    length in an `{#if}` block.
+  line: 18
+  column: 11
+  suggestions: null
+- message: Use an `{:else}` block in the `{#each}` block instead of checking its
+    length in an `{#if}` block.
+  line: 27
+  column: 7
+  suggestions: null
