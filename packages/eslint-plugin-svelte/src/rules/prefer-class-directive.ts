@@ -228,14 +228,31 @@ export default createRule('prefer-class-directive', {
 				messageId: 'unexpected',
 				*fix(fixer) {
 					const classDirectives: string[] = [];
+					const classNames = new Set<string>();
 					let space = ' ';
 					for (const [expr, className] of map) {
 						const trimmedClassName = className.trim();
 						if (trimmedClassName) {
+							if (classNames.has(trimmedClassName)) {
+								// The fix would add the same directive twice.
+								return;
+							}
+							classNames.add(trimmedClassName);
 							classDirectives.push(`class:${trimmedClassName}={${exprToString(expr)}}`);
 						} else {
 							space = className;
 						}
+					}
+					if (
+						attr.parent.attributes.some(
+							(a) =>
+								a.type === 'SvelteDirective' &&
+								a.kind === 'Class' &&
+								classNames.has(a.key.name.name)
+						)
+					) {
+						// The element already has a class directive with the same name.
+						return;
 					}
 
 					const fixesBuffer: Rule.Fix[] = [];
