@@ -1,0 +1,33 @@
+- message: "'/about/' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 6
+  column: 4
+  suggestions: null
+- message: "'/about/?tab=1' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 7
+  column: 4
+  suggestions: null
+- message: "'/' does not include the base path. Use `resolve()` from `$app/paths`,
+    or add `rel=\"external\"` if another app on this origin serves it."
+  line: 8
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { resolve } from '$app/paths';
+        </script>
+
+
+        <!-- `resolve('/about/')` is a type error with the default
+        `trailingSlash`, so no suggestion. -->
+
+        <a href="/about/">Click me!</a>
+
+        <a href="/about/?tab=1">Click me!</a>
+
+        <a href={resolve('/')}>Click me!</a>

@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { replaceState } from '$app/navigation';
 
-	const condition = true;
+	let { condition } = $props();
 
 	replaceState(condition ? resolve('/foo') : '');
 	replaceState(condition ? '' : resolve('/foo'));

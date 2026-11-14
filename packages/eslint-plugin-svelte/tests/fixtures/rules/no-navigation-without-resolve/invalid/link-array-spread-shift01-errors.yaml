@@ -1,4 +1,6 @@
-- message: Unexpected href link without resolve().
+- message: "'/bad2' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
   line: 8
   column: 4
   suggestions: null

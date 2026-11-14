@@ -1,8 +1,20 @@
-- message: Unexpected pushState() call without resolve().
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 6
   column: 12
-  suggestions: null
-- message: Unexpected pushState() call without resolve().
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script>
+        	import { pushState } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+
+        	const value = "/foo";
+
+        	pushState(resolve('/foo'));
+        	pushState(value);
+        </script>
+- message: "'/foo' does not include the base path. Use `resolve()` from `$app/paths`."
   line: 7
   column: 12
   suggestions: null

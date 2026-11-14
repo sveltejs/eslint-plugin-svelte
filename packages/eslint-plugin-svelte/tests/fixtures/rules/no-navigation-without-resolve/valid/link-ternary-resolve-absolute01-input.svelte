@@ -1,7 +1,7 @@
 <script>
 	import { resolve } from '$app/paths';
 
-	const condition = true;
+	let { condition } = $props();
 	const url = condition ? resolve('/foo') : 'https://example.com';
 	const absUrl = 'https://example.com';
 </script>

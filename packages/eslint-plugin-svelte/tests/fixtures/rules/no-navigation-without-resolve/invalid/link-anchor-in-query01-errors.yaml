@@ -1,0 +1,27 @@
+- message: "'/login?next={page.url.pathname}' does not include the base path. Use
+    `resolve()` from `$app/paths`."
+  line: 6
+  column: 7
+  suggestions: null
+- message: "'/login?next=resolve(…)' does not include the base path. Use
+    `resolve()` from `$app/paths`, or add `rel=\"external\"` if another app on
+    this origin serves it."
+  line: 10
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: >
+        <script>
+        	import { goto } from '$app/navigation';
+        	import { resolve } from '$app/paths';
+        	import { page } from '$app/state';
+
+        	goto('/login?next=' + page.url.pathname);
+        </script>
+
+
+        <!-- The path itself has no base path. -->
+
+        <a href={`${resolve('/login')}?next=${resolve('/dashboard')}`}>Click
+        me!</a>

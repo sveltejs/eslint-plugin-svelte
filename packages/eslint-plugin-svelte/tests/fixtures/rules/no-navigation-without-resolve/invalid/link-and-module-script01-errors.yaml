@@ -1,0 +1,43 @@
+- message: "'/instance' does not include the base path. Use `resolve()` from
+    `$app/paths`."
+  line: 10
+  column: 7
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script module>
+        	import { resolve } from '$app/paths';
+
+        	export const home = resolve('/');
+        </script>
+
+        <script>
+        	import { goto } from '$app/navigation';
+
+        	goto(resolve('/instance'));
+        </script>
+
+        <a href="/template">X</a>
+- message: "'/template' does not include the base path. Use `resolve()` from
+    `$app/paths`, or add `rel=\"external\"` if another app on this origin serves
+    it."
+  line: 13
+  column: 4
+  suggestions:
+    - desc: Wrap the URL with `resolve()`.
+      messageId: suggestWrap
+      output: |
+        <script module>
+        	import { resolve } from '$app/paths';
+
+        	export const home = resolve('/');
+        </script>
+
+        <script>
+        	import { goto } from '$app/navigation';
+
+        	goto('/instance');
+        </script>
+
+        <a href={resolve('/template')}>X</a>
