@@ -44,6 +44,15 @@ export default createRule('shorthand-attribute', {
 								node,
 								messageId: 'expectedShorthand',
 								*fix(fixer) {
+									const inner = sourceCode.text.slice(value.range[0] + 1, value.range[1] - 1);
+									if (inner.trim() !== node.key.name) {
+										// e.g. `a={(a)}` or `a={/* c */a}`. A shorthand can only hold a name.
+										if (sourceCode.getCommentsInside(value).length > 0) {
+											return;
+										}
+										yield fixer.replaceText(node, `{${node.key.name}}`);
+										return;
+									}
 									const quoteAndRange = getAttributeValueQuoteAndRange(node, sourceCode);
 									if (!quoteAndRange) {
 										return;
