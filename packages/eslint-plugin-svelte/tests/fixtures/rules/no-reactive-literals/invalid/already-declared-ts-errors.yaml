@@ -1,0 +1,21 @@
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 4
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 5
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script lang="ts">
+            let a: number = 0;
+            $: a = 1;
+            let b = 1
+        </script>
+
+        {a}{b}

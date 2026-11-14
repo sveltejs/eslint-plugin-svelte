@@ -1,0 +1,62 @@
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 8
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 9
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 10
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 11
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 12
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 13
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 14
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 16
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            import imported from './x.js';
+            export let prop = 0;
+            let a = 0;
+            let b;
+            function fn() {}
+            $: a = 1;
+            $: prop = '';
+            $: imported = [];
+            $: fn = {};
+            $: [b] = [];
+            $: ({ c, d: a } = {});
+            $: later = 1;
+            let later;
+            let notDeclared = 1
+        </script>
+
+        {a}{b}{c}{prop}{imported}{fn}{later}{notDeclared}
