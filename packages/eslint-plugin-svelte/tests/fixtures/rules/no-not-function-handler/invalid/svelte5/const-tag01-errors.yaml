@@ -1,0 +1,28 @@
+- message: Unexpected number value in event handler.
+  line: 7
+  column: 18
+  suggestions: null
+- message: Unexpected number value in event handler.
+  line: 13
+  column: 19
+  suggestions: null
+- message: Unexpected string value in event handler.
+  line: 14
+  column: 19
+  suggestions: null
+- message: Unexpected object in event handler.
+  line: 15
+  column: 19
+  suggestions: null
+- message: Unexpected number value in event handler.
+  line: 16
+  column: 19
+  suggestions: null
+- message: Unexpected array in event handler.
+  line: 20
+  column: 19
+  suggestions: null
+- message: Unexpected class in event handler.
+  line: 24
+  column: 19
+  suggestions: null

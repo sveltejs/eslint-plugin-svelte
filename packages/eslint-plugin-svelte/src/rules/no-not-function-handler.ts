@@ -54,6 +54,14 @@ export default createRule('no-not-function-handler', {
 					const init = def.node.init;
 					return findRootExpression(ctx, init);
 				}
+				// `{@const h = 1}`
+				if (
+					(def.parent as unknown as AST.SvelteConstTag).type === 'SvelteConstTag' &&
+					def.node.id.type === 'Identifier' &&
+					def.node.init
+				) {
+					return findRootExpression(ctx, def.node.init);
+				}
 			}
 			return node;
 		}
