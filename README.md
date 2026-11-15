@@ -141,8 +141,17 @@ import svelte from 'eslint-plugin-svelte';
 
 export default defineConfig(
   js.configs.recommended,
-  ts.configs.recommended,
+  ts.configs.recommendedTypeChecked,
   svelte.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
+        extraFileExtensions: ['.svelte']
+      }
+    }
+  },
   {
     files: ['**/*.svelte', '**/*.svelte.ts'],
     languageOptions: {
@@ -155,15 +164,14 @@ export default defineConfig(
 );
 ```
 
-#### TypeScript project with type-aware linting
+#### TypeScript project: further options
 
-Use this configuration if you need [type-aware rules](https://typescript-eslint.io/getting-started/typed-linting) or want to pass your Svelte config to the plugin.
+Use this configuration to pass your Svelte config to the plugin or to customize the parser.
 
 ```js
 // eslint.config.js
 import svelteConfig from './svelte.config.js';
 import { defineConfig } from 'eslint/config';
-import globals from 'globals';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
@@ -177,14 +185,8 @@ export default defineConfig(
       parserOptions: {
         // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
         extraFileExtensions: ['.svelte']
-      },
-      globals: {
-        ...globals.browser,
-        // for Sveltekit in non-SPA mode
-        ...globals.node
       }
     }
-    // ...
   },
   {
     files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
