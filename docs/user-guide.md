@@ -96,6 +96,33 @@ npm install --save-dev typescript-eslint
 
 ```js
 // eslint.config.js
+import { defineConfig } from 'eslint/config';
+import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import svelte from 'eslint-plugin-svelte';
+
+export default defineConfig(
+  js.configs.recommended,
+  ts.configs.recommended,
+  svelte.configs.recommended,
+  {
+    files: ['**/*.svelte', '**/*.svelte.ts'],
+    languageOptions: {
+      parserOptions: {
+        // Enable TypeScript parsing for `.svelte` and `.svelte.ts` files.
+        parser: ts.parser
+      }
+    }
+  }
+);
+```
+
+#### TypeScript project with type-aware linting
+
+Use this configuration if you need [type-aware rules](https://typescript-eslint.io/getting-started/typed-linting) or want to pass your Svelte config to the plugin.
+
+```js
+// eslint.config.js
 import svelteConfig from './svelte.config.js';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
