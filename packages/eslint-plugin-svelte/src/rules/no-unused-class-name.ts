@@ -5,6 +5,7 @@ import type { Node as SelectorNode } from 'postcss-selector-parser';
 import { findClassesInAttribute } from '../utils/ast-utils.js';
 import type { SourceCode } from '../types.js';
 import { toRegExp } from '../utils/regexp.js';
+import { parseSelector } from '../utils/css-utils/index.js';
 
 export default createRule('no-unused-class-name', {
 	meta: {
@@ -60,6 +61,10 @@ export default createRule('no-unused-class-name', {
 					styleContext.status === 'success'
 						? findClassesInPostCSSNode(styleContext.sourceAst, sourceCode.parserServices)
 						: [];
+				if (classesUsedInStyle === null) {
+					// A selector could not be parsed, so we don't know which classes are used.
+					return;
+				}
 
 				for (const { className, loc } of classesUsedInTemplate) {
 					if (
@@ -81,20 +86,33 @@ export default createRule('no-unused-class-name', {
 
 /**
  * Extract all class names used in a PostCSS node.
+ * Returns null if a selector can't be parsed.
  */
 function findClassesInPostCSSNode(
 	node: AnyNode,
 	parserServices: SourceCode['parserServices']
-): string[] {
+): string[] | null {
+	const classes: string[] = [];
 	if (node.type === 'rule') {
-		let classes = node.nodes.flatMap((node) => findClassesInPostCSSNode(node, parserServices));
-		classes = classes.concat(findClassesInSelector(parserServices.getStyleSelectorAST!(node)));
-		return classes;
+		const selectorAST = parseSelector(node, parserServices.getStyleSelectorAST!);
+		if (selectorAST === null) {
+			return null;
+		}
+		classes.push(...findClassesInSelector(selectorAST));
 	}
-	if ((node.type === 'root' || node.type === 'atrule') && node.nodes !== undefined) {
-		return node.nodes.flatMap((node) => findClassesInPostCSSNode(node, parserServices));
+	if (
+		(node.type === 'root' || node.type === 'rule' || node.type === 'atrule') &&
+		node.nodes !== undefined
+	) {
+		for (const child of node.nodes) {
+			const childClasses = findClassesInPostCSSNode(child, parserServices);
+			if (childClasses === null) {
+				return null;
+			}
+			classes.push(...childClasses);
+		}
 	}
-	return [];
+	return classes;
 }
 
 /**
