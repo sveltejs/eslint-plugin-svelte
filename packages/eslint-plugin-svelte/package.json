@@ -51,11 +51,19 @@
     "version:ci": "env-cmd -e version-ci -- pnpm run update && changeset version"
   },
   "peerDependencies": {
+    "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^8.57.1 || ^9.0.0 || ^10.0.0",
-    "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0"
+    "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0",
+    "typescript-eslint": "^8.0.0"
   },
   "peerDependenciesMeta": {
+    "@typescript-eslint/parser": {
+      "optional": true
+    },
     "svelte": {
+      "optional": true
+    },
+    "typescript-eslint": {
       "optional": true
     }
   },

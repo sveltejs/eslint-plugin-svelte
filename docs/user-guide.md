@@ -105,21 +105,11 @@ export default defineConfig(
   js.configs.recommended,
   ts.configs.recommendedTypeChecked,
   svelte.configs.recommended,
+  svelte.configs.typescript,
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
-        // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
-        extraFileExtensions: ['.svelte']
-      }
-    }
-  },
-  {
-    files: ['**/*.svelte', '**/*.svelte.ts'],
-    languageOptions: {
-      parserOptions: {
-        // Enable TypeScript parsing for `.svelte` and `.svelte.ts` files.
-        parser: ts.parser
+        projectService: true
       }
     }
   }
