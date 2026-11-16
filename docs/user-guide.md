@@ -105,14 +105,7 @@ export default defineConfig(
   js.configs.recommended,
   ts.configs.recommendedTypeChecked,
   svelte.configs.recommended,
-  svelte.configs.typescript,
-  {
-    languageOptions: {
-      parserOptions: {
-        projectService: true
-      }
-    }
-  }
+  svelte.configs.typescript
 );
 ```
 
@@ -124,6 +117,7 @@ Use this configuration to pass your Svelte config to the plugin or to customize 
 // eslint.config.js
 import svelteConfig from './svelte.config.js';
 import { defineConfig } from 'eslint/config';
+import globals from 'globals';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
@@ -137,8 +131,14 @@ export default defineConfig(
       parserOptions: {
         // Keep this consistent for TypeScript and Svelte files to avoid project reloads.
         extraFileExtensions: ['.svelte']
+      },
+      globals: {
+        ...globals.browser,
+        // for Sveltekit in non-SPA mode
+        ...globals.node
       }
     }
+    // ...
   },
   {
     files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],

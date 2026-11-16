@@ -9,15 +9,29 @@ describe('`typescript` config', () => {
 		ESLint = await loadESLint({ useFlatConfig: true });
 	});
 
+	it('should enable the project service for all files', async () => {
+		const linter = new ESLint({
+			overrideConfigFile: true,
+			// ESLint only lints `.ts` files if a config targets them.
+			overrideConfig: [...plugin.configs.typescript, { files: ['**/*.ts'] }]
+		});
+
+		for (const filePath of ['test.ts', 'test.svelte', 'test.svelte.ts', 'test.svelte.js']) {
+			const { parserOptions } = (await linter.calculateConfigForFile(filePath)).languageOptions;
+			assert.strictEqual(parserOptions.projectService, true, filePath);
+			assert.deepStrictEqual(parserOptions.extraFileExtensions, ['.svelte'], filePath);
+		}
+	});
+
 	it('should parse TypeScript in `.svelte`, `.svelte.ts` and `.svelte.js` files', async () => {
 		const linter = new ESLint({
 			overrideConfigFile: true,
 			overrideConfig: [
 				...plugin.configs.typescript,
 				{
-					rules: {
-						'svelte/no-at-html-tags': 'error'
-					}
+					// The files linted here are virtual, so they aren't part of any tsconfig.
+					languageOptions: { parserOptions: { projectService: false } },
+					rules: { 'svelte/no-at-html-tags': 'error' }
 				}
 			]
 		});

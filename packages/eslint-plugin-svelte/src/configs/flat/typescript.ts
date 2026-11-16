@@ -44,9 +44,11 @@ export function createTypeScriptConfig(): Linter.Config[] {
 			}
 		},
 		{
-			name: 'svelte:typescript:extra-file-extensions',
+			name: 'svelte:typescript:project-service',
 			languageOptions: {
 				parserOptions: {
+					// Required for type-aware rules. See more details at: https://typescript-eslint.io/packages/parser/
+					projectService: true,
 					// Keep this consistent for TypeScript and Svelte files to avoid project reloads.
 					extraFileExtensions: ['.svelte']
 				}

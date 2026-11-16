@@ -1,6 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import { ESLint } from 'eslint';
+import globals from 'globals';
 import ts from 'typescript-eslint';
 import svelte from '../../../src/index.js';
 
@@ -16,13 +17,14 @@ describe('TypeScript documentation configuration', () => {
 		for (const [index, section] of [sections[1], sections[2]].entries()) {
 			const code = section.split('```js\n')[1].split('```')[0];
 			const config = new Function(
+				'globals',
 				'js',
 				'ts',
 				'svelte',
 				'defineConfig',
 				'svelteConfig',
 				code.replace(/^import .*;\n/gmu, '').replace('export default', 'return')
-			)(js, ts, svelte, defineConfig, {});
+			)(globals, js, ts, svelte, defineConfig, {});
 			const linter = new ESLint({ overrideConfigFile: true, overrideConfig: config });
 			for (const file of [
 				'example.ts',
