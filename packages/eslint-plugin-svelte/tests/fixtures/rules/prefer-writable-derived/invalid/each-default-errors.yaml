@@ -1,0 +1,19 @@
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 3
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	const { data } = $props();
+        	let items = $derived(data.items);
+        	;
+        </script>
+
+        {#each items as { name = 'unknown' }}
+        	<p>{name}</p>
+        {/each}
+        {#each items as [key = 0, value]}
+        	<p>{key} {value}</p>
+        {/each}
