@@ -26,6 +26,7 @@ import noAtDebugTags from '../rules/no-at-debug-tags.js';
 import noAtHtmlTags from '../rules/no-at-html-tags.js';
 import noBindValueOnCheckableInputs from '../rules/no-bind-value-on-checkable-inputs.js';
 import noConflictingModuleNames from '../rules/no-conflicting-module-names.js';
+import noConstantDerived from '../rules/no-constant-derived.js';
 import noDomManipulating from '../rules/no-dom-manipulating.js';
 import noDupeElseIfBlocks from '../rules/no-dupe-else-if-blocks.js';
 import noDupeOnDirectives from '../rules/no-dupe-on-directives.js';
@@ -114,6 +115,7 @@ export const rules = [
 	noAtHtmlTags,
 	noBindValueOnCheckableInputs,
 	noConflictingModuleNames,
+	noConstantDerived,
 	noDomManipulating,
 	noDupeElseIfBlocks,
 	noDupeOnDirectives,

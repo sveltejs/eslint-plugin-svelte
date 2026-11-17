@@ -136,6 +136,11 @@ export interface RuleOptions {
    */
   'svelte/no-conflicting-module-names'?: Linter.RuleEntry<[]>
   /**
+   * disallow `$derived()` with an argument that never changes
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-constant-derived/
+   */
+  'svelte/no-constant-derived'?: Linter.RuleEntry<[]>
+  /**
    * disallow DOM manipulating
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/
    */
