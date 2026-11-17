@@ -1,0 +1,40 @@
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 7
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 14
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 21
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 28
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Map class. Use SvelteMap instead.
+  line: 35
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 42
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 49
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in Set class. Use SvelteSet instead.
+  line: 55
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 62
+  column: 14
+  suggestions: null
+- message: Found a mutable instance of the built-in URL class. Use SvelteURL instead.
+  line: 69
+  column: 14
+  suggestions: null
