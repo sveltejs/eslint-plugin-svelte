@@ -5,6 +5,7 @@ import base from './configs/flat/base.js';
 import recommended from './configs/flat/recommended.js';
 import prettier from './configs/flat/prettier.js';
 import all from './configs/flat/all.js';
+import { createTypeScriptConfig } from './configs/flat/typescript.js';
 import * as processor from './processor/index.js';
 import * as metaModule from './meta.js';
 import type { Linter, Rule } from 'eslint';
@@ -15,6 +16,9 @@ export const configs = {
 	recommended: recommended as Linter.Config[],
 	prettier: prettier as Linter.Config[],
 	all: all as Linter.Config[],
+	get typescript(): Linter.Config[] {
+		return createTypeScriptConfig();
+	},
 	// For backward compatibility
 	'flat/base': base as Linter.Config[],
 	'flat/recommended': recommended as Linter.Config[],
