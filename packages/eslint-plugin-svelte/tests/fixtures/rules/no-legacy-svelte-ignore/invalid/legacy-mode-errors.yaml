@@ -1,0 +1,27 @@
+- message: Use `reactive_declaration_invalid_placement` instead of the legacy code
+    `non-top-level-reactive-declaration`.
+  line: 5
+  column: 20
+  suggestions: null
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 10
+  column: 20
+  suggestions: null
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 13
+  column: 20
+  suggestions: null
+- message: Use `a11y_missing_attribute` instead of the legacy code
+    `a11y-missing-attribute`.
+  line: 13
+  column: 35
+  suggestions: null
+- message: Use `a11y_missing_attribute` instead of the legacy code
+    `a11y-missing-attribute`.
+  line: 16
+  column: 36
+  suggestions: null
+- message: Use `block_empty` instead of the legacy code `empty-block`.
+  line: 20
+  column: 21
+  suggestions: null
