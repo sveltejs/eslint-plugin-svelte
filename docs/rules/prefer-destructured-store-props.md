@@ -16,6 +16,8 @@ since: 'v2.10.0'
 
 This rule reports on directly accessing properties of a store containing an object in templates. These usages can instead be written as a reactive statement (or `$derived` in runes mode) using destructuring to allow for more granular change-tracking and reduced redraws in the component.
 
+Store property writes, including assignments, updates, and `bind:` targets, are ignored. Replacing them with destructured variables would prevent writes from updating the store.
+
 An example of the improvements can be see in this [REPL](https://svelte.dev/repl/7de86fea94ff40c48abb82da534dfb89)
 
 <!--eslint-skip-->
