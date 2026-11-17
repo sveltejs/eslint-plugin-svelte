@@ -66,13 +66,19 @@ export default createRule('no-top-level-browser-globals', {
 					}
 				}
 			})) {
-				if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
-					const guardChecker = getGuardChecker({ node: ref.node, not: true });
-					if (guardChecker) {
-						maybeGuards.push({
-							isAvailableLocation: guardChecker,
-							browserEnvironment: true
-						});
+				if (
+					ref.node.type === 'Identifier' ||
+					ref.node.type === 'MemberExpression' ||
+					ref.node.type === 'Property'
+				) {
+					for (const guardNode of resolveAliases(ref.node)) {
+						const guardChecker = getGuardChecker({ node: guardNode, not: true });
+						if (guardChecker) {
+							maybeGuards.push({
+								isAvailableLocation: guardChecker,
+								browserEnvironment: true
+							});
+						}
 					}
 				}
 			}
@@ -194,19 +200,62 @@ export default createRule('no-top-level-browser-globals', {
 				'$app/environment': kitEnvironment,
 				'$app/env': kitEnvironment
 			})) {
-				if (ref.node.type === 'Identifier' || ref.node.type === 'MemberExpression') {
-					yield ref.node;
+				if (
+					ref.node.type === 'Identifier' ||
+					ref.node.type === 'MemberExpression' ||
+					ref.node.type === 'Property'
+				) {
+					yield* resolveAliases(ref.node);
 				} else if (ref.node.type === 'ImportSpecifier') {
-					const variable = findVariable(context, ref.node.local);
-					if (variable) {
-						for (const reference of variable.references) {
-							if (reference.isRead() && reference.identifier.type === 'Identifier') {
-								yield reference.identifier;
-							}
-						}
-					}
+					yield* iterateVariableReads(ref.node.local);
 				}
 			}
+		}
+
+		/**
+		 * Iterate over the read references of the variable declared by the given identifier,
+		 * following aliases.
+		 */
+		function* iterateVariableReads(
+			id: TSESTree.Identifier,
+			visited: Set<TSESTree.Node> = new Set()
+		): Iterable<TSESTree.Expression> {
+			const variable = findVariable(context, id);
+			if (!variable) return;
+			for (const reference of variable.references) {
+				if (reference.isRead() && reference.identifier.type === 'Identifier') {
+					yield* resolveAliases(reference.identifier, visited);
+				}
+			}
+		}
+
+		/**
+		 * Resolves a node that reads a guard value to the expressions that should be checked as guards.
+		 * If the value is stored in a variable (e.g. `const x = browser`, `const { browser: x } = env`),
+		 * the reads of that variable are returned instead.
+		 */
+		function* resolveAliases(
+			node: TSESTree.Expression | TSESTree.Property,
+			visited: Set<TSESTree.Node> = new Set()
+		): Iterable<TSESTree.Expression> {
+			if (visited.has(node)) return;
+			visited.add(node);
+			const parent = node.parent as TSESTree.Node | undefined;
+			if (node.type === 'Property') {
+				// e.g. const { browser: x } = env
+				if (parent?.type === 'ObjectPattern' && node.value.type === 'Identifier') {
+					yield* iterateVariableReads(node.value, visited);
+				}
+				return;
+			}
+			if (parent?.type === 'VariableDeclarator' && parent.init === node) {
+				// e.g. const x = browser
+				if (parent.id.type === 'Identifier') {
+					yield* iterateVariableReads(parent.id, visited);
+				}
+				return;
+			}
+			yield node;
 		}
 
 		/**
