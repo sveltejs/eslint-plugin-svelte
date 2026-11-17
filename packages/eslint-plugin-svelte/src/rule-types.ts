@@ -399,6 +399,11 @@ export interface RuleOptions {
    */
   'svelte/require-store-reactive-access'?: Linter.RuleEntry<[]>
   /**
+   * require store `update` callbacks to return a value
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-update-return/
+   */
+  'svelte/require-store-update-return'?: Linter.RuleEntry<[]>
+  /**
    * require initial value in store
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/
    */
