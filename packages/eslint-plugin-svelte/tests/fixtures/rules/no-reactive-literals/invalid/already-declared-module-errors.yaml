@@ -1,0 +1,5 @@
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 8
+  column: 5
+  suggestions: null
