@@ -136,6 +136,24 @@ export default createRule('no-reactive-reassign', {
 				// The context to check next.
 				return { type: 'check', node: parent };
 			},
+			// e.g. `foo as any`, `foo!`, `foo satisfies T`, `<any>foo`
+			// These pass the value through unchanged. The context to check next.
+			TSAsExpression: ({ parent }: CheckContext<TSESTree.TSAsExpression>) => ({
+				type: 'check',
+				node: parent
+			}),
+			TSNonNullExpression: ({ parent }: CheckContext<TSESTree.TSNonNullExpression>) => ({
+				type: 'check',
+				node: parent
+			}),
+			TSSatisfiesExpression: ({ parent }: CheckContext<TSESTree.TSSatisfiesExpression>) => ({
+				type: 'check',
+				node: parent
+			}),
+			TSTypeAssertion: ({ parent }: CheckContext<TSESTree.TSTypeAssertion>) => ({
+				type: 'check',
+				node: parent
+			}),
 			ConditionalExpression: ({ node, parent }: CheckContext<TSESTree.ConditionalExpression>) => {
 				if (parent.test === node) {
 					return null;
