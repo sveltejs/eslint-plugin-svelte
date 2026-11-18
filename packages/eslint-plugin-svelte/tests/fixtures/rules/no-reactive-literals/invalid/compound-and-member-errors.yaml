@@ -1,0 +1,62 @@
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 5
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 6
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 7
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 8
+  column: 5
+  suggestions: null
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 9
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            let a = 0;
+            let obj = {};
+            $: a += 1;
+            $: obj.x = 1;
+            $: obj['y'] = [];
+            $: a ||= {};
+            let [b] = []
+            $: ({ c } = {});
+        </script>
+
+        {a}{obj.x}
+- message: Do not assign literal values inside reactive statements unless
+    absolutely necessary.
+  line: 10
+  column: 5
+  suggestions:
+    - desc: Move the literal out of the reactive statement into an assignment
+      messageId: fixReactiveLiteral
+      output: |
+        <!-- prettier-ignore -->
+        <script>
+            let a = 0;
+            let obj = {};
+            $: a += 1;
+            $: obj.x = 1;
+            $: obj['y'] = [];
+            $: a ||= {};
+            $: [b] = [];
+            let { c } = {}
+        </script>
+
+        {a}{obj.x}
