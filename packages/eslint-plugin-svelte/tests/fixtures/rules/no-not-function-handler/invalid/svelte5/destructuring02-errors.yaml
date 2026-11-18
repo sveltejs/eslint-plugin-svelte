@@ -1,0 +1,12 @@
+- message: Unexpected object in event handler.
+  line: 8
+  column: 18
+  suggestions: null
+- message: Unexpected array in event handler.
+  line: 9
+  column: 18
+  suggestions: null
+- message: Unexpected object in event handler.
+  line: 10
+  column: 18
+  suggestions: null
