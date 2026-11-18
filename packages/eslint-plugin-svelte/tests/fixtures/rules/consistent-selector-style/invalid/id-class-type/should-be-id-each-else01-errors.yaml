@@ -1,0 +1,12 @@
+- message: Selector should select by ID instead of class
+  line: 28
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 32
+  column: 3
+  suggestions: null
+- message: Selector should select by ID instead of class
+  line: 36
+  column: 3
+  suggestions: null
