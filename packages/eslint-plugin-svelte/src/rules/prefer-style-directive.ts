@@ -6,13 +6,220 @@ import type {
 	SvelteStyleInline,
 	SvelteStyleRoot
 } from '../utils/css-utils/index.js';
-import { parseStyleAttributeValue } from '../utils/css-utils/index.js';
+import { parseStyleAttributeValue, SHORTHAND_PROPERTIES } from '../utils/css-utils/index.js';
 import type { RuleFixer } from '../types.js';
 import { isHTMLElementLike } from '../utils/ast-utils.js';
 
 /** Checks wether the given node is string literal or not  */
 function isStringLiteral(node: TSESTree.Expression): node is TSESTree.StringLiteral {
 	return node.type === 'Literal' && typeof node.value === 'string';
+}
+
+/** Normalize a CSS property name for comparison */
+function normalizePropName(name: string): string {
+	// Custom properties are case-sensitive.
+	return name.startsWith('--') ? name : name.toLowerCase();
+}
+
+/** Collect the property names that the given style attribute sets */
+function getPropNames(root: SvelteStyleRoot<AST.SvelteMustacheTagText>): string[] {
+	const names: string[] = [];
+	for (const node of root.nodes) {
+		if (node.type === 'decl') {
+			names.push(normalizePropName(node.prop.name));
+		} else if (node.type === 'inline') {
+			for (const inlineRoot of node.getAllInlineStyles().values()) {
+				for (const inlineNode of inlineRoot.nodes) {
+					if (inlineNode.type === 'decl') {
+						names.push(normalizePropName(inlineNode.prop.name));
+					}
+				}
+			}
+		}
+	}
+	return names;
+}
+
+/**
+ * Shorthands whose longhands do not start with the shorthand name.
+ * `SHORTHAND_PROPERTIES` is shared with other rules, so they are listed here.
+ */
+const EXTRA_SHORTHAND_PROPERTIES = new Map<string, string[]>([
+	['gap', ['row-gap', 'column-gap']],
+	['inset', ['top', 'right', 'bottom', 'left']],
+	['place-content', ['align-content', 'justify-content']],
+	['place-items', ['align-items', 'justify-items']],
+	['place-self', ['align-self', 'justify-self']],
+	['white-space', ['white-space-collapse', 'text-wrap-mode']],
+	['text-wrap', ['text-wrap-mode', 'text-wrap-style']]
+]);
+
+/** Legacy names that set the same property as another name */
+const PROPERTY_ALIASES = new Map<string, string>([
+	['word-wrap', 'overflow-wrap'],
+	['grid-gap', 'gap'],
+	['grid-row-gap', 'row-gap'],
+	['grid-column-gap', 'column-gap'],
+	['page-break-before', 'break-before'],
+	['page-break-after', 'break-after'],
+	['page-break-inside', 'break-inside']
+]);
+
+/**
+ * Get the name to compare, without the vendor prefix and with aliases resolved,
+ * e.g. `transform` for `-webkit-transform`.
+ */
+function normalizeOverlapName(name: string): string {
+	const unprefixed = name.toLowerCase().replace(/^-(?:webkit|moz|ms|o)-/u, '');
+	return PROPERTY_ALIASES.get(unprefixed) ?? unprefixed;
+}
+
+/** Get the longhands that the given property sets */
+function getLonghands(name: string): string[] {
+	return [
+		name,
+		...(SHORTHAND_PROPERTIES.get(name) ?? []),
+		...(EXTRA_SHORTHAND_PROPERTIES.get(name) ?? [])
+	].map(normalizeOverlapName);
+}
+
+const PHYSICAL_KEYWORDS = new Set(['top', 'right', 'bottom', 'left', 'x', 'y']);
+const LOGICAL_KEYWORDS = new Set(['block', 'inline', 'start', 'end']);
+
+/**
+ * Get the property name without the side and axis keywords,
+ * e.g. `margin` for `margin-left` and `margin-inline-start`,
+ * and `size` for `width` and `inline-size`.
+ */
+function parseFlowRelative(name: string) {
+	if (name === 'top' || name === 'right' || name === 'bottom' || name === 'left') {
+		return { base: 'inset', physical: true, logical: false };
+	}
+	let physical = false;
+	let logical = false;
+	const words: string[] = [];
+	for (const word of name.split('-')) {
+		if (PHYSICAL_KEYWORDS.has(word)) {
+			physical = true;
+		} else if (LOGICAL_KEYWORDS.has(word)) {
+			logical = true;
+		} else if (word === 'width' || word === 'height') {
+			physical = true;
+			words.push('size');
+		} else {
+			words.push(word);
+		}
+	}
+	return { base: words.join('-'), physical, logical };
+}
+
+/**
+ * Checks whether the given properties with different side or axis keywords can set the same value,
+ * e.g. `margin-left` and `margin-inline-start` (the same side in some writing modes),
+ * and `contain-intrinsic-size` and `contain-intrinsic-width` (a shorthand and its longhand).
+ * Properties with the same kind of keywords, like `margin-left` and `margin-top`, do not overlap.
+ */
+function isSameFlowRelativeProperty(a: string, b: string): boolean {
+	const parsedA = parseFlowRelative(a);
+	const parsedB = parseFlowRelative(b);
+	return (
+		parsedA.base === parsedB.base &&
+		(parsedA.physical !== parsedB.physical || parsedA.logical !== parsedB.logical)
+	);
+}
+
+/**
+ * Checks whether the given two different properties can set the same value,
+ * e.g. a shorthand and its longhand like `margin` and `margin-top`.
+ */
+function isOverlappingProperty(a: string, b: string): boolean {
+	if (a.startsWith('--') || b.startsWith('--')) {
+		// Custom properties
+		return false;
+	}
+	if (a.toLowerCase() === b.toLowerCase()) {
+		// The same property is checked by `isDuplicated()`.
+		return false;
+	}
+	const nameA = normalizeOverlapName(a);
+	const nameB = normalizeOverlapName(b);
+	if (nameA === nameB) {
+		// e.g. `transform` and `-webkit-transform`, `word-wrap` and `overflow-wrap`
+		return true;
+	}
+	if (nameA === 'all' || nameB === 'all') {
+		// `all` resets all properties except `direction` and `unicode-bidi`.
+		const other = nameA === 'all' ? nameB : nameA;
+		return other !== 'direction' && other !== 'unicode-bidi';
+	}
+	if (nameA.startsWith(`${nameB}-`) || nameB.startsWith(`${nameA}-`)) {
+		// e.g. `margin` and `margin-inline-start`
+		return true;
+	}
+	// e.g. `border-width` and `border-top`, `margin` and `margin-inline-start`
+	const longhandsA = getLonghands(nameA);
+	const longhandsB = getLonghands(nameB);
+	return longhandsA.some((la) =>
+		longhandsB.some((lb) => la === lb || isSameFlowRelativeProperty(la, lb))
+	);
+}
+
+/**
+ * Checks whether all the styles that the given expression can give are known,
+ * e.g. `c ? 'color: red' : ''` and `c && 'color: red'`.
+ */
+function isKnownInlineStyle(node: TSESTree.Expression): boolean {
+	if (isStringLiteral(node)) return true;
+	if (node.type === 'TemplateLiteral') return node.expressions.length === 0;
+	if (node.type === 'ConditionalExpression') {
+		return isKnownInlineStyle(node.consequent) && isKnownInlineStyle(node.alternate);
+	}
+	// The left side is used only when it is falsy, so it is not a style.
+	if (node.type === 'LogicalExpression' && node.operator === '&&') {
+		return isKnownInlineStyle(node.right);
+	}
+	return false;
+}
+
+/**
+ * Checks whether moving the given node to a style directive can change the style.
+ * Style directives are applied after the style attribute, so it can change the style
+ * if a later declaration in the attribute or a style directive sets an overlapping property.
+ * When the value is dynamic, an earlier declaration can also change the style:
+ * Svelte updates a directive with `setProperty()` / `removeProperty()`,
+ * so an empty, invalid or `null` value no longer falls back to the earlier declaration.
+ */
+function hasOverlappingProperty(
+	attrNode: AST.SvelteAttribute,
+	root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
+	node:
+		| SvelteStyleDeclaration<AST.SvelteMustacheTagText>
+		| SvelteStyleInline<AST.SvelteMustacheTagText>,
+	propName: string,
+	dynamic: boolean
+): boolean {
+	const index = root.nodes.indexOf(node);
+	for (const other of root.nodes) {
+		if (other === node || (!dynamic && root.nodes.indexOf(other) < index)) continue;
+		if (other.type === 'decl') {
+			// The property name or a part of the declaration is unknown, e.g. `{name}: 1px`.
+			if (other.prop.interpolations.length || other.unknownInterpolations.length) return true;
+			if (isOverlappingProperty(propName, other.prop.name)) return true;
+		} else if (other.type === 'inline') {
+			// The expression can set any property, e.g. `{style}`.
+			if (!isKnownInlineStyle(other.node.expression)) return true;
+			for (const inlineRoot of other.getAllInlineStyles().values()) {
+				for (const inlineNode of inlineRoot.nodes) {
+					if (inlineNode.type === 'decl' && isOverlappingProperty(propName, inlineNode.prop.name))
+						return true;
+				}
+			}
+		}
+	}
+	return attrNode.parent.attributes.some(
+		(attr) =>
+			attr.type === 'SvelteStyleDirective' && isOverlappingProperty(propName, attr.key.name.name)
+	);
 }
 
 export default createRule('prefer-style-directive', {
@@ -40,11 +247,19 @@ export default createRule('prefer-style-directive', {
 			node: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>
 		) {
+			const propNames = getPropNames(root);
+
+			/** Checks whether the given property is set more than once in the style attribute */
+			function isDuplicated(name: string) {
+				const normalized = normalizePropName(name);
+				return propNames.filter((n) => n === normalized).length > 1;
+			}
+
 			for (const child of root.nodes) {
 				if (child.type === 'decl') {
-					processDeclaration(node, root, child);
+					processDeclaration(node, root, child, isDuplicated);
 				} else if (child.type === 'inline') {
-					processInline(node, root, child);
+					processInline(node, root, child, isDuplicated);
 				}
 			}
 		}
@@ -55,7 +270,8 @@ export default createRule('prefer-style-directive', {
 		function processDeclaration(
 			attrNode: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
-			decl: SvelteStyleDeclaration<AST.SvelteMustacheTagText>
+			decl: SvelteStyleDeclaration<AST.SvelteMustacheTagText>,
+			isDuplicated: (name: string) => boolean
 		) {
 			if (decl.important || decl.unknownInterpolations.length || decl.prop.interpolations.length)
 				return;
@@ -72,9 +288,31 @@ export default createRule('prefer-style-directive', {
 				loc: decl.loc,
 				messageId: 'unexpected',
 				*fix(fixer) {
-					const styleDirective = `style:${decl.prop.name}="${sourceCode.text.slice(
-						...decl.value.range
-					)}"`;
+					// A style directive always wins over the style attribute,
+					// so moving a property that is set twice can change the style.
+					if (isDuplicated(decl.prop.name)) return;
+					if (
+						hasOverlappingProperty(
+							attrNode,
+							root,
+							decl,
+							decl.prop.name,
+							decl.value.interpolations.length > 0
+						)
+					)
+						return;
+					// Use the value that PostCSS gives. It has no comments.
+					const value = decl.value.value;
+					let valueWithoutInterpolations = value;
+					for (const interpolation of decl.value.interpolations) {
+						valueWithoutInterpolations = valueWithoutInterpolations.replace(
+							sourceCode.getText(interpolation),
+							''
+						);
+					}
+					// The directive value is quoted with `"`.
+					if (valueWithoutInterpolations.includes('"')) return;
+					const styleDirective = `style:${decl.prop.name}="${value}"`;
 					if (root.nodes.length === 1 && root.nodes[0] === decl) {
 						yield fixer.replaceTextRange(attrNode.range, styleDirective);
 					} else {
@@ -95,7 +333,8 @@ export default createRule('prefer-style-directive', {
 		function processInline(
 			attrNode: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
-			inline: SvelteStyleInline<AST.SvelteMustacheTagText>
+			inline: SvelteStyleInline<AST.SvelteMustacheTagText>,
+			isDuplicated: (name: string) => boolean
 		) {
 			const node = inline.node.expression;
 
@@ -132,6 +371,11 @@ export default createRule('prefer-style-directive', {
 				node,
 				messageId: 'unexpected',
 				*fix(fixer) {
+					// A style directive always wins over the style attribute,
+					// so moving a property that is set twice can change the style.
+					if (isDuplicated(decl.prop.name)) return;
+					// The value is `null` in one case, so it is always dynamic.
+					if (hasOverlappingProperty(attrNode, root, inline, decl.prop.name, true)) return;
 					let valueText = sourceCode.text.slice(node.test.range[0], node.consequent.range[0]);
 					if (positive) {
 						valueText +=
@@ -150,7 +394,9 @@ export default createRule('prefer-style-directive', {
 							decl.value.value +
 							sourceCode.text[node.alternate.range[1] - 1];
 					}
-					const styleDirective = `style:${decl.prop.name}={${valueText}}`;
+					const styleDirective = `style:${decl.prop.name}${
+						decl.important ? '|important' : ''
+					}={${valueText}}`;
 					if (root.nodes.length === 1 && root.nodes[0] === inline) {
 						yield fixer.replaceTextRange(attrNode.range, styleDirective);
 					} else {
