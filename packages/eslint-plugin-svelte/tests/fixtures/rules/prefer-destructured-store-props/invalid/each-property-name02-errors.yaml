@@ -1,0 +1,34 @@
+- message: Destructure a from $s for better change tracking & fewer redraws
+  line: 7
+  column: 20
+  suggestions:
+    - desc: Using destructuring like const { a } = $derived($s); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <script lang="ts">
+        	import { writable } from 'svelte/store';
+        	const s = writable<Record<string, number>>({});
+        	const items: string[] = $state([]);
+        const { a: a1 } = $derived($s);
+        </script>
+
+        {#each items as a}{a1}{/each}
+        {#each items as i}{$s[i]}{/each}
+        {#snippet row(a: string)}{$s.a}{/snippet}
+- message: Destructure a from $s for better change tracking & fewer redraws
+  line: 9
+  column: 27
+  suggestions:
+    - desc: Using destructuring like const { a } = $derived($s); will run faster
+      messageId: fixUseDerivedDestructuring
+      output: |
+        <script lang="ts">
+        	import { writable } from 'svelte/store';
+        	const s = writable<Record<string, number>>({});
+        	const items: string[] = $state([]);
+        const { a: a1 } = $derived($s);
+        </script>
+
+        {#each items as a}{$s.a}{/each}
+        {#each items as i}{$s[i]}{/each}
+        {#snippet row(a: string)}{a1}{/snippet}
