@@ -210,7 +210,11 @@ function checkGotoCall(
 ): void {
 	if (
 		call.arguments.length > 0 &&
-		!isValueAllowed(context, [call.arguments[0]], resolveReferences, tsTools, {})
+		!isValueAllowed(context, [call.arguments[0]], resolveReferences, tsTools, {
+			allowEmpty:
+				call.arguments.length > 1 &&
+				expressionIsShallowOptions(new FindVariableContext(context), call.arguments[1])
+		})
 	) {
 		context.report({ loc: call.arguments[0].loc, messageId: 'gotoWithoutResolve' });
 	}
@@ -401,6 +405,12 @@ function urlStartSatisfies(
 			urlStartSatisfies(context, [first.alternate, ...rest], visited, predicate)
 		);
 	}
+	if (isTypeWrapper(first)) {
+		return (
+			predicate(first, rest) ||
+			urlStartSatisfies(context, [first.expression, ...rest], visited, predicate)
+		);
+	}
 	if (first.type === 'Identifier' || first.type === 'MemberExpression') {
 		if (predicate(first, rest)) {
 			return true;
@@ -450,11 +460,12 @@ function expandReference(
 		return null;
 	}
 	const binding = variable.identifiers[0];
+	const init = variableInit(variable);
 	const values =
 		binding.parent.type === 'VariableDeclarator'
-			? binding.parent.init === null
+			? init === null
 				? null
-				: [binding.parent.init]
+				: [init]
 			: eachItemValues(ctx, binding);
 	if (values === null) {
 		return null;
@@ -503,17 +514,6 @@ function eachItemValues(
 }
 
 // Helper functions
-
-function resolveBindingIdentifier(
-	ctx: FindVariableContext,
-	node: TSESTree.Identifier
-): TSESTree.Identifier | null {
-	const variable = ctx.findVariable(node);
-	if (variable === null || variable.identifiers.length === 0) {
-		return null;
-	}
-	return variable.identifiers[0];
-}
 
 /**
  * Resolve an `{#each array as context}` iteration variable to the iterated array and the
@@ -744,18 +744,66 @@ function resolveToLiteralSource(
 		const key = getPropertyName(node, ctx.scopeFor(node));
 		return key === null ? null : accessKey(ctx, node.object, key);
 	}
+	if (isTypeWrapper(node)) {
+		return node.expression;
+	}
 	return null;
+}
+
+/**
+ * Checks for TypeScript wrappers that don't change the runtime value: `x as T`, `x satisfies T`, `x!` and `<T>x`.
+ */
+function isTypeWrapper(
+	node: UrlPart
+): node is
+	| TSESTree.TSAsExpression
+	| TSESTree.TSSatisfiesExpression
+	| TSESTree.TSNonNullExpression
+	| TSESTree.TSTypeAssertion {
+	return (
+		node.type === 'TSAsExpression' ||
+		node.type === 'TSSatisfiesExpression' ||
+		node.type === 'TSNonNullExpression' ||
+		node.type === 'TSTypeAssertion'
+	);
 }
 
 function resolveVariableInit(
 	ctx: FindVariableContext,
 	node: TSESTree.Identifier
 ): TSESTree.Expression | null {
-	const binding = resolveBindingIdentifier(ctx, node);
-	if (binding === null || binding.parent.type !== 'VariableDeclarator') {
+	const variable = ctx.findVariable(node);
+	if (variable === null || variable.identifiers.length === 0) {
+		return null;
+	}
+	return variableInit(variable);
+}
+
+/**
+ * Returns the initializer of a variable, or null if it has none or may hold a different value.
+ */
+function variableInit(variable: Variable): TSESTree.Expression | null {
+	const binding = variable.identifiers[0];
+	if (binding.parent.type !== 'VariableDeclarator' || !isNeverReassigned(variable)) {
 		return null;
 	}
 	return binding.parent.init;
+}
+
+/**
+ * Checks that a variable always holds its initial value, i.e. it is a `const` or is never written to
+ * after initialization. Mirrors `getStaticValue()` from eslint-utils.
+ */
+function isNeverReassigned(variable: Variable): boolean {
+	if (variable.defs.length !== 1 || variable.defs[0].type !== 'Variable') {
+		return false;
+	}
+	if (variable.defs[0].parent.kind === 'const') {
+		return true;
+	}
+	const inits = variable.references.filter((reference) => reference.init).length;
+	const reads = variable.references.filter((reference) => reference.isReadOnly()).length;
+	return inits === 1 && inits + reads === variable.references.length;
 }
 
 /**
@@ -853,6 +901,24 @@ function partIsResolved(
 
 function partIsEmpty(part: UrlPart): boolean {
 	return partText(part) === '';
+}
+
+/**
+ * Checks for goto() options with `shallow: true` (shallow routing in SvelteKit 3)
+ */
+function expressionIsShallowOptions(
+	ctx: FindVariableContext,
+	node: TSESTree.CallExpressionArgument
+): boolean {
+	if (node.type === 'SpreadElement') {
+		return false;
+	}
+	const shallow = lookupProperty(ctx, node, 'shallow');
+	if (shallow.type !== 'found') {
+		return false;
+	}
+	const value = getStaticValue(shallow.value, ctx.scopeFor(shallow.value));
+	return value !== null && Boolean(value.value);
 }
 
 function expressionIsNullish(
