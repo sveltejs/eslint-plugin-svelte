@@ -25,7 +25,7 @@ The [@typescript-eslint/no-unnecessary-condition] rule does not understand react
 ```svelte
 <script lang="ts">
   /* eslint svelte/@typescript-eslint/no-unnecessary-condition: "error" */
-  export let foo: number | null = null;
+  let foo: number | null = null;
   /* ✗ BAD */
   let b = foo || 42;
   /* ✓ GOOD */
