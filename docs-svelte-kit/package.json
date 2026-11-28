@@ -50,7 +50,7 @@
     "markdown-it-container": "^4.0.0",
     "markdown-it-emoji": "^3.0.0",
     "pako": "^3.0.0",
-    "postcss-nested": "^7.0.2",
+    "postcss-nested": "^9.0.0",
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.30.0",
     "sass": "^1.92.0",
