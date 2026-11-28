@@ -1,5 +1,44 @@
 # eslint-plugin-svelte
 
+## 3.25.0
+
+### Minor Changes
+
+- [#1605](https://github.com/sveltejs/eslint-plugin-svelte/pull/1605) [`18474d9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/18474d95c62908471b8c367d2507813649b69d3c) Thanks [@marekdedic](https://github.com/marekdedic)! - fix(no-navigation-without-resolve): checking all parts of link attributes, not just the first one
+
+  Links whose `href` is made of several parts, such as `href="{resolve('/search')}{queryString}"` or `href="{resolve('/blog')}/{slug}"`, were allowed as long as the first part was resolved. Now everything after the resolved value has to be a query or a fragment, i.e. it has to start with `?` or `#` (literally, or as a variable whose value starts with it), so such links are newly reported. To fix them, pass the whole path to `resolve()` (e.g. `resolve('/blog/[slug]', { slug })`) and start the query or fragment with a literal `?` or `#` (e.g. `href="{resolve('/search')}?{params}"`).
+
+- [#1202](https://github.com/sveltejs/eslint-plugin-svelte/pull/1202) [`5459c78`](https://github.com/sveltejs/eslint-plugin-svelte/commit/5459c78f1fa28fafb5b3f0e97b457d42d52b88d7) Thanks [@baseballyama](https://github.com/baseballyama)! - feat(no-unnecessary-state-wrap): default `allowReassign` to `true`, accept an array of class names, and stop suggesting to remove `$state` from reassigned variables
+
+- [#1605](https://github.com/sveltejs/eslint-plugin-svelte/pull/1605) [`18474d9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/18474d95c62908471b8c367d2507813649b69d3c) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): not reporting pure query and fragment URLs
+
+- [#1605](https://github.com/sveltejs/eslint-plugin-svelte/pull/1605) [`18474d9`](https://github.com/sveltejs/eslint-plugin-svelte/commit/18474d95c62908471b8c367d2507813649b69d3c) Thanks [@marekdedic](https://github.com/marekdedic)! - feat(no-navigation-without-resolve): recognizing resolved values with queries and fragments
+
+### Patch Changes
+
+- [#1677](https://github.com/sveltejs/eslint-plugin-svelte/pull/1677) [`8ba0f97`](https://github.com/sveltejs/eslint-plugin-svelte/commit/8ba0f977216b65837f984ea3261c54247b0f7d02) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(valid-compile): do not pass the `experimental` compiler option to Svelte older than 5.36 unless it is set
+
+- [#1671](https://github.com/sveltejs/eslint-plugin-svelte/pull/1671) [`2d0d19a`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2d0d19accbfbfdd81e76f8f708fc0a19e6d5f664) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(prefer-destructured-store-props): suggest `$derived` instead of `$:` in runes mode
+
+- [#1672](https://github.com/sveltejs/eslint-plugin-svelte/pull/1672) [`afa3042`](https://github.com/sveltejs/eslint-plugin-svelte/commit/afa304239747a7350019b1d2802a8efc1e52d7da) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(no-export-load-in-svelte-module-in-kit-pages): report `load` exported with `export { load }`, `export * as load`, destructuring, or `export class load`, including TypeScript import aliases while ignoring local type-only bindings.
+
+- [#970](https://github.com/sveltejs/eslint-plugin-svelte/pull/970) [`a1e546e`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a1e546e373c97773307c617d0c7d61b5e7ab4241) Thanks [@BlankParenthesis](https://github.com/BlankParenthesis)! - fix(indent): fix crash on TS enums and mapped types when the script uses store access (`$store`)
+
+- [#1630](https://github.com/sveltejs/eslint-plugin-svelte/pull/1630) [`22cdc0f`](https://github.com/sveltejs/eslint-plugin-svelte/commit/22cdc0f2ee7248691ffc045259953407dd140d82) Thanks [@baseballyama](https://github.com/baseballyama)! - Stop `svelte/prefer-svelte-reactivity` from reporting instances that are created inside a function and never leave it.
+  Keep reporting instances with customized methods or hooks that may expose the instance to external code.
+
+- [#1610](https://github.com/sveltejs/eslint-plugin-svelte/pull/1610) [`2a85a23`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2a85a23ef47b3e2e2795f9202d646218216a59a2) Thanks [@marekdedic](https://github.com/marekdedic)! - no-navigation-without-resolve: follow every value assigned to a variable, so `let url = resolve('/'); url = '/foo'; goto(url);` is now reported, while `let url = resolve('/'); if (loggedIn) url = resolve('/dashboard'); goto(url);` is allowed.
+
+- [#1610](https://github.com/sveltejs/eslint-plugin-svelte/pull/1610) [`2a85a23`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2a85a23ef47b3e2e2795f9202d646218216a59a2) Thanks [@marekdedic](https://github.com/marekdedic)! - Allow `goto('', { shallow: true })` in no-navigation-without-resolve, the SvelteKit 3 replacement for `pushState('')` and `replaceState('')`.
+
+- [#1679](https://github.com/sveltejs/eslint-plugin-svelte/pull/1679) [`a567af5`](https://github.com/sveltejs/eslint-plugin-svelte/commit/a567af5117fb1d57e37c0c41ebc9784c1afc488e) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(prefer-destructured-store-props): ignore store property writes and bindings so suggestions do not replace them with read-only derived values or disconnect store updates
+
+- [#1675](https://github.com/sveltejs/eslint-plugin-svelte/pull/1675) [`e7c3e59`](https://github.com/sveltejs/eslint-plugin-svelte/commit/e7c3e597b46a18cc6a89361771daaf7730b79db5) Thanks [@baseballyama](https://github.com/baseballyama)! - fix: read `svelte-ignore` codes followed by punctuation (e.g. `a11y_autofocus:`) like Svelte does
+
+- [#1610](https://github.com/sveltejs/eslint-plugin-svelte/pull/1610) [`2a85a23`](https://github.com/sveltejs/eslint-plugin-svelte/commit/2a85a23ef47b3e2e2795f9202d646218216a59a2) Thanks [@marekdedic](https://github.com/marekdedic)! - no-navigation-without-resolve: look through TypeScript `as`, `satisfies`, `!` and `<T>` wrappers, so e.g. `goto('', { shallow: true } as const)` and `const paths = [resolve('/')] as const` are no longer reported.
+
+- [#1676](https://github.com/sveltejs/eslint-plugin-svelte/pull/1676) [`0639294`](https://github.com/sveltejs/eslint-plugin-svelte/commit/0639294be364e6ce2921ae7d2ade0c4f8cce713d) Thanks [@baseballyama](https://github.com/baseballyama)! - fix(valid-compile): in runes mode, do not hide warnings for `svelte-ignore` codes that Svelte reads as prose
+
 ## 3.24.1
 
 ### Patch Changes
