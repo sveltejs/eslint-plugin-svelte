@@ -229,6 +229,16 @@ export default createRule('consistent-selector-style', {
 					for (const className of findClassesInAttribute(attribute)) {
 						addToArrayMap(selections.class.exact, className, node);
 					}
+					if (attribute.type === 'SvelteShorthandAttribute' && attribute.key.name === 'id') {
+						const prefix = extractExpressionPrefixLiteral(context, attribute.value);
+						const suffix = extractExpressionSuffixLiteral(context, attribute.value);
+						if (prefix === null && suffix === null) {
+							selections.id.universalSelector = true;
+						} else {
+							addToArrayMap(selections.id.affixes, [prefix, suffix], node);
+						}
+						continue;
+					}
 					if (attribute.type !== 'SvelteAttribute') {
 						continue;
 					}
