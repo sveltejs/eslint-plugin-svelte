@@ -15,6 +15,31 @@ function isStringLiteral(node: TSESTree.Expression): node is TSESTree.StringLite
 	return node.type === 'Literal' && typeof node.value === 'string';
 }
 
+/** Normalize a CSS property name for comparison */
+function normalizePropName(name: string): string {
+	// Custom properties are case-sensitive.
+	return name.startsWith('--') ? name : name.toLowerCase();
+}
+
+/** Collect the property names that the given style attribute sets */
+function getPropNames(root: SvelteStyleRoot<AST.SvelteMustacheTagText>): string[] {
+	const names: string[] = [];
+	for (const node of root.nodes) {
+		if (node.type === 'decl') {
+			names.push(normalizePropName(node.prop.name));
+		} else if (node.type === 'inline') {
+			for (const inlineRoot of node.getAllInlineStyles().values()) {
+				for (const inlineNode of inlineRoot.nodes) {
+					if (inlineNode.type === 'decl') {
+						names.push(normalizePropName(inlineNode.prop.name));
+					}
+				}
+			}
+		}
+	}
+	return names;
+}
+
 export default createRule('prefer-style-directive', {
 	meta: {
 		docs: {
@@ -40,11 +65,19 @@ export default createRule('prefer-style-directive', {
 			node: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>
 		) {
+			const propNames = getPropNames(root);
+
+			/** Checks whether the given property is set more than once in the style attribute */
+			function isDuplicated(name: string) {
+				const normalized = normalizePropName(name);
+				return propNames.filter((n) => n === normalized).length > 1;
+			}
+
 			for (const child of root.nodes) {
 				if (child.type === 'decl') {
-					processDeclaration(node, root, child);
+					processDeclaration(node, root, child, isDuplicated);
 				} else if (child.type === 'inline') {
-					processInline(node, root, child);
+					processInline(node, root, child, isDuplicated);
 				}
 			}
 		}
@@ -55,7 +88,8 @@ export default createRule('prefer-style-directive', {
 		function processDeclaration(
 			attrNode: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
-			decl: SvelteStyleDeclaration<AST.SvelteMustacheTagText>
+			decl: SvelteStyleDeclaration<AST.SvelteMustacheTagText>,
+			isDuplicated: (name: string) => boolean
 		) {
 			if (decl.important || decl.unknownInterpolations.length || decl.prop.interpolations.length)
 				return;
@@ -72,9 +106,21 @@ export default createRule('prefer-style-directive', {
 				loc: decl.loc,
 				messageId: 'unexpected',
 				*fix(fixer) {
-					const styleDirective = `style:${decl.prop.name}="${sourceCode.text.slice(
-						...decl.value.range
-					)}"`;
+					// A style directive always wins over the style attribute,
+					// so moving a property that is set twice can change the style.
+					if (isDuplicated(decl.prop.name)) return;
+					// Use the value that PostCSS gives. It has no comments.
+					const value = decl.value.value;
+					let valueWithoutInterpolations = value;
+					for (const interpolation of decl.value.interpolations) {
+						valueWithoutInterpolations = valueWithoutInterpolations.replace(
+							sourceCode.getText(interpolation),
+							''
+						);
+					}
+					// The directive value is quoted with `"`.
+					if (valueWithoutInterpolations.includes('"')) return;
+					const styleDirective = `style:${decl.prop.name}="${value}"`;
 					if (root.nodes.length === 1 && root.nodes[0] === decl) {
 						yield fixer.replaceTextRange(attrNode.range, styleDirective);
 					} else {
@@ -95,7 +141,8 @@ export default createRule('prefer-style-directive', {
 		function processInline(
 			attrNode: AST.SvelteAttribute,
 			root: SvelteStyleRoot<AST.SvelteMustacheTagText>,
-			inline: SvelteStyleInline<AST.SvelteMustacheTagText>
+			inline: SvelteStyleInline<AST.SvelteMustacheTagText>,
+			isDuplicated: (name: string) => boolean
 		) {
 			const node = inline.node.expression;
 
@@ -132,6 +179,9 @@ export default createRule('prefer-style-directive', {
 				node,
 				messageId: 'unexpected',
 				*fix(fixer) {
+					// A style directive always wins over the style attribute,
+					// so moving a property that is set twice can change the style.
+					if (isDuplicated(decl.prop.name)) return;
 					let valueText = sourceCode.text.slice(node.test.range[0], node.consequent.range[0]);
 					if (positive) {
 						valueText +=
@@ -150,7 +200,9 @@ export default createRule('prefer-style-directive', {
 							decl.value.value +
 							sourceCode.text[node.alternate.range[1] - 1];
 					}
-					const styleDirective = `style:${decl.prop.name}={${valueText}}`;
+					const styleDirective = `style:${decl.prop.name}${
+						decl.important ? '|important' : ''
+					}={${valueText}}`;
 					if (root.nodes.length === 1 && root.nodes[0] === inline) {
 						yield fixer.replaceTextRange(attrNode.range, styleDirective);
 					} else {
