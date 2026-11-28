@@ -207,7 +207,7 @@ export function defineVisitor(context: IndentContext): NodeListener {
 		SvelteConstTag(node: AST.SvelteConstTag) {
 			const openToken = sourceCode.getFirstToken(node);
 			const constToken = sourceCode.getTokenAfter(openToken);
-			const declarationToken = sourceCode.getFirstToken(node.declaration);
+			const declarationToken = sourceCode.getFirstToken(node.declarations[0]);
 			const closeToken = sourceCode.getLastToken(node);
 			offsets.setOffsetToken(constToken, 1, openToken);
 			offsets.setOffsetToken(declarationToken, 1, openToken);
