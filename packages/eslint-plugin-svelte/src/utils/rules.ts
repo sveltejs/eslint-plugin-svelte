@@ -78,6 +78,7 @@ import requireEventPrefix from '../rules/require-event-prefix.js';
 import requireOptimizedStyleAttribute from '../rules/require-optimized-style-attribute.js';
 import requireStoreCallbacksUseSetParam from '../rules/require-store-callbacks-use-set-param.js';
 import requireStoreReactiveAccess from '../rules/require-store-reactive-access.js';
+import requireStoreUpdateReturn from '../rules/require-store-update-return.js';
 import requireStoresInit from '../rules/require-stores-init.js';
 import shorthandAttribute from '../rules/shorthand-attribute.js';
 import shorthandDirective from '../rules/shorthand-directive.js';
@@ -166,6 +167,7 @@ export const rules = [
 	requireOptimizedStyleAttribute,
 	requireStoreCallbacksUseSetParam,
 	requireStoreReactiveAccess,
+	requireStoreUpdateReturn,
 	requireStoresInit,
 	shorthandAttribute,
 	shorthandDirective,
