@@ -86,30 +86,31 @@ These rules relate to better ways of doing things to help you avoid problems:
 
 These rules relate to style guidelines, and are therefore quite subjective:
 
-| Rule ID                                                                                                  | Description                                                                        |          |
-| :------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :------- |
-| [svelte/consistent-selector-style](./rules/consistent-selector-style.md)                                 | enforce a consistent style for CSS selectors                                       |          |
-| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md)                     | derived store should use same variable names between values and callback           | :bulb:   |
-| [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md)                                 | enforce the location of first attribute                                            | :wrench: |
-| [svelte/html-closing-bracket-new-line](./rules/html-closing-bracket-new-line.md)                         | Require or disallow a line break before tag's closing brackets                     | :wrench: |
-| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md)                           | require or disallow a space before tag's closing brackets                          | :wrench: |
-| [svelte/html-quotes](./rules/html-quotes.md)                                                             | enforce quotes style of HTML attributes                                            | :wrench: |
-| [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                         | :wrench: |
-| [svelte/indent](./rules/indent.md)                                                                       | enforce consistent indentation                                                     | :wrench: |
-| [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                  | :wrench: |
-| [svelte/max-lines-per-block](./rules/max-lines-per-block.md)                                             | enforce maximum number of lines in svelte component blocks                         |          |
-| [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                | :wrench: |
-| [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                       | :bulb:   |
-| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                    |          |
-| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                    | :wrench: |
-| [svelte/prefer-attribute-interpolation](./rules/prefer-attribute-interpolation.md)                       | require attribute interpolation instead of template literals                       |          |
-| [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                            | :wrench: |
-| [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                | :wrench: |
-| [svelte/require-event-prefix](./rules/require-event-prefix.md)                                           | require component event names to start with "on"                                   |          |
-| [svelte/shorthand-attribute](./rules/shorthand-attribute.md)                                             | enforce use of shorthand syntax in attribute                                       | :wrench: |
-| [svelte/shorthand-directive](./rules/shorthand-directive.md)                                             | enforce use of shorthand syntax in directives                                      | :wrench: |
-| [svelte/sort-attributes](./rules/sort-attributes.md)                                                     | enforce order of attributes                                                        | :wrench: |
-| [svelte/spaced-html-comment](./rules/spaced-html-comment.md)                                             | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment | :wrench: |
+| Rule ID                                                                                                  | Description                                                                                   |          |
+| :------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :------- |
+| [svelte/consistent-selector-style](./rules/consistent-selector-style.md)                                 | enforce a consistent style for CSS selectors                                                  |          |
+| [svelte/derived-has-same-inputs-outputs](./rules/derived-has-same-inputs-outputs.md)                     | derived store should use same variable names between values and callback                      | :bulb:   |
+| [svelte/first-attribute-linebreak](./rules/first-attribute-linebreak.md)                                 | enforce the location of first attribute                                                       | :wrench: |
+| [svelte/html-closing-bracket-new-line](./rules/html-closing-bracket-new-line.md)                         | Require or disallow a line break before tag's closing brackets                                | :wrench: |
+| [svelte/html-closing-bracket-spacing](./rules/html-closing-bracket-spacing.md)                           | require or disallow a space before tag's closing brackets                                     | :wrench: |
+| [svelte/html-quotes](./rules/html-quotes.md)                                                             | enforce quotes style of HTML attributes                                                       | :wrench: |
+| [svelte/html-self-closing](./rules/html-self-closing.md)                                                 | enforce self-closing style                                                                    | :wrench: |
+| [svelte/indent](./rules/indent.md)                                                                       | enforce consistent indentation                                                                | :wrench: |
+| [svelte/max-attributes-per-line](./rules/max-attributes-per-line.md)                                     | enforce the maximum number of attributes per line                                             | :wrench: |
+| [svelte/max-lines-per-block](./rules/max-lines-per-block.md)                                             | enforce maximum number of lines in svelte component blocks                                    |          |
+| [svelte/mustache-spacing](./rules/mustache-spacing.md)                                                   | enforce unified spacing in mustache                                                           | :wrench: |
+| [svelte/no-extra-reactive-curlies](./rules/no-extra-reactive-curlies.md)                                 | disallow wrapping single reactive statements in curly braces                                  | :bulb:   |
+| [svelte/no-restricted-html-elements](./rules/no-restricted-html-elements.md)                             | disallow specific HTML elements                                                               |          |
+| [svelte/no-spaces-around-equal-signs-in-attribute](./rules/no-spaces-around-equal-signs-in-attribute.md) | disallow spaces around equal signs in attribute                                               | :wrench: |
+| [svelte/prefer-attribute-interpolation](./rules/prefer-attribute-interpolation.md)                       | require attribute interpolation instead of template literals                                  |          |
+| [svelte/prefer-class-directive](./rules/prefer-class-directive.md)                                       | require class directives instead of ternary expressions                                       | :wrench: |
+| [svelte/prefer-each-else](./rules/prefer-each-else.md)                                                   | require `{:else}` blocks in `{#each}` blocks instead of checking the length in `{#if}` blocks |          |
+| [svelte/prefer-style-directive](./rules/prefer-style-directive.md)                                       | require style directives instead of style attribute                                           | :wrench: |
+| [svelte/require-event-prefix](./rules/require-event-prefix.md)                                           | require component event names to start with "on"                                              |          |
+| [svelte/shorthand-attribute](./rules/shorthand-attribute.md)                                             | enforce use of shorthand syntax in attribute                                                  | :wrench: |
+| [svelte/shorthand-directive](./rules/shorthand-directive.md)                                             | enforce use of shorthand syntax in directives                                                 | :wrench: |
+| [svelte/sort-attributes](./rules/sort-attributes.md)                                                     | enforce order of attributes                                                                   | :wrench: |
+| [svelte/spaced-html-comment](./rules/spaced-html-comment.md)                                             | enforce consistent spacing after the `<!--` and before the `-->` in a HTML comment            | :wrench: |
 
 ## Extension Rules
 
