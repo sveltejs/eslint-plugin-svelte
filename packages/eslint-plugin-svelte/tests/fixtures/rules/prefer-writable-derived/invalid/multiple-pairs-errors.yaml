@@ -1,0 +1,99 @@
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 4
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	const { data } = $props();
+
+        	let a = $derived(data.a);
+        	;
+
+        	let b = $state(data.b);
+        	$effect(() => {
+        		b = data.b;
+        	});
+        	const names = $derived(b.items.map((item) => item.name));
+
+        	let c = $state(data.c);
+        	$effect(() => {
+        		c = data.c;
+        	});
+        	c = c.filter(Boolean);
+
+        	let d = $state(data.d);
+        	$effect(() => {
+        		d = data.d;
+        	});
+        	d.name = 'foo';
+        </script>
+
+        <p>{a.name} {names.join(', ')} {[...c].length} {d.name}</p>
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 9
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	const { data } = $props();
+
+        	let a = $state(data.a);
+        	$effect(() => {
+        		a = data.a;
+        	});
+
+        	let b = $derived(data.b);
+        	;
+        	const names = $derived(b.items.map((item) => item.name));
+
+        	let c = $state(data.c);
+        	$effect(() => {
+        		c = data.c;
+        	});
+        	c = c.filter(Boolean);
+
+        	let d = $state(data.d);
+        	$effect(() => {
+        		d = data.d;
+        	});
+        	d.name = 'foo';
+        </script>
+
+        <p>{a.name} {names.join(', ')} {[...c].length} {d.name}</p>
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 15
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	const { data } = $props();
+
+        	let a = $state(data.a);
+        	$effect(() => {
+        		a = data.a;
+        	});
+
+        	let b = $state(data.b);
+        	$effect(() => {
+        		b = data.b;
+        	});
+        	const names = $derived(b.items.map((item) => item.name));
+
+        	let c = $derived(data.c);
+        	;
+        	c = c.filter(Boolean);
+
+        	let d = $state(data.d);
+        	$effect(() => {
+        		d = data.d;
+        	});
+        	d.name = 'foo';
+        </script>
+
+        <p>{a.name} {names.join(', ')} {[...c].length} {d.name}</p>

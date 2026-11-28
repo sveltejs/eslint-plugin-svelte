@@ -1,0 +1,18 @@
+- message: Prefer using writable $derived instead of $state and $effect
+  line: 4
+  column: 6
+  suggestions:
+    - desc: Rewrite $state and $effect to $derived
+      messageId: suggestRewrite
+      output: |
+        <script>
+        	import { format } from './format.js';
+        	const { count } = $props();
+        	let doubled = $derived(count * 2);
+        	;
+        	function reset() {
+        		doubled = 0;
+        	}
+        </script>
+
+        <button onclick={reset}>{format(doubled)}</button>
