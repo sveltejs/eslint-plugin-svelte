@@ -1,0 +1,12 @@
+- message: Component 'Foo' should be named 'Bar' to match its file name.
+  line: 1
+  column: 21
+  suggestions: null
+- message: Component 'Button' should be named 'MyButton' to match its file name.
+  line: 2
+  column: 21
+  suggestions: null
+- message: Component 'Baz' should be named 'Qux' to match its file name.
+  line: 3
+  column: 21
+  suggestions: null
