@@ -1,0 +1,11 @@
+{
+	"languageOptions": {
+		"parserOptions": {
+			"svelteConfig": {
+				"compilerOptions": {
+					"runes": true
+				}
+			}
+		}
+	}
+}

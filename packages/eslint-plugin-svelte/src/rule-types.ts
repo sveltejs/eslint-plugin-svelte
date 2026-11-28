@@ -208,6 +208,11 @@ export interface RuleOptions {
    */
   'svelte/no-inspect'?: Linter.RuleEntry<[]>
   /**
+   * disallow legacy kebab-case codes in svelte-ignore comments
+   * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-legacy-svelte-ignore/
+   */
+  'svelte/no-legacy-svelte-ignore'?: Linter.RuleEntry<[]>
+  /**
    * disallow using navigation (links, goto, pushState, replaceState) without the base path
    * @see https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/
    * @deprecated

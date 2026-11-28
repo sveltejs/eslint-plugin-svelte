@@ -1,0 +1,17 @@
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 5
+  column: 20
+  suggestions: null
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 8
+  column: 20
+  suggestions: null
+- message: Use `a11y_missing_attribute` instead of the legacy code
+    `a11y-missing-attribute`.
+  line: 8
+  column: 36
+  suggestions: null
+- message: Use `a11y_autofocus` instead of the legacy code `a11y-autofocus`.
+  line: 11
+  column: 20
+  suggestions: null
