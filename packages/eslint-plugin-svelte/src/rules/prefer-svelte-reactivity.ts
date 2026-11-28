@@ -95,44 +95,13 @@ export default createRule('prefer-svelte-reactivity', {
 						// so it doesn't need to be reactive.
 						continue;
 					}
-					for (const exportedVar of exportedVars) {
-						if (isIn(node, exportedVar)) {
-							context.report({
-								messageId,
-								node
-							});
-						}
-					}
-					if (path[0] === 'Date' && isDateMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableDateUsed',
-							node
-						});
-					}
-					if (path[0] === 'Map' && isMapMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableMapUsed',
-							node
-						});
-					}
-					if (path[0] === 'Set' && isSetMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableSetUsed',
-							node
-						});
-					}
-					if (path[0] === 'URL' && isURLMutable(referenceTracker, node as TSESTree.Expression)) {
-						context.report({
-							messageId: 'mutableURLUsed',
-							node
-						});
-					}
+					// Report each construction once, even if it is exported and also mutated.
 					if (
-						path[0] === 'URLSearchParams' &&
-						isURLSearchParamsMutable(referenceTracker, node as TSESTree.Expression)
+						exportedVars.some((exportedVar) => isIn(node, exportedVar)) ||
+						isMutable(referenceTracker, node as TSESTree.Expression, path[0])
 					) {
 						context.report({
-							messageId: 'mutableURLSearchParamsUsed',
+							messageId,
 							node
 						});
 					}
@@ -554,6 +523,27 @@ function isCopyingCall(
 function isGlobal(context: RuleContext, node: TSESTree.Identifier): boolean {
 	const variable = findVariable(context, node);
 	return !variable || variable.defs.length === 0;
+}
+
+function isMutable(
+	referenceTracker: ReferenceTracker,
+	ctorNode: TSESTree.Expression,
+	className: string
+): boolean {
+	switch (className) {
+		case 'Date':
+			return isDateMutable(referenceTracker, ctorNode);
+		case 'Map':
+			return isMapMutable(referenceTracker, ctorNode);
+		case 'Set':
+			return isSetMutable(referenceTracker, ctorNode);
+		case 'URL':
+			return isURLMutable(referenceTracker, ctorNode);
+		case 'URLSearchParams':
+			return isURLSearchParamsMutable(referenceTracker, ctorNode);
+		default:
+			return false;
+	}
 }
 
 function isDateMutable(referenceTracker: ReferenceTracker, ctorNode: TSESTree.Expression): boolean {
