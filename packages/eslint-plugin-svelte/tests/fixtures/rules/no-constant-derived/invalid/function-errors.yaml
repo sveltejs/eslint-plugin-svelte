@@ -1,0 +1,59 @@
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 3
+  column: 25
+  suggestions:
+    - desc: Use `$derived.by()` instead.
+      messageId: useDerivedBy
+      output: |
+        <script>
+        	let count = $state(0);
+        	let doubled = $derived.by(() => count * 2);
+        	let tripled = $derived(() => {
+        		return count * 3;
+        	});
+        	let quadrupled = $derived(function () {
+        		return count * 4;
+        	});
+        	let multiplied = $derived((factor) => count * factor);
+        	let loaded = $derived(async () => count);
+        </script>
+
+        {doubled()}{tripled()}{quadrupled()}{multiplied(5)}{loaded()}
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 4
+  column: 25
+  suggestions:
+    - desc: Use `$derived.by()` instead.
+      messageId: useDerivedBy
+      output: |
+        <script>
+        	let count = $state(0);
+        	let doubled = $derived(() => count * 2);
+        	let tripled = $derived.by(() => {
+        		return count * 3;
+        	});
+        	let quadrupled = $derived(function () {
+        		return count * 4;
+        	});
+        	let multiplied = $derived((factor) => count * factor);
+        	let loaded = $derived(async () => count);
+        </script>
+
+        {doubled()}{tripled()}{quadrupled()}{multiplied(5)}{loaded()}
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 7
+  column: 28
+  suggestions: null
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 10
+  column: 28
+  suggestions: null
+- message: This `$derived()` holds the function itself, which never updates. Use
+    `$derived.by()` to derive the value the function returns.
+  line: 11
+  column: 24
+  suggestions: null
