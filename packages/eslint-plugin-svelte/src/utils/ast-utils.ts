@@ -655,14 +655,20 @@ export function isExpressionIdentifier(node: TSESTree.Identifier): boolean {
 		return true;
 	}
 	if (parent.type === 'MemberExpression') {
-		return !parent.computed || parent.property !== node;
+		// The name in `x.name` is not an expression, but the index in `x[index]` is.
+		return parent.computed || parent.property !== node;
 	}
 	if (
 		parent.type === 'Property' ||
 		parent.type === 'MethodDefinition' ||
 		parent.type === 'PropertyDefinition'
 	) {
-		return !parent.computed || parent.key !== node;
+		// The key in `{ key: v }` is not an expression, but the key in `{ [key]: v }` and the value in `{ v }` are.
+		return (
+			parent.computed ||
+			parent.key !== node ||
+			(parent.type === 'Property' && parent.value === node)
+		);
 	}
 	if (
 		parent.type === 'FunctionDeclaration' ||
