@@ -1,0 +1,80 @@
+- message: Can use style directives instead.
+  line: 9
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 9
+  column: 29
+  suggestions: null
+- message: Can use style directives instead.
+  line: 10
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 10
+  column: 29
+  suggestions: null
+- message: Can use style directives instead.
+  line: 11
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 11
+  column: 27
+  suggestions: null
+- message: Can use style directives instead.
+  line: 12
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 12
+  column: 32
+  suggestions: null
+- message: Can use style directives instead.
+  line: 14
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 14
+  column: 31
+  suggestions: null
+- message: Can use style directives instead.
+  line: 15
+  column: 49
+  suggestions: null
+- message: Can use style directives instead.
+  line: 17
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 18
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 19
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 20
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 22
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 23
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 23
+  column: 25
+  suggestions: null
+- message: Can use style directives instead.
+  line: 24
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 24
+  column: 23
+  suggestions: null

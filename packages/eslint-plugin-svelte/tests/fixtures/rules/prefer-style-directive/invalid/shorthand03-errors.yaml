@@ -1,0 +1,92 @@
+- message: Can use style directives instead.
+  line: 7
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 7
+  column: 26
+  suggestions: null
+- message: Can use style directives instead.
+  line: 8
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 8
+  column: 30
+  suggestions: null
+- message: Can use style directives instead.
+  line: 9
+  column: 41
+  suggestions: null
+- message: Can use style directives instead.
+  line: 10
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 10
+  column: 27
+  suggestions: null
+- message: Can use style directives instead.
+  line: 12
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 12
+  column: 27
+  suggestions: null
+- message: Can use style directives instead.
+  line: 13
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 13
+  column: 23
+  suggestions: null
+- message: Can use style directives instead.
+  line: 14
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 14
+  column: 31
+  suggestions: null
+- message: Can use style directives instead.
+  line: 15
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 15
+  column: 30
+  suggestions: null
+- message: Can use style directives instead.
+  line: 17
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 17
+  column: 39
+  suggestions: null
+- message: Can use style directives instead.
+  line: 18
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 18
+  column: 25
+  suggestions: null
+- message: Can use style directives instead.
+  line: 19
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 19
+  column: 42
+  suggestions: null
+- message: Can use style directives instead.
+  line: 20
+  column: 13
+  suggestions: null
+- message: Can use style directives instead.
+  line: 20
+  column: 38
+  suggestions: null
