@@ -1,7 +1,3 @@
-- message: Empty block(empty-block)
-  line: 2
-  column: 30
-  suggestions: null
 - message: 'A11y: noninteractive element cannot have nonnegative tabIndex
     value(a11y-no-noninteractive-tabindex)'
   line: 5
@@ -31,10 +27,6 @@
     value(a11y-no-noninteractive-tabindex)'
   line: 10
   column: 3
-  suggestions: null
-- message: Empty block(empty-block)
-  line: 14
-  column: 30
   suggestions: null
 - message: 'A11y: noninteractive element cannot have nonnegative tabIndex
     value(a11y-no-noninteractive-tabindex)'
