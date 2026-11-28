@@ -48,6 +48,10 @@ function childElementOccurenceCount(parent: AST.SvelteHTMLNode | null): ElementO
 }
 
 export function elementOccurrenceCount(element: AST.SvelteHTMLNode): ElementOccurenceCount {
+	if (element.type === 'SvelteElseBlock' && element.parent.type === 'SvelteEachBlock') {
+		// The `{:else}` of an `{#each}` block is rendered at most once (when the list is empty), not once per item.
+		return multiplyCounts(elementOccurrenceCount(element.parent), ElementOccurenceCount.ZeroOrOne);
+	}
 	const parentCount =
 		element.parent !== null ? elementOccurrenceCount(element.parent) : ElementOccurenceCount.One;
 	const parentChildCount = childElementOccurenceCount(element.parent);
