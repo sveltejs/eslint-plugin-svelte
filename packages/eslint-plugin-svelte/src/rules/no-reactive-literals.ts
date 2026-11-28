@@ -51,22 +51,51 @@ export default createRule('no-reactive-literals', {
 					node: parent,
 					loc: parent.loc,
 					messageId: 'noReactiveLiterals',
-					suggest: [
-						{
-							messageId: 'fixReactiveLiteral',
-							fix(fixer) {
-								return [
-									// Insert "let" + whatever was in there
-									fixer.insertTextBefore(parent, `let ${source.getText(node)}`),
+					// `let` can only be put before a plain `=` to a name or a destructuring of names.
+					suggest: !(node.operator === '=' && isDeclarablePattern(node.left))
+						? []
+						: [
+								{
+									messageId: 'fixReactiveLiteral',
+									fix(fixer) {
+										return [
+											// Insert "let" + whatever was in there
+											fixer.insertTextBefore(parent, `let ${source.getText(node)}`),
 
-									// Remove the original reactive statement
-									fixer.remove(parent)
-								];
-							}
-						}
-					]
+											// Remove the original reactive statement
+											fixer.remove(parent)
+										];
+									}
+								}
+							]
 				});
 			}
 		};
 	}
 });
+
+/** Checks whether the given node can be the target of a `let` declaration. */
+function isDeclarablePattern(node: TSESTree.Node | null): boolean {
+	if (!node) {
+		// A hole in an array pattern, e.g. `[, a]`
+		return true;
+	}
+	switch (node.type) {
+		case 'Identifier':
+			return true;
+		case 'ArrayPattern':
+			return node.elements.every(isDeclarablePattern);
+		case 'ObjectPattern':
+			return node.properties.every((property) =>
+				property.type === 'RestElement'
+					? isDeclarablePattern(property.argument)
+					: isDeclarablePattern(property.value)
+			);
+		case 'RestElement':
+			return isDeclarablePattern(node.argument);
+		case 'AssignmentPattern':
+			return isDeclarablePattern(node.left);
+		default:
+			return false;
+	}
+}
